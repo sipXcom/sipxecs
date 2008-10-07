@@ -1,13 +1,13 @@
 #
-# spec file for package rubygems (Version 0.8.11-2)
+# spec file for package rubygems (Version 1.3.0-1)
 #
 
 # norootforbuild
 # neededforbuild  ruby ruby-devel
 
 Name:           rubygems
-Version:        0.8.11
-Release:        2
+Version:        1.3.0
+Release:        1
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 License:        Other uncritical OpenSource License
 Group:          Development/Languages/Ruby
