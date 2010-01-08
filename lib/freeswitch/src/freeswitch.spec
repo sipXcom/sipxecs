@@ -8,11 +8,11 @@ Summary:      FreeSWITCH open source telephony platform (sipX integration)
 License:      MPL
 Group:        Productivity/Telephony/Servers
 Version:      1.0.5
-Release:      15901
+Release:      16184
 URL:          http://www.freeswitch.org/
-Packager:     SIPFoundry <sipx-dev@sipfoundry.org> (original by Michal Bielicki)
-Vendor:       http://www.sipfoundry.org (original by http://www.voiceworks.pl/)
-Source0:      %{name}-%{version}.tar.gz
+Packager:     Avaya
+Vendor:       http://www.voiceworks.pl/
+Source0:      %{name}-%{version}-%{release}.tar.gz
 Prefix:       %{prefix}
 
 AutoReqProv:  yes
