@@ -45,7 +45,7 @@ class CallResolver
   def check_connections
     @writer.test_connection
   rescue
-    log.error("Problems with CDR DB connection.")
+    log.error("call_resolver.rb:: Problems with CDR DB connection.")
     raise
   end
 
@@ -58,7 +58,7 @@ class CallResolver
     start_run = Time.now
 
     # limit the size of the queues: it's better to get starved than too eat all available memory
-    @log.debug("CSE Queue Size = #{@config.cse_queue_size}  CDR Queue Size = #{@config.cdr_queue_size}")
+    @log.debug("call_resolver.rb:: CSE Queue Size = #{@config.cse_queue_size}  CDR Queue Size = #{@config.cdr_queue_size}")
     cdr_queue = SizedQueue.new(@config.cdr_queue_size)
     cse_queue = SizedQueue.new(@config.cse_queue_size)
 
@@ -109,8 +109,8 @@ class CallResolver
       # re-raise the exception if any of the reader threads terminated abnormally
       raise t[:exception] if t.status.nil?
     end
-    log.debug("CSE Readers threads stopped.")
-    log.debug("CSEs in Queue = #{cse_queue.size()}")
+    log.debug("call_resolver.rb:: CSE Readers threads stopped.")
+    log.debug("call_resolver.rb:: CSEs in Queue = #{cse_queue.size()}")
 
     # stop running housekeeping jobs
     @long_calls_cleaner.stop
@@ -118,7 +118,7 @@ class CallResolver
     @long_ringing_calls_cleaner.stop
 
     ThreadsWait.all_waits(long_calls_cleaner_thread, failed_calls_cleaner_thread, long_ringing_calls_cleaner_thread)
-    log.debug("Clean-up threads stopped.")
+    log.debug("call_resolver.rb:: Clean-up threads stopped.")
 
   ensure
     @server.shutdown if @server
@@ -128,21 +128,21 @@ class CallResolver
 
     # wait for writer before exiting - but do not wait forever (all readers might be dead)
     writer_thread.join(10) if writer_thread
-    log.debug("CDR writer thread stopped.")
+    log.debug("call_resolver.rb:: CDR writer thread stopped.")
 
-    log.info("resolve: Done. Analysis took #{Time.now - start_run} seconds.")
+    log.info("call_resolver.rb:: resolve: Done. Analysis took #{Time.now - start_run} seconds.")
   end
 
   # install handler for INT (2) and TERM (9) signals to cleanly terminate readers threads
   def install_signal_handler(readers)
     %w( TERM INT ).each do | s |
       Signal.trap(s) do
-        log.info("#{s} intercepted. Terminating reader threads.")
+        log.info("call_resolver.rb:: #{s} intercepted. Terminating reader threads.")
         readers.each { |r| r.stop() }
       end
     end
     Signal.trap("USR1") do
-      log.debug(@state.to_s)
+      log.debug("call_resolver.rb:: " + @state.to_s)
     end
     Signal.trap("ABRT") do
       # A signal abort has been received.  Handle it by simply exiting.
