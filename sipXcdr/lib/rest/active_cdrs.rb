@@ -19,7 +19,7 @@ class ActiveCdrs < WEBrick::HTTPServlet::AbstractServlet
 
   def do_GET(req, resp)
     active_calls = @cdrService.getActiveCalls
-    @log.debug("getActiveCalls by REST #{active_calls.size}") if @log
+    @log.debug("active_cdrs.rb:: getActiveCalls by REST #{active_calls.size}") if @log
 
     doc = REXML::Document.new '<?xml version="1.0" encoding="UTF-8"?><cdrs/>'
     name = req.query['name']

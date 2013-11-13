@@ -293,11 +293,12 @@ class CallResolverConfigure
       host_port = port.to_i
       raise ConfigException, "Port for #{host} is invalid." if host_port == 0
       cse_hosts << CseHost.new(host, host_port)
-      log.debug("cse_hosts: host name #{host}, host port: #{port}")
+      log.debug("call_resolver_configure.rb:: cse_hosts: host name #{host}, host port: #{port}")
       # If at least one of the hosts != 'localhost' we are HA enabled
     end
     ha = cse_hosts.length > 1
-    log.debug("Found host other than localhost - enable HA") if ha
+    log.info("call_resolver_configure,rb:: Did not find other host than localhost - keeping HA disabled") unless ha
+    log.info("call_resolver_configure.rb:: Found host other than localhost - enable HA") if ha
     return cse_hosts, ha
   end
 

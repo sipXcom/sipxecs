@@ -47,7 +47,7 @@ module CdrResolver
         @state.active_cdrs.each do | cdr |
             active_calls << ActiveCall.new(cdr, now) if cdr.termination == Cdr::CALL_IN_PROGRESS_TERM && cdr.start_time
         end
-        @log.debug("getActiveCalls #{active_calls.size}") if @log
+        @log.debug("server.rb:: getActiveCalls #{active_calls.size}") if @log
         return active_calls
       end      
     end
