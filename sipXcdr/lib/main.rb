@@ -107,7 +107,7 @@ def main()
     resolver.resolve(start_time, end_time)
   end
 
-  config.log.error("Exiting because of error: <#{$!}>")
+  config.log.error("main.rb:: Exiting because of error: <#{$!}>")
   config.log.error do
     start_line = "\n"
     $!.backtrace.inject("") {|trace, line| "#{trace}\n#{line}" }
