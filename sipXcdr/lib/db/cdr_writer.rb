@@ -22,11 +22,11 @@ class CdrWriter < Dao
       dbh.prepare(sql) do | sth |
         while cdr = queue.shift
           if CdrWriter.getRetryCount() > 5
-          @last_row = row
             cdr = queue.shift
             log.warn("Database error occurred for 5 times successively, skipping to the next CDR")
           end
           row = CdrWriter.row_from_cdr(cdr)
+          @last_row = row
           sth.execute(*row)
           check_purge(dbh)
           CdrWriter.cleanRetries()
