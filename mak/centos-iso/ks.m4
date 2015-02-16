@@ -6,7 +6,7 @@ define(`repo_filename',`sipxecs.repo')
 define(`repo_contents',
 [sipXecs]
 name=sipXecs for CentOS - \$basearch
-baseurl=http://download.sipfoundry.org/pub/sipXecs/PACKAGE_VERSION()/CentOS_6/\$basearch
+baseurl=http://download.sipxcom.org/pub/sipXecs/PACKAGE_VERSION()/CentOS_6/\$basearch
 enabled=1
 gpgcheck=0
 )
@@ -15,7 +15,7 @@ dnl NOTE: You should start message with '====... if you want message to be remov
 dnl successul setup. See shell code in /root/.bashrc for details
 define(`welcome_message',`
 ==========================
-Welcome to SIPfoundry sipXecs.
+Welcome to sipXcom sipXecs.
 
 After logging in as root you will automatically be taken through a setup
 procedure.
