@@ -117,8 +117,7 @@ lib_all = \
   jasperserver \
   libjsonrpccpp \
   libevent2 \
-  mongo-cxx-driver \
-  mongodb
+  mongo-cxx-driver
 
 lib_exclude_fedora_16 = \
   epel \
