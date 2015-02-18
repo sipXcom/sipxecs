@@ -39,9 +39,17 @@
 #set( $transfer_expression_referror = 'transf_ext=${regex(${sip_h_X-sipX-referror}|(.*)@|%1)}' )
 #set( $transfer_expression_auth = 'transf_ext=${regex(${sip_h_X-Sipx-Authidentity}|sip:(.*)@|%1)}' )
       <action application="set" data="fifo_music=${orbit.audioDirectory}${orbit.music}"/>
-      <condition field="${sip_h_X-sipX-referror}" expression=".">
+      <condition field="${sip_h_X-sipX-referror}" expression="." break="on-true">
+        <action application="log" data="INFO extracting referror from sip_h_X-sipX-referror"/>
         <action application="set" data="${transfer_expression_referror}"/>
-        <anti-action application="set" data="${transfer_expression_auth}"/>
+      </condition>
+      <condition field="${sip_h_X-Sipx-Authidentity}" expression="." break="on-true">
+        <action application="log" data="INFO extracting referror from sip_h_X-Sipx-Authidentity"/>
+        <action application="set" data="${transfer_expression_auth}"/>
+      </condition>
+      <condition field="${sip_referred_by_user}" expression="." break="on-true">
+        <action application="log" data="INFO extracting referror from sip_referred_by_user"/>
+        <action application="set" data="transf_ext=${sip_referred_by_user}"/>
       </condition>
       <action application="set" data="fifo_orbit_exten=transferPark${transf_ext}:${orbit.parkTimeout}"/>
       <action application="set" data="fifo_orbit_dialplan=XML"/>
