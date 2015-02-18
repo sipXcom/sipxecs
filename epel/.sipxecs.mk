@@ -51,7 +51,6 @@ BUILD_EPEL = \
 	libdnet-* \
 	libdnet-devel-* \
 	libev-* \
-	libmongodb-devel-2.4* \
 	libuv-* \
 	libuv-devel-* \
 	neXtaw-* \
@@ -87,11 +86,8 @@ RUNTIME_EPEL = \
 	libiodbc-3* \
 	libev-4.* \
 	libmcrypt-* \
-	libmongodb-2.4* \
 	libunwind-* \
 	monit-* \
-	mongodb-2.4* \
-	mongodb-server-2.4* \
 	openpgm-5* \
 	php-pecl-mongo-* \
 	poco-crypto-* \
