@@ -12,9 +12,17 @@
     </condition>
     <condition field="${slot_count}" expression="^\:0$|no" break="always">
       <action application="set" data="fifo_music=/var/sipxdata/parkserver/music/default.wav"/>
-      <condition field="${sip_h_X-sipX-referror}" expression=".">
+      <condition field="${sip_h_X-sipX-referror}" expression="." break="on-true">
+        <action application="log" data="INFO extracting referror from sip_h_X-sipX-referror"/>
         <action application="set" data="transf_ext=${regex(${sip_h_X-sipX-referror}|(.*)@|%1)}"/>
-        <anti-action application="set" data="transf_ext=${regex(${sip_h_X-Sipx-Authidentity}|sip:(.*)@|%1)}"/>
+      </condition>
+      <condition field="${sip_h_X-Sipx-Authidentity}" expression="." break="on-true">
+        <action application="log" data="INFO extracting referror from sip_h_X-Sipx-Authidentity"/>
+        <action application="set" data="transf_ext=${regex(${sip_h_X-Sipx-Authidentity}|sip:(.*)@|%1)}"/>
+      </condition>
+      <condition field="${sip_referred_by_user}" expression="." break="on-true">
+        <action application="log" data="INFO extracting referror from sip_referred_by_user"/>
+        <action application="set" data="transf_ext=${sip_referred_by_user}"/>
       </condition>
       <action application="set" data="fifo_orbit_exten=transferPark${transf_ext}:120"/>
       <action application="set" data="fifo_orbit_dialplan=XML"/>
@@ -30,9 +38,17 @@
   <extension name="ParkOrbitTransfer">
     <condition field="destination_number" expression="^1111$">
       <action application="set" data="fifo_music=/var/sipxdata/parkserver/music/default.wav"/>
-      <condition field="${sip_h_X-sipX-referror}" expression=".">
+      <condition field="${sip_h_X-sipX-referror}" expression="." break="on-true">
+        <action application="log" data="INFO extracting referror from sip_h_X-sipX-referror"/>
         <action application="set" data="transf_ext=${regex(${sip_h_X-sipX-referror}|(.*)@|%1)}"/>
-        <anti-action application="set" data="transf_ext=${regex(${sip_h_X-Sipx-Authidentity}|sip:(.*)@|%1)}"/>
+      </condition>
+      <condition field="${sip_h_X-Sipx-Authidentity}" expression="." break="on-true">
+        <action application="log" data="INFO extracting referror from sip_h_X-Sipx-Authidentity"/>
+        <action application="set" data="transf_ext=${regex(${sip_h_X-Sipx-Authidentity}|sip:(.*)@|%1)}"/>
+      </condition>
+      <condition field="${sip_referred_by_user}" expression="." break="on-true">
+        <action application="log" data="INFO extracting referror from sip_referred_by_user"/>
+        <action application="set" data="transf_ext=${sip_referred_by_user}"/>
       </condition>
       <action application="set" data="fifo_orbit_exten=transferPark${transf_ext}:120"/>
       <action application="set" data="fifo_orbit_dialplan=XML"/>
@@ -50,9 +66,17 @@
   <extension name="ParkOrbitBare">
     <condition field="destination_number" expression="^2222$">
       <action application="set" data="fifo_music=/var/sipxdata/parkserver/music/default.wav"/>
-      <condition field="${sip_h_X-sipX-referror}" expression=".">
+      <condition field="${sip_h_X-sipX-referror}" expression="." break="on-true">
+        <action application="log" data="INFO extracting referror from sip_h_X-sipX-referror"/>
         <action application="set" data="transf_ext=${regex(${sip_h_X-sipX-referror}|(.*)@|%1)}"/>
-        <anti-action application="set" data="transf_ext=${regex(${sip_h_X-Sipx-Authidentity}|sip:(.*)@|%1)}"/>
+      </condition>
+      <condition field="${sip_h_X-Sipx-Authidentity}" expression="." break="on-true">
+        <action application="log" data="INFO extracting referror from sip_h_X-Sipx-Authidentity"/>
+        <action application="set" data="transf_ext=${regex(${sip_h_X-Sipx-Authidentity}|sip:(.*)@|%1)}"/>
+      </condition>
+      <condition field="${sip_referred_by_user}" expression="." break="on-true">
+        <action application="log" data="INFO extracting referror from sip_referred_by_user"/>
+        <action application="set" data="transf_ext=${sip_referred_by_user}"/>
       </condition>
       <action application="set" data="fifo_orbit_exten=transferPark${transf_ext}:86400"/>
       <action application="set" data="fifo_orbit_dialplan=XML"/>
@@ -68,9 +92,17 @@
   <extension name="ParkOrbitFull">
     <condition field="destination_number" expression="^5555$">
       <action application="set" data="fifo_music=/var/sipxdata/parkserver/music/custom.wav"/>
-      <condition field="${sip_h_X-sipX-referror}" expression=".">
+      <condition field="${sip_h_X-sipX-referror}" expression="." break="on-true">
+        <action application="log" data="INFO extracting referror from sip_h_X-sipX-referror"/>
         <action application="set" data="transf_ext=${regex(${sip_h_X-sipX-referror}|(.*)@|%1)}"/>
-        <anti-action application="set" data="transf_ext=${regex(${sip_h_X-Sipx-Authidentity}|sip:(.*)@|%1)}"/>
+      </condition>
+      <condition field="${sip_h_X-Sipx-Authidentity}" expression="." break="on-true">
+        <action application="log" data="INFO extracting referror from sip_h_X-Sipx-Authidentity"/>
+        <action application="set" data="transf_ext=${regex(${sip_h_X-Sipx-Authidentity}|sip:(.*)@|%1)}"/>
+      </condition>
+      <condition field="${sip_referred_by_user}" expression="." break="on-true">
+        <action application="log" data="INFO extracting referror from sip_referred_by_user"/>
+        <action application="set" data="transf_ext=${sip_referred_by_user}"/>
       </condition>
       <action application="set" data="fifo_orbit_exten=transferPark${transf_ext}:10"/>
       <action application="set" data="fifo_orbit_dialplan=XML"/>
