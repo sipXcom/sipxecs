@@ -1,4 +1,5 @@
 %global         daemon mongod
+%define debug_package %{nil}
 
 Name:           mongodb
 Version:        2.6.7
