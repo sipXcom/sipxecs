@@ -27,6 +27,7 @@ BuildRequires:  scons
 BuildRequires:  openssl-devel
 BuildRequires:  boost-devel
 BuildRequires:  pcre-devel
+BuildRequires:  libpcap-devel
 
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 Requires(post): systemd-units
