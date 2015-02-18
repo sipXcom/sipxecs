@@ -86,9 +86,9 @@ rm -f %{buildroot}%{_libdir}/../lib/libmongoclient.a
 %{_libdir}/libmongoclient.so
 
 %changelog
-* Tue Feb 03 2015 Ionut Oancea <ioancea@ezuce.com> - 2.6.7-2
-- Added patch for logging: http://track.sipfoundry.org/browse/XX-11578
-
 * Wed Feb 18 2015 Ionut Oancea <ioancea@ezuce.com> - 2.6.7-3
 - Added patch for maxTimeMS: http://track.sipfoundry.org/browse/XX-11590
+
+* Tue Feb 03 2015 Ionut Oancea <ioancea@ezuce.com> - 2.6.7-2
+- Added patch for logging: http://track.sipfoundry.org/browse/XX-11578
 
