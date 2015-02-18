@@ -14,8 +14,12 @@
 
 // SYSTEM INCLUDES
 //#include <...>
+#include <vector>
+#include <boost/unordered_set.hpp>
 
 // APPLICATION INCLUDES
+
+
 #include <net/SipClient.h>
 #include <os/OsServerSocket.h>
 #include <os/OsTask.h>
@@ -23,6 +27,7 @@
 #include <os/OsLockingList.h>
 #include <os/OsRWMutex.h>
 #include <utl/UtlHashMap.h>
+
 
 // DEFINES
 // MACROS
@@ -39,8 +44,7 @@ class SipUserAgent;
 class SipProtocolServerBase : public OsServerTask
 {
 /* //////////////////////////// PUBLIC //////////////////////////////////// */
-public:
-
+public: 
    enum EventSubTypes
    {
       SIP_SERVER_GC = 1
@@ -97,11 +101,19 @@ protected:
     *  exist.
     */
    // Caller must hold mClientLock.
-   // Returns NULL if it is unable to create a client.
+   // Returns empty if it is unable to create a client.
    SipClient* getClientForDestination(const char* hostAddress,
                                       int hostPort,
-                                      const char* localIp);
-
+                                      const char* localIp,
+                                      SipMessage* pMsg,
+                                      bool& canFailover);
+   
+   // Caller must hold mClientLock.
+   SipClient* findExistingClientForDestination(const char* hostAddress,
+                                               int hostPort,
+                                               const char* localIp,
+                                               SipMessage* pMsg);
+   
    // Caller must hold mClientLock.
    void startClients();
 
@@ -143,11 +155,6 @@ protected:
    // Map from the local IP addresses (as UtlString's) to the listening
    // SipClient's.
    UtlHashMap mServers;
-
-   // Caller must hold mClientLock.
-   SipClient* findExistingClientForDestination(const char* hostAddress,
-                                               int hostPort,
-                                               const char* localIp);
 
    // Caller must hold mClientLock.
    void deleteClient(SipClient* client);
