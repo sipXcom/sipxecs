@@ -9,6 +9,7 @@
 //////
 
 // SYSTEM INCLUDES
+#include <boost/lexical_cast.hpp>
 
 // APPLICATION INCLUDES
 #include <net/SipClientWriteBuffer.h>
@@ -16,6 +17,9 @@
 #include <net/SipUserAgentBase.h>
 #include <net/Instrumentation.h>
 #include <os/OsLogger.h>
+
+#include "net/SipProtocolServerBase.h"
+#include "net/HttpMessage.h"
 
 // EXTERNAL FUNCTIONS
 // EXTERNAL VARIABLES
@@ -62,7 +66,8 @@ UtlBoolean SipClientWriteBuffer::handleMessage(OsMsg& eventMessage)
 
    int msgType = eventMessage.getMsgType();
    int msgSubType = eventMessage.getMsgSubType();
-
+   SipMessage* pCloneMsg = 0;
+   
    if (msgType == OsMsg::OS_SHUTDOWN)
    {
       // When shutting down, have to return all queued outgoing messages
@@ -76,6 +81,7 @@ UtlBoolean SipClientWriteBuffer::handleMessage(OsMsg& eventMessage)
            &&  (msgSubType == SipClientSendMsg::SIP_CLIENT_SEND
              || msgSubType == SipClientSendMsg::SIP_CLIENT_SEND_KEEP_ALIVE))
    {
+     bool sendCanFailover = false;
       // Queued SIP message to send - normal path.
       if (msgSubType == SipClientSendMsg::SIP_CLIENT_SEND)
       {
@@ -83,9 +89,23 @@ UtlBoolean SipClientWriteBuffer::handleMessage(OsMsg& eventMessage)
           // the incoming eventMessage.
           SipClientSendMsg* sendMsg =
              dynamic_cast <SipClientSendMsg*> (&eventMessage);
+          
           if (sendMsg)
           {
-             insertMessage(sendMsg->detachMessage());
+             SipMessage* pMsg = sendMsg->detachMessage();
+             if (pMsg)
+             {
+               std::string canFailover;
+               pMsg->getProperty("send-can-failover", canFailover);
+               sendCanFailover = (canFailover == "yes");
+             }
+             
+             if (sendCanFailover && pMsg)
+             {
+               pCloneMsg = new SipMessage(*pMsg);
+             }
+              
+             insertMessage(pMsg);
              messageProcessed = TRUE;
           }
           else
@@ -108,10 +128,44 @@ UtlBoolean SipClientWriteBuffer::handleMessage(OsMsg& eventMessage)
       }
 
       // Write what we can.
-      writeMore();
+      if (!writeMore())
+      {
+        if (pCloneMsg && sendCanFailover)
+        {
+          //
+          // Queue the SIP message once more
+          //
+          std::string failoverHost;
+          std::string failoverPort;
+          pCloneMsg->getProperty("failover-host", failoverHost);
+          pCloneMsg->getProperty("failover-port", failoverPort);
 
+          if (!failoverHost.empty() && !failoverPort.empty())
+          {
+            int port = 5060;
+            try { port = boost::lexical_cast<int>(failoverPort); }catch(...){};            
+            OS_LOG_INFO(FAC_SIP, "SipClientWriteBuffer::handleMessage[" << mName.data() << "] - writeMore() failed.  Attempting to fail over for target: " << failoverHost << ":" << port);
+
+            mpSipServer->send(pCloneMsg, failoverHost.c_str(), port); 
+          }
+        }
+      }
+      else
+      {
+        OS_LOG_INFO(FAC_SIP, "SipClientWriteBuffer::handleMessage[" << mName.data() << "] - writeMore() failed.  No further flow is available for target" );
+      }
       // sendMsg will be deleted by ::run(), as usual.
       // Its destructor will free any storage owned by it.
+   }
+   
+  //
+  // sendTo() clones its own copy of the message
+  // delete it here
+  //
+   if (pCloneMsg)
+   {
+     delete pCloneMsg;
+     pCloneMsg = 0;
    }
 
    return (messageProcessed);
@@ -220,13 +274,14 @@ void SipClientWriteBuffer::insertMessage(UtlString* keepAlive)
 
 /// Write as much of the buffered messages as can be written.
 // Executed by the thread.
-void SipClientWriteBuffer::writeMore()
+bool SipClientWriteBuffer::writeMore()
 {
    // 'exit_loop' will be set to TRUE if an attempt to write does
    // not write any bytes, and we will then return.
    UtlBoolean exit_loop = FALSE;
    static const unsigned int WRITE_RETRY_MAX = 5;
    unsigned int write_retry = 0;
+   bool writeStatus = true;
 
    //
    // Get an exclusive lock in order for the write no to interfere with another thread
@@ -326,6 +381,7 @@ void SipClientWriteBuffer::writeMore()
          {
             // No data sent, even though (in our caller) poll()
             // reported the socket was ready to write.
+
             Os::Logger::instance().log(FAC_SIP, PRI_DEBUG,
                           "SipClientWriteBuffer[%s]::writeMore "
                           "OsSocket::write() returned 0 when trying to send %zd bytes",
@@ -333,8 +389,10 @@ void SipClientWriteBuffer::writeMore()
             if (++write_retry > WRITE_RETRY_MAX)
             {
               emptyBuffer(TRUE);
+              mClientSocket->close();
               clientStopSelf();
               exit_loop = TRUE;
+              writeStatus = false;
             }
          }
          else
@@ -346,20 +404,29 @@ void SipClientWriteBuffer::writeMore()
                           getName().data(), ret, errno);
             // Return all buffered messages with a transport error indication.
             emptyBuffer(TRUE);
+            //
+            //Close the socket
+            //
+            mClientSocket->close();
             // Because TCP is a connection protocol, we know that we cannot
             // send successfully any more and so should shut down this client.
             clientStopSelf();
             // Exit the loop so handleMessage() can process the stop request.
             exit_loop = TRUE;
+            
+            writeStatus = false;
          }
       }
    }
 
+   
    // unlock the socket object
    if (locked)
    {
      mClientSocket->unlock();
    }
+ 
+   return writeStatus;
 }
 
 /// Empty the buffer, if requested, return all messages in the queue to the SipUserAgent

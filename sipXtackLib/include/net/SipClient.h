@@ -42,7 +42,6 @@ class SipClient : public OsServerTaskWaitable, public UtlContainableAtomic
 {
 /* //////////////////////////// PUBLIC //////////////////////////////////// */
 public:
-
 /* ============================ CREATORS ================================== */
 
    SipClient(OsSocket* socket,
@@ -76,7 +75,7 @@ public:
 
    // Continue sending stored message content (because the socket
    // is now writable).
-   virtual void writeMore(void);
+   virtual bool writeMore(void);
 
    // Remove and report(if requested) all stored message content (because the socket
    // is not usable).
@@ -120,7 +119,7 @@ public:
 
     /** Class type used for runtime checking */
     static const UtlContainableType TYPE;
-
+    
 /* //////////////////////////// PROTECTED ///////////////////////////////// */
 protected:
 
@@ -206,6 +205,7 @@ protected:
      *  socket, then false forever.
      */
     UtlBoolean mbTcpOnErrWaitForSend;
+    
 
 /* //////////////////////////// PRIVATE /////////////////////////////////// */
 private:
@@ -272,5 +272,6 @@ protected:
 };
 
 /* ============================ INLINE METHODS ============================ */
+   
 
 #endif  // _SipClient_h_
