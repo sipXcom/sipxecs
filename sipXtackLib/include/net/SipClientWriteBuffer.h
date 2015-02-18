@@ -63,7 +63,7 @@ public:
    virtual void insertMessage(UtlString* keepAlive);
 
    /// Write as much of the buffered messages as can be written.
-   virtual void writeMore();
+   virtual bool writeMore();
 
    /// Empty the buffer, if requested, return all messages in the queue to the SipUserAgent
    /// as transport errors.
