@@ -375,7 +375,7 @@ void SipClient::emptyBuffer(bool reportError)
 // is now writable).
 // This is the default, do-nothing, implementation, to be overridden
 // by classes that use this functionality.
-void SipClient::writeMore(void)
+bool SipClient::writeMore(void)
 {
    assert(FALSE);
 }
@@ -539,7 +539,7 @@ UtlBoolean SipClient::isAcceptableForDestination( const UtlString& hostName, int
    }
 
    // Make sure client is okay before declaring it acceptable
-   if( isAcceptable && !isWritable() )
+   if( isAcceptable && !isOk() )
    {
       Os::Logger::instance().log(FAC_SIP, PRI_DEBUG,
                     "SipClient[%s]::isAcceptableForDestination('%s', %d, '%s')"
