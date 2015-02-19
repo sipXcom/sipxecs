@@ -63,14 +63,14 @@ void SubscribeDB::getAll(Subscriptions& subscriptions, bool preferPrimary)
   auto_ptr<mongo::DBClientCursor> pCursor = conn->get()->query(_ns, builder.obj(), 0, 0, 0, mongo::QueryOption_SlaveOk);
   if (!pCursor.get())
   {
-   throw mongo::DBException("mongo query returned null cursor", 0);
+    throw mongo::DBException("mongo query returned null cursor", 0);
   }
 
 	while (pCursor->more())
-    {
-		subscriptions.push_back(Subscription(pCursor->next()));
-	}
-	conn->done();
+  {
+    subscriptions.push_back(Subscription(pCursor->next()));
+  }
+  conn->done();
 }
 
 void SubscribeDB::upsert (
@@ -256,11 +256,12 @@ bool SubscribeDB::subscriptionExists (
 auto_ptr<mongo::DBClientCursor> pCursor = conn->get()->query(_ns, builder.obj(), 0, 0, 0, mongo::QueryOption_SlaveOk);
     if (!pCursor.get())
     {
-     throw mongo::DBException("mongo query returned null cursor", 0);
+      throw mongo::DBException("mongo query returned null cursor", 0);
     }
-    else if (pCursor->more()) {
-    	conn->done();
-        return pCursor->itcount() > 0;
+    else if (pCursor->more())
+    {
+      conn->done();
+      return pCursor->itcount() > 0;
     }
 
     conn->done();
