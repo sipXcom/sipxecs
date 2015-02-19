@@ -110,28 +110,23 @@ bool DB::findE911LineIdentifier(
     std::string& location)
 {
   mongo::BSONObj query = BSON(EntityRecord::identity_fld() << userId);
-    MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getReadQueryTimeout()));
-  std::auto_ptr<mongo::DBClientCursor> pCursor = conn->get()->query(_info.getNS(), query);
-  if (!pCursor.get())
-  {
-   throw mongo::DBException("mongo query returned null cursor", 0);
-  }
-  else if (pCursor->more())
-  {
-    mongo::BSONObj obj = pCursor->next();
+  MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getReadQueryTimeout()));
 
-    if (obj.hasField("elin"))
+  mongo::BSONObj entityObj = conn->get()->findOne(_info.getNS(), query);
+  if (!entityObj.isEmpty())
+  {
+    if (entityObj.hasField("elin"))
     {
-      e911 = obj.getStringField("elin");
+      e911 = entityObj.getStringField("elin");
 
-      if (obj.hasField("addrinfo"))
+      if (entityObj.hasField("addrinfo"))
       {
-        address = obj.getStringField("addrinfo");
+        address = entityObj.getStringField("addrinfo");
       }
       
-      if (obj.hasField("loctn"))
+      if (entityObj.hasField("loctn"))
       {
-        location = obj.getStringField("loctn");
+        location = entityObj.getStringField("loctn");
       }
 
       conn->done();

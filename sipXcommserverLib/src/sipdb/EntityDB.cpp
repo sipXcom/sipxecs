@@ -84,15 +84,11 @@ bool EntityDB::findByIdentity(const string& ident, EntityRecord& entity) const
   mongo::BSONObjBuilder builder;
   BaseDB::nearest(builder, query);
 
-  auto_ptr<mongo::DBClientCursor> pCursor = conn->get()->query(_ns, builder.obj(), 0, 0, 0, mongo::QueryOption_SlaveOk);
-  if (!pCursor.get())
-  {
-    throw mongo::DBException("mongo query returned null cursor", 0);
-  }
-  else if (pCursor->more())
+  mongo::BSONObj entityObj = conn->get()->findOne(_ns, builder.obj(), 0, mongo::QueryOption_SlaveOk);
+  if (!entityObj.isEmpty())
   {
     OS_LOG_DEBUG(FAC_ODBC, identity << " is present in namespace " << _ns);
-    entity = pCursor->next();
+    entity = entityObj;
     conn->done();
     //
     // Cache the entity
@@ -126,15 +122,11 @@ bool EntityDB::findByUserId(const string& uid, EntityRecord& entity) const
   mongo::BSONObjBuilder builder;
   BaseDB::nearest(builder, query);
   MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getReadQueryTimeout()));
-  auto_ptr<mongo::DBClientCursor> pCursor = conn->get()->query(_ns, builder.obj(), 0, 0, 0, mongo::QueryOption_SlaveOk);
 
-  if (!pCursor.get())
+  mongo::BSONObj entityObj = conn->get()->findOne(_ns, builder.obj(), 0, mongo::QueryOption_SlaveOk);
+  if (!entityObj.isEmpty())
   {
-   throw mongo::DBException("mongo query returned null cursor", 0);
-  }
-  else if (pCursor->more())
-  {
-    entity = pCursor->next();
+    entity = entityObj;
     conn->done();
     //
     // Cache the entity
@@ -190,15 +182,11 @@ bool EntityDB::findByAliasUserId(const string& alias, EntityRecord& entity) cons
   mongo::BSONObjBuilder builder;
   BaseDB::nearest(builder, query);
   MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getReadQueryTimeout()));
-  auto_ptr<mongo::DBClientCursor> pCursor = conn->get()->query(_ns, builder.obj(), 0, 0, 0, mongo::QueryOption_SlaveOk);
 
-  if (!pCursor.get())
+  mongo::BSONObj entityObj = conn->get()->findOne(_ns, builder.obj(), 0, mongo::QueryOption_SlaveOk);
+  if (!entityObj.isEmpty())
   {
-   throw mongo::DBException("mongo query returned null cursor", 0);
-  }
-  else if (pCursor->more())
-  {
-    entity = pCursor->next();
+    entity = entityObj;
     conn->done();
     //
     // Cache the entity

@@ -127,12 +127,9 @@ bool DB::findE911Location(
   mongo::BSONObjBuilder e911LocBuilder;
   BaseDB::nearest(e911LocBuilder, e911LocationQuery);
 
-  std::auto_ptr<mongo::DBClientCursor> e911Cursor = conn->get()->query(ns(), e911LocBuilder.obj(), 0, 0, 0, mongo::QueryOption_SlaveOk);
-
-  if (e911Cursor.get() && e911Cursor->more())
+  mongo::BSONObj e911LocationObj = conn->get()->findOne(ns(), e911LocBuilder.obj(), 0, mongo::QueryOption_SlaveOk);
+  if (!e911LocationObj.isEmpty())
   {
-    mongo::BSONObj e911LocationObj = e911Cursor->next();
-
     if (e911LocationObj.hasField("addrinfo"))
     {
       address = e911LocationObj.getStringField("addrinfo");
@@ -156,20 +153,17 @@ bool DB::findE911LineIdentifier(
   MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getReadQueryTimeout()));
   mongo::BSONObjBuilder builder;
   BaseDB::nearest(builder, query);
-  std::auto_ptr<mongo::DBClientCursor> pCursor = conn->get()->query(ns(), builder.obj(), 0, 0, 0, mongo::QueryOption_SlaveOk);
 
-  if (!pCursor.get())
+  mongo::BSONObj entityObj = conn->get()->findOne(ns(), builder.obj(), 0, mongo::QueryOption_SlaveOk);
+  if (!entityObj.isEmpty())
   {
-   throw mongo::DBException("mongo query returned null cursor", 0);
-  }
-  else if (pCursor->more())
-  {
-    mongo::BSONObj obj = pCursor->next();
-    if (obj.hasField("elin"))
+    if (entityObj.hasField("elin"))
     {
-      e911 = obj.getStringField("elin");
+      e911 = entityObj.getStringField("elin");
       if (!e911.empty())
+      {
         findE911Location(conn, e911, address, location);
+      }
       conn->done();
       return !e911.empty();
     }
@@ -192,22 +186,18 @@ bool DB::findE911InstrumentIdentifier(
 
   mongo::BSONObjBuilder builder;
   BaseDB::nearest(builder, query);
-  std::auto_ptr<mongo::DBClientCursor> pCursor = conn->get()->query(ns(), builder.obj(), 0, 0, 0, mongo::QueryOption_SlaveOk);
 
-  if (!pCursor.get())
+  mongo::BSONObj instrumentObj = conn->get()->findOne(ns(), builder.obj(), 0, mongo::QueryOption_SlaveOk);
+  if (!instrumentObj.isEmpty())
   {
-   throw mongo::DBException("mongo query returned null cursor", 0);
-  }
-  else if (pCursor->more())
-  {
-    mongo::BSONObj obj = pCursor->next();
-
-    if (obj.hasField("elin"))
+    if (instrumentObj.hasField("elin"))
     {
-      e911 = obj.getStringField("elin");
+      e911 = instrumentObj.getStringField("elin");
 
       if (!e911.empty())
+      {
         findE911Location(conn, e911, address, location);
+      }
       conn->done();
       return !e911.empty();
     }
