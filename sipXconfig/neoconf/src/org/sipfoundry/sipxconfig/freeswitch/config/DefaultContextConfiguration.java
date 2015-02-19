@@ -45,11 +45,11 @@ public class DefaultContextConfiguration extends AbstractFreeswitchConfiguration
         boolean park = m_featureManager.isFeatureEnabled(ParkOrbitContext.FEATURE, location);
         List<FreeswitchExtension> extensions = m_freeswitchExtensionCollector.getExtensions();
         write(writer, location, bridge, authCodes, park, m_parkOrbitContext.getParkOrbits(), extensions,
-            settings.isBlindTransferEnabled());
+            settings.isBlindTransferEnabled(), settings.isSimplifyEnabled());
     }
 
     void write(Writer writer, Location location, Bridge bridge, boolean authCodes, boolean park, Collection orbits,
-        List<FreeswitchExtension> extensions, boolean blindTransfer)
+        List<FreeswitchExtension> extensions, boolean blindTransfer, boolean simplify)
         throws IOException {
         VelocityContext context = new VelocityContext();
         if (bridge != null) {
@@ -65,6 +65,9 @@ public class DefaultContextConfiguration extends AbstractFreeswitchConfiguration
         }
         if (blindTransfer) {
             context.put("blindTransfer", true);
+        }
+        if (simplify) {
+            context.put("simplify", true);
         }
         context.put("domainName", Domain.getDomain().getName());
         context.put("location", location);
