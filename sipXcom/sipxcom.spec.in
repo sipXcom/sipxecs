@@ -1,0 +1,44 @@
+Name: @PACKAGE@
+Version: @VERSION@
+Release: @PACKAGE_REVISION@
+
+Summary: sipXcom ui plugin
+License: LGPL
+Group: Telcommunications
+Vendor: sipXcom
+Packager: Douglas Hubler <dhubler@ezuce.com>
+Url: http://www.sipxcom.org
+
+%define __jar_repack %{nil}
+
+BuildRequires: automake
+BuildRequires: libxml2
+BuildRequires: sipxconfig >= %version
+Requires: sipxconfig >= %version
+
+Source: %name-%version.tar.gz
+Prefix: %_prefix
+BuildRoot: %{_tmppath}/%name-%version-root
+
+%description
+sipXcom config plugin
+
+%prep
+%setup -q
+
+%build
+%configure --enable-rpmbuild @SIPX_RPM_CONFIGURE_OPTIONS@
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make DESTDIR=$RPM_BUILD_ROOT install
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(644,root,root,755)
+%{_datadir}/java/sipXecs/sipXconfig/plugins/sipXcom.jar
+
+%post
