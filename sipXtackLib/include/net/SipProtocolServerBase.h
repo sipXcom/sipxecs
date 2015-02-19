@@ -111,8 +111,7 @@ protected:
    // Caller must hold mClientLock.
    SipClient* findExistingClientForDestination(const char* hostAddress,
                                                int hostPort,
-                                               const char* localIp,
-                                               SipMessage* pMsg);
+                                               const char* localIp);
    
    // Caller must hold mClientLock.
    void startClients();

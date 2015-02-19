@@ -81,7 +81,10 @@ UtlBoolean SipClientWriteBuffer::handleMessage(OsMsg& eventMessage)
            &&  (msgSubType == SipClientSendMsg::SIP_CLIENT_SEND
              || msgSubType == SipClientSendMsg::SIP_CLIENT_SEND_KEEP_ALIVE))
    {
-     bool sendCanFailover = false;
+      bool sendCanFailover = false;
+      std::string failoverHost;
+      int failoverPort = 5060;
+          
       // Queued SIP message to send - normal path.
       if (msgSubType == SipClientSendMsg::SIP_CLIENT_SEND)
       {
@@ -93,12 +96,9 @@ UtlBoolean SipClientWriteBuffer::handleMessage(OsMsg& eventMessage)
           if (sendMsg)
           {
              SipMessage* pMsg = sendMsg->detachMessage();
-             if (pMsg)
-             {
-               std::string canFailover;
-               pMsg->getProperty("send-can-failover", canFailover);
-               sendCanFailover = (canFailover == "yes");
-             }
+             sendCanFailover = sendMsg->canFailover();
+             failoverHost = sendMsg->getAddress();
+             failoverPort = sendMsg->getPort();
              
              if (sendCanFailover && pMsg)
              {
@@ -130,29 +130,27 @@ UtlBoolean SipClientWriteBuffer::handleMessage(OsMsg& eventMessage)
       // Write what we can.
       if (!writeMore())
       {
-        if (pCloneMsg && sendCanFailover)
+        if (msgSubType == SipClientSendMsg::SIP_CLIENT_SEND && pCloneMsg && sendCanFailover)
         {
           //
           // Queue the SIP message once more
           //
-          std::string failoverHost;
-          std::string failoverPort;
-          pCloneMsg->getProperty("failover-host", failoverHost);
-          pCloneMsg->getProperty("failover-port", failoverPort);
-
-          if (!failoverHost.empty() && !failoverPort.empty())
-          {
-            int port = 5060;
-            try { port = boost::lexical_cast<int>(failoverPort); }catch(...){};            
-            OS_LOG_INFO(FAC_SIP, "SipClientWriteBuffer::handleMessage[" << mName.data() << "] - writeMore() failed.  Attempting to fail over for target: " << failoverHost << ":" << port);
-
-            mpSipServer->send(pCloneMsg, failoverHost.c_str(), port); 
+          if (!failoverHost.empty() && failoverPort > 0)
+          {       
+            OS_LOG_INFO(FAC_SIP, "SipClientWriteBuffer::handleMessage[" 
+              << mName.data() 
+              << "] - writeMore() failed.  Attempting to fail over for target: " 
+              << failoverHost << ":" << failoverPort);
+            mpSipServer->send(pCloneMsg, failoverHost.c_str(), failoverPort); 
           }
         }
       }
       else
       {
-        OS_LOG_INFO(FAC_SIP, "SipClientWriteBuffer::handleMessage[" << mName.data() << "] - writeMore() failed.  No further flow is available for target" );
+        OS_LOG_INFO(FAC_SIP, "SipClientWriteBuffer::handleMessage[" 
+          << mName.data() 
+          << "] - writeMore() failed.  No further flow is available for target: " 
+          << failoverHost << ":" << failoverPort);
       }
       // sendMsg will be deleted by ::run(), as usual.
       // Its destructor will free any storage owned by it.
@@ -278,7 +276,6 @@ bool SipClientWriteBuffer::writeMore()
 {
    // 'exit_loop' will be set to TRUE if an attempt to write does
    // not write any bytes, and we will then return.
-   UtlBoolean exit_loop = FALSE;
    static const unsigned int WRITE_RETRY_MAX = 5;
    unsigned int write_retry = 0;
    bool writeStatus = true;
@@ -296,7 +293,7 @@ bool SipClientWriteBuffer::writeMore()
                    mName.data(), mClientSocket->getSocketDescriptor());
    }
 
-   while (mWriteQueued && !exit_loop)
+   while (mWriteQueued && writeStatus)
    {
       if (mWritePointer >= mWriteString.length())
       {
@@ -391,8 +388,7 @@ bool SipClientWriteBuffer::writeMore()
               emptyBuffer(TRUE);
               mClientSocket->close();
               clientStopSelf();
-              exit_loop = TRUE;
-              writeStatus = false;
+              writeStatus = false; // exit the loop and return false
             }
          }
          else
@@ -411,10 +407,9 @@ bool SipClientWriteBuffer::writeMore()
             // Because TCP is a connection protocol, we know that we cannot
             // send successfully any more and so should shut down this client.
             clientStopSelf();
-            // Exit the loop so handleMessage() can process the stop request.
-            exit_loop = TRUE;
             
-            writeStatus = false;
+            // exit the loop and return false
+            writeStatus = false; 
          }
       }
    }

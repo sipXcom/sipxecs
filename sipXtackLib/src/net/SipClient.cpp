@@ -84,22 +84,24 @@ SipTransportRateLimitStrategy& SipClient::rateLimit()
 SipClientSendMsg::SipClientSendMsg(const unsigned char msgType,
                                    const unsigned char msgSubType,
                                    const SipMessage& message,
-                                   const char* address, int port) :
+                                   const char* address, int port, bool canFailover) :
    OsMsg(msgType, msgSubType),
    mpMessage(new SipMessage(message)),
    mAddress(strdup(address)),
-   mPort(port)
+   mPort(port),
+   _canFailover(canFailover)
 {
 }
 
 //Constructor for Keep Alive with no actual message
 SipClientSendMsg::SipClientSendMsg(const unsigned char msgType,
                                    const unsigned char msgSubType,
-                                   const char* address, int port) :
+                                   const char* address, int port, bool canFailover) :
    OsMsg(msgType, msgSubType),
    mpMessage(0),
    mAddress(strdup(address)),
-   mPort(port)
+   mPort(port),
+   _canFailover(canFailover)
 {
 }
 
@@ -110,7 +112,8 @@ SipClientSendMsg::SipClientSendMsg(const SipClientSendMsg& rOsMsg) :
    OsMsg(rOsMsg),
    mpMessage(new SipMessage(*rOsMsg.mpMessage)),
    mAddress(strdup(rOsMsg.mAddress)),
-   mPort(rOsMsg.mPort)
+   mPort(rOsMsg.mPort),
+   _canFailover(rOsMsg._canFailover)
 {
 }
 
@@ -297,7 +300,8 @@ UtlBoolean SipClient::handleMessage(OsMsg& eventMessage)
 // Queue a message to be sent to the specified address and port.
 UtlBoolean SipClient::sendTo(SipMessage& message,
                              const char* address,
-                             int port)
+                             int port,
+                             bool canFailover)
 {
    UtlBoolean sendOk;
 
@@ -329,7 +333,7 @@ UtlBoolean SipClient::sendTo(SipMessage& message,
       SipClientSendMsg sendMsg(OsMsg::OS_EVENT,
                                SipClientSendMsg::SIP_CLIENT_SEND,
                                message, address,
-                               portToSendTo );
+                               portToSendTo, canFailover );
 
       // Post the message to the task's queue.
       
