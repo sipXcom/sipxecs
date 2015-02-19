@@ -6,6 +6,7 @@
       <list>
         <value>classpath:/org/sipfoundry/sipxconfig/system.beans.xml</value>
         <value>classpath*:/org/sipfoundry/sipxconfig/*/**/*.beans.xml</value>
+        <value>classpath*:/sipxplugin2.beans.xml</value>
         <value>classpath*:/sipxplugin.beans.xml</value>
       </list>
     </constructor-arg>
