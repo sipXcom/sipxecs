@@ -21,6 +21,7 @@ sipx_core = \
   sipXbridge \
   sipXcdr \
   sipXconfig \
+  sipXcom \
   sipXopenfire \
   sipXcounterpath \
   sipXprompts \
