@@ -1,3 +1,6 @@
+
+#include "os/OsSocket.h"
+
 //
 // Copyright (C) 2007 Pingtel Corp., certain elements licensed under a Contributor Agreement.
 // Contributors retain copyright to elements licensed under a Contributor Agreement.
@@ -123,44 +126,15 @@ UtlBoolean SipProtocolServerBase::send(SipMessage* message,
                         getName().data(), client->getName().data(), client, clientNames.data());
        }
        
-       if (strcmp(mProtocolString, SIP_TRANSPORT_UDP) == 0 )
+       if (canFailover && (client->getSocketType() == OsSocket::UDP || client->getSocketType() == OsSocket::UNKNOWN))
        {
          //
          // UDP doesn't need fail over
          //
-         message->setProperty("send-can-failover", "no");
-       }
-       else
-       {
-         if (canFailover)
-         {
-           message->setProperty("send-can-failover", "yes");
-         }
-         else
-         {
-           message->setProperty("send-can-failover", "no");
-         }
-
-          if (canFailover)
-          {
-            //
-            // Preserve the host and port as properties
-            //
-            message->setProperty("failover-host", hostAddress);
-            std::string strPort;
-            
-            try
-            {
-              strPort = boost::lexical_cast<std::string>(hostPort);
-              message->setProperty("failover-port", strPort);
-            }
-            catch(...)
-            {
-            }
-          }
+         canFailover = false;
        }
        
-       sendOk = client->sendTo(*message, hostAddress, hostPort);
+       sendOk = client->sendTo(*message, hostAddress, hostPort, canFailover);
     }
 
     return (sendOk);
@@ -226,7 +200,7 @@ SipClient* SipProtocolServerBase::getClientForDestination(const char* hostAddres
    SipClient* client;
    UtlBoolean clientStarted = FALSE;
    
-   client = findExistingClientForDestination(hostAddress, hostPort, localIp, pMsg);
+   client = findExistingClientForDestination(hostAddress, hostPort, localIp);
 
    if (!client)
    {
@@ -329,7 +303,7 @@ SipClient* SipProtocolServerBase::getClientForDestination(const char* hostAddres
      //
      // We found an existing client.  Set failover flag
      //
-     canFailover = false;
+     canFailover = true;
    }
 
  
@@ -338,8 +312,7 @@ SipClient* SipProtocolServerBase::getClientForDestination(const char* hostAddres
 
 SipClient* SipProtocolServerBase::findExistingClientForDestination(const char* hostAddress,
                                                int hostPort,
-                                               const char* localIp,
-                                               SipMessage* pMsg)
+                                               const char* localIp)
 {
 
   UtlString hostAddressString(hostAddress ? hostAddress : "");
@@ -352,7 +325,7 @@ SipClient* SipProtocolServerBase::findExistingClientForDestination(const char* h
     {
       OS_LOG_INFO( FAC_SIP, "SipProtocolServerBase::findExistingClientForDestination found good flow " 
         << pClient->getName().data() 
-        << " for target " << hostAddressString.data());
+        << " for target " << hostAddressString.data() << ":" << hostPort);
       return pClient;
     }
   }
