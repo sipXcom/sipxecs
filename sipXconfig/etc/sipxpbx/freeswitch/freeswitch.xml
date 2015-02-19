@@ -74,6 +74,12 @@
       </type>
       <value>0</value>
     </setting>
+    <setting name="FREESWITCH_SIMPLIFY">
+      <type>
+        <boolean/>
+      </type>
+      <value>1</value>
+    </setting>
     <setting name="FREESWITCH_SIP_DEBUG">
       <type>
         <boolean>

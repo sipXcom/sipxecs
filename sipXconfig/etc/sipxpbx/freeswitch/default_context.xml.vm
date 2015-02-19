@@ -71,7 +71,8 @@
   <extension name="transferPark">
     <condition field="destination_number" expression="^transferPark(\d+)$">
       <action application="set" data="ringback=${us-ring}"/>
-      <action application="bridge" data="sofia/${domainName}/$1@${domainName}"/>
+      <action application="bridge" data="#if( $simplify ){api_on_answer='uuid_simplify ${uuid}'}#end
+sofia/${domainName}/$1@${domainName}"/>
     </condition>
   </extension>
 #end
@@ -90,7 +91,8 @@
   <extension name="going-in">
     <condition>
       <action application="set" data="ringback=${us-ring}"/>
-      <action application="bridge" data="{api_on_answer='uuid_simplify ${uuid}'}sofia/${domainName}/${destination_number}@${domainName}"/>
+      <action application="bridge" data="#if( $simplify ){api_on_answer='uuid_simplify ${uuid}'}#end
+sofia/${domainName}/${destination_number}@${domainName}"/>
     </condition>
   </extension>
 #end
