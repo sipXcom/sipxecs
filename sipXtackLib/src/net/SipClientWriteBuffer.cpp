@@ -144,14 +144,15 @@ UtlBoolean SipClientWriteBuffer::handleMessage(OsMsg& eventMessage)
             mpSipServer->send(pCloneMsg, failoverHost.c_str(), failoverPort); 
           }
         }
+        else
+        {
+          OS_LOG_INFO(FAC_SIP, "SipClientWriteBuffer::handleMessage[" 
+            << mName.data() 
+            << "] - writeMore() failed.  No further flow is available for target: " 
+            << failoverHost << ":" << failoverPort);
+        }
       }
-      else
-      {
-        OS_LOG_INFO(FAC_SIP, "SipClientWriteBuffer::handleMessage[" 
-          << mName.data() 
-          << "] - writeMore() failed.  No further flow is available for target: " 
-          << failoverHost << ":" << failoverPort);
-      }
+      
       // sendMsg will be deleted by ::run(), as usual.
       // Its destructor will free any storage owned by it.
    }
@@ -274,7 +275,7 @@ void SipClientWriteBuffer::insertMessage(UtlString* keepAlive)
 // Executed by the thread.
 bool SipClientWriteBuffer::writeMore()
 {
-   // 'exit_loop' will be set to TRUE if an attempt to write does
+   // 'writeStatus' will be set to FALSE if an attempt to write does
    // not write any bytes, and we will then return.
    static const unsigned int WRITE_RETRY_MAX = 5;
    unsigned int write_retry = 0;
