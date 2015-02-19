@@ -120,7 +120,7 @@
   <extension name="transferPark">
     <condition field="destination_number" expression="^transferPark(\d+)$">
       <action application="set" data="ringback=${us-ring}"/>
-      <action application="bridge" data="{api_on_answer='uuid_simplify ${uuid}'}sofia/ezuce.ro/$1@ezuce.ro"/>
+      <action application="bridge" data="sofia/ezuce.ro/$1@ezuce.ro"/>
     </condition>
   </extension>
   <extension name="sales">
