@@ -63,7 +63,8 @@ public:
    // Returns true if message was successfully queued.
    UtlBoolean sendTo(SipMessage& message,
                      const char* address,
-                     int port);
+                     int port,
+                     bool canFailover = false);
 
    /// Send a message.  Executed by the thread.
    // Will only be called when mWriteQueued is false.
@@ -114,6 +115,8 @@ public:
     {
        return SipClient::TYPE;
     };
+    
+    OsSocket::IpProtocolSocketType getSocketType() const;
 
     static SipTransportRateLimitStrategy& rateLimit();
 
@@ -235,12 +238,12 @@ public:
    };
 
    SipClientSendMsg(const unsigned char msgType, const unsigned char msgSubType,
-                    const SipMessage& message, const char* address, int port);
+                    const SipMessage& message, const char* address, int port, bool canFailover = false);
      //:Constructor
      // Copies 'message'.
 
    SipClientSendMsg(const unsigned char msgType, const unsigned char msgSubType,
-                    const char* address, int port);
+                    const char* address, int port, bool canFailover = false);
      //:Constructor for Keep Alive with no actual message
 
    SipClientSendMsg(const SipClientSendMsg& rOsMsg);
@@ -263,15 +266,35 @@ public:
    const SipMessage* getMessage() const;
    const char* getAddress() const;
    int getPort() const;
+   
+   bool& canFailover();
+   
+   const bool canFailover() const;
 
 protected:
    static const UtlContainableType TYPE;    /** < Class type used for runtime checking */
    SipMessage* mpMessage;
    char* mAddress;
    int mPort;
+   bool _canFailover;
 };
 
 /* ============================ INLINE METHODS ============================ */
    
+
+inline bool& SipClientSendMsg::canFailover()
+{
+  return _canFailover;
+}
+   
+inline const bool SipClientSendMsg::canFailover() const
+{
+  return _canFailover;
+}
+
+inline OsSocket::IpProtocolSocketType SipClient::getSocketType() const
+{
+  return mSocketType;
+}
 
 #endif  // _SipClient_h_
