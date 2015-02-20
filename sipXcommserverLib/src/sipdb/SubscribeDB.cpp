@@ -236,7 +236,7 @@ bool SubscribeDB::subscriptionExists (
 
   if (_local)
   {
-	preferPrimary = false;
+    preferPrimary = false;
     if (_local->subscriptionExists(component, toUri, fromUri, callId, timeNow, preferPrimary))
     {
       return true;
@@ -247,25 +247,22 @@ bool SubscribeDB::subscriptionExists (
   MongoDB::ReadTimer readTimer(const_cast<SubscribeDB&>(*this));
   
   mongo::BSONObjBuilder builder;
-	if (preferPrimary)
+  if (preferPrimary)
     BaseDB::primaryPreferred(builder, query.obj());
   else
     BaseDB::nearest(builder, query.obj());
 
-    MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getReadQueryTimeout()));
-auto_ptr<mongo::DBClientCursor> pCursor = conn->get()->query(_ns, builder.obj(), 0, 0, 0, mongo::QueryOption_SlaveOk);
-    if (!pCursor.get())
-    {
-      throw mongo::DBException("mongo query returned null cursor", 0);
-    }
-    else if (pCursor->more())
-    {
-      conn->done();
-      return pCursor->itcount() > 0;
-    }
+  MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getReadQueryTimeout()));
 
+  mongo::BSONObj subscriptionObj = conn->get()->findOne(_ns, builder.obj(), 0, mongo::QueryOption_SlaveOk);
+  if (!subscriptionObj.isEmpty())
+  {
     conn->done();
-    return false;
+    return true;
+  }
+
+  conn->done();
+  return false;
 }
 
 //void SubscribeDB::removeRows(const UtlString& key)
