@@ -9,52 +9,54 @@
  */
 package org.sipfoundry.sipxconfig.common;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 
+import org.hibernate.HibernateException;
+import org.hibernate.dialect.Dialect;
+import org.hibernate.engine.SessionImplementor;
+import org.hibernate.type.AbstractSingleColumnStandardBasicType;
+import org.hibernate.type.LiteralType;
 import org.hibernate.type.TimestampType;
+import org.hibernate.type.VersionType;
+import org.hibernate.type.descriptor.java.JdbcTimestampTypeDescriptor;
 
-/**
- * Standard Hibernate assume that type is kept in local time zone and will normalize it to UTC.
- * Use this type if your type is already normalized to UTC.
- */
-public class UtcTimestampType extends TimestampType {
-    private Calendar m_local;
+public class UtcTimestampType extends AbstractSingleColumnStandardBasicType<Date> implements VersionType<Date>,
+        LiteralType<Date> {
 
-    private Calendar getLocalCalendar() {
-        if (m_local == null) {
-            m_local = Calendar.getInstance();
-        }
-        return m_local;
+    public static final UtcTimestampType INSTANCE = new UtcTimestampType();
+
+    public UtcTimestampType() {
+        super(UtcTimestampTypeDescriptor.INSTANCE, JdbcTimestampTypeDescriptor.INSTANCE);
     }
 
-    /**
-     * value has been already converted to what Java thought was UTC value, we need to revert the
-     * results of that conversion
-     */
-    public void set(PreparedStatement st, Date value, int index) throws SQLException {
-        Date date = value;
-        Calendar local = getLocalCalendar();
-        local.setTime(date);
-        int offset = local.get(Calendar.ZONE_OFFSET);
-        local.add(Calendar.MILLISECOND, -offset);
-        Date localTime = local.getTime();
-        super.set(st, localTime, index);
+    public String getName() {
+        return TimestampType.INSTANCE.getName();
     }
 
-    /**
-     * result of this function will be converted to local value, we need to add now offset that
-     * will be removed by that conversion
-     */
-    public Object get(ResultSet rs, String name) throws SQLException {
-        Date value = (Date) super.get(rs, name);
-        Calendar local = getLocalCalendar();
-        local.setTime(value);
-        int offset = local.get(Calendar.ZONE_OFFSET);
-        local.add(Calendar.MILLISECOND, offset);
-        return local.getTime();
+    @Override
+    public String[] getRegistrationKeys() {
+        return TimestampType.INSTANCE.getRegistrationKeys();
+    }
+
+    public Date next(Date current, SessionImplementor session) {
+        return TimestampType.INSTANCE.next(current, session);
+    }
+
+    public Date seed(SessionImplementor session) {
+        return TimestampType.INSTANCE.seed(session);
+    }
+
+    public Comparator<Date> getComparator() {
+        return TimestampType.INSTANCE.getComparator();
+    }
+
+    public String objectToSQLString(Date value, Dialect dialect) throws Exception {
+        return TimestampType.INSTANCE.objectToSQLString(value, dialect);
+    }
+
+    public Date fromStringValue(String xml) throws HibernateException {
+        return TimestampType.INSTANCE.fromStringValue(xml);
     }
 }
+
