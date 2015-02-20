@@ -295,6 +295,7 @@ SipClient* SipProtocolServerBase::getClientForDestination(const char* hostAddres
       // clients for this server.
       if (client)
       {
+        mClientList.append(client);
         canFailover = false;
       }
    }
