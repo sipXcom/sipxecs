@@ -14,12 +14,12 @@
 		class="org.springframework.beans.factory.config.PropertyOverrideConfigurer">
 		<property name="properties">
 			<props>
-				<prop key="skin.messageSourceBeanId">sipxcomI18n</prop>
+				<prop key="skin.messageSourceBeanId">resourceI18n</prop>
 			</props>
 		</property>
 	</bean>
 
-	<bean id="sipxcomI18n"
+	<bean id="resourceI18n"
 		class="org.springframework.context.support.ResourceBundleMessageSource">
 		<property name="basename" value="sipXcom" />
 	</bean>
