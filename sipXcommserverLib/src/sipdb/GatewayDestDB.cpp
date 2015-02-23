@@ -60,7 +60,7 @@ void GatewayDestDB::updateRecord(const GatewayDestRecord& record, bool upsert)
   MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
   mongo::DBClientBase* client = conn->get();
 
-  client->update(_ns, query, update, upsert, false);
+  client->update(_ns, writeQueryMaxTimeMS(query), update, upsert, false);
 	client->ensureIndex("node.gatewaydest", BSON( GatewayDestRecord::callIdField() << 1 ));
 	client->ensureIndex("node.gatewaydest", BSON( GatewayDestRecord::expirationTimeField() << 1 ));
 
@@ -84,7 +84,7 @@ void GatewayDestDB::removeRecord(const GatewayDestRecord& record)
   MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
   mongo::DBClientBase* client = conn->get();
 
-  client->remove(_ns, query);
+  client->remove(_ns, writeQueryMaxTimeMS(query));
   client->ensureIndex("node.gatewaydest",  BSON( GatewayDestRecord::callIdField() << 1 ));
   client->ensureIndex("node.gatewaydest", BSON( GatewayDestRecord::expirationTimeField() << 1 ));
 
@@ -97,7 +97,7 @@ void GatewayDestDB::removeAllRecords()
 
   mongo::BSONObj all;
   MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
-  conn->get()->remove(_ns, all);
+  conn->get()->remove(_ns, writeQueryMaxTimeMS(all));
   conn->done();
 }
 
@@ -112,7 +112,7 @@ void GatewayDestDB::removeAllExpired()
 	MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
 	mongo::DBClientBase* client = conn->get();
 
-  client->remove(_ns, query);
+  client->remove(_ns, writeQueryMaxTimeMS(query));
   client->ensureIndex("node.gatewaydest",  BSON( GatewayDestRecord::callIdField() << 1 ));
 	client->ensureIndex("node.gatewaydest", BSON( GatewayDestRecord::expirationTimeField() << 1 ));
 
@@ -140,7 +140,7 @@ bool GatewayDestDB::getUnexpiredRecord(GatewayDestRecord& record) const
   mongo::BSONObjBuilder builder;
   BaseDB::nearest(builder, query);
 
-  mongo::BSONObj recordObj = conn->get()->findOne(_ns, builder.obj(), 0, mongo::QueryOption_SlaveOk);
+  mongo::BSONObj recordObj = conn->get()->findOne(_ns, readQueryMaxTimeMS(builder.obj()), 0, mongo::QueryOption_SlaveOk);
   if (!recordObj.isEmpty())
   {
     OS_LOG_DEBUG(FAC_ODBC, "GatewayDestDB::getUnexpiredRecord - found record "

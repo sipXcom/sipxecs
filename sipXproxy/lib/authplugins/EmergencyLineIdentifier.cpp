@@ -154,7 +154,7 @@ bool DB::findE911LineIdentifier(
   mongo::BSONObjBuilder builder;
   BaseDB::nearest(builder, query);
 
-  mongo::BSONObj entityObj = conn->get()->findOne(ns(), builder.obj(), 0, mongo::QueryOption_SlaveOk);
+  mongo::BSONObj entityObj = conn->get()->findOne(ns(), readQueryMaxTimeMS(builder.obj()), 0, mongo::QueryOption_SlaveOk);
   if (!entityObj.isEmpty())
   {
     if (entityObj.hasField("elin"))
@@ -187,7 +187,7 @@ bool DB::findE911InstrumentIdentifier(
   mongo::BSONObjBuilder builder;
   BaseDB::nearest(builder, query);
 
-  mongo::BSONObj instrumentObj = conn->get()->findOne(ns(), builder.obj(), 0, mongo::QueryOption_SlaveOk);
+  mongo::BSONObj instrumentObj = conn->get()->findOne(ns(), readQueryMaxTimeMS(builder.obj()), 0, mongo::QueryOption_SlaveOk);
   if (!instrumentObj.isEmpty())
   {
     if (instrumentObj.hasField("elin"))

@@ -112,7 +112,7 @@ bool DB::findE911LineIdentifier(
   mongo::BSONObj query = BSON(EntityRecord::identity_fld() << userId);
   MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getReadQueryTimeout()));
 
-  mongo::BSONObj entityObj = conn->get()->findOne(_info.getNS(), query);
+  mongo::BSONObj entityObj = conn->get()->findOne(_info.getNS(), readQueryMaxTimeMS(query));
   if (!entityObj.isEmpty())
   {
     if (entityObj.hasField("elin"))
