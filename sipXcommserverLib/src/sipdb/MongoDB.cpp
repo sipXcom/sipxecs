@@ -329,7 +329,25 @@ namespace MongoDB
     return _lastReadSpeed;
   }
 
+  static mongo::Query BaseDB::queryMaxTimeMS(const mongo::BSONObj& obj, unsigned int maxTimeMs)
+  {
+    mongo::Query query(obj);
+
+    return query.maxTimeMs(maxTimeMs);
+  }
+
+  mongo::Query BaseDB::readQueryMaxTimeMS(const mongo::BSONObj& obj) const
+  {
+    return queryMaxTimeMS(obj, _info.getReadQueryTimeoutMs());
+  }
+
+  mongo::Query BaseDB::writeQueryMaxTimeMS(const mongo::BSONObj& obj) const
+  {
+    return queryMaxTimeMS(obj, _info.getWriteQueryTimeoutMs());
+  }
+
   UpdateTimer::UpdateTimer(BaseDB& db) :
+    _end(0),
     _db(db)
   {
     struct timeval sTimeVal;
@@ -346,6 +364,7 @@ namespace MongoDB
   }
 
   ReadTimer::ReadTimer(BaseDB& db) :
+    _end(0),
     _db(db)
   {
     struct timeval sTimeVal;

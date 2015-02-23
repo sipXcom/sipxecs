@@ -244,6 +244,14 @@ public:
 
   const double getWriteQueryTimeout() const { double writeQueryTimeout = _info.getWriteQueryTimeoutMs(); return writeQueryTimeout/1000; }
 
+  //
+  // Construct final read and write queries by setting the maximum
+  // time (in milliseconds) the queries will be available in the server part
+  //
+  static mongo::Query queryMaxTimeMS(const mongo::BSONObj& obj, unsigned int maxTimeMS);
+  mongo::Query readQueryMaxTimeMS(const mongo::BSONObj& obj) const;
+  mongo::Query writeQueryMaxTimeMS(const mongo::BSONObj& obj) const;
+
 protected:
   std::string _ns;
 	mutable ConnectionInfo _info;
