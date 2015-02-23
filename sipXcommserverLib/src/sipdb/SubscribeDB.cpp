@@ -60,7 +60,7 @@ void SubscribeDB::getAll(Subscriptions& subscriptions, bool preferPrimary)
     BaseDB::nearest(builder, query.obj());
 
 
-  auto_ptr<mongo::DBClientCursor> pCursor = conn->get()->query(_ns, builder.obj(), 0, 0, 0, mongo::QueryOption_SlaveOk);
+  auto_ptr<mongo::DBClientCursor> pCursor = conn->get()->query(_ns, readQueryMaxTimeMS(builder.obj()), 0, 0, 0, mongo::QueryOption_SlaveOk);
   if (!pCursor.get())
   {
     throw mongo::DBException("mongo query returned null cursor", 0);
@@ -157,7 +157,7 @@ void SubscribeDB::upsert (
 
     MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
     mongo::DBClientBase* client = conn->get();
-    client->update(_ns, query, update, true, false);
+    client->update(_ns, writeQueryMaxTimeMS(query), update, true, false);
     ensureIndex(client);
     conn->done();
 
@@ -193,7 +193,7 @@ void SubscribeDB::remove (
         Subscription::subscribeCseq_fld() << BSON_LESS_THAN(subscribeCseq));
 
     MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
-    conn->get()->remove(_ns, query);
+    conn->get()->remove(_ns, writeQueryMaxTimeMS(query));
     conn->done();
 }
 
@@ -216,7 +216,7 @@ void SubscribeDB::removeError (
         Subscription::callId_fld() << callid.str());
 
     MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
-    conn->get()->remove(_ns, query);
+    conn->get()->remove(_ns, writeQueryMaxTimeMS(query));
     conn->done();
 }
 
@@ -254,7 +254,7 @@ bool SubscribeDB::subscriptionExists (
 
   MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getReadQueryTimeout()));
 
-  mongo::BSONObj subscriptionObj = conn->get()->findOne(_ns, builder.obj(), 0, mongo::QueryOption_SlaveOk);
+  mongo::BSONObj subscriptionObj = conn->get()->findOne(_ns, readQueryMaxTimeMS(builder.obj()), 0, mongo::QueryOption_SlaveOk);
   if (!subscriptionObj.isEmpty())
   {
     conn->done();
@@ -285,7 +285,7 @@ void SubscribeDB::removeExpired( const UtlString& component, const unsigned long
         Subscription::component_fld() << component.str() <<
         Subscription::expires_fld() << BSON_LESS_THAN((long long)timeNow));
     MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
-    conn->get()->remove(_ns, query);
+    conn->get()->remove(_ns, writeQueryMaxTimeMS(query));
     conn->done();
 }
 
@@ -318,7 +318,7 @@ void SubscribeDB::getUnexpiredSubscriptions (
       BaseDB::nearest(builder, query.obj());
 
     MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getReadQueryTimeout()));
-    auto_ptr<mongo::DBClientCursor> pCursor = conn->get()->query(_ns, builder.obj(), 0, 0, 0, mongo::QueryOption_SlaveOk);
+    auto_ptr<mongo::DBClientCursor> pCursor = conn->get()->query(_ns, readQueryMaxTimeMS(builder.obj()), 0, 0, 0, mongo::QueryOption_SlaveOk);
     if (!pCursor.get())
     {
      throw mongo::DBException("mongo query returned null cursor", 0);
@@ -357,7 +357,7 @@ void SubscribeDB::getUnexpiredContactsFieldsContaining(
       BaseDB::nearest(builder, query.obj());
 
     MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getReadQueryTimeout()));
-    auto_ptr<mongo::DBClientCursor> pCursor = conn->get()->query(_ns, builder.obj(), 0, 0, 0, mongo::QueryOption_SlaveOk);
+    auto_ptr<mongo::DBClientCursor> pCursor = conn->get()->query(_ns, readQueryMaxTimeMS(builder.obj()), 0, 0, 0, mongo::QueryOption_SlaveOk);
     if (!pCursor.get())
     {
      throw mongo::DBException("mongo query returned null cursor", 0);
@@ -414,7 +414,7 @@ void SubscribeDB::updateNotifyUnexpiredSubscription(
 
     MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
     mongo::DBClientBase* client = conn->get();
-    client->update(_ns, query, update);
+    client->update(_ns, writeQueryMaxTimeMS(query), update);
     ensureIndex(client);
     conn->done();
 }
@@ -485,7 +485,7 @@ void SubscribeDB::updateToTag(
     mongo::BSONObj query = BSON(Subscription::callId_fld() << callid.str());
     MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
     mongo::DBClientBase* client = conn->get();
-    auto_ptr<mongo::DBClientCursor> pCursor = client->query(_ns, query);
+    auto_ptr<mongo::DBClientCursor> pCursor = client->query(_ns, writeQueryMaxTimeMS(query));
     if (!pCursor.get())
     {
      throw mongo::DBException("mongo query returned null cursor", 0);
@@ -520,7 +520,7 @@ void SubscribeDB::updateToTag(
                             mongo::BSONObj query = BSON("_id" << oid);
                             mongo::BSONObj update = BSON("$set" << BSON(Subscription::toUri_fld() << dummy.data()));
 
-                            client->update(_ns, query, update);
+                            client->update(_ns, writeQueryMaxTimeMS(query), update);
                             ensureIndex(client);
                         }
                         else
@@ -563,7 +563,7 @@ bool SubscribeDB::findFromAndTo(
       BaseDB::nearest(builder, query.obj());
 
     MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getReadQueryTimeout()));
-    auto_ptr<mongo::DBClientCursor> pCursor = conn->get()->query(_ns, builder.obj(), 0, 0, 0, mongo::QueryOption_SlaveOk);
+    auto_ptr<mongo::DBClientCursor> pCursor = conn->get()->query(_ns, readQueryMaxTimeMS(builder.obj()), 0, 0, 0, mongo::QueryOption_SlaveOk);
     if (!pCursor.get())
     {
      throw mongo::DBException("mongo query returned null cursor", 0);
@@ -621,7 +621,7 @@ int SubscribeDB::getMaxVersion(const UtlString& uri, bool preferPrimary) const
       BaseDB::nearest(builder, query.obj());
 
     MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getReadQueryTimeout()));
-    auto_ptr<mongo::DBClientCursor> pCursor = conn->get()->query(_ns, builder.obj(), 0, 0, 0, mongo::QueryOption_SlaveOk);
+    auto_ptr<mongo::DBClientCursor> pCursor = conn->get()->query(_ns, readQueryMaxTimeMS(builder.obj()), 0, 0, 0, mongo::QueryOption_SlaveOk);
     if (!pCursor.get())
     {
      throw mongo::DBException("mongo query returned null cursor", 0);
@@ -654,7 +654,7 @@ void SubscribeDB::removeAllExpired()
       Subscription::expires_fld() << BSON_LESS_THAN_EQUAL((long long)timeNow));
 
     MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
-    conn->get()->remove(_ns, query);
+    conn->get()->remove(_ns, writeQueryMaxTimeMS(query));
     conn->done();
 }
 

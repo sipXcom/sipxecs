@@ -84,7 +84,7 @@ bool EntityDB::findByIdentity(const string& ident, EntityRecord& entity) const
   mongo::BSONObjBuilder builder;
   BaseDB::nearest(builder, query);
 
-  mongo::BSONObj entityObj = conn->get()->findOne(_ns, builder.obj(), 0, mongo::QueryOption_SlaveOk);
+  mongo::BSONObj entityObj = conn->get()->findOne(_ns, readQueryMaxTimeMS(builder.obj()), 0, mongo::QueryOption_SlaveOk);
   if (!entityObj.isEmpty())
   {
     OS_LOG_DEBUG(FAC_ODBC, identity << " is present in namespace " << _ns);
@@ -123,7 +123,7 @@ bool EntityDB::findByUserId(const string& uid, EntityRecord& entity) const
   BaseDB::nearest(builder, query);
   MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getReadQueryTimeout()));
 
-  mongo::BSONObj entityObj = conn->get()->findOne(_ns, builder.obj(), 0, mongo::QueryOption_SlaveOk);
+  mongo::BSONObj entityObj = conn->get()->findOne(_ns, readQueryMaxTimeMS(builder.obj()), 0, mongo::QueryOption_SlaveOk);
   if (!entityObj.isEmpty())
   {
     entity = entityObj;
@@ -183,7 +183,7 @@ bool EntityDB::findByAliasUserId(const string& alias, EntityRecord& entity) cons
   BaseDB::nearest(builder, query);
   MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getReadQueryTimeout()));
 
-  mongo::BSONObj entityObj = conn->get()->findOne(_ns, builder.obj(), 0, mongo::QueryOption_SlaveOk);
+  mongo::BSONObj entityObj = conn->get()->findOne(_ns, readQueryMaxTimeMS(builder.obj()), 0, mongo::QueryOption_SlaveOk);
   if (!entityObj.isEmpty())
   {
     entity = entityObj;
