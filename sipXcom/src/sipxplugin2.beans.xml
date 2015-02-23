@@ -10,7 +10,7 @@
   http://www.springframework.org/schema/security
   http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
-	<bean id="resourceOverrider"
+	<bean id="sipxcomOverrider"
 		class="org.springframework.beans.factory.config.PropertyOverrideConfigurer">
 		<property name="properties">
 			<props>
@@ -21,7 +21,7 @@
 
 	<bean id="sipxcomI18n"
 		class="org.springframework.context.support.ResourceBundleMessageSource">
-		<property name="basename" value="sipXcom" />
+		<property name="basename" value="sipxcom" />
 	</bean>
 
 	<bean id="skinProperties" class="org.sipfoundry.sipxconfig.site.skin.SkinProperties">
