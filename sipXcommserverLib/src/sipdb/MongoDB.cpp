@@ -329,7 +329,7 @@ namespace MongoDB
     return _lastReadSpeed;
   }
 
-  static mongo::Query BaseDB::queryMaxTimeMS(const mongo::BSONObj& obj, unsigned int maxTimeMs)
+  mongo::Query BaseDB::queryMaxTimeMS(const mongo::BSONObj& obj, unsigned int maxTimeMs)
   {
     mongo::Query query(obj);
 
