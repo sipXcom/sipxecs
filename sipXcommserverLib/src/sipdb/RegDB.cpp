@@ -114,7 +114,7 @@ void RegDB::updateBinding(RegBinding& binding)
     MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
     mongo::DBClientBase* client = conn->get();
 
-    client->remove(_ns, writeQueryMaxTimeMS(query));
+    client->remove(_ns, query);
     client->insert(_ns, update);
     client->ensureIndex("node.registrar", BSON( "identity" << 1 ));
     client->ensureIndex("node.registrar", BSON( "expirationTime" << 1 ));
@@ -147,7 +147,7 @@ void RegDB::expireOldBindings(const string& identity, const string& callId, unsi
     MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
     mongo::DBClientBase* client = conn->get();
 
-	client->remove(_ns, writeQueryMaxTimeMS(query));
+	client->remove(_ns, query);
 	client->ensureIndex("node.registrar",  BSON( "identity" << 1 ));
 	client->ensureIndex("node.registrar", BSON( "expirationTime" << 1 ));
 
@@ -170,7 +170,7 @@ void RegDB::expireAllBindings(const string& identity, const string& callId, unsi
     MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
     mongo::DBClientBase* client = conn->get();
 
-    client->remove(_ns, writeQueryMaxTimeMS(query));
+    client->remove(_ns, query);
 	client->ensureIndex("node.registrar",  BSON( "identity" << 1 ));
 	client->ensureIndex("node.registrar", BSON( "expirationTime" << 1 ));
 
@@ -199,7 +199,7 @@ void RegDB::removeAllExpired()
   MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
   mongo::DBClientBase* client = conn->get();
 
-  client->remove(_ns, writeQueryMaxTimeMS(query));
+  client->remove(_ns, query);
   client->ensureIndex("node.registrar",  BSON( "identity" << 1 ));
   client->ensureIndex("node.registrar", BSON( "expirationTime" << 1 ));
 
@@ -547,7 +547,7 @@ void RegDB::cleanAndPersist(int currentExpireTime)
     mongo::BSONObj query = BSON(
         "expirationTime" << BSON_LESS_THAN(currentExpireTime));
     MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
-    conn->get()->remove(_ns, writeQueryMaxTimeMS(query));
+    conn->get()->remove(_ns, query);
 	conn->done();
 }
 
@@ -562,6 +562,6 @@ void RegDB::clearAllBindings()
   
   mongo::BSONObj all;
   MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
-  conn->get()->remove(_ns, writeQueryMaxTimeMS(all));
+  conn->get()->remove(_ns, all);
   conn->done();
 }

@@ -60,7 +60,7 @@ void GatewayDestDB::updateRecord(const GatewayDestRecord& record, bool upsert)
   MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
   mongo::DBClientBase* client = conn->get();
 
-  client->update(_ns, writeQueryMaxTimeMS(query), update, upsert, false);
+  client->update(_ns, query, update, upsert, false);
 	client->ensureIndex("node.gatewaydest", BSON( GatewayDestRecord::callIdField() << 1 ));
 	client->ensureIndex("node.gatewaydest", BSON( GatewayDestRecord::expirationTimeField() << 1 ));
 
@@ -84,7 +84,7 @@ void GatewayDestDB::removeRecord(const GatewayDestRecord& record)
   MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
   mongo::DBClientBase* client = conn->get();
 
-  client->remove(_ns, writeQueryMaxTimeMS(query));
+  client->remove(_ns, query);
   client->ensureIndex("node.gatewaydest",  BSON( GatewayDestRecord::callIdField() << 1 ));
   client->ensureIndex("node.gatewaydest", BSON( GatewayDestRecord::expirationTimeField() << 1 ));
 
@@ -97,7 +97,7 @@ void GatewayDestDB::removeAllRecords()
 
   mongo::BSONObj all;
   MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
-  conn->get()->remove(_ns, writeQueryMaxTimeMS(all));
+  conn->get()->remove(_ns, all);
   conn->done();
 }
 
@@ -112,7 +112,7 @@ void GatewayDestDB::removeAllExpired()
 	MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
 	mongo::DBClientBase* client = conn->get();
 
-  client->remove(_ns, writeQueryMaxTimeMS(query));
+  client->remove(_ns, query);
   client->ensureIndex("node.gatewaydest",  BSON( GatewayDestRecord::callIdField() << 1 ));
 	client->ensureIndex("node.gatewaydest", BSON( GatewayDestRecord::expirationTimeField() << 1 ));
 
