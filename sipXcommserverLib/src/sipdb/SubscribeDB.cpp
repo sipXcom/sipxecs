@@ -157,7 +157,7 @@ void SubscribeDB::upsert (
 
     MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
     mongo::DBClientBase* client = conn->get();
-    client->update(_ns, writeQueryMaxTimeMS(query), update, true, false);
+    client->update(_ns, query, update, true, false);
     ensureIndex(client);
     conn->done();
 
@@ -193,7 +193,7 @@ void SubscribeDB::remove (
         Subscription::subscribeCseq_fld() << BSON_LESS_THAN(subscribeCseq));
 
     MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
-    conn->get()->remove(_ns, writeQueryMaxTimeMS(query));
+    conn->get()->remove(_ns, query);
     conn->done();
 }
 
@@ -216,7 +216,7 @@ void SubscribeDB::removeError (
         Subscription::callId_fld() << callid.str());
 
     MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
-    conn->get()->remove(_ns, writeQueryMaxTimeMS(query));
+    conn->get()->remove(_ns, query);
     conn->done();
 }
 
@@ -285,7 +285,7 @@ void SubscribeDB::removeExpired( const UtlString& component, const unsigned long
         Subscription::component_fld() << component.str() <<
         Subscription::expires_fld() << BSON_LESS_THAN((long long)timeNow));
     MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
-    conn->get()->remove(_ns, writeQueryMaxTimeMS(query));
+    conn->get()->remove(_ns, query);
     conn->done();
 }
 
@@ -414,7 +414,7 @@ void SubscribeDB::updateNotifyUnexpiredSubscription(
 
     MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
     mongo::DBClientBase* client = conn->get();
-    client->update(_ns, writeQueryMaxTimeMS(query), update);
+    client->update(_ns, query, update);
     ensureIndex(client);
     conn->done();
 }
@@ -520,7 +520,7 @@ void SubscribeDB::updateToTag(
                             mongo::BSONObj query = BSON("_id" << oid);
                             mongo::BSONObj update = BSON("$set" << BSON(Subscription::toUri_fld() << dummy.data()));
 
-                            client->update(_ns, writeQueryMaxTimeMS(query), update);
+                            client->update(_ns, query, update);
                             ensureIndex(client);
                         }
                         else
@@ -654,7 +654,7 @@ void SubscribeDB::removeAllExpired()
       Subscription::expires_fld() << BSON_LESS_THAN_EQUAL((long long)timeNow));
 
     MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
-    conn->get()->remove(_ns, writeQueryMaxTimeMS(query));
+    conn->get()->remove(_ns, query);
     conn->done();
 }
 
