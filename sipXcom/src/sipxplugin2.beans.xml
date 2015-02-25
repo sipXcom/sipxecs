@@ -10,27 +10,17 @@
   http://www.springframework.org/schema/security
   http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
-	<bean id="sipxcomOverrider"
-		class="org.springframework.beans.factory.config.PropertyOverrideConfigurer">
-		<property name="properties">
-			<props>
-				<prop key="skin.messageSourceBeanId">sipxcomI18n</prop>
-			</props>
-		</property>
-	</bean>
-
 	<bean id="sipxcomI18n"
-		class="org.springframework.context.support.ResourceBundleMessageSource">
+		class="org.sipfoundry.sipxconfig.PluggableResourceBundleMessageSource">
 		<property name="basename" value="sipxcom" />
 	</bean>
 
 	<bean id="skinProperties" class="org.sipfoundry.sipxconfig.site.skin.SkinProperties">
 		<property name="properties">
-			<props>				
+			<props>
 				<prop key="logo.png">sipXcomAdminLogo.png</prop>
 				<prop key="favicon.ico">sipXcomLoginScreen.png</prop>
 			</props>
 		</property>
 	</bean>
 </beans>
-
