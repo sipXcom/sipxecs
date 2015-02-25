@@ -407,7 +407,15 @@ public class ReplicationManagerImpl extends SipxHibernateDaoSupport implements R
             }
             LOG.debug(String.format("Update query: %s: ", updateQ));
             LOG.debug(String.format("Remove query: %s: ", removeQ));
-            DBObject set = new BasicDBObject("$set", updateQ).append("$unset", removeQ);
+            BasicDBObject set = new BasicDBObject();
+            BasicDBObject emptyObject = new BasicDBObject();
+            if (!updateQ.equals(emptyObject)) {
+                set.append("$set", updateQ);
+            }
+            if (!removeQ.equals(emptyObject)) {
+                set.append("$unset", removeQ);
+            }
+            LOG.debug(String.format("Final query: %s: ", set));
             getDbCollection().update(toUpdate, set);
         }
 
