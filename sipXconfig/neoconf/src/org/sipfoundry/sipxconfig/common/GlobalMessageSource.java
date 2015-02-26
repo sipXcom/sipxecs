@@ -15,11 +15,11 @@
 package org.sipfoundry.sipxconfig.common;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
+import org.sipfoundry.sipxconfig.PluggableResourceBundleMessageSource;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.ListableBeanFactory;
@@ -92,7 +92,17 @@ public class GlobalMessageSource implements MessageSource, BeanFactoryAware {
     Collection<MessageSource> getDelegates() {
         if (m_delegates == null) {
             Map<String, MessageSource> beans = m_beanFactory.getBeansOfType(MessageSource.class);
-            Set<MessageSource> copy = new HashSet<MessageSource>(beans.values());
+            //using LinkedHashSet to keep insertion order
+            LinkedHashSet<MessageSource> copy = new LinkedHashSet<MessageSource>(beans.values());
+            copy.addAll(beans.values());
+            //pluggable beans will be added last so plugin resource labels to come first
+            Map<String, PluggableResourceBundleMessageSource> pluggableBeans = m_beanFactory.
+                getBeansOfType(PluggableResourceBundleMessageSource.class);
+            Collection<PluggableResourceBundleMessageSource> pluggableValues = pluggableBeans.values();
+            //Add pluggable values last - might be needed to get overwritten
+            copy.removeAll(pluggableValues);
+            copy.addAll(pluggableValues);
+
             // otherwise recursive!
             copy.remove(this);
             m_delegates = copy;
