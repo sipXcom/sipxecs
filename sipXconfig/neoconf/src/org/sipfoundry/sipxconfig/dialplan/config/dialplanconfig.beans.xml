@@ -18,6 +18,7 @@
     <property name="sbcManager" ref="sbcManager" />
     <property name="addressManager" ref="addressManager" />
     <property name="sbcDeviceManager" ref="sbcDeviceManager" />
+    <property name="featureManager" ref="featureManager" />
   </bean>
 
   <bean id="dialPlanConfigGenerator" class="org.sipfoundry.sipxconfig.dialplan.config.ConfigGenerator">

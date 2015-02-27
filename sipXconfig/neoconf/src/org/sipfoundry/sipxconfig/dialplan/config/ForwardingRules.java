@@ -14,12 +14,16 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.sipfoundry.sipxconfig.address.AddressManager;
 import org.sipfoundry.sipxconfig.bridge.BridgeSbc;
 import org.sipfoundry.sipxconfig.dialplan.IDialingRule;
+import org.sipfoundry.sipxconfig.feature.FeatureManager;
+import org.sipfoundry.sipxconfig.feature.GlobalFeature;
+import org.sipfoundry.sipxconfig.feature.LocationFeature;
 import org.sipfoundry.sipxconfig.mwi.Mwi;
 import org.sipfoundry.sipxconfig.proxy.ProxyManager;
 import org.sipfoundry.sipxconfig.registrar.Registrar;
@@ -27,17 +31,21 @@ import org.sipfoundry.sipxconfig.sbc.DefaultSbc;
 import org.sipfoundry.sipxconfig.sbc.SbcDevice;
 import org.sipfoundry.sipxconfig.sbc.SbcDeviceManager;
 import org.sipfoundry.sipxconfig.sbc.SbcManager;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 /**
  * Controls very initial SIP message routing from proxy based on SIP method and potentialy message
  * content.
  */
-public class ForwardingRules extends RulesFile {
+public class ForwardingRules extends RulesFile implements ApplicationContextAware {
     private SbcManager m_sbcManager;
     private List<String> m_routes;
     private SbcDeviceManager m_sbcDeviceManager;
     private AddressManager m_addressManager;
     private VelocityEngine m_velocityEngine;
+    private ApplicationContext m_context;
+    private FeatureManager m_featureManager;
 
     public void setSbcManager(SbcManager sbcManager) {
         m_sbcManager = sbcManager;
@@ -93,11 +101,44 @@ public class ForwardingRules extends RulesFile {
             }
         }
         context.put("bridgeSbcs", bridgeSbcs);
+
+        Map<String, ForwardingRulesPlugin> beans = m_context.getBeansOfType(ForwardingRulesPlugin.class);
+        List<ForwardingRulesPlugin> subscribePlugins = new ArrayList<ForwardingRulesPlugin>();
+        List<ForwardingRulesPlugin> notifyPlugins = new ArrayList<ForwardingRulesPlugin>();
+        if (beans != null) {
+            for (ForwardingRulesPlugin bean : beans.values()) {
+                String featureId = bean.getFeatureId();
+                if (featureId == null  || (m_featureManager.isFeatureEnabled(new LocationFeature(featureId))
+                        || m_featureManager.isFeatureEnabled(new GlobalFeature(featureId)))) {
+                    if (bean.getMethodPattern().equals(ForwardingRulesPlugin.NOTIFY)) {
+                        notifyPlugins.add(bean);
+                    }
+                    if (bean.getMethodPattern().equals(ForwardingRulesPlugin.SUBSCRIBE)) {
+                        subscribePlugins.add(bean);
+                    }
+                }
+            }
+        }
+
+        if (!subscribePlugins.isEmpty()) {
+            context.put("subscribeFieldMatches", subscribePlugins);
+        }
+
+        if (!notifyPlugins.isEmpty()) {
+            context.put("addNotify", true);
+            context.put("notifyFieldMatches", notifyPlugins);
+        }
+
         try {
             m_velocityEngine.mergeTemplate("commserver/forwardingrules.vm", context, writer);
         } catch (Exception e) {
             throw new IOException(e);
         }
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext context) {
+        m_context = context;
     }
 
     public void setAddressManager(AddressManager addressManager) {
@@ -106,5 +147,9 @@ public class ForwardingRules extends RulesFile {
 
     public void setVelocityEngine(VelocityEngine velocityEngine) {
         m_velocityEngine = velocityEngine;
+    }
+
+    public void setFeatureManager(FeatureManager featureManager) {
+        m_featureManager = featureManager;
     }
 }
