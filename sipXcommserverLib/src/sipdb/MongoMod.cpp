@@ -15,6 +15,9 @@
 
 #include <mongo/client/dbclient.h>
 
+#include "os/OsTime.h"
+#include "os/OsDateTime.h"
+#include "os/OsLogger.h"
 #include "sipdb/MongoMod.h"
 
 //
@@ -39,5 +42,23 @@ mongo::BSONObj mongoMod::minKey((const char *) &minkeydata);
 
 mongo::ScopedDbConnection* mongoMod::ScopedDbConnection::getScopedDbConnection(const std::string& host, double socketTimeout)
 {
-  return new mongo::ScopedDbConnection(host, socketTimeout);
+  OS_LOG_DEBUG(FAC_ODBC, "ScopedDbConnection::getScopedDbConnection() - host '" << host << "', socketTimeout '" << socketTimeout << "' seconds");
+
+  OsTime start;
+  OsDateTime::getCurTime(start);
+
+  mongo::ScopedDbConnection* connection = new mongo::ScopedDbConnection(host, socketTimeout);
+  if (connection->ok())
+  {
+    OsTime stop;
+    OsDateTime::getCurTime(stop);
+
+    OS_LOG_DEBUG(FAC_ODBC, "ScopedDbConnection::getScopedDbConnection() - returned connection " << connection->get() << " in " << (stop - start).cvtToMsecs() << " milliseconds");
+  }
+  else
+  {
+    OS_LOG_ERROR(FAC_ODBC, "ScopedDbConnection::getScopedDbConnection() - failed for host " << host);
+  }
+
+  return connection;
 }
