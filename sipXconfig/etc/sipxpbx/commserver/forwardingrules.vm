@@ -39,11 +39,34 @@
         <routeTo ruriParams="sipx-noroute=Voicemail">&lt;${regEventAddress.stripProtocol()};transport=tcp&gt;</routeTo>
       </fieldMatch>
 
+#foreach($match in $subscribeFieldMatches)
+      <fieldMatch fieldName="${match.fieldMatch}">
+        <fieldPattern>${match.fieldPattern}</fieldPattern>
+        <routeTo#if( $match.ruriParams ) ruriParams="$match.ruriParams"#end
+>&lt;${match.routeTo}&gt;</routeTo>
+      </fieldMatch>
+
+#end
       <!-- All other SUBSCRIBE requests go to the SIP registry service -->
       <routeTo ruriParams="sipx-noroute=Voicemail">&lt;${regAddress.stripProtocol()};transport=tcp;x-sipx-routetoreg&gt;</routeTo>
 
     </methodMatch>
 
+#if( ${addNotify} )
+    <methodMatch>
+      <methodPattern>NOTIFY</methodPattern>
+
+#foreach($match in $notifyFieldMatches)
+        <fieldMatch fieldName="${match.fieldMatch}">
+          <fieldPattern>${match.fieldPattern}</fieldPattern>
+          <routeTo #if( $match.ruriParams )ruriParams="$match.ruriParams"#end
+>&lt;${match.routeTo}&gt;</routeTo>
+        </fieldMatch>
+
+#end
+    </methodMatch>
+
+#end
     <methodMatch>
       <methodPattern>INVITE</methodPattern>
       <routeTo>&lt;${regAddress.stripProtocol()};transport=tcp;x-sipx-routetoreg&gt;</routeTo>
