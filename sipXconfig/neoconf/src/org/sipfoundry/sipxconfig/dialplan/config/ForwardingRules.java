@@ -129,8 +129,6 @@ public class ForwardingRules extends RulesFile implements ApplicationContextAwar
             context.put("notifyFieldMatches", notifyPlugins);
         }
 
-        context.put("currentLocation", getLocation());
-
         try {
             m_velocityEngine.mergeTemplate("commserver/forwardingrules.vm", context, writer);
         } catch (Exception e) {
