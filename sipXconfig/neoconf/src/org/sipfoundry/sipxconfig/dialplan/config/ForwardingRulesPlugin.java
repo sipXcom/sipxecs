@@ -14,6 +14,8 @@
  */
 package org.sipfoundry.sipxconfig.dialplan.config;
 
+import org.sipfoundry.sipxconfig.commserver.Location;
+
 public interface ForwardingRulesPlugin {
     public final String NOTIFY = "NOTIFY";
     public final String SUBSCRIBE = "SUBSCRIBE";
@@ -24,7 +26,7 @@ public interface ForwardingRulesPlugin {
 
     String getFieldPattern();
 
-    String getRouteTo();
+    String getRouteTo(Location location);
 
     String getFeatureId();
 
