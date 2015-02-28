@@ -473,7 +473,7 @@ public class ForwardingRulesTest extends XMLTestCase {
         }
 
         @Override
-        public String getRouteTo() {
+        public String getRouteTo(Location location) {
             return m_routeTo;
         }
 
