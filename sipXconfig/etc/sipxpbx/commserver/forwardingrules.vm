@@ -40,10 +40,11 @@
       </fieldMatch>
 
 #foreach($match in $subscribeFieldMatches)
+#set ($routeTo = $match.getRouteTo($currentLocation))
       <fieldMatch fieldName="${match.fieldMatch}">
         <fieldPattern>${match.fieldPattern}</fieldPattern>
         <routeTo#if( $match.ruriParams ) ruriParams="$match.ruriParams"#end
->&lt;${match.routeTo}&gt;</routeTo>
+>&lt;$routeTo&gt;</routeTo>
       </fieldMatch>
 
 #end
@@ -57,10 +58,11 @@
       <methodPattern>NOTIFY</methodPattern>
 
 #foreach($match in $notifyFieldMatches)
+#set ($routeTo = $match.getRouteTo($currentLocation))
         <fieldMatch fieldName="${match.fieldMatch}">
           <fieldPattern>${match.fieldPattern}</fieldPattern>
           <routeTo #if( $match.ruriParams )ruriParams="$match.ruriParams"#end
->&lt;${match.routeTo}&gt;</routeTo>
+>&lt;$routeTo&gt;</routeTo>
         </fieldMatch>
 
 #end
