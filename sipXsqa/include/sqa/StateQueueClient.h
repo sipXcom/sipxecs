@@ -34,6 +34,7 @@
 #define SQA_LINGER_TIME_MILLIS 5000
 #define SQA_TERMINATE_STRING "__TERMINATE__"
 #define SQA_CONN_MAX_READ_BUFF_SIZE 65536
+#define SQA_CONN_CONNECTION_TIMEOUT_MSEC 5000
 #define SQA_CONN_READ_TIMEOUT 1000
 #define SQA_CONN_WRITE_TIMEOUT 1000
 #define SQA_KEY_MIN 22172
@@ -176,7 +177,7 @@ public:
     void startConnectTimer()
     {
       boost::system::error_code ec;
-      _connectTimer.expires_from_now(boost::posix_time::milliseconds(_readTimeout), ec);
+      _connectTimer.expires_from_now(boost::posix_time::milliseconds(SQA_CONN_CONNECTION_TIMEOUT_MSEC), ec);
       _connectTimer.async_wait(boost::bind(&BlockingTcpClient::onConnectTimeout, this, boost::asio::placeholders::error));
     }
 
@@ -220,7 +221,7 @@ public:
       if (e)
         return;
       close();
-      OS_LOG_ERROR(FAC_NET, CLASS_INFO() "- " << _readTimeout << " milliseconds.");
+      OS_LOG_ERROR(FAC_NET, CLASS_INFO() "- " << SQA_CONN_CONNECTION_TIMEOUT_MSEC << " milliseconds.");
     }
 
     void close()
@@ -327,15 +328,18 @@ public:
         boost::asio::ip::tcp::resolver::iterator hosts = _resolver.resolve(query);
 
         ConnectTimer timer(this);
+
+        // this flag may be reset by ConnectTimer's timer during connect() call
+        _isConnected = true;
+
         //////////////////////////////////////////////////////////////////////////
         // Only works in 1.47 version of asio.  1.46 doesnt have this utility func
         // boost::asio::connect(*_pSocket, hosts);
         _pSocket->connect(hosts->endpoint()); // so we use the connect member
         //////////////////////////////////////////////////////////////////////////
-        _isConnected = true;
         OS_LOG_INFO(FAC_NET, CLASS_INFO() "creating new connection to " << serviceAddress << ":" << servicePort << " SUCESSFUL.");
       }
-      catch(std::exception e)
+      catch(std::exception &e)
       {
         OS_LOG_ERROR(FAC_NET, CLASS_INFO() "failed with error " << e.what());
         _isConnected = false;
@@ -651,6 +655,7 @@ protected:
 
   Type _type;
   boost::asio::io_service _ioService;
+  boost::asio::io_service::work _ioServiceWork;
   boost::thread* _pIoServiceThread;
   boost::scoped_ptr<boost::thread> _pKeepAliveThread;
   int _sleepCount;
@@ -697,6 +702,7 @@ public:
         ) :
     _type(type),
     _ioService(),
+    _ioServiceWork(_ioService),
     _pIoServiceThread(0),
     _pKeepAliveThread(0),
     _sleepCount(0),
@@ -725,6 +731,8 @@ public:
         createZmqSocket();
       }
 
+      _pIoServiceThread = new boost::thread(boost::bind(&boost::asio::io_service::run, &_ioService));
+
       for (std::size_t i = 0; i < _poolSize; i++)
       {
         BlockingTcpClient* pClient = new BlockingTcpClient(_ioService, readTimeout, writeTimeout, i == 0 ? SQA_KEY_ALPHA : SQA_KEY_DEFAULT );
@@ -741,7 +749,6 @@ public:
       _pKeepAliveThread.reset(
           new boost::thread(
               boost::bind(&StateQueueClient::keepAliveThreadRun, this)));
-      _pIoServiceThread = new boost::thread(boost::bind(&boost::asio::io_service::run, &_ioService));
 
       if (_type == Watcher)
         _zmqEventId = "sqw.";
@@ -774,6 +781,7 @@ public:
         ) :
     _type(type),
     _ioService(),
+    _ioServiceWork(_ioService),
     _pIoServiceThread(0),
     _pKeepAliveThread(0),
     _sleepCount(0),
@@ -799,6 +807,8 @@ public:
         createZmqSocket();
       }
 
+      _pIoServiceThread = new boost::thread(boost::bind(&boost::asio::io_service::run, &_ioService));
+
       for (std::size_t i = 0; i < _poolSize; i++)
       {
         BlockingTcpClient* pClient = new BlockingTcpClient(_ioService, readTimeout, writeTimeout, i == 0 ? SQA_KEY_ALPHA : SQA_KEY_DEFAULT);
@@ -817,7 +827,6 @@ public:
       _pKeepAliveThread.reset(
           new boost::thread(
               boost::bind(&StateQueueClient::keepAliveThreadRun, this)));
-      _pIoServiceThread = new boost::thread(boost::bind(&boost::asio::io_service::run, &_ioService));
 
       if (_type == Watcher)
         _zmqEventId = "sqw.";
@@ -930,6 +939,8 @@ public:
     }
 
     destroyZmqSocket();
+
+    _ioService.stop();
 
     if (_pIoServiceThread)
     {
