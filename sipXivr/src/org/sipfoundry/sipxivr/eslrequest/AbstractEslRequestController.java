@@ -38,6 +38,7 @@ public abstract class AbstractEslRequestController implements EslRequestControll
     private String m_uuid;
     private String m_localeString;
     private String m_sipxChangeDomainName;
+    private boolean m_bridgedTransfer;
 
     public abstract void extractParameters(Hashtable<String, String> parameters);
 
@@ -102,9 +103,9 @@ public abstract class AbstractEslRequestController implements EslRequestControll
         }
         Transfer xfer;
         if (m_uuid != null) {
-            xfer = new Transfer(m_fses, m_uuid, dest);
+            xfer = new Transfer(m_fses, m_uuid, dest, m_bridgedTransfer);
         } else {
-            xfer = new Transfer(m_fses, dest);
+            xfer = new Transfer(m_fses, dest, m_bridgedTransfer);
         }
         xfer.go();
         if (disconnect) {
@@ -289,6 +290,10 @@ public abstract class AbstractEslRequestController implements EslRequestControll
 
     public String getFreeswitchIpAndPort() {
         return getVariable("FreeSWITCH-IPv4") + ":15060";
+    }
+
+    public void setBridgedTransfer(boolean bridge) {
+        m_bridgedTransfer = bridge;
     }
 
 }
