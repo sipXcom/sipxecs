@@ -43,13 +43,14 @@ SubscribeDB* SubscribeDB::CreateInstance() {
 
 void SubscribeDB::getAll(Subscriptions& subscriptions, bool preferPrimary)
 {
-    mongo::BSONObjBuilder query;
-    MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getReadQueryTimeout()));
-    if (_local) {
-      preferPrimary = false;
-      _local->getAll(subscriptions, preferPrimary);
-      query.append(Subscription::shardId_fld(), BSON("$ne" << getShardId()));
-    }
+  mongo::BSONObjBuilder query;
+  if (_local) {
+    preferPrimary = false;
+    _local->getAll(subscriptions, preferPrimary);
+    query.append(Subscription::shardId_fld(), BSON("$ne" << getShardId()));
+  }
+
+  MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getReadQueryTimeout()));
 
   MongoDB::ReadTimer readTimer(const_cast<SubscribeDB&>(*this));
   
