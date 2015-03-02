@@ -11,6 +11,7 @@
 
   <bean id="aaEslRequestController" class="org.sipfoundry.attendant.AaEslRequestController" scope="eslRequest">
     <property name="sipxchangeDomainName" value="${ivr.sipxchangeDomainName}" />
+    <property name="bridgedTransfer" value="${ivr.transferByBridge}" />
     <property name="fsConfig" ref="fsConfig" />
     <property name="fsEventSocket" ref="fsEventSocket" />
     <property name="autoAttendantConfig" ref="autoAttendantConfig" />
