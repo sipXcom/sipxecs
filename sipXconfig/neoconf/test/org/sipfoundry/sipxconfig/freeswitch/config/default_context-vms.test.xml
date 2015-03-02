@@ -7,4 +7,10 @@
       <action application="redirect" data="sip:IVR@10.1.1.2:15060;${sip_req_params}"/>
     </condition>
   </extension>
+  <extension name="transferBridged">
+    <condition field="destination_number" expression="^transferBridged(.*)$">
+      <action application="set" data="ringback=${us-ring}"/>
+      <action application="bridge" data="{ignore_early_media=true}sofia/$${domain}/$1@$${domain}"/>
+    </condition>
+  </extension>
 </context>

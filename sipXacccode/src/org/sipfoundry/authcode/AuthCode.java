@@ -158,7 +158,7 @@ public class AuthCode {
         // for call permissions that will be used.
         new Set(m_fses, "sip_auth_username", user).go();
         new Set(m_fses, "sip_auth_password", passwd).go();
-        Transfer xfer = new Transfer(m_fses, uri);
+        Transfer xfer = new Transfer(m_fses, uri, false);
         xfer.go();
         throw new DisconnectException();
     }

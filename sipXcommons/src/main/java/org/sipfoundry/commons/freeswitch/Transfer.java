@@ -8,23 +8,33 @@
  */
 package org.sipfoundry.commons.freeswitch;
 
+import org.sipfoundry.commons.userdb.ValidUsers;
+
 public class Transfer extends CallCommand {
 
     private String m_uuid;
 
-    public Transfer(FreeSwitchEventSocketInterface fses, String sipURI) {
+    public Transfer(FreeSwitchEventSocketInterface fses, String sipURI, boolean bridge) {
         super(fses);
-        // Send a REFER
-        createCommand(sipURI);
+        if (bridge) {
+            createBridgeCommand(sipURI);
+        } else {
+            // Send a REFER
+            createDeflectCommand(sipURI);
+        }
     }
 
-    public Transfer(FreeSwitchEventSocketInterface fses, String uuid, String sipURI) {
+    public Transfer(FreeSwitchEventSocketInterface fses, String uuid, String sipURI, boolean bridge) {
         super(fses);
         m_uuid = uuid;
-        createCommand(sipURI);
+        if (bridge) {
+            createBridgeCommand(sipURI);
+        } else {
+            createDeflectCommand(sipURI);
+        }
     }
 
-    private void createCommand(String sipURI) {
+    private void createDeflectCommand(String sipURI) {
         m_command = "deflect\nexecute-app-arg: ";
         // sipURI MUST have sip: in there (Can be display URI)
         if (sipURI.toLowerCase().contains("sip:")) {
@@ -32,6 +42,10 @@ public class Transfer extends CallCommand {
         } else {
             m_command += "sip:" + sipURI;
         }
+    }
+
+    private void createBridgeCommand(String sipURI) {
+        m_command = "transfer\nexecute-app-arg: transferBridged"+ ValidUsers.getUserPart(sipURI) + " XML default";
     }
 
     @Override
