@@ -20,6 +20,9 @@
 #include "os/OsLogger.h"
 #include "sipdb/MongoMod.h"
 
+// Defines the maximum delay accepted for mongo connection
+#define MAX_CONNECTION_DELAY_MSEC 100
+
 //
 // Rewrites the mongo::minKey external variable defined in Mongo c++ driver
 // implementation - mongo/db/jsonobj.cpp file
@@ -52,8 +55,16 @@ mongo::ScopedDbConnection* mongoMod::ScopedDbConnection::getScopedDbConnection(c
   {
     OsTime stop;
     OsDateTime::getCurTime(stop);
+    int connectionDelayMsec = (stop - start).cvtToMsecs();
 
-    OS_LOG_DEBUG(FAC_ODBC, "ScopedDbConnection::getScopedDbConnection() - returned connection " << connection->get() << " in " << (stop - start).cvtToMsecs() << " milliseconds");
+    OsSysLogPriority priority = PRI_DEBUG;
+    if (MAX_CONNECTION_DELAY_MSEC < connectionDelayMsec)
+    {
+      priority = PRI_ALERT;
+    }
+    Os::Logger::instance().log(FAC_ODBC, priority, "ScopedDbConnection::getScopedDbConnection() - returned connection %p in %d milliseconds",
+        connection->get(),
+        connectionDelayMsec);
   }
   else
   {
