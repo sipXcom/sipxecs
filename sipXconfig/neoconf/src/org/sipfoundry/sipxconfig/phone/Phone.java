@@ -46,6 +46,8 @@ import org.sipfoundry.sipxconfig.systemaudit.SystemAuditable;
 public abstract class Phone extends Device implements Replicable, SystemAuditable {
     public static final Log LOG = LogFactory.getLog(Phone.class);
 
+    public static final String GROUP_VERSION_FIRMWARE_VERSION = "group.version/firmware.version";
+
     public static final String URI_IN_PREFIX = "~~in~";
 
     // public because of checkstyle

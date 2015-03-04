@@ -57,25 +57,6 @@
 		    </p>
 		  </form>
 	 </span>
-    <span jwcid="groupVersionTab@Block" >
-		<span jwcid="@common/QuickHelp" value="message:quick.help.profile.version"/>
-		  <form jwcid="@Form">
-		    <fieldset>
-  			  <table>
-  			      <tr jwcid="@common/FieldPanel" for=selectVersion field="component:selectGroupVersion"
-        			label="message:label.selectGroupVersion"
-        			description="message:description.selectGroupVersion">
-      				<span jwcid="selectGroupVersion@PropertySelection"
-				        model="ognl:groupVersions"
-				        value="ognl:groupVersion"
-				        displayName="message:label.firmware"/>
-    				</tr> 
-    				</table>
-    				<input jwcid="applyGv@Submit" id="form:apply"
-    				listener="listener:applyGroupVersion"
-    				value="message:button.applyGroupVersion"/>
-		  </form>
-	</span>
    <span jwcid="specialTabBody@common/Plugin" blockId="PhoneGroupsTabBody"/>
 <span jwcid="@If" condition="ognl:(getResourceId() != 2)">
   <p><span jwcid="@Insert" value="ognl:editFormSettingDescription"/></p>

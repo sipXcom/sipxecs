@@ -147,5 +147,7 @@ public interface PhoneContext extends DataObjectSource {
     Phone getPhoneBySerialNumber(String serialNumber);
     List<Phone> loadPhonesByPage(int firstRow, int pageSize);
 
-    void applyGroupFirmwareVersion(Group group, DeviceVersion v);
+    void applyGroupFirmwareVersion(Group group, DeviceVersion v, String modelId);
+
+    String getGroupFirmwareVersion(Phone phone, int groupId);
 }
