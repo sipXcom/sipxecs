@@ -33,6 +33,7 @@ import org.sipfoundry.sipxconfig.phone.Line;
 import org.sipfoundry.sipxconfig.phone.Phone;
 import org.sipfoundry.sipxconfig.phone.PhoneModel;
 import org.sipfoundry.sipxconfig.setting.BeanWithSettings;
+import org.sipfoundry.sipxconfig.setting.ConditionalSettingImpl;
 import org.sipfoundry.sipxconfig.setting.Group;
 import org.sipfoundry.sipxconfig.setting.Setting;
 import org.sipfoundry.sipxconfig.setting.SettingDao;
@@ -40,8 +41,7 @@ import org.sipfoundry.sipxconfig.setting.SettingFilter;
 import org.sipfoundry.sipxconfig.setting.SettingUtil;
 import org.sipfoundry.sipxconfig.setting.type.EnumSetting;
 
-public abstract class EditPhoneDefaults extends PhoneBasePage implements PageBeginRenderListener {
-    private static final String GROUP_VERSION_FIRMWARE_VERSION = "group.version/firmware.version";
+public abstract class EditPhoneDefaults extends PhoneBasePage implements PageBeginRenderListener {    
 
     public static final String PAGE = "phone/EditPhoneDefaults";
 
@@ -148,6 +148,8 @@ public abstract class EditPhoneDefaults extends PhoneBasePage implements PageBeg
 
     public void apply() {
         getSettingDao().saveGroup(getGroup());
+        getPhoneContext().applyGroupFirmwareVersion(getGroup(),
+            DeviceVersion.getDeviceVersion(getPhone().getBeanId() + getDeviceVersion().getVersionId()), getPhone().getModelId());
     }
 
     public IPage cancel(IRequestCycle cycle) {
@@ -174,13 +176,18 @@ public abstract class EditPhoneDefaults extends PhoneBasePage implements PageBeg
         phone = getPhoneContext().newPhone(getPhoneModel());
         Line line = phone.createLine();
         phone.addLine(line);
+        
         setPhone(phone);
-
-        DeviceVersion deviceVersion = getDeviceVersion();
-        if (deviceVersion == null) {
-            setDeviceVersion(phone.getDeviceVersion());
-        } else {
-            phone.setDeviceVersion(deviceVersion);
+        
+        String groupVersion = getPhoneContext().getGroupFirmwareVersion(getPhone(), group.getId());
+        if (groupVersion != null) {
+            phone.setSettingValue(Phone.GROUP_VERSION_FIRMWARE_VERSION, groupVersion);
+            DeviceVersion deviceVersion = getDeviceVersion();
+            if (deviceVersion == null) {                    
+                setDeviceVersion(DeviceVersion.getDeviceVersion(groupVersion));
+            } else {
+                phone.setDeviceVersion(deviceVersion);
+            }            
         }
 
         String editSettingsName = getEditFormSettingName();
@@ -190,45 +197,7 @@ public abstract class EditPhoneDefaults extends PhoneBasePage implements PageBeg
             setEditFormSettingName(((Setting) nav.next()).getName());
         }
 
-        // Init. the group versions dropdown menu.
-        if (hasGroupVersions()) {
-            if (getGroupVersions() == null) {
-                Map<String, String> versions = ((EnumSetting) getGroup().inherhitSettingsForEditing(phone)
-                        .getSetting(GROUP_VERSION_FIRMWARE_VERSION).getType()).getEnums();
-                List<DeviceVersion> deviceVersions = new ArrayList<DeviceVersion>();
-                for (String version : versions.keySet()) {
-                    if (StringUtils.isNotBlank(version)) {
-                        DeviceVersion dv = DeviceVersion.getDeviceVersion(phone.getBeanId() + version);
-                        deviceVersions.add(dv);
-                    }
-                }
-                IPropertySelectionModel versionsSelectionModel = new GroupVersionsSelectionModel(deviceVersions);
-                setGroupVersions(versionsSelectionModel);
-            }
-            String groupVersion = getGroupVersion();
-            if (groupVersion == null) {
-                setGroupVersion(getGroup().inherhitSettingsForEditing(getPhone())
-                        .getSetting(GROUP_VERSION_FIRMWARE_VERSION).getValue());
-            } else {
-                getGroup().inherhitSettingsForEditing(getPhone()).getSetting(GROUP_VERSION_FIRMWARE_VERSION)
-                        .setValue(groupVersion);
-            }
-            if (!event.getRequestCycle().isRewinding()) {
-                if (getResourceId() != GROUP_VERSION) {
-                    setGroupVersion(null);
-                }
-            }
-        }
         editSettings();
-    }
-
-    public boolean hasGroupVersions() {
-        return getGroup().inherhitSettingsForEditing(getPhone()).getSetting(GROUP_VERSION_FIRMWARE_VERSION) != null;
-    }
-
-    public void applyGroupVersion() {
-        getPhoneContext().applyGroupFirmwareVersion(getGroup(),
-                DeviceVersion.getDeviceVersion(getPhone().getBeanId() + getGroupVersion()));
     }
 
     /**
