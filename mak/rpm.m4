@@ -18,10 +18,10 @@ AC_ARG_ENABLE(upstream, [--disable-upstream Do not use upstream. Appropriate for
 ])
 AC_SUBST(UPSTREAM)
 
-AC_ARG_VAR(UPSTREAM_URL, [Where to find sipXecs distribution. Default: http://download.sipfoundry.org/pub/sipXecs])
+AC_ARG_VAR(UPSTREAM_URL, [Where to find sipXecs distribution. Default: http://download.sipxcom.org/pub/sipXecs])
 if test -z "$UPSTREAM_URL"; then
   # This repo matches the release branch code slightly more closely then last release
-  UPSTREAM_URL=http://download.sipfoundry.org/pub/${PACKAGE_VERSION}-stable
+  UPSTREAM_URL=http://download.sipxcom.org/pub/${PACKAGE_VERSION}-stable
 else
   UPSTREAM_URL=`echo $UPSTREAM_URL | sed 's|/$||g'`
 fi
@@ -114,8 +114,8 @@ AC_ARG_ENABLE(rpm, [--enable-rpm Using mock package to build rpms],
   AC_ARG_VAR(DOWNLOAD_LIB_CACHE, [When to cache source files that are downloaded, default ~/libsrc])
   test -n "${DOWNLOAD_LIB_CACHE}" || DOWNLOAD_LIB_CACHE=~/libsrc
 
-  AC_ARG_VAR(DOWNLOAD_LIB_URL, [When to cache source files that are downloaded, default download.sipfoundry.org])
-  test -n "${DOWNLOAD_LIB_URL}" || DOWNLOAD_LIB_URL=http://download.sipfoundry.org/pub/sipXecs/libs
+  AC_ARG_VAR(DOWNLOAD_LIB_URL, [When to cache source files that are downloaded, default download.sipxcom.org])
+  test -n "${DOWNLOAD_LIB_URL}" || DOWNLOAD_LIB_URL=http://download.sipxcom.org/pub/sipXecs/libs
 
   AC_ARG_VAR(RPM_DIST_DIR, [Where to assemble final set of RPMs and SRPMs in preparation for publishing to a download server.])
   test -n "${RPM_DIST_DIR}" || RPM_DIST_DIR=repo
