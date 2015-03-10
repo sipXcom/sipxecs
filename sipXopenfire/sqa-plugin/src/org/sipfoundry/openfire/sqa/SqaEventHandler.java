@@ -20,6 +20,7 @@ import static org.apache.commons.lang.StringUtils.substringBefore;
 import ietf.params.xml.ns.dialog_info.DialogInfo;
 
 import java.io.StringReader;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
@@ -30,6 +31,7 @@ import org.jivesoftware.openfire.XMPPServer;
 import org.sipfoundry.commons.userdb.User;
 import org.sipfoundry.commons.userdb.ValidUsers;
 import org.sipfoundry.commons.util.UnfortunateLackOfSpringSupportFactory;
+import org.sipfoundry.openfire.sqa.SipEventBean.DialogElement;
 import org.sipfoundry.sqaclient.SQAEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,9 +89,6 @@ public class SqaEventHandler implements Runnable {
                 observerPartyUser = user;
                 observerPartyId = sipId;
             }
-            boolean trying = bean.isTrying();
-            boolean ringing = bean.isRinging();
-            boolean confirmed = bean.isConfirmed();
             boolean terminated = bean.isTerminated();
             JID observerJID = m_server.createJID(observerUser.getJid(), null);
             if (observerJID == null) {
@@ -98,38 +97,51 @@ public class SqaEventHandler implements Runnable {
             }
             logger.debug("Initiator: " + userJid);
             logger.debug("Recipient: " + targetJid);
-            logger.debug("Observer status: trying: " + trying + " confirmed: " + confirmed + " terminated: " + terminated + " ringing: " + ringing);
             logger.debug("Observer JID (IM Entity that sent the message): " + observerJID.getNode());
             org.jivesoftware.openfire.user.User ofObserverUser = m_server.getUserManager().getUser(observerJID.getNode());
             Presence presence = m_server.getPresenceManager().getPresence(ofObserverUser);
+
             if (presence == null) {
                 logger.debug("User is OFFLINE  -- cannot set presence state");
                 return;
             }
-            if (confirmed) {
-                SipPresenceBean previousPresenceBean = m_presenceCache.get(observerJID.getNode());
-                logger.debug("Previous confirmed presence bean with key: " + observerJID.getNode() + " is: " + previousPresenceBean);
-                //if cache is not cleared, than this is a new incomming call, do not broadcast on the call status again
-                if (previousPresenceBean == null) {
-                    logger.debug("ObserverPartyUser " + observerPartyUser + " observer party id " + observerPartyId);
-                    String presenceMessage = Utils.generateXmppStatusMessageWithSipState(observerUser, observerPartyUser, presence, observerPartyId);
-                    //presence status is about to be changed - save current presence
-                    if (presenceMessage != null) {
-                        //save current presence and broadcast -on the phone- to roster
-                        m_presenceCache.put(observerJID.getNode(), new SipPresenceBean(presence.getStatus(), observerPartyId));
-                        presence.setStatus(presenceMessage);
-                        ofObserverUser.getRoster().broadcastPresence(presence);
-                    }
-                }
-            } else if (terminated) {
-                SipPresenceBean previousPresenceBean = m_presenceCache.get(observerJID.getNode());
-                logger.debug("Previous terminated presence bean with key: " + observerJID.getNode() + " is: " + previousPresenceBean);
-                if(previousPresenceBean != null) {
-                    //if on the phone and call terminated, broadcast previous presence, clear cache
-                    presence.setStatus(previousPresenceBean.getStatusMessage());
+
+            SipPresenceBean presenceBean = m_presenceCache.get(observerJID.getNode());
+            logger.debug("Processing state events for user: " + observerJID.getNode() + " and presence status " + presence.getStatus());
+            boolean previousConfirmed = false;
+            if (presenceBean == null) {
+                presenceBean = new SipPresenceBean(presence.getStatus(), observerPartyId);
+                m_presenceCache.put(observerJID.getNode(), presenceBean);
+            } else {
+                previousConfirmed = presenceBean.isConfirmed();
+                logger.debug("Dialog states size: " + presenceBean.getDialogStates().size());
+            }
+            List<DialogElement> elements = bean.getDialogs();
+            for (DialogElement element : elements) {
+                presenceBean.setDialogState(element.getId(), element.getDialogState());
+            }
+            boolean actualConfirmed = presenceBean.isConfirmed();
+
+            logger.debug("Observer status: previousConfirmed: " + previousConfirmed + " actualConfirmed " + actualConfirmed + " terminated: " + terminated);
+            if (!previousConfirmed && actualConfirmed) {
+                //save current presence status (before modifying it to On The Phone)
+                logger.debug("Confirmed received, save current presence status " + presence.getStatus());
+                presenceBean.setStatusMessage(presence.getStatus());
+                logger.debug("ObserverPartyUser " + observerPartyUser + " observer party id " + observerPartyId);
+                String presenceMessage = Utils.generateXmppStatusMessageWithSipState(observerUser, observerPartyUser, presence, observerPartyId);
+                //presence status is about to be changed - save current presence
+                if (presenceMessage != null) {
+                    //broadcast -on the phone- to roster
+                    presence.setStatus(presenceMessage);
                     ofObserverUser.getRoster().broadcastPresence(presence);
-                    m_presenceCache.remove(observerJID.getNode());
                 }
+            } else if (!actualConfirmed && terminated) {
+                //if on the phone and call terminated, broadcast previous presence
+                logger.debug("Terminate received, previous presence status to broadcast " + presenceBean.getStatusMessage());
+                presence.setStatus(presenceBean.getStatusMessage());
+                ofObserverUser.getRoster().broadcastPresence(presence);
+                //remove user presence bean from cache, there is no confirmed dialog present
+                m_presenceCache.remove(observerJID.getNode());
             }
         } catch (Exception e) {
             logger.error("Cannot parse packet: data ", e);
