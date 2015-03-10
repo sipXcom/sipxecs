@@ -53,6 +53,7 @@ import org.sipfoundry.sipxconfig.phonebook.PhonebookEntry;
 import org.sipfoundry.sipxconfig.phonebook.PhonebookManager;
 import org.sipfoundry.sipxconfig.setting.Group;
 import org.sipfoundry.sipxconfig.setting.SettingDao;
+import org.sipfoundry.sipxconfig.setting.ValueStorage;
 import org.sipfoundry.sipxconfig.speeddial.SpeedDial;
 import org.sipfoundry.sipxconfig.speeddial.SpeedDialManager;
 import org.springframework.beans.factory.BeanFactory;
@@ -398,6 +399,17 @@ public class PhoneContextImpl extends SipxHibernateDaoSupport implements BeanFac
     public void onSave(Object entity) {
         if (entity instanceof Phone) {
             Phone phone = (Phone) entity;
+            //set phone group firmware version
+            //this is a proposed phone firmware version given what groups a phone belongs to
+            //and we save it as a setting value.
+            //given complexity of phone model and what groups a phone belongs to, a proposed
+            //firmware value will show in group firmware UI page
+            ValueStorage vs = (ValueStorage) phone.getValueStorage() == null ? new ValueStorage()
+                : (ValueStorage) phone.getValueStorage();
+            int groupId = getPhoneGroupIdMinWeight(phone.getId());
+            vs.setSettingValue(Phone.GROUP_VERSION_FIRMWARE_VERSION, getGroupFirmwareVersion(phone, groupId));
+            phone.setValueStorage(vs);
+            getHibernateTemplate().merge(phone);
             LOG.error(String.format(ALARM_PHONE_CHANGED, phone.getId(), phone.getSerialNumber()));
         } else if (entity instanceof Group) {
             Group g = (Group) entity;
