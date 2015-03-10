@@ -112,7 +112,7 @@ public class SqaPlugin implements Plugin {
         }
         @Override
         public void run() {
-            ExecutorService executor = Executors.newFixedThreadPool(10);
+            ExecutorService executor = Executors.newSingleThreadExecutor();
             logger.info("Start watching...");
             while (true) {
                 SQAEvent event = m_watcher.watch();
