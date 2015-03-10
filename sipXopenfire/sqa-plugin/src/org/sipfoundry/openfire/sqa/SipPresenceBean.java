@@ -16,9 +16,19 @@
  */
 package org.sipfoundry.openfire.sqa;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.sipfoundry.openfire.sqa.SipEventBean.DialogState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class SipPresenceBean {
     private String m_statusMessage;
     private String m_callingPartiId;
+    private static final Logger logger = LoggerFactory.getLogger(SipPresenceBean.class);
+    private Map<String, DialogState> m_dialogStates = new HashMap<String, DialogState>();
 
     public SipPresenceBean(String statusMessage, String callingPartiId) {
         m_statusMessage = statusMessage;
@@ -29,7 +39,43 @@ public class SipPresenceBean {
         return m_statusMessage;
     }
 
+    public void setStatusMessage(String statusMessage) {
+        m_statusMessage = statusMessage;
+    }
+
     public String getCallingPartiId() {
         return m_callingPartiId;
+    }
+
+    public void setDialogState(String dialogId, DialogState dialogState) {
+        logger.debug("Set state " + dialogState.getName() + " for dialogId: " + dialogId);
+        //save new/existing dialog state or remove dialog if terminated
+        if (dialogState == DialogState.terminated) {
+            m_dialogStates.remove(dialogId);
+        } else {
+            m_dialogStates.put(dialogId, dialogState);
+        }
+    }
+
+    public void removeDialogState(String dialogId) {
+        m_dialogStates.remove(dialogId);
+    }
+
+    public boolean isConfirmed(String dialogId) {
+        return m_dialogStates.get(dialogId) == DialogState.confirmed;
+    }
+
+    public Map<String, DialogState> getDialogStates() {
+        return m_dialogStates;
+    }
+
+    public boolean isConfirmed() {
+        Collection<DialogState> states = m_dialogStates.values();
+        for (DialogState state : states) {
+            if (state == DialogState.confirmed) {
+                return true;
+            }
+        }
+        return false;
     }
 }

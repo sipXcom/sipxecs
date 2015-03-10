@@ -48,21 +48,22 @@ public class PresenceEventListenerImpl implements PresenceEventListener {
     public void presenceChanged(ClientSession arg0, Presence presence) {
         String userJid = presence.getFrom().getNode();
         SipPresenceBean previousPresenceBean = m_presenceCache.get(userJid);
-        //cache is not cleared, but the presence is changed - change status accordingly keeping the sip state
         if(previousPresenceBean != null) {
-            User user = m_users.getUserByJid(userJid);
-            String callingPartyId = previousPresenceBean.getCallingPartiId();
-            User callingParty = m_users.getUser(callingPartyId);
-            //Presence changed - save new presence and broadcast -on the phone- to roster
-            m_presenceCache.put(userJid, new SipPresenceBean(presence.getStatus(), callingPartyId));
-            String presenceMessage = Utils.generateXmppStatusMessageWithSipState(user, callingParty, presence, callingPartyId);
-            org.jivesoftware.openfire.user.User ofObserverUser = null;
-            try {
-                ofObserverUser = XMPPServer.getInstance().getUserManager().getUser(userJid);
+            //cache is not cleared and confirmed, but the presence is changed - change status accordingly keeping the sip state
+            previousPresenceBean.setStatusMessage(presence.getStatus());
+            if (previousPresenceBean.isConfirmed()) {
+                User user = m_users.getUserByJid(userJid);
+                String callingPartyId = previousPresenceBean.getCallingPartiId();
+                User callingParty = m_users.getUser(callingPartyId);
+                String presenceMessage = Utils.generateXmppStatusMessageWithSipState(user, callingParty, presence, callingPartyId);
                 presence.setStatus(presenceMessage);
-                ofObserverUser.getRoster().broadcastPresence(presence);
-            } catch (UserNotFoundException e) {
-                logger.debug("Cannot update user presence ", e);
+                org.jivesoftware.openfire.user.User ofObserverUser = null;
+                try {
+                    ofObserverUser = XMPPServer.getInstance().getUserManager().getUser(userJid);
+                    ofObserverUser.getRoster().broadcastPresence(presence);
+                } catch (UserNotFoundException e) {
+                    logger.debug("Cannot update user presence ", e);
+                }
             }
 
         }
