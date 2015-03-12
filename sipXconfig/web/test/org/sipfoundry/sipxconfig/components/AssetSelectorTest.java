@@ -32,9 +32,9 @@ public class AssetSelectorTest extends TestCase {
 
     public void testAudioFormat() throws Exception {
         InputStream wav = PatternsEditorTest.class.getResourceAsStream("thankyou_goodbye.wav");
-        assertTrue(AssetSelector.isAcceptedAudioFormat(wav));
+        assertTrue(AssetSelector.isAcceptedAudioFormat(wav, false));
 
         InputStream notWav = getClass().getResourceAsStream("unused.png");
-        assertFalse(AssetSelector.isAcceptedAudioFormat(notWav));
+        assertFalse(AssetSelector.isAcceptedAudioFormat(notWav, false));
     }
 }

@@ -45,6 +45,10 @@ import org.sipfoundry.sipxconfig.components.TapestryUtils;
 public abstract class AssetSelector extends BaseComponent {
     private static final Log LOG = LogFactory.getLog(AssetSelector.class);
 
+    private static final String WAV = "audio/x-wav";
+    private static final String MP3 = "audio/mpeg";
+    private static final String COMMA = ",";
+
     @InjectObject("spring:tapestry")
     public abstract TapestryContext getTapestry();
 
@@ -193,7 +197,14 @@ public abstract class AssetSelector extends BaseComponent {
      * @throws ValidatorException if audio file is uploaded but cannot be validated
      */
     private void validateFileType(IValidationDelegate validator) {
-        if (!getContentType().equals("audio/x-wav")) {
+        if (!getContentType().equals(WAV)
+                && !getContentType().equals(MP3)
+                && !getContentType()
+                        .equals(new StringBuilder().append(WAV).append(COMMA)
+                                .append(MP3).toString())
+                && !getContentType()
+                        .equals(new StringBuilder().append(MP3).append(COMMA)
+                                .append(WAV).toString())) {
             // only validate audio files
             return;
         }
@@ -201,11 +212,16 @@ public abstract class AssetSelector extends BaseComponent {
         if (!isUploadFileSpecified(upload)) {
             return;
         }
-        if (isAcceptedAudioFormat(upload.getStream())) {
+        boolean isMP3 = upload.getFileName().endsWith("mp3");
+        if (isAcceptedAudioFormat(upload.getStream(), isMP3)) {
             return;
         }
 
-        String error = getMessages().format("error.badWavFormat", upload.getFileName());
+        String errorString = "error.badWavFormat";
+        if (getContentType().contains(MP3)) {
+            errorString = "error.badWavOrMP3Format";
+        }
+        String error = getMessages().format(errorString, upload.getFileName());
         validator.record(new ValidatorException(error));
     }
 
@@ -222,8 +238,14 @@ public abstract class AssetSelector extends BaseComponent {
         return !isEnabled();
     }
 
-    public static boolean isAcceptedAudioFormat(InputStream stream) {
+    public static boolean isAcceptedAudioFormat(InputStream stream, boolean isMP3) {
         try {
+            if (isMP3) {
+                // No extra validation needed for mp3 because the format is supported by freeswitch;
+                // Also Java Sound does not support MP3 by default;
+                // So in order to do extra validation we would need an additional library;
+                return true;
+            }
             InputStream testedStream = stream;
             // HACK: looks like in openjdk InputStream does not support mark/reset
             if (!stream.markSupported()) {
@@ -239,7 +261,7 @@ public abstract class AssetSelector extends BaseComponent {
                     2, // frame rate
                     8000, // frame size
                     false); // isBigEndian)
-            return format.matches(audio.getFormat());
+            return true;
         } catch (IOException e) {
             LOG.warn("Uploaded file problems.", e);
         } catch (UnsupportedAudioFileException e) {
