@@ -274,4 +274,12 @@ public abstract class EditGateway extends PageWithCallback implements PageBeginR
         page.setTransientGateway(null);
         return page;
     }
+
+    public String getHelpMessage() {
+        if (getGateway() instanceof SipTrunk) {
+            return getMessages().getMessage("help.gatewayConfigSipTrunk");
+        } else {
+            return getMessages().getMessage("help.gatewayConfig");
+        }
+    }
 }

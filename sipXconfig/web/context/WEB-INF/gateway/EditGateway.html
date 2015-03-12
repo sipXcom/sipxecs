@@ -15,7 +15,7 @@
 
   <div jwcid="@common/ProfilePreview" device="ognl:gateway"/>
   <div jwcid="@common/DeviceResources" deviceDescriptor="ognl:gateway.model" />
-  <div jwcid="@common/QuickHelp" value="message:help.gatewayConfig">gateway config help text here...</div>
+  <div jwcid="@common/QuickHelp" value="ognl:helpMessage">gateway config help text here...</div>
   <span jwcid="@If" condition="ognl:activeTab.equals('gcai')">
     <span jwcid="@common/QuickHelp" value="message:quick.help.gatewayCallerAlias"/>
   </span>
