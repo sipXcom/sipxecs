@@ -25,6 +25,7 @@ import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.cxf.common.util.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
@@ -404,12 +405,7 @@ public class PhoneContextImpl extends SipxHibernateDaoSupport implements BeanFac
             //and we save it as a setting value.
             //given complexity of phone model and what groups a phone belongs to, a proposed
             //firmware value will show in group firmware UI page
-            ValueStorage vs = (ValueStorage) phone.getValueStorage() == null ? new ValueStorage()
-                : (ValueStorage) phone.getValueStorage();
-            int groupId = getPhoneGroupIdMinWeight(phone.getId());
-            vs.setSettingValue(Phone.GROUP_VERSION_FIRMWARE_VERSION, getGroupFirmwareVersion(phone, groupId));
-            phone.setValueStorage(vs);
-            getHibernateTemplate().merge(phone);
+            applyGroupFirmwareVersion(phone);
             LOG.error(String.format(ALARM_PHONE_CHANGED, phone.getId(), phone.getSerialNumber()));
         } else if (entity instanceof Group) {
             Group g = (Group) entity;
@@ -423,6 +419,22 @@ public class PhoneContextImpl extends SipxHibernateDaoSupport implements BeanFac
     public void applyGroupFirmwareVersion(Group group, DeviceVersion v, String modelId) {
         LOG.debug(String.format("Attempting to apply firmware version %s to group %s... ", v.getVersionId(),
                 group.getName()));
+        Collection<Phone> phones = getPhonesByGroupId(group.getId());
+        boolean flushNeeded = false;
+        for (Phone phone : phones) {
+            //initialize group firmware version if there are phones with no group firmware version
+            //this is a proposed phone firmware version given what groups a phone belongs to
+            //and we save it as a setting value.
+            //given complexity of phone model and what groups a phone belongs to, a proposed
+            //firmware value will show in group firmware UI page
+            if (StringUtils.isEmpty(phone.getSettingValue(Phone.GROUP_VERSION_FIRMWARE_VERSION))) {
+                applyGroupFirmwareVersion(phone);
+                flushNeeded = true;
+            }
+        }
+        if (flushNeeded) {
+            getHibernateTemplate().flush();
+        }
         String versionId = v.toString();
         final List<Integer> ids = new LinkedList<Integer>();
         final List<String> models = new LinkedList<String>();
@@ -459,6 +471,18 @@ public class PhoneContextImpl extends SipxHibernateDaoSupport implements BeanFac
         if (updates.size() > 0) {
             m_jdbcTemplate.batchUpdate(updates.toArray(new String[] {}));
         }
+    }
+
+    private void applyGroupFirmwareVersion(Phone phone) {
+        ValueStorage vs = (ValueStorage) phone.getValueStorage() == null ? new ValueStorage()
+            : (ValueStorage) phone.getValueStorage();
+        int groupId = getPhoneGroupIdMinWeight(phone.getId());
+        String groupFirmwareVersion = getGroupFirmwareVersion(phone, groupId);
+        LOG.debug("Apply proposed group firmware setting value: "
+             + groupFirmwareVersion + " for phone: " + phone.getSerialNumber());
+        vs.setSettingValue(Phone.GROUP_VERSION_FIRMWARE_VERSION, groupFirmwareVersion);
+        phone.setValueStorage(vs);
+        getHibernateTemplate().merge(phone);
     }
 
     @Override
