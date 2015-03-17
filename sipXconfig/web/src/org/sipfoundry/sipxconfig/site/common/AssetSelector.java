@@ -200,11 +200,9 @@ public abstract class AssetSelector extends BaseComponent {
         if (!getContentType().equals(WAV)
                 && !getContentType().equals(MP3)
                 && !getContentType()
-                        .equals(new StringBuilder().append(WAV).append(COMMA)
-                                .append(MP3).toString())
+                        .equals(StringUtils.join(new String[]{WAV, COMMA, MP3}))
                 && !getContentType()
-                        .equals(new StringBuilder().append(MP3).append(COMMA)
-                                .append(WAV).toString())) {
+                        .equals(StringUtils.join(new String[]{MP3, COMMA, WAV}))) {
             // only validate audio files
             return;
         }
@@ -261,7 +259,7 @@ public abstract class AssetSelector extends BaseComponent {
                     2, // frame rate
                     8000, // frame size
                     false); // isBigEndian)
-            return true;
+            return format.matches(audio.getFormat());
         } catch (IOException e) {
             LOG.warn("Uploaded file problems.", e);
         } catch (UnsupportedAudioFileException e) {
