@@ -77,6 +77,9 @@ public:
     /// Signal the task that it is time to shut down.
     virtual void requestShutdown();
 
+    /// overwrites task's function
+    virtual UtlBoolean isShutDown(void);
+
     /// Receive SIP or other OS messages.
     virtual UtlBoolean handleMessage(OsMsg& eventMessage);
     /**< Messages are dispatched to either the SipRegistrarServer or SipRedirectServer thread */
