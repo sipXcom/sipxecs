@@ -323,9 +323,6 @@ SipSubscribeServer::SipSubscribeServer(const char* defaultTermination,
     , mDefaultTermination(defaultTermination)
     , mSubscribeServerMutex(OsMutex::Q_FIFO)
 {
-   // Set our queue to be the queue for resend event messages in
-   // *mpSubscriptionMgr.
-   mpSubscriptionMgr->initialize(getMessageQueue());
 }
 
 
@@ -358,6 +355,51 @@ SipSubscribeServer::operator=(const SipSubscribeServer& rhs)
       return *this;
 
    return *this;
+}
+
+UtlBoolean SipSubscribeServer::initialize(void *pArg)
+{
+   Os::Logger::instance().log(FAC_SIP, PRI_DEBUG, "SipSubscribeServer::initialize with pArg '%p'", pArg);
+
+   UtlBoolean initialized = FALSE;
+   unsigned int retryNo = 10;
+   const unsigned int RETRY_DELAY_MSEC = 500;
+
+   while (isNotShut() && !initialized && --retryNo)
+   {
+      std::string exceptionMsg;
+      try
+      {
+         // Set our queue to be the queue for resend event messages in
+         // *mpSubscriptionMgr.
+         mpSubscriptionMgr->initialize(getMessageQueue());
+         initialized = TRUE;
+      }
+      catch (std::exception& e)
+      {
+         exceptionMsg = e.what();
+      }
+      catch (...)
+      {
+         exceptionMsg = "Unknown Exception";
+      }
+
+      // log an error and wait some time
+      if (!initialized)
+      {
+         Os::Logger::instance().log(FAC_SIP, PRI_ERR, "SipSubscribeServer::initialize Exception: '%s' - retrying after %d milliseconds",
+                    exceptionMsg.c_str(), RETRY_DELAY_MSEC);
+         OsTask::delay(RETRY_DELAY_MSEC);
+      }
+   }
+
+   // log an error and
+   if (!initialized)
+   {
+      Os::Logger::instance().log(FAC_SIP, PRI_EMERG, "SipSubscribeServer::initialize failed - SipSubscribeServer is aborted");
+   }
+
+   return initialized;
 }
 
 void SipSubscribeServer::contentChangeCallback(void* applicationData,

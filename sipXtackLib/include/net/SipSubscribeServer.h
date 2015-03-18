@@ -201,6 +201,12 @@ public:
 
 /* ============================ MANIPULATORS ============================== */
 
+    //! Overwrites the initialization routine of the task
+    /*! Is used in order to load all data needed by the subscribe server to
+     *  properly run - e.g. subscribed contacts
+     */
+    virtual UtlBoolean initialize(void *pArg);
+
     //! Callback invoked by SipPublishContentMgr when content changes
     /*! This is used to tell the SipSubscribeServer that a new notify
      *  needs to be sent as the event state content has changed.
