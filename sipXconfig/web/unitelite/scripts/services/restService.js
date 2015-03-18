@@ -1,18 +1,3 @@
-/*
- * Copyright (c) eZuce, Inc. All rights reserved.
- * Contributed to SIPfoundry under a Contributor Agreement
- *
- * This software is free software; you can redistribute it and/or modify it under
- * the terms of the Affero General Public License (AGPL) as published by the
- * Free Software Foundation; either version 3 of the License, or (at your option)
- * any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
- * details.
- */
-
 (function(){
 'use strict';
 
@@ -757,7 +742,7 @@ uw.service('restService', [
         getUserInfo: function (user) {
           return request(authHeaders({
             method:  'GET',
-            url:     baseRest + '/my/redirect/search/phonebook?query=' + user
+            url:     baseRest + '/my/redirect/search/phonebook?query=' + self.cred.user
           }))
         },
         getMessages: function (folder) {
@@ -803,7 +788,7 @@ uw.service('restService', [
         putSubjectMessage: function (id, sub) {
           return request(authHeaders({
             method:  'PUT',
-            url:     baseRest + '/my/redirect/mailbox/' + self.user + '/message/' + id + '/subject',
+            url:     baseRest + '/my/redirect/mailbox/' + self.cred.user + '/message/' + id + '/subject',
             data:    sub
           }))
         },
@@ -829,13 +814,13 @@ uw.service('restService', [
         postBasicCall: function (to) {
           return request(authHeaders({
             method:  'POST',
-            url:     baseRest + '/my/redirect/callcontroller/' + self.user + '/' + escape(to)
+            url:     baseRest + '/my/redirect/callcontroller/' + self.cred.user + '/' + escape(to)
           }))
         },
         getBasicCall: function (to) {
           return request(authHeaders({
             method:  'GET',
-            url:     baseRest + '/my/redirect/callcontroller/' + self.user + '/' + escape(to)
+            url:     baseRest + '/my/redirect/callcontroller/' + self.cred.user + '/' + escape(to)
           }))
         },
         getConfList: function () {
@@ -1218,8 +1203,8 @@ uw.service('restService', [
         conf.url = conf.url + '?invcache=' + Math.floor((Math.random() * 99999) + 10000);;
       }
       return _.extend(conf, {
-            cache: false
-          });
+          cache: false
+        });
     }
 
   }
