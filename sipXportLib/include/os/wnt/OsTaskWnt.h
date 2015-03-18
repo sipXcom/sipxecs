@@ -77,6 +77,11 @@ public:
 
 /* ============================ MANIPULATORS ============================== */
 
+   virtual UtlBoolean initialize(void *pArg);
+   /// The initialization routine of the task.
+   /// Note: It will be called by the start() function inside task thread. Also,
+   ///       run() routine will be called only if this function returns 'true'
+
    virtual UtlBoolean restart(void);
      //:Restart the task
      // The task is first terminated, and then reinitialized with the same
