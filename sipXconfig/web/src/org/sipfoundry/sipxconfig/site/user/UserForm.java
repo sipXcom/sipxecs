@@ -174,6 +174,7 @@ public abstract class UserForm extends BaseComponent implements EditPinComponent
             String extStr = extension.toString();
             getUser().setUserName(extStr);
         }
+        setImAccount(new ImAccount(getUser()));
     }
 
     /**
