@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:security="http://www.springframework.org/schema/security"
-  xmlns:task="http://www.springframework.org/schema/task"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans 
-  http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-  http://www.springframework.org/schema/task 
-  http://www.springframework.org/schema/task/spring-task-4.0.xsd
-  http://www.springframework.org/schema/security
-  http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
 
 	<bean id="sipxcomI18n"
 		class="org.sipfoundry.sipxconfig.PluggableResourceBundleMessageSource">
