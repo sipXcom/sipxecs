@@ -141,6 +141,9 @@ class SipSubscribeServer : public OsServerTask
 /* //////////////////////////// PUBLIC //////////////////////////////////// */
 public:
 
+   //! Callback signature to be used if initialize() call fails
+   typedef boost::function<void (void) > InitFailureCallback;
+
 /* ============================ CREATORS ================================== */
 
     //! Helper utility to build a basic server with default behavior
@@ -206,6 +209,9 @@ public:
      *  properly run - e.g. subscribed contacts
      */
     virtual UtlBoolean initialize(void *pArg);
+
+    //! Sets the callback to be called by the initialize() function in case it fails
+    void setInitializeFailureCallback(InitFailureCallback callback);
 
     //! Callback invoked by SipPublishContentMgr when content changes
     /*! This is used to tell the SipSubscribeServer that a new notify
@@ -424,6 +430,9 @@ private:
 
     /// Milliseconds of delay to allow when sending out bulk NOTIFYs.
     static const int sNotifyDelay;
+
+    /// Pointer to the initialization failure callback
+    InitFailureCallback mInitFailureCallback;
 };
 
 /* ============================ INLINE METHODS ============================ */

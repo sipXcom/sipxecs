@@ -322,6 +322,7 @@ SipSubscribeServer::SipSubscribeServer(const char* defaultTermination,
     , mpDefaultEventHandler(&defaultEventHandler)
     , mDefaultTermination(defaultTermination)
     , mSubscribeServerMutex(OsMutex::Q_FIFO)
+    , mInitFailureCallback(NULL)
 {
 }
 
@@ -367,28 +368,14 @@ UtlBoolean SipSubscribeServer::initialize(void *pArg)
 
    while (isNotShut() && !initialized && --retryNo)
    {
-      std::string exceptionMsg;
-      try
-      {
-         // Set our queue to be the queue for resend event messages in
-         // *mpSubscriptionMgr.
-         mpSubscriptionMgr->initialize(getMessageQueue());
-         initialized = TRUE;
-      }
-      catch (std::exception& e)
-      {
-         exceptionMsg = e.what();
-      }
-      catch (...)
-      {
-         exceptionMsg = "Unknown Exception";
-      }
+      // Set our queue to be the queue for resend event messages in
+      // *mpSubscriptionMgr.
+      initialized = mpSubscriptionMgr->initialize(getMessageQueue());
 
-      // log an error and wait some time
+      // log an error and wait some time in case init function failed
       if (!initialized)
       {
-         Os::Logger::instance().log(FAC_SIP, PRI_ERR, "SipSubscribeServer::initialize Exception: '%s' - retrying after %d milliseconds",
-                    exceptionMsg.c_str(), RETRY_DELAY_MSEC);
+         Os::Logger::instance().log(FAC_SIP, PRI_ERR, "SipSubscribeServer::initialize failed - retrying after %d milliseconds", RETRY_DELAY_MSEC);
          OsTask::delay(RETRY_DELAY_MSEC);
       }
    }
@@ -397,9 +384,22 @@ UtlBoolean SipSubscribeServer::initialize(void *pArg)
    if (!initialized)
    {
       Os::Logger::instance().log(FAC_SIP, PRI_EMERG, "SipSubscribeServer::initialize failed - SipSubscribeServer is aborted");
+
+      // call initialize fail callback, if set
+      if (mInitFailureCallback)
+      {
+         mInitFailureCallback();
+      }
    }
 
    return initialized;
+}
+
+void SipSubscribeServer::setInitializeFailureCallback(SipSubscribeServer::InitFailureCallback callback)
+{
+   Os::Logger::instance().log(FAC_SIP, PRI_DEBUG, "SipSubscribeServer::setInitializeFailureCallback");
+
+   mInitFailureCallback = callback;
 }
 
 void SipSubscribeServer::contentChangeCallback(void* applicationData,
