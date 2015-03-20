@@ -341,29 +341,6 @@ void SipRegistrar::requestShutdown(void)
    yield(); // make the caller wait so that SipRegistrar can run.
 }
 
-UtlBoolean SipRegistrar::isShutDown(void)
-{
-   Os::Logger::instance().log(FAC_SIP, PRI_DEBUG, "SipRegistrar::isShutDown");
-
-   // Check the base function first
-   if (OsServerTask::isShutDown())
-   {
-      return TRUE;
-   }
-
-   // If registration event server is not up, shutdown the Registrar
-   if (mRegisterEventServer && !mRegisterEventServer->isUp())
-   {
-      Os::Logger::instance().log(FAC_SIP, PRI_INFO, "SipRegistrar::isShutDown - shutdown Registrar because EventServer is not up");
-      requestShutdown();
-      waitUntilShutDown();
-
-      return TRUE;
-   }
-
-   return FALSE;
-}
-
 // Destructor
 SipRegistrar::~SipRegistrar()
 {

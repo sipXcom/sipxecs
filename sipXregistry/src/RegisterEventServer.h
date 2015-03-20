@@ -112,9 +112,6 @@ class RegisterEventServer
    //! Get the SIP domain name for the resources.
    const UtlString* getDomainName();
 
-   //! Specifies if RegisterEventServer is up or not
-   UtlBoolean isUp();
-
 /* //////////////////////////// PROTECTED ///////////////////////////////// */
   protected:
 
@@ -162,11 +159,6 @@ class RegisterEventServer
 inline const UtlString* RegisterEventServer::getDomainName()
 {
    return &mDomainName;
-}
-
-inline UtlBoolean RegisterEventServer::isUp()
-{
-   return mSubscribeServer.isNotShut() && mUserAgent.isNotShut();
 }
 
 #endif  // _RegisterEventServer_h_
