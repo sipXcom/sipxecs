@@ -26,6 +26,7 @@
 #include <os/OsQueuedEvent.h>
 #include <net/SipOutputProcessor.h>
 #include <net/SipInputProcessor.h>
+#include <boost/bind.hpp>
 
 // DEFINES
 #define SIP_DEFAULT_RTT     100 // Default T1 value (RFC 3261), in msec.
@@ -167,6 +168,8 @@ public:
     friend class SipUdpServer;
     friend int SipUdpServer::run(void* runArg);
 
+    typedef boost::function<void(SipTransaction*, const SipMessage&, SipMessage&)> ProvisionalResponseHandler;
+    
     enum EventSubTypes
     {
         UNSPECIFIED = 0,
@@ -698,7 +701,10 @@ public:
     void setStaticNATAddress(const UtlString& address);
 
     const UtlString& getStaticNATAddress() const;
+    
+    void setProvisionalResponseHandler(const ProvisionalResponseHandler& provisionalResponseHandler);
 
+    void onProvisionalResponse(SipTransaction* pTransaction, const SipMessage& request, SipMessage& provisionalResponse);
 /* //////////////////////////// PROTECTED ///////////////////////////////// */
 protected:
 
@@ -873,6 +879,8 @@ private:
     SipUserAgent& operator=(const SipUserAgent& rhs);
 
     friend class SipTransactionList;
+    
+    ProvisionalResponseHandler _provisionalResponseHandler;
 };
 
 /* ============================ INLINE METHODS ============================ */
@@ -885,6 +893,11 @@ inline void SipUserAgent::setStaticNATAddress(const UtlString& address)
 inline const UtlString& SipUserAgent::getStaticNATAddress() const
 {
   return mStaticNATAddress;
+}
+
+inline void SipUserAgent::setProvisionalResponseHandler(const ProvisionalResponseHandler& provisionalResponseHandler)
+{
+ _provisionalResponseHandler = provisionalResponseHandler;
 }
 
 

@@ -356,6 +356,41 @@ TransferControl::authorizeAndModify(const UtlString& id,    /**< The authenticat
 }
 
 
+/// This method is called by the proxy if willModifyResponse is set to true
+/// giving the plugin to modify responses before they get relayed
+void TransferControl::modifyProvisionalResponse(
+  SipTransaction* pTransaction,
+  const SipMessage& request,
+  SipMessage& response)
+{
+  //
+  // Only enable marshaling of 180 if suppressAlertIndicatorForTransfers is true
+  //
+  
+  if (mpSipRouter->suppressAlertIndicatorForTransfers())
+  {
+    int msgResponseCode = response.getResponseStatusCode();
+    if (msgResponseCode == 180)
+    {
+      //
+      // Check if 180 has an SDP.  Transform it as a 183 so that it won't get suppressed
+      //
+      
+      if (response.getBody())
+      {
+        OS_LOG_INFO(FAC_SIP, "TransferControl[%s]::modifyProvisionalResponse - Rewriting 180 with SDP to 183 Session Progress.");
+        response.setResponseFirstHeaderLine(SIP_PROTOCOL_VERSION, 183, "Session Progress (Marshaled)");
+      }
+    }
+  }
+}
+
+/// Boolean indicator that returns true if the plugin wants to process provisional responses
+bool TransferControl::willModifyProvisionalResponse() const
+{
+  return true;
+}
+
 /// destructor
 TransferControl::~TransferControl()
 {

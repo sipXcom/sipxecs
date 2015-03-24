@@ -199,6 +199,8 @@ SipRouter::SipRouter(SipUserAgent& sipUserAgent,
    
    mpEntityDb = new EntityDB(MongoDB::ConnectionInfo::globalInfo());
    mpRegDb = RegDB::CreateInstance();
+   
+   mpSipUserAgent->setProvisionalResponseHandler(boost::bind(&SipRouter::modifyProvisionalResponse, this, _1, _2, _3));
 
    // All is in readiness... Let the proxying begin...
    mpSipUserAgent->start();
@@ -310,6 +312,14 @@ void SipRouter::readConfig(OsConfigDb& configDb, const Url& defaultUri)
    while ((authPlugin = dynamic_cast<AuthPlugin*>(authPlugins.next(&authPluginName))))
    {
       authPlugin->announceAssociatedSipRouter( this );
+      
+      //
+      // Check if the plugin wants to modify provisional responses
+      //
+      if (authPlugin->willModifyProvisionalResponse())
+      {
+        _provisionalResponseModifiers.push_back(authPlugin);
+      }
    }
 
    // Load, instantiate and configure all authorization plugins
@@ -1668,4 +1678,12 @@ bool SipRouter::getUserLocation(const UtlString& identity, UtlString& location) 
   }
 
   return false;
+}
+
+void SipRouter::modifyProvisionalResponse(SipTransaction* pTransaction, const SipMessage& request, SipMessage& response)
+{
+  for (ProvisionalResponseModifiers::iterator iter = _provisionalResponseModifiers.begin(); iter != _provisionalResponseModifiers.end(); iter++)
+  {
+    (*iter)->modifyProvisionalResponse(pTransaction, request, response);
+  }
 }

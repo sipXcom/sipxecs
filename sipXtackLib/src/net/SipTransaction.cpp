@@ -4260,6 +4260,19 @@ UtlBoolean SipTransaction::handleIncoming(SipMessage& incomingMessage,
     // Requests, provisional responses, CANCEL response
     else
     {
+        //
+        // Call SipUserAgent provisional response handler prior to calling addResponse
+        // to give the chance for applications to modify the response before it
+        // gets attached to this transaction
+        //
+        if (incomingMessage.isResponse())
+        {
+          int msgResponseCode = incomingMessage.getResponseStatusCode();
+          if (msgResponseCode > 100 && msgResponseCode < 200)
+            userAgent.onProvisionalResponse(this, *mpRequest, incomingMessage);
+        }
+        
+                
         SipMessage* responseCopy = new SipMessage(incomingMessage);
 #ifdef TEST_PRINT
         Os::Logger::instance().log(FAC_SIP, PRI_DEBUG,
