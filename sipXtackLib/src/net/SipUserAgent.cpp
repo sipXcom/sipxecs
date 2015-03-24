@@ -4269,11 +4269,6 @@ UtlBoolean SipUserAgent::doesMaddrMatchesUserAgent(SipMessage& message)
    return bMatch;
 }
 
-void SipUserAgent::onProvisionalResponse(SipTransaction* pTransaction, const SipMessage& request, SipMessage& provisionalResponse)
-{
-  if (_provisionalResponseHandler)
-    _provisionalResponseHandler(pTransaction, request, provisionalResponse);
-}
 /* //////////////////////////// PRIVATE /////////////////////////////////// */
 
 /* ============================ FUNCTIONS ================================= */

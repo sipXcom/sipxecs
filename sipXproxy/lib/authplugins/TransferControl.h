@@ -69,16 +69,6 @@ class TransferControl : public AuthPlugin
 
    virtual void announceAssociatedSipRouter( SipRouter* sipRouter );
    
-   /// This method is called by the proxy if willModifyResponse is set to true
-   /// giving the plugin to modify responses before they get relayed
-   virtual void modifyProvisionalResponse(
-     SipTransaction* pTransaction,
-     const SipMessage& request,
-     SipMessage& response);
-
-   /// Boolean indicator that returns true if the plugin wants to process provisional responses
-   virtual bool willModifyProvisionalResponse() const;
-   
   protected:
    friend class TransferControlTest;
    

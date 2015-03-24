@@ -186,16 +186,6 @@ class AuthPlugin : public Plugin
    /// Provide a string version of an AuthResult value for logging. 
    static const char* AuthResultStr(AuthResult result);
    
-   /// This method is called by the proxy if willModifyResponse is set to true
-   /// giving the plugin to modify responses before they get relayed
-   virtual void modifyProvisionalResponse(
-     SipTransaction* pTransaction,
-     const SipMessage& request,
-     SipMessage& response);
-
-   /// Boolean indicator that returns true if the plugin wants to process provisional responses
-   virtual bool willModifyProvisionalResponse() const;
-
   protected:
 
    /// constructor
@@ -217,22 +207,5 @@ class AuthPlugin : public Plugin
 // @endcond INCLUDENOCOPY
 
 };
-
-//
-// Inlines
-//
-
-inline void AuthPlugin::modifyProvisionalResponse(
- SipTransaction* pTransaction,
- const SipMessage& request,
- SipMessage& finalResponse)
-{
-}
-
-/// Boolean indicator that returns true if the plugin wants to process final responses
-inline bool AuthPlugin::willModifyProvisionalResponse() const
-{
- return false;
-}
 
 #endif // _AUTHPLUGIN_H_

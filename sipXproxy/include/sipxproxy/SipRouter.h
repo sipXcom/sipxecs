@@ -11,7 +11,6 @@
 #define _SipRouter_h_
 
 // SYSTEM INCLUDES
-#include <vector>
 #include "sipdb/EntityDB.h"
 
 // APPLICATION INCLUDES
@@ -75,8 +74,6 @@ class SipRouter : public OsServerTask
 /* //////////////////////////// PUBLIC //////////////////////////////////// */
   public:
 
-   typedef std::vector<AuthPlugin*> ProvisionalResponseModifiers;
-   
    /// Default constructor
    SipRouter(SipUserAgent& sipUserAgent, 
              ForwardRules& forwardingRules,
@@ -176,8 +173,6 @@ class SipRouter : public OsServerTask
    
    UtlBoolean suppressAlertIndicatorForTransfers() const;
    
-   void modifyProvisionalResponse(SipTransaction* pTransaction, const SipMessage& request, SipMessage& response);
-   
 /* //////////////////////////// PROTECTED ///////////////////////////////// */
   protected:
 
@@ -256,7 +251,6 @@ class SipRouter : public OsServerTask
    RegDB* mpRegDb;
    
    UtlBoolean _suppressAlertIndicatorForTransfers;
-   ProvisionalResponseModifiers _provisionalResponseModifiers;
 };
 
 /* ============================ INLINE METHODS ============================ */
