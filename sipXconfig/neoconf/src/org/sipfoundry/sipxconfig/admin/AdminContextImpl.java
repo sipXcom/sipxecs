@@ -217,6 +217,10 @@ public class AdminContextImpl extends HibernateDaoSupport implements AdminContex
         return getSettings().isAuthEmailAddress();
     }
 
+    public String getNewLdapUserGroupNamePrefix() {
+        return getSettings().getNewLdapUserGroupNamePrefix();
+    }
+
     @Required
     public void setDomainManager(DomainManager domainManager) {
         m_domainManager = domainManager;

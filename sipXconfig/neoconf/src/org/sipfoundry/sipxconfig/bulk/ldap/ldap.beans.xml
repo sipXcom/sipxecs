@@ -73,7 +73,9 @@
     <property name="userMapper">
       <ref local="ldapUserMapper" />
     </property>
+    <property name="settingDao" ref="settingDao" />
     <property name="permissionManager" ref="permissionManager" />
+    <property name="adminContext" ref="adminContext" />
   </bean>
 
   <bean id="ldapUserMapper" class="org.sipfoundry.sipxconfig.bulk.ldap.UserMapper" scope="prototype">

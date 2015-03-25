@@ -151,6 +151,12 @@
       </type>
       <value>false</value>
     </setting>
+    <setting name="newUserGroupPrefix">
+      <type>
+    	<string/>
+      </type>
+      <value>New_LDAP</value>
+    </setting>    
   </group>
   <group name="user-portal">
     <setting name="old-portal">
