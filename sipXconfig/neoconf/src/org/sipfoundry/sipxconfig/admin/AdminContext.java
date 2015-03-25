@@ -55,4 +55,6 @@ public interface AdminContext {
     boolean isAuthEmailAddress();
 
     boolean isSystemAuditEnabled();
+
+    String getNewLdapUserGroupNamePrefix();
 }

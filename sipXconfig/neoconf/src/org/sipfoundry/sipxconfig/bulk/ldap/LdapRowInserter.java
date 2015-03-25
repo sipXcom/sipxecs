@@ -22,6 +22,7 @@ import javax.naming.directory.SearchResult;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.sipfoundry.sipxconfig.admin.AdminContext;
 import org.sipfoundry.sipxconfig.bulk.RowInserter;
 import org.sipfoundry.sipxconfig.common.CoreContext;
 import org.sipfoundry.sipxconfig.common.DuplicateType;
@@ -34,6 +35,7 @@ import org.sipfoundry.sipxconfig.forwarding.ForwardingContext;
 import org.sipfoundry.sipxconfig.permission.PermissionManager;
 import org.sipfoundry.sipxconfig.setting.Group;
 import org.sipfoundry.sipxconfig.setting.GroupAutoAssign;
+import org.sipfoundry.sipxconfig.setting.SettingDao;
 import org.sipfoundry.sipxconfig.vm.MailboxManager;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -57,6 +59,8 @@ public class LdapRowInserter extends RowInserter<SearchResult> {
     private Set<String> m_aliases;
     private List<String> m_importedUserNames;
     private List<String> m_notImportedUserNames;
+    private SettingDao m_settingDao;
+    private AdminContext m_adminContext;
 
     @Override
     protected Log getLog() {
@@ -99,7 +103,11 @@ public class LdapRowInserter extends RowInserter<SearchResult> {
             newUser = (user == null);
             if (newUser) {
                 user = m_coreContext.newUser();
+                String newUserGroupName = StringUtils.
+                    join(new String[] {m_adminContext.getNewLdapUserGroupNamePrefix(), m_domain});
                 user.setUserName(userName);
+                user.addGroup(m_settingDao.
+                    getGroupCreateIfNotFound(CoreContext.USER_GROUP_RESOURCE_ID, newUserGroupName));
             } else if (!user.isLdapManaged()) {
                 // this user was already created but it is not supposed to be managed by LDAP
                 LOG.info("STOP Inserting:" + attrs.toString()
@@ -185,6 +193,11 @@ public class LdapRowInserter extends RowInserter<SearchResult> {
     @Override
     protected String dataToString(SearchResult sr) {
         return sr.getName();
+    }
+
+    @Required
+    public void setSettingDao(SettingDao settingDao) {
+        m_settingDao = settingDao;
     }
 
     @Override
@@ -275,5 +288,10 @@ public class LdapRowInserter extends RowInserter<SearchResult> {
 
     public List<String> getNotImportedUserNames() {
         return m_notImportedUserNames;
+    }
+
+    @Required
+    public void setAdminContext(AdminContext adminContext) {
+        m_adminContext = adminContext;
     }
 }

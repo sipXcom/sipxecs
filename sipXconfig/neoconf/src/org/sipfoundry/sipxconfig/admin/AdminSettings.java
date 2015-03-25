@@ -43,6 +43,7 @@ public class AdminSettings extends PersistableSettings implements DeployConfigOn
     private static final String AUTHENTICATION_AUTH_ACC_NAME = "configserver-config/account-name";
     private static final String AUTHENTICATION_EMAIL_ADDRESS = "configserver-config/email-address";
     private static final String CORS_DOMAIN_SETTING = "configserver-config/corsDomains";
+    private static final String NEW_LDAP_USERS_GROUP_PREFIX = "ldap-management/newUserGroupPrefix";
 
     private PasswordPolicy m_passwordPolicy;
     private String[] m_logLevelKeys;
@@ -90,6 +91,10 @@ public class AdminSettings extends PersistableSettings implements DeployConfigOn
 
     public boolean isDelete() {
         return (Boolean) getSettingTypedValue(LDAP_MANAGEMENT_DELETE);
+    }
+
+    public String getNewLdapUserGroupNamePrefix() {
+        return (String) getSettingTypedValue(NEW_LDAP_USERS_GROUP_PREFIX);
     }
 
     public void setDisable(boolean disable) {
