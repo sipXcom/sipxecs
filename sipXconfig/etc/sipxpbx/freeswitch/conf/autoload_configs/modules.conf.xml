@@ -96,7 +96,7 @@
     <load module="mod_lua"/>
 
     <!-- ASR /TTS -->
-    <!-- <load module="mod_flite"/> -->
+    <load module="mod_flite"/>
     <!-- <load module="mod_pocketsphinx"/> -->
     <!-- <load module="mod_cepstral"/> -->
     <!-- <load module="mod_tts_commandline"/> -->
@@ -104,7 +104,7 @@
     
     <!-- Say -->
     <load module="mod_say_en"/>
-    <load module="mod_say_ru"/>
+    <!-- <load module="mod_say_ru"/> -->
     <!-- <load module="mod_say_zh"/> -->
 
     <!-- Third party modules -->
