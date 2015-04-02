@@ -34,16 +34,7 @@ BUILD_EPEL = \
 	Canna-libs-* \
 	ccache-* \
 	compface-1.5*\
-	erlang-R14B-* \
-	erlang-erlydtl-* \
-	erlang-getopt-* \
-	erlang-gettext-* \
-	erlang-lfe-* \
-	erlang-mustache-* \
-	erlang-neotoma-* \
-	erlang-protobuffs-* \
-	erlang-meck-* \
-	erlang-rebar-* \
+	erlang-* \
 	gperftools-devel-* \
 	gtest-devel-* \
 	gyp-* \
