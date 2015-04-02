@@ -34,6 +34,7 @@ BUILD_EPEL = \
 	Canna-libs-* \
 	ccache-* \
 	compface-1.5*\
+	erlang-R14B-* \
 	erlang-erlydtl-* \
 	erlang-getopt-* \
 	erlang-gettext-* \
