@@ -100,7 +100,7 @@ $(sipx:=.deps): %.deps :
 	        -e 's/Requires://' \
 	        -e 's/,/\n/g' \
 	        -e '/SELF/d' \
-	        $(foreach P,$(sipx),-e '/$(P)/Id') \
+	        $(foreach P,$(sipx_all),-e '/$(P)/Id') \
 	        $(REWRITE_DEPS_$(DISTRO_OS)_$(DISTRO_VER)) | \
 	    awk '{print $$1}' | \
 	    sort -u
