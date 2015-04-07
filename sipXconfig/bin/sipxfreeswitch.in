@@ -29,7 +29,7 @@ DAEMON_START_ARGS="-nc -nonat \
    $DAEMON_ARGS"
 DAEMON_STOP_ARGS="-stop \
    $DAEMON_ARGS"
-PIDFILE=@SIPX_LOGDIR@/freeswitch.pid
+PIDFILE=@SIPX_RUNDIR@/freeswitch.pid
 
 do_setlimits() {
         ulimit -c unlimited
