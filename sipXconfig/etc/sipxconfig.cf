@@ -64,7 +64,7 @@ bundle agent sipxconfig_running {
         comment => "start sipxconfig",
         args => "start";
 
-    primary.sipxconfig_running.(restart_sipxconfig|restart_sipxecs|java_authorities_repaired)::
+    primary.sipxconfig_running.(restart_sipxconfig|restart_sipxecs|java_authorities_repaired|change_password)::
       "$(sipx.SIPX_SERVICEDIR)/sipxconfig"
         comment => "restart sipxconfig",
         args => "asyncrestart";

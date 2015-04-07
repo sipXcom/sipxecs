@@ -21,11 +21,15 @@ import java.io.Writer;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
+import org.sipfoundry.sipxconfig.cdr.CdrManager;
+import org.sipfoundry.sipxconfig.cfgmgt.CfengineModuleConfiguration;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigProvider;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigRequest;
+import org.sipfoundry.sipxconfig.cfgmgt.KeyValueConfiguration;
 import org.sipfoundry.sipxconfig.cfgmgt.LoggerKeyValueConfiguration;
 import org.sipfoundry.sipxconfig.commserver.Location;
+import org.sipfoundry.sipxconfig.proxy.ProxyManager;
 import org.sipfoundry.sipxconfig.setting.Setting;
 import org.sipfoundry.sipxconfig.setting.SettingUtil;
 
@@ -42,12 +46,26 @@ public class AdminConfig implements ConfigProvider {
         Set<Location> locations = request.locations(manager);
         AdminSettings settings = m_adminContext.getSettings();
         Setting adminSettings = settings.getSettings().getSetting(m_adminSettingsKey);
+
         for (Location l : locations) {
+            File dir = manager.getLocationDataDirectory(l);
+            if(l.isPrimary() || manager.getFeatureManager().isFeatureEnabled(ProxyManager.FEATURE, l)
+                || manager.getFeatureManager().isFeatureEnabled(CdrManager.FEATURE, l)) {
+                Writer pwd = new FileWriter(new File(dir, "postgres-pwd.properties"));
+                Writer pwdCfdat = new FileWriter(new File(dir, "postgres-pwd.cfdat"));
+                try {
+                    KeyValueConfiguration cfg = KeyValueConfiguration.equalsSeparated(pwd);
+                    CfengineModuleConfiguration cfgCfdat = new CfengineModuleConfiguration(pwdCfdat);
+                    cfg.write("password", settings.getPostgresPassword());
+                    cfgCfdat.write("NEW_POSTGRESQL_PASSWORD", settings.getPostgresPassword());
+                } finally {
+                    IOUtils.closeQuietly(pwd);
+                    IOUtils.closeQuietly(pwdCfdat);
+                }
+            }
             if (!l.isPrimary()) {
                 continue;
             }
-            File dir = manager.getLocationDataDirectory(l);
-
             String log4jFileName = "log4j.properties.part";
             String[] logLevelKeys = settings.getLogLevelKeys();
             SettingUtil.writeLog4jSetting(adminSettings, dir, log4jFileName, logLevelKeys);
