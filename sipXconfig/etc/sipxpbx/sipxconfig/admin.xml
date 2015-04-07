@@ -70,6 +70,11 @@
         <string minLen="8" password="yes"/>
       </type>
     </setting>
+    <setting name="postgres-pwd">
+      <type>
+        <string minLen="8" password="yes"/>
+      </type>
+    </setting>    
     <setting name="vmpin-default">
       <type>
         <string minLen="4" password="yes"/>

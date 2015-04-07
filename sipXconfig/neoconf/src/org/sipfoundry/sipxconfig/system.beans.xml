@@ -10,10 +10,24 @@
       <value>sipxconfig.properties</value>
     </constructor-arg>
   </bean>
+  
+  <bean id="postgres-pwd.properties" class="org.springframework.core.io.ClassPathResource">
+    <constructor-arg index="0">
+      <value>postgres-pwd.properties</value>
+    </constructor-arg>
+  </bean>
 
   <bean id="sysdir" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="ignoreUnresolvablePlaceholders" value="true"/>
     <property name="location">
       <ref local="sipxconfig.properties" />
+    </property>
+  </bean>
+  
+  <bean id="postgres-pwd" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    <property name="location">
+      <ref local="postgres-pwd.properties" />
     </property>
   </bean>
 
@@ -22,6 +36,13 @@
   <bean class="org.springframework.beans.factory.config.PropertyOverrideConfigurer">
     <property name="location">
       <ref local="sipxconfig.properties" />
+    </property>
+    <property name="ignoreInvalidKeys" value="true" />
+  </bean>
+  
+  <bean class="org.springframework.beans.factory.config.PropertyOverrideConfigurer">
+    <property name="location">
+      <ref local="postgres-pwd.properties" />
     </property>
     <property name="ignoreInvalidKeys" value="true" />
   </bean>
@@ -45,6 +66,9 @@
     </property>
     <property name="user">
       <value>${sipxconfig.db.user}</value>
+    </property>
+    <property name="password">
+      <value>${password}</value>
     </property>
     <!-- Determines how many connections at a time c3p0 will try to acquire when the pool
       is exhausted.  Default: 3.
