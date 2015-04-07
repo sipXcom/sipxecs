@@ -101,6 +101,7 @@ public class MediaServlet extends HttpServlet {
                 if (messageIdSuffix != null
                         && !messageIdSuffix.equals(message.getDescriptor().getAudioFormat())) {
                     response.sendError(404); // name doesn't match
+                    return;
                 }
                 response.setHeader("Expires", "0");
                 response.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
