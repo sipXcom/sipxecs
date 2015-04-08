@@ -140,7 +140,7 @@ account.${lastLineID}.sip_listen_port = 0
 #end
 
 #set ($lastLineID = $lastLineID + 1)
-#if (${lastLineID}<${maxLineCount})
+#if (${lastLineID}<=${maxLineCount})
 # Disable other lines
 #foreach($L in [${lastLineID}..${maxLineCount}])
 #set ($SLP = $L - 1)
