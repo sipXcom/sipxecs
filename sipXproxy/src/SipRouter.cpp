@@ -39,6 +39,10 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/thread/pthread/mutex.hpp>
 
+#include "OSS/SIP/SIPMessage.h"
+#include "OSS/SIP/SIPURI.h"
+#include "OSS/SIP/SIPContact.h"
+
 // DEFINES
 //#define TEST_PRINT 1
 
@@ -236,6 +240,8 @@ SipRouter::SipRouter(SipUserAgent& sipUserAgent,
    mpSipUserAgent->setPreDispatchEvaluator(boost::bind(&SipRouter::preDispatch, this, _1));
    
    mpSipUserAgent->setFinalResponseHandler(boost::bind(&SipRouter::modifyFinalResponse, this, _1, _2, _3));
+   
+   mpSipUserAgent->setPreprocesor(boost::bind(&SipRouter::preprocessMessage, this, _1, _2, _3));
      
    // All is in readiness... Let the proxying begin...
    mpSipUserAgent->start();
@@ -2184,4 +2190,48 @@ void SipRouter::modifyFinalResponse(SipTransaction* pTransaction, const SipMessa
   {
     (*iter)->modifyFinalResponse(pTransaction, request, finalResponse);
   }
+}
+
+
+bool SipRouter::preprocessMessage(SipMessage& msg,
+                                  const UtlString& msgText,
+                                  int msgLength)
+{
+  //
+  // Due to a bug in the sipx URI parser, we will be dropping messages that has a comma in the user part
+  // See: http://jira.sipxcom.org/browse/XX-11602?filter=-2
+  //
+  try
+  {
+    OSS::SIP::SIPMessage msg(msgText.data());
+
+    if (msg.isRequest())
+    {
+      std::vector<std::string> bindings;
+      OSS::SIP::SIPContact::msgGetContacts(&msg, bindings);
+
+      if (bindings.empty())
+      {
+        OS_LOG_WARNING(FAC_SIP, "Unable to parse any contact in message - \n" << msgText.data());
+        return false;
+      }
+
+      std::string contact = bindings[0];
+      OSS::SIP::ContactURI hContact(contact);
+      std::string user = hContact.getUser();
+
+      if (user.find(',') != std::string::npos)
+      {
+        OS_LOG_WARNING(FAC_SIP, "Dropping message with comma in contact-user - \n" << msgText.data());
+        return false;
+      }
+    }
+  }
+  catch(...)
+  {
+    OS_LOG_WARNING(FAC_SIP, "Unable to parse incoming message - \n" << msgText.data());
+    return false;
+  }
+  
+  return true;
 }

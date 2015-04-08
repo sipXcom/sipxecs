@@ -18,6 +18,7 @@ AM_CONDITIONAL(IS_RPMBUILD, test x$enable_rpmbuild = xyes)
 SFAC_INIT_FLAGS
 SFAC_LIB_COMMSERVER
 SFAC_FEATURE_SIP_TLS
+SFAC_LIB_OSS_CORE
 CHECK_ODBC
 AC_ARG_ENABLE(cse-tests,
   AC_HELP_STRING([--enable-cse-tests], [Run unit tests that test saving CSE data to postgres db setup]),
