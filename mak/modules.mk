@@ -9,6 +9,7 @@ sipx_core = \
   sipXportLib \
   sipXtackLib \
   sipXresiprocate \
+  oss_core \
   sipXmediaLib \
   sipXmediaAdapterLib \
   sipXcallLib \
