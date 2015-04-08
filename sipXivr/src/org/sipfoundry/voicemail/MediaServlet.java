@@ -79,6 +79,12 @@ public class MediaServlet extends HttpServlet {
         // The third element is the "context" (either mwi, message)
         String dir = subDirs[2];
         String messageId = subDirs[3];
+        String messageIdSuffix = null;
+        if (messageId.endsWith(".wav") || messageId.endsWith(".mp3")) {
+            String[] messageIdArray = messageId.split("\\.");
+            messageIdSuffix = messageIdArray[1];
+            messageId = messageIdArray[0];
+        }
 
         User user = validUsers.getUser(mailboxString);
         // only superadmin and mailbox owner can access this service
@@ -92,6 +98,11 @@ public class MediaServlet extends HttpServlet {
             if (method.equals(METHOD_GET)) {
                 VmMessage message = mailboxManager.getVmMessage(user.getUserName(), messageId, true);
                 File audioFile = message.getAudioFile();
+                if (messageIdSuffix != null
+                        && !messageIdSuffix.equals(message.getDescriptor().getAudioFormat())) {
+                    response.sendError(404); // name doesn't match
+                    return;
+                }
                 response.setHeader("Expires", "0");
                 response.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
                 response.setHeader("Pragma", "public");
