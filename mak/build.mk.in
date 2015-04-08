@@ -68,7 +68,10 @@ $(foreach P,$(custommodules),$(SRC)/$(P)) : $(SRC)/% :
 $(foreach P,$(git_submodules),$(SRC)/$(P)/.git) : $(SRC)/%/.git :
 	cd $(SRC); \
 	  git submodule init $*; \
-	  git submodule update $*
+	  git submodule update $*; \
+          cd $(SRC)/$*; \
+          git submodule init; \
+          git submodule update
 
 .PHONY:$(sipx)
 help.* = Compile and install from source this a specific project. Assumes all dependencies are already compiled and installed.
