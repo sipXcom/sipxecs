@@ -272,6 +272,10 @@ class SipRouter : public OsServerTask
    
    bool preDispatch(SipMessage* pMsg);
    
+   bool preprocessMessage(SipMessage& msg,
+                                  const UtlString& msgText,
+                                  int msgLength);
+   
    void registerDispatchTimer(DispatchTimer& dispatchTimer);
    
    Int64 getLastDispatchSpeed() const;
