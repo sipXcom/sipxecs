@@ -19,7 +19,7 @@
 #include <net/SipClient.h>
 #include <net/SipMessageEvent.h>
 #include <net/SipProtocolServerBase.h>
-#include <net/SipUserAgentBase.h>
+#include <net/SipUserAgent.h>
 #include <net/Instrumentation.h>
 
 #include <os/OsDateTime.h>
@@ -35,7 +35,6 @@
 #include <sstream>
 #include <vector>
 
-#define SIP_DEFAULT_RTT 500
 // The time in milliseconds that we allow poll() to wait.
 // This must be short, as the run() loop must wake up periodically to check
 // if the client's thread is being shut down.
@@ -194,7 +193,6 @@ SipClient::SipClient(OsSocket* socket,
    mRemoteViaPort(PORT_NONE),
    mRemoteReceivedPort(PORT_NONE),
    mSocketLock(OsBSem::Q_FIFO, OsBSem::FULL),
-   mFirstResendTimeoutMs(SIP_DEFAULT_RTT * 4), // for first transcation time out
    mbSharedSocket(bIsSharedSocket),
    mWriteQueued(FALSE),
    mbTcpOnErrWaitForSend(TRUE)
@@ -1260,6 +1258,15 @@ bool SipClient::preprocessMessage(SipMessage& msg,
                                   const UtlString& msgText,
                                   int msgLength)
 {
+  SipUserAgent* pUserAgent = dynamic_cast<SipUserAgent* >(mpSipUserAgent);
+  
+  if (pUserAgent && pUserAgent->preprocessor())
+  {
+    if (!pUserAgent->preprocessor()(msg, msgText, msgLength))
+    {
+      return false;
+    }
+  }
   
   msg.setProperty("transport-queue-size", boost::lexical_cast<std::string>(mIncomingQ.numMsgs()));
   msg.setProperty("transport-queue-max-size", boost::lexical_cast<std::string>(mIncomingQ.maxMsgs()));

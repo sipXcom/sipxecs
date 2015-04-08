@@ -186,7 +186,6 @@ protected:
 
     long touchedTime;
     OsBSem mSocketLock;
-    int mFirstResendTimeoutMs;
 
     /** Is this a shared socket?
      *  If true, do not delete or close it.

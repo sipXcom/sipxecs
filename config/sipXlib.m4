@@ -797,31 +797,38 @@ AC_DEFUN([CHECK_SERVICEDIR],
   AC_SUBST([SERVICEDIR])
 ])
 
-AC_DEFUN([OSSCORE_LIB],
+
+AC_DEFUN([SFAC_LIB_OSS_CORE],
 [
-  AC_ARG_WITH(osscore, [--with-osscore={yes,no,osscore-location} Default is yes and will search 
-                        for osscore in standard locations], 
-osscore_prefix="$withval",  
-osscore_prefix="yes")
+    SFAC_ARG_WITH_INCLUDE([OSS/OSS.h],
+            [oss_coreinc],
+            [ --with-oss_coreinc=<dir> oss core include path ],
+            [oss_core])
 
-  if test "$osscore_prefix" == "yes" ; then
-    osscore_prefix="${PREFIX}/lib /usr/lib /usr/lib64"
-  fi
+    if test x_$foundpath != x_; then
+        AC_MSG_RESULT($foundpath)
+    else
+        AC_MSG_WARN([    assuming it will be in '${prefix}/include'])
+        foundpath=${prefix}/include
+    fi
+    OSSCOREINC=$foundpath
+    AC_SUBST(OSSCOREINC)
 
-  if test "$osscore_prefix" != "no"; then
-    AC_MSG_CHECKING([for OssCore])
-    for d in $osscore_prefix ; do
-      if test -f $d/liboss_core.la ; then
-        AC_MSG_RESULT([yes - $d])
-        osscore_found=yes
-        break;
-      fi
-    done
-  fi
+    SFAC_ARG_WITH_LIB([liboss_core.la],
+            [oss_corelib],
+            [ --with-oss_corelib=<dir> oss core library path ],
+            [oss_core])
 
-  if test -z "$osscore_found" ; then
-    AC_MSG_RESULT([no])
-  fi
+    if test x_$foundpath != x_; then
+        AC_MSG_RESULT($foundpath)
+    else
+        AC_MSG_WARN([    assuming it will be in '${prefix}/lib'])
+        foundpath=${prefix}/lib
+    fi 
 
-  AC_SUBST(OSSCORE_LIBS, "$d/liboss_core.la")
-])
+    OSSCORELIB=$foundpath
+    LIBRE="${prefix}/opt/ossapp/librem/lib/librem.a ${prefix}/opt/ossapp/libre/lib/libre.a"
+
+    AC_SUBST(OSSCORE_LIBS,["$OSSCORELIB/liboss_core.la $OSSCORELIB/liboss_carp.la $LIBRE"])
+
+]) # SFAC_LIB_OSS_CORE

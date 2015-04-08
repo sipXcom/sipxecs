@@ -171,6 +171,7 @@ public:
     friend class SipUdpServer;
     friend int SipUdpServer::run(void* runArg);
 
+    typedef boost::function<bool(SipMessage&,const UtlString&,int)> Preprocessor;
     typedef boost::function<bool(SipMessage*)> DispatchEvaluator;
     typedef boost::function<void(SipTransaction*, const SipMessage&, SipMessage&)> FinalResponseHandler;
     
@@ -715,6 +716,10 @@ public:
     void setPreDispatchEvaluator(const DispatchEvaluator& preDispatch);
     
     void setFinalResponseHandler(const FinalResponseHandler& finalResponseHandler);
+    
+    void setPreprocesor(const Preprocessor& preprocessor);
+    
+    Preprocessor& preprocessor();
 
     const SipTransactionList& getSipTransactions() const;
     
@@ -894,6 +899,7 @@ private:
     int _maxTransactionCount;
     DispatchEvaluator _preDispatch;
     FinalResponseHandler _finalResponseHandler;
+    Preprocessor _preprocessor;
 
     //! Disabled copy constructor
     SipUserAgent(const SipUserAgent& rSipUserAgent);
@@ -939,6 +945,16 @@ inline void SipUserAgent::setPreDispatchEvaluator(const DispatchEvaluator& preDi
 inline void SipUserAgent::setFinalResponseHandler(const FinalResponseHandler& finalResponseHandler)
 {
   _finalResponseHandler = finalResponseHandler;
+}
+
+inline void SipUserAgent::setPreprocesor(const Preprocessor& preprocessor)
+{
+  _preprocessor = preprocessor;
+}
+
+inline SipUserAgent::Preprocessor& SipUserAgent::preprocessor()
+{
+  return _preprocessor;
 }
 
 

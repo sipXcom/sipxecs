@@ -21,6 +21,7 @@ sipXproxy_LDFLAGS = \
 sipXproxy_LDADD = \
 	libsipXproxy.la \
 	@SIPXCOMMSERVER_LIBS@ \
+	@OSSCORE_LIBS@ \
         -lzmq \
         -lmongoclient \
         -lboost_system-mt
