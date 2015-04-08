@@ -108,7 +108,9 @@ public class MediaServlet extends HttpServlet {
                 response.setHeader("Pragma", "public");
                 response.setHeader("Content-Disposition", "attachment; filename=\"" + audioFile.getName() + "\"");
                 String mimeType = MimeType.getMimeByFormat(message.getDescriptor().getAudioFormat());
-                if (StringUtils.isNotBlank(mimeType)) {
+                if (dir.equals("download")){
+                    response.setHeader("Content-type", "application/force-download");
+                }else if (StringUtils.isNotBlank(mimeType)) {
                     response.setHeader("Content-type", MimeType.getMimeByFormat(message.getDescriptor().getAudioFormat()));
                 }
 
