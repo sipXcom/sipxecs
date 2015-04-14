@@ -49,7 +49,7 @@ public class AdminConfig implements ConfigProvider {
 
         for (Location l : locations) {
             File dir = manager.getLocationDataDirectory(l);
-            if(l.isPrimary() || manager.getFeatureManager().isFeatureEnabled(ProxyManager.FEATURE, l)
+            if (l.isPrimary() || manager.getFeatureManager().isFeatureEnabled(ProxyManager.FEATURE, l)
                 || manager.getFeatureManager().isFeatureEnabled(CdrManager.FEATURE, l)) {
                 Writer pwd = new FileWriter(new File(dir, "postgres-pwd.properties"));
                 Writer pwdCfdat = new FileWriter(new File(dir, "postgres-pwd.cfdat"));
