@@ -75,7 +75,7 @@ public class AdminSettings extends PersistableSettings implements DeployConfigOn
     }
 
     public String getPostgresPassword() {
-        return getSettingValue("configserver-config/postgres-pwd");
+        return getSettingValue(POSTGRES_PASSWORD);
     }
 
     public String getDefaultVmPin() {
