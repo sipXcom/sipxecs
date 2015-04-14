@@ -24,8 +24,9 @@ bundle agent sipxdns {
       "managed_ext" string => ".unmanaged";
 
   methods:
-    !sipxdns_unmanaged::
-      "any" usebundle => sipxecs_network_config;
+    "any" usebundle => sipxecs_network_config;
+
+    !sipxdns_unmanaged::   
       "any" usebundle => network_scripts;
       
     sipxdns::
