@@ -21,7 +21,6 @@ import java.io.Writer;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
-import org.sipfoundry.sipxconfig.cdr.CdrManager;
 import org.sipfoundry.sipxconfig.cfgmgt.CfengineModuleConfiguration;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigProvider;
@@ -49,8 +48,7 @@ public class AdminConfig implements ConfigProvider {
 
         for (Location l : locations) {
             File dir = manager.getLocationDataDirectory(l);
-            if (l.isPrimary() || manager.getFeatureManager().isFeatureEnabled(ProxyManager.FEATURE, l)
-                || manager.getFeatureManager().isFeatureEnabled(CdrManager.FEATURE, l)) {
+            if (l.isPrimary() || manager.getFeatureManager().isFeatureEnabled(ProxyManager.FEATURE, l)) {
                 Writer pwd = new FileWriter(new File(dir, "postgres-pwd.properties"));
                 Writer pwdCfdat = new FileWriter(new File(dir, "postgres-pwd.cfdat"));
                 try {

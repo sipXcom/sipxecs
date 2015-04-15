@@ -52,6 +52,7 @@ public class CdrLogRestlet extends Restlet {
         RestServerConfig config = RestServer.getRestServerConfig();
         String cdrDBUrl = config.getSipxcdrAddress();
         String dbUser = config.getDbUser();
+        String dbPassword = config.getDbPassword();
 
         try {
             Method httpMethod = request.getMethod();
@@ -105,7 +106,7 @@ public class CdrLogRestlet extends Restlet {
 
             System.setProperty("jdbc.drivers", "org.postgresql.Driver");
             // Establish a connection to the CDR database.
-            cdrConnection = DriverManager.getConnection(cdrDBUrl, dbUser, "");
+            cdrConnection = DriverManager.getConnection(cdrDBUrl, dbUser, dbPassword);
 
             String sqlPrepareString;
             String userLike = "%:" + userId + "@%";
