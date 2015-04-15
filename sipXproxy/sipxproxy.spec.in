@@ -18,6 +18,7 @@ BuildRequires: unixODBC-devel
 BuildRequires: zip
 BuildRequires: oss_core-devel
 BuildRequires: libmcrypt-devel
+BuildRequires: gtest-devel
 %if %{_vendor} == suse
 BuildRequires: pwdutils
 %else
