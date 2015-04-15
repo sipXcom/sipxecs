@@ -20,6 +20,10 @@ BuildRequires: oss_core-devel
 BuildRequires: libmcrypt-devel
 BuildRequires: gtest-devel
 BuildRequires: v8-devel
+BuildRequires: leveldb-devel
+BuildRequires: hiredis-devel
+BuildRequires: libpcap-devel
+
 %if %{_vendor} == suse
 BuildRequires: pwdutils
 %else
