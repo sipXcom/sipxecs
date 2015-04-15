@@ -103,6 +103,7 @@ bundle edit_line sipXproxy_config_contents() {
       "SIPX_PROXY.400_authrules.RULES : $(sipx.SIPX_CONFDIR)/authrules.xml";
       "SIPX_PROXY.990_emerglineid.EMERGRULES : $(sipx.SIPX_CONFDIR)/authrules.xml";
       "SIPX_PROXY_BIND_IP : $(sipx.bind_ip)";
+      "SIPX_PROXY_CALL_STATE_DB_PASSWORD : $(sipx.NEW_POSTGRESQL_PASSWORD)";
       "SIPX_TRAN_HOOK_LIBRARY.905_gatewaydest : $(sipx.SIPX_LIBDIR)/transactionplugins/libGatewayDestPlugin.so";
     homer::
       "SIPX_TRAN_HOOK_LIBRARY.100_sipxhomer : $(sipx.SIPX_LIBDIR)/transactionplugins/libsipXhomerProxyPlugin.so";
@@ -157,7 +158,7 @@ bundle agent sipxproxy_running {
         comment => "start sipxproxy",
         args => "start";
 
-    sipxproxy.sipxproxy_running.(restart_sipxproxy|restart_sipxecs)::
+    sipxproxy.sipxproxy_running.(restart_sipxproxy|restart_sipxecs|change_password)::
       "$(sipx.SIPX_SERVICEDIR)/sipxproxy"
         comment => "restart sipxproxy",
         args => "asyncrestart";
