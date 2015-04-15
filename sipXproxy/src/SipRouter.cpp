@@ -2216,14 +2216,17 @@ bool SipRouter::preprocessMessage(SipMessage& parsedMsg,
         return false;
       }
 
-      std::string contact = bindings[0];
-      OSS::SIP::ContactURI hContact(contact);
-      std::string user = hContact.getUser();
-
-      if (user.find(',') != std::string::npos)
+      for (std::vector<std::string>::iterator iter = bindings.begin(); iter != bindings.end(); iter++)
       {
-        OS_LOG_WARNING(FAC_SIP, "Dropping message with comma in contact-user - \n" << msgText.data());
-        return false;
+        std::string& contact = *iter;
+        OSS::SIP::ContactURI hContact(contact);
+        std::string user = hContact.getUser();
+
+        if (user.find(',') != std::string::npos)
+        {
+          OS_LOG_WARNING(FAC_SIP, "Dropping message with comma in contact-user - \n" << msgText.data());
+          return false;
+        }
       }
     }
   }
