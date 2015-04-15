@@ -17,6 +17,7 @@ BuildRequires: pcre-devel >= 4.5
 BuildRequires: unixODBC-devel
 BuildRequires: zip
 BuildRequires: oss_core-devel
+BuildRequires: libmcrypt-devel
 %if %{_vendor} == suse
 BuildRequires: pwdutils
 %else
