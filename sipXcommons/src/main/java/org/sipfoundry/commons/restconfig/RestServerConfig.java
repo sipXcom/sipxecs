@@ -19,6 +19,7 @@ public class RestServerConfig {
 	private String sipxProxyDomain;
 	private String sipxcdrAddress;
 	private String dbUser;
+	private String dbPassword;
 
 	public void setIpAddress(String ipAddress) {
 		this.ipAddress = ipAddress;
@@ -90,6 +91,14 @@ public class RestServerConfig {
 
     public void setDbUser(String dbUser) {
         this.dbUser = dbUser;
+    }
+
+    public String getDbPassword() {
+        return dbPassword;
+    }
+
+    public void setDbPassword(String dbPassword) {
+        this.dbPassword = dbPassword;
     }
 
     public int getCacheTimeout() {

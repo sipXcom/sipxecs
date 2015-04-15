@@ -31,6 +31,7 @@ public class RestServerConfigFileParser {
         digester.addCallMethod( String.format("%s/%s", REST_CONFIG,"log-level"), "setLogLevel",0);
         digester.addCallMethod( String.format("%s/%s", REST_CONFIG,"sipxcdr-address"), "setSipxcdrAddress", 0);
         digester.addCallMethod( String.format("%s/%s", REST_CONFIG,"db-user"), "setDbUser", 0);
+        digester.addCallMethod( String.format("%s/%s", REST_CONFIG,"db-password"), "setDbPassword", 0);
     }
 
     public RestServerConfig parse(String url) {
