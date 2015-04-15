@@ -1203,15 +1203,15 @@ private:
     {
       // WARNING: at one test it worked only with this fix; later it worked also without
       // this fix
-//      if (false == _isAlive)
-//      {
-//        OS_LOG_INFO(FAC_NET, "StateQueueClient::eventLoop connection is not alive, closing socket, resubscribe");
-//
-//        destroyZmqSocket();
-//        createZmqSocket();
-//
-//        subscribeForEvents();
-//      }
+      if (false == _isAlive)
+      {
+        OS_LOG_INFO(FAC_NET, "StateQueueClient::eventLoop connection is not alive, closing socket, resubscribe");
+
+        destroyZmqSocket();
+        createZmqSocket();
+
+        subscribeForEvents();
+      }
 
       std::string id;
       std::string data;
