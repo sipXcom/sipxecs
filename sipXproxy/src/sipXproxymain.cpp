@@ -74,10 +74,12 @@ static const char* CONFIG_SETTING_CALL_STATE_DB = "SIPX_PROXY_CALL_STATE_DB";
 static const char* CONFIG_SETTING_CALL_STATE_DB_HOST = "SIPX_PROXY_CALL_STATE_DB_HOST";
 static const char* CONFIG_SETTING_CALL_STATE_DB_NAME = "SIPX_PROXY_CALL_STATE_DB_NAME";
 static const char* CONFIG_SETTING_CALL_STATE_DB_USER = "SIPX_PROXY_CALL_STATE_DB_USER";
+static const char* CONFIG_SETTING_CALL_STATE_DB_PASSWORD = "SIPX_PROXY_CALL_STATE_DB_PASSWORD";
 static const char* CONFIG_SETTING_CALL_STATE_DB_DRIVER = "SIPX_PROXY_CALL_STATE_DB_DRIVER";
 static const char* CALL_STATE_DATABASE_HOST = "localhost";
 static const char* CALL_STATE_DATABASE_NAME = "SIPXCDR";
 static const char* CALL_STATE_DATABASE_USER = POSTGRESQL_USER;
+static const char* CALL_STATE_DATABASE_PASSWORD = "";
 static const char* CALL_STATE_DATABASE_DRIVER = "{PostgreSQL}";
 static const char* PROXY_CONFIG_PREFIX = "SIPX_PROXY";
 
@@ -270,6 +272,7 @@ int proxy()
     UtlString callStateDbHostName;
     UtlString callStateDbName;
     UtlString callStateDbUserName;
+    UtlString callStateDbPassword;
     UtlString callStateDbDriver;    
     if (enableCallStateDbObserver)
     {
@@ -294,6 +297,11 @@ int proxy()
       {
         callStateDbUserName = CALL_STATE_DATABASE_USER;
       }
+      osServiceOptions.getOption(CONFIG_SETTING_CALL_STATE_DB_PASSWORD, callStateDbPassword);
+      if (callStateDbPassword.isNull())
+      {
+        callStateDbPassword = CALL_STATE_DATABASE_PASSWORD;
+      }      
       Os::Logger::instance().log(FAC_SIP, PRI_INFO, "%s : %s", CONFIG_SETTING_CALL_STATE_DB_USER,
           callStateDbUserName.data());
 
@@ -505,7 +513,8 @@ int proxy()
        pEventWriter = new CallStateEventWriter_DB(callStateDbName.data(),
                                                   callStateDbHostName.data(),
                                                   callStateDbUserName,
-                                                  callStateDbDriver);      
+                                                  callStateDbDriver,
+                                                  callStateDbPassword);      
     }                                            
        
     if (pEventWriter)
