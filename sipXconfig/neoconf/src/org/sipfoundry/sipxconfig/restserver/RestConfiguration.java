@@ -35,11 +35,13 @@ import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.domain.Domain;
 import org.sipfoundry.sipxconfig.setting.Setting;
 import org.sipfoundry.sipxconfig.setting.SettingUtil;
+import org.springframework.beans.factory.annotation.Required;
 
 public class RestConfiguration implements ConfigProvider {
     private RestServer m_restServer;
     private VelocityEngine m_velocityEngine;
     private String m_restSettingKey = "rest-config";
+    private String m_postgresPwd;
 
     @Override
     public void replicate(ConfigManager manager, ConfigRequest request) throws IOException {
@@ -80,6 +82,7 @@ public class RestConfiguration implements ConfigProvider {
         context.put("location", location);
         context.put("domainName", domain.getName());
         context.put("sipxcdrDbAddress", sipxcdrApi.toString());
+        context.put("postgresPwd", m_postgresPwd);
         try {
             m_velocityEngine.mergeTemplate("sipxrest/sipxrest-config.vm", context, wtr);
         } catch (Exception e) {
@@ -93,5 +96,10 @@ public class RestConfiguration implements ConfigProvider {
 
     public void setVelocityEngine(VelocityEngine velocityEngine) {
         m_velocityEngine = velocityEngine;
+    }
+
+    @Required
+    public void setPostgresPwd(String postgresPwd) {
+        m_postgresPwd = postgresPwd;
     }
 }

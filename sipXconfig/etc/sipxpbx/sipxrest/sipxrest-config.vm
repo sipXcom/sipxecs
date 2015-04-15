@@ -8,4 +8,5 @@
   <sip-port>$settings.getSetting('sipPort').Value</sip-port>
   <sipxcdr-address>${sipxcdrDbAddress}</sipxcdr-address>
   <db-user>@POSTGRESQL_USER@</db-user>
+  <db-password>${postgresPwd}</db-password>
 </rest-config>

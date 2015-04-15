@@ -25,6 +25,7 @@
   <bean id="restServerConfiguration" class="org.sipfoundry.sipxconfig.restserver.RestConfiguration">
     <property name="restServer" ref="restServer" />
     <property name="velocityEngine" ref="velocityEngine"/>
+    <property name="postgresPwd" value="${password}"/>
   </bean>
 
 </beans>
