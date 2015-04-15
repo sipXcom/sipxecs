@@ -63,7 +63,7 @@ bundle agent postgres_init {
     !fedora16_or_greater.initdb::
       "$(sipx.PG_DAEMON)"
         comment => "initialize postgres",
-        args => "initdb";   
+        args => "initdb";
 }
 
 bundle agent postgres_config {
@@ -89,7 +89,7 @@ bundle agent postgres_config {
         create => "true",
         perms => mog("644","$(sipx.POSTGRESQL_USER)","$(sipx.POSTGRESQL_GROUP)"),
         classes => if_repaired("restart_postgres"),
-        edit_line => replace_contents("-i");                      
+        edit_line => replace_contents("-i");
 }
 
 
@@ -148,7 +148,7 @@ bundle agent postgres_sysv_running {
   vars:
     any::
       "service_command" string => "/usr/bin/postmaster";
-      
+
   methods:
     any::
       "any" usebundle => find_service_by_command("$(service_command)", "postgres_running","$(sipx.POSTGRESQL_USER)");
@@ -176,7 +176,7 @@ bundle agent postgres_sysv_running {
     postgres.postgres_running.(restart_postgres|change_password)::
       "$(sipx.PG_DAEMON)"
         comment => "restart postgres",
-        args => "restart";               
+        args => "restart";
 }
 
 bundle agent postgres_sysctl_running {
