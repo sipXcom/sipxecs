@@ -2193,7 +2193,7 @@ void SipRouter::modifyFinalResponse(SipTransaction* pTransaction, const SipMessa
 }
 
 
-bool SipRouter::preprocessMessage(SipMessage& msg,
+bool SipRouter::preprocessMessage(SipMessage& parsedMsg,
                                   const UtlString& msgText,
                                   int msgLength)
 {
