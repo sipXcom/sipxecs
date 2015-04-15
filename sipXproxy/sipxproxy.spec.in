@@ -16,7 +16,7 @@ BuildRequires: zeromq-devel
 BuildRequires: pcre-devel >= 4.5
 BuildRequires: unixODBC-devel
 BuildRequires: zip
-BuildRequires: oss_core
+BuildRequires: oss_core-devel
 %if %{_vendor} == suse
 BuildRequires: pwdutils
 %else
