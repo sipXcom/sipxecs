@@ -40,6 +40,7 @@ BUILD_EPEL = \
 	gyp-* \
 	http-parser-* \
 	http-parser-devel-* \
+	libmcrypt-devel-* \
 	libdnet-* \
 	libdnet-devel-* \
 	libev-* \
