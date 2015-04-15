@@ -54,6 +54,7 @@ sipx_extra = \
   sipXrecording \
   sipXhomer \
   sipXcallQueue \
+  sipXAocBilling \
   sipXtools
 
 # sipxecs projects that are NOT essential for a running communication system
@@ -170,6 +171,7 @@ sipXsaa_DEPS = sipXsqa sipXcallLib sipXcommserverLib
 sipXhomer_DEPS = sipXsqa sipXresiprocate
 sipXsbc_DEPS = sipXconfig sipXsqa sipXregistry
 sipXcallQueue_DEPS = sipXconfig
+sipXAocBilling_DEPS = sipXconfig
 sipXexample_DEPS = sipXcommserverLib sipXconfig
 sipXsss_DEPS = sipXsqa sipXcommserverLib sipXresiprocate
 sipXyard = sipXcommserverLib
