@@ -42,6 +42,8 @@
 #include "OSS/SIP/SIPMessage.h"
 #include "OSS/SIP/SIPURI.h"
 #include "OSS/SIP/SIPContact.h"
+#include "OSS/SIP/SIPRequestLine.h"
+#include "OSS/SIP/SIPFrom.h"
 
 // DEFINES
 //#define TEST_PRINT 1
@@ -2207,6 +2209,9 @@ bool SipRouter::preprocessMessage(SipMessage& parsedMsg,
 
     if (msg.isRequest())
     {
+      //
+      // Validate contact-uri
+      //
       std::vector<std::string> bindings;
       OSS::SIP::SIPContact::msgGetContacts(&msg, bindings);
 
@@ -2221,12 +2226,68 @@ bool SipRouter::preprocessMessage(SipMessage& parsedMsg,
         std::string& contact = *iter;
         OSS::SIP::ContactURI hContact(contact);
         std::string user = hContact.getUser();
+        
+        //
+        // First validate the entire URI
+        //
+        std::string uri = hContact.getURI();
+        if (!OSS::SIP::SIPURI::verify(uri.c_str()))
+        {
+          OS_LOG_WARNING(FAC_SIP, "Dropping message with invalid contact-uri " << uri.c_str() << "\n" << msgText.data());
+          return false;
+        }
 
+        //
+        // Commas are LEGAL characters in the user-info ABNF definition for a URI.
+        // We intentionally drop these messages because of a bug in the sipX URI
+        // parser.  It is too risky to fix that currently or I'm just too lazy.
+        // If you had the mileage to fix the parser, feel free to comment this check out.
+        //
+        // Hint:  The URI parser treats commas as header boundaries, then it miserably chokes on it.
         if (user.find(',') != std::string::npos)
         {
           OS_LOG_WARNING(FAC_SIP, "Dropping message with comma in contact-user - \n" << msgText.data());
           return false;
         }
+      }
+      
+      // See: http://jira.sipxcom.org/browse/SIPX-17
+      
+      //
+      // Validate request-line
+      //
+      OSS::SIP::SIPRequestLine rLine;
+      rLine = msg.startLine();
+      std::string ruri;
+      rLine.getURI(ruri);
+      if (!OSS::SIP::SIPURI::verify(ruri.c_str()))
+      {
+        OS_LOG_WARNING(FAC_SIP, "Dropping message with invalid request-uri " << ruri.c_str() << "\n" << msgText.data());
+        return false;
+      }
+      
+      //
+      // Validate the from-uri
+      //
+      const std::string& from = msg.hdrGet(OSS::SIP::HDR_FROM);
+      OSS::SIP::SIPFrom hFrom(from);
+      std::string furi = hFrom.getURI();
+      if (!OSS::SIP::SIPURI::verify(furi.c_str()))
+      {
+        OS_LOG_WARNING(FAC_SIP, "Dropping message with invalid from-uri " << furi.c_str() << "\n" << msgText.data());
+        return false;
+      }
+      
+      //
+      // Validate the to-uri
+      //
+      const std::string& to = msg.hdrGet(OSS::SIP::HDR_TO);
+      OSS::SIP::SIPTo hTo(to);
+      std::string turi = hTo.getURI();
+      if (!OSS::SIP::SIPURI::verify(turi.c_str()))
+      {
+        OS_LOG_WARNING(FAC_SIP, "Dropping message with invalid to-uri " << turi.c_str() << "\n" << msgText.data());
+        return false;
       }
     }
   }
