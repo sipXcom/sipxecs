@@ -33,6 +33,7 @@ class Dao
   def initialize(database_url, purge_age, table_name, log)
     @connection = database_url.to_dbi
     @username = database_url.username
+    @password = database_url.password
     @purge_age = purge_age
     @table_name = table_name
     @last_purge_time = nil    
@@ -40,7 +41,7 @@ class Dao
   end
   
   def connect(&block)
-    DBI.connect(@connection, @username, &block)
+    DBI.connect(@connection, @username, @password, &block)
   end
   
   # this is run to test if DB connection is working

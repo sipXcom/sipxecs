@@ -89,13 +89,14 @@ class CallResolverConfigure
     # so we can log messages in the methods that are called here.
 
     @db_user = config.fetch('SIP_CALLRESOLVER_DB_USER', 'postgres')
+    @db_password = config.fetch('SIP_CALLRESOLVER_DB_PASSWORD', '')
 
     # default values for db connection info
-    @local_db_url = DatabaseUrl.new(:username => @db_user)
+    @local_db_url = DatabaseUrl.new(:username => @db_user, :password => @db_password)
 
     # :TODO: read CDR database URL params from the Call Resolver config file
     # rather than just hardwiring default values.
-    @cdr_database_url = DatabaseUrl.new(:username => @db_user)
+    @cdr_database_url = DatabaseUrl.new(:username => @db_user, :password => @db_password)
 
     # These two methods must get called in this order
     @cse_hosts, @ha = get_cse_hosts_config
@@ -261,7 +262,7 @@ class CallResolverConfigure
     return [ @cdr_database_url ] if cse_hosts.empty?
     # Build the list of CSE DB URLs.
     cse_hosts.collect do |cse_host|
-      DatabaseUrl.new(:host =>cse_host.host, :port => cse_host.port, :username => @db_user)
+      DatabaseUrl.new(:host =>cse_host.host, :port => cse_host.port, :username => @db_user, :password => @db_password)
     end
   end
 

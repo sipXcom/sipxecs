@@ -37,8 +37,19 @@ bundle agent sipxcdr_config {
         comment => "install CDR config $(this.promiser)",
         create => "true",
         perms => m("644"),
-        copy_from => copy_from_cfdata("$(sipx.location_id)/$(conf_file)"),
+        edit_line => sipxcdr_callresolver_config,
         classes => if_repaired("restart_sipxcdr");
+}
+
+bundle edit_line sipxcdr_callresolver_config {
+  insert_lines:
+    any::
+      "$(sipx.SIPX_CFDATA)/$(sipx.location_id)/callresolver-config.part"
+        insert_type => "file";
+      "SIP_CALLRESOLVER_DB_PASSWORD : $(sipx.NEW_POSTGRESQL_PASSWORD)";
+  delete_lines:
+    any::
+      ".*";
 }
 
 bundle agent sipxcdr_setup {

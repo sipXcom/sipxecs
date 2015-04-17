@@ -8,4 +8,5 @@
   <sip-port>6050</sip-port>
   <sipxcdr-address>jdbc:postgresql://master.example.com/SIPXCDR</sipxcdr-address>
   <db-user>@POSTGRESQL_USER@</db-user>
+  <db-password>${postgresPwd}</db-password>
 </rest-config>
