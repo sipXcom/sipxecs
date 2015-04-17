@@ -55,7 +55,7 @@ public class CdrConfiguration implements ConfigProvider {
                 continue;
             }
             ConfigUtils.enableCfengineClass(dir, datfile, true, CdrManager.FEATURE.getId(), "postgres");
-            FileWriter wtr = new FileWriter(new File(dir, "callresolver-config"));
+            FileWriter wtr = new FileWriter(new File(dir, "callresolver-config.part"));
             try {
                 write(wtr, proxyLocations, settings);
             } finally {

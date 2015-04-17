@@ -6,7 +6,7 @@
 ##############################################################################
 
 # Holds the params needed to connect to a database
-class DatabaseUrl < Struct.new(:database, :port, :host, :adapter, :username)
+class DatabaseUrl < Struct.new(:database, :port, :host, :adapter, :username, :password)
   
   def initialize(args)
     super()    
@@ -20,6 +20,7 @@ class DatabaseUrl < Struct.new(:database, :port, :host, :adapter, :username)
     if self[:username].nil?
         raise ArgumentError, 'postgres username is required'
     end
+    self[:password] ||= ''
   end
   
   def to_dbi
