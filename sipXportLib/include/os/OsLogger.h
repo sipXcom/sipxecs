@@ -49,6 +49,7 @@ typedef boost::function<bool(int /*facility*/, int /*level*/, const std::ostring
                                         LOG_FILTER_FACILITY LOG_FORMAT_DELIMITERS \
                                         LOG_FILTER_PRIORITY LOG_FORMAT_DELIMITERS \
                                         LOG_FILTER_HOST_NAME LOG_FORMAT_DELIMITERS \
+                                        LOG_FILTER_TASK_NAME LOG_FORMAT_DELIMITERS \
                                         LOG_FILTER_THREAD_ID LOG_FORMAT_DELIMITERS \
                                         LOG_FILTER_PROCESS_NAME LOG_FORMAT_DELIMITERS \
                                         LOG_FILTER_ESCAPE
