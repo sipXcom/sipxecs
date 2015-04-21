@@ -60,7 +60,7 @@ bundle agent rsyslog_config {
 
 bundle edit_line syslog_config {
     replace_patterns:
-        "^SYSLOGD_OPTIONS=.*$" replace_with => disable_dns_lookup;
+        "^SYSLOGD_OPTIONS=\"-c 5\"$" replace_with => disable_dns_lookup;
 }
 
 body replace_with disable_dns_lookup {
