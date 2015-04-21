@@ -50,6 +50,22 @@ bundle agent rsyslog_config {
         comment => "remove phonelog config",
         delete => tidy,
         classes => if_repaired("restart_rsyslogd");
+
+    any::
+      "/etc/sysconfig/rsyslog"
+        comment => "disable dns lookup in syslog",
+        edit_line => syslog_config,
+        classes => if_repaired("restart_rsyslogd");
+}
+
+bundle edit_line syslog_config {
+    replace_patterns:
+        "^SYSLOGD_OPTIONS=.*$" replace_with => disable_dns_lookup;
+}
+
+body replace_with disable_dns_lookup {
+   replace_value => "SYSLOGD_OPTIONS=\"-c 5 -x\"";
+   occurrences => "first";
 }
 
 bundle edit_line phonelog_config {
