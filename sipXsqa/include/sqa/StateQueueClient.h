@@ -1201,15 +1201,27 @@ private:
 
     while (!_terminate)
     {
-      // WARNING: at one test it worked only with this fix; later it worked also without
-      // this fix
-      if (false == _isAlive)
+      bool lastReadFailed = false;
+      // Although ZeroMQ assures that a sub socket will reconnect to publisher automatically, 
+      // this seems to be not a 100% certainty.  There are cases when publisher disappears,
+      // it takes 8 minutes for the client to receive events again.
+      //
+      // There is also the case of socket reads where a cann to recv is assured to only return when
+      // it receives the complete packet.  We will not treat this at 100% certainty and treat
+      // a read failure as a trigger for resubscribe.
+ 
+      if (false == _isAlive || lastReadFailed)
       {
-        OS_LOG_INFO(FAC_NET, "StateQueueClient::eventLoop connection is not alive, closing socket, resubscribe");
+        OS_LOG_ERROR(FAC_NET, "StateQueueClient::eventLoop connection is not alive, closing socket, resubscribe");
 
+        // Create a new socket to refresh it's state.
         destroyZmqSocket();
         createZmqSocket();
 
+        //
+        // This will block until it succeeds or _terminated flag is set
+        // So there is no danger of a runaway loop here
+        //   
         subscribeForEvents();
       }
 
@@ -1236,6 +1248,7 @@ private:
       }
       else
       {
+        lastReadFailed = true;
         if (_terminate)
         {
           break;
