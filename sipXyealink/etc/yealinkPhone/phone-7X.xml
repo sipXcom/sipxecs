@@ -700,7 +700,8 @@
 	</group>
 	<group name="ADVANCED" advanced="yes">
 	    <!--// Configure the volume of the side tone. It ranges from -48 to 0, the default value is -3. //-->
-	    <setting name="voice.side_tone"><type><integer min="-48" max="0"/></type><value>-3</value></setting>
+	    <!--// Value of -32768 disables this annoying side tone //-->
+	    <setting name="voice.side_tone"><type><integer min="-32768" max="0"/></type><value>-32768</value></setting>
 	</group>
     </group>
     <group name="distinctive-ringer">
