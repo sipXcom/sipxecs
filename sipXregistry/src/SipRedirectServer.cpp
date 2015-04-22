@@ -817,7 +817,7 @@ SipRedirectServer::handleMessage(OsMsg& eventMessage)
   {
     const SipMessage& message = *((SipMessageEvent&)eventMessage).getMessage();
     SipMessage finalResponse;
-    finalResponse.setResponseData(&message, SIP_5XX_CLASS_CODE, errorString.c_str());
+    finalResponse.setResponseData(&message, SIP_SERVICE_UNAVAILABLE_CODE, errorString.c_str());
     mpSipUserAgent->send(finalResponse);
     handled = TRUE;
   }
