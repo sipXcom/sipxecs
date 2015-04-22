@@ -693,7 +693,7 @@ SipRouter::handleMessage( OsMsg& eventMessage )
                               << " application: " << appQueueSize << "/" << appMaxQueueSize
                               << " transport: " << queueSize << "/" <<  maxQueueSize 
                               << " which exceeds " << _rejectOnFilledQueuePercent << "%");
-                          finalResponse.setResponseData(sipRequest, SIP_5XX_CLASS_CODE, "Queue Size Is Too High");
+                          finalResponse.setResponseData(sipRequest, SIP_SERVICE_UNAVAILABLE_CODE, "Queue Size Is Too High");
                           mpSipUserAgent->send(finalResponse);
                           return TRUE; // Simply return true to indicate we have handled the request
                         }
@@ -738,7 +738,7 @@ SipRouter::handleMessage( OsMsg& eventMessage )
                   else if (!_threadPool.schedule(boost::bind(&SipRouter::handleRequest, this, _1), pMsg))
                   {
                     SipMessage finalResponse;
-                    finalResponse.setResponseData(pMsg, SIP_5XX_CLASS_CODE, "No Thread Available");
+                    finalResponse.setResponseData(pMsg, SIP_SERVICE_UNAVAILABLE_CODE, "No Thread Available");
                     mpSipUserAgent->send(finalResponse);
 
                     OS_LOG_ERROR(FAC_SIP, "SipRouter::handleMessage failed to create pooled thread!  Threadpool size="
@@ -798,7 +798,7 @@ SipRouter::handleMessage( OsMsg& eventMessage )
     if (!message.isResponse())
     {
       SipMessage finalResponse;
-      finalResponse.setResponseData(&message, SIP_5XX_CLASS_CODE, errorString.c_str());
+      finalResponse.setResponseData(&message, SIP_SERVICE_UNAVAILABLE_CODE, errorString.c_str());
       mpSipUserAgent->send(finalResponse);
     }
   }
@@ -1579,7 +1579,7 @@ SipRouter::ProxyAction SipRouter::proxyMessage(SipMessage& sipRequest, SipMessag
    // respond with 5XX code in case an exception was caught
    if (!errorString.empty())
    {
-     sipResponse.setResponseData(&sipRequest, SIP_5XX_CLASS_CODE, errorString.c_str());
+     sipResponse.setResponseData(&sipRequest, SIP_SERVICE_UNAVAILABLE_CODE, errorString.c_str());
      returnedAction = SendResponse;
    }
 

@@ -1277,7 +1277,7 @@ SipRegistrarServer::handleMessage( OsMsg& eventMessage )
         if (!_registerHandler.schedule(boost::bind(&SipRegistrarServer::handleRegister, this, _1), pMsg))
         {
           SipMessage finalResponse;
-          finalResponse.setResponseData(pMsg, SIP_5XX_CLASS_CODE, "No Thread Available");
+          finalResponse.setResponseData(pMsg, SIP_SERVICE_UNAVAILABLE_CODE, "No Thread Available");
           mSipUserAgent->send(finalResponse);
 
           OS_LOG_ERROR(FAC_SIP, "SipRegistrarServer::handleMessage failed to create pooled thread!  Threadpool size="
@@ -1343,7 +1343,7 @@ SipRegistrarServer::handleMessage( OsMsg& eventMessage )
   {
     const SipMessage& message = *((SipMessageEvent&)eventMessage).getMessage();
     SipMessage finalResponse;
-    finalResponse.setResponseData(&message, SIP_5XX_CLASS_CODE, errorString.c_str());
+    finalResponse.setResponseData(&message, SIP_SERVICE_UNAVAILABLE_CODE, errorString.c_str());
     mSipUserAgent->send(finalResponse);
     handled = TRUE;
   }
