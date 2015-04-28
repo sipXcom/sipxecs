@@ -376,7 +376,6 @@ public class GeneralAuditHandler extends AbstractSystemAuditHandler {
                             .inherhitSettingsForEditing(user);
                     defaultValue = groupSettings.getSetting((String) valueKey)
                             .getDefaultValue();
-                    throw new NullPointerException();
                 } catch (NullPointerException npe) {
                     return null;
                 }
