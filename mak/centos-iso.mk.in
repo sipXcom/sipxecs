@@ -159,12 +159,18 @@ ISO_RM_LIST = \
   .*-static-.* \
   bakefile-.* \
   emacs-erlang-.* \
+  erlang-bitcask-* \
+  erlang-erlsyslog-* \
+  erlang-esasl-* \
+  erlang-inviso-* \
   freeswitch-freetdm-.* \
   freeswitch-java-.* \
   freeswitch-perl-.* \
   freeswitch-python-.* \
   freeswitch-skypopen-.* \
   freeswitch-spidermonkey-.* \
+  net-snmp-perl-* \
+  net-snmp-gui-* \
   nodejs-burrito-.* \
   nodejs-bunker-.* \
   nodejs-jscoverage-.* \
@@ -172,7 +178,6 @@ ISO_RM_LIST = \
   nodejs-tap-.* \
   nodejs-snockets-.* \
   nodejs-runforcover-.* \
-  oss_core-.* \
   sipxcustomcallerid.* \
   sipxsbc.* \
   sipxtest.* \
@@ -205,11 +210,8 @@ ISO_ADD_EPEL = \
   libiodbc-3* \
   libev-4.* \
   libmcrypt-* \
-  libmongodb-2.4* \
   libuv-devel-* \
   monit-5.1* \
-  mongodb-2.4* \
-  mongodb-server-2.4* \
   nodejs-devel-0.* \
   npm-1.3.* \
   openpgm-5* \
@@ -488,6 +490,7 @@ ISO_ADD_OS = \
   libidn-* \
   libIDL-* \
   libjpeg-* \
+  libglade2-2.* \
   libnih-* \
   libnl-* \
   libnotify-* \
@@ -727,6 +730,10 @@ ISO_ADD_OS = \
   xorg-x11-drv-ati-firmware-* \
   xorg-x11-fonts-Type1-* \
   xorg-x11-font-utils-* \
+  xmlrpc-c-1.* \
+  xmlrpc-c-client-1.* \
+  xmlrpc-c-c++-1.* \
+  xmlrpc-c-client++-1.* \
   xz-4.* \
   xz-libs-* \
   xz-lzma-compat-4.* \
