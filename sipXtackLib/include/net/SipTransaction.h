@@ -334,7 +334,14 @@ public:
     UtlSList& childTransactions();
 
     bool isMarkedForDeletion() const;
+    
     void markForDeletion();
+    
+    static void setTcpResendTimes(int resendTimes);
+    static int getTcpResendTimes();
+    
+    static void setUdpResendTimes(int resendTimes);
+    static int getUdpResendTimes();
 /* //////////////////////////// PROTECTED ///////////////////////////////// */
 protected:
     void handleChildTimeoutEvent(SipTransaction& child,
