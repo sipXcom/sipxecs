@@ -17,7 +17,9 @@
 
 bundle agent 00_sipxconfig {
   classes:
-  "postgres_pwd_conf" expression => fileexists("$(sipx.SIPX_CONFDIR)/postgres-pwd.properties");
+    "postgres_pwd_cf" expression => fileexists("$(sipx.SIPX_CFDATA)/$(sipx.location_id)/postgres-pwd.properties");
+    "postgres_pwd_conf" expression => fileexists("$(sipx.SIPX_CONFDIR)/postgres-pwd.properties");
+    "postgres_pwd_cfdat" expression => fileexists("$(sipx.SIPX_CFDATA)/$(sipx.location_id)/postgres-pwd.cfdat");
   methods:
     primary::
       # normally not nec but mongodb need 00_ssh to run first
@@ -47,7 +49,21 @@ bundle agent 00_sipxconfig {
         create => "true",
         perms => mog("644", "root", "root"),
         edit_defaults => empty,
-        edit_line => sipxconfig_config;       
+        edit_line => sipxconfig_config;
+    postgres.!postgres_pwd_cf::
+      "$(sipx.SIPX_CFDATA)/$(sipx.location_id)/postgres-pwd.properties"
+        comment => "initialize postgres pwd file location config",
+        create => "true",
+        perms => mog("644", "$(sipx.SIPXPBXUSER)", "$(sipx.SIPXPBXGROUP)"),
+        edit_defaults => empty,
+        edit_line => empty_postgres_pwd;
+    postgres.!postgres_pwd_cfdat::
+      "$(sipx.SIPX_CFDATA)/$(sipx.location_id)/postgres-pwd.cfdat"
+        comment => "initialize postgres pwd file cfdat",
+        create => "true",
+        perms => mog("644", "$(sipx.SIPXPBXUSER)", "$(sipx.SIPXPBXGROUP)"),
+        edit_defaults => empty,
+        edit_line => empty_postgres_pwd_cfdat;        
     postgres.!postgres_pwd_conf::
       "$(sipx.SIPX_CONFDIR)/postgres-pwd.properties"
         comment => "initialize postgres pwd file config",
@@ -116,6 +132,14 @@ mongoReplicaSetManager.primaryFqdn=$(sipx.host).$(sipx.net_domain)
 bundle edit_line empty_postgres_pwd {
   insert_lines:
       "password=";     
+  delete_lines:  
+    any::
+      ".*";  
+}
+
+bundle edit_line empty_postgres_pwd_cfdat {
+  insert_lines:
+      "=NEW_POSTGRESQL_PASSWORD=";
   delete_lines:  
     any::
       ".*";  

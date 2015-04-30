@@ -126,15 +126,14 @@ bundle edit_line postgresql_conf {
 bundle edit_line pg_hba_conf {
   classes:
     "trust" expression => strcmp("","$(sipx.NEW_POSTGRESQL_PASSWORD)");
-    "pwdfile_exists" expression  => fileexists("$(sipx.SIPX_CFDATA)/$(sipx.location_id)/postgres-pwd.cfdat");
   insert_lines:
-    pwdfile_exists.!trust::
+    !trust::
       "local all all md5";
       "host all all 127.0.0.1/32 md5";
       "host all all ::1/128 md5";
       # any node in the cluster can connect to postgresql
       "host all all 0.0.0.0/0 md5";
-    !pwdfile_exists|trust::
+    trust::
       "local all all trust";
       "host all all 127.0.0.1/32 trust";
       "host all all ::1/128 trust";
@@ -210,7 +209,7 @@ bundle agent postgres_sysctl_running {
     
     postgres.change_password::
        "$(sipx.SIPX_BINDIR)/postgres_change_pwd"
-         comment => "change postgres password",
+         comment => "change postgres password to $(sipx.NEW_POSTGRESQL_PASSWORD)",
          args => "$(sipx.NEW_POSTGRESQL_PASSWORD)";
          
     postgres.postgres_running.(restart_postgres|change_password)::
