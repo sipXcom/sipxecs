@@ -403,6 +403,5 @@ public abstract class UserGroupSettings extends GroupSettings implements PageBeg
     public void onChangeHotelling() {
         getGroup().setSettingValue(HOTELLING_SETTING, getHotellingSetting().getValue());
         apply();
-        getHotellingLocator().getHotellingBean().generate(getGroup());
     }
 }
