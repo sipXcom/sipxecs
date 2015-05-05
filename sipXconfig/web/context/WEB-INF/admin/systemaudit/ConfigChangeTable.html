@@ -1,5 +1,5 @@
 <table jwcid="configChangeTable@common/Table" id="configChange:list"
-	columns="* dateTime,ipAddress,configChangeType,configChangeAction,details"
+	columns="* dateTime,userName,configChangeType,configChangeAction,details"
 	usePager="true"
 	source="ognl:source"
 	row="ognl:configChange"
@@ -8,7 +8,7 @@
 	<span jwcid="dateTimeColumnValue@Block"> <span
         jwcid="@Insert" value="ognl:configChange.dateTime" format="ognl:dateFormat" />
     </span>
-	<span jwcid="ipAddressColumnValue@Block">
+	<span jwcid="userNameColumnValue@Block">
 		<span jwcid="@If" condition="ognl:user != null" renderTag="false">
 			<img jwcid="@Image" image="ognl:userIcon" align="absmiddle" title="ognl:userIconTitle" />
 			<span jwcid="@If"
