@@ -602,6 +602,46 @@ SipRedirectorPickUp::lookUpDialog(
             // parameters.  (Field parameters have been broken out in
             // param elements.)
             Url contact_URI(dialog_info->mTargetDialogRemoteURI, TRUE);
+            
+            //
+            // Check if this is a registered binding.  If it is a registered binding, use the binding instead
+            //
+            RegDB::Bindings bindings;
+            if (SipRegistrar::getInstance(NULL)->getRegDB()->getUnexpiredRegisteredBinding(contact_URI, bindings) && !bindings.empty())
+            {
+              std::string newTarget;
+              
+              if (bindings.size() == 1)
+              {
+                newTarget = bindings.front().getContact();
+              }
+              else
+              {
+                //
+                // If there are multiple bindings, get the most recent
+                //
+                unsigned long expireTime = 0;
+                for (RegDB::Bindings::const_iterator iter = bindings.begin(); iter != bindings.end(); iter++)
+                {
+                  if (iter->getExpirationTime() > expireTime)
+                  {
+                    newTarget = iter->getContact();
+                    expireTime = iter->getExpirationTime();
+                  }
+                }
+              }
+              
+              if (!newTarget.empty())
+              {
+                //
+                // Convert the target to addr-spec
+                //
+                Url contactUri(newTarget.c_str(), Url::NameAddr);
+                UtlString contactAddrSpec;
+                contactUri.getUri(contactAddrSpec);
+                contact_URI.fromString(contactAddrSpec, TRUE);
+              }
+            }
 
             // Construct the Replaces: header value the caller should use.
             UtlString header_value(dialog_info->mTargetDialogCallId);

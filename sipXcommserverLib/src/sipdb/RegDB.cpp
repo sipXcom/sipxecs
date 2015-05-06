@@ -300,6 +300,84 @@ static void push_or_replace_binding(RegDB::Bindings& bindings, const RegBinding&
   bindings.push_back(binding);
 }
 
+bool RegDB::getUnexpiredRegisteredBinding(
+      const Url& registeredBinding,
+      Bindings& bindings,
+      bool preferPrimary)
+{
+  bool isRegistered = false;
+  UtlString hostPort;
+  UtlString user;
+  registeredBinding.getHostWithPort(hostPort);
+  registeredBinding.getUserId(user);
+
+  std::ostringstream binding;
+  binding << "sip:";
+  if (!user.isNull())
+    binding << user.data() << "@";
+  binding << hostPort.data();
+    
+  long long timeNow = OsDateTime::getSecsSinceEpoch();
+  
+  mongo::BSONObjBuilder query;
+	query.append("binding", binding.str());
+  query.append("expirationTime", BSON_GREATER_THAN(timeNow));
+
+	if (_local)
+  {
+		preferPrimary = false;
+		_local->getUnexpiredRegisteredBinding(registeredBinding, bindings, preferPrimary);
+		query.append("shardId", BSON("$ne" << _local->getShardId()));
+	} 
+
+  MongoDB::ReadTimer readTimer(const_cast<RegDB&>(*this));
+  
+	mongo::BSONObjBuilder builder;
+	if (!preferPrimary)
+	  BaseDB::nearest(builder, query.obj());
+	else
+	  BaseDB::primaryPreferred(builder, query.obj());
+
+	MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getReadQueryTimeout()));
+	auto_ptr<mongo::DBClientCursor> pCursor = conn->get()->query(_ns, readQueryMaxTimeMS(builder.obj()), 0, 0, 0, mongo::QueryOption_SlaveOk);
+
+  if (!pCursor.get())
+  {
+   throw mongo::DBException("mongo query returned null cursor", 0);
+  }
+
+  if ((isRegistered = pCursor->more()))
+  {
+    RegBinding binding(pCursor->next());
+      
+    if (binding.getExpirationTime() > timeNow)
+    {
+      OS_LOG_INFO(FAC_SIP, "RegDB::getUnexpiredRegisteredBinding "
+      << " Identity: " << binding.getIdentity()
+      << " Contact: " << binding.getContact()
+      << " Expires: " << binding.getExpirationTime() - OsDateTime::getSecsSinceEpoch() << " sec"
+      << " Call-Id: " << binding.getCallId());
+
+      push_or_replace_binding(bindings, binding);
+    }
+    else
+    {
+      OS_LOG_WARNING(FAC_SIP, "RegDB::getUnexpiredRegisteredBinding returned an expired record?!?!"
+        << " Identity: " << binding.getIdentity()
+        << " Contact: " << binding.getContact()
+        << " Call-Id: " << binding.getCallId()
+        << " Expires: " <<  binding.getExpirationTime() << " epoch"
+        << " TimeNow: " << timeNow << " epoch");
+    }
+  }
+  
+	conn->done();
+  
+  OS_LOG_INFO(FAC_SIP, "RegDB::getUnexpiredRegisteredBinding returning " << (isRegistered ? "TRUE" : "FALSE") << " for binding " <<  binding.str());
+   
+	return isRegistered;
+}
+
 bool RegDB::getUnexpiredContactsUser(const string& identity, unsigned long timeNow, Bindings& bindings, bool preferPrimary) const
 {
 	static string gruuPrefix = GRUU_PREFIX;
