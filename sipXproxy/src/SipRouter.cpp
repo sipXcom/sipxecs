@@ -2289,6 +2289,19 @@ bool SipRouter::preprocessMessage(SipMessage& parsedMsg,
         OS_LOG_WARNING(FAC_SIP, "Dropping message with invalid to-uri " << turi.c_str() << "\n" << msgText.data());
         return false;
       }
+      
+      //
+      // Check if the To-URI has a SIP_SIPX_AUTHIDENTITY header param, reinsert as independent header.  See http://jira.sipxcom.org/browse/UC-2891
+      //
+      if (to.find(SIP_SIPX_AUTHIDENTITY) != std::string::npos)
+      {
+        std::string authIdentity = hTo.getHeaderParam(SIP_SIPX_AUTHIDENTITY);
+        if (!authIdentity.empty() && !msg.hdrPresent(SIP_SIPX_AUTHIDENTITY))
+        {
+          OS_LOG_WARNING(FAC_SIP, "To header has a " << SIP_SIPX_AUTHIDENTITY << " header parameter.  Reinserting it as an independent header.");
+          parsedMsg.setHeaderValue(SIP_SIPX_AUTHIDENTITY, authIdentity.c_str(), 0);
+        }
+      }
     }
   }
   catch(...)
