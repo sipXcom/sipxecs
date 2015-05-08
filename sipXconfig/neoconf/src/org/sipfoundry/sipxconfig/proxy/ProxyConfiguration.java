@@ -106,7 +106,8 @@ public class ProxyConfiguration implements ConfigProvider, ApplicationContextAwa
         throws IOException {
         KeyValueConfiguration config = KeyValueConfiguration.colonSeparated(wtr);
         Setting root = settings.getSettings();
-        config.writeSettings(root.getSetting("proxy-configuration"));
+        Setting proxyConfigurationSettings = root.getSetting("proxy-configuration");
+        config.writeSettings(proxyConfigurationSettings);
         config.writeSettings("SIPX_PROXY.205_subscriptionauth.", root.getSetting("subscriptionauth"));
         config.writeSettings("SIPX_PROXY.350_calleralertinfo.", root.getSetting("alert-info"));
         config.writeSettings("SIPX_PROXY.400_authrules.", root.getSetting("authrules"));
@@ -142,6 +143,13 @@ public class ProxyConfiguration implements ConfigProvider, ApplicationContextAwa
                 "$(sipx.SIPX_LIBDIR)/authplugins/libRequestLinter.so");
         config.write("SIPX_PROXY_HOOK_LIBRARY.990_emerglineid",
                 "$(sipx.SIPX_LIBDIR)/authplugins/libEmergencyLineIdentifier.so");
+        Setting consultativeTransfer = proxyConfigurationSettings
+                .getSetting("SIPX_CONSULTATIVE_TRANSFER_GATEWAY_INITIAL_INVITE");
+        boolean isConsultativeTransfer = Boolean.parseBoolean(consultativeTransfer.getValue());
+        if (isConsultativeTransfer) {
+            config.write("SIPX_TRAN_HOOK_LIBRARY.905_gatewaydest",
+                    "$(sipx.SIPX_LIBDIR)/transactionplugins/libGatewayDestPlugin.so");
+        }
 
         // write plugin proxy hooks
         Map<String, ProxyHookPlugin> beans = m_context.getBeansOfType(ProxyHookPlugin.class);

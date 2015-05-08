@@ -159,6 +159,10 @@
       <type refid="true-false"/>
       <value>false</value>
     </setting>
+    <setting name="SIPX_CONSULTATIVE_TRANSFER_GATEWAY_INITIAL_INVITE" advanced="yes">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>
     <!--  unsure what these next 2 settings do -->
     <setting name="SIPX_PROXY_LOG_CONSOLE" hidden="yes">
       <type><string/></type>
