@@ -169,6 +169,10 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
         config.write("aa.liveAaEnablePrefix", aaSettings.getEnablePrefix());
         config.write("aa.liveAaDisablePrefix", aaSettings.getDisablePrefix());
         config.write("aa.liveAaDid", aaSettings.getLiveDid());
+        config.write("aa.dtmf.maxDigits", aaSettings.getMaxDigits());
+        config.write("aa.dtmf.firstDigitTimeout", aaSettings.getFirstDigit());
+        config.write("aa.dtmf.interDigitTimeout", aaSettings.getInterDigit());
+        config.write("aa.dtmf.extraDigitTimeout", aaSettings.getExtraDigit());
     }
 
     @Override
