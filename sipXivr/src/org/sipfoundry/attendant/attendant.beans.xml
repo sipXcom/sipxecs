@@ -29,6 +29,10 @@
 
   <bean id="aaLiveManagementController" class="org.sipfoundry.attendant.AaLiveManagementController" scope="eslRequest">
     <property name="sipxchangeDomainName" value="${ivr.sipxchangeDomainName}" />
+    <property name="maxDigits" value="${aa.dtmf.maxDigits}" />
+    <property name="firstDigitTimeout" value="${aa.dtmf.firstDigitTimeout}" />
+    <property name="interDigitTimeout" value="${aa.dtmf.interDigitTimeout}" />
+    <property name="extraDigitTimeout" value="${aa.dtmf.extraDigitTimeout}" />
     <property name="fsConfig" ref="fsConfig" />
     <property name="fsEventSocket" ref="fsEventSocket" />
   </bean>

@@ -19,5 +19,31 @@
       </type>
       <value />
     </setting>
+    <group name="dtmf">
+        <setting name="maxDigits">
+          <type>
+            <integer min="1" required="yes" />
+          </type>
+          <value>20</value>
+        </setting>
+        <setting name="firstDigitTimeout">
+          <type>
+            <integer min="1" required="yes" />
+          </type>
+          <value>10</value>
+        </setting>
+        <setting name="interDigitTimeout">
+          <type>
+            <integer min="1" required="yes" />
+          </type>
+          <value>1</value>
+        </setting>
+        <setting name="extraDigitTimeout">
+          <type>
+            <integer min="1" required="yes" />
+          </type>
+          <value>1</value>
+        </setting>
+    </group>
   </group>
 </model>
