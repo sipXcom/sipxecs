@@ -82,6 +82,13 @@ bundle agent sipxfreeswitch_config {
         perms => m("644"),
         edit_line => sipxfreeswitch_modules,
         classes => if_repaired("restart_sipxfreeswitch");
+
+    any::
+      "$(sipx.SIPX_CONFDIR)/freeswitch/conf/"
+        comment => "copy mod_en configuration files in sipxecs config directory",
+        perms => m("644"),
+        copy_from => local_cp("/etc/freeswitch/lang/."),
+        depth_search => recurse("inf");
 }
 
 bundle edit_line sipxfreeswitch_modules {
