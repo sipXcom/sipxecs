@@ -58,6 +58,10 @@ public class IvrConfigTest {
         m_aaSettings = new AutoAttendantSettings();
         m_aaSettings.setModelFilesContext(TestHelper.getModelFilesContext());
         m_aaSettings.setSettingTypedValue("liveAttendant/did", "1234567");
+        m_aaSettings.setSettingTypedValue("liveAttendant/dtmf/maxDigits", 20);
+        m_aaSettings.setSettingTypedValue("liveAttendant/dtmf/firstDigitTimeout", 10);
+        m_aaSettings.setSettingTypedValue("liveAttendant/dtmf/interDigitTimeout", 1);
+        m_aaSettings.setSettingTypedValue("liveAttendant/dtmf/extraDigitTimeout", 1);
     }
 
     @Test
