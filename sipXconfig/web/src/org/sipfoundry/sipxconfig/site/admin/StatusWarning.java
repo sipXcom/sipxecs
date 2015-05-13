@@ -82,6 +82,14 @@ public abstract class StatusWarning extends BaseComponent {
     }
 
     public String getWarningLabel() {
-        return getMessages().getMessage(getWarning().getWarning());
+        String label = null;
+        Warning warning = getWarning();
+        String parameter = warning.getParameter();
+        if (parameter != null) {
+            label = getMessages().format(warning.getWarning(), parameter);
+        } else {
+            label = getMessages().getMessage(warning.getWarning());
+        }
+        return label;
     }
 }
