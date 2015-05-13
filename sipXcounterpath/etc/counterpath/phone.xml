@@ -306,6 +306,18 @@
       </type>
       <value>40</value>
     </setting>
+    <setting name="feature:dtmf_strategy:dtmf_inband">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>
+    <setting name="feature:dtmf_strategy:dtmf_outofband">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>
+    <setting name="feature:dtmf_strategy:dtmf_sip_info">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>    
   </group>
   <group name="network">
     <group name="rtp_inactivity">
@@ -585,4 +597,150 @@
       </type>
     </setting>    
   </group>
+  <group name="devices">    
+    <setting name="feature:deskphone:subscribe_path">        
+    </setting>
+    <setting name="system:general:zero_touch_best_headset">        
+    </setting>
+    <setting name="system:general:zero_touch_best_speaker_phone">   
+    </setting>
+    <setting name="system:general:zero_touch_devices_enabled">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>
+  </group>
+  <group name="directory">
+  <group name="adsi">
+  <group name="server_settings">     
+    <setting name="feature:adsi:root">        
+    </setting>
+  </group>
+  <group name="search_options">  
+    <setting name="feature:adsi:timeout">
+      <type>
+        <integer/>
+      </type>
+      <value>2000</value>          
+    </setting>
+    <setting name="feature:adsi:sizelimit">
+      <type>
+        <integer/>
+      </type>
+      <value>600</value>       
+    </setting>
+    <setting name="feature:adsi:polltime">
+      <type>
+        <integer/>
+      </type>
+      <value>600</value>       
+    </setting>   
+    <setting name="feature:adsi:enable">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>
+    <setting name="feature:adsi:search_on_demand">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>
+    </group>
+    <group name="attribute_mapping">
+    <setting name="feature:adsi:department_Key">   
+    </setting>
+    <setting name="feature:adsi:dispName_Key">   
+    </setting>
+    <setting name="feature:adsi:email_Key">   
+    </setting>
+    <setting name="feature:adsi:firstName_Key">   
+    </setting>
+    <setting name="feature:adsi:jabber_Key">   
+    </setting>
+    <setting name="feature:adsi:lastName_Key">   
+    </setting>
+    <setting name="feature:adsi:location_Key">   
+    </setting>
+    <setting name="feature:adsi:mobile_Key">   
+    </setting>
+    <setting name="feature:adsi:officephone_Key">   
+    </setting>
+    <setting name="feature:adsi:sip_Key">   
+    </setting>
+    <setting name="feature:adsi:title_Key">   
+    </setting>
+    <setting name="feature:adsi:work_Key">   
+    </setting>
+  </group>
+  </group>
+  <group name="ldap">
+  <group name="server_settings">
+    <setting name="feature:ldap:use_tls">
+      <type refid="true-false"/>
+      <value>false</value>      
+    </setting>
+    <setting name="feature:ldap:enable">
+      <type refid="true-false"/>
+      <value>false</value>      
+    </setting>
+    <setting name="feature:ldap:server">      
+    </setting>
+    <setting name="feature:ldap:auth_method">
+      <type>
+        <integer/>
+      </type>
+      <value>0</value>       
+    </setting>
+    <setting name="feature:ldap:username">      
+    </setting>
+    <setting name="feature:ldap:password">      
+    </setting>
+    <setting name="feature:ldap:root">      
+    </setting>
+    <setting name="feature:ldap:query">      
+    </setting>
+  </group>  
+  <group name="search_options">  
+    <setting name="feature:ldap:search_on_demand">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>
+    <setting name="feature:ldap:timeout">
+      <type>
+        <integer/>
+      </type>
+      <value>2000</value>
+    </setting>
+    <setting name="feature:ldap:sizelimit">
+      <type>
+        <integer/>
+      </type>
+      <value>600</value>
+    </setting>
+    <setting name="feature:ldap:polltime">
+      <type>
+        <integer/>
+      </type>
+      <value>600</value>
+    </setting>
+  </group>  
+  <group name="attribute_mapping">
+    <setting name="feature:ldap:departmentKey">   
+    </setting>
+    <setting name="feature:ldap:dispNameKey">   
+    </setting>
+    <setting name="feature:ldap:emailKey">   
+    </setting>
+    <setting name="feature:ldap:firstNameKey">   
+    </setting>
+    <setting name="feature:ldap:guidKey">   
+    </setting>    
+    <setting name="feature:ldap:jabberKey">   
+    </setting>
+    <setting name="feature:ldap:lastNameKey">   
+    </setting>
+    <setting name="feature:ldap:locationKey">   
+    </setting>
+    <setting name="feature:ldap:mobileKey">  
+    </setting>
+  </group>    
+  </group>
+  </group> 
 </model>
