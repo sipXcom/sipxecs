@@ -31,6 +31,7 @@ public interface MongoConstants {
     static final String USERBUSYPROMPT = "bsyprmpt";
     static final String MOH = "moh";
     static final String VOICEMAILTUI = "vcmltui";
+    static final String FORWARD_DELETE_VOICEMAIL = "fwddelvm";
     static final String EMAIL = "email";
     static final String NOTIFICATION = "notif";
     static final String ATTACH_AUDIO = "attaudio";

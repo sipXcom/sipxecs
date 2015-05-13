@@ -32,6 +32,7 @@ import org.sipfoundry.sipxconfig.dialplan.AttendantMenu;
 import org.sipfoundry.sipxconfig.dialplan.AttendantMenuAction;
 import org.sipfoundry.sipxconfig.dialplan.AttendantMenuItem;
 import org.sipfoundry.sipxconfig.permission.PermissionName;
+import org.sipfoundry.sipxconfig.vm.MailboxPreferences;
 import org.sipfoundry.sipxconfig.vm.attendant.PersonalAttendant;
 import org.sipfoundry.sipxconfig.vm.attendant.PersonalAttendantManager;
 
@@ -58,6 +59,8 @@ public class PersonalAttendantResource extends UserResource {
 
         settings.setPersonalAttendantPermission(user.hasPermission(PermissionName.PERSONAL_AUTO_ATTENDANT));
         settings.setDepositVM(user.isDepositVoicemail());
+        boolean isForwardDeleteVM = (boolean) user.getSettingTypedValue(MailboxPreferences.FORWARD_DELETE_VOICEMAIL);
+        settings.setForwardDeleteVM(isForwardDeleteVM);
         settings.setPlayVMDefaultOptions(user.getPlayVmDefaultOptions());
         settings.setOperator((String) user.getSettingTypedValue(AbstractUser.OPERATOR_SETTING));
 
@@ -90,6 +93,11 @@ public class PersonalAttendantResource extends UserResource {
 
             if (settings.getDepositVM() != null) {
                 user.setDepositVoicemail(settings.getDepositVM());
+            }
+            if (settings.getForwardDeleteVM() != null) {
+                user.setSettingTypedValue(
+                        MailboxPreferences.FORWARD_DELETE_VOICEMAIL,
+                        settings.getForwardDeleteVM());
             }
             if (settings.getPlayVMDefaultOptions() != null) {
                 user.setPlayVmDefaultOptions(settings.getPlayVMDefaultOptions());
@@ -138,6 +146,7 @@ public class PersonalAttendantResource extends UserResource {
     // the JSON representation of this is sent to/from the client
     private static class AttendantBean {
         private Boolean m_depositVM;
+        private Boolean m_forwardDeleteVM;
         private Boolean m_playVMDefaultOptions;
         private String m_operator;
         private Map<String, String> m_menu;
@@ -151,6 +160,14 @@ public class PersonalAttendantResource extends UserResource {
 
         public void setDepositVM(Boolean depositVM) {
             m_depositVM = depositVM;
+        }
+
+        public Boolean getForwardDeleteVM() {
+            return m_forwardDeleteVM;
+        }
+
+        public void setForwardDeleteVM(Boolean forwardDeleteVM) {
+            m_forwardDeleteVM = forwardDeleteVM;
         }
 
         public Boolean getPlayVMDefaultOptions() {
@@ -204,10 +221,13 @@ public class PersonalAttendantResource extends UserResource {
 
         @Override
         public String toString() {
-            return "AttendantBean [m_depositVM=" + m_depositVM + ", m_playVMDefaultOptions="
-                + m_playVMDefaultOptions + ", m_operator=" + m_operator + ", m_menu=" + m_menu + ", m_language="
-                + m_language + ", m_overrideLanguage=" + m_overrideLanguage + ", m_personalAttendantPermission="
-                + m_personalAttendantPermission + "]";
+            return "AttendantBean [m_depositVM=" + m_depositVM
+                    + ", m_forwardDeleteVM=" + m_forwardDeleteVM
+                    + ", m_playVMDefaultOptions=" + m_playVMDefaultOptions
+                    + ", m_operator=" + m_operator + ", m_menu=" + m_menu
+                    + ", m_language=" + m_language + ", m_overrideLanguage="
+                    + m_overrideLanguage + ", m_personalAttendantPermission="
+                    + m_personalAttendantPermission + "]";
         }
     }
 }

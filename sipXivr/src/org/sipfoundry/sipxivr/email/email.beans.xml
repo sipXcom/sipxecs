@@ -4,6 +4,7 @@
 
   <bean id="emailer" class="org.sipfoundry.sipxivr.email.Emailer" init-method="init">
     <property name="audioFormat" value="${audio.format}" />
+    <property name="mailboxManager" ref="mailboxManager" />
   </bean>
 
   <bean id="FULL" class="org.sipfoundry.sipxivr.email.EmailFormatter" scope="prototype">
