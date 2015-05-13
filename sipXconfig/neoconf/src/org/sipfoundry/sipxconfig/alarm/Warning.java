@@ -18,6 +18,7 @@ package org.sipfoundry.sipxconfig.alarm;
 
 public class Warning {
     private String m_warning;
+    private String m_parameter;
     private String m_page;
 
     public Warning(String warning, String page) {
@@ -32,4 +33,13 @@ public class Warning {
     public String getPage() {
         return m_page;
     }
+
+    public String getParameter() {
+        return m_parameter;
+    }
+
+    public void setParameter(String parameter) {
+        this.m_parameter = parameter;
+    }
+
 }
