@@ -56,6 +56,34 @@
     <setting name="authorization_username" hidden="yes">
       <value />
     </setting>
+    <setting name="enabled_features" advanced="yes">
+      <type>
+        <enum>
+          <option>
+              <value>0x1</value>
+          </option>
+          <option>
+              <value>0x2</value>
+          </option>
+          <option>
+              <value>0x4</value>
+          </option>
+          <option>
+              <value>0x8</value>
+          </option>
+          <option>
+              <value>0x10</value>
+          </option>
+          <option>
+              <value>0x20</value>
+          </option>
+          <option>
+              <value>0x40</value>
+          </option>
+        </enum>
+      </type>
+      <value>0</value>
+    </setting>
   </group>
   <group name="mwi_notification">
     <setting name="subscribe_to_message_waiting">
@@ -111,6 +139,19 @@
       <value>3600</value>
     </setting>
     <group name="workgroup">
+      <setting name="workgroup_type">
+        <type>
+          <enum>
+            <option>
+              <value>0</value>
+            </option>
+            <option>
+              <value>1</value>
+            </option>
+          </enum>
+        </type>
+        <value>0</value>
+      </setting>
       <setting name="workgroup_subscription_aor">
         <value/>
       </setting>
@@ -195,6 +236,15 @@
       </setting>
     </group>
     <group name="network_firewall">
+      <setting name="firewall_traversal_server">
+        <value />
+      </setting>
+      <setting name="firewall_server_username">
+        <value />
+      </setting>
+      <setting name="firewall_server_password">
+        <value />
+      </setting>
       <setting name="ice_enabled">
         <type refid="true-false" />
         <value>false</value>
@@ -210,21 +260,53 @@
         <type refid="true-false" />
         <value>false</value>
       </setting>
+      <setting name="sip_port_range_enable">
+        <type refid="true-false" />
+        <value>false</value>
+      </setting>
+      <setting name="sip_port_range_min">
+        <type>
+          <integer />
+        </type>
+        <value />
+      </setting>
+      <setting name="sip_port_range_max">
+        <type>
+          <integer />
+        </type>
+        <value />
+      </setting>
       <setting name="port_range_enable">
         <type refid="true-false" />
         <value>false</value>
       </setting>
-      <setting name="port_range_min">
+      <setting name="rtp_port_range_min_audio0">
         <type>
           <integer />
         </type>
         <value />
       </setting>
-      <setting name="port_range_max">
+      <setting name="rtp_port_range_max_audio0">
         <type>
           <integer />
         </type>
         <value />
+      </setting>
+      <setting name="rtp_port_range_min_video0">
+        <type>
+          <integer />
+        </type>
+        <value />
+      </setting>
+      <setting name="rtp_port_range_max_video0">
+        <type>
+          <integer />
+        </type>
+        <value />
+      </setting>
+      <setting name="use_rport">
+        <type refid="true-false" />
+        <value>true</value>
       </setting>
       <setting name="firewall_traversal_mode">
         <type>
@@ -316,25 +398,88 @@
         <type>
           <enum>
             <option>
-              <value>0</value>
+              <value>automatic</value>
             </option>
             <option>
-              <value>1</value>
+              <value>tcp</value>
             </option>
             <option>
-              <value>2</value>
+              <value>udp</value>
             </option>
+            <option>
+              <value>tls</value>
+            </option>            
           </enum>
         </type>
-        <value>0</value>
+        <value>automatic</value>
       </setting>
+      <setting name="allow_ipv6">
+        <type refid="true-false" />
+        <value>false</value>
+      </setting>      
       <setting name="enable_rinstance">
         <type refid="true-false" />
         <value>true</value>
       </setting>
+      <setting name="use_old_style_hold">
+        <type refid="true-false" />
+        <value>false</value>      
+      </setting>
     </group>
-  <group name="srtp">
-    <setting name="srtp">
+    <group name="xmpp_signaling">
+      <setting name="xmpp_retry_t1_s">
+        <type>
+          <integer />
+        </type>
+        <value>10</value>
+      </setting>
+      <setting name="xmpp_retry_t2_s">
+        <type>
+          <integer />
+        </type>
+        <value>60</value>
+      </setting>
+      <setting name="xmpp_connect_timeout_s">
+        <type>
+          <integer />
+        </type>
+        <value>30</value>
+      </setting>
+      <setting name="xmpp_retry_final_count">
+        <type>
+          <integer />
+        </type>
+        <value>300</value>
+      </setting>
+      <setting name="xmpp_retry_t1_count">
+        <type>
+          <integer />
+        </type>
+        <value>6</value>
+      </setting>
+      <setting name="xmpp_retry_t2_count">
+        <type>
+          <integer />
+        </type>
+        <value>5</value>
+      </setting>
+      <setting name="xmpp_port_selection">
+        <type refid="true-false" />
+        <value>false</value>
+      </setting>
+      <setting name="xmpp_connect_port">
+        <type>
+          <integer />
+        </type>
+      </setting>
+      <setting name="xmpp_priority">
+        <type>
+          <integer />
+        </type>
+      </setting>        
+    </group>
+    <group name="srtp">
+      <setting name="srtp">
         <type>
           <enum>
             <option>
@@ -350,24 +495,45 @@
         </type>
         <value>0</value>
       </setting>
+    </group>
   </group>
+  
+  <group name="callsecurity">
+    <setting name="security_outgoing_srtp">
+      <type refid="true-false" />
+      <value>true</value>
+    </setting>    
   </group>
+  
   <group name="voicemail">
-    <setting name="forward_always" hidden="yes">
+    <setting name="forward_always">
       <type refid="true-false" />
       <value>false</value>
     </setting>
-    <setting name="forward_always_uri" hidden="yes">
+    <setting name="forward_always_uri">
       <value />
     </setting>
-    <setting name="forward_busy" hidden="yes">
+    <setting name="forward_busy">
       <type refid="true-false" />
       <value>false</value>
     </setting>
-    <setting name="forward_busy_uri" hidden="yes">
+    <setting name="forward_busy_uri">
       <value />
     </setting>
     <setting name="voicemail_url">
+      <value />
+    </setting>
+    <setting name="forward_no_answer">
+      <type refid="true-false" />
+      <value>false</value>
+    </setting>    
+    <setting name="forward_no_answer_after_in_seconds">
+      <type>
+        <integer />
+      </type>
+      <value>0</value>
+    </setting>
+    <setting name="forward_no_answer_uri">
       <value />
     </setting>
   </group>
