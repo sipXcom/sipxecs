@@ -32,6 +32,7 @@ import static org.sipfoundry.commons.mongo.MongoConstants.DISPLAY_NAME;
 import static org.sipfoundry.commons.mongo.MongoConstants.DISTRIB_LISTS;
 import static org.sipfoundry.commons.mongo.MongoConstants.EMAIL;
 import static org.sipfoundry.commons.mongo.MongoConstants.FORCE_PIN_CHANGE;
+import static org.sipfoundry.commons.mongo.MongoConstants.FORWARD_DELETE_VOICEMAIL;
 import static org.sipfoundry.commons.mongo.MongoConstants.HASHED_PASSTOKEN;
 import static org.sipfoundry.commons.mongo.MongoConstants.HOST;
 import static org.sipfoundry.commons.mongo.MongoConstants.IM_ADVERTISE_ON_CALL_STATUS;
@@ -105,6 +106,9 @@ public class Mailstore extends AbstractDataSetGenerator {
         top.put(HASHED_PASSTOKEN, user.getSipPasswordHash(getCoreContext().getAuthorizationRealm()));
         top.put(PINTOKEN, user.getPintoken());
         MailboxPreferences mp = new MailboxPreferences(user);
+
+        putOnlyIfNotNull(top, FORWARD_DELETE_VOICEMAIL,
+                user.getSettingValue("voicemail/mailbox/forward-delete-voicemail"));
 
         String emailAddress = mp.getEmailAddress();
         boolean enableNotification = StringUtils.isNotBlank(emailAddress) && mp.isEmailNotificationEnabled();

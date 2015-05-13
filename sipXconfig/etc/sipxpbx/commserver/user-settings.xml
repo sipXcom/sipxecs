@@ -320,6 +320,12 @@
           <string />
         </type>
       </setting>
+      <setting name="forward-delete-voicemail">
+        <type>
+          <boolean />
+        </type>
+        <value>0</value>
+      </setting>
       <setting name="primary-email-voicemail-notification">
         <type>
           <enum>
