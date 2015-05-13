@@ -25,6 +25,7 @@ public class MailboxPreferences {
     public static final String BUSY_PROMPT = "voicemail/mailbox/user-busy-prompt";
     public static final String VOICEMAIL_TUI = "voicemail/mailbox/voicemail-tui";
     public static final String EXTERNAL_MWI = "voicemail/mailbox/external-mwi";
+    public static final String FORWARD_DELETE_VOICEMAIL = "voicemail/mailbox/forward-delete-voicemail";
 
     public static final String PRIMARY_EMAIL_NOTIFICATION = "voicemail/mailbox/primary-email-voicemail-notification";
     public static final String PRIMARY_EMAIL_FORMAT = "voicemail/mailbox/primary-email-format";
@@ -156,6 +157,7 @@ public class MailboxPreferences {
     private String m_busyPrompt;
     private VoicemailTuiType m_voicemailTui = VoicemailTuiType.STANDARD;
     private String m_externalMwi;
+    private boolean m_forwardDeleteVoicemail;
 
     private String m_emailAddress;
     private MailFormat m_emailFormat = MailFormat.FULL;
@@ -185,6 +187,7 @@ public class MailboxPreferences {
         m_busyPrompt = user.getSettingValue(BUSY_PROMPT);
         m_voicemailTui = VoicemailTuiType.fromValue(user.getSettingValue(VOICEMAIL_TUI));
         m_externalMwi = user.getSettingValue(EXTERNAL_MWI);
+        m_forwardDeleteVoicemail = (Boolean) user.getSettingTypedValue(FORWARD_DELETE_VOICEMAIL);
         m_attachVoicemailToEmail = AttachType.fromValue(user.getPrimaryEmailNotification());
         m_emailFormat = MailFormat.valueOf(user.getPrimaryEmailFormat());
         m_includeAudioAttachment = (Boolean) user.isPrimaryEmailAttachAudio();
@@ -206,6 +209,7 @@ public class MailboxPreferences {
         user.setSettingValue(BUSY_PROMPT, m_busyPrompt);
         user.setSettingValue(VOICEMAIL_TUI, m_voicemailTui.getValue());
         user.setSettingValue(EXTERNAL_MWI, m_externalMwi);
+        user.setSettingTypedValue(FORWARD_DELETE_VOICEMAIL, m_forwardDeleteVoicemail);
         user.setPrimaryEmailNotification(m_attachVoicemailToEmail.getValue());
         user.setPrimaryEmailFormat(m_emailFormat.name());
         user.setPrimaryEmailAttachAudio(m_includeAudioAttachment);
@@ -374,6 +378,14 @@ public class MailboxPreferences {
 
     public void setImapAccount(String imapAccount) {
         m_imapAccount = imapAccount;
+    }
+
+    public boolean isForwardDeleteVoicemail() {
+        return m_forwardDeleteVoicemail;
+    }
+
+    public void setForwardDeleteVoicemail(boolean forwardDeleteVoicemail) {
+        m_forwardDeleteVoicemail = forwardDeleteVoicemail;
     }
 
     public boolean isImapServerConfigured() {

@@ -46,6 +46,7 @@ import static org.sipfoundry.commons.mongo.MongoConstants.DISTRIB_LISTS;
 import static org.sipfoundry.commons.mongo.MongoConstants.EMAIL;
 import static org.sipfoundry.commons.mongo.MongoConstants.ENTITY_NAME;
 import static org.sipfoundry.commons.mongo.MongoConstants.FAX_NUMBER;
+import static org.sipfoundry.commons.mongo.MongoConstants.FORWARD_DELETE_VOICEMAIL;
 import static org.sipfoundry.commons.mongo.MongoConstants.FORCE_PIN_CHANGE;
 import static org.sipfoundry.commons.mongo.MongoConstants.GROUPS;
 import static org.sipfoundry.commons.mongo.MongoConstants.HASHED_PASSTOKEN;
@@ -706,6 +707,11 @@ public class ValidUsers {
         }
 
         user.setVoicemailTui(getStringValue(obj, VOICEMAILTUI));
+
+        if (getStringValue(obj, FORWARD_DELETE_VOICEMAIL) != null) {
+            user.setForwardDeleteVoicemail(getStringValue(obj, FORWARD_DELETE_VOICEMAIL));
+        }
+
         user.setEmailAddress(getStringValue(obj, EMAIL));
         if (obj.keySet().contains(NOTIFICATION)) {
             user.setEmailFormat(getStringValue(obj, NOTIFICATION));

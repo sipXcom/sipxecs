@@ -35,6 +35,7 @@ public class User {
     private Vector<String> m_aliases;
     private HashMap<String, DistributionList> m_distributionLists;
     private Locale m_locale; // The locale for the UI to present to this user
+    private boolean m_forwardDeleteVoicemail;
     private String m_emailAddress;
     private String m_altEmailAddress;
     private boolean m_attachAudioToEmail;
@@ -256,6 +257,14 @@ public class User {
 
     public void setLocale(Locale locale) {
         m_locale = locale;
+    }
+
+    public boolean isForwardDeleteVoicemail() {
+        return m_forwardDeleteVoicemail;
+    }
+
+    public void setForwardDeleteVoicemail(String value) {
+        m_forwardDeleteVoicemail = value.equals("1") || value.equals("true");
     }
 
     public String getEmailAddress() {
