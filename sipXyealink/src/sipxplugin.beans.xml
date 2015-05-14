@@ -7,7 +7,6 @@
     <property name="registrarSettings" ref="registrarSettings"/>
     <property name="uploadManager" ref="uploadManager"/>
     <property name="ldapManager" ref="ldapManager"/>
-    <property name="addressManager" ref="addressManager"/>
 </bean>
 
 <bean id="org.sipfoundry.sipxconfig.phone.yealink.YealinkModel.VER_6X"
@@ -199,6 +198,24 @@
 <bean id="yealinkPhoneSIPT46G" parent="yealinkModel">
 	<property name="label" value="Yealink SIP-T46G" />
 	<property name="name" value="T46" />
+	<property name="maxLineCount" value="6" />
+	<property name="maxDSSKeyCount" value="21" />
+	<property name="supportedFeatures">
+	    <set>
+		<value>hasHDSound</value>
+		<value>hasPhoneBook</value>
+		<value>hasRingTones</value>
+		<value>hasWallPapers</value>
+		<value>hasScreenSavers</value>
+		<value>hasExpansionPanels</value>
+		<value>hasLanguages</value>
+	    </set>
+	</property>
+</bean>
+
+<bean id="yealinkPhoneSIPT48G" parent="yealinkModel">
+	<property name="label" value="Yealink SIP-T48G" />
+	<property name="name" value="T48" />
 	<property name="maxLineCount" value="6" />
 	<property name="maxDSSKeyCount" value="21" />
 	<property name="supportedFeatures">

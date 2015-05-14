@@ -27,8 +27,6 @@ using namespace std;
 
 const string SubscribeDB::NS("node.subscription");
 
-double SubscribeDB::SUBSCRIPTION_GET_ALL_QUERY_MIN_TIME_SEC = 1.0;
-
 SubscribeDB* SubscribeDB::CreateInstance() {
    SubscribeDB* ldb = NULL;
 
@@ -52,16 +50,7 @@ void SubscribeDB::getAll(Subscriptions& subscriptions, bool preferPrimary)
     query.append(Subscription::shardId_fld(), BSON("$ne" << getShardId()));
   }
 
-  // sets the socket and query timeouts
-  double socketTimeout = SUBSCRIPTION_GET_ALL_QUERY_MIN_TIME_SEC;
-  if (socketTimeout < getReadQueryTimeout())
-  {
-    socketTimeout = getReadQueryTimeout();
-  }
-  unsigned int queryTimeMaxMs = static_cast<unsigned int>(socketTimeout) * 1000;
-
-  MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), socketTimeout));
-
+  MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getReadQueryTimeout()));
   MongoDB::ReadTimer readTimer(const_cast<SubscribeDB&>(*this));
   
   mongo::BSONObjBuilder builder;
@@ -71,7 +60,7 @@ void SubscribeDB::getAll(Subscriptions& subscriptions, bool preferPrimary)
     BaseDB::nearest(builder, query.obj());
 
 
-  auto_ptr<mongo::DBClientCursor> pCursor = conn->get()->query(_ns, MongoDB::BaseDB::queryMaxTimeMS(builder.obj(), queryTimeMaxMs), 0, 0, 0, mongo::QueryOption_SlaveOk);
+  auto_ptr<mongo::DBClientCursor> pCursor = conn->get()->query(_ns, readQueryMaxTimeMS(builder.obj()), 0, 0, 0, mongo::QueryOption_SlaveOk);
   if (!pCursor.get())
   {
     throw mongo::DBException("mongo query returned null cursor", 0);
