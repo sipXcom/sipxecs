@@ -33,7 +33,8 @@ SipPersistentSubscriptionMgr::SipPersistentSubscriptionMgr(
    SubscribeDB& db) :
    mComponent(component),
    mDomain(domain),
-   mDB(db)
+   mDB(db),
+   mBaseInitialized(FALSE)
 {
    Os::Logger::instance().log(FAC_SIP, PRI_DEBUG,
                  "SipPersistentSubscriptionMgr:: "
@@ -49,16 +50,37 @@ SipPersistentSubscriptionMgr::~SipPersistentSubscriptionMgr()
 }
 
 /* ============================ MANIPULATORS ============================== */
-void SipPersistentSubscriptionMgr::initialize(OsMsgQ* pMsgQ)
+UtlBoolean SipPersistentSubscriptionMgr::initialize(OsMsgQ* pMsgQ)
 {
-   // initialize the base class
-   SipSubscriptionMgr::initialize(pMsgQ);
+   // initialize the base class, if needed
+   if (!mBaseInitialized)
+   {
+      mBaseInitialized = SipSubscriptionMgr::initialize(pMsgQ);
+   }
+
+   // exit in case the base class wasn't successfully initialized
+   if (!mBaseInitialized)
+   {
+      return FALSE;
+   }
 
    // Read the subscription table and initialize the SipSubscriptionMgr.
-
    unsigned long now = OsDateTime::getSecsSinceEpoch();
    SubscribeDB::Subscriptions subscriptions;
-   mDB.getAll(subscriptions);
+   try
+   {
+      mDB.getAll(subscriptions);
+   }
+   catch (std::exception& e)
+   {
+      Os::Logger::instance().log(FAC_SIP, PRI_ERR, "SipPersistentSubscriptionMgr::initialize - exception %s", e.what());
+      return FALSE;
+   }
+   catch (...)
+   {
+      Os::Logger::instance().log(FAC_SIP, PRI_ERR, "SipPersistentSubscriptionMgr::initialize - unknown exception");
+      return FALSE;
+   }
 
    for (SubscribeDB::Subscriptions::iterator iter = subscriptions.begin();
        iter != subscriptions.end(); iter++)
@@ -137,6 +159,8 @@ void SipPersistentSubscriptionMgr::initialize(OsMsgQ* pMsgQ)
 											  row.version());
       }
    }
+
+   return TRUE;
 }
 
 UtlBoolean SipPersistentSubscriptionMgr::updateDialogInfo(

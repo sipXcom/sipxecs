@@ -322,10 +322,8 @@ SipSubscribeServer::SipSubscribeServer(const char* defaultTermination,
     , mpDefaultEventHandler(&defaultEventHandler)
     , mDefaultTermination(defaultTermination)
     , mSubscribeServerMutex(OsMutex::Q_FIFO)
+    , mInitFailureCallback(NULL)
 {
-   // Set our queue to be the queue for resend event messages in
-   // *mpSubscriptionMgr.
-   mpSubscriptionMgr->initialize(getMessageQueue());
 }
 
 
@@ -358,6 +356,50 @@ SipSubscribeServer::operator=(const SipSubscribeServer& rhs)
       return *this;
 
    return *this;
+}
+
+UtlBoolean SipSubscribeServer::initialize(void *pArg)
+{
+   Os::Logger::instance().log(FAC_SIP, PRI_DEBUG, "SipSubscribeServer::initialize with pArg '%p'", pArg);
+
+   UtlBoolean initialized = FALSE;
+   unsigned int retryNo = 10;
+   const unsigned int RETRY_DELAY_MSEC = 500;
+
+   while (isNotShut() && !initialized && --retryNo)
+   {
+      // Set our queue to be the queue for resend event messages in
+      // *mpSubscriptionMgr.
+      initialized = mpSubscriptionMgr->initialize(getMessageQueue());
+
+      // log an error and wait some time in case init function failed
+      if (!initialized)
+      {
+         Os::Logger::instance().log(FAC_SIP, PRI_ERR, "SipSubscribeServer::initialize failed - retrying after %d milliseconds", RETRY_DELAY_MSEC);
+         OsTask::delay(RETRY_DELAY_MSEC);
+      }
+   }
+
+   // log an error and
+   if (!initialized)
+   {
+      Os::Logger::instance().log(FAC_SIP, PRI_EMERG, "SipSubscribeServer::initialize failed - SipSubscribeServer is aborted");
+
+      // call initialize fail callback, if set
+      if (mInitFailureCallback)
+      {
+         mInitFailureCallback();
+      }
+   }
+
+   return initialized;
+}
+
+void SipSubscribeServer::setInitializeFailureCallback(SipSubscribeServer::InitFailureCallback callback)
+{
+   Os::Logger::instance().log(FAC_SIP, PRI_DEBUG, "SipSubscribeServer::setInitializeFailureCallback");
+
+   mInitFailureCallback = callback;
 }
 
 void SipSubscribeServer::contentChangeCallback(void* applicationData,
