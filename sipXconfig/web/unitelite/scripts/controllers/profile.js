@@ -1,18 +1,3 @@
-/*
- * Copyright (c) eZuce, Inc. All rights reserved.
- * Contributed to SIPfoundry under a Contributor Agreement
- *
- * This software is free software; you can redistribute it and/or modify it under
- * the terms of the Affero General Public License (AGPL) as published by the
- * Free Software Foundation; either version 3 of the License, or (at your option)
- * any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
- * details.
- */
-
 (function(){
 'use strict';
 
@@ -128,6 +113,7 @@ uw.controller('profile', [
     $scope.search         = uiService.search;
     $scope.callNo         = '';
     $scope.displayNo      = '';
+    $scope.clicked        = false;
     $scope.showMainMenu   = false;
     $scope.showDial       = false;
     $scope.startNo        = false;
@@ -206,7 +192,12 @@ uw.controller('profile', [
       return;
     }
     $scope.phone.call = function () {
-      var callNo              = angular.copy($scope.callNo);
+      var callNo              = angular.copy($scope.callNo)
+        .replace('(', '')
+        .replace(')', '')
+        .replace('.', '')
+        .replace(' ', '')
+        .replace('-', '');
       $scope.phone.msg        = 'Requesting call...';
       $scope.phone.disabled   = true;
 
@@ -314,8 +305,9 @@ uw.controller('profile', [
     }
 
     $scope.searchResultClick = function (item) {
+      $scope.clicked    = true;
       $scope.displayNo = item.name;
-      $scope.callNo = item.profile.vCard['X-INTERN'];
+      $scope.callNo = angular.copy(item.profile.vCard['X-INTERN']);
     }
 
     $scope.$watchCollection('search', function (val) {
@@ -333,6 +325,11 @@ uw.controller('profile', [
         $scope.startNo = false;
         $scope.callNo = val;
       } else {
+        if ($scope.clicked) {
+          $scope.searchResult   = [];
+          $scope.clicked        = false;
+          return;
+        }
         $scope.callNo = val;
         var arr = [];
         val = val.toString().toLowerCase();

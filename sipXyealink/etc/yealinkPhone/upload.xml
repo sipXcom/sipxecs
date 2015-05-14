@@ -149,6 +149,17 @@
     		</type>
 		<description>Firmware binary in 28.x.x.x.rom</description>
         </setting>
+	<setting name="yealink_SIP-T48.rom">
+    		<label>SIP-T48G</label>
+    		<type>
+    			<file>
+    				<contentType>application/binary</contentType>
+    				<rename>T48.rom</rename>
+    				<moveTo>../</moveTo>
+    			</file>
+    		</type>
+		<description>Firmware binary in 35.x.x.x.rom</description>
+        </setting>
         <setting name="Logo132x64.dob">
             <label>SIP-T2X LCD Logo (screensaver)</label>
             <type>
