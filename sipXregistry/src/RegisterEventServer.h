@@ -112,7 +112,6 @@ class RegisterEventServer
    //! Get the SIP domain name for the resources.
    const UtlString* getDomainName();
 
-
 /* //////////////////////////// PROTECTED ///////////////////////////////// */
   protected:
 
@@ -161,7 +160,5 @@ inline const UtlString* RegisterEventServer::getDomainName()
 {
    return &mDomainName;
 }
-
-
 
 #endif  // _RegisterEventServer_h_
