@@ -71,6 +71,11 @@ OsStatus OsTaskWnt::deleteForce(void)
 }
 /* ============================ MANIPULATORS ============================== */
 
+UtlBoolean OsTaskWnt::initialize(void *pArg)
+{
+  return TRUE;
+}
+
 // Restart the task.
 // The task is first terminated, and then reinitialized with the same
 // name, priority, options, stack size, original entry point, and
@@ -622,8 +627,13 @@ unsigned int __stdcall OsTaskWnt::threadEntry(LPVOID arg)
 
    //osPrintf("OsTaskWnt::threadEntry rand: %d threadId: %d epoch: %d ptr: %d\n",
    //    rand(), taskId, eTimeInt, pTask);
+   unsigned int returnCode = 1;
 
-   unsigned int returnCode = pTask->run(pTask->getArg());
+   // call the initialization routine of the task
+   if (pTask->initialize(pTask->getArg()))
+   {
+     returnCode = pTask->run(pTask->getArg());
+   }
 
    // After run returns be sure to mark the thread as shut down
    pTask->ackShutdown();

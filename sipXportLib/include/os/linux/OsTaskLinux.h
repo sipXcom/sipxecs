@@ -73,6 +73,11 @@ public:
    virtual
    ~OsTaskLinux();
 
+   /// The initialization routine of the task.
+   /// Note: It will be called by the start() function inside task thread. Also,
+   ///       run() routine will be called only if this function returns 'true'
+   virtual UtlBoolean initialize(void *pArg);
+
    /// The entry point for the task.
    virtual int run(void* pArg) = 0;
    /**<

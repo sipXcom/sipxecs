@@ -186,8 +186,6 @@ private:
 
     SubscribeDB* _local;
 
-    // Specifies the minimum allowed time used to get all subscriptions from the database
-    static double SUBSCRIPTION_GET_ALL_QUERY_MIN_TIME_SEC;
 };
 
 #endif	/* SUBSCRIBEDB_H */
