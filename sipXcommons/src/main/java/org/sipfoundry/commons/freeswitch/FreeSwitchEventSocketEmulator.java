@@ -54,4 +54,9 @@ public class FreeSwitchEventSocketEmulator extends FreeSwitchEventSocketInterfac
     	return true;
     }
 
+    @Override
+    public FreeSwitchEvent apiCmdResponse(String cmd) {
+        return null;
+    }
+
 }

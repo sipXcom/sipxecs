@@ -18,8 +18,8 @@ package org.sipfoundry.sipxivr;
 
 import java.util.Hashtable;
 
-import org.sipfoundry.sipxivr.eslrequest.EslRequestApp;
-import org.sipfoundry.sipxivr.eslrequest.EslRequestController;
+import org.sipfoundry.commons.freeswitch.eslrequest.EslRequestApp;
+import org.sipfoundry.commons.freeswitch.eslrequest.EslRequestController;
 
 
 public abstract class SipxIvrApp implements EslRequestApp {

@@ -21,8 +21,8 @@ import org.sipfoundry.commons.util.UnfortunateLackOfSpringSupportFactory;
 public class ConfBasicThread extends Thread {
     // Default freeswitch socket client strings, should be read from:
     // /usr/local/freeswitch/conf/autoload_configs/event_socket.conf.xml
-    static String fsListenPort = "8021"; // parameter "listen-port"
-    static String fsPassword = "ClueCon"; // parameter "password"
+    public static String fsListenPort = "8021"; // parameter "listen-port"
+    public static String fsPassword = "ClueCon"; // parameter "password"
 
     // a thread that listens on a freeswitch socket for conference related events
     // based on events received, maintains relavant data about conferences and

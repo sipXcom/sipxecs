@@ -9,6 +9,13 @@
   </extension>
 #end
 #end
+#if ($callback)
+  <extension name="CBB">
+    <condition field="destination_number" expression="^CBB${dollar}">
+      <action application="socket" data="${location.address}:8284 async full"/>
+    </condition>
+  </extension>
+#end
   <extension name="IVR">
     <condition field="destination_number" expression="^IVR${dollar}">
       <action application='set' data='sip_callee_id_name=IVR'/>

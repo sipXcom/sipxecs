@@ -19,7 +19,7 @@ package org.sipfoundry.bridge;
 import java.util.Hashtable;
 
 import org.sipfoundry.commons.freeswitch.BridgeCommand;
-import org.sipfoundry.sipxivr.eslrequest.AbstractEslRequestController;
+import org.sipfoundry.commons.freeswitch.eslrequest.AbstractEslRequestController;
 
 public class BridgeEslRequestController extends AbstractEslRequestController {
 

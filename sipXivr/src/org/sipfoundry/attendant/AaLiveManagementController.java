@@ -19,7 +19,7 @@ package org.sipfoundry.attendant;
 import java.util.Hashtable;
 
 import org.sipfoundry.commons.freeswitch.Collect;
-import org.sipfoundry.sipxivr.eslrequest.AbstractEslRequestController;
+import org.sipfoundry.commons.freeswitch.eslrequest.AbstractEslRequestController;
 import org.springframework.beans.factory.annotation.Required;
 
 public class AaLiveManagementController extends AbstractEslRequestController {

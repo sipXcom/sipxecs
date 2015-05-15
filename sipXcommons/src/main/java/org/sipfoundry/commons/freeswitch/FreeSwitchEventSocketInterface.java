@@ -11,6 +11,7 @@ package org.sipfoundry.commons.freeswitch;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -46,6 +47,8 @@ public abstract class FreeSwitchEventSocketInterface {
     public abstract void cmd(String cmd);
 
     public abstract FreeSwitchEvent cmdResponse(String cmd);
+
+    public abstract FreeSwitchEvent apiCmdResponse(String cmd);
 
     public abstract FreeSwitchEvent awaitLiveEvent();
 
@@ -242,6 +245,10 @@ public abstract class FreeSwitchEventSocketInterface {
         return getVariable("variable_sip_from_uri");
     }
 
+    public String getToUri() {
+        return getVariable("variable_sip_to_uri");
+    }
+
     public String getFromUser() {
         return getVariable("variable_sip_from_user");
     }
@@ -267,5 +274,26 @@ public abstract class FreeSwitchEventSocketInterface {
         } else {
             return digits ;
         }
+    }
+
+    public Hashtable<String, String> extractCallParameters() {
+        String sipReqParams = this.getVariable("variable_sip_req_params");
+        // Create a table of parameters to pass in
+        Hashtable<String, String> parameters = new Hashtable<String, String>();
+
+        if (sipReqParams != null) {
+            // Split parameter fields (separated by semicolons)
+            String[] params = sipReqParams.split(";");
+            for (String param : params) {
+                // Split key value pairs (separated by optional equal sign)
+                String[] kvs = param.split("=", 2);
+                if (kvs.length == 2) {
+                    parameters.put(kvs[0], kvs[1]);
+                } else {
+                    parameters.put(kvs[0], "");
+                }
+            }
+        }
+        return parameters;
     }
 }

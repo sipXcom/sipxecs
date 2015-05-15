@@ -1,7 +1,7 @@
 /**
  *
  *
- * Copyright (c) 2011 eZuce, Inc. All rights reserved.
+ * Copyright (c) 2015 sipXcom, Inc. All rights reserved.
  * Contributed to SIPfoundry under a Contributor Agreement
  *
  * This software is free software; you can redistribute it and/or modify it under
@@ -14,18 +14,18 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
  * details.
  */
-package org.sipfoundry.sipxivr.eslrequest;
+package org.sipfoundry.commons.freeswitch;
 
+public class OriginateBridgeCommand extends CallCommand {
 
-public abstract class EslRequestScopeRunnable implements Runnable {
-
-    public final void run() {
-        try {
-            runEslRequest();
-        } finally {
-            EslRequestScopeContextHolder.currentEslRequestScopeAttributes().clear();
-        }
+    public OriginateBridgeCommand(FreeSwitchEventSocketInterface fses, String calledURI, String calleeURI) {
+        super(fses);
+        m_command = "originate " + calledURI + ";sipx-noroute=VoiceMail;sipx-userforward=false &bridge(" + calleeURI + ")";
     }
 
-    public abstract void runEslRequest();
+    public FreeSwitchEvent originate() {
+        m_finished = false;
+        return m_fses.apiCmdResponse(m_command);
+    }
+
 }

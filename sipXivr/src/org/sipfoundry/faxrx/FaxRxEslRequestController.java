@@ -19,7 +19,7 @@ package org.sipfoundry.faxrx;
 import java.util.Hashtable;
 
 import org.sipfoundry.commons.freeswitch.FaxReceive;
-import org.sipfoundry.sipxivr.eslrequest.AbstractEslRequestController;
+import org.sipfoundry.commons.freeswitch.eslrequest.AbstractEslRequestController;
 
 public class FaxRxEslRequestController extends AbstractEslRequestController {
 
