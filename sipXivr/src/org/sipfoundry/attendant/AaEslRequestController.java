@@ -18,7 +18,7 @@ package org.sipfoundry.attendant;
 
 import java.util.Hashtable;
 
-import org.sipfoundry.sipxivr.eslrequest.AbstractEslRequestController;
+import org.sipfoundry.commons.freeswitch.eslrequest.AbstractEslRequestController;
 
 public class AaEslRequestController extends AbstractEslRequestController {
     private static final String RESOURCE_NAME = "org.sipfoundry.attendant.AutoAttendant";

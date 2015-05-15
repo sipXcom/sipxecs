@@ -30,6 +30,7 @@ import static org.sipfoundry.commons.mongo.MongoConstants.AVATAR;
 import static org.sipfoundry.commons.mongo.MongoConstants.BUTTONS;
 import static org.sipfoundry.commons.mongo.MongoConstants.CALL_FROM_ANY_IM;
 import static org.sipfoundry.commons.mongo.MongoConstants.CALL_IM;
+import static org.sipfoundry.commons.mongo.MongoConstants.CALLBACK_LIST;
 import static org.sipfoundry.commons.mongo.MongoConstants.CELL_PHONE_NUMBER;
 import static org.sipfoundry.commons.mongo.MongoConstants.COMPANY_NAME;
 import static org.sipfoundry.commons.mongo.MongoConstants.CONF_ENTRY_IM;
@@ -850,7 +851,7 @@ public class ValidUsers {
         return user;
     }
 
-    private static String getStringValue(DBObject obj, String key) {
+    public static String getStringValue(DBObject obj, String key) {
         if (obj.keySet().contains(key)) {
             if (obj.get(key) != null) {
                 return obj.get(key).toString();

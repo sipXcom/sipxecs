@@ -18,8 +18,8 @@ import org.sipfoundry.commons.freeswitch.DisconnectException;
 import org.sipfoundry.commons.freeswitch.FreeSwitchEventSocketInterface;
 import org.sipfoundry.commons.freeswitch.Hangup;
 import org.sipfoundry.commons.freeswitch.Set;
-import org.sipfoundry.sipxivr.eslrequest.EslRequestScopeRunnable;
-import org.sipfoundry.sipxivr.eslrequest.EslRequestApp;
+import org.sipfoundry.commons.freeswitch.eslrequest.EslRequestApp;
+import org.sipfoundry.commons.freeswitch.eslrequest.EslRequestScopeRunnable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
@@ -48,7 +48,7 @@ public abstract class SipXivr extends EslRequestScopeRunnable implements Applica
                         fses.getVariable("variable_sip_call_id"), fses.getVariable("variable_sip_from_uri"),
                         fses.getVariable("variable_sip_req_uri")));
 
-                Hashtable<String, String> parameters = extractCallParameters(fses);
+                Hashtable<String, String> parameters = fses.extractCallParameters();
                 String action = parameters.get("action");
                 String uuid = parameters.get("uuid");
                 if (uuid != null) {
@@ -86,27 +86,6 @@ public abstract class SipXivr extends EslRequestScopeRunnable implements Applica
         }
 
         LOG.debug("SipXivr::run Ending SipXivr thread with client " + m_clientSocket);
-    }
-
-    private Hashtable<String, String> extractCallParameters(FreeSwitchEventSocketInterface fses) {
-        String sipReqParams = fses.getVariable("variable_sip_req_params");
-        // Create a table of parameters to pass in
-        Hashtable<String, String> parameters = new Hashtable<String, String>();
-
-        if (sipReqParams != null) {
-            // Split parameter fields (separated by semicolons)
-            String[] params = sipReqParams.split(";");
-            for (String param : params) {
-                // Split key value pairs (separated by optional equal sign)
-                String[] kvs = param.split("=", 2);
-                if (kvs.length == 2) {
-                    parameters.put(kvs[0], kvs[1]);
-                } else {
-                    parameters.put(kvs[0], "");
-                }
-            }
-        }
-        return parameters;
     }
 
     public void setClient(Socket client) {

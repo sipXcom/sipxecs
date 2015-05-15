@@ -86,6 +86,7 @@ public class User {
     private boolean m_hotelingEnabled;
     private boolean m_forcePinChange;
     private String m_vmLanguage;
+    private Vector<String> m_callbackUsers;
 
     public enum EmailFormats {
         FORMAT_NONE("NONE"), FORMAT_FULL("FULL"), FORMAT_MEDIUM("MEDIUM"), FORMAT_BRIEF("BRIEF"), FORMAT_IMAP("IMAP");
@@ -742,5 +743,21 @@ public class User {
 
     public void setVmLanguage(String vmLanguage) {
         m_vmLanguage = vmLanguage;
+    }
+
+    public Vector<String> getCallbackUsers() {
+        return m_callbackUsers;
+    }
+
+    public void addCallbackUser(String callbackUser) {
+        this.m_callbackUsers.add(callbackUser);
+    }
+
+    public void setCallbackUsers(Vector<String> callbackUsers) {
+        this.m_callbackUsers = callbackUsers;
+    }
+
+    public boolean isMarkedForCallback() {
+        return !m_callbackUsers.isEmpty();
     }
 }
