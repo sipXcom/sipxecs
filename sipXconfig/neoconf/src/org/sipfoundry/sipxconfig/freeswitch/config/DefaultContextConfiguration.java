@@ -16,6 +16,7 @@ import java.util.Set;
 
 import org.apache.velocity.VelocityContext;
 import org.sipfoundry.sipxconfig.acccode.AuthCodes;
+import org.sipfoundry.sipxconfig.callback.CallbackOnBusy;
 import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.conference.Bridge;
 import org.sipfoundry.sipxconfig.conference.Conference;
@@ -42,14 +43,15 @@ public class DefaultContextConfiguration extends AbstractFreeswitchConfiguration
     public void write(Writer writer, Location location, FreeswitchSettings settings) throws IOException {
         Bridge bridge = m_conferenceContext.getBridgeByServer(location.getFqdn());
         boolean authCodes = m_featureManager.isFeatureEnabled(AuthCodes.FEATURE, location);
+        boolean callback = m_featureManager.isFeatureEnabled(CallbackOnBusy.FEATURE, location);
         boolean park = m_featureManager.isFeatureEnabled(ParkOrbitContext.FEATURE, location);
         List<FreeswitchExtension> extensions = m_freeswitchExtensionCollector.getExtensions();
-        write(writer, location, bridge, authCodes, park, m_parkOrbitContext.getParkOrbits(), extensions,
+        write(writer, location, bridge, authCodes, callback, park, m_parkOrbitContext.getParkOrbits(), extensions,
             settings.isBlindTransferEnabled(), settings.isSimplifyEnabled());
     }
 
-    void write(Writer writer, Location location, Bridge bridge, boolean authCodes, boolean park, Collection orbits,
-        List<FreeswitchExtension> extensions, boolean blindTransfer, boolean simplify)
+    void write(Writer writer, Location location, Bridge bridge, boolean authCodes, boolean callback, boolean park,
+            Collection orbits, List<FreeswitchExtension> extensions, boolean blindTransfer, boolean simplify)
         throws IOException {
         VelocityContext context = new VelocityContext();
         if (bridge != null) {
@@ -58,6 +60,9 @@ public class DefaultContextConfiguration extends AbstractFreeswitchConfiguration
         }
         if (authCodes) {
             context.put("acccode", true);
+        }
+        if (callback) {
+            context.put("callback", true);
         }
         if (park) {
             context.put("park", true);

@@ -117,6 +117,7 @@ public interface MongoConstants {
     static final String TO_URI = "to";
     static final String CALLID = "cid";
     static final String VMONDND = "vmondnd";
+    static final String CALLBACK_LIST = "cbu";
     // speed dials
     static final String SPEEDDIAL = "spdl";
     static final String USER = "usr";
@@ -175,4 +176,5 @@ public interface MongoConstants {
 
     //phones
     static final String SERIAL_NUMBER = "mac";
+
 }

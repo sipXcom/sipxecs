@@ -1,0 +1,7 @@
+#set($callback=${service.getSettings().getSetting('callback')})
+log.level=$callback.getSetting('log.level').Value
+log.file=${service.logDir}/sipxcallback.log
+
+callback.sipxchangeDomainName=${service.domainName}
+
+freeswitch.eventSocketPort=$callback.getSetting('freeswitch.eventSocketPort').Value

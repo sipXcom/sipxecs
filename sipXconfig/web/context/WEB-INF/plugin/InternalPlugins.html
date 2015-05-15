@@ -18,6 +18,9 @@
    <span jwcid="@If" condition="ognl:isOn('intercom')">
      <span jwcid="@common/AdminNavigationMenu" pagePath="admin/Intercom" label="ognl:messages.getMessage('menu.intercom')" />
    </span>
+   <span jwcid="@If" condition="ognl:isOn('callback')">
+     <span jwcid="@common/AdminNavigationMenu" pagePath="callback/EditCallback" label="ognl:messages.getMessage('menu.callback')" />
+   </span>
    <span jwcid="@If" condition="ognl:isOn('proxy')">
      <span jwcid="@common/AdminNavigationMenu" pagePath="admin/ListCallGroups" label="ognl:messages.getMessage('menu.huntGroups')" />     
    </span>

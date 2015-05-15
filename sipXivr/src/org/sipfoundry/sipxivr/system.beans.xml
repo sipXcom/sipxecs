@@ -6,7 +6,7 @@
     <property name="scopes">
       <map>
         <entry key="eslRequest">
-          <bean class="org.sipfoundry.sipxivr.eslrequest.EslRequestScope"/>
+          <bean class="org.sipfoundry.commons.freeswitch.eslrequest.EslRequestScope"/>
         </entry>
       </map>
     </property>

@@ -23,12 +23,12 @@ import org.apache.log4j.Logger;
 import org.sipfoundry.commons.freeswitch.Play;
 import org.sipfoundry.commons.freeswitch.PromptList;
 import org.sipfoundry.commons.freeswitch.Record;
+import org.sipfoundry.commons.freeswitch.eslrequest.AbstractEslRequestController;
 import org.sipfoundry.commons.userdb.PersonalAttendant;
 import org.sipfoundry.commons.userdb.User;
 import org.sipfoundry.commons.userdb.ValidUsers;
 import org.sipfoundry.sipxivr.ApplicationConfiguraton;
 import org.sipfoundry.sipxivr.common.IvrChoice;
-import org.sipfoundry.sipxivr.eslrequest.AbstractEslRequestController;
 import org.sipfoundry.voicemail.mailbox.TempMessage;
 
 public class VmEslRequestController extends AbstractEslRequestController {

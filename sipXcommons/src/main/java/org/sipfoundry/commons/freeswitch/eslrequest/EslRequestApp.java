@@ -14,28 +14,12 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
  * details.
  */
-package org.sipfoundry.moh;
+package org.sipfoundry.commons.freeswitch.eslrequest;
 
 import java.util.Hashtable;
 
-import org.sipfoundry.commons.freeswitch.eslrequest.AbstractEslRequestController;
+public interface EslRequestApp {
 
-public class MohEslRequestController extends AbstractEslRequestController {
-    private static final String RESOURCE_NAME = "org.sipfoundry.attendant.AutoAttendant";
-    private String m_mohParam;
-
-    @Override
-    public void extractParameters(Hashtable<String, String> parameters) {
-        m_mohParam = parameters.get("moh");
-    }
-
-    @Override
-    public void loadConfig() {
-        initLocalization(RESOURCE_NAME, null);
-    }
-
-    public String getMohParam() {
-        return m_mohParam;
-    }
+    void run(Hashtable<String, String> parameters);
 
 }

@@ -14,12 +14,18 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
  * details.
  */
-package org.sipfoundry.sipxivr.eslrequest;
+package org.sipfoundry.commons.freeswitch.eslrequest;
 
-import java.util.Hashtable;
 
-public interface EslRequestApp {
+public abstract class EslRequestScopeRunnable implements Runnable {
 
-    void run(Hashtable<String, String> parameters);
+    public final void run() {
+        try {
+            runEslRequest();
+        } finally {
+            EslRequestScopeContextHolder.currentEslRequestScopeAttributes().clear();
+        }
+    }
 
+    public abstract void runEslRequest();
 }

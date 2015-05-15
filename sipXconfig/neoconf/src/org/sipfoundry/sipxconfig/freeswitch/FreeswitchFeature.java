@@ -57,6 +57,7 @@ public class FreeswitchFeature implements FeatureProvider, AddressProvider, Proc
     public static final AddressType XMLRPC_ADDRESS = new AddressType("freeswitch-xmlrpc", "http://%s:%d/RPC2");
     public static final AddressType EVENT_ADDRESS = new AddressType("freeswitch-event");
     public static final AddressType ACC_EVENT_ADDRESS = new AddressType("acc-freeswitch-event");
+    public static final AddressType CALLBACK_EVENT_ADDRESS = new AddressType("callback-freeswitch-event");
 
     private static final String PROCESS = "sipxfreeswitch";
 
@@ -89,7 +90,7 @@ public class FreeswitchFeature implements FeatureProvider, AddressProvider, Proc
         DefaultFirewallRule[] rules = new DefaultFirewallRule[] {
             new DefaultFirewallRule(XMLRPC_ADDRESS), new DefaultFirewallRule(EVENT_ADDRESS),
             new DefaultFirewallRule(ACC_EVENT_ADDRESS), new DefaultFirewallRule(SIP_ADDRESS),
-            new DefaultFirewallRule(SIP_UDP_ADDRESS),
+            new DefaultFirewallRule(CALLBACK_EVENT_ADDRESS), new DefaultFirewallRule(SIP_UDP_ADDRESS),
             new DefaultFirewallRule(RTP_ADDRESS, FirewallRule.SystemId.PUBLIC, true)
         };
         return Arrays.asList(rules);
@@ -98,7 +99,7 @@ public class FreeswitchFeature implements FeatureProvider, AddressProvider, Proc
     @Override
     public Collection<Address> getAvailableAddresses(AddressManager manager, AddressType type, Location requester) {
         if (!type.equalsAnyOf(SIP_ADDRESS, SIP_UDP_ADDRESS, XMLRPC_ADDRESS, EVENT_ADDRESS, ACC_EVENT_ADDRESS,
-                RTP_ADDRESS)) {
+                CALLBACK_EVENT_ADDRESS, RTP_ADDRESS)) {
             return null;
         }
 
@@ -117,6 +118,8 @@ public class FreeswitchFeature implements FeatureProvider, AddressProvider, Proc
                 address = new Address(type, location.getAddress(), settings.getEventSocketPort());
             } else if (type.equals(ACC_EVENT_ADDRESS)) {
                 address = new Address(type, location.getAddress(), settings.getAccEventSocketPort());
+            } else if (type.equals(CALLBACK_EVENT_ADDRESS)) {
+                address = new Address(type, location.getAddress(), settings.getCallbackEventSocketPort());
             } else if (type.equals(SIP_ADDRESS) || type.equals(SIP_UDP_ADDRESS)) {
                 address = new Address(type, location.getAddress(), settings.getFreeswitchSipPort());
             } else if (type.equalsAnyOf(RTP_ADDRESS)) {

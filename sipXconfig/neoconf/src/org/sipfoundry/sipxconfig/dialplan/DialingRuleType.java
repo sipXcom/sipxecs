@@ -32,6 +32,7 @@ public final class DialingRuleType extends Enum {
             SiteToSiteDialingRule.class, CallTag.STS);
     public static final DialingRuleType AUTHCODE = new DialingRuleType("Authorization Code",
             AuthorizationCodeRule.class, CallTag.AUTH);
+    public static final DialingRuleType CALLBACK = new DialingRuleType("Callback", CallbackRule.class);
 
     private final Class< ? extends DialingRule> m_klass;
     private final CallTag m_callTag;

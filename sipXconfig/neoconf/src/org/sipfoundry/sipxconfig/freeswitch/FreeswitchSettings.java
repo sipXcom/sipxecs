@@ -45,6 +45,10 @@ public class FreeswitchSettings extends SettingsWithLocation implements DeployCo
         return 8184; // not configurable at this time, no particular reason. --Douglas
     }
 
+    public int getCallbackEventSocketPort() {
+        return 8284;
+    }
+
     public int getXmlRpcPort() {
         return (Integer) getSettingTypedValue(FREESWITCH_XMLRPC_PORT);
     }
