@@ -20,7 +20,7 @@ import org.apache.tapestry.annotations.Bean;
 import org.apache.tapestry.annotations.InjectObject;
 import org.apache.tapestry.event.PageBeginRenderListener;
 import org.apache.tapestry.event.PageEvent;
-import org.sipfoundry.sipxconfig.callback.CallbackOnBusyImpl;
+import org.sipfoundry.sipxconfig.callback.CallbackOnBusy;
 import org.sipfoundry.sipxconfig.callback.CallbackSettings;
 import org.sipfoundry.sipxconfig.components.PageWithCallback;
 import org.sipfoundry.sipxconfig.components.SipxValidationDelegate;
@@ -31,8 +31,8 @@ public abstract class EditCallback extends PageWithCallback implements PageBegin
     @Bean
     public abstract SipxValidationDelegate getValidator();
 
-    @InjectObject("spring:callbackImpl")
-    public abstract CallbackOnBusyImpl getCallbackManager();
+    @InjectObject("spring:callback")
+    public abstract CallbackOnBusy getCallbackManager();
 
     public abstract CallbackSettings getSettings();
 
