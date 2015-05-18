@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+  <bean id="callback" class="org.springframework.aop.framework.ProxyFactoryBean" parent="abstractDao">
+    <property name="proxyInterfaces">
+      <list>
+        <value>org.sipfoundry.sipxconfig.callback.CallbackOnBusy</value>
+      </list>
+    </property>
+    <property name="target">
+      <ref local="callbackImpl" />
+    </property>
+  </bean>
+
+  <bean id="callbackImpl" class="org.sipfoundry.sipxconfig.callback.CallbackOnBusyImpl">
+    <property name="featureManager" ref="featureManager" />
+    <property name="addressManager" ref="addressManager" />
+    <property name="settingsDao">
+      <bean parent="beanWithSettingsDao">
+        <property name="target">
+          <bean parent="beanWithSettingsDaoImpl">
+            <constructor-arg value="org.sipfoundry.sipxconfig.callback.CallbackSettings"/>
+          </bean>
+        </property>
+      </bean>
+    </property>
+  </bean>
+
+  <bean id="callbackSettings" class="org.sipfoundry.sipxconfig.callback.CallbackSettings" parent="settingsBean">
+  </bean>
+
+  <bean id="callbackConfiguration" class="org.sipfoundry.sipxconfig.callback.CallbackConfiguration">
+    <property name="callbackImpl" ref="callbackImpl"/>
+  </bean>
+
+</beans>
