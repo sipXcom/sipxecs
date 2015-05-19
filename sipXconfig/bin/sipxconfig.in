@@ -79,7 +79,11 @@ IndexDir=${TmpDir}/index
 Dependencies=`@SIPX_BINDIR@/java-dep -d ${CommonsLibDir} -d ${LibDir} sipxconfig sipxconfig-web @web_PKGS@ cdr-binding`
 export CLASSPATH=`echo @SIPX_CONFDIR@ ${Dependencies} ${PluginDir}/*.jar | sed -e 's/ /:/g'`
 
-source @SIPX_CONFDIR@/postgres-pwd.properties
+#source @SIPX_CONFDIR@/postgres-pwd.properties
+
+value=`cat @SIPX_CONFDIR@/postgres-pwd.properties`
+prefix="password="
+password=${value#$prefix}
 
 # Incase system failed suddenly, clear previous locks
 clearIndexLocks() {
@@ -104,7 +108,7 @@ databaseCommand() {
       -Dlog.dir=${LogDir} \
       -Dtmp.dir=${TmpDir} \
       -Dsipxconfig.db.user=@POSTGRESQL_USER@ \
-      -Dsipxconfig.db.password=${password} \
+      -Dsipxconfig.db.password='${password}' \
       ${SIPXCONFIG_ANT_OPTS} \
       -f @SIPX_CONFDIR@/database/database.xml \
       $@"
