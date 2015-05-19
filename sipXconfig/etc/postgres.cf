@@ -125,7 +125,7 @@ bundle edit_line postgresql_conf {
 
 bundle edit_line pg_hba_conf {
   classes:
-    "trust" expression => strcmp("","$(sipx.NEW_POSTGRESQL_PASSWORD)");
+    "trust" expression => strcmp("",'$(sipx.NEW_POSTGRESQL_PASSWORD)');
     "pwdfile_exists" expression  => fileexists("$(sipx.SIPX_CFDATA)/$(sipx.location_id)/postgres-pwd.cfdat");
   insert_lines:
     pwdfile_exists.!trust::
@@ -171,8 +171,8 @@ bundle agent postgres_sysv_running {
         
     postgres.change_password::
        "$(sipx.SIPX_BINDIR)/postgres_change_pwd"
-         comment => "change postgres password to $(sipx.NEW_POSTGRESQL_PASSWORD)",
-         args => "$(sipx.NEW_POSTGRESQL_PASSWORD)";        
+         comment => "change postgres password ",
+         args => '$(sipx.NEW_POSTGRESQL_PASSWORD)';        
 
     postgres.postgres_running.(restart_postgres|change_password)::
       "$(sipx.PG_DAEMON)"
@@ -211,7 +211,7 @@ bundle agent postgres_sysctl_running {
     postgres.change_password::
        "$(sipx.SIPX_BINDIR)/postgres_change_pwd"
          comment => "change postgres password",
-         args => "$(sipx.NEW_POSTGRESQL_PASSWORD)";
+         args => '$(sipx.NEW_POSTGRESQL_PASSWORD)';
          
     postgres.postgres_running.(restart_postgres|change_password)::
       "$(sipx.systemctl)"
@@ -222,13 +222,13 @@ bundle agent postgres_sysctl_running {
 bundle agent postgres_activate_new_password {
   files:
     "/root/.pgpass"
-      comment => "create postgress pgpass file $(sipx.NEW_POSTGRESQL_PASSWORD)",
+      comment => "create postgress pgpass file",
       create => "true",
       perms => mog("600", root, root),
       edit_line => postgres_pgpass;
     
     "$(sipx.PGDATA)/../.pgpass"
-      comment => "create postgress pgpass file $(sipx.NEW_POSTGRESQL_PASSWORD)",
+      comment => "create postgress pgpass file",
       create => "true",
       perms => mog("600", "$(sipx.POSTGRESQL_USER)","$(sipx.POSTGRESQL_GROUP)"),
       edit_line => postgres_pgpass;
@@ -237,7 +237,7 @@ bundle agent postgres_activate_new_password {
 bundle edit_line postgres_pgpass {
   insert_lines:
     any::
-      "localhost:5432:*:postgres:$(sipx.NEW_POSTGRESQL_PASSWORD)";
+      'localhost:5432:*:postgres:$(sipx.NEW_POSTGRESQL_PASSWORD)';
   delete_lines:  
     any::
       ".*";  
