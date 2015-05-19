@@ -45,6 +45,7 @@ public class AdminConfig implements ConfigProvider {
         Set<Location> locations = request.locations(manager);
         AdminSettings settings = m_adminContext.getSettings();
         Setting adminSettings = settings.getSettings().getSetting(m_adminSettingsKey);
+        String password = settings.getPostgresPassword();
 
         for (Location l : locations) {
             File dir = manager.getLocationDataDirectory(l);
@@ -54,8 +55,8 @@ public class AdminConfig implements ConfigProvider {
                 try {
                     KeyValueConfiguration cfg = KeyValueConfiguration.equalsSeparated(pwd);
                     CfengineModuleConfiguration cfgCfdat = new CfengineModuleConfiguration(pwdCfdat);
-                    cfg.write("password", settings.getPostgresPassword());
-                    cfgCfdat.write("NEW_POSTGRESQL_PASSWORD", settings.getPostgresPassword());
+                    cfg.write("password", password);
+                    cfgCfdat.write("NEW_POSTGRESQL_PASSWORD", password);
                 } finally {
                     IOUtils.closeQuietly(pwd);
                     IOUtils.closeQuietly(pwdCfdat);
