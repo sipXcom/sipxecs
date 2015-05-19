@@ -326,6 +326,11 @@ void HttpMessage::parseMessage(const char* messageBytes, ssize_t byteCount)
       }
    }
 
+   //
+   // Clear previous headers if there are any
+   //
+   mNameValues.destroyAll();
+   
    if(byteCount > 0)
    {
       ssize_t bytesConsumed = 0;
