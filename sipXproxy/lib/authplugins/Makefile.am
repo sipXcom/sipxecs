@@ -30,7 +30,8 @@ nobase_lib_LTLIBRARIES = \
     authplugins/libRequestLinter.la \
     authplugins/libMSFT_ExchangeTransferHack.la \
     authplugins/libSubscriptionAuth.la \
-    authplugins/libCallDestination.la
+    authplugins/libCallDestination.la  \
+    authplugins/libV8Engine.la
 
 authplugins_libCallerAlias_la_SOURCES = \
     CallerAlias.h \
@@ -163,6 +164,21 @@ authplugins_libEmergencyLineIdentifier_la_LDFLAGS = \
     $(AUTHPLUGIN_COMMON_LD_FLAGS)
 
 authplugins_libEmergencyLineIdentifier_la_LIBADD = \
+    @SIPXCOMMSERVER_LIBS@ \
+    -lmongoclient \
+    -lboost_system-mt
+
+authplugins_libV8Engine_la_SOURCES = \
+    V8Engine.h \
+    V8Engine.cpp
+
+authplugins_libV8Engine_la_CXXFLAGS = \
+    $(AUTHPLUGIN_COMMON_CXX_FLAGS)
+
+authplugins_libV8Engine_la_LDFLAGS = \
+    $(AUTHPLUGIN_COMMON_LD_FLAGS)
+
+authplugins_libV8Engine_la_LIBADD = \
     @SIPXCOMMSERVER_LIBS@ \
     -lmongoclient \
     -lboost_system-mt
