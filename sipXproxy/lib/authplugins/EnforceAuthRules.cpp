@@ -269,16 +269,26 @@ EnforceAuthRules::authorizeAndModify(const UtlString& id,    /**< The authentica
             }
             else
             {
-               result = DENY;
-               Os::Logger::instance().log(FAC_AUTH, PRI_WARNING,
-                             "EnforceAuthRules[%s]::authorizeAndModify "
-                             " call '%s' requires '%s'",
-                             mInstanceName.data(), callId.data(), unmatchedPermissions.data()
-                             );
-               // since the user is at least a valid user, help them debug the configuration
-               // by telling them what permissions would allow this request.
-               reason.append("Requires ");
-               reason.append(unmatchedPermissions);
+              if (!unmatchedPermissions.isNull())
+              {
+                result = DENY;
+                Os::Logger::instance().log(FAC_AUTH, PRI_WARNING,
+                              "EnforceAuthRules[%s]::authorizeAndModify "
+                              " call '%s' requires '%s'",
+                              mInstanceName.data(), callId.data(), unmatchedPermissions.data()
+                              );
+                // since the user is at least a valid user, help them debug the configuration
+                // by telling them what permissions would allow this request.
+                reason.append("Requires ");
+                reason.append(unmatchedPermissions);
+              }
+              else
+              {
+                result = ALLOW;
+                Os::Logger::instance().log(FAC_AUTH, PRI_DEBUG, "EnforceAuthRules[%s]::authorizeAndModify "
+                             " id '%s' authorized by 'no permission required'",
+                             mInstanceName.data(), id.data());
+              }
             }
          }
       }
