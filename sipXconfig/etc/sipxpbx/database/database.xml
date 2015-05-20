@@ -1435,7 +1435,7 @@
     <db-patch patch="openacd-permission-profile"/>
   </target>
 
-	<!--
+  <!--
     - SUPPORT UTILITIES
   -->
   <!-- Run SQL on SIPXCONFIG database and update patch list if successful -->
