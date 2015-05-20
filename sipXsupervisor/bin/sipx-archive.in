@@ -160,6 +160,16 @@ class Backup < ArchiveBase
   end
 end
 
+# Orchestrate backup in a dedicated path
+class BackupToPath < Backup
+  def initialize(config, backupPath)
+    super(config)
+    unless backupPath.nil?
+      @backup_dir = backupPath
+    end  
+  end
+end
+
 # Orchestrate restore a cluster including staging file from local or ftp plan.
 class Restore < Backup
   def initialize(config, paths)
@@ -506,6 +516,11 @@ EOF
   opts.on("--backup config.yaml",
       "Restore the specified Configuration archive."){ |v|    
     operation = Backup.new(v)
+  }
+  
+  opts.on("--backupToPath config.yaml,backupPath", Array,
+      "Backup on a dedicated path"){ |v|
+    operation = BackupToPath.new(v[0], v[1])
   }
 
   opts.on("--restore config.yaml,paths", Array,
