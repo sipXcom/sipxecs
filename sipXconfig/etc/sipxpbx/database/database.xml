@@ -471,6 +471,7 @@
     <antcall target="insert_default_dns_view" />
     <antcall target="system-audit" />
     <antcall target="config-change-value" />
+    <antcall target="openacd-permission-profile" />
   </target>
 
   <target name="plugin-patches">
@@ -1430,8 +1431,11 @@
   <target name="config-change-value" unless="config-change-value">
     <db-patch patch="config-change-value"/>
   </target>
+  <target name="openacd-permission-profile" unless="openacd-permission-profile">
+    <db-patch patch="openacd-permission-profile"/>
+  </target>
 
-  <!--
+	<!--
     - SUPPORT UTILITIES
   -->
   <!-- Run SQL on SIPXCONFIG database and update patch list if successful -->
