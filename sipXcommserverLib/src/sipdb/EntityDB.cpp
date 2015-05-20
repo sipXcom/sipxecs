@@ -252,9 +252,9 @@ bool EntityDB::getCredential(const UtlString& userid, const UtlString& realm, Ur
 	return true;
 }
 
-void EntityDB::getAliasContacts(const Url& aliasIdentity, Aliases& aliases, bool& isUserIdentity) const
+void EntityDB::getAliasContacts(const Url& aliasIdentity, Aliases& aliases, bool& isUserIdentity, UtlString& userIdentity) const
 {
-	UtlString alias;
+  UtlString alias;
 	aliasIdentity.getUserId(alias);
 	if (alias.isNull())
 		return;
@@ -274,7 +274,14 @@ void EntityDB::getAliasContacts(const Url& aliasIdentity, Aliases& aliases, bool
 				aliases.push_back(*iter);
 		}
 		isUserIdentity = !entity.realm().empty() && !entity.password().empty();
+    userIdentity = entity.identity().c_str();
 	}
+}
+
+void EntityDB::getAliasContacts(const Url& aliasIdentity, Aliases& aliases, bool& isUserIdentity) const
+{
+	UtlString identity;
+  getAliasContacts(aliasIdentity, aliases, isUserIdentity, identity);
 }
 
 bool EntityDB::findByIdentity(const Url& uri, EntityRecord& entity) const
