@@ -131,12 +131,18 @@ class Restore < ArchiveBase
     if !pre_mongo
       cmd "tar -zxvf #{params[:file]} -C #{@tmpdir} dump" or
         raise "Failed to extract user profiles database from archive"
+      cmd "mongo profiles --eval \"db.userProfile.remove({})\""  
       cmd "mongorestore --db profiles --collection userProfile #{@tmpdir}/dump/profiles/userProfile.bson" or
         raise "Failed to restore user profiles database"
+
+      cmd "mongo profiles --eval \"db.fs.files.remove({})\""  
       cmd "mongorestore --db profiles --collection fs.files #{@tmpdir}/dump/profiles/fs.files.bson" or
         cmd "echo Failed to restore avatar database"
+        
+      cmd "mongo profiles --eval \"db.fs.chunks.remove({})\""  
       cmd "mongorestore --db profiles --collection fs.chunks #{@tmpdir}/dump/profiles/fs.chunks.bson" or
         cmd "echo Failed to restore avatar database"
+
 	  restore_additional_databases()
     else
       sql_exec(@restoredb, "insert into setup(setup_id) values ('migrate_profiles');") or
