@@ -147,13 +147,17 @@
     </property>
   </bean>
 
-  <bean id="disableLdapUsersTimer" class="org.sipfoundry.sipxconfig.bulk.ldap.DisableLdapUsersTimer">
+  <bean id="ldapTimer" class="org.sipfoundry.sipxconfig.bulk.ldap.LdapTimer">
     <property name="adminContext" ref="adminContext"/>
     <property name="userProfileService" ref="userProfileService" />
+    <property name="ldapManager">
+      <ref local="ldapManager" />
+    </property>
   </bean>
   
   <task:scheduled-tasks>
-	<task:scheduled ref="disableLdapUsersTimer" method="disableDeleteUsers" fixed-delay="60000" /> 
+	<task:scheduled ref="ldapTimer" method="disableDeleteUsers" fixed-delay="60000" />
+	<task:scheduled ref="ldapTimer" method="verifyLdapConnection" cron="0 0 */2 * * ?" /> 
   </task:scheduled-tasks>
   
   <bean id="disableLdapUsersTask" class="org.sipfoundry.sipxconfig.bulk.ldap.DisableLdapUsersTask" scope="prototype">
@@ -161,4 +165,5 @@
     <property name="imdb" ref="imdb"/>
     <property name="coreContext" ref="coreContext"/>
   </bean>
+  
 </beans>

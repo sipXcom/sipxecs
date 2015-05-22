@@ -9,6 +9,7 @@
  */
 package org.sipfoundry.sipxconfig.bulk.ldap;
 
+import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.createMock;
@@ -28,12 +29,14 @@ import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 import org.junit.Assert;
 import org.sipfoundry.commons.userdb.profile.UserProfile;
+import org.sipfoundry.sipxconfig.admin.AdminContext;
 import org.sipfoundry.sipxconfig.bulk.RowInserter.RowStatus;
 import org.sipfoundry.sipxconfig.bulk.csv.Index;
 import org.sipfoundry.sipxconfig.common.CoreContext;
 import org.sipfoundry.sipxconfig.common.User;
 import org.sipfoundry.sipxconfig.permission.PermissionManager;
 import org.sipfoundry.sipxconfig.setting.Group;
+import org.sipfoundry.sipxconfig.setting.SettingDao;
 import org.sipfoundry.sipxconfig.test.TestHelper;
 import org.sipfoundry.sipxconfig.vm.MailboxManager;
 
@@ -44,14 +47,29 @@ public class LdapRowInserterTest extends TestCase {
     private static final String NO_LDAP = "noldap";
 
     private LdapRowInserter m_rowInserter;
+    private AdminContext m_adminContext;
+    private SettingDao m_settingDao;
 
     @Override
     protected void setUp() {
         m_rowInserter = new LdapRowInserter();
+        m_adminContext = createMock(AdminContext.class);
+        m_adminContext.getNewLdapUserGroupNamePrefix();
+        expectLastCall().andReturn("grPrefix_").anyTimes();
+        replay(m_adminContext);
+        Group newGroup = new Group();
+        newGroup.setName("grPrefix_example.com");
+        newGroup.setResource(CoreContext.USER_GROUP_RESOURCE_ID);
+        m_settingDao = createMock(SettingDao.class);
+        m_settingDao.getGroupCreateIfNotFound(CoreContext.USER_GROUP_RESOURCE_ID, "grPrefix_example.com");
+        expectLastCall().andReturn(newGroup);
+        replay(m_settingDao);
         AttrMap attrMap = new AttrMap();
         attrMap.setDefaultGroupName("test-import");
         attrMap.setAttribute(Index.USERNAME.getName(), "identity");
         m_rowInserter.setAttrMap(attrMap);
+        m_rowInserter.setAdminContext(m_adminContext);
+        m_rowInserter.setSettingDao(m_settingDao);
     }
 
     private User insertRow(boolean existingUser, boolean ldapManaged) throws Exception {
@@ -167,7 +185,7 @@ public class LdapRowInserterTest extends TestCase {
 
     public void testInsertRowNewUser() throws Exception {
         User joe = insertRow(false, false);
-        assertEquals(1, joe.getGroups().size());
+        assertEquals(2, joe.getGroups().size());
         //ldap group was saved
         for (Group group : joe.getGroups()) {
             if (StringUtils.equals(group.getName(), SALES)) {
