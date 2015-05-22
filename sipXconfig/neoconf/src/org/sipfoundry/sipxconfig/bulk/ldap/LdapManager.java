@@ -14,6 +14,7 @@ import java.util.List;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
+import org.sipfoundry.sipxconfig.alarm.AlarmDefinition;
 import org.sipfoundry.sipxconfig.common.CronSchedule;
 import org.sipfoundry.sipxconfig.feature.GlobalFeature;
 import org.springframework.ldap.core.DirContextProcessor;
@@ -22,6 +23,7 @@ public interface LdapManager {
     public static final GlobalFeature FEATURE = new GlobalFeature("ldapConfig");
     public static final String FILTER_ALL_CLASSES = "objectclass=*";
     public static final String CONTEXT_BEAN_NAME = "ldapManager";
+    public static final AlarmDefinition LDAP_CONNECTION_FAILED = new AlarmDefinition("LDAP_CONNECTION_FAILED");
 
     public static final DirContextProcessor NULL_PROCESSOR = new DirContextProcessor() {
         @Override

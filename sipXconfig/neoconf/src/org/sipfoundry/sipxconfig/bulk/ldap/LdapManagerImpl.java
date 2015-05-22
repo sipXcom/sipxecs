@@ -14,6 +14,8 @@ import static org.springframework.dao.support.DataAccessUtils.singleResult;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +28,9 @@ import javax.naming.directory.SearchControls;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.sipfoundry.sipxconfig.alarm.AlarmDefinition;
+import org.sipfoundry.sipxconfig.alarm.AlarmProvider;
+import org.sipfoundry.sipxconfig.alarm.AlarmServerManager;
 import org.sipfoundry.sipxconfig.common.CronSchedule;
 import org.sipfoundry.sipxconfig.common.SipxHibernateDaoSupport;
 import org.sipfoundry.sipxconfig.common.UserException;
@@ -44,7 +49,8 @@ import org.springframework.ldap.core.AttributesMapper;
 /**
  * Maintains LDAP connection params, attribute maps and schedule LdapManagerImpl
  */
-public class LdapManagerImpl extends SipxHibernateDaoSupport implements LdapManager, ApplicationContextAware {
+public class LdapManagerImpl extends SipxHibernateDaoSupport implements LdapManager,
+    ApplicationContextAware, AlarmProvider {
     private static final Log LOG = LogFactory.getLog(LdapManagerImpl.class);
     private static final String QUERY_OVERRIDE_PIN =
             "SELECT value_storage_id, value from setting_value where path='ldap/overwrite_pin'";
@@ -112,7 +118,8 @@ public class LdapManagerImpl extends SipxHibernateDaoSupport implements LdapMana
 
     @Override
     public boolean verifyLdapConnection(LdapConnectionParams params) {
-        LOG.debug("verifying LDAP connection: " + params.getFullHost());
+        String fullHost = params.getFullHost();
+        LOG.debug("verifying LDAP connection: " + fullHost);
         try {
             String[] attrNames = new String[] {
                 NAMING_CONTEXTS, SUBSCHEMA_SUBENTRY
@@ -120,6 +127,7 @@ public class LdapManagerImpl extends SipxHibernateDaoSupport implements LdapMana
             retrieveDefaultSearchBase(params, attrNames);
             return true;
         } catch (Exception e) {
+            LOG.error("ALARM_LDAP_CONNECTION_FAILED for host:" + fullHost + " reason: " + e.getMessage());
             return false;
         }
     }
@@ -227,7 +235,7 @@ public class LdapManagerImpl extends SipxHibernateDaoSupport implements LdapMana
 
         cons.setReturningAttributes(attrNames);
         cons.setSearchScope(SearchControls.OBJECT_SCOPE);
-        cons.setTimeLimit(30000);
+        cons.setTimeLimit(params.getTimeout());
 
         List<Map<String, String>> results = m_templateFactory.getLdapTemplate(params).search("",
                 FILTER_ALL_CLASSES, cons, new AttributesToValues(attrNames), NULL_PROCESSOR);
@@ -371,5 +379,10 @@ public class LdapManagerImpl extends SipxHibernateDaoSupport implements LdapMana
     @Required
     public void setConfigJdbcTemplate(JdbcTemplate template) {
         m_jdbcTemplate = template;
+    }
+
+    @Override
+    public Collection<AlarmDefinition> getAvailableAlarms(AlarmServerManager manager) {
+        return Collections.singleton(LDAP_CONNECTION_FAILED);
     }
 }
