@@ -34,6 +34,7 @@
           <Set name="contextPath">/sipxconfig</Set>
           <Set name="war"><SystemProperty name="jetty.lib.dir"/>/sipxconfig.war</Set>
           <Set name="extractWAR">true</Set>
+          <Set name="tempDirectory"><SystemProperty name="jetty.tmp.dir"/>/sipxconfig</Set>
         </New>
       </Arg>
     </Call>
@@ -43,6 +44,7 @@
           <Set name="contextPath">/cmcprov</Set>
           <Set name="war"><SystemProperty name="jetty.lib.dir"/>/cmcprov.war</Set>
           <Set name="extractWAR">true</Set>
+          <Set name="tempDirectory"><SystemProperty name="jetty.tmp.dir"/>/cmcprov</Set>
         </New>
       </Arg>
     </Call>
