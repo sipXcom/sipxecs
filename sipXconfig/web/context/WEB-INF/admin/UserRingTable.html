@@ -16,7 +16,12 @@
                 </span>
             </span>
             <span jwcid="expirationColumnValue">
-                <input jwcid="expiration" maxlength="6" type="text" size="3"></input>
+                <span jwcid="@If" condition="ognl:useFwdTimers">
+                    <input jwcid="readOnlyExpiration" maxlength="6" type="text" size="3" readonly="readonly"/>
+                </span>
+                <span jwcid="@Else">
+                    <input jwcid="expiration" maxlength="6" type="text" size="3"/>
+                </span>
             </span>
 		</table>
 	    <ul class="component-submit">

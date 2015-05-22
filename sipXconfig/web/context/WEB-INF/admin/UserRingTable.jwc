@@ -8,6 +8,7 @@
 
   <parameter name="rings" required="yes"/>
   <parameter name="idConverter" required="yes"/>
+  <parameter name="useFwdTimers" required="yes"/>
 
   <!-- P R O P E R T I E S -->
   <inject property="coreContext" object="spring:coreContext"/>
@@ -53,6 +54,11 @@
   </component>
   <component id="expirationColumnValue" type="Block"/>
   <component id="expiration" type="TextField">
+    <binding name="value" value="currentRow.expiration"/>
+    <binding name="validators" value="spring-validators:validPhone,required"/>
+    <binding name="displayName" value="message:label.ringFor"/>
+  </component>
+  <component id="readOnlyExpiration" type="TextField">
     <binding name="value" value="currentRow.expiration"/>
     <binding name="validators" value="spring-validators:validPhone,required"/>
     <binding name="displayName" value="message:label.ringFor"/>
