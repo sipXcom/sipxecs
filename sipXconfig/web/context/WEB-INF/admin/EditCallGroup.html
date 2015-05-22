@@ -12,7 +12,7 @@
     nameValidator="spring-validators:required,validSipUserId"
     useDid="ognl:true"/>
   <fieldset jwcid="ringTable@admin/UserRingTable" rings="ognl:callGroup.rings"
-    idConverter="ognl:idConverter"/>
+    idConverter="ognl:idConverter" useFwdTimers="ognl:callGroup.useFwdTimers"/>
   <fieldset>
     <table>
       <tr jwcid="@common/FieldPanel"
