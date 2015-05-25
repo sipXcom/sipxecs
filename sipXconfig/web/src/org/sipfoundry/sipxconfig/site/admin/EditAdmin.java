@@ -67,7 +67,7 @@ public abstract class EditAdmin extends PageWithCallback implements PageBeginRen
         String password = getSettings().getPostgresPassword();
         if (StringUtils.contains(password, '%') || StringUtils.contains(password, '\'') || StringUtils.contains(password, '/')
             || StringUtils.contains(password, '\\') || StringUtils.contains(password, '`') ||
-            StringUtils.contains(password, ':') || StringUtils.contains(password, '\"')) {
+            StringUtils.contains(password, ':') || StringUtils.contains(password, '\"') || StringUtils.contains(password, ' ')) {
             throw new UserException(getMessages().getMessage("error.invalid.password"));
         }
         try {
