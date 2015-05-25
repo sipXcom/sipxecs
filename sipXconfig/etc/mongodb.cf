@@ -112,7 +112,8 @@ bundle agent mongodb_arbiter_config {
     mongod_arbiter::
       "dirs" slist => {
         "/var/lib/mongodb-arbiter",
-        "/var/run/$(mongodb.id)"
+        "/var/run/$(mongodb.id)",
+        "/var/log/mongodb/arbiter"
       };
 
   files:
@@ -129,6 +130,13 @@ bundle agent mongodb_arbiter_config {
         edit_defaults => empty,
         edit_line => mongodb_arbiter_config_contents,
         classes => if_repaired("restart_mongo_arbiter");
+
+      "/etc/logrotate.d/mongodb-arbiter"
+        comment => "Log rotation config for mongodb arbiter",
+        perms => mog("644", "root", "root"),
+        create => "true",
+        edit_defaults => empty,
+        edit_line => mongo_arbiter_logrotate_contents;
 }
 
 bundle edit_line mongodb_arbiter_config_contents {
@@ -137,7 +145,7 @@ bundle edit_line mongodb_arbiter_config_contents {
   insert_lines:
 "replSet=sipxecs
 port=27018
-logpath=/var/log/$(mongodb.id)/mongod-arbiter.log
+logpath=/var/log/$(mongodb.id)/arbiter/mongodb.log
 fork=true
 pidfilepath=/var/run/$(mongodb.id)/mongodb-arbiter.pid
 smallfiles=true
@@ -148,12 +156,31 @@ bind_ip=0.0.0.0
 ";
 }
 
+bundle edit_line mongo_arbiter_logrotate_contents {
+  insert_lines:
+"/var/log/$(mongodb.id)/arbiter/mongodb.log {
+       weekly
+       rotate 10
+       copytruncate
+       delaycompress
+       compress
+       notifempty
+       missingok
+       postrotate
+          /bin/kill -USR1 `cat /var/run/$(mongodb.id)/mongodb-arbiter.pid 2>/dev/null` 2> /dev/null|| true
+       endscript
+}
+";
+}
+
+
 bundle agent mongo_local_config {
   vars:
     any::
       "dirs" slist => {
         "/var/lib/mongo-local",
-        "/var/run/$(mongodb.id)"
+        "/var/run/$(mongodb.id)",
+        "/var/log/mongodb/local"
       };
 
   files:
@@ -170,6 +197,13 @@ bundle agent mongo_local_config {
         edit_defaults => empty,
         edit_line => mongo_local_config_contents,
         classes => if_repaired("restart_mongo_local");
+        
+      "/etc/logrotate.d/mongodb-local"
+        comment => "Log rotation config for local mongodb",
+        perms => mog("644", "root", "root"),
+        create => "true",
+        edit_defaults => empty,
+        edit_line => mongo_local_logrotate_contents;
 
     !mongo_local::
       "/var/lib/mongo-local"
@@ -201,7 +235,7 @@ bundle edit_line mongo_local_config_contents {
 "replSet=sipxlocal
 port=27019
 logappend=true
-logpath=/var/log/$(mongodb.id)/local.log
+logpath=/var/log/$(mongodb.id)/local/mongodb.log
 fork=true
 smallfiles=true
 pidfilepath=/var/run/$(mongodb.id)/local.pid
@@ -243,6 +277,23 @@ bundle agent mongo_local_sync {
       "$(service)"
         comment => "restart mongo sync",
         args => "restart";
+}
+
+bundle edit_line mongo_local_logrotate_contents {
+  insert_lines:
+"/var/log/$(mongodb.id)/local/mongodb.log {
+       weekly
+       rotate 10
+       copytruncate
+       delaycompress
+       compress
+       notifempty
+       missingok
+       postrotate
+          /bin/kill -USR1 `cat /var/run/$(mongodb.id)/local.pid 2>/dev/null` 2> /dev/null|| true
+       endscript
+}
+";
 }
 
 bundle agent mongo_local_arbiter_config {
