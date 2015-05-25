@@ -55,13 +55,13 @@
   <!-- mod_dingaling is reliant on the vcard data in the "directory" section. -->
   <!-- mod_sofia is reliant on the user data for authorization --> 
   <section name="directory" description="User Directory">
-    <X-PRE-PROCESS cmd="include" data="directory/*.xml"/>
+    <X-PRE-PROCESS cmd="include" data="/etc/freeswitch/directory/*.xml"/>
   </section>
 
   <!-- phrases section (under development still) -->
   <section name="phrases" description="Speech Phrase Management">
     <macros>
-      <X-PRE-PROCESS cmd="include" data="lang/en/*.xml"/>
+      <X-PRE-PROCESS cmd="include" data="/etc/freeswitch/lang/en/*.xml"/>
     </macros>
   </section>
 
