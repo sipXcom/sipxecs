@@ -58,22 +58,14 @@
   <!-- mod_dingaling is reliant on the vcard data in the "directory" section. -->
   <!-- mod_sofia is reliant on the user data for authorization --> 
   <section name="directory" description="User Directory">
-    <X-PRE-PROCESS cmd="include" data="/etc/freeswitch/directory/*.xml"/>
+    <X-PRE-PROCESS cmd="include" data="directory/*.xml"/>
   </section>
 
-  <section name="languages" description="Language Management">
-    <language name="en" say-module="en" sound-prefix="/opt/freeswitch/sounds/en/us/callie" tts-engine="cepstral" tts-voice="callie">
-    <phrases>
-      <macros>
-        <X-PRE-PROCESS cmd="include" data="demo/*.xml"/> <!-- Note: this now grabs whole subdir, previously grabbed only demo.xml -->
-        <!-- voicemail_en_tts is purely implemented with tts, we have the files based one that is the default. -->
-        <X-PRE-PROCESS cmd="include" data="vm/sounds.xml"/> <!-- vm/tts.xml if you want to use tts and have cepstral -->
-        <X-PRE-PROCESS cmd="include" data="dir/sounds.xml"/> <!-- dir/tts.xml if you want to use tts and have cepstral -->
-        <X-PRE-PROCESS cmd="include" data="ivr/*.xml"/> <!-- IVR and custom phrases go here -->
-      </macros>
-      <X-PRE-PROCESS cmd="include" data="vm/voicemail_ivr.xml"/>
-    </phrases>
-    </language>
-</section>
+  <!-- phrases section (under development still) -->
+  <section name="phrases" description="Speech Phrase Management">
+    <macros>
+      <X-PRE-PROCESS cmd="include" data="lang/en/*.xml"/>
+    </macros>
+  </section>
 
 </document>
