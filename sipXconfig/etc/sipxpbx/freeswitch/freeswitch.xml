@@ -68,6 +68,12 @@
       </type>
       <value>30</value>
     </setting>
+    <setting name="FREESWITCH_RTP_TIMEOUT">
+      <type>
+        <integer />
+      </type>
+      <value>300</value>
+    </setting>
     <setting name="FREESWITCH_BLIND_TRANSFER">
       <type>
         <boolean/>
