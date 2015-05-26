@@ -295,6 +295,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{sipxpbxconf}/test.d/*
 %config(noreplace) %{sipxpbxconf}/unmanaged/*
 %config(noreplace) %{sipxpbxconf}/unmanagedPhone/*
+%config(noreplace) %{sipxpbxconf}/sipxcallback/*
 %config(noreplace) %{sipxpbxconf}/unite/unitelite.conf
 %config(noreplace) %attr(755,sipx,sipx) %{_localstatedir}/sipxdata/parkserver/music
 
