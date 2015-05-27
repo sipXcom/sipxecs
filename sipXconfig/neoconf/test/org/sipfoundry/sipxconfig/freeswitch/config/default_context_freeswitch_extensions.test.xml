@@ -2,11 +2,13 @@
   <extension name="IVR">
     <condition field="destination_number" expression="^IVR$">
       <action application='set' data='sip_callee_id_name=IVR'/>
+      <action application="set" data="max_forwards=10"/>
       <action application="socket" data="192.168.1.1:8084 async full"/>
     </condition>
   </extension>
   <extension name="sales">
     <condition field="destination_number" expression="^300$">
+      <action application="set" data="max_forwards=10"/>
       <action application="fly" data="away"/>
     </condition>
   </extension>

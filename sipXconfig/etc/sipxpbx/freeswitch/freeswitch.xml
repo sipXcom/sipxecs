@@ -68,6 +68,12 @@
       </type>
       <value>30</value>
     </setting>
+    <setting name="FREESWITCH_MAX_FORWARDS">
+      <type>
+        <integer />
+      </type>
+      <value></value>
+    </setting>
     <setting name="FREESWITCH_RTP_TIMEOUT">
       <type>
         <integer />

@@ -129,7 +129,7 @@ public class DefaultContextConfigurationTest {
         mc.andReturn(null);
         mc.replay();
         m_configuration.setFeatureManager(mgr);
-        m_configuration.write(actual, location, bridge, false, false, false, null, extensions, false, true);
+        m_configuration.write(actual, location, bridge, false, false, false, null, extensions, false, true, null);
         String expected = IOUtils
                 .toString(getClass().getResourceAsStream("default_context-no-conferences.test.xml"));
         assertEquals(expected, actual.toString());
@@ -147,7 +147,7 @@ public class DefaultContextConfigurationTest {
         mc.replay();
         m_configuration.setFeatureManager(mgr);
         List<FreeswitchExtension> extensions = getExtensions();
-        m_configuration.write(actual, location, bridge, false, false, false, null, extensions, true, true);
+        m_configuration.write(actual, location, bridge, false, false, false, null, extensions, true, true, 10);
         String expected = IOUtils.toString(getClass().getResourceAsStream(
                 "default_context_freeswitch_extensions.test.xml"));
         assertEquals(expected, actual.toString());
@@ -165,7 +165,7 @@ public class DefaultContextConfigurationTest {
         m_configuration.setFeatureManager(mgr);
         Bridge bridge = createBridge();
         List<FreeswitchExtension> extensions = Collections.emptyList();
-        m_configuration.write(actual, location, bridge, false, false, false, null, extensions, false, true);
+        m_configuration.write(actual, location, bridge, false, false, false, null, extensions, false, true, null);
         String expected = IOUtils.toString(getClass().getResourceAsStream("default_context.test.xml"));
         assertEquals(expected, actual.toString());
     }
@@ -182,7 +182,7 @@ public class DefaultContextConfigurationTest {
         m_configuration.setFeatureManager(mgr);
         Bridge bridge = new Bridge();
         List<FreeswitchExtension> extensions = Collections.emptyList();
-        m_configuration.write(actual, location, bridge, true, false, false, null, extensions, false, true);
+        m_configuration.write(actual, location, bridge, true, false, false, null, extensions, false, true, 30);
         String expected = IOUtils.toString(getClass().getResourceAsStream("default_context-authcodes.test.xml"));
         assertEquals(expected, actual.toString());
     }
@@ -199,7 +199,7 @@ public class DefaultContextConfigurationTest {
         m_configuration.setFeatureManager(mgr);
         Bridge bridge = new Bridge();
         List<FreeswitchExtension> extensions = Collections.emptyList();
-        m_configuration.write(actual, location, bridge, false, true, false, null, extensions, false, true);
+        m_configuration.write(actual, location, bridge, false, true, false, null, extensions, false, true, null);
         String expected = IOUtils.toString(getClass().getResourceAsStream("default_context-callback.test.xml"));
         assertEquals(expected, actual.toString());
     }
@@ -225,7 +225,7 @@ public class DefaultContextConfigurationTest {
         m_configuration.setFeatureManager(mgr);
         Bridge bridge = new Bridge();
         List<FreeswitchExtension> extensions = Collections.emptyList();
-        m_configuration.write(actual, manila, bridge, false, false, false, null, extensions, false, true);
+        m_configuration.write(actual, manila, bridge, false, false, false, null, extensions, false, true, 35);
         String expected = IOUtils.toString(getClass().getResourceAsStream("default_context-vms.test.xml"));
         assertEquals(expected, actual.toString());
     }
@@ -269,7 +269,7 @@ public class DefaultContextConfigurationTest {
         orbit4.setName("Full");
         orbit4.setMusic("custom.wav");
         orbits.add(orbit4);
-        m_configuration.write(actual, location, bridge, false, false, true, orbits, extensions, true, false);
+        m_configuration.write(actual, location, bridge, false, false, true, orbits, extensions, true, false, 20);
         String expected = IOUtils.toString(getClass().getResourceAsStream("default_context_orbits.test.xml"));
         assertEquals(expected, actual.toString());
     }
