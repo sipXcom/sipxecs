@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util" xmlns:task="http://www.springframework.org/schema/task"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/task  http://www.springframework.org/schema/task/spring-task-4.0.xsd">
+
+  <bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+    <property name="scopes">
+      <map>
+        <entry key="eslRequest">
+          <bean class="org.sipfoundry.commons.freeswitch.eslrequest.EslRequestScope"/>
+        </entry>
+      </map>
+    </property>
+  </bean>
+
+  <bean id="callbackProps" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="locations">
+      <list>
+        <value>file:${conf.dir}/sipxcallback.properties</value>
+        <value>file:${conf.dir}/domain-config</value>
+      </list>
+    </property>
+    <property name="searchSystemEnvironment" value="true" />
+    <property name="ignoreUnresolvablePlaceholders" value="true" />
+  </bean>
+
+  <bean id="sipxCallbackServer" class="org.sipfoundry.sipxcallback.SipXcallbackServer">
+    <lookup-method bean="callbackCallHandler" name="getCallbackCallHandler"/>
+    <property name="eventSocketPort" value="${freeswitch.eventSocketPort}" />
+  </bean>
+
+  <bean id="callbackCallHandler" class="org.sipfoundry.sipxcallback.CallbackCallHandler" scope="prototype">
+    <lookup-method bean="fsEventSocket" name="getFsEventSocket"/>
+    <property name="imdbTemplate" ref="imdb" />
+    <property name="prefix" value="${callback-prefix}" />
+  </bean>
+
+  <bean id="fsConfig" class="org.sipfoundry.sipxcallback.common.FreeSwitchConfigurationImpl">
+    <property name="eventSocketPort" value="${freeswitch.eventSocketPort}" />
+    <property name="sipxchangeDomainName" value="${callback.sipxchangeDomainName}" />
+  </bean>
+
+  <bean id="callbackConfig" class="org.sipfoundry.sipxcallback.CallbackConfiguration">
+    <property name="eventSocketPort" value="${freeswitch.eventSocketPort}" />
+  </bean>
+
+  <bean id="fsEventSocket" class="org.sipfoundry.commons.freeswitch.FreeSwitchEventSocket" scope="eslRequest">
+    <constructor-arg><ref bean="fsConfig"/></constructor-arg>
+  </bean>
+
+  <bean id="callbackTimer" class="org.sipfoundry.sipxcallback.CallbackTimer" scope="prototype">
+    <property name="imdbTemplate" ref="imdb" />
+    <property name="expires" value="${callback-duration}" />
+    <property name="sipxchangeDomainName" value="${callback.sipxchangeDomainName}" />
+  </bean>
+
+  <task:scheduled-tasks>
+    <task:scheduled ref="callbackTimer" method="run" fixed-delay="15000" />
+  </task:scheduled-tasks>
+
+</beans>

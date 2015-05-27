@@ -16,11 +16,11 @@
  */
 package org.sipfoundry.commons.freeswitch;
 
-public class OriginateBridgeCommand extends CallCommand {
+public class OriginateCommand extends CallCommand {
 
-    public OriginateBridgeCommand(FreeSwitchEventSocketInterface fses, String calledURI, String calleeURI) {
+    public OriginateCommand(FreeSwitchEventSocketInterface fses, String calledURI) {
         super(fses);
-        m_command = "originate " + calledURI + ";sipx-noroute=VoiceMail;sipx-userforward=false &bridge(" + calleeURI + ")";
+        m_command = "originate " + calledURI + ";sipx-noroute=VoiceMail;sipx-userforward=false &park";
     }
 
     public FreeSwitchEvent originate() {
