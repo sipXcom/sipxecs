@@ -12,6 +12,16 @@
       </false>
     </boolean>
   </type>
+  <type id="true-false-digit">
+    <boolean>
+      <true>
+        <value>1</value>
+      </true>
+      <false>
+        <value>0</value>
+      </false>
+    </boolean>
+  </type>  
   <type id="preffered-voice-codecs-type">
     <multi-enum labelKeyPrefix="codec">
       <option>
@@ -27,33 +37,45 @@
         <value>g729</value>
       </option>
       <option>
-        <value>gsm</value>
-      </option>
-      <option>
         <value>ilbc</value>
       </option>
       <option>
         <value>opus</value>
       </option>
       <option>
-        <value>silk8000</value>
+        <value>silk_nb</value>
       </option>
       <option>
-        <value>silk16000</value>
+        <value>silk_wb</value>
       </option>
       <option>
-        <value>silk32000</value>
+        <value>silk_swb</value>
+      </option>
+      <option>
+        <value>broadvoice32</value>
+      </option>
+      <option>
+        <value>speex</value>
+      </option>
+      <option>
+        <value>speex_wb</value>
       </option>
     </multi-enum>
   </type>
   <type id="preffered-video-codecs-type">
     <multi-enum labelKeyPrefix="codec">
       <option>
-        <value>H264</value>
+        <value>h264</value>
       </option>
       <option>
-        <value>VP8</value>
+        <value>vp8</value>
       </option>
+      <option>
+        <value>h263_1998</value>
+      </option>
+      <option>
+        <value>h263</value>
+      </option>          
     </multi-enum>
   </type>
   <type id="log-level">
@@ -273,6 +295,19 @@
     </group>
     -->
   </group>
+  <group name="calls">
+  <group name="answer">
+    <setting name="ui:call:auto_answer_timer_ms">
+      <type>
+        <integer min="0" max="5000"/>
+      </type>
+      <value>3000</value>
+    </setting>
+    <setting name="ui:call:auto_answer_with_video">
+      <type refid="true-false-digit"/>
+      <value>0</value>
+    </setting>
+  </group>
   <group name="dtmf">
     <setting name="rtp:2833:enabled">
       <type refid="true-false"/>
@@ -318,6 +353,7 @@
       <type refid="true-false"/>
       <value>false</value>
     </setting>    
+  </group>
   </group>
   <group name="network">
     <group name="rtp_inactivity">
