@@ -471,6 +471,7 @@
     <antcall target="insert_default_dns_view" />
     <antcall target="system-audit" />
     <antcall target="config-change-value" />
+    <antcall target="openacd-custom-header" />
   </target>
 
   <target name="plugin-patches">
@@ -1429,6 +1430,9 @@
   </target>
   <target name="config-change-value" unless="config-change-value">
     <db-patch patch="config-change-value"/>
+  </target>
+  <target name="openacd-custom-header" unless="openacd-custom-header">
+    <db-patch patch="openacd-custom-header"/>
   </target>
 
   <!--
