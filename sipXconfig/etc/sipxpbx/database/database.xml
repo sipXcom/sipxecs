@@ -472,6 +472,7 @@
     <antcall target="system-audit" />
     <antcall target="config-change-value" />
     <antcall target="openacd-permission-profile" />
+    <antcall target="openacd-custom-header" />
   </target>
 
   <target name="plugin-patches">
@@ -1433,6 +1434,9 @@
   </target>
   <target name="openacd-permission-profile" unless="openacd-permission-profile">
     <db-patch patch="openacd-permission-profile"/>
+  </target>
+  <target name="openacd-custom-header" unless="openacd-custom-header">
+    <db-patch patch="openacd-custom-header"/>
   </target>
 
   <!--
