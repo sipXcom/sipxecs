@@ -291,8 +291,6 @@ SipRegistrarServer::initialize(
     {
       SipRegistrar::getInstance(NULL)->getRegDB()->setExpireGracePeriod(gracePeriod * 60);
     }
-
-    _expireThread.run(SipRegistrar::getInstance(NULL)->getRegDB());
 }
 
 
