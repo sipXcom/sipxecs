@@ -13,6 +13,8 @@
  * details.
  */
 
+#include <os/OsLogger.h>
+
 #include "sipdb/RegBinding.h"
 
 const char* RegBinding::identity_fld(){ static std::string fld = "identity"; return fld.c_str(); }
@@ -90,6 +92,104 @@ void RegBinding::swap(RegBinding& binding)
     std::swap(_expired, binding._expired);
 }
 
+void RegBinding::fromBSONObj(const mongo::BSONObj& bson)
+{
+  if (bson.hasField(RegBinding::identity_fld()))
+    _identity = bson.getStringField(RegBinding::identity_fld());
+
+  if (bson.hasField(RegBinding::uri_fld()))
+    _uri = bson.getStringField(RegBinding::uri_fld());
+
+  if (bson.hasField(RegBinding::callId_fld()))
+    _callId = bson.getStringField(RegBinding::callId_fld());
+
+  if (bson.hasField(RegBinding::contact_fld()))
+    _contact = bson.getStringField(RegBinding::contact_fld());
+
+  if (bson.hasField(RegBinding::binding_fld()))
+    _binding = bson.getStringField(RegBinding::binding_fld());
+
+  if (bson.hasField(RegBinding::qvalue_fld()))
+    _qvalue = bson.getStringField(RegBinding::qvalue_fld());
+
+  if (bson.hasField(RegBinding::instanceId_fld()))
+    _instanceId = bson.getStringField(RegBinding::instanceId_fld());
+
+  if (bson.hasField(RegBinding::gruu_fld()))
+    _gruu = bson.getStringField(RegBinding::gruu_fld());
+
+  if (bson.hasField(RegBinding::shardId_fld()))
+    _shardId = bson.getIntField(RegBinding::shardId_fld());
+
+  if (bson.hasField(RegBinding::path_fld()))
+    _path = bson.getStringField(RegBinding::path_fld());
+
+  if (bson.hasField(RegBinding::cseq_fld()))
+    _cseq = bson.getIntField(RegBinding::cseq_fld());
+
+  if (bson.hasField(RegBinding::expirationTime_fld()))
+  {
+    mongo::BSONElement expirationTimeElement = bson.getField(RegBinding::expirationTime_fld());
+
+    // save the time depending on its type
+    if (mongo::Date == expirationTimeElement.type())
+    {
+      _expirationTime = static_cast<unsigned long>(expirationTimeElement.date().toTimeT());
+    }
+    else if (expirationTimeElement.isNumber())
+    {
+      _expirationTime = static_cast<unsigned long>(expirationTimeElement.Int());
+      OS_LOG_WARNING(FAC_SIP, "RegBinding::fromBSONObj found old-style registration"
+          << " Identity: " << _identity
+          << " Contact: " << _contact
+          << " Call-Id: " << _callId);
+    }
+    else
+    {
+      OS_LOG_ERROR(FAC_SIP, "RegBinding::fromBSONObj "
+          "unsupported " << expirationTimeElement.toString() << " element for registration"
+          << " Identity: " << _identity
+          << " Contact: " << _contact
+          << " Call-Id: " << _callId);
+    }
+  }
+
+  if (bson.hasField(RegBinding::instrument_fld()))
+    _instrument = bson.getStringField(RegBinding::instrument_fld());
+
+  if (bson.hasField(RegBinding::localAddress_fld()))
+    _localAddress = bson.getStringField(RegBinding::localAddress_fld());
+
+  if (bson.hasField(RegBinding::timestamp_fld()))
+    _timestamp = bson.getIntField(RegBinding::timestamp_fld());
+
+  if (bson.hasField(RegBinding::expired_fld()))
+    _expired = bson.getBoolField(RegBinding::expired_fld());
+
+  
+}
+
+mongo::BSONObj RegBinding::toBSONObj() const
+{
+  return BSON(
+      timestamp_fld() << static_cast<long long>(_timestamp) <<
+      localAddress_fld() << _localAddress <<
+      identity_fld() << _identity <<
+      uri_fld() << _uri <<
+      callId_fld() << _callId <<
+      contact_fld() << _contact <<
+      binding_fld() << _binding <<
+      qvalue_fld() << _qvalue <<
+      instanceId_fld() << _instanceId <<
+      gruu_fld() << _gruu <<
+      shardId_fld() << _shardId <<
+      path_fld() << _path <<
+      cseq_fld() << _cseq <<
+      expirationTime_fld() << MongoDB::BaseDB::dateFromSecsSinceEpoch(_expirationTime) <<
+      instrument_fld() << _instrument <<
+      expired_fld() << _expired);
+}
+
 RegBinding::RegBinding(const mongo::BSONObj& bson) :
   _shardId(0),
   _cseq(0),
@@ -97,109 +197,14 @@ RegBinding::RegBinding(const mongo::BSONObj& bson) :
   _timestamp(0),
   _expired(false)
 {
-    if (bson.hasField(RegBinding::identity_fld()))
-      _identity = bson.getStringField(RegBinding::identity_fld());
-
-    if (bson.hasField(RegBinding::uri_fld()))
-      _uri = bson.getStringField(RegBinding::uri_fld());
-
-    if (bson.hasField(RegBinding::callId_fld()))
-      _callId = bson.getStringField(RegBinding::callId_fld());
-
-    if (bson.hasField(RegBinding::contact_fld()))
-      _contact = bson.getStringField(RegBinding::contact_fld());
-    
-    if (bson.hasField(RegBinding::binding_fld()))
-      _binding = bson.getStringField(RegBinding::binding_fld());
-
-    if (bson.hasField(RegBinding::qvalue_fld()))
-      _qvalue = bson.getStringField(RegBinding::qvalue_fld());
-
-    if (bson.hasField(RegBinding::instanceId_fld()))
-      _instanceId = bson.getStringField(RegBinding::instanceId_fld());
-
-    if (bson.hasField(RegBinding::gruu_fld()))
-      _gruu = bson.getStringField(RegBinding::gruu_fld());
-
-    if (bson.hasField(RegBinding::shardId_fld()))
-      _shardId = bson.getIntField(RegBinding::shardId_fld());
-
-    if (bson.hasField(RegBinding::path_fld()))
-      _path = bson.getStringField(RegBinding::path_fld());
-
-    if (bson.hasField(RegBinding::cseq_fld()))
-      _cseq = bson.getIntField(RegBinding::cseq_fld());
-
-    if (bson.hasField(RegBinding::expirationTime_fld()))
-      _expirationTime = bson.getIntField(RegBinding::expirationTime_fld());
-
-    if (bson.hasField(RegBinding::instrument_fld()))
-      _instrument = bson.getStringField(RegBinding::instrument_fld());
-
-    if (bson.hasField(RegBinding::localAddress_fld()))
-      _localAddress = bson.getStringField(RegBinding::localAddress_fld());
-
-    if (bson.hasField(RegBinding::timestamp_fld()))
-      _timestamp = bson.getIntField(RegBinding::timestamp_fld());
-
-    if (bson.hasField(RegBinding::expired_fld()))
-      _expired = bson.getBoolField(RegBinding::expired_fld());
+  fromBSONObj(bson);
 }
 
 RegBinding& RegBinding::operator=(const mongo::BSONObj& bson)
 {
-    if (bson.hasField(RegBinding::identity_fld()))
-      _identity = bson.getStringField(RegBinding::identity_fld());
+  fromBSONObj(bson);
 
-    if (bson.hasField(RegBinding::uri_fld()))
-      _uri = bson.getStringField(RegBinding::uri_fld());
-
-    if (bson.hasField(RegBinding::callId_fld()))
-      _callId = bson.getStringField(RegBinding::callId_fld());
-
-    if (bson.hasField(RegBinding::contact_fld()))
-      _contact = bson.getStringField(RegBinding::contact_fld());
-    
-    if (bson.hasField(RegBinding::binding_fld()))
-      _binding = bson.getStringField(RegBinding::binding_fld());
-
-    if (bson.hasField(RegBinding::qvalue_fld()))
-      _qvalue = bson.getStringField(RegBinding::qvalue_fld());
-
-    if (bson.hasField(RegBinding::instanceId_fld()))
-      _instanceId = bson.getStringField(RegBinding::instanceId_fld());
-
-    if (bson.hasField(RegBinding::gruu_fld()))
-      _gruu = bson.getStringField(RegBinding::gruu_fld());
-
-    if (bson.hasField(RegBinding::shardId_fld()))
-      _shardId = bson.getIntField(RegBinding::shardId_fld());
-
-    if (bson.hasField(RegBinding::shardId_fld()))
-      _shardId = bson.getIntField(RegBinding::shardId_fld());
-
-    if (bson.hasField(RegBinding::path_fld()))
-      _path = bson.getStringField(RegBinding::path_fld());
-
-    if (bson.hasField(RegBinding::cseq_fld()))
-      _cseq = bson.getIntField(RegBinding::cseq_fld());
-
-    if (bson.hasField(RegBinding::expirationTime_fld()))
-      _expirationTime = bson.getIntField(RegBinding::expirationTime_fld());
-
-    if (bson.hasField(RegBinding::instrument_fld()))
-      _instrument = bson.getStringField(RegBinding::instrument_fld());
-
-    if (bson.hasField(RegBinding::localAddress_fld()))
-      _localAddress = bson.getStringField(RegBinding::localAddress_fld());
-
-    if (bson.hasField(RegBinding::timestamp_fld()))
-      _timestamp = bson.getIntField(RegBinding::timestamp_fld());
-
-    if (bson.hasField(RegBinding::expired_fld()))
-      _expired = bson.getBoolField(RegBinding::expired_fld());
-    
-    return *this;
+  return *this;
 }
 
 RegBinding& RegBinding::operator=(const RegBinding& binding)
