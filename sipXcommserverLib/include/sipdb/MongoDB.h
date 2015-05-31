@@ -252,6 +252,11 @@ public:
   mongo::Query readQueryMaxTimeMS(const mongo::BSONObj& obj) const;
   mongo::Query writeQueryMaxTimeMS(const mongo::BSONObj& obj) const;
 
+  //
+  // Gets a mongo::Date_t object from the given epoch time in seconds
+  //
+  static mongo::Date_t dateFromSecsSinceEpoch(unsigned long timestamp);
+
 protected:
   std::string _ns;
 	mutable ConnectionInfo _info;

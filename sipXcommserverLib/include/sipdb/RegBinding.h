@@ -33,6 +33,7 @@ public:
     void swap(RegBinding& binding);
     RegBinding& operator=(const RegBinding& binding);
     RegBinding& operator=(const mongo::BSONObj& bson);
+    mongo::BSONObj toBSONObj() const;
     const std::string& getIdentity() const;
     const std::string& getUri() const;
     const std::string& getCallId() const;
@@ -85,6 +86,7 @@ public:
     static const char* shardId_fld();
 
 private:
+    void fromBSONObj(const mongo::BSONObj& bson);
     std::string _identity;
     std::string _uri;
     std::string _callId;
