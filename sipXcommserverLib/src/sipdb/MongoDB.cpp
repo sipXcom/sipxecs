@@ -346,6 +346,12 @@ namespace MongoDB
     return queryMaxTimeMS(obj, _info.getWriteQueryTimeoutMs());
   }
 
+  mongo::Date_t BaseDB::dateFromSecsSinceEpoch(unsigned long timestamp)
+  {
+    // Note: the constructor of mongo::Date_t expects the timestamp in millis
+    return mongo::Date_t(1000 * timestamp);
+  }
+
   UpdateTimer::UpdateTimer(BaseDB& db) :
     _end(0),
     _db(db)

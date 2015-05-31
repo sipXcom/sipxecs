@@ -39,19 +39,19 @@ public:
     typedef std::vector<RegBinding> Bindings;
 
  RegDB(const MongoDB::ConnectionInfo& info) :
-    BaseDB(info, NS), _local(NULL), _expireGracePeriod(0)
+    BaseDB(info, NS), _local(NULL), _expireGracePeriod(0), _expirationTimeIndexTTL(0)
 	{
 	}
 	;
 
  RegDB(const MongoDB::ConnectionInfo& info, RegDB* local) :
-     BaseDB(info, NS), _local(local), _expireGracePeriod(0)
+     BaseDB(info, NS), _local(local), _expireGracePeriod(0), _expirationTimeIndexTTL(0)
 	{
 	}
 	;
 
  RegDB(const MongoDB::ConnectionInfo& info, RegDB* local, const std::string& ns) :
-    BaseDB(info, ns), _local(local), _expireGracePeriod(0)
+    BaseDB(info, ns), _local(local), _expireGracePeriod(0), _expirationTimeIndexTTL(0)
 	{
 	}
 	;
@@ -155,9 +155,11 @@ public:
 protected:
 
 private:
+    void ensureIndexes(mongo::DBClientBase* client);
     std::string _localAddress;
     RegDB* _local;
     unsigned long _expireGracePeriod;
+    int _expirationTimeIndexTTL;
 };
 
 //

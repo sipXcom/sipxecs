@@ -268,7 +268,7 @@ public:
 
 	bool getAllOldBindings(int timeNow, RegDB::Bindings& bindings)
 	{
-		mongo::BSONObj query = BSON( "expirationTime" << BSON_LESS_THAN(timeNow));
+		mongo::BSONObj query = BSON( "expirationTime" << BSON_LESS_THAN(MongoDB::BaseDB::dateFromSecsSinceEpoch(timeNow)));
 		MongoDB::ScopedDbConnectionPtr pConn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString()));
 		auto_ptr<mongo::DBClientCursor> pCursor = pConn->get()->query(_info.getNS(), query);
 		if (pCursor.get() && pCursor->more())
