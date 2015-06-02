@@ -111,6 +111,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/authplugins/libRequestLinter.so*
 %attr(755,root,root) %{_libdir}/authplugins/libSubscriptionAuth.so*
 %attr(755,root,root) %{_libdir}/authplugins/libTransferControl.so*
+%attr(755,root,root) %{_libdir}/authplugins/libV8Engine.so*
 %attr(755,root,root) %{_libdir}/libsipXproxy.so*
 %attr(755,root,root) %{_libdir}/transactionplugins/libGatewayDestPlugin.so*
 
@@ -126,6 +127,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/authplugins/libRequestLinter.la
 %{_libdir}/authplugins/libSubscriptionAuth.la
 %{_libdir}/authplugins/libTransferControl.la
+%{_libdir}/authplugins/libV8Engine.la
 %{_libdir}/libsipXproxy.la
 %{_includedir}/sipxproxy/*
 %{_libdir}/transactionplugins/libGatewayDestPlugin.la
