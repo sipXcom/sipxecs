@@ -9,12 +9,14 @@
  */
 package org.sipfoundry.sipxconfig.commserver.imdb;
 
+import java.util.Date;
+
 import org.apache.commons.lang.builder.CompareToBuilder;
 
 public class RegistrationItem implements Comparable {
     private String m_uri;
     private String m_contact;
-    private long m_expires;
+    private Date m_expires;
     private String m_primary;
     private String m_instrument;
     private String m_regCallId;
@@ -28,11 +30,11 @@ public class RegistrationItem implements Comparable {
         m_contact = contact;
     }
 
-    public long getExpires() {
+    public Date getExpires() {
         return m_expires;
     }
 
-    public void setExpires(long expires) {
+    public void setExpires(Date expires) {
         m_expires = expires;
     }
 
@@ -82,6 +84,6 @@ public class RegistrationItem implements Comparable {
     }
 
     public long timeToExpireAsSeconds(long nowSeconds) {
-        return getExpires() - nowSeconds;
+        return getExpires().getTime() / 1000 - nowSeconds;
     }
 }

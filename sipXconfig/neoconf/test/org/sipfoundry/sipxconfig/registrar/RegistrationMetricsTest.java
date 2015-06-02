@@ -11,7 +11,10 @@ package org.sipfoundry.sipxconfig.registrar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -43,12 +46,17 @@ public class RegistrationMetricsTest extends TestCase {
                 }
             };
             List regs = new ArrayList();
+            Calendar calendar = new GregorianCalendar(2015,6,2,13,24,30);
             for (int i = 0; i < regData.length; i++) {
                 RegistrationItem item = new RegistrationItem();
                 item.setContact(regData[i][0]);
-                item.setExpires(Long.parseLong(regData[i][1]));
+                item.setExpires(calendar.getTime());
                 regs.add(item);
             }
+            
+            Calendar now = new GregorianCalendar(2015,6,2,13,24,20);
+            Date dateNow = now.getTime();
+            long nowSeconds = dateNow.getTime() / 1000;
 
             m_metrics.setRegistrations(regs);
             List cleanRegs = new ArrayList(m_metrics.getUniqueRegistrations());
@@ -56,9 +64,7 @@ public class RegistrationMetricsTest extends TestCase {
             assertEquals("contact1", ((RegistrationItem) cleanRegs.get(0)).getContact());
             assertEquals("contact2", ((RegistrationItem) cleanRegs.get(1)).getContact());
             assertEquals("contact3", ((RegistrationItem) cleanRegs.get(2)).getContact());
-            assertEquals(12, ((RegistrationItem) cleanRegs.get(0)).getExpires());
-            assertEquals(11, ((RegistrationItem) cleanRegs.get(1)).getExpires());
-            assertEquals(13, ((RegistrationItem) cleanRegs.get(2)).getExpires());
+            assertEquals(10, ((RegistrationItem) cleanRegs.get(0)).timeToExpireAsSeconds(nowSeconds));
     }
 
     public void testCalculateMetricsEmpty() {

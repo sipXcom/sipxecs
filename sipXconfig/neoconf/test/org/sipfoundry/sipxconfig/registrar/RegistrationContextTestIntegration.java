@@ -9,6 +9,8 @@
  */
 package org.sipfoundry.sipxconfig.registrar;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.sipfoundry.sipxconfig.common.User;
@@ -28,17 +30,18 @@ public class RegistrationContextTestIntegration extends ImdbTestCase {
     private RegistrationContextImpl m_builder;
     private MongoTemplate m_nodeDb;
     private DomainManager m_mgr;
+    private Calendar calendar = new GregorianCalendar(2015,6,2,13,24,30);
 
     private final Object[][] DATA = {
         {
             "063b4c2f5e11bf66a232762a7cf9e73a", "2395", "sip:3000@example.org",
             "\"John Doe\"<sip:john.doe@example.org;LINEID=f57f2117d5997f8d03d8395732f463f3>", true,
-            "3000@example.org", 1299762967, 1299762667, "0004f22aa38a", "1",
+            "3000@example.org", calendar.getTime(), 1299762667, "0004f22aa38a", "1",
             "3f404b64-fc8490c3-6b14ac9a@192.168.2.21"
         },
         {
             "063b4c2f5e11bf66a232762a7cf9e73b", "2399", "sip:3001@example.org",
-            "\"John Doe\"<sip:jane.doe@example.org>", false, "3001@example.org", 1299762968, 1299762668,
+            "\"John Doe\"<sip:jane.doe@example.org>", false, "3001@example.org", calendar.getTime(), 1299762668,
             "0004f2a9b633", "2", "3f404b64-fc8490c3-6b14ac9a@192.168.2.19"
         }
     };
@@ -81,7 +84,7 @@ public class RegistrationContextTestIntegration extends ImdbTestCase {
         List registrations = m_builder.getRegistrations();
         assertEquals(1, registrations.size());
         RegistrationItem ri = (RegistrationItem) registrations.get(0);
-        assertEquals(1299762968, ri.getExpires());
+        assertEquals(calendar.getTime(), ri.getExpires());
         assertEquals("sip:3001@example.org", ri.getUri());
         assertTrue(ri.getContact().indexOf("Doe") > 0);
     }
@@ -93,7 +96,7 @@ public class RegistrationContextTestIntegration extends ImdbTestCase {
         registrations = m_builder.getRegistrationsByUser(user);
         assertEquals(1, registrations.size());
         RegistrationItem ri = registrations.get(0);
-        assertEquals(1299762968, ri.getExpires());
+        assertEquals(calendar.getTime(), ri.getExpires());
         assertEquals("sip:3001@example.org", ri.getUri());
         assertTrue(ri.getContact().indexOf("Doe") > 0);
     }
