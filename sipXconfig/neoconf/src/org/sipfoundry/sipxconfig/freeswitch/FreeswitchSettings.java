@@ -66,7 +66,10 @@ public class FreeswitchSettings extends SettingsWithLocation implements DeployCo
         return (Boolean) getSettingTypedValue(FREESWITCH_SIMPLIFY);
     }
 
-    public int getMaxForwards() {
+    public Integer getMaxForwards() {
+        if (getSettingTypedValue(FREESWITCH_MAX_FORWARDS) == null) {
+            return null;
+        }
         return (Integer) getSettingTypedValue(FREESWITCH_MAX_FORWARDS);
     }
 
