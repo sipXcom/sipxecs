@@ -15,6 +15,7 @@ import static org.sipfoundry.commons.mongo.MongoConstants.INSTRUMENT;
 import static org.sipfoundry.commons.mongo.MongoConstants.REG_CONTACT;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -149,12 +150,8 @@ public class RegistrationContextImpl implements RegistrationContext {
             item.setContact((String) registration.get(REG_CONTACT));
             item.setPrimary(StringUtils.substringBefore((String) registration.get(LOCAL_ADDRESS), "/"));
             // handle change from integer type to long in expiration time
-            Object expires = registration.get(EXPIRATION_TIME);
-            if (expires instanceof Integer) {
-                item.setExpires((Integer) expires);
-            } else {
-                item.setExpires((Long) expires);
-            }
+            Date expires = (Date) registration.get(EXPIRATION_TIME);
+            item.setExpires(expires);
             item.setUri((String) registration.get(URI));
             item.setInstrument((String) registration.get(INSTRUMENT));
             item.setRegCallId((String) registration.get(CALL_ID));
