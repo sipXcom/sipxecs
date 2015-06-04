@@ -150,8 +150,12 @@ public class RegistrationContextImpl implements RegistrationContext {
             item.setContact((String) registration.get(REG_CONTACT));
             item.setPrimary(StringUtils.substringBefore((String) registration.get(LOCAL_ADDRESS), "/"));
             // handle change from integer type to long in expiration time
-            Date expires = (Date) registration.get(EXPIRATION_TIME);
-            item.setExpires(expires);
+            Object expires = registration.get(EXPIRATION_TIME);
+            if (expires instanceof Date) {
+                item.setExpires((Date) expires);
+            } else {
+                item.setExpires(new Date());
+            }
             item.setUri((String) registration.get(URI));
             item.setInstrument((String) registration.get(INSTRUMENT));
             item.setRegCallId((String) registration.get(CALL_ID));
