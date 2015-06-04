@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -25,6 +26,7 @@ import org.apache.commons.logging.LogFactory;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
 import org.sipfoundry.sipxconfig.common.DaoUtils;
 import org.sipfoundry.sipxconfig.common.UserException;
+import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.commserver.LocationsManager;
 import org.sipfoundry.sipxconfig.domain.Domain;
 import org.sipfoundry.sipxconfig.setting.BeanWithSettingsDao;
@@ -223,13 +225,25 @@ public class CertificateManagerImpl implements CertificateManager, SetupListener
         String issuer = getIssuer(authority);
         String authKey = getAuthorityKey(authority);
         CertificateGenerator gen;
+        List<String> altLocations = getAltLocations();
         if (type.equals(COMM_CERT)) {
-            gen = CertificateGenerator.sip(domain, fqdn, issuer, authKey);
+            gen = CertificateGenerator.sip(domain, fqdn, issuer, authKey, altLocations);
         } else {
-            gen = CertificateGenerator.web(domain, fqdn, issuer, authKey);
+            gen = CertificateGenerator.web(domain, fqdn, issuer, authKey, altLocations);
         }
         gen.setBitCount(keySize);
         updateCertificate(type, gen.getCertificateText(), gen.getPrivateKeyText(), authority);
+    }
+
+    private List<String> getAltLocations() {
+        Location[] locations = m_locationsManager.getLocations();
+        List<String> altLocations = new ArrayList<String>();
+        for (Location location : locations) {
+            if (!location.isPrimary()) {
+                altLocations.add(location.getFqdn());
+            }
+        }
+        return altLocations;
     }
 
     @Override
@@ -281,13 +295,14 @@ public class CertificateManagerImpl implements CertificateManager, SetupListener
         String fqdn = m_locationsManager.getPrimaryLocation().getFqdn();
         String issuer = getIssuer(authority);
         String authKey = getAuthorityKey(authority);
+        List<String> altLocations = getAltLocations();
         if (!hasCertificate(COMM_CERT, authority)) {
-            CertificateGenerator gen = CertificateGenerator.sip(domain, fqdn, issuer, authKey);
+            CertificateGenerator gen = CertificateGenerator.sip(domain, fqdn, issuer, authKey, altLocations);
             gen.setBitCount(keySize);
             updateCertificate(COMM_CERT, gen.getCertificateText(), gen.getPrivateKeyText(), authority);
         }
         if (!hasCertificate(WEB_CERT, authority)) {
-            CertificateGenerator gen = CertificateGenerator.web(domain, fqdn, issuer, authKey);
+            CertificateGenerator gen = CertificateGenerator.web(domain, fqdn, issuer, authKey, altLocations);
             gen.setBitCount(keySize);
             updateCertificate(WEB_CERT, gen.getCertificateText(), gen.getPrivateKeyText(), authority);
         }
