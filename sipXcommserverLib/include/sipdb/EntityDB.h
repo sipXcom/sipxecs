@@ -78,6 +78,8 @@ public:
 	// Query interface to return a set of mapped full URI
 	// contacts associated with the alias
 	void getAliasContacts(const Url& aliasIdentity, Aliases& aliases, bool& isUserIdentity) const;
+  
+  void getAliasContacts(const Url& aliasIdentity, Aliases& aliases, bool& isUserIdentity, UtlString& identity) const;
 	
 	bool tail(std::vector<std::string>& opLogs);
 
