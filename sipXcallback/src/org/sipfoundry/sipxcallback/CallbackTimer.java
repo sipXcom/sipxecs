@@ -33,8 +33,11 @@ import org.sipfoundry.commons.freeswitch.FreeSwitchEventSocket;
 import org.sipfoundry.commons.userdb.ValidUsers;
 import org.sipfoundry.sipxcallback.common.CallbackUtil;
 import org.sipfoundry.sipxcallback.common.FreeSwitchConfigurationImpl;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.DBCollection;
@@ -42,7 +45,10 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.QueryBuilder;
 
-public class CallbackTimer {
+/**
+ *  Daemon task class that handles callback requests registered in the system
+ */
+public class CallbackTimer implements BeanFactoryAware{
     private static final Logger LOG = Logger.getLogger("org.sipfoundry.sipxcallback");
 
     private int m_expires;
@@ -50,7 +56,8 @@ public class CallbackTimer {
 
     private FreeSwitchConfigurationImpl fsConfig;
     private FreeSwitchEventSocket m_fsCmdSocket;
-    private String sipxchangeDomainName;
+    private ThreadPoolTaskExecutor m_taskExecutor;
+    private BeanFactory m_beanFactory;
 
     public void run() throws ParseException {
         if (m_fsCmdSocket == null) {
@@ -87,7 +94,7 @@ public class CallbackTimer {
     }
 
     /**
-     * returns a list with objects to be removed because their callback duration has expired
+     * Returns a list with objects to be removed because their callback duration has expired
      */
     private List<DBObject> handleCallbackAction(String calleeName, DBObject callbackObject, BasicDBList callbackList) {
         List<DBObject> objectsToBeRemoved = new ArrayList<DBObject>();
@@ -97,14 +104,28 @@ public class CallbackTimer {
             long timeDiff = currentDate - callerDate;
             // check if the flag for callback has expired
             if (timeDiff < m_expires * 60000) {
-                CallbackThread callbackThread = new CallbackThread(m_imdbTemplate, callerName,
-                        calleeName, m_fsCmdSocket, sipxchangeDomainName);
-                callbackThread.start();
+                executeCallbackThread(calleeName, callerName);
             } else {
                 objectsToBeRemoved.add(callbackObject);
             }
         }
         return objectsToBeRemoved;
+    }
+
+    public void executeCallbackThread(String callerName, String calleeName) {
+        try {
+            if (m_taskExecutor.getThreadPoolExecutor().getQueue().isEmpty()) {
+                CallbackThread callbackThread = (CallbackThread) m_beanFactory
+                        .getBean(CallbackThread.BEAN_NAME);
+                callbackThread.initiate(callerName, calleeName, m_fsCmdSocket);
+                m_taskExecutor.execute(callbackThread);
+            } else {
+                LOG.debug("Wait for queue to become empty and look "+
+                 "for more users that need to receive callbacks") ;
+            }
+        } catch (Exception ex) {
+            LOG.error("Error during callback execution: ", ex);
+        }
     }
 
     private DBCursor findCallbackUsers(DBCollection entityCollection) {
@@ -142,8 +163,12 @@ public class CallbackTimer {
     }
 
     @Required
-    public void setSipxchangeDomainName(String sipxchangeDomainName) {
-        this.sipxchangeDomainName = sipxchangeDomainName;
+    public void setTaskExecutor(ThreadPoolTaskExecutor taskExecutor) {
+        m_taskExecutor = taskExecutor;
+    }
+
+    public void setBeanFactory(BeanFactory beanFactory) {
+        m_beanFactory = beanFactory;
     }
 
 }

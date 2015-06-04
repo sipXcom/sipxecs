@@ -63,13 +63,17 @@ public class CallbackUtil {
     }
 
     public static void updateCallbackInformation(MongoTemplate imdbTemplate,
-            String calleeUserName, String callerChannelName, boolean insertNewRequest) {
+            String calleeUserName, String callerChannelName, boolean insertNewRequest) throws CallbackException {
         if (callerChannelName.contains(".")) {
             callerChannelName = callerChannelName.replace(".", ";");
         }
         DBCollection entityCollection = imdbTemplate.getCollection("entity");
         DBObject user = CallbackUtil.findUserByName(calleeUserName,
                 entityCollection);
+        if (user == null) {
+            // callback user was not found
+            throw new CallbackException("Callback user: " + calleeUserName + " not found !");
+        }
         BasicDBList callbackList = null;
         if (user.keySet().contains(MongoConstants.CALLBACK_LIST)) {
             callbackList = (BasicDBList) user.get(MongoConstants.CALLBACK_LIST);

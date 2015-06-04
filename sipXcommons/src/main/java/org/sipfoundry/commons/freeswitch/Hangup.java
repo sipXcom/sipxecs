@@ -14,4 +14,10 @@ public class Hangup extends CallCommand {
         super(fses);
         m_command = "hangup";
     }
+
+    public Hangup(FreeSwitchEventSocketInterface fses, String uuid) {
+        super(fses);
+        m_command = "uuid_kill " + uuid;
+        m_sendAsApi = true;
+    }
 }

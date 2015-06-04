@@ -14,34 +14,44 @@ import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 import org.sipfoundry.commons.freeswitch.Answer;
+import org.sipfoundry.commons.freeswitch.Broadcast;
 import org.sipfoundry.commons.freeswitch.DisconnectException;
 import org.sipfoundry.commons.freeswitch.FreeSwitchEventSocketInterface;
 import org.sipfoundry.commons.freeswitch.Hangup;
 import org.sipfoundry.commons.freeswitch.eslrequest.EslRequestScopeRunnable;
+import org.sipfoundry.sipxcallback.common.CallbackException;
 import org.sipfoundry.sipxcallback.common.CallbackUtil;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
+/**
+ *  Class used to register callback requests in the system
+ */
 public abstract class CallbackCallHandler extends EslRequestScopeRunnable {
     private static final Logger LOG = Logger.getLogger("org.sipfoundry.sipxcallback");
 
     private Socket m_clientSocket;
     private String m_prefix;
     private MongoTemplate m_imdbTemplate;
+    private String m_welcomePrompt;
+    private String m_errorPrompt;
 
     protected abstract FreeSwitchEventSocketInterface getFsEventSocket();
 
     @Override
     public void runEslRequest() {
-        LOG.debug("runEslRequest ::run Starting SipXcallback thread with client " + m_clientSocket);
+        LOG.debug("runEslRequest ::run Starting SipXcallback thread with client "
+                + m_clientSocket);
 
         FreeSwitchEventSocketInterface fses = getFsEventSocket();
         try {
             if (fses.connect(m_clientSocket, null)) {
-                LOG.info(String.format("SipXcallback::run Accepting call-id %s from %s to %s",
-                        fses.getVariable("variable_sip_call_id"), fses.getVariable("variable_sip_from_uri"),
+                LOG.info(String.format(
+                        "SipXcallback::run Accepting call-id %s from %s to %s",
+                        fses.getVariable("variable_sip_call_id"),
+                        fses.getVariable("variable_sip_from_uri"),
                         fses.getVariable("variable_sip_req_uri")));
                 new Answer(fses).go();
-                new Hangup(fses).go();
                 run(fses);
             }
         } catch (DisconnectException e) {
@@ -50,6 +60,7 @@ public abstract class CallbackCallHandler extends EslRequestScopeRunnable {
             LOG.error("sipXcallback::run", t);
         } finally {
             try {
+                new Hangup(fses).go();
                 fses.close();
             } catch (IOException e) {
                 // Nothing to do, no where to go home...
@@ -59,7 +70,9 @@ public abstract class CallbackCallHandler extends EslRequestScopeRunnable {
 
     /**
      * Marks the callee user for callback on busy
+     * 
      * @param fses
+     * @throws CallbackException
      * @throws InterruptedException
      */
     public final void run(FreeSwitchEventSocketInterface fses) {
@@ -73,21 +86,44 @@ public abstract class CallbackCallHandler extends EslRequestScopeRunnable {
         String calleeUserName = splittedToUri[0];
         if (calleeUserName == null || calleeUserName.isEmpty()
                 || calleeUserName.equals(callerUserName)) {
+            // callback user not found
+            LOG.warn("Callback user " + calleeUserName + " was not found.");
+            new Broadcast(fses, fses.getVariable("variable_sip_call_id"), m_errorPrompt, false).startResponse();
             return;
         }
-        CallbackUtil.updateCallbackInformation(m_imdbTemplate, calleeUserName,
-                callerURL, true);
+        try {
+            CallbackUtil.updateCallbackInformation(m_imdbTemplate, calleeUserName,callerURL, true);
+        } catch (CallbackException e) {
+            // callback user not found
+            LOG.warn("Callback user " + calleeUserName + " was not found.");
+            new Broadcast(fses, fses.getVariable("variable_sip_call_id"), m_errorPrompt, false).startResponse();
+            return;
+        }
+        new Broadcast(fses, fses.getVariable("variable_sip_call_id"), m_welcomePrompt, false).startResponse();
     }
 
+    @Required
     public void setClient(Socket clientSocket) {
         m_clientSocket = clientSocket;
     }
 
+    @Required
     public void setPrefix(String prefix) {
         m_prefix = prefix;
     }
 
+    @Required
     public void setImdbTemplate(MongoTemplate imdbTemplate) {
         m_imdbTemplate = imdbTemplate;
+    }
+
+    @Required
+    public void setWelcomePrompt(String welcomePrompt) {
+        this.m_welcomePrompt = welcomePrompt;
+    }
+
+    @Required
+    public void setErrorPrompt(String errorPrompt) {
+        this.m_errorPrompt = errorPrompt;
     }
 }
