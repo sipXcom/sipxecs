@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+
 import org.bouncycastle.asn1.x509.BasicConstraints;
 import org.bouncycastle.asn1.x509.GeneralName;
 import org.bouncycastle.asn1.x509.GeneralNames;
@@ -37,12 +38,24 @@ public class CertificateGenerator extends AbstractCertificateGenerator {
         m_authorityKey = authorityKey;
     }
 
-    public static CertificateGenerator web(String domain, String fqdn, String issuer, String authorityKey) {
-        return new CertificateGenerator(domain, fqdn, issuer, authorityKey);
+    private static CertificateGenerator genCert(String domain, String fqdn, String issuer,
+        String authorityKey, List<String> altHosts) {
+        CertificateGenerator gen = new CertificateGenerator(domain, fqdn, issuer, authorityKey);
+        for (String host : altHosts) {
+            gen.addSanName(host);
+        }
+        return gen;
     }
 
-    public static CertificateGenerator sip(String sipDomain, String fqdn, String issuer, String authorityKey) {
-        CertificateGenerator gen = new CertificateGenerator(sipDomain, fqdn, issuer, authorityKey);
+    public static CertificateGenerator web(String domain, String fqdn, String issuer, String authorityKey,
+        List<String> altHosts) {
+        CertificateGenerator gen = genCert(domain, fqdn, issuer, authorityKey, altHosts);
+        return gen;
+    }
+
+    public static CertificateGenerator sip(String sipDomain, String fqdn, String issuer, String authorityKey,
+        List<String> altHosts) {
+        CertificateGenerator gen = genCert(sipDomain, fqdn, issuer, authorityKey, altHosts);
         gen.m_sipDomain = sipDomain;
         return gen;
     }
@@ -69,6 +82,9 @@ public class CertificateGenerator extends AbstractCertificateGenerator {
                 names.add(new GeneralName(GeneralName.uniformResourceIdentifier, format("sip:%s", m_sipDomain)));
             }
             names.add(new GeneralName(GeneralName.dNSName, getCommonName()));
+            for (String host : getSanNames()) {
+                names.add(new GeneralName(GeneralName.dNSName, host));
+            }
             gen.addExtension(X509Extension.subjectAlternativeName, false,
                     new GeneralNames((GeneralName[]) names.toArray(new GeneralName[names.size()])));
 
