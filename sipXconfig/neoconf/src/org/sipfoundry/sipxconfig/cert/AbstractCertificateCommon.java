@@ -9,6 +9,9 @@ package org.sipfoundry.sipxconfig.cert;
 
 import static java.lang.String.format;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AbstractCertificateCommon {
     public static final int DEFAULT_KEY_SIZE = 2048;
 
@@ -18,6 +21,7 @@ public class AbstractCertificateCommon {
     private String m_organization;
     private String m_organizationUnit = "sipXecs";
     private String m_commonName;
+    private List<String> m_sanNames = new ArrayList<String>();
     private String m_email;
     private String m_dnsDomain;
     private String m_host;
@@ -129,5 +133,13 @@ public class AbstractCertificateCommon {
 
     public String getHost() {
         return m_host;
+    }
+
+    public void addSanName(String sanName) {
+        m_sanNames.add(sanName);
+    }
+
+    public List<String> getSanNames() {
+        return m_sanNames;
     }
 }
