@@ -108,6 +108,7 @@ lib_all = \
   rubygem-file-tail \
   erlang \
   freeswitch \
+  freeswitch-callie \
   hiredis \
   net-snmp \
   homer \
