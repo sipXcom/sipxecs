@@ -108,7 +108,7 @@ lib_all = \
   rubygem-file-tail \
   erlang \
   freeswitch \
-  freeswitch-callie \
+  freeswitch-sounds-en-us-callie \
   hiredis \
   net-snmp \
   homer \
