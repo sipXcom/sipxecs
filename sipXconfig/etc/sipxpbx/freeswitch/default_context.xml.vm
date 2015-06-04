@@ -15,9 +15,6 @@
 #if ($callback)
   <extension name="CBB">
     <condition field="destination_number" expression="^CBB${dollar}">
-#if ($maxForwards)
-      <action application="set" data="max_forwards=$maxForwards"/>
-#end
       <action application="socket" data="${location.address}:8284 async full"/>
     </condition>
   </extension>

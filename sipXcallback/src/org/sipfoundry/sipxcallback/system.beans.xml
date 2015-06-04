@@ -32,6 +32,8 @@
     <lookup-method bean="fsEventSocket" name="getFsEventSocket"/>
     <property name="imdbTemplate" ref="imdb" />
     <property name="prefix" value="${callback-prefix}" />
+    <property name="welcomePrompt" value="/usr/local/sipx/share/www/doc/stdprompts_en/thankyou_goodbye.wav"/>
+    <property name="errorPrompt" value="/usr/local/sipx/share/www/doc/stdprompts_en/error_hang_up.wav"/>
   </bean>
 
   <bean id="fsConfig" class="org.sipfoundry.sipxcallback.common.FreeSwitchConfigurationImpl">
@@ -47,14 +49,29 @@
     <constructor-arg><ref bean="fsConfig"/></constructor-arg>
   </bean>
 
-  <bean id="callbackTimer" class="org.sipfoundry.sipxcallback.CallbackTimer" scope="prototype">
+  <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+    <property name="corePoolSize" value="10" />
+    <property name="maxPoolSize" value="1000" />
+    <property name="queueCapacity" value="1005" />
+  </bean>
+
+  <bean id="callbackTimer" class="org.sipfoundry.sipxcallback.CallbackTimer">
     <property name="imdbTemplate" ref="imdb" />
     <property name="expires" value="${callback-duration}" />
+    <property name="taskExecutor" ref="taskExecutor" />
+  </bean>
+
+  <bean id="callbackThread" class="org.sipfoundry.sipxcallback.CallbackThread" scope="prototype">
+    <property name="imdbTemplate" ref="imdb" />
     <property name="sipxchangeDomainName" value="${callback.sipxchangeDomainName}" />
+    <property name="callerPrompt" value="${conf.dir}/sipxcallback/prompts/caller.wav" />
+    <property name="requestedCallbackPrompt" value="${conf.dir}/sipxcallback/prompts/requested_a_callback.wav" />
+    <property name="butTheyAreBusyPrompt" value="${conf.dir}/sipxcallback/prompts/but_they_are_busy.wav" />
+    <property name="isNotAnsweringPrompt" value="${conf.dir}/sipxcallback/prompts/is_not_answering.wav" />
   </bean>
 
   <task:scheduled-tasks>
-    <task:scheduled ref="callbackTimer" method="run" fixed-delay="15000" />
+    <task:scheduled ref="callbackTimer" method="run" fixed-delay="60000" />
   </task:scheduled-tasks>
 
 </beans>
