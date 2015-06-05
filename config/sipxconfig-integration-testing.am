@@ -80,7 +80,7 @@ plugin-reset-integration-test :
 
 javac-test : $(SIPXCONFIG_TEST_CONFIG_FILES)
 
-SIPXCONFIG_TEST_CONFIG_FILES = test.properties sipxconfig.properties
+SIPXCONFIG_TEST_CONFIG_FILES = test.properties sipxconfig.properties postgres-pwd.properties
 # tip: to append to CLEANFILES, use CLEANFILES += A B C
 CLEANFILES = $(SIPXCONFIG_TEST_CONFIG_FILES)
 
@@ -99,6 +99,10 @@ test.properties : DOMAIN=$(shell hostname -f)
 .PHONY: test.properties
 test.properties :
 	@echo -e "$(subst $(space),\n,$(foreach V,local.etc.dir DOMAIN $(CommonVariablesNames),$(V)=$($(V))))" > $@
+	
+
+postgres-pwd.properties :
+	@echo -e "" >$@
 
 # customize spring beans for unit test environment, must include tab as first char otherwise
 # automake treats it differently
