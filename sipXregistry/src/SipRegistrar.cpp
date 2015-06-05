@@ -147,7 +147,7 @@ SipRegistrar::SipRegistrar(OsConfigDb* configDb) :
 
    MongoDB::ConnectionInfo gInfo = MongoDB::ConnectionInfo::globalInfo();
    mpEntityDb = new EntityDB(gInfo);
-   mpRegDb = RegDB::CreateInstance();
+   mpRegDb = RegDB::CreateInstance(true /* ensure indexes */);
    mpSubscribeDb = SubscribeDB::CreateInstance();
 
    mConfigDb->get("SIP_REGISTRAR_BIND_IP", mBindIp);
