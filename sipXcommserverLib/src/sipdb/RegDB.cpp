@@ -36,7 +36,7 @@ using namespace std;
 
 const string RegDB::NS("node.registrar");
 
-RegDB* RegDB::CreateInstance() {
+RegDB* RegDB::CreateInstance(bool ensureIndexes) {
    RegDB* lRegDb = NULL;
 
    MongoDB::ConnectionInfo local = MongoDB::ConnectionInfo::localInfo();
@@ -44,6 +44,12 @@ RegDB* RegDB::CreateInstance() {
      Os::Logger::instance().log(FAC_SIP, PRI_INFO, "Regional database defined");
      Os::Logger::instance().log(FAC_SIP, PRI_INFO, local.getConnectionString().toString().c_str());
      lRegDb = new RegDB(local);
+
+     // ensure indexes, if requested
+     if (ensureIndexes)
+     {
+       lRegDb->ensureIndexes();
+     }
    } else {
      Os::Logger::instance().log(FAC_SIP, PRI_INFO, "No regional database found");
    }
@@ -51,6 +57,11 @@ RegDB* RegDB::CreateInstance() {
    MongoDB::ConnectionInfo global = MongoDB::ConnectionInfo::globalInfo();
    RegDB* regDb = new RegDB(global, lRegDb);
 
+   // ensure indexes, if requested
+   if (ensureIndexes)
+   {
+     regDb->ensureIndexes();
+   }
    return regDb;
 }
 
@@ -59,7 +70,22 @@ RegDB* RegDB::CreateInstance() {
 //
 void RegDB::ensureIndexes(mongo::DBClientBase* client)
 {
-  client->ensureIndex(_ns, BSON(RegBinding::identity_fld() << 1 ));
+  MongoDB::ScopedDbConnectionPtr conn(0);
+  mongo::DBClientBase* clientPtr = client;
+
+  OS_LOG_INFO(FAC_SIP, "RegDB::ensureIndexes "
+                        << "existing client: " << (client ? "yes" : "no")
+                        << ", expireGracePeriod: " << _expireGracePeriod
+                        << ", expirationTimeIndexTTL: " << _expirationTimeIndexTTL);
+
+  // in case no client was provided, create a new connection
+  if (!clientPtr)
+  {
+    conn.reset(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
+    clientPtr = conn->get();
+  }
+
+  clientPtr->ensureIndex(_ns, BSON(RegBinding::identity_fld() << 1 ));
 
   // shape the new expirationtime index TTL
   int newExpirationTimeIndexTTL = (MONGO_REG_EXPIRATION_TIME_MIN_TTL_SEC > _expireGracePeriod) ? MONGO_REG_EXPIRATION_TIME_MIN_TTL_SEC : _expireGracePeriod;
@@ -70,13 +96,19 @@ void RegDB::ensureIndexes(mongo::DBClientBase* client)
   if (newExpirationTimeIndexTTL != _expirationTimeIndexTTL)
   {
     _expirationTimeIndexTTL = newExpirationTimeIndexTTL;
-    client->dropIndex(_ns, BSON(RegBinding::expirationTime_fld() << 1));
+    clientPtr->dropIndex(_ns, BSON(RegBinding::expirationTime_fld() << 1));
   }
 
   // Note: the parameters from 3 to 7 are just the defaults of the function
-  client->ensureIndex(_ns, BSON(RegBinding::expirationTime_fld() << 1),
+  clientPtr->ensureIndex(_ns, BSON(RegBinding::expirationTime_fld() << 1),
                       false, "", true, false, -1, /* just the defaults */
                       _expirationTimeIndexTTL);
+
+  // close the connection, if it was created
+  if (conn)
+  {
+    conn->done();
+  }
 }
 
 void RegDB::updateBinding(const RegBinding::Ptr& pBinding)
@@ -338,7 +370,7 @@ bool RegDB::getUnexpiredRegisteredBinding(
     binding << user.data() << "@";
   binding << hostPort.data();
     
-  long long timeNow = OsDateTime::getSecsSinceEpoch();
+  unsigned long timeNow = OsDateTime::getSecsSinceEpoch();
   
   mongo::BSONObjBuilder query;
   query.append(RegBinding::binding_fld(), binding.str());

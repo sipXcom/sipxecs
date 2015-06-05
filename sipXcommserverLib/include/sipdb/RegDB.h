@@ -65,7 +65,7 @@ public:
 	}
 	;
 
-    static RegDB* CreateInstance();
+    static RegDB* CreateInstance(bool ensureIndexes = false);
 
     void updateBinding(const RegBinding::Ptr& pBinding);
 
@@ -155,7 +155,7 @@ public:
 protected:
 
 private:
-    void ensureIndexes(mongo::DBClientBase* client);
+    void ensureIndexes(mongo::DBClientBase* client = NULL);
     std::string _localAddress;
     RegDB* _local;
     unsigned long _expireGracePeriod;
