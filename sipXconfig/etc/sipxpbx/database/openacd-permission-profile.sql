@@ -26,6 +26,10 @@ create table openacd_permission_agent_group (
       on update no action on delete no action
 );
 
+-- insert all existing agent groups to "supervisor" permission
+insert into openacd_permission_agent_group (openacd_agent_group_id, openacd_permission_profile_id) 
+select a.openacd_agent_group_id, p.openacd_permission_profile_id from openacd_agent_group as a, openacd_permission_profile as p where p.name='supervisor';
+
 create table openacd_permission_queue (
   openacd_queue_id integer not null,
   openacd_permission_profile_id integer not null,
@@ -38,8 +42,18 @@ create table openacd_permission_queue (
       on update no action on delete no action
 );
 
+-- insert all existing queues to "supervisor" permission
+insert into openacd_permission_queue (openacd_queue_id, openacd_permission_profile_id) 
+select a.openacd_queue_id, p.openacd_permission_profile_id from openacd_queue as a, openacd_permission_profile as p where p.name='supervisor';
+
 -- add permission profile column to AGENT table
-alter table openacd_agent add column openacd_permission_profile_id integer NOT NULL;
+alter table openacd_agent add column openacd_permission_profile_id integer;
+
+-- all existing agents will have default "agent" permission profile
+update openacd_agent set openacd_permission_profile_id = (SELECT openacd_permission_profile_id FROM openacd_permission_profile where name='agent');
+
+alter table openacd_agent alter column openacd_permission_profile_id set NOT NULL;
+
 alter table openacd_agent add constraint fk_openacd_permission_profile foreign key (openacd_permission_profile_id)
       references openacd_permission_profile (openacd_permission_profile_id) match simple
       on update no action on delete no action;
