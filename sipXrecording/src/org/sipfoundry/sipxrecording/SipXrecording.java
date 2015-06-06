@@ -88,8 +88,15 @@ public class SipXrecording implements Runnable {
         // Start the Jetty Server
         WebServer.getInstance().startServer();
 
-        // Create & configure hazelcast instance
-        Hazelcast.newHazelcastInstance();
+        if (s_config.isHzEnabled()) {
+            // Create & configure hazelcast instance
+            LOG.info("Configuring Hazelcast instance");
+            Hazelcast.newHazelcastInstance();
+        } else {
+            LOG.warn("Component notification (Hazelcast based) is not enabled. " +
+                    "Certain features (like conference event notifications over XMPP) are not available");
+        }
+
     }
 
     private static void initConferenceService() throws Exception {
