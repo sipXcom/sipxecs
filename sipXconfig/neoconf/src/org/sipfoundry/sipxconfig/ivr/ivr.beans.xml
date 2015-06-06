@@ -45,6 +45,7 @@
     <property name="ivr" ref="ivr" />
     <property name="mwi" ref="mwi" />
     <property name="autoAttendantManager" ref="autoAttendantManager" />
+    <property name="adminContext" ref="adminContext" />
   </bean>
 
   <bean id="sipXivrMessages" class="org.springframework.context.support.ResourceBundleMessageSource">
