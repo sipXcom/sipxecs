@@ -48,7 +48,7 @@ public class ImBotConfiguration implements ConfigProvider {
 
     @Override
     public void replicate(ConfigManager manager, ConfigRequest request) throws IOException {
-        if (!request.applies(ImBot.FEATURE, LocalizationContext.FEATURE)) {
+        if (!request.applies(ImBot.FEATURE, LocalizationContext.FEATURE, AdminContext.FEATURE)) {
             return;
         }
         List<Location> restServerLocations = manager.getFeatureManager().getLocationsForEnabledFeature(

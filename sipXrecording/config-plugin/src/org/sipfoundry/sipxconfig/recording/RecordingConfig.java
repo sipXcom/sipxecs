@@ -44,7 +44,7 @@ public class RecordingConfig implements ConfigProvider {
 
     @Override
     public void replicate(ConfigManager manager, ConfigRequest request) throws IOException {
-        if (!request.applies(FEATURE, Ivr.FEATURE)) {
+        if (!request.applies(FEATURE, Ivr.FEATURE, AdminContext.FEATURE)) {
             return;
         }
 
