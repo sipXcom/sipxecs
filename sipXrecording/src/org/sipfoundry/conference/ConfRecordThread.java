@@ -42,6 +42,7 @@ public class ConfRecordThread extends ConfBasicThread {
     private ConferenceContextImpl m_conferenceContext;
 
     private ExecutorService m_executorService = Executors.newSingleThreadExecutor();
+    private boolean hzEnabled;
 
     public ConfRecordThread(RecordingConfiguration recordingConfig) {
         // Check that the freeswitch initial recording directory exists
@@ -64,6 +65,7 @@ public class ConfRecordThread extends ConfBasicThread {
             }
         }
         setConfConfiguration(recordingConfig);
+        hzEnabled = recordingConfig.isHzEnabled();
     }
 
     private void AuditWavMp3Files(File dir) {
@@ -107,6 +109,11 @@ public class ConfRecordThread extends ConfBasicThread {
 
     @Override
     public void ProcessConfUserAdd(ConferenceTask conf, ConferenceMember member) {
+
+        if (!hzEnabled) {
+            LOG.debug("ProcessConfUserAdd: nothing to do, hazelcast notification not enabled");
+        }
+
         User owner = conf.getOwner();
         if(owner != null && owner.getConfEntryIM()) {
             Date date = new Date();
@@ -125,6 +132,10 @@ public class ConfRecordThread extends ConfBasicThread {
     }
 
     public void ProcessConfUserDel(ConferenceTask conf, ConferenceMember member) {
+
+        if (!hzEnabled) {
+            LOG.debug("ProcessConfUserDel: nothing to do, hazelcast notification not enabled");
+        }
 
         User owner = conf.getOwner();
 
