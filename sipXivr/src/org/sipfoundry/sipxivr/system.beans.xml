@@ -92,7 +92,8 @@
   <!--
     - H A Z E L C A S T
   -->
-  <bean id="hzInstance" class="com.hazelcast.core.Hazelcast" factory-method="newHazelcastInstance">
+  <bean id="hzStarter" class="org.sipfoundry.sipxivr.HazelcastStarter" init-method="init">
+    <property name="hzEnabled" value="${ivr.hzEnabled}" />
   </bean>
 
 </beans>

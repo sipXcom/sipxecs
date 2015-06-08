@@ -26,6 +26,7 @@
   
   <bean id="imBotConfiguration" class="org.sipfoundry.sipxconfig.imbot.ImBotConfiguration">
     <property name="imbot" ref="imBot" />
+    <property name="adminContext" ref="adminContext" />
   </bean>
 
   <bean id="imBotManager" class="org.sipfoundry.sipxconfig.imbot.ImBotManager">
