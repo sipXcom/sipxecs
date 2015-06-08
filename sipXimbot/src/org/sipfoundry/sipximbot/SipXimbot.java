@@ -34,14 +34,21 @@ public class SipXimbot {
         // Load the configuration
         s_config = ImbotConfiguration.get();
 
-        // Create & configure hazelcast instance
-        HazelcastInstance hzInstance = Hazelcast.newHazelcastInstance();
-        ITopic<HzMediaEvent> vmTopic = hzInstance.getTopic(HzConstants.VM_TOPIC);
-        vmTopic.addMessageListener(new MediaMessageListener());
-        ITopic<HzMediaEvent> confTopic = hzInstance.getTopic(HzConstants.CONF_TOPIC);
-        confTopic.addMessageListener(new MediaMessageListener());
-        ITopic<HzImEvent> imTopic = hzInstance.getTopic(HzConstants.IM_TOPIC);
-        imTopic.addMessageListener(new ImMessageListener());
+        if (s_config.isHzEnabled()) {
+            // Create & configure hazelcast instance
+            LOG.info("Configuring Hazelcast instance");
+            HazelcastInstance hzInstance = Hazelcast.newHazelcastInstance();
+            ITopic<HzMediaEvent> vmTopic = hzInstance.getTopic(HzConstants.VM_TOPIC);
+            vmTopic.addMessageListener(new MediaMessageListener());
+            ITopic<HzMediaEvent> confTopic = hzInstance.getTopic(HzConstants.CONF_TOPIC);
+            confTopic.addMessageListener(new MediaMessageListener());
+            ITopic<HzImEvent> imTopic = hzInstance.getTopic(HzConstants.IM_TOPIC);
+            imTopic.addMessageListener(new ImMessageListener());
+        } else {
+            LOG.warn("Component notification (Hazelcast based) is not enabled. " +
+            		"Certain features (like voicemail and conference event notifications) are not available");
+        }
+
 
         IMBot.init();
 
