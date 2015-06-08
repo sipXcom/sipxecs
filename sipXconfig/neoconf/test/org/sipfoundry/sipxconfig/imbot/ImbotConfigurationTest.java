@@ -37,7 +37,7 @@ public class ImbotConfigurationTest {
         Address admin = new Address(AdminContext.HTTP_ADDRESS, "admin.example.org", 101);
         Address rest = new Address(RestServer.HTTP_API, "rest.example.org", 102);
         Address imApi = new Address(RestServer.HTTP_API, "imapi.example.org", 103);
-        ImBotConfiguration.write(actual, settings, domain, ivr, admin, rest, imApi);
+        ImBotConfiguration.write(actual, settings, domain, ivr, admin, rest, imApi, true);
         String expected = IOUtils.toString(getClass().getResourceAsStream("expected-sipximbot.properties"));
         assertEquals(expected, actual.toString());
     }

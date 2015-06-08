@@ -46,6 +46,19 @@ bundle agent sipxsupervisor_config {
 	edit_defaults => empty,
         edit_line => sipxsupervisor_allowed_users,
         classes => if_repaired("restart_sipxsupervisor");
+
+      "/etc/security/limits.d/97-sipx-nproc.conf"
+        comment => "setup sipx user limits",
+        create => "true",
+        perms => m("644"),
+        edit_line => sipx_limits_contents;
+}
+
+bundle edit_line sipx_limits_contents {
+  insert_lines:
+"sipx soft nofile 4096 
+sipx hard nofile 10240
+";
 }
 
 bundle edit_line sipxsupervisor_allowed_addrs {
