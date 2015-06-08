@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+import org.sipfoundry.sipxconfig.admin.AdminContext;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.ListableBeanFactory;
@@ -32,9 +34,11 @@ import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 
 public class HzContextImpl implements HzContext, BeanFactoryAware {
+    private static final Logger LOG = Logger.getLogger(HzContextImpl.class);
     private static final String INSTANCE_NAME = "config-instance";
     private Collection<HzProvider> m_providers;
     private ListableBeanFactory m_beanFactory;
+    private AdminContext m_adminContext;
 
     @Override
     @Required
@@ -44,6 +48,11 @@ public class HzContextImpl implements HzContext, BeanFactoryAware {
 
     @Override
     public HazelcastInstance buildHzInstance(File f) throws FileNotFoundException {
+        if (!m_adminContext.isHazelcastEnabled()) {
+            LOG.debug("Hazelcast feature is disabled, nothing to do");
+            return null;
+        }
+
         HazelcastInstance oldInstance = Hazelcast.getHazelcastInstanceByName(INSTANCE_NAME);
         if (oldInstance != null) {
             return oldInstance;
@@ -64,6 +73,15 @@ public class HzContextImpl implements HzContext, BeanFactoryAware {
         }
 
         return m_providers;
+    }
+
+    public void setAdminContext(AdminContext adminContext) {
+        m_adminContext = adminContext;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return m_adminContext.isHazelcastEnabled();
     }
 
 }

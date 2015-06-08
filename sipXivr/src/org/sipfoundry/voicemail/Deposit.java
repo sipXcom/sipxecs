@@ -34,6 +34,7 @@ public class Deposit extends AbstractVmAction implements ApplicationContextAware
     private Map<String, String> m_depositMap;
     private ApplicationContext m_appContext;
     private String m_operatorAddr;
+    private boolean m_hzEnabled;
     private ExecutorService m_executorService = Executors.newSingleThreadExecutor();
     /**
      * The depositVoicemail dialog
@@ -242,7 +243,7 @@ public class Deposit extends AbstractVmAction implements ApplicationContextAware
         String instantMsg = getChannelCallerIdName() + " (" + getChannelCallerIdName() + ") "
                 + m_appContext.getMessage("leaving_msg", null, "is leaving a voice message.", user.getLocale());
         try {
-            if (user.getVMEntryIM()) {
+            if (user.getVMEntryIM() && m_hzEnabled) {
                 m_executorService.submit(new HzPublisherTask(
                     new HzVmEvent(getChannelCallerIdName(), user.getUserName(), instantMsg, HzVmEvent.VmType.START_LEAVE_VM),
                     HzConstants.VM_TOPIC));
@@ -267,7 +268,7 @@ public class Deposit extends AbstractVmAction implements ApplicationContextAware
             }
             String instantMsg = getChannelCallerIdName() + " (" + getChannelCallerIdNumber() + ") " + description;
             try {
-                if (user.getVMExitIM()) {
+                if (user.getVMExitIM() && m_hzEnabled) {
                     m_executorService.submit(new HzPublisherTask(
                         new HzVmEvent(getChannelCallerIdName(), user.getUserName(), instantMsg, HzVmEvent.VmType.END_LEAVE_VM),
                         HzConstants.VM_TOPIC));
@@ -323,6 +324,10 @@ public class Deposit extends AbstractVmAction implements ApplicationContextAware
 
     public void setSendImUrl(String url) {
         m_sendIMUrl = url;
+    }
+
+    public void setHzEnabled(boolean enabled) {
+        m_hzEnabled = enabled;
     }
 
     public void setMailboxManager(MailboxManager manager) {
