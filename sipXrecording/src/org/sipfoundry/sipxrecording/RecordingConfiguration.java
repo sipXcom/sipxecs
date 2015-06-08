@@ -40,6 +40,7 @@ public class RecordingConfiguration implements FreeSwitchConfigurationInterface 
     private static RecordingConfiguration s_current;
     private static File s_propertiesFile;
     private static long s_lastModified;
+    private boolean m_hzEnabled;
 
     private RecordingConfiguration() {
     }
@@ -122,6 +123,7 @@ public class RecordingConfiguration implements FreeSwitchConfigurationInterface 
             m_jettyPort = Integer.parseInt(props.getProperty(prop = "jetty.port"));
             m_ivrNodes = split(props.getProperty(prop = "config.ivrNodes"));
             m_audioFormat = props.getProperty(prop = "audio.format");
+            m_hzEnabled = Boolean.valueOf(props.getProperty("recording.hzEnabled"));
         } catch (Exception e) {
             System.err.println("Problem understanding property " + prop);
             e.printStackTrace(System.err);
@@ -175,6 +177,10 @@ public class RecordingConfiguration implements FreeSwitchConfigurationInterface 
 
     public String getAudioFormat() {
         return m_audioFormat;
+    }
+
+    public boolean isHzEnabled() {
+        return m_hzEnabled;
     }
 
     @Override

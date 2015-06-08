@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Required;
 public class AdminSettings extends PersistableSettings implements DeployConfigOnEdit {
 
     public static final String SYSTEM_AUDIT = "configserver-config/systemAudit";
+    public static final String HAZELCAST_NOTIFICATION = "configserver-config/hazelcastNotification";
     private static final Log LOG = LogFactory.getLog(AdminSettings.class);
 
     private static final String LDAP_MANAGEMENT_DISABLE = "ldap-management/disable";
@@ -137,6 +138,14 @@ public class AdminSettings extends PersistableSettings implements DeployConfigOn
 
     public void setSystemAuditEnabled(boolean systemAuditEnabled) {
         setSettingTypedValue(SYSTEM_AUDIT, systemAuditEnabled);
+    }
+
+    public void setHazelcastNotification(boolean notification) {
+        setSettingTypedValue(HAZELCAST_NOTIFICATION, notification);
+    }
+
+    public boolean isHazelcastNotification() {
+        return (Boolean) getSettingTypedValue(HAZELCAST_NOTIFICATION);
     }
 
     protected static String validateDomainList(String corsDomains) {

@@ -21,5 +21,7 @@ import com.hazelcast.core.HazelcastInstance;
 
 public interface HzContext {
 
-    public HazelcastInstance buildHzInstance(File f) throws FileNotFoundException;
+    HazelcastInstance buildHzInstance(File f) throws FileNotFoundException;
+
+    boolean isEnabled();
 }

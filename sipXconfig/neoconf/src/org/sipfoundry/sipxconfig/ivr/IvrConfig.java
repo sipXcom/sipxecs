@@ -58,6 +58,7 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
     private Ivr m_ivr;
     private Mwi m_mwi;
     private AutoAttendantManager m_aaManager;
+    private AdminContext m_adminContext;
 
     @Override
     public void replicate(ConfigManager manager, ConfigRequest request) throws IOException {
@@ -100,7 +101,7 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
             Writer wtr = new FileWriter(f);
             try {
                 write(wtr, settings, domain, location, getMwiLocations(mwiLocations, location), mwiPort, restApi,
-                        adminApi, apacheApi, imApi, fsEvent, aaSettings);
+                        adminApi, apacheApi, imApi, fsEvent, aaSettings, m_adminContext.isHazelcastEnabled());
             } finally {
                 IOUtils.closeQuietly(wtr);
             }
@@ -133,7 +134,7 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
 
     void write(Writer wtr, IvrSettings settings, Domain domain, Location location, String mwiAddresses, int mwiPort,
             Address restApi, Address adminApi, Address apacheApi, Address imApi, Address fsEvent,
-            AutoAttendantSettings aaSettings)
+            AutoAttendantSettings aaSettings, boolean hzEnabled)
         throws IOException {
         LoggerKeyValueConfiguration config = LoggerKeyValueConfiguration.equalsSeparated(wtr);
         config.writeSettings(settings.getSettings());
@@ -169,6 +170,7 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
         config.write("aa.liveAaEnablePrefix", aaSettings.getEnablePrefix());
         config.write("aa.liveAaDisablePrefix", aaSettings.getDisablePrefix());
         config.write("aa.liveAaDid", aaSettings.getLiveDid());
+        config.write("ivr.hzEnabled", hzEnabled);
     }
 
     @Override
@@ -196,5 +198,9 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
     @Required
     public void setAutoAttendantManager(AutoAttendantManager aaManager) {
         m_aaManager = aaManager;
+    }
+
+    public void setAdminContext(AdminContext adminContext) {
+        m_adminContext = adminContext;
     }
 }
