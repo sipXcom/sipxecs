@@ -64,7 +64,7 @@
     </setting>
     <setting name="hazelcastNotification">
       <type refid="true-false"/>
-      <value>false</value>
+      <value>true</value>
     </setting>
     <setting name="password-policy">
       <type refid="policy-type" />
