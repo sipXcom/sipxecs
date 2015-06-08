@@ -64,7 +64,7 @@ public class IvrConfigTest {
     public void testWriteWithOpenfireService() throws Exception {
         StringWriter actual = new StringWriter();
         m_config.write(actual, m_settings, m_domain, m_location, "192.168.0.1,192.168.0.2", 8100, m_restApi,
-                m_adminApi, m_apacheApi, m_imApi, m_fsEvent, m_aaSettings);
+                m_adminApi, m_apacheApi, m_imApi, m_fsEvent, m_aaSettings, true);
         String expected = IOUtils.toString(getClass().getResourceAsStream(
                 "expected-sipxivr-with-openfire.properties"));
         assertEquals(expected, actual.toString());
@@ -74,7 +74,7 @@ public class IvrConfigTest {
     public void testWriteWithoutOpenfireService() throws Exception {
         StringWriter actual = new StringWriter();
         m_config.write(actual, m_settings, m_domain, m_location, "192.168.0.1,192.168.0.2", 8100, m_restApi,
-                m_adminApi, m_apacheApi, null, m_fsEvent, m_aaSettings);
+                m_adminApi, m_apacheApi, null, m_fsEvent, m_aaSettings, false);
         String expected = IOUtils.toString(getClass().getResourceAsStream(
                 "expected-sipxivr-without-openfire.properties"));
         assertEquals(expected, actual.toString());

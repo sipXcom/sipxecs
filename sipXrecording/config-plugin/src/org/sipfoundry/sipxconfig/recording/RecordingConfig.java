@@ -27,6 +27,7 @@ import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.sipfoundry.sipxconfig.address.Address;
+import org.sipfoundry.sipxconfig.admin.AdminContext;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigProvider;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigRequest;
@@ -39,10 +40,11 @@ import org.springframework.beans.factory.annotation.Required;
 public class RecordingConfig implements ConfigProvider {
     private Recording m_recording;
     private Ivr m_ivr;
+    private AdminContext m_adminContext;
 
     @Override
     public void replicate(ConfigManager manager, ConfigRequest request) throws IOException {
-        if (!request.applies(FEATURE, Ivr.FEATURE)) {
+        if (!request.applies(FEATURE, Ivr.FEATURE, AdminContext.FEATURE)) {
             return;
         }
 
@@ -61,14 +63,14 @@ public class RecordingConfig implements ConfigProvider {
             File f = new File(dir, "sipxrecording.properties.part");
             Writer wtr = new FileWriter(f);
             try {
-                write(wtr, m_recording.getSettings(), ivrAddresses, m_ivr.getAudioFormat());
+                write(wtr, m_recording.getSettings(), ivrAddresses, m_ivr.getAudioFormat(), m_adminContext.isHazelcastEnabled());
             } finally {
                 IOUtils.closeQuietly(wtr);
             }
         }
     }
 
-    void write(Writer wtr, RecordingSettings settings, List<Address> ivrAddresses, String audioFormat) throws IOException {
+    void write(Writer wtr, RecordingSettings settings, List<Address> ivrAddresses, String audioFormat, boolean hzEnabled) throws IOException {
         KeyValueConfiguration config = KeyValueConfiguration.equalsSeparated(wtr);
         config.writeSettings(settings.getSettings());
         StringBuilder ivrAddressesStr = new StringBuilder();
@@ -81,6 +83,7 @@ public class RecordingConfig implements ConfigProvider {
             config.write("config.ivrNodes", ivrAddressesStr.toString());
         }
         config.write("audio.format", audioFormat);
+        config.write("recording.hzEnabled", hzEnabled);
     }
 
     @Required
@@ -91,5 +94,10 @@ public class RecordingConfig implements ConfigProvider {
     @Required
     public void setIvr(Ivr ivr) {
         m_ivr = ivr;
+    }
+
+    @Required
+    public void setAdminContext(AdminContext adminContext) {
+        m_adminContext = adminContext;
     }
 }

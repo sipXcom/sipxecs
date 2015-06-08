@@ -28,7 +28,8 @@
     <property name="depositMap" ref="depositMap" />
     <property name="mailboxManager" ref="mailboxManager" />
     <property name="validUsers" ref="validUsers" />
-    <property name="operatorAddr" value="${ivr.operatorAddr}" />    
+    <property name="operatorAddr" value="${ivr.operatorAddr}" />
+    <property name="hzEnabled" value="${ivr.hzEnabled}" />    
   </bean>
 
   <bean id="depositMap" class="java.util.HashMap" />
