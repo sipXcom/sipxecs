@@ -46,6 +46,9 @@
           <label jwcid="rebuildLabel@common/FieldPanel" for="id:rebuild" field="component:rebuild"
             label="message:label.rebuild" description="message:description.rebuild">
             <input jwcid="rebuild@Submit" listener="listener:rebuild" value="message:button.rebuild" />
+            <span jwcid="@If" condition="ognl:certificateType == 'sip'" renderTag="false">
+                <span jwcid="@common/Confirm" component="component:rebuild" prompt="message:confirm.rebuild"/>
+            </span>
           </label>
         </tr>
       </tbody>
