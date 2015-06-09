@@ -96,13 +96,10 @@ void RegDB::ensureIndexes(mongo::DBClientBase* client)
   if (newExpirationTimeIndexTTL != _expirationTimeIndexTTL)
   {
     _expirationTimeIndexTTL = newExpirationTimeIndexTTL;
-    clientPtr->dropIndex(_ns, BSON(RegBinding::expirationTime_fld() << 1));
+    BaseDB::safeDropIndex(clientPtr, RegBinding::expirationTime_fld());
   }
 
-  // Note: the parameters from 3 to 7 are just the defaults of the function
-  clientPtr->ensureIndex(_ns, BSON(RegBinding::expirationTime_fld() << 1),
-                      false, "", true, false, -1, /* just the defaults */
-                      _expirationTimeIndexTTL);
+  BaseDB::safeEnsureTTLIndex(clientPtr, RegBinding::expirationTime_fld(), _expirationTimeIndexTTL);
 
   // close the connection, if it was created
   if (conn)

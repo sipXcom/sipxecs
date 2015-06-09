@@ -257,6 +257,16 @@ public:
   //
   static mongo::Date_t dateFromSecsSinceEpoch(unsigned long timestamp);
 
+  //
+  // Drops/Removes the specified index keys in a safe way (i.e. catching mongo's possible exceptions)
+  //
+  bool safeDropIndex(mongo::DBClientBase* client, const std::string& key) const;
+
+  //
+  // Ensures the creation of a TTL index in a safe way (i.e. catching mongo's possible exceptions)
+  //
+  bool safeEnsureTTLIndex(mongo::DBClientBase* client, const std::string& key, int ttl) const;
+
 protected:
   std::string _ns;
 	mutable ConnectionInfo _info;

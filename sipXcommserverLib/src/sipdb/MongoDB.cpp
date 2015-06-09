@@ -352,6 +352,62 @@ namespace MongoDB
     return mongo::Date_t(1000 * timestamp);
   }
 
+  bool BaseDB::safeDropIndex(mongo::DBClientBase* client, const std::string& key) const
+  {
+    int ret = true;
+
+    try
+    {
+      client->dropIndex(_ns, BSON(key << 1));
+    }
+    // NOTE: we're logging with WARNING level because this function will return
+    //       an exception in case the key does not exist in the database, which
+    //       looks like a pretty common setup
+    catch (std::exception& e)
+    {
+      OS_LOG_WARNING(FAC_SIP, "BaseDB::safeDropIndex failed for index: " << key
+              << ". " << e.what());
+      ret = false;
+    }
+    catch (...)
+    {
+      OS_LOG_WARNING(FAC_SIP, "BaseDB::safeDropIndex failed for index: " << key
+              << ". Unknown Exception");
+      ret = false;
+    }
+
+    return ret;
+  }
+
+  bool BaseDB::safeEnsureTTLIndex(mongo::DBClientBase* client, const std::string& key, int ttl) const
+  {
+    int ret = true;
+
+    try
+    {
+      // Note: the parameters from 3 to 7 are just the defaults of the function
+      client->ensureIndex(_ns, BSON(key << 1),
+                            false, "", true, false, -1, /* just the defaults */
+                            ttl);
+    }
+    catch (std::exception& e)
+    {
+      OS_LOG_ERROR(FAC_SIP, "BaseDB::safeEnsureTTLIndex failed for index: " << key
+              << ", ttl: " << ttl
+              << ". " << e.what());
+      ret = false;
+    }
+    catch (...)
+    {
+      OS_LOG_ERROR(FAC_SIP, "BaseDB::safeEnsureTTLIndex failed for index: " << key
+              << ", ttl: " << ttl
+              << ". Unknown Exception");
+      ret = false;
+    }
+
+    return ret;
+  }
+
   UpdateTimer::UpdateTimer(BaseDB& db) :
     _end(0),
     _db(db)
