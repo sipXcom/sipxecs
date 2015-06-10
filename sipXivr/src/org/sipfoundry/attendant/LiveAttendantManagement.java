@@ -40,10 +40,10 @@ public class LiveAttendantManagement extends SipxIvrApp {
         }
         boolean enable = false;
         if (dialedNumber.startsWith(m_enablePrefix)) {
-            dialedNumber = StringUtils.strip(dialedNumber, m_enablePrefix);
+            dialedNumber = StringUtils.stripStart(dialedNumber, m_enablePrefix);
             enable = true;
         } else if (dialedNumber.startsWith(m_disablePrefix)) {
-            dialedNumber = StringUtils.strip(dialedNumber, m_disablePrefix);
+            dialedNumber = StringUtils.stripStart(dialedNumber, m_disablePrefix);
             enable = false;
         }
         LOG.debug("LiveAttendantManagement:run dialed number" + dialedNumber + " action " + enable);
