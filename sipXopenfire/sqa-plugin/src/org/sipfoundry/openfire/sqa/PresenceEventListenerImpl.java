@@ -40,15 +40,20 @@ public class PresenceEventListenerImpl implements PresenceEventListener {
         m_presenceCache = presenceCache;
     }
     @Override
-    public void availableSession(ClientSession arg0, Presence arg1) {
-
+    public void availableSession(ClientSession arg0, Presence presence) {
+        broadcastOnThePhone(presence);
     }
 
     @Override
     public void presenceChanged(ClientSession arg0, Presence presence) {
+        broadcastOnThePhone(presence);
+    }
+
+    private void broadcastOnThePhone(Presence presence) {
         String userJid = presence.getFrom().getNode();
         SipPresenceBean previousPresenceBean = m_presenceCache.get(userJid);
         if(previousPresenceBean != null) {
+            logger.debug("broadcast On The phone needed, status: " + userJid + "  " + previousPresenceBean.isConfirmed());
             //cache is not cleared and confirmed, but the presence is changed - change status accordingly keeping the sip state
             previousPresenceBean.setStatusMessage(presence.getStatus());
             if (previousPresenceBean.isConfirmed()) {
@@ -65,7 +70,6 @@ public class PresenceEventListenerImpl implements PresenceEventListener {
                     logger.debug("Cannot update user presence ", e);
                 }
             }
-
         }
     }
 
