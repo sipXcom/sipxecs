@@ -101,17 +101,18 @@ public class SqaEventHandler implements Runnable {
             logger.debug("Observer JID (IM Entity that sent the message): " + observerJID.getNode());
             org.jivesoftware.openfire.user.User ofObserverUser = m_server.getUserManager().getUser(observerJID.getNode());
             Presence presence = m_server.getPresenceManager().getPresence(ofObserverUser);
-
+            String presenceStatus = null;
             if (presence == null) {
                 logger.debug("User is OFFLINE  -- cannot set presence state");
-                return;
+            } else {
+                presenceStatus = presence.getStatus();
             }
 
             SipPresenceBean presenceBean = m_presenceCache.get(observerJID.getNode());
-            logger.debug("Processing state events for user: " + observerJID.getNode() + " and presence status " + presence.getStatus());
+            logger.debug("Processing state events for user: " + observerJID.getNode() + " and presence status " + presenceStatus);
             boolean previousConfirmed = false;
             if (presenceBean == null) {
-                presenceBean = new SipPresenceBean(presence.getStatus(), observerPartyId);
+                presenceBean = new SipPresenceBean(presenceStatus, observerPartyId);
                 m_presenceCache.put(observerJID.getNode(), presenceBean);
             } else {
                 previousConfirmed = presenceBean.isConfirmed();
@@ -126,21 +127,28 @@ public class SqaEventHandler implements Runnable {
             logger.debug("Observer status: previousConfirmed: " + previousConfirmed + " actualConfirmed " + actualConfirmed + " terminated: " + terminated);
             if (!previousConfirmed && actualConfirmed) {
                 //save current presence status (before modifying it to On The Phone)
-                logger.debug("Confirmed received, save current presence status " + presence.getStatus());
-                presenceBean.setStatusMessage(presence.getStatus());
+                logger.debug("Confirmed received, save current presence status " + presenceStatus);
+                presenceBean.setStatusMessage(presenceStatus);
                 logger.debug("ObserverPartyUser " + observerPartyUser + " observer party id " + observerPartyId);
-                String presenceMessage = Utils.generateXmppStatusMessageWithSipState(observerUser, observerPartyUser, presence, observerPartyId);
+                String presenceMessage = presence != null ?
+                    Utils.generateXmppStatusMessageWithSipState(observerUser, observerPartyUser, presence, observerPartyId) : null;
                 //presence status is about to be changed - save current presence
                 if (presenceMessage != null) {
                     //broadcast -on the phone- to roster
                     presence.setStatus(presenceMessage);
                     ofObserverUser.getRoster().broadcastPresence(presence);
+                } else {
+                    logger.debug("User is offline cannot broadcast confirmed: " + observerPartyId);
                 }
             } else if (!actualConfirmed && terminated) {
                 //if on the phone and call terminated, broadcast previous presence
                 logger.debug("Terminate received, previous presence status to broadcast " + presenceBean.getStatusMessage());
-                presence.setStatus(presenceBean.getStatusMessage());
-                ofObserverUser.getRoster().broadcastPresence(presence);
+                if (presence != null) {
+                    presence.setStatus(presenceBean.getStatusMessage());
+                    ofObserverUser.getRoster().broadcastPresence(presence);
+                } else {
+                    logger.debug("User is offline cannot broadcast terminated: " + observerPartyId);
+                }
                 //remove user presence bean from cache, there is no confirmed dialog present
                 m_presenceCache.remove(observerJID.getNode());
             }
