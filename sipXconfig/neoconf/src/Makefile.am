@@ -18,7 +18,7 @@ neoconf_RESOURCES = \
 	$(shell cd $(srcdir); find . -type f \( \
 	  -name '*.json' \
 	  -o -name '*.properties' \
-	  -o -name '*.crt' \
+	  -o -name 'verisignclass3ca' \
 	  -o -name '*.xml' \
 	  -o -name '*.jpg' \
 	  -o -name '*.xsd' \

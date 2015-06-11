@@ -102,6 +102,8 @@ public class CertificateConfig implements ConfigProvider {
         sslOpenfire.storeIfDifferent(new File(dir, "ssl-openfire.keystore"));
 
         File authDir = new File(dir, "authorities");
+        //remove old certs
+        FileUtils.deleteQuietly(authDir);
         authDir.mkdir();
         JavaKeyStore store = new JavaKeyStore();
         for (String authority : m_certificateManager.getAuthorities()) {

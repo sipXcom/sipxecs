@@ -27,7 +27,7 @@
     <property name="locationsManager" ref="locationsManager"/>
     <property name="thirdPartyAuthorites">
       <list>
-        <value>verisignclass3ca.crt</value>
+        <value>verisignclass3ca</value>
       </list>
     </property>
   </bean>

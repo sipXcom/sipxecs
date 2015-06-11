@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Collection;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -84,7 +85,7 @@ public abstract class CertificateAuthorities extends BaseComponent implements Pa
             getValidator().record(new UserException("&error.certificate"), getMessages());
             return;
         }
-        String caFileName = uploadFile.getFileName();
+        String caFileName = FilenameUtils.removeExtension(uploadFile.getFileName());
         Reader r = null;
         try {
             String ca = IOUtils.toString(uploadFile.getStream());
