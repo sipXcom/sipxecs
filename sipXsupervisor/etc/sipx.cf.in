@@ -272,6 +272,13 @@ body copy_from copy_from_cfdata(filename) {
   compare => "digest";
 }
 
+body copy_from copy_from_sync_cfdata(filename) {
+  source => "$(sipx.SIPX_CFDATA)/$(filename)";
+  compare => "digest";
+  purge => "true";
+  preserve => "true";
+}
+
 body copy_from copy_from_cfdatadir {
   source => "$(sipx.SIPX_CFDATA)";
   compare => "digest";

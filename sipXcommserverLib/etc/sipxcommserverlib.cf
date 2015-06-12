@@ -70,7 +70,7 @@ bundle agent sipxcommserverlib_config {
       "$(sipx.SIPX_CONFDIR)/ssl/authorities"
         comment => "install SSL info $(this.promiser)",
         create => "true",
-        copy_from => copy_from_cfdata("authorities"),
+        copy_from => copy_from_sync_cfdata("authorities"),
         depth_search => recurse("1"),
         file_select => authority_files,
         perms => mog("644","$(sipx.SIPXPBXUSER)","$(sipx.SIPXPBXGROUP)"),
