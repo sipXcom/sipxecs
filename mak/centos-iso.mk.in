@@ -4,15 +4,15 @@
 
 ## Common make variables you may want to override in another makefile
 ISO_SRC ?= $(SRC)/mak/centos-iso
-ISO_LABEL ?= sipxecs
+ISO_LABEL ?= sipxcom
 ISO_REV ?= $(PACKAGE_REVISION)
 DIST_DIR = @DIST_DIR@
 SPLASH_FILE ?= $(ISO_SRC)/splash.jpg
 SPLASH_MENU ?= $(ISO_SRC)/isolinux.cfg
 VOLUME_LABEL ?= "CentOS sipX $(PACKAGE_VERSION)"
 APPLICATION_LABEL ?= "CentOS sipX $(PACKAGE_VERSION)"
-PUBLISHER_ID ?= sipx-dev@list.sipfoundry.org
-PREPARERER_ID ?= sipx-dev@list.sipfoundry.org
+PUBLISHER_ID ?= sipxcom-dev@googlegroups.com
+PREPARERER_ID ?= sipxcom-dev@googlegroups.com
 CENTOS_VER = 6.6
 ISO_RPM_DOWNLOAD_URL ?= @CENTOS_BASE_URL@/$(CENTOS_VER)
 ISO_M4_OPTS = $(CUSTOM_ISO_M4_OPTS) -D PACKAGE_VERSION=$(PACKAGE_VERSION)
@@ -119,7 +119,7 @@ iso-download-os-% : mak/*-centos-iso.mk
 
 iso-download-epel-% : mak/*-centos-iso.mk
 	rsync -av --delete \
-	  $(addprefix @CENTOS_RSYNC_URL@/epel/6/$(ARCH)/,$(ISO_ADD_EPEL)) \
+	  $(addprefix rsync://download.sipxcom.org/pub/epel/6/$(ARCH)/,$(ISO_ADD_EPEL)) \
 	  $(ISO_PACKAGES_EPEL)/
 
 iso-packages-% : iso-download-os-% iso-download-epel-%
@@ -564,6 +564,7 @@ ISO_ADD_OS = \
   nss-softokn-freebl-* \
   nss-sysinit-* \
   nss-util-* \
+  nss-tools-* \
   ntp-4.* \
   ntpdate-* \
   notification-daemon-* \
