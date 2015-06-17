@@ -49,8 +49,13 @@ public class BackupConfigTest {
         Location l1 = new Location("one", "1.1.1.1");
         l1.setUniqueId(1);
         BackupConfig.BackupRestore backupRestore = new BackupConfig.BackupRestore();
-        backupRestore.setBackup(true);
-        backupRestore.setRestore(true);
+        backupRestore.setBackup(true, "d1");
+        backupRestore.setRestore(true, "d1");
+        backupRestore.setBackup(true, "d2");
+        backupRestore.setRestore(true, "d2");
+        backupRestore.setBackup(true, "d3");
+        backupRestore.setRestore(true, "d3");
+
         config.writeHostDefinitions(new YamlConfiguration(actual), l1, Arrays.asList(d1, d2, d3),
             backupRestore, new TreeSet<ArchiveDefinition>(), new TreeSet<ArchiveDefinition>());
         String expected = IOUtils.toString(getClass().getResourceAsStream("expected-backup.yaml"));
@@ -100,7 +105,7 @@ public class BackupConfigTest {
 
         verify(mgr);
     }
-    
+
     @Test
     public void clusterRedundantSingleNodeBackup() throws IOException {
         BackupConfig config = new BackupConfig();
@@ -144,7 +149,7 @@ public class BackupConfigTest {
 
         verify(mgr);
     }
-    
+
     @Test
     public void clusterRedundantSingleNodeBackup2() throws IOException {
         BackupConfig config = new BackupConfig();
@@ -177,14 +182,14 @@ public class BackupConfigTest {
         mgr.getArchiveDefinitions(l2, null, null);
         expectLastCall().andReturn(Arrays.asList(d2, d3)).anyTimes();
         mgr.getArchiveDefinitions(l3, null, null);
-        expectLastCall().andReturn(Arrays.asList(d2)).anyTimes();        
+        expectLastCall().andReturn(Arrays.asList(d2)).anyTimes();
         mgr.getArchiveDefinitions(l1, plan, settings);
         expectLastCall().andReturn(Arrays.asList(d1, d2)).anyTimes();
         mgr.getArchiveDefinitions(l2, plan, settings);
         expectLastCall().andReturn(Arrays.asList(d2, d3)).anyTimes();
         mgr.getArchiveDefinitions(l3, plan, settings);
         expectLastCall().andReturn(Arrays.asList(d2)).anyTimes();
-        
+
         replay(mgr);
         config.setBackupManager(mgr);
 
@@ -195,7 +200,7 @@ public class BackupConfigTest {
 
         verify(mgr);
     }
-    
+
     @Test
     public void clusterLocationEmpty() throws IOException {
         BackupConfig config = new BackupConfig();
@@ -228,14 +233,14 @@ public class BackupConfigTest {
         mgr.getArchiveDefinitions(l2, null, null);
         expectLastCall().andReturn(Arrays.asList(d2, d3)).anyTimes();
         mgr.getArchiveDefinitions(l3, null, null);
-        expectLastCall().andReturn(Arrays.asList()).anyTimes();        
+        expectLastCall().andReturn(Arrays.asList()).anyTimes();
         mgr.getArchiveDefinitions(l1, plan, settings);
         expectLastCall().andReturn(Arrays.asList(d1, d2)).anyTimes();
         mgr.getArchiveDefinitions(l2, plan, settings);
         expectLastCall().andReturn(Arrays.asList(d2, d3)).anyTimes();
         mgr.getArchiveDefinitions(l3, plan, settings);
         expectLastCall().andReturn(Arrays.asList()).anyTimes();
-        
+
         replay(mgr);
         config.setBackupManager(mgr);
 
@@ -245,7 +250,7 @@ public class BackupConfigTest {
         assertEquals(expected, actual.toString());
 
         verify(mgr);
-    }    
+    }
 
     @Test
     public void clusterBackupRestoreOnDifferentNodes() throws IOException {
@@ -291,7 +296,7 @@ public class BackupConfigTest {
     }
 
     @Test
-    public void clusterBackupOnSecondaryRestoreOnPrimary() throws IOException {
+    public void clusterOneBackupOnSecondaryRestoreOnPrimary() throws IOException {
         BackupConfig config = new BackupConfig();
 
         BackupSettings settings = new BackupSettings();
@@ -328,6 +333,94 @@ public class BackupConfigTest {
         StringWriter actual = new StringWriter();
         config.writeConfig(actual, plan, hosts, settings);
         String expected = IOUtils.toString(getClass().getResourceAsStream("backup-on-secondary-restore-on-primary.yaml"));
+        assertEquals(expected, actual.toString());
+
+        verify(mgr);
+    }
+
+    @Test
+    public void clusterMultipleBackupOnSecondaryRestoreOnPrimary1() throws IOException {
+        BackupConfig config = new BackupConfig();
+
+        BackupSettings settings = new BackupSettings();
+        settings.setModelFilesContext(TestHelper.getModelFilesContext());
+
+        Location l1 = new Location("one", "1.1.1.1");
+        l1.setUniqueId(1);
+        l1.setPrimary(true);
+        Location l2 = new Location("two", "2.2.2.2");
+        l2.setUniqueId(2);
+        Collection<Location> hosts = Arrays.asList(l1, l2);
+
+        //3 possible archive definitions . 'archive' to backup on secondary, restore on primary
+        //others backup/restore on primary
+        ArchiveDefinition d1 = new ArchiveDefinition("archive.tar.gz", "backup", null);
+        ArchiveDefinition d2 = new ArchiveDefinition("archive.tar.gz", null, "restore");
+        ArchiveDefinition d3 = new ArchiveDefinition("archive2.tar.gz", "backup", "restore");
+        ArchiveDefinition d4 = new ArchiveDefinition("archive3.tar.gz", "backup", "restore");
+
+        BackupPlan plan = new BackupPlan(BackupType.local);
+        //select all definitions to backup or restore
+        plan.setDefinitionIds(new TreeSet<String>(Arrays.asList("archive.tar.gz", "archive2.tar.gz", "archive3.tar.gz")));
+        plan.setLimitedCount(20);
+
+        BackupManager mgr = createMock(BackupManager.class);
+        //archive, archive2, archive3 running on all nodes
+        mgr.getArchiveDefinitions(l1, plan, settings);
+        expectLastCall().andReturn(Arrays.asList(d2, d3, d4)).anyTimes();
+        mgr.getArchiveDefinitions(l2, plan, settings);
+        expectLastCall().andReturn(Arrays.asList(d1, d3, d4)).anyTimes();
+        replay(mgr);
+
+        config.setBackupManager(mgr);
+        StringWriter actual = new StringWriter();
+        config.writeConfig(actual, plan, hosts, settings);
+        String expected = IOUtils.toString(getClass().getResourceAsStream("multiple-backup-on-secondary-restore-on-primary.yaml"));
+        assertEquals(expected, actual.toString());
+
+        verify(mgr);
+    }
+
+    @Test
+    public void clusterMultipleBackupOnSecondaryRestoreOnPrimary2() throws IOException {
+        BackupConfig config = new BackupConfig();
+
+        BackupSettings settings = new BackupSettings();
+        settings.setModelFilesContext(TestHelper.getModelFilesContext());
+
+        Location l1 = new Location("one", "1.1.1.1");
+        l1.setUniqueId(1);
+        l1.setPrimary(true);
+        Location l2 = new Location("two", "2.2.2.2");
+        l2.setUniqueId(2);
+        Collection<Location> hosts = Arrays.asList(l1, l2);
+
+        //3 possible archive definitions . 'archive' to backup on secondary, restore on primary
+        //others backup/restore on primary
+        ArchiveDefinition d1 = new ArchiveDefinition("archive.tar.gz", "backup", null);
+        ArchiveDefinition d2 = new ArchiveDefinition("archive.tar.gz", null, "restore");
+        ArchiveDefinition d3 = new ArchiveDefinition("archive2.tar.gz", "backup", "restore");
+        ArchiveDefinition d4 = new ArchiveDefinition("archive3.tar.gz", "backup", "restore");
+
+        BackupPlan plan = new BackupPlan(BackupType.local);
+        //select all definitions to backup or restore
+        plan.setDefinitionIds(new TreeSet<String>(Arrays.asList("archive.tar.gz", "archive2.tar.gz", "archive3.tar.gz")));
+        plan.setLimitedCount(20);
+
+        BackupManager mgr = createMock(BackupManager.class);
+        //archive2, archive3 running on l1, archive running on l2 only
+        mgr.getArchiveDefinitions(l1, plan, settings);
+        //restore archive on l1 but backup on l2
+        //(ex: voicemail running on l2 only, but restore on l1 because of mongo single master architecture)
+        expectLastCall().andReturn(Arrays.asList(d2, d3, d4)).anyTimes();
+        mgr.getArchiveDefinitions(l2, plan, settings);
+        expectLastCall().andReturn(Arrays.asList(d1)).anyTimes();
+        replay(mgr);
+
+        config.setBackupManager(mgr);
+        StringWriter actual = new StringWriter();
+        config.writeConfig(actual, plan, hosts, settings);
+        String expected = IOUtils.toString(getClass().getResourceAsStream("multiple-backup-on-secondary-restore-on-primary.yaml"));
         assertEquals(expected, actual.toString());
 
         verify(mgr);

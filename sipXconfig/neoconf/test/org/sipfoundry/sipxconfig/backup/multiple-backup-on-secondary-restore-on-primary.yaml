@@ -1,0 +1,17 @@
+hosts:
+   1:
+      host: 1.1.1.1
+      backup:
+         archive2.tar.gz: backup
+         archive3.tar.gz: backup
+      restore:
+         archive.tar.gz: restore
+         archive2.tar.gz: restore
+         archive3.tar.gz: restore
+   2:
+      host: 2.2.2.2
+      backup:
+         archive.tar.gz: backup
+plan: local
+max: 20
+settings:
