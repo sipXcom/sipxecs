@@ -156,6 +156,10 @@ public class PolycomPhone extends Phone implements BeanFactoryAware {
     public void setDeviceVersion(DeviceVersion version) {
         super.setDeviceVersion(version);
         DeviceVersion myVersion = getDeviceVersion();
+        if (getModel() instanceof PolycomModel) {
+            PolycomModel polycomModel = (PolycomModel) getModel();
+            polycomModel.setDefaultVersion(myVersion);
+        }
         if (PolycomModel.is40orLater(myVersion)) {
             getModel().setSettingsFile("phone-40.xml");
             getModel().setLineSettingsFile("line-40.xml");
