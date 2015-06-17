@@ -474,6 +474,7 @@
     <antcall target="openacd-permission-profile" />
     <antcall target="openacd-custom-header" />
   	<antcall target="delete-verisign-crt-crt" />
+    <antcall target="openacd-permission-constraint" />
   </target>
 
   <target name="plugin-patches">
@@ -1441,7 +1442,10 @@
   </target>
   <target name="delete-verisign-crt-crt" unless="delete-verisign-crt-crt">
   	<db-patch patch="delete-verisign-crt-crt"/>
-  </target>	
+  </target>
+  <target name="openacd-permission-constraint" unless="openacd-permission-constraint">
+    <db-patch patch="openacd-permission-constraint"/>
+  </target>
 
   <!--
     - SUPPORT UTILITIES
