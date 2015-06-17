@@ -23,7 +23,9 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -31,6 +33,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.sipfoundry.commons.security.Util;
 import org.sipfoundry.sipxconfig.cfgmgt.CfengineModuleConfiguration;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
@@ -45,6 +49,8 @@ import org.sipfoundry.sipxconfig.feature.FeatureManager;
 import org.sipfoundry.sipxconfig.setting.Setting;
 
 public class BackupConfig implements ConfigProvider, FeatureListener {
+    private static final Log LOG = LogFactory.getLog(BackupConfig.class);
+
     private static final String RESTORE = "restore";
     private BackupManager m_backupManager;
     private ConfigManager m_configManager;
@@ -118,21 +124,27 @@ public class BackupConfig implements ConfigProvider, FeatureListener {
         for (Location host : hosts) {
             Collection<ArchiveDefinition> possibleDefIds = m_backupManager.getArchiveDefinitions(host, plan, settings);
             final BackupRestore execBackupRestore = new BackupRestore();
-
+            LOG.debug("BACKUP CONFIG - host: " + host.getFqdn() + " possible definitions: " + possibleDefIds);
             Collection<ArchiveDefinition> defIds = CollectionUtils.select(possibleDefIds, new Predicate() {
                 @Override
                 public boolean evaluate(Object arg0) {
                     ArchiveDefinition def = (ArchiveDefinition) arg0;
-                    boolean selected = selectedDefIds.contains((def).getId());
+                    String defId = def.getId();
+                    boolean selected = selectedDefIds.contains(defId);
+                    LOG.debug("BACKUP CONFIG - is definition selected: " + def.getId() + " " + selected
+                        + " already marked for backup " + configuredBackupArchives.contains(def)
+                        + " already marked for restore " + configuredRestoreArchives.contains(def));
                     //at least one backup command
-                    if (!execBackupRestore.isBackup() && !StringUtils.isEmpty(def.getBackupCommand()) && selected
+                    if (!execBackupRestore.isBackup(defId) && !StringUtils.isEmpty(def.getBackupCommand()) && selected
                         && (!def.isSingleNodeBackup() || !configuredBackupArchives.contains(def))) {
-                        execBackupRestore.setBackup(true);
+                        execBackupRestore.setBackup(true, defId);
+                        LOG.debug("BACKUP CONFIG - definition is selected for backup");
                     }
                     //at least one restore command
-                    if (!execBackupRestore.isRestore() && !StringUtils.isEmpty(def.getRestoreCommand()) && selected
+                    if (!execBackupRestore.isRestore(defId) && !StringUtils.isEmpty(def.getRestoreCommand()) && selected
                         && (!def.isSingleNodeRestore() || !configuredRestoreArchives.contains(def))) {
-                        execBackupRestore.setRestore(true);
+                        execBackupRestore.setRestore(true, defId);
+                        LOG.debug("BACKUP CONFIG - definition is selected for restore");
                     }
                     return selected;
                 }
@@ -169,25 +181,29 @@ public class BackupConfig implements ConfigProvider, FeatureListener {
         if (execBackupRestore.isBackup()) {
             config.startStruct("backup");
             for (ArchiveDefinition def : defs) {
-                if (!def.isSingleNodeBackup() || !backupDefs.contains(def)) {
-                    writeCommand(config, def, def.getBackupCommand());
-                    backupDefs.add(def);
-                }
-            }
-            config.endStruct();
-        }
-        //write restore struct if at least one restore command is available
-        if (execBackupRestore.isRestore()) {
-            config.startStruct(RESTORE);
-            for (ArchiveDefinition def : defs) {
-                if (!def.isSingleNodeRestore() || !restoreDefs.contains(def)) {
-                    writeCommand(config, def, def.getRestoreCommand());
-                    restoreDefs.add(def);
+                if (execBackupRestore.isBackup(def.getId())) {
+                    if (!def.isSingleNodeBackup() || !backupDefs.contains(def)) {
+                        writeCommand(config, def, def.getBackupCommand());
+                        backupDefs.add(def);
+                    }
                 }
             }
             config.endStruct();
         }
 
+        //write restore struct if at least one restore command is available
+        if (execBackupRestore.isRestore()) {
+            config.startStruct(RESTORE);
+            for (ArchiveDefinition def : defs) {
+                if (execBackupRestore.isRestore(def.getId())) {
+                    if (!def.isSingleNodeRestore() || !restoreDefs.contains(def)) {
+                        writeCommand(config, def, def.getRestoreCommand());
+                        restoreDefs.add(def);
+                    }
+                }
+            }
+            config.endStruct();
+        }
         config.endStruct();
     }
 
@@ -240,20 +256,28 @@ public class BackupConfig implements ConfigProvider, FeatureListener {
         m_dirty = true;
     }
     public static class BackupRestore {
-        private boolean m_backup;
-        private boolean m_restore;
+        private Map<String, Boolean> m_backup = new HashMap<String, Boolean>();
+        private Map<String, Boolean> m_restore = new HashMap<String, Boolean>();
 
-        public boolean isBackup() {
-            return m_backup;
+        public boolean isBackup(String defId) {
+            Boolean value = m_backup.get(defId);
+            return value != null && value;
         }
-        public void setBackup(boolean backup) {
-            m_backup = backup;
+        public void setBackup(boolean backup, String defId) {
+            m_backup.put(defId, backup);
+        }
+        public boolean isRestore(String defId) {
+            Boolean value = m_restore.get(defId);
+            return value != null && value;
+        }
+        public void setRestore(boolean restore, String defId) {
+            m_restore.put(defId, restore);
+        }
+        public boolean isBackup() {
+            return !m_backup.isEmpty();
         }
         public boolean isRestore() {
-            return m_restore;
-        }
-        public void setRestore(boolean restore) {
-            m_restore = restore;
+            return !m_restore.isEmpty();
         }
     }
 }
