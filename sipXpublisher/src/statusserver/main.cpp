@@ -81,8 +81,6 @@ main(int argc, char* argv[] )
   // register custom exception handling for mongo
   OsExceptionHandler::instance().registerHandler(MONGO_EXCEPTION, MONGO_CONNECT_EXCEPTION, boost::bind(&customMongoConnectExceptionHandling, _1));
 
-  const OsConfigDb& configDb = SipXApplication::instance().getConfig().getOsConfigDb();
-
     // Fetch Pointer to the OsServer task object, note that
     // object uses the IMDB so it is important to shut this thread
     // cleanly before the signal handler exits

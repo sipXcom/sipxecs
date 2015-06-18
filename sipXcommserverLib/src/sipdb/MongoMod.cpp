@@ -43,6 +43,8 @@ static struct MinKeyData
 } minkeydata;
 mongo::BSONObj mongoMod::minKey((const char *) &minkeydata);
 
+const int mongoMod::EXPIRES_AFTER_SECONDS_MINIMUM_SECS = 1;
+
 mongo::ScopedDbConnection* mongoMod::ScopedDbConnection::getScopedDbConnection(const std::string& host, double socketTimeout)
 {
   OS_LOG_DEBUG(FAC_ODBC, "ScopedDbConnection::getScopedDbConnection() - host '" << host << "', socketTimeout '" << socketTimeout << "' seconds");

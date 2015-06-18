@@ -24,16 +24,6 @@
 
 using namespace std;
 
-//
-// Defines the minimum number of seconds used for the TTL of registrations indexed after
-// expirationTime key.
-// !Note!: This time should be 0 (as specified in
-//         http://docs.mongodb.org/manual/tutorial/expire-data/#expire-documents-at-a-specific-clock-time
-//         but due to the limitation in the C++ driver
-//         (see https://github.com/mongodb/mongo/commit/85b1a93def9416ce3fb00faa077dd871183ef39a#diff-7cd4c4d808fb366aeb57036d60ed1806R1110)
-//         we'll have to use the minimum possible value for TTL
-#define MONGO_REG_EXPIRATION_TIME_MIN_TTL_SEC 1
-
 const string RegDB::NS("node.registrar");
 
 RegDB* RegDB::CreateInstance(bool ensureIndexes) {
@@ -88,7 +78,7 @@ void RegDB::ensureIndexes(mongo::DBClientBase* client)
   clientPtr->ensureIndex(_ns, BSON(RegBinding::identity_fld() << 1 ));
 
   // shape the new expirationtime index TTL
-  int newExpirationTimeIndexTTL = (MONGO_REG_EXPIRATION_TIME_MIN_TTL_SEC > _expireGracePeriod) ? MONGO_REG_EXPIRATION_TIME_MIN_TTL_SEC : _expireGracePeriod;
+  int newExpirationTimeIndexTTL = (mongoMod::EXPIRES_AFTER_SECONDS_MINIMUM_SECS > static_cast<int>(_expireGracePeriod)) ? mongoMod::EXPIRES_AFTER_SECONDS_MINIMUM_SECS : static_cast<int>(_expireGracePeriod);
 
   // Note: Since we're not allowed to create the same index using different parameters,
   //       we'll have to drop the existing index in case we're setting it for the first
@@ -96,10 +86,10 @@ void RegDB::ensureIndexes(mongo::DBClientBase* client)
   if (newExpirationTimeIndexTTL != _expirationTimeIndexTTL)
   {
     _expirationTimeIndexTTL = newExpirationTimeIndexTTL;
-    BaseDB::safeDropIndex(clientPtr, RegBinding::expirationTime_fld());
+    safeDropIndex(clientPtr, RegBinding::expirationTime_fld());
   }
 
-  BaseDB::safeEnsureTTLIndex(clientPtr, RegBinding::expirationTime_fld(), _expirationTimeIndexTTL);
+  safeEnsureTTLIndex(clientPtr, RegBinding::expirationTime_fld(), _expirationTimeIndexTTL);
 
   // close the connection, if it was created
   if (conn)
