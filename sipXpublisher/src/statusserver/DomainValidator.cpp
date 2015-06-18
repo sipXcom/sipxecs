@@ -88,8 +88,6 @@ void DomainValidator::addDomainAliases()
 
 bool DomainValidator::isValidDomain(const Url& uri) const
 {
-   bool isValid = false;
-
    UtlString domain;
    uri.getHostAddress(domain);
    domain.toLower();

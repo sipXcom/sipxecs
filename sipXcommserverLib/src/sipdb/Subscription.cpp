@@ -13,6 +13,8 @@
  * details.
  */
 
+#include <os/OsLogger.h>
+
 #include "sipdb/Subscription.h"
 
 using namespace std;
@@ -178,10 +180,33 @@ Subscription& Subscription::operator=(const mongo::BSONObj& bsonObj)
 	if (bsonObj.hasField(Subscription::version_fld()))
 		_version = bsonObj.getIntField(Subscription::version_fld());
 
-	if (bsonObj.hasField(Subscription::expires_fld()))
-		_expires = bsonObj.getIntField(Subscription::expires_fld());
+  if (bsonObj.hasField(Subscription::expires_fld()))
+  {
+    mongo::BSONElement expiresElement = bsonObj.getField(Subscription::expires_fld());
 
-    return *this;
+    // save the time depending on its type
+    if (mongo::Date == expiresElement.type())
+    {
+      _expires = static_cast<unsigned int>(expiresElement.date().toTimeT());
+    }
+    else if (expiresElement.isNumber())
+    {
+      _expires = static_cast<unsigned int>(expiresElement.Number());
+      OS_LOG_WARNING(FAC_SIP, "Found old-style subscription"
+          << " Uri: " << _uri
+          << " Contact: " << _contact
+          << " Call-Id: " << _callId);
+    }
+    else
+    {
+      OS_LOG_ERROR(FAC_SIP, "unsupported " << expiresElement.toString() << " element for subscription"
+          << " Uri: " << _uri
+          << " Contact: " << _contact
+          << " Call-Id: " << _callId);
+    }
+  }
+
+  return *this;
 }
 
 void Subscription::swap(Subscription& subscription)

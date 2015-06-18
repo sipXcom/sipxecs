@@ -122,13 +122,8 @@ StatusServer::StatusServer(
     domain.getHostAddress(mlocalDomainHost);
 
     MongoDB::ConnectionInfo info = MongoDB::ConnectionInfo::globalInfo();
-    mSubscribeDb = SubscribeDB::CreateInstance();
+    mSubscribeDb = SubscribeDB::CreateInstance(true /* ensure indexes creation */);
     mEntityDb = new EntityDB(info);
-
-    //
-    // Run the subscription garbage collector
-    //
-    _expireThread.run(mSubscribeDb);
 
     mIsCredentialDB = useCredentialDB;
 

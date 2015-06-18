@@ -52,19 +52,19 @@ public:
 	static const std::string NS;
     typedef std::vector<Subscription> Subscriptions;
     SubscribeDB(const MongoDB::ConnectionInfo& info) :
-                BaseDB(info, NS), _local(NULL)
+                BaseDB(info, NS), _local(NULL), _isFirstEnsureIndexes(true)
 	{
 	}
 	;
 
     SubscribeDB(const MongoDB::ConnectionInfo& info, SubscribeDB* local) :
-		BaseDB(info, NS) , _local(local)
+		BaseDB(info, NS) , _local(local), _isFirstEnsureIndexes(true)
 	{
 	}
 	;
 
     SubscribeDB(const MongoDB::ConnectionInfo& info, SubscribeDB* local, std::string ns) :
-		BaseDB(info, ns), _local(local)
+		BaseDB(info, ns), _local(local), _isFirstEnsureIndexes(true)
 	{
 	}
 	;
@@ -148,7 +148,7 @@ public:
         const UtlString& id,
         unsigned long timeNow,
         int updatedNotifyCseq,
-        int version) const;
+        int version);
 
 //    void updateSubscribeUnexpiredSubscription (
 //        const UtlString& component,
@@ -164,7 +164,7 @@ public:
     void updateToTag(
        const UtlString& callid,
        const UtlString& fromtag,
-       const UtlString& totag) const;
+       const UtlString& totag);
 
     bool findFromAndTo(
        const UtlString& callid,
@@ -179,12 +179,13 @@ public:
 
     void removeAllExpired();
 
-    static SubscribeDB* CreateInstance();
+    static SubscribeDB* CreateInstance(bool ensureIndexes = false);
 
 private:
-    void ensureIndex(mongo::DBClientBase* client) const;
+    void ensureIndexes(mongo::DBClientBase* client = NULL);
 
     SubscribeDB* _local;
+    bool _isFirstEnsureIndexes;
 
 };
 

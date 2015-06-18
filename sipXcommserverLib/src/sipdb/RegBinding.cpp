@@ -138,7 +138,7 @@ void RegBinding::fromBSONObj(const mongo::BSONObj& bson)
     }
     else if (expirationTimeElement.isNumber())
     {
-      _expirationTime = static_cast<unsigned long>(expirationTimeElement.Int());
+      _expirationTime = static_cast<unsigned long>(expirationTimeElement.Number());
       OS_LOG_WARNING(FAC_SIP, "RegBinding::fromBSONObj found old-style registration"
           << " Identity: " << _identity
           << " Contact: " << _contact
