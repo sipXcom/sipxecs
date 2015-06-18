@@ -636,7 +636,7 @@ SipRedirectorPickUp::lookUpDialog(
                 //
                 // Convert the target to addr-spec
                 //
-                Url contactUri(newTarget.c_str(), Url::NameAddr);
+                Url contactUri(UtlString(newTarget.c_str()), Url::NameAddr);
                 UtlString contactAddrSpec;
                 contactUri.getUri(contactAddrSpec);
                 contact_URI.fromString(contactAddrSpec, TRUE);

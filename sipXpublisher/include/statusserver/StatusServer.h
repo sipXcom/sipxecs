@@ -128,7 +128,6 @@ private:
     HttpServer* mHttpServer;
     SubscribeDB* mSubscribeDb;
     EntityDB* mEntityDb;
-    SubscribeExpireThread _expireThread;
 
     // Private constructor for singleton implementation
     StatusServer (

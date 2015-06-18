@@ -121,7 +121,7 @@ public:
                subscription.notifyCseq_fld() << subscription.notifyCseq() <<        // "notifyCseq"
                subscription.subscribeCseq_fld() << subscription.subscribeCseq() <<  // "subscribeCseq"
                subscription.version_fld() << subscription.version() <<              // "version"
-               subscription.expires_fld() <<  subscription.expires();               // "expires"
+               subscription.expires_fld() <<  BaseDB::dateFromSecsSinceEpoch(subscription.expires());               // "expires"
 
       bsonObj = bsonObjBuilder.obj();
    }

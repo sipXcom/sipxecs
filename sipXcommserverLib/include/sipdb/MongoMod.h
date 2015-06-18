@@ -32,6 +32,16 @@ namespace mongoMod
   //
   extern mongo::BSONObj minKey;
 
+  //
+  // Defines the minimum number of seconds used by the mongo TTL thread, as
+  // 'expireAfterSeconds' value, to expire documents
+  // !Note!: This time should be 0 (as specified in
+  //         http://docs.mongodb.org/manual/tutorial/expire-data/#expire-documents-at-a-specific-clock-time
+  //         but due to the limitation in the C++ driver
+  //         (see https://github.com/mongodb/mongo/commit/85b1a93def9416ce3fb00faa077dd871183ef39a#diff-7cd4c4d808fb366aeb57036d60ed1806R1110)
+  //         we'll have to use the minimum possible value
+  extern const int EXPIRES_AFTER_SECONDS_MINIMUM_SECS;
+
   namespace ScopedDbConnection
   {
     //
