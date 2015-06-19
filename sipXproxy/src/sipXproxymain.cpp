@@ -474,6 +474,12 @@ int proxy()
       {
         timerT1 = SIP_MAX_RTT;
       }
+      
+      OS_LOG_NOTICE(FAC_SIP,  "T1 Timer set by config.  Value: " << timerT1 << " ms");
+    }
+    else
+    {
+      OS_LOG_NOTICE(FAC_SIP,  "T1 Timer set to default.  Value: " << timerT1 << " ms");
     }
     
     if (osServiceOptions.hasOption("SIPX_PROXY_RETRANSMIT_TIMES"))
@@ -491,6 +497,12 @@ int proxy()
       
       SipTransaction::setTcpResendTimes(sipRetran);
       SipTransaction::setUdpResendTimes(sipRetran);
+      
+      OS_LOG_NOTICE(FAC_SIP,  "Retransmit count set by config.  Value: " << sipRetran << " times");
+    }
+    else
+    {
+      OS_LOG_NOTICE(FAC_SIP,  "Retransmit count set to default.  Value: " << sipRetran << " times");
     }
     
     // Start the sip stack
