@@ -74,9 +74,9 @@ int main(int argc, char** argv)
     sqa.stop();
     return 0;
   }
-  OS_LOG_INFO(FAC_NET, "State Queue Agent process STARTED.");
+  OS_LOG_NOTICE(FAC_NET, "State Queue Agent process STARTED.");
   sipXApplication.waitForTerminationRequest(1);
-  OS_LOG_INFO(FAC_NET, "State Queue Agent process TERMINATED.");
+  OS_LOG_NOTICE(FAC_NET, "State Queue Agent process TERMINATED.");
   return 0;
 }
 
