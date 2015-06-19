@@ -380,6 +380,14 @@ SipUserAgent::SipUserAgent(int sipTcpPort,
     // How long before we expire transactions by default
     mDefaultExpiresSeconds = DEFAULT_SIP_TRANSACTION_EXPIRES;
     mDefaultSerialExpiresSeconds = DEFAULT_SIP_SERIAL_EXPIRES;
+    
+    
+    OS_LOG_NOTICE(FAC_SIP, "SIP Timer Values - "
+      << " mUnreliableTransportTimeoutMs : " << mUnreliableTransportTimeoutMs 
+      << " mMaxResendTimeoutMs : " << mMaxResendTimeoutMs
+      << " mTransactionStateTimeoutMs : " << mTransactionStateTimeoutMs
+      << " mDefaultExpiresSeconds : " << mDefaultExpiresSeconds
+      << " mDefaultSerialExpiresSeconds : " << mDefaultSerialExpiresSeconds);
 
     // Construct the default Contact header value.
     {
