@@ -4755,11 +4755,8 @@ void SipTransaction::cancel(SipUserAgent& userAgent,
                                MESSAGE_CANCEL);
             }
 
-            //if(mIsRecursing)
-            {
-                cancelChildren(userAgent,
-                               transactionList);
-            }
+            cancelChildren(userAgent,  transactionList);
+
         }
 
         // If this transaction has been initiated (i.e. request
@@ -4798,8 +4795,12 @@ void SipTransaction::cancelChildren(SipUserAgent& userAgent,
           }
           childTransaction->mCancelReasonValue.append(mCancelReasonValue.data());
        }
-       childTransaction->cancel(userAgent,
-                                transactionList);
+       
+       //
+       // childTransaction->cancel(userAgent,
+       //                         transactionList);
+       
+       userAgent.enqueueCancelMessage(childTransaction);
     }
 }
 
@@ -5333,6 +5334,15 @@ void SipTransaction::buildHash(const SipMessage& message,
     char cSeqString[20];
     sprintf(cSeqString, "%d", cSeq);
     hash.append(cSeqString);
+}
+
+void SipTransaction::buildHash(UtlBoolean isServerTransaction, UtlString& hash)
+{
+  hash = mCallId;
+  hash.append(isServerTransaction ? 's' : 'c');
+  char cSeqString[20];
+  sprintf(cSeqString, "%d", mCseq);
+  hash.append(cSeqString);
 }
 
 SipTransaction* SipTransaction::getTopMostParent() const

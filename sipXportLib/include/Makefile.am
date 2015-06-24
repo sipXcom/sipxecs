@@ -144,7 +144,8 @@ nobase_include_HEADERS = \
     utl/UtlRandom.h \
     utl/Plugin.h \
     utl/PluginHooks.h \
-    utl/cJSON.h
+    utl/cJSON.h \
+    utl/UtlBlockingQueue.h
 
 
 EXTRA_DIST= \
