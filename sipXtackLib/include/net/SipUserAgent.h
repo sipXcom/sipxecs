@@ -17,6 +17,7 @@
 
 // APPLICATION INCLUDES
 #include <utl/UtlHashBag.h>
+#include <utl/UtlBlockingQueue.h>
 #include <os/OsServerTask.h>
 #include <net/SipUserAgentBase.h>
 #include <net/SipMessage.h>
@@ -170,10 +171,17 @@ public:
     friend class SipTransaction;
     friend class SipUdpServer;
     friend int SipUdpServer::run(void* runArg);
+    
+    struct TransactionInfo
+    {
+      UtlString hash;
+      SipTransaction* ptr;
+    };
 
     typedef boost::function<bool(SipMessage&,const UtlString&,int)> Preprocessor;
     typedef boost::function<bool(SipMessage*)> DispatchEvaluator;
     typedef boost::function<void(SipTransaction*, const SipMessage&, SipMessage&)> FinalResponseHandler;
+    typedef UtlBlockingQueue<TransactionInfo*> MessageCancelQueue;
     
     enum EventSubTypes
     {
@@ -724,6 +732,8 @@ public:
     const SipTransactionList& getSipTransactions() const;
     
     void onFinalResponse(SipTransaction* pTransaction, const SipMessage& request, SipMessage& finalResponse);
+    
+    void enqueueCancelMessage(SipTransaction* pTransaction);
 
 /* //////////////////////////// PROTECTED ///////////////////////////////// */
 protected:
@@ -785,6 +795,7 @@ protected:
 
     void garbageCollection();
     
+    void handleCancelQueue();
     
 /* //////////////////////////// PRIVATE /////////////////////////////////// */
 private:
@@ -900,6 +911,8 @@ private:
     DispatchEvaluator _preDispatch;
     FinalResponseHandler _finalResponseHandler;
     Preprocessor _preprocessor;
+    MessageCancelQueue _cancelQueue;
+    boost::thread* _pCancelQueueThread;
 
     //! Disabled copy constructor
     SipUserAgent(const SipUserAgent& rSipUserAgent);

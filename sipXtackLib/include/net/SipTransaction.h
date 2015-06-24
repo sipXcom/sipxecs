@@ -199,6 +199,9 @@ public:
     static void buildHash(const SipMessage& message,
                           UtlBoolean isOutgoing,
                           UtlString& hash);
+    
+    void buildHash(       UtlBoolean isServerTransaction,
+                          UtlString& hash);
 
     SipTransaction* getTopMostParent() const;
 
