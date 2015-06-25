@@ -4383,7 +4383,10 @@ void SipUserAgent::enqueueCancelMessage(SipTransaction* pTransaction)
 {
   TransactionInfo* pTransactionInfo = new TransactionInfo();
   pTransactionInfo->ptr = pTransaction;
-  pTransaction->buildHash(TRUE, pTransactionInfo->hash);
+  pTransaction->buildHash(FALSE, pTransactionInfo->hash);
+  
+  OS_LOG_INFO(FAC_SIP, "SipUserAgent::enqueueCancelMessage - " << pTransactionInfo->hash.data());
+  
   _cancelQueue.enqueue(pTransactionInfo);
 }
 
@@ -4414,6 +4417,8 @@ void SipUserAgent::handleCancelQueue()
       OS_LOG_NOTICE(FAC_SIP, "SipUserAgent::handleCancelQueue - Got NULL transaction pointer");
       continue;
     }
+    
+    OS_LOG_INFO(FAC_SIP, "SipUserAgent::handleCancelQueue - processing " << pTransactionInfo->hash.data());
     
     //
     // lock the transaction
