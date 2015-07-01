@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.sipfoundry.sipxconfig.address.Address;
 import org.sipfoundry.sipxconfig.address.AddressManager;
 import org.sipfoundry.sipxconfig.address.AddressProvider;
@@ -75,6 +76,22 @@ public class IvrImpl implements FeatureProvider, AddressProvider, Ivr, ProcessPr
     private String m_archiveScript = "sipxivr-archive";
     private SipxReplicationContext m_sipxReplicationContext;
 
+    public void saveDefaultIvrBackupHost() {
+        IvrSettings settings = getSettings();
+        String backupHost = settings.getBackupHost();
+        boolean setDefault = (backupHost == null);
+        if (!setDefault) {
+            Location location = m_configManager.getLocationManager().getLocationByAddress(backupHost);
+            setDefault = !m_featureManager.isFeatureEnabled(Ivr.FEATURE, location);
+        }
+        if (setDefault) {
+            List<Location> locations = m_featureManager.getLocationsForEnabledFeature(Ivr.FEATURE);
+            if (!CollectionUtils.isEmpty(locations)) {
+                settings.setSettingValue(IvrSettings.IVR_BACKUP_HOST, locations.get(0).getAddress());
+                saveSettings(settings);
+            }
+        }
+    }
 
     public IvrSettings getSettings() {
         return m_settingsDao.findOrCreateOne();
@@ -82,6 +99,10 @@ public class IvrImpl implements FeatureProvider, AddressProvider, Ivr, ProcessPr
 
     public String getAudioFormat() {
         return getSettings().getAudioFormat();
+    }
+
+    public String getBackupHost() {
+        return getSettings().getBackupHost();
     }
 
     public CallPilotSettings getCallPilotSettings() {
@@ -254,6 +275,7 @@ public class IvrImpl implements FeatureProvider, AddressProvider, Ivr, ProcessPr
 
         ArchiveDefinition def = new ArchiveDefinition(ARCHIVE, m_archiveScript + " --backup %s",
             m_archiveScript + " --restore %s");
+        def.setBackupHost(getBackupHost());
         return Collections.singleton(def);
     }
 

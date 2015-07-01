@@ -46,7 +46,9 @@ import org.sipfoundry.sipxconfig.feature.FeatureChangeRequest;
 import org.sipfoundry.sipxconfig.feature.FeatureChangeValidator;
 import org.sipfoundry.sipxconfig.feature.FeatureListener;
 import org.sipfoundry.sipxconfig.feature.FeatureManager;
+import org.sipfoundry.sipxconfig.ivr.Ivr;
 import org.sipfoundry.sipxconfig.setting.Setting;
+import org.springframework.beans.factory.annotation.Required;
 
 public class BackupConfig implements ConfigProvider, FeatureListener {
     private static final Log LOG = LogFactory.getLog(BackupConfig.class);
@@ -54,17 +56,21 @@ public class BackupConfig implements ConfigProvider, FeatureListener {
     private static final String RESTORE = "restore";
     private BackupManager m_backupManager;
     private ConfigManager m_configManager;
+    private Ivr m_ivr;
     private boolean m_dirty;
 
     @Override
     public void replicate(ConfigManager manager, ConfigRequest request) throws IOException {
-        if (!request.applies(BackupManager.FEATURE) && !m_dirty) {
+        if (!request.applies(BackupManager.FEATURE, Ivr.FEATURE) && !m_dirty) {
             return;
         }
 
         BackupSettings settings = m_backupManager.getSettings();
         Collection<BackupPlan> plans = m_backupManager.getBackupPlans();
         List<Location> hosts = manager.getLocationManager().getLocationsList();
+
+        //save new default backup host if necessary
+        m_ivr.saveDefaultIvrBackupHost();
 
         writeCfConfig(manager.getGlobalDataDirectory(), hosts, settings);
 
@@ -103,8 +109,13 @@ public class BackupConfig implements ConfigProvider, FeatureListener {
                     //Write definition ids where backup should take place (we can have restore to take place on one node
                     //and backup on other node, therefore we need to check if backup command is not null,
                     //otherwise we might end up with duplicates)
-                    if (definition.getBackupCommand() != null) {
-                        cfg.write(StringUtils.replace(definition.getId(), ".", "_"), host.getAddress());
+                    //Host might be specified where the backup to run, if service is redundant (voicemail for example)
+                    String backupHost = definition.getBackupHost();
+                    LOG.debug("BACKUP CONFIG cf - backup host: " + backupHost);
+                    if (!StringUtils.isEmpty(definition.getBackupCommand())
+                        && (backupHost == null || backupHost.equals(host.getAddress()))) {
+                        cfg.write(StringUtils.replace(definition.getId(), ".", "_"),
+                            backupHost == null ? host.getAddress() : backupHost);
                     }
                 }
             }
@@ -121,7 +132,7 @@ public class BackupConfig implements ConfigProvider, FeatureListener {
         config.startStruct("hosts");
         final Set<ArchiveDefinition> configuredBackupArchives = new TreeSet<ArchiveDefinition>();
         final Set<ArchiveDefinition> configuredRestoreArchives = new TreeSet<ArchiveDefinition>();
-        for (Location host : hosts) {
+        for (final Location host : hosts) {
             Collection<ArchiveDefinition> possibleDefIds = m_backupManager.getArchiveDefinitions(host, plan, settings);
             final BackupRestore execBackupRestore = new BackupRestore();
             LOG.debug("BACKUP CONFIG - host: " + host.getFqdn() + " possible definitions: " + possibleDefIds);
@@ -130,13 +141,16 @@ public class BackupConfig implements ConfigProvider, FeatureListener {
                 public boolean evaluate(Object arg0) {
                     ArchiveDefinition def = (ArchiveDefinition) arg0;
                     String defId = def.getId();
+                    String backupHost = def.getBackupHost();
+                    LOG.debug("BACKUP CONFIG yaml - backup host: " + backupHost);
                     boolean selected = selectedDefIds.contains(defId);
                     LOG.debug("BACKUP CONFIG - is definition selected: " + def.getId() + " " + selected
                         + " already marked for backup " + configuredBackupArchives.contains(def)
                         + " already marked for restore " + configuredRestoreArchives.contains(def));
                     //at least one backup command
                     if (!execBackupRestore.isBackup(defId) && !StringUtils.isEmpty(def.getBackupCommand()) && selected
-                        && (!def.isSingleNodeBackup() || !configuredBackupArchives.contains(def))) {
+                        && (!def.isSingleNodeBackup() || !configuredBackupArchives.contains(def)
+                        && (backupHost == null || backupHost.equals(host.getAddress())))) {
                         execBackupRestore.setBackup(true, defId);
                         LOG.debug("BACKUP CONFIG - definition is selected for backup");
                     }
@@ -244,6 +258,11 @@ public class BackupConfig implements ConfigProvider, FeatureListener {
 
     public void setConfigManager(ConfigManager configManager) {
         m_configManager = configManager;
+    }
+
+    @Required
+    public void setIvr(Ivr ivr) {
+        m_ivr = ivr;
     }
 
     @Override
