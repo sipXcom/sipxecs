@@ -36,4 +36,6 @@ public interface Ivr {
     public void saveCallPilotSettings(CallPilotSettings settings);
 
     public String getAudioFormat();
+
+    public void saveDefaultIvrBackupHost();
 }

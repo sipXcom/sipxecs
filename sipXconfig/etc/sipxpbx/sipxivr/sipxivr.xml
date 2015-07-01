@@ -143,5 +143,11 @@
       </type>
       <value>false</value>
     </setting>
+    <setting name="ivr.backup_host">
+      <type>
+        <enum>
+        </enum>
+      </type>
+    </setting>
   </group>
 </model>

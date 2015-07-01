@@ -12,10 +12,12 @@ package org.sipfoundry.sipxconfig.ivr;
 import static org.junit.Assert.assertEquals;
 
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.easymock.classextension.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 import org.sipfoundry.sipxconfig.address.Address;
@@ -24,6 +26,7 @@ import org.sipfoundry.sipxconfig.apache.ApacheManager;
 import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.dialplan.attendant.AutoAttendantSettings;
 import org.sipfoundry.sipxconfig.domain.Domain;
+import org.sipfoundry.sipxconfig.feature.FeatureManager;
 import org.sipfoundry.sipxconfig.freeswitch.FreeswitchFeature;
 import org.sipfoundry.sipxconfig.im.ImManager;
 import org.sipfoundry.sipxconfig.restserver.RestServer;
@@ -41,14 +44,22 @@ public class IvrConfigTest {
     private Address m_imApi;
     private Address m_imbotApi;
     private Address m_fsEvent;
+    private FeatureManager m_featureManager;
 
     @Before
     public void setUp() {
         m_config = new IvrConfig();
+        m_featureManager = EasyMock.createMock(FeatureManager.class);
+        List<Location> locations = new ArrayList<Location>();
         m_location = TestHelper.createDefaultLocation();
+        locations.add(m_location);
+        m_featureManager.getLocationsForEnabledFeature(Ivr.FEATURE);
+        EasyMock.expectLastCall().andReturn(locations).anyTimes();
+        EasyMock.replay(m_featureManager);
         m_domain = new Domain("example.org");
         m_domain.setSipRealm("grapefruit");
         m_settings = new IvrSettings();
+        m_settings.setFeatureManager(m_featureManager);
         m_settings.setModelFilesContext(TestHelper.getModelFilesContext());
         m_restApi = new Address(RestServer.HTTP_API, "rest.example.org", 101);
         m_adminApi = new Address(AdminContext.HTTP_ADDRESS, "admin.example.org", 102);
@@ -62,6 +73,7 @@ public class IvrConfigTest {
         m_aaSettings.setSettingTypedValue("liveAttendant/dtmf/firstDigitTimeout", 10);
         m_aaSettings.setSettingTypedValue("liveAttendant/dtmf/interDigitTimeout", 1);
         m_aaSettings.setSettingTypedValue("liveAttendant/dtmf/extraDigitTimeout", 1);
+
     }
 
     @Test
