@@ -51,6 +51,7 @@
   <bean id="backupConfig" class="org.sipfoundry.sipxconfig.backup.BackupConfig">
     <property name="backupManager" ref="backupManager"/>
     <property name="configManager" ref="configManager"/>
+    <property name="ivr" ref="ivr" />
   </bean>
   
   <bean id="backupRunner" class="org.sipfoundry.sipxconfig.backup.BackupRunnerImpl">
