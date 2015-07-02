@@ -104,7 +104,8 @@ public class SnmpManagerImpl implements BeanFactoryAware, SnmpManager, FeaturePr
     public List<ServiceStatus> getServicesStatuses(Location location) {
         ProcessSnmpReader reader = new ProcessSnmpReader();
         try {
-            List<ServiceStatus> statuses = reader.read(location.getAddress());
+            String communityString = getSettings().getCommunityString();
+            List<ServiceStatus> statuses = reader.read(location.getAddress(), communityString);
             return statuses;
         } catch (IOException e) {
             throw new UserException("Could not get SNMP data", e);
