@@ -63,7 +63,7 @@ public class ProcessSnmpReader {
     private static final Log LOG = LogFactory.getLog(ProcessSnmpReader.class);
     private List<ServiceStatus> m_statuses;
 
-    public List<ServiceStatus> read(String address) throws IOException {
+    public List<ServiceStatus> read(String address, String communityString) throws IOException {
         m_statuses = new ArrayList<ServiceStatus>();
         LOG.info(format("Connecting to %s to get SNMP information", address));
         Address targetAddress = GenericAddress.parse(format("udp:%s/161", address));
@@ -71,7 +71,7 @@ public class ProcessSnmpReader {
         Snmp snmp = new Snmp(transport);
         transport.listen();
 
-        OctetString community = new OctetString("public");
+        OctetString community = new OctetString(communityString);
 
         CommunityTarget target = new CommunityTarget();
         target.setCommunity(community);
