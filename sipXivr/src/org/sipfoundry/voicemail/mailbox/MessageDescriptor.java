@@ -104,15 +104,18 @@ public class MessageDescriptor {
     }
 
     public Date getTimeStampDate() {
+        return getTimeStampDateUtil(m_timestamp);
+    }
 
+    public static Date getTimeStampDateUtil(String timestamp) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH);
         try {
-            return dateFormat.parse(m_timestamp);
+            return dateFormat.parse(timestamp);
         } catch (ParseException e) {
             // hmmm .. lets try the default locale (for backward compatibility)
             dateFormat = new SimpleDateFormat(DATE_FORMAT);
             try {
-                return dateFormat.parse(m_timestamp);
+                return dateFormat.parse(timestamp);
             } catch (ParseException e1) {
                 return null;
             }
