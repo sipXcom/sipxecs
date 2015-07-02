@@ -82,7 +82,7 @@
           </option>
         </enum>
       </type>
-      <value>0</value>
+      <value>0x1</value>
     </setting>
   </group>
   <group name="mwi_notification">
@@ -501,7 +501,7 @@
   <group name="callsecurity">
     <setting name="security_outgoing_srtp">
       <type refid="true-false" />
-      <value>true</value>
+      <value>false</value>
     </setting>    
   </group>
   
@@ -540,7 +540,7 @@
   <group name="xmpp-config">
     <setting name="configured">
       <type refid="true-false" />
-      <value>false</value>
+      <value>true</value>
     </setting>  
     <setting name="enabled">
       <type refid="true-false" />
