@@ -32,7 +32,7 @@ public class VcardWriter implements PhonebookWriter {
         String[] fields = entry.getFields();
 
         Formatter formatter = new Formatter(m_writer);
-        m_writer.write("BEGIN:vCard\n");
+        m_writer.write("BEGIN:VCARD\n");
         m_writer.write("VERSION:3.0\n");
         formatter.format("FN:%s %s\n", fields[0], fields[1]);
         formatter.format("N:%s;%s;;;\n", fields[1], fields[0]);
@@ -50,7 +50,7 @@ public class VcardWriter implements PhonebookWriter {
             formatter.format("ORG:%s;%s\n", fields[5], fields[4]);
             formatter.format("TITLE:%s\n", fields[3]);
         }
-        m_writer.write("END:vCard\n\n");
+        m_writer.write("END:VCARD\n\n");
     }
 
 }
