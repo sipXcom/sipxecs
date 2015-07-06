@@ -475,6 +475,7 @@
     <antcall target="openacd-custom-header" />
   	<antcall target="delete-verisign-crt-crt" />
     <antcall target="openacd-permission-constraint" />
+  	<antcall target="add-4.4-orbit-location" />
   </target>
 
   <target name="plugin-patches">
@@ -1445,6 +1446,9 @@
   </target>
   <target name="openacd-permission-constraint" unless="openacd-permission-constraint">
     <db-patch patch="openacd-permission-constraint"/>
+  </target>
+  <target name="add-4.4-orbit-location" unless="add-4.4-orbit-location">
+  	<db-patch patch="add-4.4-orbit-location" />
   </target>
 
   <!--
