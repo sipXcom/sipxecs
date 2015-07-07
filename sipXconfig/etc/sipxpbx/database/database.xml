@@ -476,6 +476,7 @@
   	<antcall target="delete-verisign-crt-crt" />
     <antcall target="openacd-permission-constraint" />
   	<antcall target="add-4.4-orbit-location" />
+  	<antcall target="update-expiration-time" />
   </target>
 
   <target name="plugin-patches">
@@ -1450,6 +1451,9 @@
   <target name="add-4.4-orbit-location" unless="add-4.4-orbit-location">
   	<db-patch patch="add-4.4-orbit-location" />
   </target>
+  <target name="update-expiration-time" unless="update-expiration-time">
+  	<mongodb-patch patch="update-expiration-time" />
+  </target>
 
   <!--
     - SUPPORT UTILITIES
@@ -1461,6 +1465,16 @@
       <sipx-sql>
         <transaction src="${sql.dir}/@{patch}.sql" />
       </sipx-sql>
+      <mark-patch-applied patch="@{patch}" />
+    </sequential>
+  </macrodef>
+
+  <macrodef name="mongodb-patch">
+    <attribute name="patch" />
+    <sequential>
+      <exec executable="mongo">
+        <arg line="${sql.dir}/@{patch}.js" />
+      </exec>
       <mark-patch-applied patch="@{patch}" />
     </sequential>
   </macrodef>
