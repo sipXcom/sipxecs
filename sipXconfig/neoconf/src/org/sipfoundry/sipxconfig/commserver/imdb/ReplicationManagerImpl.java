@@ -449,17 +449,19 @@ public class ReplicationManagerImpl extends SipxHibernateDaoSupport implements R
             long start = System.currentTimeMillis();
             Map<String, ReplicableProvider> beanMap = m_beanFactory.getBeansOfType(ReplicableProvider.class);
             for (ReplicableProvider provider : beanMap.values()) {
-                for (Replicable entity : provider.getReplicables()) {
-                    if (entity != null) {
-                        if (!entity.getDataSets().contains(ds)) { /*
-                                                                   * Callable used for the
-                                                                   * replication of members in a
-                                                                   * group
-                                                                   */
+                if (provider instanceof Proxy) {
+                    for (Replicable entity : provider.getReplicables()) {
+                        if (entity != null) {
+                            if (!entity.getDataSets().contains(ds)) { /*
+                                                                       * Callable used for the
+                                                                       * replication of members in a
+                                                                       * group
+                                                                       */
 
-                            continue;
+                                continue;
+                            }
+                            replicateEntity(entity);
                         }
-                        replicateEntity(entity);
                     }
                 }
             }
