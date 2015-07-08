@@ -120,8 +120,11 @@ ${s.ProfileName} =
 #if(${setting.ProfileName} == "voice_mail.number")
 ${setting.ProfileName}.${lastLineID} = $!{setting.Value}
 #elseif (${setting.ProfileName} == "label")
-#elseif (${setting.ProfileName} == "user_name")
+#elseif (${setting.ProfileName} == "display_name")
 account.${lastLineID}.label = $!{setting.Value}
+#elseif (${setting.ProfileName} == "user_name")
+#linekey.${lastLineID}.label = $!{setting.Value}
+
 account.${lastLineID}.user_name = $!{setting.Value}
 #else
 #if (${setting.name} == "codec")
@@ -140,7 +143,7 @@ account.${lastLineID}.sip_listen_port = 0
 #end
 
 #set ($lastLineID = $lastLineID + 1)
-#if (${lastLineID}<=${maxLineCount})
+#if (${lastLineID}<${maxLineCount})
 # Disable other lines
 #foreach($L in [${lastLineID}..${maxLineCount}])
 #set ($SLP = $L - 1)
@@ -164,12 +167,52 @@ account.${L}.backup_outbound_port = 0
 #end
 #end
 
+# overwrite empty linekeys at beginning
+#set ($lastLineID = $lastLineID - 1)
+#foreach($L in [1..${lastLineID}])
+linekey.${L}.line = ${L}
+linekey.${L}.type = 15
+linekey.${L}.value = 
+linekey.${L}.label = 
+linekey.${L}.pickup_value = 
+#end
+# add speeddials
+#set ($x = ${lastLineID} - 0)
+#foreach ($button in $cfg.SpeedDial)
+#set ($x = $x + 1)
+#if (!$button.Blf)
+#if (${x} < $phone.MaxDSSKeyCount)
+linekey.${x}.type = 13
+linekey.${x}.value = $button.Number
+linekey.${x}.label = $button.Label
+linekey.${x}.line = 1
+linekey.${x}.pickup_value = 
+#end
+#else
+linekey.${x}.type = 39
+linekey.${x}.line = 1
+linekey.${x}.value = 
+linekey.${x}.label = 
+linekey.${x}.pickup_value = 
+#end
+#end
+# Overwrite empty linekeys at end
+#set ($x = $x + 1)
+#foreach($L in [$x..$phone.MaxDSSKeyCount])
+linekey.${L}.line = 1
+linekey.${L}.type = 39
+linekey.${L}.value = 
+linekey.${L}.label = 
+linekey.${L}.pickup_value = 
+#end
+
 #Phone settings
 #phoneSetting($phone.Settings)
 
 #Downloads
-local_contact.data_photo_tar.url = $!{TFTPServer}yealink/Contacts/contacts.tar
+#local_contact.data_photo_tar.url = $!{TFTPServer}yealink/Contacts/contacts.tar
 favorite_setting.url = $!{TFTPServer}yealink/Contacts/favorites.xml
+directory_setting.url = $!{TFTPServer}yealink/Contacts/favorites.xml
 super_search.url = $!{TFTPServer}yealink/Contacts/search.xml
 #foreach ($f in $phone.RingTones)
 ringtone.url = $!{TFTPServer}yealink/RingTones/$!{f}
