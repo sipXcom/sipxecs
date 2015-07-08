@@ -40,6 +40,7 @@ public class ImbotConfiguration implements FreeSwitchConfigurationInterface {
     private String m_myAsstAcct;
     private String m_myAsstPswd;
     private String m_voicemailRootUrl;
+    private boolean m_hzEnabled;
 
     private static ImbotConfiguration s_current;
     private static File s_propertiesFile;
@@ -140,6 +141,7 @@ public class ImbotConfiguration implements FreeSwitchConfigurationInterface {
             m_myAsstPswd =  props.getProperty(prop = "imbot.paPassword");
             m_configUrl = props.getProperty(prop = "imbot.configUrl");
             m_voicemailRootUrl = props.getProperty("imbot.voicemailRootUrl");
+            m_hzEnabled = Boolean.valueOf(props.getProperty("imbot.hzEnabled"));
 
         } catch (Exception e) {
             System.err.println("Problem understanding property " + prop);
@@ -230,6 +232,10 @@ public class ImbotConfiguration implements FreeSwitchConfigurationInterface {
 
     public String getVoicemailRootUrl() {
         return m_voicemailRootUrl;
+    }
+
+    public boolean isHzEnabled() {
+        return m_hzEnabled;
     }
 
 	@Override

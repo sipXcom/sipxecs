@@ -103,6 +103,18 @@
       <type><boolean /></type>
       <value>0</value>
     </setting>
+    <setting name="SIPX_PROXY_DEFAULT_RTT" advanced="yes">
+      <type>
+        <integer min="100" max="500"/>
+      </type>
+      <value>100</value>
+    </setting>
+    <setting name="SIPX_PROXY_RETRANSMIT_TIMES" advanced="yes">
+      <type>
+        <integer min="2" max="7"/>
+      </type>
+      <value>4</value>
+    </setting>
     <setting name="SIPX_PROXY_HOP_BY_HOP_CANCEL">
       <type><boolean /></type>
       <value>0</value>

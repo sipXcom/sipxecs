@@ -30,8 +30,10 @@
 // EXTERNAL FUNCTIONS
 // EXTERNAL VARIABLES
 // CONSTANTS
-#define SIP_UDP_RESEND_TIMES 4          // Maximum number of times to send/resend messages via UDP
-#define SIP_TCP_RESEND_TIMES 4          // Maximum number of times to send/resend messages via TCP
+#define SIP_MAX_RESEND_TIMES 7 // Maximum allowable value for SIP_UDP_RESEND_TIMES and SIP_TCP_RESEND_TIMES
+#define SIP_MIN_RESEND_TIMES 2 // Minimum resend time value
+static int SIP_UDP_RESEND_TIMES = 4;          // Maximum number of times to send/resend messages via UDP
+static int SIP_TCP_RESEND_TIMES = 4;          // Maximum number of times to send/resend messages via TCP
 #define MIN_Q_DELTA_SQUARE 0.0000000001 // Smallest Q difference is 0.00001
 #define UDP_LARGE_MSG_LIMIT  1200       // spec says 1300, but we may have to add another via
 
@@ -42,6 +44,8 @@
 //#define TEST_PRINT
 //#define TEST_TOUCH
 //#define LOG_TRANSLOCK
+
+
 
 /* //////////////////////////// PUBLIC //////////////////////////////////// */
 UtlBoolean SipTransaction::enableTcpResend = FALSE;
@@ -4751,11 +4755,8 @@ void SipTransaction::cancel(SipUserAgent& userAgent,
                                MESSAGE_CANCEL);
             }
 
-            //if(mIsRecursing)
-            {
-                cancelChildren(userAgent,
-                               transactionList);
-            }
+            cancelChildren(userAgent,  transactionList);
+
         }
 
         // If this transaction has been initiated (i.e. request
@@ -4794,8 +4795,12 @@ void SipTransaction::cancelChildren(SipUserAgent& userAgent,
           }
           childTransaction->mCancelReasonValue.append(mCancelReasonValue.data());
        }
-       childTransaction->cancel(userAgent,
-                                transactionList);
+       
+       //
+       // childTransaction->cancel(userAgent,
+       //                         transactionList);
+       
+       userAgent.enqueueCancelMessage(childTransaction);
     }
 }
 
@@ -5329,6 +5334,15 @@ void SipTransaction::buildHash(const SipMessage& message,
     char cSeqString[20];
     sprintf(cSeqString, "%d", cSeq);
     hash.append(cSeqString);
+}
+
+void SipTransaction::buildHash(UtlBoolean isServerTransaction, UtlString& hash)
+{
+  hash = mCallId;
+  hash.append(isServerTransaction ? 's' : 'c');
+  char cSeqString[20];
+  sprintf(cSeqString, "%d", mCseq);
+  hash.append(cSeqString);
 }
 
 SipTransaction* SipTransaction::getTopMostParent() const
@@ -6174,6 +6188,42 @@ OsSocket::IpProtocolSocketType SipTransaction::getPreferredProtocol()
     return retProto;
 }
 
+void SipTransaction::setTcpResendTimes(int resendTimes)
+{
+  if (resendTimes > SIP_MAX_RESEND_TIMES)
+  {
+    resendTimes = SIP_MAX_RESEND_TIMES;
+  }
+  else if (resendTimes < SIP_MIN_RESEND_TIMES)
+  {
+    resendTimes = SIP_MIN_RESEND_TIMES;
+  }
+  
+  SIP_TCP_RESEND_TIMES = resendTimes;
+}
+int SipTransaction::getTcpResendTimes()
+{
+  return SIP_TCP_RESEND_TIMES;
+}
+
+void SipTransaction::setUdpResendTimes(int resendTimes)
+{
+  if (resendTimes > SIP_MAX_RESEND_TIMES)
+  {
+    resendTimes = SIP_MAX_RESEND_TIMES;
+  }
+  else if (resendTimes < SIP_MIN_RESEND_TIMES)
+  {
+    resendTimes = SIP_MIN_RESEND_TIMES;
+  }
+  
+  SIP_UDP_RESEND_TIMES = resendTimes;
+}
+
+int SipTransaction::getUdpResendTimes()
+{
+  return SIP_UDP_RESEND_TIMES;
+}
 
 /* //////////////////////////// PROTECTED ///////////////////////////////// */
 

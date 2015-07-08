@@ -46,7 +46,7 @@ bundle edit_line sipxcdr_callresolver_config {
     any::
       "$(sipx.SIPX_CFDATA)/$(sipx.location_id)/callresolver-config.part"
         insert_type => "file";
-      "SIP_CALLRESOLVER_DB_PASSWORD : $(sipx.NEW_POSTGRESQL_PASSWORD)";
+      'SIP_CALLRESOLVER_DB_PASSWORD : $(sipx.NEW_POSTGRESQL_PASSWORD)';
   delete_lines:
     any::
       ".*";

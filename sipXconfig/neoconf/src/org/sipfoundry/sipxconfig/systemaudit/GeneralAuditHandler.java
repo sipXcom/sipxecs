@@ -343,12 +343,14 @@ public class GeneralAuditHandler extends AbstractSystemAuditHandler {
         if (valueBefore != null) {
             configChangeValue.setValueBefore(getObjectName(valueBefore));
         } else {
-            configChangeValue.setValueBefore(getSettingDefaultValue(systemAuditable, valueKey));
+            String valueBeforeDefault = getSettingDefaultValue(systemAuditable, valueKey);
+            configChangeValue.setValueBefore(valueBeforeDefault);
         }
         if (valueAfter != null) {
             configChangeValue.setValueAfter(getObjectName(valueAfter));
         } else {
-            configChangeValue.setValueAfter(getSettingDefaultValue(systemAuditable, valueKey));
+            String valueAfterDefault = getSettingDefaultValue(systemAuditable, valueKey);
+            configChangeValue.setValueAfter(valueAfterDefault);
         }
         configChange.addValue(configChangeValue);
     }
@@ -363,13 +365,20 @@ public class GeneralAuditHandler extends AbstractSystemAuditHandler {
                 BeanWithSettings beanWithSettings = (BeanWithSettings) systemAuditable;
                 defaultValue = beanWithSettings.getSettingDefaultValue((String) valueKey);
             } else if (systemAuditable instanceof Group) {
-                User user = new User();
-                PermissionManager permissionManager = new PermissionManagerImpl();
-                m_modelFilesContext.loadModelFile("commserver/user-settings.xml");
-                permissionManager.setModelFilesContext(m_modelFilesContext);
-                user.setPermissionManager(permissionManager);
-                Setting groupSettings = ((Group) systemAuditable).inherhitSettingsForEditing(user);
-                defaultValue = groupSettings.getSetting((String) valueKey).getDefaultValue();
+                try {
+                    User user = new User();
+                    PermissionManager permissionManager = new PermissionManagerImpl();
+                    m_modelFilesContext
+                            .loadModelFile("commserver/user-settings.xml");
+                    permissionManager.setModelFilesContext(m_modelFilesContext);
+                    user.setPermissionManager(permissionManager);
+                    Setting groupSettings = ((Group) systemAuditable)
+                            .inherhitSettingsForEditing(user);
+                    defaultValue = groupSettings.getSetting((String) valueKey)
+                            .getDefaultValue();
+                } catch (NullPointerException npe) {
+                    return null;
+                }
             }
         }
         return defaultValue;

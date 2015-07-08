@@ -51,6 +51,11 @@ public class HzConfig implements ConfigProvider {
             return;
         }
 
+        if (!m_hzContext.isEnabled()) {
+            LOG.debug("Hazelcast config not enabled, no configuration to generate");
+            return;
+        }
+
         VelocityContext context = new VelocityContext();
 
         //ensure unique address
