@@ -7,7 +7,7 @@
 #
 #
 
-import time
+import calendar, datetime, time
 import os
 import sys
 import subprocess
@@ -78,7 +78,7 @@ def spread():
 			registrations.append(['URI', 'Expires', 'Instrument'])
 		
 		for item in results:
-			regexpire = int(item.get('expirationTime', 'undefined')) - int(time.time())
+			regexpire = int(calendar.timegm(item.get('expirationTime', 'undefined').timetuple())) - int(time.time())
 			
 			if options.expanded:
 				registrations.append([item.get('uri', 'undefined'), item.get('contact', 'undefined'), str(regexpire), item.get('instrument', 'undefined')])
