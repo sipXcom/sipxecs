@@ -151,7 +151,6 @@ any::
     <load module=\"mod_portaudio_stream\"/>
     <load module=\"mod_spidermonkey\"/>
     <load module=\"mod_lua\"/>
-    <load module=\"mod_flite\"/>
     <load module=\"mod_say_en\"/>
     <load module=\"mod_say_de\"/>
     <load module=\"mod_ivr\"/>

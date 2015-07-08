@@ -44,10 +44,11 @@ import org.springframework.beans.factory.annotation.Required;
 
 public class ImBotConfiguration implements ConfigProvider {
     private ImBot m_imbot;
+    private AdminContext m_adminContext;
 
     @Override
     public void replicate(ConfigManager manager, ConfigRequest request) throws IOException {
-        if (!request.applies(ImBot.FEATURE, LocalizationContext.FEATURE)) {
+        if (!request.applies(ImBot.FEATURE, LocalizationContext.FEATURE, AdminContext.FEATURE)) {
             return;
         }
         List<Location> restServerLocations = manager.getFeatureManager().getLocationsForEnabledFeature(
@@ -81,7 +82,7 @@ public class ImBotConfiguration implements ConfigProvider {
             File f = new File(manager.getLocationDataDirectory(location), "sipximbot.properties.part");
             Writer wtr = new FileWriter(f);
             try {
-                write(wtr, settings, domain, ivr, admin, rest, imApi);
+                write(wtr, settings, domain, ivr, admin, rest, imApi, m_adminContext.isHazelcastEnabled());
             } finally {
                 IOUtils.closeQuietly(wtr);
             }
@@ -89,8 +90,7 @@ public class ImBotConfiguration implements ConfigProvider {
     }
 
     protected static void write(Writer wtr, ImBotSettings settings, Domain domain, Address ivr, Address admin,
-        Address rest,
-            Address imApi) throws IOException {
+        Address rest, Address imApi, boolean hzEnabled) throws IOException {
         LoggerKeyValueConfiguration config = LoggerKeyValueConfiguration.equalsSeparated(wtr);
         config.write("imbot.locale", settings.getLocale());
         config.write("imbot.paUserName", settings.getPersonalAssistantImId() + '@' + domain.getName());
@@ -105,10 +105,15 @@ public class ImBotConfiguration implements ConfigProvider {
             config.write("imbot.openfireHost", domain.getNetworkName());
             config.write("imbot.openfireXmlRpcPort", imApi.getPort());
         }
+        config.write("imbot.hzEnabled", hzEnabled);
     }
 
     @Required
     public void setImbot(ImBot imbot) {
         m_imbot = imbot;
+    }
+
+    public void setAdminContext(AdminContext adminContext) {
+        m_adminContext = adminContext;
     }
 }

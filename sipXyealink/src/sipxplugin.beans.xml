@@ -214,6 +214,24 @@
 	</property>
 </bean>
 
+<bean id="yealinkPhoneSIPT48G" parent="yealinkModel">
+	<property name="label" value="Yealink SIP-T48G" />
+	<property name="name" value="T48" />
+	<property name="maxLineCount" value="6" />
+	<property name="maxDSSKeyCount" value="21" />
+	<property name="supportedFeatures">
+	    <set>
+		<value>hasHDSound</value>
+		<value>hasPhoneBook</value>
+		<value>hasRingTones</value>
+		<value>hasWallPapers</value>
+		<value>hasScreenSavers</value>
+		<value>hasExpansionPanels</value>
+		<value>hasLanguages</value>
+	    </set>
+	</property>
+</bean>
+
 <bean id="yealinkPhoneW52" parent="yealinkModel">
 	<property name="label" value="Yealink W52" />
 	<property name="name" value="W52" />

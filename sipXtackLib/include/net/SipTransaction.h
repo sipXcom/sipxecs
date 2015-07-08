@@ -199,6 +199,9 @@ public:
     static void buildHash(const SipMessage& message,
                           UtlBoolean isOutgoing,
                           UtlString& hash);
+    
+    void buildHash(       UtlBoolean isServerTransaction,
+                          UtlString& hash);
 
     SipTransaction* getTopMostParent() const;
 
@@ -334,7 +337,14 @@ public:
     UtlSList& childTransactions();
 
     bool isMarkedForDeletion() const;
+    
     void markForDeletion();
+    
+    static void setTcpResendTimes(int resendTimes);
+    static int getTcpResendTimes();
+    
+    static void setUdpResendTimes(int resendTimes);
+    static int getUdpResendTimes();
 /* //////////////////////////// PROTECTED ///////////////////////////////// */
 protected:
     void handleChildTimeoutEvent(SipTransaction& child,

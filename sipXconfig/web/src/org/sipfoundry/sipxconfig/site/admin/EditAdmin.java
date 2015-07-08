@@ -15,6 +15,7 @@
 package org.sipfoundry.sipxconfig.site.admin;
 
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.tapestry.annotations.Bean;
 import org.apache.tapestry.annotations.InjectObject;
 import org.apache.tapestry.event.PageBeginRenderListener;
@@ -63,6 +64,12 @@ public abstract class EditAdmin extends PageWithCallback implements PageBeginRen
     public void apply() {
         getSettings().setSettingTypedValue(USER_PORTAL_PATH,
                 BooleanUtils.toBoolean(getWebPortal(), OLD, NEW));
+        String password = getSettings().getPostgresPassword();
+        if (StringUtils.contains(password, '%') || StringUtils.contains(password, '\'') || StringUtils.contains(password, '/')
+            || StringUtils.contains(password, '\\') || StringUtils.contains(password, '`') ||
+            StringUtils.contains(password, ':') || StringUtils.contains(password, '\"') || StringUtils.contains(password, ' ')) {
+            throw new UserException(getMessages().getMessage("error.invalid.password"));
+        }
         try {
             // this is just to force validation
             getSettings().setCorsDomains(getSettings().getCorsDomains());

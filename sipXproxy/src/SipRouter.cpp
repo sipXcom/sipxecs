@@ -2215,7 +2215,7 @@ bool SipRouter::preprocessMessage(SipMessage& parsedMsg,
       std::vector<std::string> bindings;
       OSS::SIP::SIPContact::msgGetContacts(&msg, bindings);
 
-      if (bindings.empty())
+      if (bindings.empty() && (msg.isRequest("INVITE") || msg.isRequest("SUBSCRIBE")))
       {
         OS_LOG_WARNING(FAC_SIP, "Unable to parse any contact in message - \n" << msgText.data());
         return false;
