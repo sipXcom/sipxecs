@@ -67,6 +67,11 @@
 // Default expiry times (in seconds)
 #define DEFAULT_SIP_TRANSACTION_EXPIRES 180
 #define DEFAULT_SIP_SERIAL_EXPIRES 20
+#define DEFAULT_SIP_RETRAN 4
+#define SIP_MIN_RTT 100
+#define SIP_MAX_RTT 500
+#define SIP_MIN_RETRAN 2
+#define SIP_MAX_RETRAN 7
 
 #define EXIT_ON_TERMINATION true
 
@@ -101,7 +106,7 @@ int proxy()
     UtlString ipAddress;
 
     OsServiceOptions& osServiceOptions = SipXApplication::instance().getConfig();
-
+   
     OsSocket::getHostIp(&ipAddress);
 
     osServiceOptions.getOption(CONFIG_SETTING_BIND_IP, bindIp);
@@ -455,6 +460,51 @@ int proxy()
     }
 #endif // TEST_PRINT
     
+    int timerT1 = SIP_DEFAULT_RTT;
+    int sipRetran = DEFAULT_SIP_RETRAN;
+    
+    if (osServiceOptions.hasOption("SIPX_PROXY_DEFAULT_RTT"))
+    {
+      osServiceOptions.getOption("SIPX_PROXY_DEFAULT_RTT", timerT1);
+      if (timerT1 < SIP_MIN_RTT)
+      {
+        timerT1 = SIP_MIN_RTT;
+      }
+      else if (timerT1 > SIP_MAX_RTT)
+      {
+        timerT1 = SIP_MAX_RTT;
+      }
+      
+      OS_LOG_NOTICE(FAC_SIP,  "T1 Timer set by config.  Value: " << timerT1 << " ms");
+    }
+    else
+    {
+      OS_LOG_NOTICE(FAC_SIP,  "T1 Timer set to default.  Value: " << timerT1 << " ms");
+    }
+    
+    if (osServiceOptions.hasOption("SIPX_PROXY_RETRANSMIT_TIMES"))
+    {
+      osServiceOptions.getOption("SIPX_PROXY_RETRANSMIT_TIMES", sipRetran);
+      
+      if (sipRetran < SIP_MIN_RETRAN)
+      {
+        sipRetran = SIP_MIN_RETRAN;
+      }
+      else if (sipRetran > SIP_MAX_RETRAN)
+      {
+        sipRetran = SIP_MAX_RETRAN;
+      }
+      
+      SipTransaction::setTcpResendTimes(sipRetran);
+      SipTransaction::setUdpResendTimes(sipRetran);
+      
+      OS_LOG_NOTICE(FAC_SIP,  "Retransmit count set by config.  Value: " << sipRetran << " times");
+    }
+    else
+    {
+      OS_LOG_NOTICE(FAC_SIP,  "Retransmit count set to default.  Value: " << sipRetran << " times");
+    }
+    
     // Start the sip stack
     SipUserAgent* pSipUserAgent = new SipUserAgent(
         proxyTcpPort,
@@ -471,7 +521,7 @@ int proxy()
         NULL, // auth user IDs
         NULL, // auth passwords
         NULL, // line mgr
-        SIP_DEFAULT_RTT, // first resend timeout
+        timerT1, // first resend timeout
         FALSE, // default to proxy transaction
         SIPUA_DEFAULT_SERVER_UDP_BUFFER_SIZE, // socket layer read buffer size
         SIPUA_DEFAULT_SERVER_OSMSG_QUEUE_SIZE, // OsServerTask message queue size

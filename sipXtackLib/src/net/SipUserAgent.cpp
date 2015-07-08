@@ -56,6 +56,7 @@
 
 #include "net/HttpMessage.h"
 #include "net/SipMessage.h"
+#include "utl/UtlBlockingQueue.h"
 
 // EXTERNAL FUNCTIONS
 // EXTERNAL VARIABLES
@@ -70,6 +71,7 @@
 #define SIP_UA_LOG "sipuseragent.log"
 #define CONFIG_LOG_DIR SIPX_LOGDIR
 #define BOOL_ENABLE_MESSAGE_LOGGING TRUE
+#define MAx_CANCEL_QUEUE_SIZE 1024
 
 #ifndef  VENDOR
 # define VENDOR "sipXecs"
@@ -145,6 +147,8 @@ SipUserAgent::SipUserAgent(int sipTcpPort,
         , mbShuttingDown(FALSE)
         , mbShutdownDone(FALSE)
         , _maxTransactionCount(0)
+        , _cancelQueue(MAx_CANCEL_QUEUE_SIZE)
+        , _pCancelQueueThread(0)
 {
    Os::Logger::instance().log(FAC_SIP, PRI_DEBUG,
                  "SipUserAgent[%s]::_ sipTcpPort = %d, sipUdpPort = %d, "
@@ -380,6 +384,14 @@ SipUserAgent::SipUserAgent(int sipTcpPort,
     // How long before we expire transactions by default
     mDefaultExpiresSeconds = DEFAULT_SIP_TRANSACTION_EXPIRES;
     mDefaultSerialExpiresSeconds = DEFAULT_SIP_SERIAL_EXPIRES;
+    
+    
+    OS_LOG_NOTICE(FAC_SIP, "SIP Timer Values - "
+      << " mUnreliableTransportTimeoutMs : " << mUnreliableTransportTimeoutMs 
+      << " mMaxResendTimeoutMs : " << mMaxResendTimeoutMs
+      << " mTransactionStateTimeoutMs : " << mTransactionStateTimeoutMs
+      << " mDefaultExpiresSeconds : " << mDefaultExpiresSeconds
+      << " mDefaultSerialExpiresSeconds : " << mDefaultSerialExpiresSeconds);
 
     // Construct the default Contact header value.
     {
@@ -462,6 +474,11 @@ SipUserAgent::SipUserAgent(int sipTcpPort,
     cacheLocalAddress();
 
     mSipTransactions.runGarbageCollection();
+    
+    //
+    // Start the cancel queue
+    //
+    _pCancelQueueThread = new boost::thread(boost::bind(&SipUserAgent::handleCancelQueue, this));
 }
 
 // Copy constructor NOT ALLOWED
@@ -470,6 +487,17 @@ SipUserAgent::SipUserAgent(int sipTcpPort,
 // Destructor
 SipUserAgent::~SipUserAgent()
 {
+    //
+    // Stop the cancel queue
+    // 
+    if (_pCancelQueueThread)
+    {
+      _cancelQueue.terminate();
+      _pCancelQueueThread->join();
+      delete _pCancelQueueThread;
+      _pCancelQueueThread = 0;
+    }
+    
     mpTimer->stop();
     delete mpTimer;
     mpTimer = NULL;
@@ -4348,6 +4376,71 @@ void SipUserAgent::onFinalResponse(SipTransaction* pTransaction, const SipMessag
 {
   if (_finalResponseHandler)
     _finalResponseHandler(pTransaction, request, finalResponse);
+}
+
+
+void SipUserAgent::enqueueCancelMessage(SipTransaction* pTransaction)
+{
+  TransactionInfo* pTransactionInfo = new TransactionInfo();
+  pTransactionInfo->ptr = pTransaction;
+  pTransaction->buildHash(FALSE, pTransactionInfo->hash);
+  
+  OS_LOG_INFO(FAC_SIP, "SipUserAgent::enqueueCancelMessage - " << pTransactionInfo->hash.data());
+  
+  _cancelQueue.enqueue(pTransactionInfo);
+}
+
+void SipUserAgent::handleCancelQueue()
+{
+  OS_LOG_NOTICE(FAC_SIP, "SipUserAgent::handleCancelQueue - STARTED");
+  while (true)
+  {   
+    //
+    // We are all good.  Dispatch this message
+    //
+   
+    TransactionInfo* pTransactionInfo = 0;
+    if (!_cancelQueue.dequeue(pTransactionInfo))
+    {
+      OS_LOG_NOTICE(FAC_SIP, "SipUserAgent::handleCancelQueue - Exiting");
+      break;
+    }
+    
+    if (!pTransactionInfo)
+    {
+      OS_LOG_NOTICE(FAC_SIP, "SipUserAgent::handleCancelQueue - Got NULL transaction info");
+      continue;
+    }
+    
+    if (!pTransactionInfo->ptr)
+    {
+      OS_LOG_NOTICE(FAC_SIP, "SipUserAgent::handleCancelQueue - Got NULL transaction pointer");
+      continue;
+    }
+    
+    OS_LOG_INFO(FAC_SIP, "SipUserAgent::handleCancelQueue - processing " << pTransactionInfo->hash.data());
+    
+    //
+    // lock the transaction
+    //
+    if (mSipTransactions.waitUntilAvailable(pTransactionInfo->ptr, pTransactionInfo->hash))
+    {
+      //
+      // Cancel the child transaction
+      //
+      pTransactionInfo->ptr->cancel(*this, mSipTransactions);
+
+
+      //
+      // Unlock the transaction before we go
+      //
+      mSipTransactions.markAvailable(*(pTransactionInfo->ptr));
+    }
+
+    delete pTransactionInfo;
+  }
+  
+  OS_LOG_NOTICE(FAC_SIP, "SipUserAgent::handleCancelQueue - TERMINATED");
 }
 
 

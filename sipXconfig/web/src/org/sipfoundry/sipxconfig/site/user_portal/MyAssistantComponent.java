@@ -24,6 +24,7 @@ import org.apache.tapestry.annotations.ComponentClass;
 import org.apache.tapestry.annotations.InjectObject;
 import org.apache.tapestry.annotations.Parameter;
 import org.apache.tapestry.valid.ValidatorException;
+import org.sipfoundry.sipxconfig.admin.AdminContext;
 import org.sipfoundry.sipxconfig.common.CoreContext;
 import org.sipfoundry.sipxconfig.common.User;
 import org.sipfoundry.sipxconfig.components.SipxValidationDelegate;
@@ -52,6 +53,9 @@ public abstract class MyAssistantComponent extends BaseComponent {
     @InjectObject(value = "spring:imBotManager")
     public abstract ImBotManager getImBotManager();
 
+    @InjectObject(value = "spring:adminContext")
+    public abstract AdminContext getAdminContext();
+
     @Bean
     public abstract SipxValidationDelegate getValidator();
 
@@ -67,6 +71,12 @@ public abstract class MyAssistantComponent extends BaseComponent {
     }
 
     public void onEnablePA() {
+
+        if (!getAdminContext().isHazelcastEnabled()) {
+            LOG.warn("Request to Add My Assistant To Roster failed, Hazelcast not enabled");
+            recordFailure(FAILURE_MSG);
+        }
+
         Future<Object> future = getImBotManager().requestToAddMyAssistantToRoster(getUser().getName());
         try {
             if ((Boolean) future.get(30, TimeUnit.SECONDS)) {

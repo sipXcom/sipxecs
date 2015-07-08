@@ -56,6 +56,11 @@ OsTaskLinux::~OsTaskLinux()
    waitUntilShutDown();
 }
 
+UtlBoolean OsTaskLinux::initialize(void *pArg)
+{
+  return TRUE;
+}
+
 void OsTaskLinux::ackShutdown()
 {
    // the task thread is done - we can now get rid of it.
@@ -700,9 +705,19 @@ void * OsTaskLinux::taskEntry(void* arg)
    // start is done, so now we can let the OsTask::run method execute.
    pTask->mDataGuard.release();
 
-   // Run the code the task is supposed to run, namely the run()
-   // method of its class.
-   pTask->run(pTask->getArg());
+   // call the initialization routine of the task
+   if (pTask->initialize(pTask->getArg()))
+   {
+     // Run the code the task is supposed to run, namely the run()
+     // method of its class.
+     pTask->run(pTask->getArg());
+   }
+   else
+   {
+     Os::Logger::instance().log(FAC_KERNEL, PRI_ERR,
+                   "OsTaskLinux::taskEntry '%s' failed to initialize",
+                   pTask->mName.data());
+   }
 
    // The thread has completed now, so clean up and signal the destructor
    pTask->ackShutdown();

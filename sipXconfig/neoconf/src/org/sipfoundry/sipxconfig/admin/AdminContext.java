@@ -57,4 +57,7 @@ public interface AdminContext {
     boolean isSystemAuditEnabled();
 
     String getNewLdapUserGroupNamePrefix();
+
+    boolean isHazelcastEnabled();
+
 }

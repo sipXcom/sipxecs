@@ -172,6 +172,13 @@ std::size_t OsServiceOptions::hasOption(const std::string& optionName, OptionTyp
     if (ct && pOptionType)
       *pOptionType = ConfigOption;
   }
+  
+  if (!ct)
+  {
+    ct = _unregisteredOptions.count(optionName);
+    if (ct && pOptionType)
+      *pOptionType = ConfigOption;
+  }
 
   return ct;
 }

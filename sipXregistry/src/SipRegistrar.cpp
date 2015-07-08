@@ -182,6 +182,10 @@ int SipRegistrar::run(void* pArg)
             // from here on, everything happens in handleMessage
             taskResult = OsServerTask::run(pArg);
          }
+         else
+         {
+           Os::Logger::instance().log(FAC_SIP, PRI_EMERG, "SipRegistrar::run Unable to initialize server");
+         }
       }
    }
    else

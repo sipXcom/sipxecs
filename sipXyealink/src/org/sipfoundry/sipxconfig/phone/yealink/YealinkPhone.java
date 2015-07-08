@@ -74,7 +74,7 @@ import org.sipfoundry.sipxconfig.upload.yealink.YealinkUpload;
 public class YealinkPhone extends Phone {
     public static final String BEAN_ID = "yealink";
     private static final Log LOG = LogFactory.getLog(YealinkPhone.class);
-    private static final String SIPT46_PATTERN = "yealinkPhoneSIPT46.*";
+    private static final String SIPT46_PATTERN = "yealinkPhoneSIPT4[6-8].*";
     private static final String SIPT412_PATTERN = "yealinkPhoneSIPT4[12].*";
     private static final String SIPT4_PATTERN = "yealinkPhoneSIPT4.*";
     private static final String SIPT13_PATTERN = "yealinkPhoneSIPT[1-3].*";
