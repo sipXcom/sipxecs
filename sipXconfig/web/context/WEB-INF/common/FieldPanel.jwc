@@ -11,6 +11,7 @@
   <parameter name="defaultValue" required="no"/>
   <parameter name="description" required="no"/>
   <parameter name="highlight" required="no"/>
+  <parameter name="leftColumnWidth" required="no"/>
 
   <component id="settingLabel" type="FieldLabel">
     <binding name="field" value="field"/>
@@ -31,5 +32,8 @@
   </component>
   <component id="highlightStyle" type="Any">
     <binding name="class" value="highlight ? 'highlight' : ''"/>
+  </component>
+  <component id="settingLabelColumn" type="Any">
+    <binding name="width" value="leftColumnWidth ? 'leftColumnWidth' : '25%'"/>
   </component>
 </component-specification>
