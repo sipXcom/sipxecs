@@ -477,6 +477,7 @@
     <antcall target="openacd-permission-constraint" />
   	<antcall target="add-4.4-orbit-location" />
   	<antcall target="update-expiration-time" />
+  	<antcall target="openacd-permission-update" />
   </target>
 
   <target name="plugin-patches">
@@ -1453,6 +1454,9 @@
   </target>
   <target name="update-expiration-time" unless="update-expiration-time">
   	<mongodb-patch patch="update-expiration-time" />
+  </target>
+  <target name="openacd-permission-update" unless="openacd-permission-update">
+  	<db-patch patch="openacd-permission-update"/>
   </target>
 
   <!--
