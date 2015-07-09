@@ -185,7 +185,10 @@ public class CsvRowInserter extends RowInserter<String[]> {
         // disable user email notification
         user.setNotified(true);
 
-        Index.PIN.setProperty(user, row);
+        String pin = Index.PIN.get(row);
+        if (!StringUtils.isEmpty(pin)) {
+            Index.PIN.setProperty(user, row);
+        }
         String voicemailPin = Index.VOICEMAIL_PIN.get(row);
         if (!StringUtils.isEmpty(voicemailPin)) {
             if (isHashed(voicemailPin)) {
@@ -198,7 +201,10 @@ public class CsvRowInserter extends RowInserter<String[]> {
         Index.FIRST_NAME.setProperty(user, row);
         Index.LAST_NAME.setProperty(user, row);
         Index.ALIAS.setProperty(user, row);
-        Index.SIP_PASSWORD.setProperty(user, row);
+        String sipPassword = Index.SIP_PASSWORD.get(row);
+        if (!StringUtils.isEmpty(sipPassword)) {
+            Index.SIP_PASSWORD.setProperty(user, row);
+        }
         Index.SALUTATION.setProperty(user, row);
         Index.MANAGER.setProperty(user, row);
         Index.EMPLOYEE_ID.setProperty(user, row);

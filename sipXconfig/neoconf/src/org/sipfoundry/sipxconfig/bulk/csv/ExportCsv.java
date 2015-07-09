@@ -117,14 +117,17 @@ public class ExportCsv {
     void exportUser(SimpleCsvWriter csv, String[] row, User user) throws IOException {
         Index.USERNAME.set(row, user.getUserName());
 
-        Index.SIP_PASSWORD.set(row, user.getSipPassword());
         Index.FIRST_NAME.set(row, user.getFirstName());
         Index.LAST_NAME.set(row, user.getLastName());
         Index.ALIAS.set(row, user.getAliasesString());
         Index.USER_GROUP.set(row, user.getGroupsNames());
         Index.EMAIL.set(row, user.getEmailAddress());
 
-        Index.PIN.set(row, user.getPintoken());
+        if (!user.isAdmin()) {
+            Index.SIP_PASSWORD.set(row, user.getSipPassword());
+            Index.PIN.set(row, user.getPintoken());
+        }
+
         Index.VOICEMAIL_PIN.set(row, user.getVoicemailPintoken());
         // XMPP
         Index.IM_ID.set(row, user.getImId());
