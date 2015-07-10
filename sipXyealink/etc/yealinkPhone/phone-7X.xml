@@ -259,7 +259,7 @@
 	<!--// Specify the web language, the valid values are: English, Chinese_S, Turkish, Portuguese, Spanish, Italian, French, Russian, Deutsch and Czech. //-->
 	<setting name="lang.wui"><type refid="WebLanguage_type"/><value>English</value></setting>
 	<!--// Specify the LCD language, the valid values are: English (default), Chinese_S, Chinese_T, German, French, Turkish, Italian, Polish, Spanish and Portuguese. lang.gui = English //-->
-	<setting name="lang.gui" advanced="yes" if="yealinkPhone(SIPT|VP).*"><type refid="LcdLanguage_type"/><string/></type><value>English</value></setting>
+	<setting name="lang.gui" advanced="yes" if="yealinkPhone(SIPT|VP).*"><type refid="LcdLanguage_type"><string/></type><value>English</value></setting>
 	<!--// 
 	#######################################################################################
 	##            Configure the access  URL of language file                             ##
