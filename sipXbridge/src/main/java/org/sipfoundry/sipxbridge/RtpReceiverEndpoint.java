@@ -101,16 +101,16 @@ class RtpReceiverEndpoint implements SymEndpointInterface {
              * Filter the codecs to the allow set. This filter is applied only for
              * audio codecs.
              */
-            this.sessionDescription = SipUtilities.cleanSessionDescription(sessionDescription);
+            sessionDescription = SipUtilities.cleanSessionDescription( sessionDescription ); 
             
             /*
              * draft-ietf-sipping-sip-offeranswer-08 section 5.2.5 makes it clear that a UA cannot
              * change the session id field of the o-line when making a subsequent offer/answer.
              * We use the same Origin field for all interactions.
              */
-            this.sessionDescription.setOrigin(origin);
+            sessionDescription.setOrigin(origin);
             SipUtilities.fixupSdpMediaAddresses(sessionDescription, address, this.getPort());
-            
+            this.sessionDescription = SipUtilities.cloneSessionDescription(sessionDescription);
 
             if ( logger.isDebugEnabled() ) {
                  logger.debug("sessionDescription after fixup : " + sessionDescription);
