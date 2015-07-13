@@ -56,6 +56,7 @@
     <param name="rtp-timeout-sec" value="$settings.getSetting('FREESWITCH_RTP_TIMEOUT').Value"/>
     <param name="rtp-hold-timeout-sec" value="1800"/>
     <param name="enable-3pcc" value="true"/>
+    <param name="inbound-use-callid-as-uuid" value="$settings.getSetting('FREESWITCH_USE_CALL_ID_AS_UUID_INBOUND').Value"/>
 
     <!-- TLS: disabled by default, set to "true" to enable -->
     <param name="tls" value="$${external_ssl_enable}"/>
