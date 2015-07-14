@@ -63,10 +63,16 @@ public class FaxRx extends SipxIvrApp {
         }
 
         finally {
-            m_faxProcessor.queueFaxProcessing(user, faxPathName, faxReceive.getRemoteStationId(),
-                    controller.getChannelCallerIdName(), controller.getChannelCallerIdNumber(),
-                    faxReceive.faxTotalPages(), faxReceive.rxSuccess(), faxReceive.getResultCode(),
-                    faxReceive.getResultText());
+            if (faxReceive != null) {
+                m_faxProcessor.queueFaxProcessing(user, faxPathName, faxReceive.getRemoteStationId(),
+                        controller.getChannelCallerIdName(), controller.getChannelCallerIdNumber(),
+                        faxReceive.faxTotalPages(), faxReceive.rxSuccess(), faxReceive.getResultCode(),
+                        faxReceive.getResultText());
+            } else {
+                m_faxProcessor.queueFaxProcessing(user, faxPathName, null,
+                        controller.getChannelCallerIdName(), controller.getChannelCallerIdNumber(),
+                        0, false, "", "FaxReceive: failed to receive fax.");
+            }
         }
     }
 
