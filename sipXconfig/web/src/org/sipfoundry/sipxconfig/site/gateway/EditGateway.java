@@ -236,6 +236,9 @@ public abstract class EditGateway extends PageWithCallback implements PageBeginR
         Gateway gateway = getGateway();
         gateway.addPort(new FxoPort());
         getGatewayContext().saveGateway(gateway);
+        // need to fetch the gateway again, after the save operation
+        gateway = getGatewayContext().getGateway(gateway.getId());
+        setGateway(gateway);
         int last = gateway.getPorts().size() - 1;
         FxoPort port = gateway.getPorts().get(last);
 
