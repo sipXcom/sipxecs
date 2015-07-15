@@ -74,7 +74,7 @@
         <value>h263_1998</value>
       </option>
       <option>
-        <value>h264</value>
+        <value>h263</value>
       </option>          
     </multi-enum>
   </type>
@@ -445,7 +445,7 @@
     <group name="video_codecs">
       <setting name="videoCodecs">
         <type refid="preffered-video-codecs-type"/>
-        <value>h263</value>
+        <value>h264</value>
       </setting>
     </group>
     <group name="general_settings">
