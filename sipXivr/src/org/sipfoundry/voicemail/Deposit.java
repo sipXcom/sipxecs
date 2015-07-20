@@ -177,6 +177,8 @@ public class Deposit extends AbstractVmAction implements ApplicationContextAware
                             }
                             // Message was too short. Don't save the message.
                             tempMessage.setIsToBeStored(false);
+                            // Delete temp message if it is too short
+                            m_mailboxManager.deleteTempMessage(tempMessage);
 
                             // "Sorry, your message was too short and was not delivered."
                             play("msg_too_short", "");
