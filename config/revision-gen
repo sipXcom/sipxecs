@@ -24,7 +24,7 @@ if test -d ../.git; then
 fi
 
 VERSION=$1
-if [ $VERSION == "15.08" ]; then
+if [ $VERSION == "15.10" ]; then
     VERSION="4.6.0"
 fi
 if [ $VERSION == "15.06" ]; then
