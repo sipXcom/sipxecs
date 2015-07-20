@@ -77,6 +77,7 @@
           <param name="username" value="~media-user"/>
           <param name="password" value="p4ssw0rd"/>
           <param name="register" value="false"/>
+          <param name="outbound-use-uuid-as-callid" value="true"/>
         </gateway>
       </gateways>
 </profile>

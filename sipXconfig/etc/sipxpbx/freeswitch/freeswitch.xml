@@ -106,6 +106,10 @@
       <type refid="true-false"/>
       <value>true</value>
     </setting>
+    <setting name="FREESWITCH_USE_CALL_ID_AS_UUID_OUTBOUND">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>
     <setting name="FREESWITCH_SIP_DEBUG">
       <type>
         <boolean>
