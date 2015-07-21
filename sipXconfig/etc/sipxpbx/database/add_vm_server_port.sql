@@ -1,0 +1,1 @@
+alter table internal_dialing_rule add column media_server_port integer;
