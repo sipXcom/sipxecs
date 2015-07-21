@@ -478,6 +478,7 @@
   	<antcall target="add-4.4-orbit-location" />
   	<antcall target="update-expiration-time" />
   	<antcall target="openacd-permission-update" />
+  	<antcall target="add_vm_server_port" />
   </target>
 
   <target name="plugin-patches">
@@ -1458,6 +1459,9 @@
   <target name="openacd-permission-update" unless="openacd-permission-update">
   	<db-patch patch="openacd-permission-update"/>
   </target>
+  <target name="add_vm_server_port" unless="add_vm_server_port">
+  	<db-patch patch="add_vm_server_port"/>
+  </target>	
 
   <!--
     - SUPPORT UTILITIES
