@@ -1,4 +1,4 @@
-BEGIN:vCard
+BEGIN:VCARD
 VERSION:3.0
 FN:Michael Jordan
 N:Jordan;Michael;;;
@@ -12,16 +12,16 @@ EMAIL;TYPE=PREF:test@test.com
 EMAIL:alt@test.com
 ORG:NBA;
 TITLE:Mr.
-END:vCard
+END:VCARD
 
-BEGIN:vCard
+BEGIN:VCARD
 VERSION:3.0
 FN:Teemu Selanne
 N:Selanne;Teemu;;;
 TEL;TYPE=WORK:789
-END:vCard
+END:VCARD
 
-BEGIN:vCard
+BEGIN:VCARD
 VERSION:3.0
 FN:Saku Koivu
 N:Koivu;Saku;;;
@@ -35,9 +35,9 @@ EMAIL;TYPE=PREF:
 EMAIL:
 ORG:;
 TITLE:
-END:vCard
+END:VCARD
 
-BEGIN:vCard
+BEGIN:VCARD
 VERSION:3.0
 FN:Eric Staal
 N:Staal;Eric;;;
@@ -51,5 +51,5 @@ EMAIL;TYPE=PREF:
 EMAIL:
 ORG:;
 TITLE:
-END:vCard
+END:VCARD
 
