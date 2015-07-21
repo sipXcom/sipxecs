@@ -40,6 +40,8 @@ public abstract class YealinkConstants {
     public static final String AUTH_ID_V6X_SETTING = "account/AuthName";
     public static final String AUTH_ID_V7X_SETTING = "basic/auth_name";
     public static final String DISPLAY_NAME_V6X_SETTING = "account/DisplayName";
+    public static final String LABEL_V6X_SETTING = "account/Label";
+    public static final String LABEL_V7X_SETTING = "basic/label";
     public static final String DISPLAY_NAME_V7X_SETTING = "basic/display_name";
     public static final String PASSWORD_V6X_SETTING = "account/password";
     public static final String PASSWORD_V7X_SETTING = "basic/password";
