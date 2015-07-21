@@ -66,15 +66,15 @@ public class MappingRulesTest extends XMLTestCase {
     public MappingRulesTest() {
         XmlUnitHelper.setNamespaceAware(false);
         XMLUnit.setIgnoreWhitespace(true);
-    }    
-    
+    }
+
     public void setUp() {
         TestHelper.initDefaultDomain();
         m_out = new MappingRules();
         m_out.setDomainName("example.org");
         Location l = TestHelper.createDefaultLocation();
         m_out.setLocation(l);
-        
+
         m_addressManager = createMock(AddressManager.class);
         m_addressManager.getSingleAddress(Rls.TCP_SIP, l);
         expectLastCall().andReturn(new Address(Rls.TCP_SIP, "192.168.1.5", 9906)).anyTimes();
@@ -85,7 +85,7 @@ public class MappingRulesTest extends XMLTestCase {
         m_addressManager.getSingleAddress(FreeswitchFeature.SIP_ADDRESS);
         expectLastCall().andReturn(new Address(FreeswitchFeature.SIP_ADDRESS, "192.168.1.1", 102)).anyTimes();
         replay(m_addressManager);
-        
+
         m_out.setAddressManager(m_addressManager);
     }
 
@@ -308,11 +308,60 @@ public class MappingRulesTest extends XMLTestCase {
         assertEquals(IOUtils.toString(referenceXmlStream, "UTF-8"), generatedXml);
         EasyMock.verify(lc);
     }
-    
+
+    public void testVoicemailRulesPort() throws Exception {
+        int extension = 3;
+        List<DialingRule> rules = new ArrayList<DialingRule>();
+        AutoAttendant aa = new AutoAttendant();
+        aa.setSystemId(AutoAttendant.OPERATOR_ID);
+        aa.setName("Operator");
+        aa.resetToFactoryDefault();
+        rules.add(new MohRule("192.168.1.5:9905", "~~mh~u"));
+        rules.add(new RlsRule());
+
+        LocalizationContext lc = EasyMock.createNiceMock(LocalizationContext.class);
+
+        FreeswitchMediaServer mediaServer = new FreeswitchMediaServer();
+        mediaServer.setAddressManager(m_addressManager);
+        //FreeswitchMediaServerTest.configureMediaServer(mediaServer);
+
+        mediaServer.setLocalizationContext(lc);
+        MediaServer exchangeMediaServer = new ExchangeMediaServer("exchange.example.com", "102");
+        exchangeMediaServer.setPort(8090);
+        exchangeMediaServer.setLocalizationContext(lc);
+
+        EasyMock.replay(lc);
+
+        rules.add(new MappingRule.LiveAttendantManagement(mediaServer, "123456", "*87", "*88", null));
+        rules.add(new MappingRule.Operator(aa, "100", new String[] {
+            "operator", "0"
+        }, mediaServer));
+        rules.add(new MappingRule.Voicemail("101", "+123456789", mediaServer));
+        rules.add(new MappingRule.Voicemail("102",null, exchangeMediaServer));
+        rules.add(new MappingRule.VoicemailTransfer("2", extension, mediaServer));
+        rules.add(new MappingRule.VoicemailTransfer("2", extension, exchangeMediaServer));
+        rules.add(new MappingRule.VoicemailFallback(mediaServer));
+        rules.add(new MappingRule.VoicemailFallback(exchangeMediaServer));
+        rules.add(new VoicemailRedirectRule());
+
+        m_out.begin();
+        for (DialingRule rule : rules) {
+            m_out.generate(rule);
+        }
+        m_out.end();
+        m_out.setLocation(TestHelper.createDefaultLocation());
+        String generatedXml = toString(m_out);
+
+        InputStream referenceXmlStream = getClass().getResourceAsStream("mappingrules-multiple-servers-port.test.xml");
+
+        assertEquals(IOUtils.toString(referenceXmlStream, "UTF-8"), generatedXml);
+        EasyMock.verify(lc);
+    }
+
     private String toString(MappingRules rules) throws IOException {
         StringWriter wtr = new StringWriter();
-        rules.write(wtr);        
-        return wtr.toString();        
+        rules.write(wtr);
+        return wtr.toString();
     }
 
     public void testHostPatternProvider() throws Exception {
