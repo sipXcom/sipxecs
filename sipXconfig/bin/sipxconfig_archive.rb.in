@@ -182,6 +182,9 @@ class Restore < ArchiveBase
     sql_exec(@restoredb, "select change_primary_ip_on_restore('#{params[:ipaddress]}');") or
       raise "Failed to update ip address."
 
+    sql_exec(@restoredb, "update park_orbit set location_id=(select location_id from location where primary_location=true) WHERE location_id IS NULL;") or
+      raise "Failed to update park orbit locations."
+
     cmd "#{@initd}/sipxconfig stop" if params[:restart]
     cmd "dropdb -U #{@pguser} #{@db}"
     # alter database command need double quotes if db name is capitalized. Also, first set of double
