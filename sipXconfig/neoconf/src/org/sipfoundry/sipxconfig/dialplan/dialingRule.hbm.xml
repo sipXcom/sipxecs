@@ -67,6 +67,7 @@
       <property name="voiceMailPrefix" />
       <property name="mediaServerType" />
       <property name="mediaServerHostname" />
+      <property name="mediaServerPort" />
     </joined-subclass>
 
     <joined-subclass name="InternationalRule" table="international_dialing_rule">
