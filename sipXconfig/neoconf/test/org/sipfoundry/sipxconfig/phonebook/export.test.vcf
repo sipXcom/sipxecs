@@ -1,18 +1,18 @@
-BEGIN:vCard
+BEGIN:VCARD
 VERSION:3.0
 FN:Jean Luc Picard
 N:Picard;Jean Luc;;;
 TEL;TYPE=WORK:1234
-END:vCard
+END:VCARD
 
-BEGIN:vCard
+BEGIN:VCARD
 VERSION:3.0
 FN:Luke Skywalker
 N:Skywalker;Luke;;;
 TEL;TYPE=WORK:1235
-END:vCard
+END:VCARD
 
-BEGIN:vCard
+BEGIN:VCARD
 VERSION:3.0
 FN:Frank Dawson
 N:Dawson;Frank;;;
@@ -26,5 +26,5 @@ EMAIL;TYPE=PREF:Frank_Dawson@Lotus.com
 EMAIL:fdawson@earthlink.net
 ORG:Lotus Development Corporation;IT Dept
 TITLE:Senior Programmer
-END:vCard
+END:VCARD
 
