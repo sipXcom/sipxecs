@@ -37,7 +37,9 @@ public class YealinkLineDefaults {
 
     @SettingEntry(paths = {
             YealinkConstants.USER_ID_V6X_SETTING,
-            YealinkConstants.USER_ID_V7X_SETTING
+            YealinkConstants.USER_ID_V7X_SETTING,
+            YealinkConstants.LABEL_V6X_SETTING,
+            YealinkConstants.LABEL_V7X_SETTING
             })
     public String getUserName() {
         String userName = null;
