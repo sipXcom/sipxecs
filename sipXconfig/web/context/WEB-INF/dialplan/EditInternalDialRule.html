@@ -56,6 +56,16 @@
                value="ognl:rule.mediaServerHostname"
                validators="spring-validators:voicemailHostnameValidator,validHostOrIp"/>
         </tr>
+        <tr jwcid="@common/FieldPanel"
+          field="component:mediaServerPort"
+          label="message:label.mediaServerPort"
+          description="message:description.mediaServerPort"
+          for="dialplan:externalVoicemailServerPort">
+            <span jwcid="mediaServerPort@TextField" id="dialplan:externalVoicemailServerPort"
+               value="ognl:rule.mediaServerPort"
+               translator="translator:integer" validators="spring-validators:min=1025,max=65535"
+               displayName="message:label.mediaServerPort"/>
+        </tr>
       </tbody>
     </table>
   </fieldset>

@@ -32,6 +32,8 @@ public abstract class MediaServer {
 
     private String m_hostname;
 
+    private Integer m_port;
+
     private String m_serverExtension;
 
     /**
@@ -114,6 +116,14 @@ public abstract class MediaServer {
         m_hostname = hostname;
     }
 
+    public Integer getPort() {
+        return m_port;
+    }
+
+    public void setPort(Integer port) {
+        m_port = port;
+    }
+
     public String getLabel() {
         return m_label;
     }
@@ -180,6 +190,15 @@ public abstract class MediaServer {
         m_localizationContext = localizationContext;
     }
 
+    private String getHostPort(String host, Integer port) {
+        StringBuilder hostnamePort = new StringBuilder(host);
+        if (port != null) {
+            hostnamePort.append(":");
+            hostnamePort.append(port);
+        }
+        return hostnamePort.toString();
+    }
+
     /**
      * Builds a URL based on the provided digits, media server, and sip parameters.
      *
@@ -192,7 +211,7 @@ public abstract class MediaServer {
         String headerParams = getHeaderParameterStringForOperation(operation, userDigits);
         String hostname = getHostname(Operation.VoicemailDeposit);
         String digits = getDigitStringForOperation(operation, userDigits);
-        return MappingRule.buildUrl(digits, hostname, uriParams, headerParams, fieldParams);
+        return MappingRule.buildUrl(digits, getHostPort(hostname, getPort()), uriParams, headerParams, fieldParams);
     }
 
     protected final String getLanguage() {
@@ -207,7 +226,7 @@ public abstract class MediaServer {
         String headerParams = getHeaderParameterStringForOperation(Operation.Autoattendant, CallDigits.FIXED_DIGITS);
         String hostname = getHostname(Operation.Autoattendant);
         String digits = getDigitStringForOperation(Operation.Autoattendant, CallDigits.FIXED_DIGITS);
-        return MappingRule.buildUrl(digits, hostname, uriParams, headerParams, null);
+        return MappingRule.buildUrl(digits, getHostPort(hostname, getPort()), uriParams, headerParams, null);
     }
 
     public String buildVoicemailDepositUrl(String fieldParams) {
