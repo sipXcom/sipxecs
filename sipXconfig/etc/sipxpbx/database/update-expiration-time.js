@@ -1,7 +1,7 @@
 db = new Mongo().getDB("node");
 // update registrations
 db.registrar.find().forEach(function(doc) {
-  db.registrar.update({"_id":doc._id},{$set:{"expirationTime":getDateFromEpoch(doc.expirationTime.$numberLong)}} );
+  db.registrar.update({"_id":doc._id},{$set:{"expirationTime":getDateFromEpoch(doc.expirationTime + "")}} );
 });
 // update subscriptions
 db.subscription.find().forEach(function(doc) {  
