@@ -480,6 +480,7 @@
   	<antcall target="openacd-permission-update" />
   	<antcall target="add_vm_server_port" />
     <antcall target="openacd-permission-update2" />
+    <antcall target="openacd-permission-update3" />
   </target>
 
   <target name="plugin-patches">
@@ -1465,6 +1466,9 @@
   </target>	
   <target name="openacd-permission-update2" unless="openacd-permission-update2">
     <db-patch patch="openacd-permission-update2"/>
+  </target>
+  <target name="openacd-permission-update3" unless="openacd-permission-update3">
+    <db-patch patch="openacd-permission-update3"/>
   </target>
 
   <!--
