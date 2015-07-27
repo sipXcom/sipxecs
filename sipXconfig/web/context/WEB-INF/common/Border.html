@@ -27,6 +27,7 @@
           <span class="linkHelp"><a jwcid="helpLink@GenericLink" class="linkHelp" id="link.help" target="sipxconfig-help" href="ognl:helpLink"><span key="link.help">Online Help</span></a></span>
           &nbsp;&nbsp;|&nbsp;&nbsp;
           <span class="linkLogout"><a jwcid="logoutLink@DirectLink" class="linkLogout" id="link.logout" listener="listener:logout"><span key="link.logout">Logout</span></a></span>
+          &nbsp;&nbsp;&nbsp;&nbsp;
           <span jwcid="@If" condition="ognl:userSession.admin" renderTag="false">
             <span jwcid="@search/SearchPanel"/>
           </span>
