@@ -32,8 +32,8 @@
     <lookup-method bean="fsEventSocket" name="getFsEventSocket"/>
     <property name="imdbTemplate" ref="imdb" />
     <property name="prefix" value="${callback-prefix}" />
-    <property name="welcomePrompt" value="/usr/local/sipx/share/www/doc/stdprompts_en/thankyou_goodbye.wav"/>
-    <property name="errorPrompt" value="/usr/local/sipx/share/www/doc/stdprompts_en/error_hang_up.wav"/>
+    <property name="welcomePrompt" value="${stdprompts.dir}/thankyou_goodbye.wav"/>
+    <property name="errorPrompt" value="${stdprompts.dir}/error_hang_up.wav"/>
   </bean>
 
   <bean id="fsConfig" class="org.sipfoundry.sipxcallback.common.FreeSwitchConfigurationImpl">
