@@ -96,6 +96,7 @@ Requires: sipxacccode >= %version
 Requires: sipxaudiocodes >= %version
 Requires: sipxbridge >= %version
 Requires: sipxcallcontroller >= %version
+Requires: sipxcallback >= %version
 Requires: sipxcdr >= %version
 Requires: sipxcdrlog >= %version
 Requires: sipxcisco >= %version
