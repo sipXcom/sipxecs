@@ -44,6 +44,7 @@ start() {
       -Dconf.dir=@SIPX_CONFDIR@ \
       -Dlog.dir=@SIPX_LOGDIR@ \
       -Dvar.dir=@SIPX_VARDIR@ \
+      -Dstdprompts.dir=@wwwdir@/doc/stdprompts \
       $JavaSslOpts \
       ${SIPXCALL_OPTS} \
          org.sipfoundry.sipxcallback.SipXcallbackServer \

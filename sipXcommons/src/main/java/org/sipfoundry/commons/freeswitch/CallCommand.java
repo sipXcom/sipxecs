@@ -32,6 +32,19 @@ public class CallCommand extends FreeSwitchEventHandler {
         return false;
     }
 
+    /**
+     * This method is identical to "start()" method.
+     * The only difference is that it will also consume the freeswitch response.
+     */
+    public FreeSwitchEvent startResponse() {
+        m_finished = false;
+        // Send the command to the socket
+        if (!m_sendAsApi)
+            return m_fses.cmdResponse("sendmsg " + m_fses.getSessionUUID() + "\ncall-command: execute\nexecute-app-name: " + m_command);
+        else
+            return m_fses.apiCmdResponse(m_command);
+    }
+
     public void go() {
         m_fses.invoke(this);
     }
