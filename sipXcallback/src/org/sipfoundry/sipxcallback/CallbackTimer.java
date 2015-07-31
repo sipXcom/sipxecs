@@ -17,7 +17,6 @@
 package org.sipfoundry.sipxcallback;
 
 import static org.sipfoundry.commons.mongo.MongoConstants.CALLBACK_LIST;
-import static org.sipfoundry.commons.mongo.MongoConstants.ENTITY_NAME;
 import static org.sipfoundry.commons.mongo.MongoConstants.UID;
 
 import java.io.IOException;
@@ -33,31 +32,27 @@ import org.sipfoundry.commons.freeswitch.FreeSwitchEventSocket;
 import org.sipfoundry.commons.userdb.ValidUsers;
 import org.sipfoundry.sipxcallback.common.CallbackUtil;
 import org.sipfoundry.sipxcallback.common.FreeSwitchConfigurationImpl;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import com.mongodb.QueryBuilder;
 
 /**
  *  Daemon task class that handles callback requests registered in the system
  */
-public class CallbackTimer implements BeanFactoryAware{
+public class CallbackTimer {
     private static final Logger LOG = Logger.getLogger("org.sipfoundry.sipxcallback");
 
     private int m_expires;
-    private MongoTemplate m_imdbTemplate;
+    private CallbackUtil m_callbackUtil;
 
     private FreeSwitchConfigurationImpl fsConfig;
     private FreeSwitchEventSocket m_fsCmdSocket;
     private ThreadPoolTaskExecutor m_taskExecutor;
-    private BeanFactory m_beanFactory;
+    private CallbackThread m_callbackThread;
 
     public void run() throws ParseException {
         if (m_fsCmdSocket == null) {
@@ -73,23 +68,23 @@ public class CallbackTimer implements BeanFactoryAware{
             }
         }
 
-        DBCollection entityCollection = m_imdbTemplate.getCollection("entity");
+        DBCollection entityCollection = m_callbackUtil.getImdbTemplate().getCollection("entity");
         // get all users which have callback on busy set
-        DBCursor users = findCallbackUsers(entityCollection);
+        DBCursor users = m_callbackUtil.getCallbackUsers(entityCollection);
 
         // iterate over users
         for (DBObject user : users) {
             BasicDBList callbackList = (BasicDBList) user.get(CALLBACK_LIST);
             String calleeName = ValidUsers.getStringValue(user, UID);
             // iterate over callback requests for each user
-            // keep tabs if any callback flag has expired and the update the callback list
+            // keep tabs if any callback flag has expired and then update the callback list
             List<DBObject> objectsToBeRemoved = new ArrayList<DBObject>();
             for (Object callerDbObject : callbackList) {
                 List<DBObject> objectsToBeRemovedToken = handleCallbackAction(
                         calleeName, (DBObject) callerDbObject, callbackList);
                 objectsToBeRemoved.addAll(objectsToBeRemovedToken);
             }
-            CallbackUtil.updateCallbackList(entityCollection, callbackList, user, objectsToBeRemoved);
+            m_callbackUtil.updateCallbackList(entityCollection, callbackList, user, objectsToBeRemoved);
         }
     }
 
@@ -100,7 +95,7 @@ public class CallbackTimer implements BeanFactoryAware{
         List<DBObject> objectsToBeRemoved = new ArrayList<DBObject>();
         for (String callerName : callbackObject.keySet()) {
             long callerDate = (long) callbackObject.get(callerName);
-            long currentDate = CallbackUtil.getCurrentTimestamp();
+            long currentDate = m_callbackUtil.getCurrentTimestamp();
             long timeDiff = currentDate - callerDate;
             // check if the flag for callback has expired
             if (timeDiff < m_expires * 60000) {
@@ -115,10 +110,8 @@ public class CallbackTimer implements BeanFactoryAware{
     public void executeCallbackThread(String callerName, String calleeName) {
         try {
             if (m_taskExecutor.getThreadPoolExecutor().getQueue().isEmpty()) {
-                CallbackThread callbackThread = (CallbackThread) m_beanFactory
-                        .getBean(CallbackThread.BEAN_NAME);
-                callbackThread.initiate(callerName, calleeName, m_fsCmdSocket);
-                m_taskExecutor.execute(callbackThread);
+                m_callbackThread.initiate(callerName, calleeName, m_fsCmdSocket);
+                m_taskExecutor.execute(m_callbackThread);
             } else {
                 LOG.debug("Wait for queue to become empty and look "+
                  "for more users that need to receive callbacks") ;
@@ -126,11 +119,6 @@ public class CallbackTimer implements BeanFactoryAware{
         } catch (Exception ex) {
             LOG.error("Error during callback execution: ", ex);
         }
-    }
-
-    private DBCursor findCallbackUsers(DBCollection entityCollection) {
-        DBObject query = QueryBuilder.start(ENTITY_NAME).is("user").and(CALLBACK_LIST).exists(true).get();
-        return entityCollection.find(query);
     }
 
     public void setExpires(int expires) {
@@ -158,8 +146,8 @@ public class CallbackTimer implements BeanFactoryAware{
     }
 
     @Required
-    public void setImdbTemplate(MongoTemplate imdbTemplate) {
-        m_imdbTemplate = imdbTemplate;
+    public void setCallbackUtil(CallbackUtil callbackUtil) {
+        m_callbackUtil = callbackUtil;
     }
 
     @Required
@@ -167,8 +155,9 @@ public class CallbackTimer implements BeanFactoryAware{
         m_taskExecutor = taskExecutor;
     }
 
-    public void setBeanFactory(BeanFactory beanFactory) {
-        m_beanFactory = beanFactory;
+    @Required
+    public void setCallbackThread(CallbackThread callbackThread) {
+        m_callbackThread = callbackThread;
     }
 
 }

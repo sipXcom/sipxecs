@@ -22,7 +22,6 @@ import org.sipfoundry.commons.freeswitch.eslrequest.EslRequestScopeRunnable;
 import org.sipfoundry.sipxcallback.common.CallbackException;
 import org.sipfoundry.sipxcallback.common.CallbackUtil;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.data.mongodb.core.MongoTemplate;
 
 /**
  *  Class used to register callback requests in the system
@@ -32,7 +31,7 @@ public abstract class CallbackCallHandler extends EslRequestScopeRunnable {
 
     private Socket m_clientSocket;
     private String m_prefix;
-    private MongoTemplate m_imdbTemplate;
+    private CallbackUtil m_callbackUtil;
     private String m_welcomePrompt;
     private String m_errorPrompt;
 
@@ -92,7 +91,7 @@ public abstract class CallbackCallHandler extends EslRequestScopeRunnable {
             return;
         }
         try {
-            CallbackUtil.updateCallbackInformation(m_imdbTemplate, calleeUserName,callerURL, true);
+            m_callbackUtil.updateCallbackInformation(calleeUserName,callerURL, true);
         } catch (CallbackException e) {
             // callback user not found
             LOG.warn("Callback user " + calleeUserName + " was not found.");
@@ -113,8 +112,8 @@ public abstract class CallbackCallHandler extends EslRequestScopeRunnable {
     }
 
     @Required
-    public void setImdbTemplate(MongoTemplate imdbTemplate) {
-        m_imdbTemplate = imdbTemplate;
+    public void setCallbackUtil(CallbackUtil callbackUtil) {
+        m_callbackUtil = callbackUtil;
     }
 
     @Required
