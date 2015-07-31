@@ -30,7 +30,7 @@
 
   <bean id="callbackCallHandler" class="org.sipfoundry.sipxcallback.CallbackCallHandler" scope="prototype">
     <lookup-method bean="fsEventSocket" name="getFsEventSocket"/>
-    <property name="imdbTemplate" ref="imdb" />
+    <property name="callbackUtil" ref="callbackUtil" />
     <property name="prefix" value="${callback-prefix}" />
     <property name="welcomePrompt" value="${stdprompts.dir}/thankyou_goodbye.wav"/>
     <property name="errorPrompt" value="${stdprompts.dir}/error_hang_up.wav"/>
@@ -39,10 +39,6 @@
   <bean id="fsConfig" class="org.sipfoundry.sipxcallback.common.FreeSwitchConfigurationImpl">
     <property name="eventSocketPort" value="${freeswitch.eventSocketPort}" />
     <property name="sipxchangeDomainName" value="${callback.sipxchangeDomainName}" />
-  </bean>
-
-  <bean id="callbackConfig" class="org.sipfoundry.sipxcallback.CallbackConfiguration">
-    <property name="eventSocketPort" value="${freeswitch.eventSocketPort}" />
   </bean>
 
   <bean id="fsEventSocket" class="org.sipfoundry.commons.freeswitch.FreeSwitchEventSocket" scope="eslRequest">
@@ -56,18 +52,23 @@
   </bean>
 
   <bean id="callbackTimer" class="org.sipfoundry.sipxcallback.CallbackTimer">
-    <property name="imdbTemplate" ref="imdb" />
+    <property name="callbackUtil" ref="callbackUtil" />
     <property name="expires" value="${callback-duration}" />
     <property name="taskExecutor" ref="taskExecutor" />
+    <property name="callbackThread" ref="callbackThread" />
   </bean>
 
   <bean id="callbackThread" class="org.sipfoundry.sipxcallback.CallbackThread" scope="prototype">
-    <property name="imdbTemplate" ref="imdb" />
+    <property name="callbackUtil" ref="callbackUtil" />
     <property name="sipxchangeDomainName" value="${callback.sipxchangeDomainName}" />
     <property name="callerPrompt" value="${conf.dir}/sipxcallback/prompts/caller.wav" />
     <property name="requestedCallbackPrompt" value="${conf.dir}/sipxcallback/prompts/requested_a_callback.wav" />
     <property name="butTheyAreBusyPrompt" value="${conf.dir}/sipxcallback/prompts/but_they_are_busy.wav" />
     <property name="isNotAnsweringPrompt" value="${conf.dir}/sipxcallback/prompts/is_not_answering.wav" />
+  </bean>
+
+  <bean id="callbackUtil" class="org.sipfoundry.sipxcallback.common.CallbackUtil">
+    <property name="imdbTemplate" ref="imdb" />
   </bean>
 
   <task:scheduled-tasks>
