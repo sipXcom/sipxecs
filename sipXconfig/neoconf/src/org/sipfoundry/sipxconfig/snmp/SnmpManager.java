@@ -45,4 +45,6 @@ public interface SnmpManager {
     public List<ProcessDefinition> getProcessDefinitions(Location location, Collection<String> processId);
 
     public void restartProcesses(Location location, Collection<ProcessDefinition> processes);
+
+    public void restartProcessesInAllLocations(Collection<ProcessDefinition> processes);
 }
