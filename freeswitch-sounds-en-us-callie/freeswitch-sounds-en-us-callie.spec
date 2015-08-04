@@ -215,18 +215,18 @@ popd
 %attr(0750,freeswitch,daemon)	%dir	%{SOUNDSDIR}/en/us/callie/time/8000
 %attr(0750,freeswitch,daemon)	%dir	%{SOUNDSDIR}/en/us/callie/voicemail/8000
 %attr(0750,freeswitch,daemon)	%dir	%{SOUNDSDIR}/en/us/callie/zrtp/8000
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/ascii/8000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/base256/8000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/conference/8000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/currency/8000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/digits/8000/*.wav
-%attr(0640,freeswitch,daemon)           %{SOUNDSDIR}/en/us/callie/directory/8000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/ivr/8000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/misc/8000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/phonetic-ascii/8000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/time/8000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/voicemail/8000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/zrtp/8000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/ascii/8000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/base256/8000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/conference/8000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/currency/8000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/digits/8000/*.wav
+%attr(0777,freeswitch,daemon)           %{SOUNDSDIR}/en/us/callie/directory/8000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/ivr/8000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/misc/8000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/phonetic-ascii/8000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/time/8000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/voicemail/8000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/zrtp/8000/*.wav
 
 %files -n freeswitch-sounds-en-us-callie-16000
 %defattr(-,root,root,-)
@@ -242,18 +242,18 @@ popd
 %attr(0750,freeswitch,daemon)	%dir	%{SOUNDSDIR}/en/us/callie/time/16000
 %attr(0750,freeswitch,daemon)	%dir	%{SOUNDSDIR}/en/us/callie/voicemail/16000
 %attr(0750,freeswitch,daemon)	%dir	%{SOUNDSDIR}/en/us/callie/zrtp/16000
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/ascii/16000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/base256/16000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/conference/16000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/currency/16000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/digits/16000/*.wav
-%attr(0640,freeswitch,daemon)           %{SOUNDSDIR}/en/us/callie/directory/16000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/ivr/16000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/misc/16000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/phonetic-ascii/16000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/time/16000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/voicemail/16000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/zrtp/16000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/ascii/16000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/base256/16000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/conference/16000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/currency/16000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/digits/16000/*.wav
+%attr(0777,freeswitch,daemon)           %{SOUNDSDIR}/en/us/callie/directory/16000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/ivr/16000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/misc/16000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/phonetic-ascii/16000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/time/16000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/voicemail/16000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/zrtp/16000/*.wav
 
 %files -n freeswitch-sounds-en-us-callie-32000
 %defattr(-,root,root,-)
@@ -269,18 +269,18 @@ popd
 %attr(0750,freeswitch,daemon)	%dir	%{SOUNDSDIR}/en/us/callie/time/32000
 %attr(0750,freeswitch,daemon)	%dir	%{SOUNDSDIR}/en/us/callie/voicemail/32000
 %attr(0750,freeswitch,daemon)	%dir	%{SOUNDSDIR}/en/us/callie/zrtp/32000
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/ascii/32000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/base256/32000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/conference/32000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/currency/32000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/digits/32000/*.wav
-%attr(0640,freeswitch,daemon)           %{SOUNDSDIR}/en/us/callie/directory/32000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/ivr/32000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/misc/32000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/phonetic-ascii/32000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/time/32000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/voicemail/32000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/zrtp/32000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/ascii/32000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/base256/32000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/conference/32000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/currency/32000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/digits/32000/*.wav
+%attr(0777,freeswitch,daemon)           %{SOUNDSDIR}/en/us/callie/directory/32000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/ivr/32000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/misc/32000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/phonetic-ascii/32000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/time/32000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/voicemail/32000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/zrtp/32000/*.wav
 
 %files -n freeswitch-sounds-en-us-callie-48000
 %defattr(-,root,root,-)
@@ -296,18 +296,18 @@ popd
 %attr(0750,freeswitch,daemon)	%dir	%{SOUNDSDIR}/en/us/callie/time/48000
 %attr(0750,freeswitch,daemon)	%dir	%{SOUNDSDIR}/en/us/callie/voicemail/48000
 %attr(0750,freeswitch,daemon)	%dir	%{SOUNDSDIR}/en/us/callie/zrtp/48000
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/ascii/48000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/base256/48000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/conference/48000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/currency/48000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/digits/48000/*.wav
-%attr(0640,freeswitch,daemon)           %{SOUNDSDIR}/en/us/callie/directory/48000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/ivr/48000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/misc/48000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/phonetic-ascii/48000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/time/48000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/voicemail/48000/*.wav
-%attr(0640,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/zrtp/48000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/ascii/48000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/base256/48000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/conference/48000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/currency/48000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/digits/48000/*.wav
+%attr(0777,freeswitch,daemon)           %{SOUNDSDIR}/en/us/callie/directory/48000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/ivr/48000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/misc/48000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/phonetic-ascii/48000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/time/48000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/voicemail/48000/*.wav
+%attr(0777,freeswitch,daemon)		%{SOUNDSDIR}/en/us/callie/zrtp/48000/*.wav
 
 %files -n freeswitch-sounds-en-us-callie-all
 
