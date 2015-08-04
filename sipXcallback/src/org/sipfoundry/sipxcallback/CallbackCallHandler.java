@@ -20,7 +20,7 @@ import org.sipfoundry.commons.freeswitch.FreeSwitchEventSocketInterface;
 import org.sipfoundry.commons.freeswitch.Hangup;
 import org.sipfoundry.commons.freeswitch.eslrequest.EslRequestScopeRunnable;
 import org.sipfoundry.sipxcallback.common.CallbackException;
-import org.sipfoundry.sipxcallback.common.CallbackUtil;
+import org.sipfoundry.sipxcallback.common.CallbackService;
 import org.springframework.beans.factory.annotation.Required;
 
 /**
@@ -31,7 +31,7 @@ public abstract class CallbackCallHandler extends EslRequestScopeRunnable {
 
     private Socket m_clientSocket;
     private String m_prefix;
-    private CallbackUtil m_callbackUtil;
+    private CallbackService m_callbackService;
     private String m_welcomePrompt;
     private String m_errorPrompt;
 
@@ -91,7 +91,7 @@ public abstract class CallbackCallHandler extends EslRequestScopeRunnable {
             return;
         }
         try {
-            m_callbackUtil.updateCallbackInformation(calleeUserName,callerURL, true);
+            m_callbackService.updateCallbackInformation(calleeUserName,callerURL, true);
         } catch (CallbackException e) {
             // callback user not found
             LOG.warn("Callback user " + calleeUserName + " was not found.");
@@ -112,8 +112,8 @@ public abstract class CallbackCallHandler extends EslRequestScopeRunnable {
     }
 
     @Required
-    public void setCallbackUtil(CallbackUtil callbackUtil) {
-        m_callbackUtil = callbackUtil;
+    public void setCallbackService(CallbackService callbackService) {
+        m_callbackService = callbackService;
     }
 
     @Required
