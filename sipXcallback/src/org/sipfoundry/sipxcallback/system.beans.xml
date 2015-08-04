@@ -30,7 +30,7 @@
 
   <bean id="callbackCallHandler" class="org.sipfoundry.sipxcallback.CallbackCallHandler" scope="prototype">
     <lookup-method bean="fsEventSocket" name="getFsEventSocket"/>
-    <property name="callbackUtil" ref="callbackUtil" />
+    <property name="callbackService" ref="callbackService" />
     <property name="prefix" value="${callback-prefix}" />
     <property name="welcomePrompt" value="${stdprompts.dir}/thankyou_goodbye.wav"/>
     <property name="errorPrompt" value="${stdprompts.dir}/error_hang_up.wav"/>
@@ -52,14 +52,13 @@
   </bean>
 
   <bean id="callbackTimer" class="org.sipfoundry.sipxcallback.CallbackTimer">
-    <property name="callbackUtil" ref="callbackUtil" />
-    <property name="expires" value="${callback-duration}" />
+    <property name="callbackService" ref="callbackService" />
     <property name="taskExecutor" ref="taskExecutor" />
     <property name="callbackThread" ref="callbackThread" />
   </bean>
 
   <bean id="callbackThread" class="org.sipfoundry.sipxcallback.CallbackThread" scope="prototype">
-    <property name="callbackUtil" ref="callbackUtil" />
+    <property name="callbackService" ref="callbackService" />
     <property name="sipxchangeDomainName" value="${callback.sipxchangeDomainName}" />
     <property name="callerPrompt" value="${conf.dir}/sipxcallback/prompts/caller.wav" />
     <property name="requestedCallbackPrompt" value="${conf.dir}/sipxcallback/prompts/requested_a_callback.wav" />
@@ -67,9 +66,15 @@
     <property name="isNotAnsweringPrompt" value="${conf.dir}/sipxcallback/prompts/is_not_answering.wav" />
   </bean>
 
-  <bean id="callbackUtil" class="org.sipfoundry.sipxcallback.common.CallbackUtil">
+  <bean id="callbackServiceImpl" class="org.sipfoundry.sipxcallback.common.CallbackServiceImpl">
     <property name="imdbTemplate" ref="imdb" />
+    <property name="expires" value="${callback-duration}" />
   </bean>
+
+  <bean id="callbackService" class="org.springframework.aop.framework.ProxyFactoryBean">
+    <property name="target" ref="callbackServiceImpl" />
+    <property name="proxyInterfaces" value="org.sipfoundry.sipxcallback.common.CallbackService" />
+  </bean> 
 
   <task:scheduled-tasks>
     <task:scheduled ref="callbackTimer" method="run" fixed-delay="60000" />

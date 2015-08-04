@@ -25,7 +25,7 @@ import org.sipfoundry.commons.freeswitch.FreeSwitchEventSocketInterface;
 import org.sipfoundry.commons.freeswitch.Hangup;
 import org.sipfoundry.commons.freeswitch.OriginateCommand;
 import org.sipfoundry.sipxcallback.common.CallbackException;
-import org.sipfoundry.sipxcallback.common.CallbackUtil;
+import org.sipfoundry.sipxcallback.common.CallbackService;
 import org.springframework.beans.factory.annotation.Required;
 
 public class CallbackThread extends Thread {
@@ -40,7 +40,7 @@ public class CallbackThread extends Thread {
     private String m_calleeName;
     private String m_callerName;
     private FreeSwitchEventSocketInterface m_fsCmdSocket;
-    private CallbackUtil m_callbackUtil;
+    private CallbackService m_callbackService;
     private String sipxchangeDomainName;
 
     private String m_callerPrompt;
@@ -87,7 +87,7 @@ public class CallbackThread extends Thread {
         // remove the callback flag from B user
         String callerURL = m_callerUID.split("/")[2];
         try {
-            m_callbackUtil.updateCallbackInformation(m_calleeName, callerURL, false);
+            m_callbackService.updateCallbackInformation(m_calleeName, callerURL, false);
         } catch (CallbackException e) {
             LOG.error(e);
             return;
@@ -139,8 +139,8 @@ public class CallbackThread extends Thread {
     }
 
     @Required
-    public void setCallbackUtil(CallbackUtil callbackUtil) {
-        m_callbackUtil = callbackUtil;
+    public void setCallbackService(CallbackService callbackService) {
+        m_callbackService = callbackService;
     }
 
     @Required
