@@ -22,8 +22,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.sipfoundry.sipxconfig.address.Address;
 import org.sipfoundry.sipxconfig.address.AddressManager;
 import org.sipfoundry.sipxconfig.commserver.Location;
@@ -44,7 +42,6 @@ import org.sipfoundry.sipxconfig.snmp.SnmpManager;
 import org.springframework.beans.factory.annotation.Required;
 
 public class CallbackOnBusyImpl implements FeatureProvider, CallbackOnBusy, ProcessProvider {
-    private static final Log LOG = LogFactory.getLog(CallbackOnBusyImpl.class);
 
     private BeanWithSettingsDao<CallbackSettings> m_settingsDao;
     private FeatureManager m_featureManager;
@@ -74,7 +71,6 @@ public class CallbackOnBusyImpl implements FeatureProvider, CallbackOnBusy, Proc
     public void featureChangePrecommit(FeatureManager manager,
             FeatureChangeValidator validator) {
         validator.requiredOnSameHost(FEATURE, FreeswitchFeature.FEATURE);
-        validator.singleLocationOnly(FEATURE);
     }
 
     @Override
