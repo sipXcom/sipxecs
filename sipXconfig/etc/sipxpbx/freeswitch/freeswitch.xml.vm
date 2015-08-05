@@ -62,7 +62,7 @@
   </section>
 
   <section name="languages" description="Language Management">
-    <language name="en" say-module="en" sound-prefix="/opt/freeswitch/sounds/en/us/callie" tts-engine="cepstral" tts-voice="callie">
+    <language name="en" say-module="en" sound-prefix="/usr/share/freeswitch/sounds/en/us/callie" tts-engine="cepstral" tts-voice="callie">
     <phrases>
     <macros>
     <X-PRE-PROCESS cmd="include" data="demo/*.xml"/> <!-- Note: this now grabs whole subdir, previously grabbed only demo.xml -->

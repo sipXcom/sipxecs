@@ -19,7 +19,6 @@ package org.sipfoundry.sipxcallback;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;

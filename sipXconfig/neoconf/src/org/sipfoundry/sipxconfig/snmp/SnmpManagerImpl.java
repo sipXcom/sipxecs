@@ -207,6 +207,14 @@ public class SnmpManagerImpl implements BeanFactoryAware, SnmpManager, FeaturePr
         m_systemAuditManager.auditServiceRestart(location.getFqdn(), serviceNames);
     }
 
+    @Override
+    public void restartProcessesInAllLocations(Collection<ProcessDefinition> processes) {
+        Location[] locations = m_locationsManager.getLocations();
+        for (Location location : locations) {
+            restartProcesses(location, processes);
+        }
+    }
+
     public void setConfigManager(ConfigManager configManager) {
         m_configManager = configManager;
     }
