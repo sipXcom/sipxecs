@@ -63,7 +63,11 @@
   <feature
 #set ($group = $cfg.EndpointSettings.getSetting('feature'))
 #foreach ($setting in $cfg.getSettings($group))
-    feature.${setting.ProfileName}.enabled="$!{setting.Value}" 
+#if(${setting.ProfileName} == "forward.enable" || ${setting.ProfileName} == "doNotDisturb.enable")
+    feature.${setting.ProfileName}="$!{setting.Value}" 
+#else
+    feature.${setting.ProfileName}.enabled="$!{setting.Value}"
+#end
 #end
 #if ($phone.model.isSupported("exchangeIntegration"))
  #set ($calendar = $cfg.EndpointSettings.getSetting('calendar/feature.exchangeCalendar.enabled'))
@@ -91,14 +95,14 @@
     roaming_privacy.${setting.ProfileName}="$!{setting.Value}"
 #end
   />
-#if ($phone.Model.ModelId == "polycomVVX500")
+#if ($phone.Model.ModelId == "polycomVVX500" || $phone.Model.ModelId == "polycomVVX410")
 #set ($group = $cfg.EndpointSettings.getSetting('polycomVVX500bg'))
   <bg>
     <bg.color bg.color.selection="$group.getSetting('selection').Value">
       <bg.color.bm bg.color.bm.1.em.name="$group.getSetting('bm.1.em.name').Value" bg.color.bm.1.name="$group.getSetting('bm.1.name').Value" />
     </bg.color>
   </bg>
-#elseif($phone.Model.ModelId == "polycomVVX1500")
+#elseif($phone.Model.ModelId == "polycomVVX1500"  || $phone.Model.ModelId == "polycomVVX600")
 #set ($group = $cfg.EndpointSettings.getSetting('polycomVVX1500bg'))
   <bg>
     <bg.VVX_1500>
