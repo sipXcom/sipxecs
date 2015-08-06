@@ -20,6 +20,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.sipfoundry.commons.freeswitch.BridgeCommand;
 import org.sipfoundry.commons.freeswitch.Broadcast;
+import org.sipfoundry.commons.freeswitch.ChannelExists;
 import org.sipfoundry.commons.freeswitch.FreeSwitchEvent;
 import org.sipfoundry.commons.freeswitch.FreeSwitchEventSocketInterface;
 import org.sipfoundry.commons.freeswitch.Hangup;
@@ -102,12 +103,26 @@ public class CallbackThread extends Thread {
         new Broadcast(m_fsCmdSocket, calleeUUID, m_requestedCallbackPrompt, false).startResponse();
         Thread.sleep(4000);
 
+        // check to see if called channel is not hung up
+        if (!new ChannelExists(m_fsCmdSocket, calleeUUID).isUUIDActive()) {
+            return;
+        }
+
         // originate a call to A user
         String originateProperties = ORIGINATE_PROPERTIES.replace("00000000", m_calleeName);
         OriginateCommand originateCallerCmd = new OriginateCommand(m_fsCmdSocket,
                 originateProperties + m_callerUID);
         FreeSwitchEvent responseCaller = originateCallerCmd.originate();
+
+        // check to see if called channel is not hung up
         String responseCallerContent = responseCaller.getContent();
+        if (!new ChannelExists(m_fsCmdSocket, calleeUUID).isUUIDActive()) {
+            String callerUUID = getUUIDFromResponseContent(responseCallerContent);
+            new Hangup(m_fsCmdSocket, callerUUID).startResponse();
+            return;
+        }
+
+        // finish the callback process
         if (responseCallerContent.startsWith(ORIGINATE_RESPONSE_OK)) {
             handleCallbackSuccess(responseCallerContent, calleeUUID);
         } else if (responseCallerContent.contains("USER_BUSY")) {
