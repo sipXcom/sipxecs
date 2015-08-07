@@ -102,7 +102,14 @@
       <bg.color.bm bg.color.bm.1.em.name="$group.getSetting('bm.1.em.name').Value" bg.color.bm.1.name="$group.getSetting('bm.1.name').Value" />
     </bg.color>
   </bg>
-#elseif($phone.Model.ModelId == "polycomVVX1500"  || $phone.Model.ModelId == "polycomVVX600")
+#elseif($phone.Model.ModelId == "polycomVVX600")
+#set ($group = $cfg.EndpointSettings.getSetting('polycomVVX600bg'))
+  <bg>
+    <bg.color bg.color.selection="$group.getSetting('selection').Value">
+      <bg.color.bm bg.color.bm.1.em.name="$group.getSetting('bm.1.em.name').Value" bg.color.bm.1.name="$group.getSetting('bm.1.name').Value" />
+    </bg.color>
+  </bg>
+#elseif($phone.Model.ModelId == "polycomVVX1500")
 #set ($group = $cfg.EndpointSettings.getSetting('polycomVVX1500bg'))
   <bg>
     <bg.VVX_1500>
