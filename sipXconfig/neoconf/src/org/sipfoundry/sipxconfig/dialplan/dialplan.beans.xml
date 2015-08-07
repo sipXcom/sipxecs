@@ -9,6 +9,7 @@
 
   <bean id="exchangeUmMediaServer" class="org.sipfoundry.sipxconfig.dialplan.ExchangeMediaServer" scope="prototype">
     <property name="label" value="Exchange Voicemail Server" />
+    <property name="type" value="exchangeUmMediaServer" />
     <property name="localizationContext" ref="localizationContext" />
   </bean>
 
