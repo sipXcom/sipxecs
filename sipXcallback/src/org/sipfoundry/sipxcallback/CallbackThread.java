@@ -20,6 +20,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.sipfoundry.commons.freeswitch.BridgeCommand;
 import org.sipfoundry.commons.freeswitch.Broadcast;
+import org.sipfoundry.commons.freeswitch.ChannelExists;
 import org.sipfoundry.commons.freeswitch.FreeSwitchEvent;
 import org.sipfoundry.commons.freeswitch.FreeSwitchEventSocketInterface;
 import org.sipfoundry.commons.freeswitch.Hangup;
@@ -32,7 +33,7 @@ public class CallbackThread extends Thread {
 
     private static final Logger LOG = Logger.getLogger("org.sipfoundry.sipxcallback");
     private static final String ORIGINATE_RESPONSE_OK = "+OK ";
-    private static final String ORIGINATE_PROPERTIES = "{ignore_early_media=true,originate_timeout=20,fail_on_single_reject=USER_BUSY,hangup_after_bridge=true}";
+    private static final String ORIGINATE_PROPERTIES = "{ignore_early_media=true,originate_timeout=20,fail_on_single_reject=USER_BUSY,hangup_after_bridge=true,origination_caller_id_number=00000000}";
     public static final String BEAN_NAME = "callbackThread";
 
     private String m_callerUID;
@@ -60,8 +61,9 @@ public class CallbackThread extends Thread {
     @Override
     public void run() {
         LOG.debug("Originating call to " + m_calleeUID);
+        String originateProperties = ORIGINATE_PROPERTIES.replace("00000000", m_callerName);
         OriginateCommand originateCalleeCmd = new OriginateCommand(m_fsCmdSocket,
-                ORIGINATE_PROPERTIES + m_calleeUID);
+                originateProperties + m_calleeUID);
         FreeSwitchEvent responseCallee = originateCalleeCmd.originate();
         String responseContent = responseCallee.getContent();
         if ((responseContent != null) && (responseContent.startsWith(ORIGINATE_RESPONSE_OK))) {
@@ -101,11 +103,26 @@ public class CallbackThread extends Thread {
         new Broadcast(m_fsCmdSocket, calleeUUID, m_requestedCallbackPrompt, false).startResponse();
         Thread.sleep(4000);
 
+        // check to see if called channel is not hung up
+        if (!new ChannelExists(m_fsCmdSocket, calleeUUID).isUUIDActive()) {
+            return;
+        }
+
         // originate a call to A user
+        String originateProperties = ORIGINATE_PROPERTIES.replace("00000000", m_calleeName);
         OriginateCommand originateCallerCmd = new OriginateCommand(m_fsCmdSocket,
-                ORIGINATE_PROPERTIES + m_callerUID);
+                originateProperties + m_callerUID);
         FreeSwitchEvent responseCaller = originateCallerCmd.originate();
+
+        // check to see if called channel is not hung up
         String responseCallerContent = responseCaller.getContent();
+        if (!new ChannelExists(m_fsCmdSocket, calleeUUID).isUUIDActive()) {
+            String callerUUID = getUUIDFromResponseContent(responseCallerContent);
+            new Hangup(m_fsCmdSocket, callerUUID).startResponse();
+            return;
+        }
+
+        // finish the callback process
         if (responseCallerContent.startsWith(ORIGINATE_RESPONSE_OK)) {
             handleCallbackSuccess(responseCallerContent, calleeUUID);
         } else if (responseCallerContent.contains("USER_BUSY")) {
