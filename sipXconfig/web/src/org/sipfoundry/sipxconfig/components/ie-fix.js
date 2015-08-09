@@ -1,5 +1,16 @@
+function iOS() {
+    if (userAgent.match(/ipad|iphone|ipod/i)) {
+        return true
+    } else {
+        return false
+    }
+}
+
+function doNothing () {
+}
+
 function hoverToOverForIE() {
-    if (typeof document.body.style.maxHeight != "undefined") {
+    if ((typeof document.body.style.maxHeight != "undefined") && (iOS() == false)) {
         // see: http://ajaxian.com/archives/detecting-ie7-in-javascript
         // modern browser: no need to simulate li:hover
         return;
@@ -18,8 +29,12 @@ function hoverToOverForIE() {
         for ( var i = 0; i < navRoot.childNodes.length; i++) {
             var node = navRoot.childNodes[i];
             if (node.nodeName == "LI") {
-                node.onmouseover = addOver;
-                node.onmouseout = removeOver;
+                if (iOS() == false) {
+                    node.onmouseover = addOver;
+                    node.onmouseout = removeOver;
+                } else {
+                    node.onclick = doNothing;
+                }
             }
         }
     }

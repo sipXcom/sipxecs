@@ -333,4 +333,12 @@ public abstract class DialingRule extends BeanWithId implements NamedObject,
     public String getConfigChangeType() {
         return DialingRule.class.getSimpleName();
     }
+
+    public String getExternalHostname() {
+        return null;
+    }
+
+    public List<String> getExternalPermissionNames() {
+        return Collections.emptyList();
+    }
 }
