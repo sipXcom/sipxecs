@@ -21,13 +21,14 @@ import java.util.Collection;
 import java.util.List;
 
 import org.sipfoundry.sipxconfig.address.AddressType;
+import org.sipfoundry.sipxconfig.address.AddressType.Protocol;
 import org.sipfoundry.sipxconfig.feature.LocationFeature;
 import org.sipfoundry.sipxconfig.firewall.DefaultFirewallRule;
 import org.sipfoundry.sipxconfig.setting.PersistableSettings;
 
 public interface SaaManager {
     final AddressType SAA_TCP = new AddressType("saaTcp");
-    final AddressType SAA_UDP = new AddressType("saaUdp");
+    final AddressType SAA_UDP = new AddressType("saaUdp", Protocol.udp);
     final List<AddressType> SUPPORTED_ADDRESS_TYPES = Arrays.asList(new AddressType[] {
         SAA_TCP, SAA_UDP
     });
