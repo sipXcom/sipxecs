@@ -1,5 +1,5 @@
 function iOS() {
-    if (userAgent.match(/ipad|iphone|ipod/i)) {
+    if (navigator.userAgent.match(/ipad|iphone|ipod/i)) {
         return true
     } else {
         return false
