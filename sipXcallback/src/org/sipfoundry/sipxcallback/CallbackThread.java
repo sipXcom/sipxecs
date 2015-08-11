@@ -99,7 +99,7 @@ public class CallbackThread extends Thread {
 
         // play "Caller <callerName> requested a callback" to B users
         new Broadcast(m_fsCmdSocket, calleeUUID, m_callerPrompt, false).startResponse();
-        new Broadcast(m_fsCmdSocket, calleeUUID, m_calleeName, true).startResponse();
+        new Broadcast(m_fsCmdSocket, calleeUUID, m_callerName, true).startResponse();
         new Broadcast(m_fsCmdSocket, calleeUUID, m_requestedCallbackPrompt, false).startResponse();
         Thread.sleep(4000);
 
