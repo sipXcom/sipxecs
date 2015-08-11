@@ -5232,6 +5232,26 @@
         <value>ezLogo320x240.jpg</value>        
       </setting>
     </group>
+    <group name="polycomVVX600bg" hidden="yes">
+      <setting name="selection">
+        <type>
+          <string />
+        </type>
+        <value>2,1</value>        
+      </setting>
+      <setting name="bm.1.em.name">
+        <type>
+	      <string />
+	    </type>
+        <value>ezLogo800x480.jpg</value>        
+      </setting>
+       <setting name="bm.1.name">
+        <type>
+          <string />
+        </type>
+        <value>ezLogo800x480.jpg</value>        
+      </setting>
+    </group>
     <group name="polycom550bg" hidden="yes">
       <setting name="selection">
         <type>
