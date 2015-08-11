@@ -13,7 +13,7 @@ VOLUME_LABEL ?= "CentOS sipX $(PACKAGE_VERSION)"
 APPLICATION_LABEL ?= "CentOS sipX $(PACKAGE_VERSION)"
 PUBLISHER_ID ?= sipxcom-dev@googlegroups.com
 PREPARERER_ID ?= sipxcom-dev@googlegroups.com
-CENTOS_VER = 6.6
+CENTOS_VER = 6.7
 ISO_RPM_DOWNLOAD_URL ?= @CENTOS_BASE_URL@/$(CENTOS_VER)
 ISO_M4_OPTS = $(CUSTOM_ISO_M4_OPTS) -D PACKAGE_VERSION=$(PACKAGE_VERSION)
 ISO_PACKAGES_OS=$(ARCH)-os-Packages
@@ -381,6 +381,7 @@ ISO_ADD_OS = \
   groff-1.* \
   grub-* \
   grubby-* \
+  gsm-1.0.* \
   gstreamer-0* \
   gstreamer-plugins-base-* \
   gstreamer-tools-* \
@@ -468,6 +469,7 @@ ISO_ADD_OS = \
   libacl-* \
   libasyncns-* \
   libattr-* \
+  libao-0.8.* \
   libblkid-* \
   libcap-2.* \
   libcap-ng-0.* \
@@ -507,6 +509,7 @@ ISO_ADD_OS = \
   libsepol-devel-* \
   libsndfile-* \
   libss-* \
+  libsamplerate-0.1.* \
   libstdc++-4.4.7-* \
   libstdc++-devel-* \
   libtasn1-2.* \
@@ -686,6 +689,7 @@ ISO_ADD_OS = \
   startup-notification-0.* \
   sudo-* \
   sound-theme-freedesktop-* \
+  sox-14.2.* \
   speex-1.* \
   system-config-firewall-base-* \
   system-config-network-tui-* \
@@ -717,6 +721,7 @@ ISO_ADD_OS = \
   util-linux-ng-* \
   vim-minimal-* \
   vsftpd-* \
+  wavpack-4.60-* \
   wget-* \
   which-* \
   wireless-tools-* \
