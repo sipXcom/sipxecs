@@ -29,7 +29,7 @@ public enum CallTag {
     TF("Toll Free", "TF"), // toll free
     VM("VoiceMail", "VMAIL"), // voicemail
     VMR("VoiceMail Redirect", "RVMAIL"), // voicemail redirect
-    CBR("Callback Redirect", "RCMAIL"), // callback redirect
+    CBB("Callback", "CBB"), // callback on busy
     AL("Alias", "AL"),  // Alias
     INT("Internal", "INT"), // Internal
     PARK("Park", "PARK"), // Park
