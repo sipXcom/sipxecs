@@ -16,9 +16,6 @@
   <extension name="CBB">
     <condition field="destination_number" expression="^CBB${dollar}">
       <action application="socket" data="${location.address}:8284 async full"/>
-#foreach($other in $locations)
-      <action application="redirect" data="sip:CBB@${other.address}:15060;${sip_req_params}"/>
-#end
     </condition>
   </extension>
 #end
