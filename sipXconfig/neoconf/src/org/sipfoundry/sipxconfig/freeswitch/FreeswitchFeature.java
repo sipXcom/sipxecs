@@ -90,7 +90,7 @@ public class FreeswitchFeature implements FeatureProvider, AddressProvider, Proc
         DefaultFirewallRule[] rules = new DefaultFirewallRule[] {
             new DefaultFirewallRule(XMLRPC_ADDRESS), new DefaultFirewallRule(EVENT_ADDRESS),
             new DefaultFirewallRule(ACC_EVENT_ADDRESS), new DefaultFirewallRule(SIP_ADDRESS),
-            new DefaultFirewallRule(CALLBACK_EVENT_ADDRESS), new DefaultFirewallRule(SIP_UDP_ADDRESS),
+            new DefaultFirewallRule(CALLBACK_EVENT_ADDRESS), new DefaultFirewallRule(SIP_ADDRESS),
             new DefaultFirewallRule(RTP_ADDRESS, FirewallRule.SystemId.PUBLIC, true)
         };
         return Arrays.asList(rules);

@@ -16,7 +16,7 @@
  */
 package org.sipfoundry.sipxcallback.common;
 
-import java.util.Map;
+import java.util.Set;
 
 public interface CallbackService {
 
@@ -28,6 +28,6 @@ public interface CallbackService {
      * Method used to assemble callback information and decide what requests are expired.
      * @return a Map which consists of calleeName and callerName from which you can build the callback thread
      */
-    public Map<String, String> runCallbackTimer();
+    public Set<CallbackLegs> runCallbackTimer();
 
 }

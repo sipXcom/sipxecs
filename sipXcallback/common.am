@@ -23,6 +23,7 @@ sipxcall_PKGS = \
 	spring-aop \
 	spring-data-commons \
 	spring-data-mongodb \
-	aopalliance
+	aopalliance \
+	hazelcast-all
 
 sipxcall_JAVAROOT = $(abspath $(top_builddir)/src/classes)

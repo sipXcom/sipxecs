@@ -1,5 +1,5 @@
 log4j.logger.org.sipfoundry.sipxcallback=INFO
-log4j.rootLogger=warn, file
+log4j.rootLogger=info, file
 log4j.appender.file=org.sipfoundry.commons.log4j.SipFoundryAppender
 log4j.appender.file.File=@SIPX_LOGDIR@/sipxcallback.log
 log4j.appender.file.layout=org.sipfoundry.commons.log4j.SipFoundryLayout
