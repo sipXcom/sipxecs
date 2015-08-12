@@ -29,6 +29,9 @@ import org.sipfoundry.sipxcallback.common.CallbackException;
 import org.sipfoundry.sipxcallback.common.CallbackService;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.IMap;
+
 public class CallbackThread extends Thread {
 
     private static final Logger LOG = Logger.getLogger("org.sipfoundry.sipxcallback");
@@ -43,6 +46,7 @@ public class CallbackThread extends Thread {
     private FreeSwitchEventSocketInterface m_fsCmdSocket;
     private CallbackService m_callbackService;
     private String sipxchangeDomainName;
+    private HazelcastInstance m_hazelcastInstance;
 
     private String m_callerPrompt;
     private String m_requestedCallbackPrompt;
@@ -90,6 +94,8 @@ public class CallbackThread extends Thread {
         String callerURL = m_callerUID.split("/")[2];
         try {
             m_callbackService.updateCallbackInformation(m_calleeName, callerURL, false);
+            IMap<Object, Object> hazelcastMap = m_hazelcastInstance.getMap(CallbackTimer.HAZELCAST_CALLS);
+            hazelcastMap.remove(m_calleeName);
         } catch (CallbackException e) {
             LOG.error(e);
             return;
@@ -183,5 +189,10 @@ public class CallbackThread extends Thread {
     @Required
     public void setSipxchangeDomainName(String sipxchangeDomainName) {
         this.sipxchangeDomainName = sipxchangeDomainName;
+    }
+
+    @Required
+    public void setHazelcastInstance(HazelcastInstance hazelcastInstance) {
+        m_hazelcastInstance = hazelcastInstance;
     }
 }

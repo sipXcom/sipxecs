@@ -23,9 +23,9 @@ import static org.sipfoundry.commons.mongo.MongoConstants.UID;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 
 import org.sipfoundry.commons.mongo.MongoConstants;
@@ -45,6 +45,7 @@ public class CallbackServiceImpl implements CallbackService {
     private MongoTemplate m_imdbTemplate;
     private int m_expires;
 
+    @Override
     public void updateCallbackInformation(String calleeUserName,
             String callerChannelName, boolean insertNewRequest)
             throws CallbackException {
@@ -76,13 +77,14 @@ public class CallbackServiceImpl implements CallbackService {
         updateCallbackList(entityCollection, callbackList, user, null);
     }
 
-    public Map<String, String> runCallbackTimer() {
+    @Override
+    public Set<CallbackLegs> runCallbackTimer() {
         DBCollection entityCollection = m_imdbTemplate.getCollection("entity");
         // get all users which have callback on busy set
         DBCursor users = getCallbackUsers(entityCollection);
 
         // iterate over users
-        Map<String,String> callsMap = new HashMap<String,String>();
+        Set<CallbackLegs> callsMap = new HashSet<CallbackLegs>();
         for (DBObject user : users) {
             BasicDBList callbackList = (BasicDBList) user.get(CALLBACK_LIST);
             String calleeName = ValidUsers.getStringValue(user, UID);
@@ -90,7 +92,7 @@ public class CallbackServiceImpl implements CallbackService {
             // keep tabs if any callback flag has expired and then update the callback list
             List<DBObject> objectsToBeRemoved = new ArrayList<DBObject>();
             for (Object callerDbObject : callbackList) {
-                callsMap.putAll( handleCallbackAction(calleeName, (DBObject) callerDbObject,
+                callsMap.addAll(handleCallbackAction(calleeName, (DBObject) callerDbObject,
                         callbackList, objectsToBeRemoved) );
             }
             updateCallbackList(entityCollection, callbackList, user, objectsToBeRemoved);
@@ -129,22 +131,23 @@ public class CallbackServiceImpl implements CallbackService {
      * Returns a list with objects to be removed because their callback duration has expired
      * @return 
      */
-    private Map<String, String> handleCallbackAction(String calleeName,
+    private Set<CallbackLegs> handleCallbackAction(String calleeName,
             DBObject callbackObject, BasicDBList callbackList,
             List<DBObject> objectsToBeRemoved) {
-        Map<String,String> callsMap = new HashMap<String,String>();
+        Set<CallbackLegs> callSet = new HashSet<CallbackLegs>();
         for (String callerName : callbackObject.keySet()) {
             long callerDate = (long) callbackObject.get(callerName);
             long currentDate = getCurrentTimestamp();
             long timeDiff = currentDate - callerDate;
             // check if the flag for callback has expired
             if (timeDiff < m_expires * 60000) {
-                callsMap.put(calleeName, callerName);
+                CallbackLegs callbackLegs = new CallbackLegs(calleeName, callerName);
+                callSet.add(callbackLegs);
             } else {
                 objectsToBeRemoved.add(callbackObject);
             }
         }
-        return callsMap;
+        return callSet;
     }
 
     private DBCursor getCallbackUsers(DBCollection entityCollection) {
