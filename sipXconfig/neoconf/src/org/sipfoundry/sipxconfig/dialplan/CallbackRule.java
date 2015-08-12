@@ -15,15 +15,16 @@ import org.sipfoundry.sipxconfig.dialplan.config.UrlTransform;
 public class CallbackRule extends DialingRule {
 
     private static final String USER_PART = "CBB";
+    private static final String CBB_FQDN_PREFIX = "cbb.";
     private final UrlTransform m_transform;
     private final DialPattern m_dialPattern;
 
 
-    public CallbackRule(String prefix, String addrPort) {
+    public CallbackRule(String prefix, String addrLocation) {
         setEnabled(true);
         m_dialPattern = new DialPattern(prefix, DialPattern.VARIABLE_DIGITS);
         m_transform = new UrlTransform();
-        m_transform.setUrl(MappingRule.buildUrl(USER_PART, addrPort, null, null, null));
+        m_transform.setUrl(MappingRule.buildUrl(USER_PART, CBB_FQDN_PREFIX + addrLocation, null, null, null));
     }
 
     @Override
@@ -57,4 +58,10 @@ public class CallbackRule extends DialingRule {
     public boolean isGatewayAware() {
         return false;
     }
+
+    @Override
+    public CallTag getCallTag() {
+        return CallTag.CBB;
+    }
+
 }
