@@ -16,6 +16,8 @@
   <bean id="callbackImpl" class="org.sipfoundry.sipxconfig.callback.CallbackOnBusyImpl">
     <property name="featureManager" ref="featureManager" />
     <property name="addressManager" ref="addressManager" />
+    <property name="domainManager" ref="domainManager" />
+    <property name="freeswitchFeature" ref="freeswitchFeature" />
     <property name="settingsDao">
       <bean parent="beanWithSettingsDao">
         <property name="target">

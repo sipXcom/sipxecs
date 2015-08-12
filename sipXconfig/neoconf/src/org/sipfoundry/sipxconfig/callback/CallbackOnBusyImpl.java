@@ -24,9 +24,15 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.sipfoundry.sipxconfig.address.Address;
 import org.sipfoundry.sipxconfig.address.AddressManager;
+import org.sipfoundry.sipxconfig.address.AddressType;
 import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.dialplan.CallbackRule;
 import org.sipfoundry.sipxconfig.dialplan.DialingRule;
+import org.sipfoundry.sipxconfig.dns.DnsManager;
+import org.sipfoundry.sipxconfig.dns.DnsProvider;
+import org.sipfoundry.sipxconfig.dns.ResourceRecord;
+import org.sipfoundry.sipxconfig.dns.ResourceRecords;
+import org.sipfoundry.sipxconfig.domain.DomainManager;
 import org.sipfoundry.sipxconfig.feature.Bundle;
 import org.sipfoundry.sipxconfig.feature.FeatureChangeRequest;
 import org.sipfoundry.sipxconfig.feature.FeatureChangeValidator;
@@ -35,17 +41,22 @@ import org.sipfoundry.sipxconfig.feature.FeatureProvider;
 import org.sipfoundry.sipxconfig.feature.GlobalFeature;
 import org.sipfoundry.sipxconfig.feature.LocationFeature;
 import org.sipfoundry.sipxconfig.freeswitch.FreeswitchFeature;
+import org.sipfoundry.sipxconfig.ivr.Ivr;
 import org.sipfoundry.sipxconfig.setting.BeanWithSettingsDao;
 import org.sipfoundry.sipxconfig.snmp.ProcessDefinition;
 import org.sipfoundry.sipxconfig.snmp.ProcessProvider;
 import org.sipfoundry.sipxconfig.snmp.SnmpManager;
 import org.springframework.beans.factory.annotation.Required;
 
-public class CallbackOnBusyImpl implements FeatureProvider, CallbackOnBusy, ProcessProvider {
+public class CallbackOnBusyImpl implements FeatureProvider, CallbackOnBusy, ProcessProvider, DnsProvider {
+
+    private static final String CBB = "cbb";
 
     private BeanWithSettingsDao<CallbackSettings> m_settingsDao;
     private FeatureManager m_featureManager;
     private AddressManager m_addressManager;
+    private DomainManager m_domainManager;
+    private FreeswitchFeature m_fsFeature;
 
     @Override
     public List<? extends DialingRule> getDialingRules(Location location) {
@@ -61,8 +72,8 @@ public class CallbackOnBusyImpl implements FeatureProvider, CallbackOnBusy, Proc
         if (StringUtils.isEmpty(prefix)) {
             return Collections.emptyList();
         }
-        String fsAddressPort = locations.get(0).getAddress() + ':' + fsAddress.getPort();
-        CallbackRule rule = new CallbackRule(prefix, fsAddressPort);
+        String fsAddressLocation = locations.get(0).getFqdn() + ':' + fsAddress.getPort();
+        CallbackRule rule = new CallbackRule(prefix, fsAddressLocation);
         rule.appendToGenerationRules(dialingRules);
         return dialingRules;
     }
@@ -119,6 +130,38 @@ public class CallbackOnBusyImpl implements FeatureProvider, CallbackOnBusy, Proc
         }
     }
 
+    @Override
+    public Address getAddress(DnsManager manager, AddressType t,
+            Collection<Address> addresses, Location whoIsAsking) {
+        if (!m_featureManager.isFeatureEnabled(Ivr.FEATURE)) {
+            return null;
+        }
+
+        if (whoIsAsking != null && m_featureManager.isFeatureEnabled(Ivr.FEATURE, whoIsAsking)) {
+            return new Address(t, getAddress(whoIsAsking.getHostnameInSipDomain()));
+        }
+        return new Address(t, getAddress(m_domainManager.getDomainName()));
+    }
+
+    private String getAddress(String host) {
+        return String.format("%s.%s", CBB, host);
+    }
+
+    @Override
+    public Collection<ResourceRecords> getResourceRecords(DnsManager manager) {
+        FeatureManager fm = manager.getAddressManager().getFeatureManager();
+        List<Location> locations = fm.getLocationsForEnabledFeature(FEATURE);
+        if (locations == null || locations.isEmpty()) {
+            return Collections.emptyList();
+        }
+        ResourceRecords records = new ResourceRecords("_sip._tcp", CBB, true);
+        for (Location l : locations) {
+            int port = m_fsFeature.getSettings(l).getFreeswitchSipPort();
+            records.addRecord(new ResourceRecord(l.getHostname(), port, l.getRegionId()));
+        }
+        return Collections.singleton(records);
+    }
+
     public boolean isEnabled() {
         return m_featureManager.isFeatureEnabled(FEATURE);
     }
@@ -136,6 +179,16 @@ public class CallbackOnBusyImpl implements FeatureProvider, CallbackOnBusy, Proc
     @Required
     public void setAddressManager(AddressManager addressManager) {
         m_addressManager = addressManager;
+    }
+
+    @Required
+    public void setDomainManager(DomainManager domainManager) {
+        m_domainManager = domainManager;
+    }
+
+    @Required
+    public void setFreeswitchFeature(FreeswitchFeature fsFeature) {
+        m_fsFeature = fsFeature;
     }
 
 }
