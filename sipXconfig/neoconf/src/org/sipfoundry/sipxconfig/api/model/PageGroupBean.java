@@ -16,6 +16,8 @@ package org.sipfoundry.sipxconfig.api.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
@@ -114,7 +116,7 @@ public class PageGroupBean {
             userBean.setUserName(user.getUserName());
             userBean.setLastName(user.getLastName());
             userBean.setFirstName(user.getFirstName());
-            List<String> aliases = new ArrayList<String>();
+            Set<String> aliases = new TreeSet<String>();
             for (String alias : user.getAliases()) {
                 aliases.add(alias);
             }
@@ -133,59 +135,5 @@ public class PageGroupBean {
         group.setPageGroupNumber(bean.getPageGroupNumber());
         group.setSound(bean.getSound());
         group.setTimeout(bean.getTimeout());
-    }
-
-    @XmlRootElement(name = "User")
-    @XmlType(propOrder = {
-            "id", "userName", "lastName", "firstName", "aliases"
-            })
-    public static class UserBean {
-        private Integer m_id;
-        private String m_userName;
-        private String m_lastName;
-        private String m_firstName;
-        private List<String> m_aliases;
-
-        public Integer getId() {
-            return m_id;
-        }
-
-        public void setId(Integer id) {
-            m_id = id;
-        }
-
-        public String getUserName() {
-            return m_userName;
-        }
-
-        public void setUserName(String name) {
-            m_userName = name;
-        }
-
-        public String getLastName() {
-            return m_lastName;
-        }
-
-        public void setLastName(String name) {
-            m_lastName = name;
-        }
-
-        public String getFirstName() {
-            return m_firstName;
-        }
-
-        public void setFirstName(String name) {
-            m_firstName = name;
-        }
-
-        public void setAliases(List<String> aliases) {
-            m_aliases = aliases;
-        }
-
-        @XmlElementWrapper(name = "Aliases")
-        @XmlElement(name = "Alias")
-        public List<String> getAliases() {
-            return m_aliases;
-        }
     }
 }

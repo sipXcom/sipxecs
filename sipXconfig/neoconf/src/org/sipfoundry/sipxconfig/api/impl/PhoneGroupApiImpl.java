@@ -16,8 +16,6 @@ package org.sipfoundry.sipxconfig.api.impl;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
@@ -25,7 +23,6 @@ import javax.ws.rs.core.Response.Status;
 
 import org.sipfoundry.sipxconfig.api.PhoneGroupApi;
 import org.sipfoundry.sipxconfig.api.model.GroupBean;
-import org.sipfoundry.sipxconfig.api.model.GroupList;
 import org.sipfoundry.sipxconfig.api.model.ModelBean.ModelList;
 import org.sipfoundry.sipxconfig.api.model.SettingsList;
 import org.sipfoundry.sipxconfig.device.ModelSource;
@@ -37,14 +34,14 @@ import org.sipfoundry.sipxconfig.setting.Setting;
 import org.sipfoundry.sipxconfig.setting.SettingDao;
 import org.springframework.beans.factory.annotation.Required;
 
-public class PhoneGroupApiImpl implements PhoneGroupApi {
+public class PhoneGroupApiImpl extends GroupApiImpl  implements PhoneGroupApi {
     private PhoneContext m_phoneContext;
     private SettingDao m_settingDao;
     private ModelSource<PhoneModel> m_phoneModelSource;
 
     @Override
     public Response getPhoneGroups() {
-        return buildPhoneGroupList(m_phoneContext.getGroups(),
+        return buildGroupList(m_phoneContext.getGroups(),
             m_settingDao.getGroupMemberCountIndexedByGroupId(Phone.class));
     }
 
@@ -172,13 +169,6 @@ public class PhoneGroupApiImpl implements PhoneGroupApi {
             group.getDatabaseValues().remove(path);
             m_settingDao.saveGroup(group);
             return Response.ok().build();
-        }
-        return Response.status(Status.NOT_FOUND).build();
-    }
-
-    private Response buildPhoneGroupList(List<Group> phoneGroups, Map count) {
-        if (phoneGroups != null) {
-            return Response.ok().entity(GroupList.convertGroupList(phoneGroups, count)).build();
         }
         return Response.status(Status.NOT_FOUND).build();
     }
