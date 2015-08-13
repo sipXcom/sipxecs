@@ -22,6 +22,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
+import org.sipfoundry.sipxconfig.common.User;
 import org.sipfoundry.sipxconfig.phone.Phone;
 import org.sipfoundry.sipxconfig.setting.Group;
 
@@ -110,5 +111,9 @@ public class GroupBean {
 
     public static void convertToPhoneGroup(GroupBean groupBean, Group group) {
         convertToGroup(groupBean, group, Phone.GROUP_RESOURCE_ID);
+    }
+
+    public static void convertToUserGroup(GroupBean groupBean, Group group) {
+        convertToGroup(groupBean, group, User.GROUP_RESOURCE_ID);
     }
 }

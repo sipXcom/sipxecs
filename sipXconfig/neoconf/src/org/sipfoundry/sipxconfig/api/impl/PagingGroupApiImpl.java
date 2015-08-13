@@ -23,8 +23,8 @@ import javax.ws.rs.core.Response.Status;
 import org.mozilla.javascript.edu.emory.mathcs.backport.java.util.Collections;
 import org.sipfoundry.sipxconfig.api.PagingGroupApi;
 import org.sipfoundry.sipxconfig.api.model.PageGroupBean;
-import org.sipfoundry.sipxconfig.api.model.PageGroupBean.UserBean;
 import org.sipfoundry.sipxconfig.api.model.PageGroupList;
+import org.sipfoundry.sipxconfig.api.model.UserBean;
 import org.sipfoundry.sipxconfig.common.CoreContext;
 import org.sipfoundry.sipxconfig.common.User;
 import org.sipfoundry.sipxconfig.paging.PagingContext;
@@ -106,7 +106,7 @@ public class PagingGroupApiImpl extends BaseServiceApiImpl implements PagingGrou
         group.setUsers(new HashSet<User>());
         for (UserBean userBean : bean.getUsers()) {
             User user = null;
-            if (userBean.getId() != null) {
+            if (userBean.getId() > 0) {
                 user = m_coreContext.getUser(userBean.getId());
             } else if (userBean.getUserName() != null) {
                 user = m_coreContext.loadUserByUserNameOrAlias(userBean.getUserName());

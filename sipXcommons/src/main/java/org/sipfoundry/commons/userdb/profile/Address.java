@@ -16,6 +16,9 @@
  */
 package org.sipfoundry.commons.userdb.profile;
 
+import org.codehaus.jackson.annotate.JsonPropertyOrder;
+
+@JsonPropertyOrder({"country", "street", "city", "zip", "officeDesignation", "state"})
 public class Address {
 
     private String m_street;
