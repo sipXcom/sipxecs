@@ -40,10 +40,16 @@ public final class PolycomModel extends PhoneModel {
     public static final DeviceVersion VER_5_1_2 = new DeviceVersion(PolycomPhone.BEAN_ID, "5.1.2");
     public static final DeviceVersion VER_5_1_3 = new DeviceVersion(PolycomPhone.BEAN_ID, "5.1.3");
     public static final DeviceVersion VER_5_2_0 = new DeviceVersion(PolycomPhone.BEAN_ID, "5.2.0");
+    public static final DeviceVersion VER_5_2_1 = new DeviceVersion(PolycomPhone.BEAN_ID, "5.2.1");
+    public static final DeviceVersion VER_5_2_2 = new DeviceVersion(PolycomPhone.BEAN_ID, "5.2.2");
+    public static final DeviceVersion VER_5_2_3 = new DeviceVersion(PolycomPhone.BEAN_ID, "5.2.3");
+    public static final DeviceVersion VER_5_3_0 = new DeviceVersion(PolycomPhone.BEAN_ID, "5.3.0");
+    public static final DeviceVersion VER_5_3_1 = new DeviceVersion(PolycomPhone.BEAN_ID, "5.3.1");
+    public static final DeviceVersion VER_5_4_0 = new DeviceVersion(PolycomPhone.BEAN_ID, "5.4.0");
     public static final DeviceVersion[] SUPPORTED_VERSIONS = new DeviceVersion[] {
         VER_3_1_X, VER_3_2_X, VER_4_0_X, VER_4_1_X, VER_4_1_0, VER_4_1_2, VER_4_1_3, VER_4_1_4, VER_4_1_5,
         VER_5_0_0, VER_5_0_1, VER_5_0_2, VER_4_1_6, VER_4_1_7, VER_4_1_8, VER_5_1_1, VER_5_1_2, VER_5_1_3,
-        VER_5_2_0
+        VER_5_2_0, VER_5_2_1, VER_5_2_2, VER_5_2_3, VER_5_3_0, VER_5_3_1, VER_5_4_0
     };
     private static final Log LOG = LogFactory.getLog(PolycomModel.class);
     private DeviceVersion m_deviceVersion;
