@@ -437,11 +437,20 @@ sec.TLS.profile.1.caCert.platform2="0"
 />
 #end
 
-#set ($softKey = $cfg.EndpointSettings.getSetting('softKey'))
-#if($softKey)
+#set ($softKeyFeature = $cfg.EndpointSettings.getSetting('softKey').getSetting('feature'))
+#if($softKeyFeature)
 <softKey
-#foreach ($setting in $cfg.getRecursiveSettings($softKey))
-          softKey.${setting.ProfileName}="$!{setting.Value}"
+#foreach ($setting in $cfg.getRecursiveSettings($softKeyFeature))
+          softKey.feature.${setting.ProfileName}="$!{setting.Value}"
+#end
+/>
+#end
+
+#set ($softKeyEfk = $cfg.EndpointSettings.getSetting('softKey').getSetting('efk'))
+#if($softKeyEfk)
+<change
+#foreach ($setting in $cfg.getRecursiveSettings($softKeyEfk))
+          efk.${setting.ProfileName}="$!{setting.Value}"
 #end
 />
 #end
