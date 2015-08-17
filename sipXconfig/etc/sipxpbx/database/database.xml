@@ -481,6 +481,7 @@
   	<antcall target="add_vm_server_port" />
     <antcall target="openacd-permission-update2" />
     <antcall target="openacd-permission-update3" />
+    <antcall target="openacd-add-pstn-agent" />
   </target>
 
   <target name="plugin-patches">
@@ -1470,8 +1471,11 @@
   <target name="openacd-permission-update3" unless="openacd-permission-update3">
     <db-patch patch="openacd-permission-update3"/>
   </target>
+  <target name="openacd-add-pstn-agent" unless="openacd-add-pstn-agent">
+    <db-patch patch="openacd-add-pstn-agent"/>
+  </target>
 
-  <!--
+	<!--
     - SUPPORT UTILITIES
   -->
   <!-- Run SQL on SIPXCONFIG database and update patch list if successful -->
