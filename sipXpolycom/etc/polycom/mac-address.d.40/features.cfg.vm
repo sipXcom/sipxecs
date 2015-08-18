@@ -95,22 +95,36 @@
     roaming_privacy.${setting.ProfileName}="$!{setting.Value}"
 #end
   />
-#if ($phone.Model.ModelId == "polycomVVX500" || $phone.Model.ModelId == "polycomVVX410")
-#set ($group = $cfg.EndpointSettings.getSetting('polycomVVX500bg'))
+#if ($phone.Model.ModelId == "polycomVVX500" || $phone.Model.ModelId == "polycomVVX410" || $phone.Model.ModelId == "polycomVVX400")
+#set ($group = $cfg.EndpointSettings.getSetting('background').getSetting('polycomVVX500bg'))
+#if($group.getSetting('enabled').Value == 1)
   <bg>
     <bg.color bg.color.selection="$group.getSetting('selection').Value">
       <bg.color.bm bg.color.bm.1.em.name="$group.getSetting('bm.1.em.name').Value" bg.color.bm.1.name="$group.getSetting('bm.1.name').Value" />
     </bg.color>
   </bg>
+#end
+#elseif($phone.Model.ModelId == "polycomVVX300" || $phone.Model.ModelId == "polycomVVX310")
+#set ($group = $cfg.EndpointSettings.getSetting('background').getSetting('polycomVVX300bg'))
+#if($group.getSetting('enabled').Value == 1)
+  <bg>
+    <bg.color bg.color.selection="$group.getSetting('selection').Value">
+      <bg.color.bm bg.color.bm.1.em.name="$group.getSetting('bm.1.em.name').Value" bg.color.bm.1.name="$group.getSetting('bm.1.name').Value" />
+    </bg.color>
+  </bg>
+#end
 #elseif($phone.Model.ModelId == "polycomVVX600")
-#set ($group = $cfg.EndpointSettings.getSetting('polycomVVX600bg'))
+#set ($group = $cfg.EndpointSettings.getSetting('background').getSetting('polycomVVX600bg'))
+#if($group.getSetting('enabled').Value == 1)
   <bg>
     <bg.color bg.color.selection="$group.getSetting('selection').Value">
       <bg.color.bm bg.color.bm.1.em.name="$group.getSetting('bm.1.em.name').Value" bg.color.bm.1.name="$group.getSetting('bm.1.name').Value" />
     </bg.color>
   </bg>
+#end
 #elseif($phone.Model.ModelId == "polycomVVX1500")
-#set ($group = $cfg.EndpointSettings.getSetting('polycomVVX1500bg'))
+#set ($group = $cfg.EndpointSettings.getSetting('background').getSetting('polycomVVX1500bg'))
+#if($group.getSetting('enabled').Value == 1)
   <bg>
     <bg.VVX_1500>
       <bg.VVX_1500.color bg.VVX_1500.color.selection="$group.getSetting('selection').Value">
@@ -118,8 +132,10 @@
       </bg.VVX_1500.color>
     </bg.VVX_1500>
   </bg>
+#end
 #elseif($phone.Model.ModelId == "polycom670")
-#set ($group = $cfg.EndpointSettings.getSetting('polycom670bg'))
+#set ($group = $cfg.EndpointSettings.getSetting('background').getSetting('polycom670bg'))
+#if($group.getSetting('enabled').Value == 1)
   <bg>
     <bg.hiRes>
       <bg.hiRes.color bg.hiRes.color.selection="$group.getSetting('selection').Value">
@@ -127,8 +143,10 @@
       </bg.hiRes.color>
     </bg.hiRes>
   </bg>
+#end
 #elseif($phone.Model.ModelId == "polycom450")
-#set ($group = $cfg.EndpointSettings.getSetting('polycom450bg'))
+#set ($group = $cfg.EndpointSettings.getSetting('background').getSetting('polycom450bg'))
+#if($group.getSetting('enabled').Value == 1)
   <bg>
     <bg.medRes>
       <bg.medRes.gray bg.medRes.gray.selection="$group.getSetting('selection').Value">
@@ -136,8 +154,10 @@
       </bg.medRes.gray>
     </bg.medRes>
   </bg>
+#end
 #elseif($phone.Model.ModelId == "polycom550" || $phone.Model.ModelId == "polycom560" || $phone.Model.ModelId == "polycom650")
-#set ($group = $cfg.EndpointSettings.getSetting('polycom550bg'))
+#set ($group = $cfg.EndpointSettings.getSetting('background').getSetting('polycom550bg'))
+#if($group.getSetting('enabled').Value == 1)
   <bg>
     <bg.hiRes>
       <bg.hiRes.gray bg.hiRes.gray.selection="$group.getSetting('selection').Value">
@@ -145,5 +165,6 @@
       </bg.hiRes.gray>
     </bg.hiRes>
   </bg>
+#end
 #end
 </polycomConfig>
