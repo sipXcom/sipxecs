@@ -89,6 +89,40 @@ bundle agent sipxfreeswitch_config {
         perms => m("644"),
         copy_from => local_cp("/etc/freeswitch/lang/."),
         depth_search => recurse("inf");
+
+    fs_core::
+      "/etc/sysctl.conf"
+        comment => "Adding kernel network parameters $(this.promoiser)",
+        perms => mog("0644","root","root"),
+        edit_line => add_sysctl_conf_core(),
+        classes => if_repaired("update_sysctl_core");
+
+    !fs_core::
+      "/etc/sysctl.conf"
+        comment => "Deleting kernel network parameters $(this.promoiser)",
+        perms => mog("0644","root","root"),
+        edit_line => delete_sysctl_conf_core(),
+        classes => if_repaired("update_sysctl_core");
+
+  commands:
+    update_sysctl_core::
+      "/sbin/sysctl"
+        comment => "Apply kernel FS core parameters",
+        args => "-p";
+}
+
+bundle edit_line add_sysctl_conf_core() {
+  insert_lines:
+    "# sipxecs generated - core dumps";
+    "fs.suid_dumpable=2";
+    "kernel.core_pattern=/tmp/core";
+}
+
+bundle edit_line delete_sysctl_conf_core() {
+  delete_lines:
+    "# sipxecs generated - core dumps";
+    "fs.suid_dumpable=2";
+    "kernel.core_pattern=/tmp/core";
 }
 
 bundle edit_line sipxfreeswitch_modules {
@@ -215,7 +249,7 @@ bundle agent sipxfreeswitch_running {
         comment => "reload freeswitch",
         args => "reload";
 
-    sipxfreeswitch.sipxfreeswitch_running.(restart_sipxecs|restart_sipxfreeswitch)::
+    sipxfreeswitch.sipxfreeswitch_running.(restart_sipxecs|restart_sipxfreeswitch|update_sysctl_core)::
       "$(sipx.SIPX_SERVICEDIR)/sipxfreeswitch"
         comment => "restart freeswitch",
         args => "asyncrestart";
