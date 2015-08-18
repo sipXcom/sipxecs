@@ -581,6 +581,17 @@ int proxy()
        
        // and start the observer
        cseObserver = new SipXProxyCseObserver(*pSipUserAgent, domainName, pEventWriter);
+       
+       bool logAuthCodes = false;
+       osServiceOptions.getOption("SIPX_PROXY_LOG_AUTH_CODES", logAuthCodes, false);
+       
+       if (logAuthCodes)
+       {
+         cseObserver->setLogAuthCodes(true);
+         OS_LOG_NOTICE(FAC_SIP, "SipAuthProxyMain:: Auth Codes will be logged in CDRs");
+       }
+
+       
        cseObserver->start();
     }
     else

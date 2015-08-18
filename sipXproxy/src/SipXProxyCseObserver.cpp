@@ -14,6 +14,8 @@
 #include "SipXProxyCseObserver.h"
 #include <net/SipUserAgent.h>
 #include <net/SipXauthIdentity.h>
+#include <sipdb/EntityDB.h>
+#include <sipxproxy/SipRouter.h>
 #include <os/OsDateTime.h>
 #include "os/OsEventMsg.h"
 #include "os/OsMutex.h"
@@ -140,7 +142,8 @@ SipXProxyCseObserver::SipXProxyCseObserver(SipUserAgent&         sipUserAgent,
    mpWriter(pWriter),
    mSequenceNumber(0),
    mFlushTimer(getMessageQueue(), 0),
-   mCallTransMutex(OsMutex::Q_FIFO)
+   mCallTransMutex(OsMutex::Q_FIFO),
+   _logAuthCodes(false)
 {
    OsTime timeNow;
    OsDateTime::getCurTime(timeNow);
@@ -466,9 +469,6 @@ UtlBoolean SipXProxyCseObserver::handleMessage(OsMsg& eventMessage)
             UtlString toField;
             sipMsg->getToField(&toField);
             
-            UtlString fromField;
-            sipMsg->getFromField(&fromField);
-
 
             // collect the branch Id (i.e. transaction id) and via count.
             UtlString viaValue;
@@ -488,6 +488,34 @@ UtlBoolean SipXProxyCseObserver::handleMessage(OsMsg& eventMessage)
             UtlString replaces_fromTag;
             UtlString matchingIdentityHeader;
             SipXauthIdentity sipxIdentity(*sipMsg, matchingIdentityHeader, true,SipXauthIdentity::allowUnbound);
+            
+            //
+            // Get the Entity record if the auth-identity exists
+            //
+            UtlString authIdentity;
+            sipxIdentity.getIdentity(authIdentity);
+            EntityRecord entity;
+            
+            if (!authIdentity.isNull())
+            {
+              std::string identity = authIdentity.str();
+              SipRouter::getEntityDBInstance()->findByIdentity(identity, entity);
+            }
+            
+            //
+            // Determine if the entity record has an authc field
+            // Append it to the from uri
+            //
+            UtlString fromField;
+            if (_logAuthCodes && !entity.authc().empty())
+            {
+              fromUrl.setUrlParameter("auth-code", entity.authc().c_str());
+              fromUrl.toString(fromField);
+            }
+            else
+            {
+              sipMsg->getFromField(&fromField);
+            }
 
             sipMsg->getReferToField(referTo);
             sipMsg->getReferredByField(referredBy);   
