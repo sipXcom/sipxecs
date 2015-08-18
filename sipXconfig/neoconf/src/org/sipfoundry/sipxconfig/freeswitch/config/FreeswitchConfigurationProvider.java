@@ -44,10 +44,11 @@ public class FreeswitchConfigurationProvider implements ConfigProvider, BeanFact
             File dir = manager.getLocationDataDirectory(location);
             boolean enabled = manager.getFeatureManager().isFeatureEnabled(FreeswitchFeature.FEATURE, location);
             ConfigUtils.enableCfengineClass(dir, "sipxfreeswitch.cfdat", enabled, "sipxfreeswitch");
+            FreeswitchSettings settings = m_freeswitch.getSettings(location);
+            ConfigUtils.enableCfengineClass(dir, "fscore.cfdat", settings.isCoreEnabled(), "fs_core");
             if (!enabled) {
                 continue;
             }
-            FreeswitchSettings settings = m_freeswitch.getSettings(location);
             Map<String, AbstractFreeswitchConfiguration> configs = m_beanFactory
                     .getBeansOfType(AbstractFreeswitchConfiguration.class);
             for (AbstractFreeswitchConfiguration config : configs.values()) {

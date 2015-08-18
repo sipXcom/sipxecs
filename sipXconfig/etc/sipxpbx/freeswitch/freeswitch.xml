@@ -123,5 +123,18 @@
       </type>
       <value>0</value>
     </setting>
+    <setting name="FREESWITCH_CORE">
+      <type>
+        <boolean>
+          <true>
+            <value>1</value>
+          </true>
+          <false>
+            <value>0</value>
+          </false>
+        </boolean>
+      </type>
+      <value>0</value>
+    </setting>
   </group>
 </model>
