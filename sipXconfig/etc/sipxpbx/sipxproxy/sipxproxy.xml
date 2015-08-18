@@ -233,6 +233,10 @@
       <type><integer min="10" required="yes"/></type>
       <value>300</value>
     </setting>
+    <setting name="LOG_AUTH_CODES" advanced="yes">
+      <type><boolean /></type>
+      <value>0</value>
+    </setting>
   </group>
   <group name="msftxchghack"  advanced="yes">
     <setting name="USERAGENT" advanced="yes">
