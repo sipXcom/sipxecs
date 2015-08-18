@@ -17,8 +17,6 @@
 #foreach ($setting in $cfg.getRecursiveSettings($reg))
     reg.${i}.${setting.ProfileName}="$!{setting.Value}"
 #end
-    reg.${i}.acd-login-logout="0"
-    reg.${i}.acd-agent-available="0"
     reg.${i}.proxyRequire=""
 #end
   />

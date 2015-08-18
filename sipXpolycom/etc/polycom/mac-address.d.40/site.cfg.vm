@@ -334,6 +334,11 @@
     device.syslog.${setting.ProfileName}="$!{setting.Value}"
 #end
 
+#set ($group = $cfg.EndpointSettings.getSetting('auth'))
+#foreach ($setting in $cfg.getSettings($group))
+    device.auth.${setting.ProfileName}="$!{setting.Value}"
+#end
+
 #set ($group = $cfg.EndpointSettings.getSetting('network').getSetting('device.net'))
 #if ($cfg.EndpointSettings.getSetting('network').getSetting('device.net').getSetting('overwrite').Value != 0)
 #foreach ($setting in $cfg.getSettings($group))
@@ -432,11 +437,20 @@ sec.TLS.profile.1.caCert.platform2="0"
 />
 #end
 
-#set ($softKey = $cfg.EndpointSettings.getSetting('softKey'))
-#if($softKey)
+#set ($softKeyFeature = $cfg.EndpointSettings.getSetting('softKey').getSetting('feature'))
+#if($softKeyFeature)
 <softKey
-#foreach ($setting in $cfg.getRecursiveSettings($softKey))
-          softKey.${setting.ProfileName}="$!{setting.Value}"
+#foreach ($setting in $cfg.getRecursiveSettings($softKeyFeature))
+          softKey.feature.${setting.ProfileName}="$!{setting.Value}"
+#end
+/>
+#end
+
+#set ($softKeyEfk = $cfg.EndpointSettings.getSetting('softKey').getSetting('efk'))
+#if($softKeyEfk)
+<change
+#foreach ($setting in $cfg.getRecursiveSettings($softKeyEfk))
+          efk.${setting.ProfileName}="$!{setting.Value}"
 #end
 />
 #end
