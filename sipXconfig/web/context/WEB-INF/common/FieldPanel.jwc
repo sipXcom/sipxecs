@@ -12,6 +12,7 @@
   <parameter name="description" required="no"/>
   <parameter name="highlight" required="no"/>
   <parameter name="leftColumnWidth" required="no"/>
+  <parameter name="valignLabelTop" required="no"/>
 
   <component id="settingLabel" type="FieldLabel">
     <binding name="field" value="field"/>
@@ -35,5 +36,6 @@
   </component>
   <component id="settingLabelColumn" type="Any">
     <binding name="width" value="leftColumnWidth ? 'leftColumnWidth' : '25%'"/>
+    <binding name="valign" value="valignLabelTop ? 'top' : 'center'"/>
   </component>
 </component-specification>
