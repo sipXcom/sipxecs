@@ -160,6 +160,12 @@ public:
     //
     std::string& entity();
     static const char* entity_fld();
+    
+    //
+    // Authentication Code if present
+    //
+    std::string& authc();
+    static const char* authc_fld();
 
     //
     // Caller alias to be sent to certain target domains
@@ -209,6 +215,7 @@ private:
     std::string _pin;
     std::string _authType;
     std::string _location;
+    std::string _authc;
     CallerId _callerId;
     //bool _ignoreUserCallerId;
     //bool _transformCallerExtension;
@@ -285,6 +292,11 @@ inline EntityRecord::CallerId& EntityRecord::callerId()
     return _callerId;
 }
 
+inline std::string& EntityRecord::authc()
+{
+  return _authc;
+}
+    
 inline std::vector<EntityRecord::Alias>& EntityRecord::aliases()
 {
     return _aliases;

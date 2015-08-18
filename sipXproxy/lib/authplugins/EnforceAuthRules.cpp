@@ -327,6 +327,7 @@ bool EnforceAuthRules::isAuthorized(const UtlString& id,
     UtlSListIterator requiredRecs(requiredSet);
     UtlHashMap* requiredRecord;
     UtlString permissionKey("permission");
+       
     while((requiredRecord = dynamic_cast<UtlHashMap*>(requiredRecs())))
     {
       UtlString* reqPermission = dynamic_cast<UtlString*>(requiredRecord->findValue(&permissionKey));
