@@ -87,6 +87,24 @@
       <option>
         <value>5.2.0</value>
       </option>
+      <option>
+        <value>5.2.1</value>
+      </option>
+      <option>
+        <value>5.2.2</value>
+      </option>
+      <option>
+        <value>5.2.3</value>
+      </option>
+      <option>
+        <value>5.3.0</value>
+      </option>
+      <option>
+        <value>5.3.1</value>
+      </option>
+      <option>
+        <value>5.4.0</value>
+      </option>
     </enum>
   </type>
   <group name="provision-config">
