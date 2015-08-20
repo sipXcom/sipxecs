@@ -19,7 +19,6 @@ import java.util.TreeMap;
 import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.localization.LocalizationContext;
 import org.sipfoundry.sipxconfig.permission.PermissionName;
-import org.springframework.beans.factory.annotation.Required;
 
 public abstract class MediaServer {
 
@@ -41,8 +40,6 @@ public abstract class MediaServer {
      * User visible label of for this media server.
      */
     private String m_label;
-
-    private String m_type;
 
     private Location m_location;
 
@@ -135,15 +132,6 @@ public abstract class MediaServer {
         m_label = label;
     }
 
-    public String getType() {
-        return m_type;
-    }
-
-    @Required
-    public void setType(String type) {
-        m_type = type;
-    }
-
     public Location getLocation() {
         return m_location;
     }
@@ -202,11 +190,11 @@ public abstract class MediaServer {
         m_localizationContext = localizationContext;
     }
 
-    protected String getHostPort() {
-        StringBuilder hostnamePort = new StringBuilder(m_hostname);
-        if (m_port != null) {
+    private String getHostPort(String host, Integer port) {
+        StringBuilder hostnamePort = new StringBuilder(host);
+        if (port != null) {
             hostnamePort.append(":");
-            hostnamePort.append(m_port);
+            hostnamePort.append(port);
         }
         return hostnamePort.toString();
     }
@@ -223,7 +211,7 @@ public abstract class MediaServer {
         String headerParams = getHeaderParameterStringForOperation(operation, userDigits);
         String hostname = getHostname(Operation.VoicemailDeposit);
         String digits = getDigitStringForOperation(operation, userDigits);
-        return MappingRule.buildUrl(digits, hostname, uriParams, headerParams, fieldParams);
+        return MappingRule.buildUrl(digits, getHostPort(hostname, getPort()), uriParams, headerParams, fieldParams);
     }
 
     protected final String getLanguage() {
@@ -238,7 +226,7 @@ public abstract class MediaServer {
         String headerParams = getHeaderParameterStringForOperation(Operation.Autoattendant, CallDigits.FIXED_DIGITS);
         String hostname = getHostname(Operation.Autoattendant);
         String digits = getDigitStringForOperation(Operation.Autoattendant, CallDigits.FIXED_DIGITS);
-        return MappingRule.buildUrl(digits, hostname, uriParams, headerParams, null);
+        return MappingRule.buildUrl(digits, getHostPort(hostname, getPort()), uriParams, headerParams, null);
     }
 
     public String buildVoicemailDepositUrl(String fieldParams) {
