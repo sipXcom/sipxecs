@@ -204,9 +204,8 @@ SipRedirectorAliasDB::lookUp(
 
    EntityDB::Aliases aliases;
    bool isUserIdentity = false;
-   UtlString userIdentity;
    EntityDB* entityDb = SipRegistrar::getInstance(NULL)->getEntityDB();
-   entityDb->getAliasContacts(requestUri, aliases, isUserIdentity, userIdentity);
+   entityDb->getAliasContacts(requestUri, aliases, isUserIdentity);
    int numAliasContacts = aliases.size();
 
    if (numAliasContacts > 0)
@@ -221,14 +220,7 @@ SipRedirectorAliasDB::lookUp(
       
 
       SipXauthIdentity authIdentity;
-      
-      if (isUserIdentity)
-      {
-        //
-        // Use the real identity of the alias to sign the contact
-        //
-        authIdentity.setIdentity(userIdentity);
-      }
+      authIdentity.setIdentity(requestIdentity);
 
       for (EntityDB::Aliases::iterator iter = aliases.begin(); iter != aliases.end(); iter++)
       {
