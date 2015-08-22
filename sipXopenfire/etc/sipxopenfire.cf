@@ -216,12 +216,6 @@ bundle agent sipxopenfire_running {
         args => "restart";
 }
 
-body copy_from local_cp_by_digest(filename) {
-  source => "$(filename)";
-  compare => "digest";
-  purge => "true";
-}
-
 bundle edit_line sipxopenfire_log4j_properties_contents {
   insert_lines:
     any::

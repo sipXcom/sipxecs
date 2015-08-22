@@ -561,3 +561,9 @@ bundle common refresh_sip_service(regex, file, filebefore, service_name) {
 	  	"refresh_$(service_name)" and => {strcmp("$(props)","$(propsbefore)")};
 	  	"restart_$(service_name)" not => "refresh_$(service_name)";
 }
+
+body copy_from local_cp_by_digest(filename) {
+  source => "$(filename)";
+  compare => "digest";
+  purge => "true";
+}
