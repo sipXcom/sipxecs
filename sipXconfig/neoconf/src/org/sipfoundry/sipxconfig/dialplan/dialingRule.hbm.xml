@@ -68,6 +68,7 @@
       <property name="mediaServerType" />
       <property name="mediaServerHostname" />
       <property name="mediaServerPort" />
+      <property name="externalAuthorizationChecked" />
     </joined-subclass>
 
     <joined-subclass name="InternationalRule" table="international_dialing_rule">

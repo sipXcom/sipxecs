@@ -110,7 +110,7 @@ public class AuthRules extends RulesXmlFile {
         String externalHost = rule.getExternalHostname();
         List<String> externalPermissions = rule.getExternalPermissionNames();
 
-        if (externalHost != null && !externalPermissions.isEmpty()) {
+        if (rule.isExternalAuthorizationChecked() && externalHost != null) {
             Element hostMatch = mappings.addElement(HOST_MATCH);
             addRuleName(hostMatch, rule);
             addRuleDescription(hostMatch, rule);
@@ -118,7 +118,9 @@ public class AuthRules extends RulesXmlFile {
             Element hostPattern = hostMatch.addElement(HOST_PATTERN);
             hostPattern.setText(externalHost);
 
-            addPermissions(rule, hostMatch, externalPermissions, null);
+            if (externalPermissions != null) {
+                addPermissions(rule, hostMatch, externalPermissions, null);
+            }
         }
     }
 

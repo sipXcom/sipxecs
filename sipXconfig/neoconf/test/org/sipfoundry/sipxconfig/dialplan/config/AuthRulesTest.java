@@ -78,6 +78,8 @@ public class AuthRulesTest {
         control.andReturn("test rule description");
         rule.isAuthorizationChecked();
         control.andReturn(true);
+        rule.isExternalAuthorizationChecked();
+        control.andReturn(false);
         rule.getRuleType();
         control.andReturn(null);
         rule.getTransformedPatterns(gateway);
@@ -129,6 +131,8 @@ public class AuthRulesTest {
         rule.getDescription();
         control.andReturn("test rule description");
         rule.isAuthorizationChecked();
+        control.andReturn(true);
+        rule.isExternalAuthorizationChecked();
         control.andReturn(true);
         rule.getPermissionNames();
         control.andReturn(Collections.emptyList());
@@ -183,6 +187,8 @@ public class AuthRulesTest {
         IDialingRule rule = control.createMock(IDialingRule.class);
         rule.isAuthorizationChecked();
         control.andReturn(true);
+        rule.isExternalAuthorizationChecked();
+        control.andReturn(false);
         rule.getEnabledGateways();
         control.andReturn(Arrays.asList(gateways));
         rule.getName();
@@ -257,6 +263,8 @@ public class AuthRulesTest {
         IDialingRule rule = control.createMock(IDialingRule.class);
         rule.isAuthorizationChecked();
         control.andReturn(true);
+        rule.isExternalAuthorizationChecked();
+        control.andReturn(false);
         rule.getName();
         control.andReturn("testrule").times(gateways.length);
         rule.getDescription();
@@ -316,6 +324,8 @@ public class AuthRulesTest {
         IDialingRule rule = control.createMock(IDialingRule.class);
         rule.isAuthorizationChecked();
         control.andReturn(true);
+        rule.isExternalAuthorizationChecked();
+        control.andReturn(false);
         rule.getName();
         control.andReturn("test emerg rule").times(gateways.length);
         rule.getDescription();
