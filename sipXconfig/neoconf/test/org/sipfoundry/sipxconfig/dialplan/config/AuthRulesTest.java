@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import junit.framework.JUnit4TestAdapter;
@@ -89,6 +90,10 @@ public class AuthRulesTest {
         }));
         rule.getEnabledGateways();
         control.andReturn(gateways);
+        rule.getExternalHostname();
+        control.andReturn(null);
+        rule.getExternalPermissionNames();
+        control.andReturn(null);
         control.replay();
 
         MockAuthRules authRules = new MockAuthRules();
@@ -110,6 +115,53 @@ public class AuthRulesTest {
 
         // check if generate no access has been called properly
         Assert.assertEquals(1, authRules.uniqueGateways);
+
+        control.verify();
+    }
+
+    @Test
+    public void testGenerateExternalNoGateway() throws Exception {
+
+        IMocksControl control = EasyMock.createControl();
+        IDialingRule rule = control.createMock(IDialingRule.class);
+        rule.getName();
+        control.andReturn("test rule");
+        rule.getDescription();
+        control.andReturn("test rule description");
+        rule.isAuthorizationChecked();
+        control.andReturn(true);
+        rule.getPermissionNames();
+        control.andReturn(Collections.emptyList());
+        rule.getEnabledGateways();
+        control.andReturn(Collections.EMPTY_LIST);
+        rule.getTransformedPatterns(null);
+        control.andReturn(new String[] {
+            "101"
+        });
+        rule.getExternalHostname();
+        control.andReturn("10.1.2.3:5080");
+        rule.getExternalPermissionNames();
+        control.andReturn(Arrays.asList(new String[] {
+            PermissionName.VOICEMAIL.getName()
+        }));
+        rule.isTargetPermission();
+        control.andReturn(false);
+        control.replay();
+
+        MockAuthRules authRules = new MockAuthRules();
+        authRules.begin();
+        authRules.generate(rule);
+        authRules.end();
+
+        Document document = authRules.getPreLocalizedDocument();
+        String domDoc = TestHelper.asString(document);
+
+        XMLAssert.assertXpathEvaluatesTo("test rule", "/mappings/hostMatch/name", domDoc);
+        XMLAssert.assertXpathEvaluatesTo("test rule description", "/mappings/hostMatch/description", domDoc);
+        XMLAssert.assertXpathEvaluatesTo("101", "/mappings/hostMatch/userMatch/userPattern", domDoc);
+        XMLAssert.assertXpathEvaluatesTo("10.1.2.3:5080", "/mappings/hostMatch/hostPattern", domDoc);
+        XMLAssert.assertXpathEvaluatesTo("Voicemail", "/mappings/hostMatch/userMatch/permissionMatch/permission",
+                domDoc);
 
         control.verify();
     }
@@ -150,6 +202,10 @@ public class AuthRulesTest {
         control.andReturn(Arrays.asList(new String[] {
             PermissionName.VOICEMAIL.getName()
         }));
+        rule.getExternalHostname();
+        control.andReturn(null);
+        rule.getExternalPermissionNames();
+        control.andReturn(null);
         control.replay();
 
         AuthRules authRules = new AuthRules();
@@ -217,6 +273,10 @@ public class AuthRulesTest {
         control.andReturn(Arrays.asList(new String[] {}));
         rule.getEnabledGateways();
         control.andReturn(Arrays.asList(gateways));
+        rule.getExternalHostname();
+        control.andReturn(null);
+        rule.getExternalPermissionNames();
+        control.andReturn(null);
         control.replay();
 
         MockAuthRules authRules = new MockAuthRules();
@@ -272,6 +332,10 @@ public class AuthRulesTest {
         control.andReturn(Arrays.asList(new String[] {}));
         rule.getEnabledGateways();
         control.andReturn(Arrays.asList(gateways));
+        rule.getExternalHostname();
+        control.andReturn(null);
+        rule.getExternalPermissionNames();
+        control.andReturn(null);
         control.replay();
 
         MockAuthRules authRules = new MockAuthRules();
