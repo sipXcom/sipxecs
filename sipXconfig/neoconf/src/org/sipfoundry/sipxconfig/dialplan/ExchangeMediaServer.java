@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.sipfoundry.sipxconfig.dialplan.MediaServer.Operation;
 import org.sipfoundry.sipxconfig.permission.PermissionName;
 
 public class ExchangeMediaServer extends MediaServer {
@@ -82,5 +83,15 @@ public class ExchangeMediaServer extends MediaServer {
     @Override
     public PermissionName getPermissionName() {
         return null;
+    }
+
+    /*
+     * use semicolon to specify also the port if available
+     * @see org.sipfoundry.sipxconfig.dialplan.MediaServer#
+     * getHostname(org.sipfoundry.sipxconfig.dialplan.MediaServer.Operation)
+     */
+    @Override
+    public String getHostname(Operation operation) {
+        return getHostPort();
     }
 }
