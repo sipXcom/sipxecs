@@ -23,7 +23,7 @@ public class FreeswitchConfigurationTest {
 
     @Before
     public void setUp() {
-        m_configuration = new FreeswitchConfiguration();  
+        m_configuration = new FreeswitchConfiguration();
         m_configuration.setVelocityEngine(TestHelper.getVelocityEngine());
     }
 
@@ -35,6 +35,6 @@ public class FreeswitchConfigurationTest {
         settings.setModelFilesContext(TestHelper.getModelFilesContext());
         m_configuration.write(actual, domain, settings);
         String expected = IOUtils.toString(getClass().getResourceAsStream("freeswitch.test.xml"));
-        assertEquals(expected, actual.toString());        
+        assertEquals(expected, actual.toString());
     }
 }
