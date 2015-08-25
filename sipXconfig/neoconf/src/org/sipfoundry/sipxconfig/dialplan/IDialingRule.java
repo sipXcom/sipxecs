@@ -98,4 +98,6 @@ public interface IDialingRule {
      * @return set of permissions
      */
     public List<String> getExternalPermissionNames();
+
+    public abstract boolean isExternalAuthorizationChecked();
 }
