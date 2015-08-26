@@ -27,6 +27,14 @@
             <span jwcid="description@TextArea" id="code:description" value="ognl:authCode.description"
               cols="45" rows="3" validators="spring-validators:validFieldSize"/>
           </tr>
+          
+          <tr  jwcid="@common/FieldPanel" for="code:locations" field="component:locations"
+             label="message:label.locations"
+             description="message:description.locations">
+            <span jwcid="locations@contrib:Palette" id="locations" 
+		        selected="ognl:authCode.locationsList" model="ognl:locationsModel"
+		        rows="10" sort="literal:USER" />
+          </tr>
         </tbody>
       </table>
       </fieldset>

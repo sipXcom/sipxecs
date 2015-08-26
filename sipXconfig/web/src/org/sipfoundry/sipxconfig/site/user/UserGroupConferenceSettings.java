@@ -37,6 +37,7 @@ public abstract class UserGroupConferenceSettings extends BaseComponent {
     private static final String SETTING_PATH_CONFERENCE_ENABLED = "conference/enabled";
     private static final String SETTING_PATH_CONFERENCE_BRIDGE_ID = "conference/bridgeId";
     private static final String SETTING_PATH_CONFERENCE_PREFIX = "conference/prefix";
+    private static final String CONFERENCE_INHERIT_LOCATION = "conference/inherit-location";
 
     private static final Log LOG = LogFactory.getLog(UserGroupConferenceSettings.class);
 
@@ -88,6 +89,14 @@ public abstract class UserGroupConferenceSettings extends BaseComponent {
 
     public void setConferenceEnabled(Boolean enabled) {
         getSettings().getSetting(SETTING_PATH_CONFERENCE_ENABLED).setTypedValue(enabled.toString());
+    }
+
+    public Boolean isLocationInherited() {
+        return Boolean.valueOf(getSettings().getSetting(CONFERENCE_INHERIT_LOCATION).getValue());
+    }
+
+    public void setLocationInherited(Boolean enabled) {
+        getSettings().getSetting(CONFERENCE_INHERIT_LOCATION).setTypedValue(enabled.toString());
     }
 
     public String getConferencePrefix() {

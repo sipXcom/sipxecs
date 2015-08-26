@@ -18,10 +18,17 @@
         <table>
           <tbody>
             <tr jwcid="common"/>
+            <tr jwcid="@admin/commserver/LocationSelection" server="ognl:parkOrbit.location" locations="ognl:parkServers"/>
+            <tr jwcid="@common/FieldPanel" for="orbit:locations" field="component:locations"
+              label="message:label.locations"
+              description="message:description.locations">
+              <span jwcid="locations@contrib:Palette" id="locations" 
+		        selected="ognl:parkOrbit.locationsList" model="ognl:locationsModel"
+		        rows="10" sort="literal:USER" />
+            </tr>
             <tr jwcid="musicLabel">
               <span jwcid="musicOnHoldSelector"/>
             </tr>
-            <tr jwcid="@admin/commserver/LocationSelection" server="ognl:parkOrbit.location" locations="ognl:parkServers"/>
           </tbody>
         </table>
       </fieldset>

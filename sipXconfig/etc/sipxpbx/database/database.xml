@@ -482,6 +482,7 @@
     <antcall target="openacd-permission-update2" />
     <antcall target="openacd-permission-update3" />
     <antcall target="openacd-add-pstn-agent" />
+    <antcall target="call-restrictions" />
   </target>
 
   <target name="plugin-patches">
@@ -1473,6 +1474,9 @@
   </target>
   <target name="openacd-add-pstn-agent" unless="openacd-add-pstn-agent">
     <db-patch patch="openacd-add-pstn-agent"/>
+  </target>
+  <target name="call-restrictions" unless="call-restrictions">
+    <db-patch patch="call-restrictions"/>
   </target>
 
 	<!--

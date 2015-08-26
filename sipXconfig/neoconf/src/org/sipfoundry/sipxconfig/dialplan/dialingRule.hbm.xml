@@ -144,6 +144,10 @@
           </composite-element>
         </array>
       </component>
+      <set name="locations" table="branch_aa_dialing_rule">
+        <key column="attendant_dialing_rule_id" />
+        <many-to-many column="branch_id" class="org.sipfoundry.sipxconfig.branch.Branch" />
+      </set>
     </joined-subclass>
 
     <joined-subclass name="SiteToSiteDialingRule" table="site_to_site_dialing_rule">

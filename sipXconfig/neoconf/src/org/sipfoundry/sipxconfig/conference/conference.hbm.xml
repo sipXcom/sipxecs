@@ -40,6 +40,10 @@
 
     <many-to-one name="owner" column="owner_id" class="org.sipfoundry.sipxconfig.common.User" foreign-key="fk_owner_id"
       not-null="false" lazy="proxy" />
+    <set name="locations" table="branch_conference">
+      <key column="meetme_conference_id" />
+      <many-to-many column="branch_id" class="org.sipfoundry.sipxconfig.branch.Branch" />
+    </set>
   </class>
 
   <query name="conferenceIdsWithAlias">

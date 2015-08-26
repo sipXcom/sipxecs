@@ -19,11 +19,15 @@ import org.apache.tapestry.annotations.Parameter;
 import org.apache.tapestry.contrib.table.model.IBasicTableModel;
 import org.apache.tapestry.event.PageBeginRenderListener;
 import org.apache.tapestry.event.PageEvent;
+import org.apache.tapestry.valid.IValidationDelegate;
+import org.apache.tapestry.valid.ValidatorException;
 import org.sipfoundry.sipxconfig.branch.Branch;
 import org.sipfoundry.sipxconfig.branch.BranchManager;
 import org.sipfoundry.sipxconfig.common.User;
+import org.sipfoundry.sipxconfig.common.UserException;
 import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.components.SelectMap;
+import org.sipfoundry.sipxconfig.components.TapestryUtils;
 import org.sipfoundry.sipxconfig.gateway.Gateway;
 import org.sipfoundry.sipxconfig.search.SearchManager;
 import org.sipfoundry.sipxconfig.setting.SettingDao;
@@ -87,7 +91,12 @@ public abstract class BranchTable extends BaseComponent implements PageBeginRend
     }
 
     public void deleteBranch() {
-        BranchManager branchManager = getBranchManager();
-        branchManager.deleteBranches(getSelections().getAllSelected());
+        try {
+            BranchManager branchManager = getBranchManager();
+            branchManager.deleteBranches(getSelections().getAllSelected());
+        } catch (UserException ex) {
+            IValidationDelegate validator = TapestryUtils.getValidator(getPage());
+            validator.record(new ValidatorException(getMessages().getMessage("branches.delete.err")));
+        }
     }
 }

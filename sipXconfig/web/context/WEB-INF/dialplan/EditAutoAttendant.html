@@ -61,6 +61,13 @@
             displayName="message:denyDial"
             maxlength="1024"/>
         </tr>
+        <tr  jwcid="@common/FieldPanel" for="attendant:locations" field="component:locations"
+           label="message:label.locations"
+           description="message:description.locations">
+          <span jwcid="locations@contrib:Palette" id="locations" 
+		      selected="ognl:attendant.locationsList" model="ognl:locationsModel"
+		      rows="10" sort="literal:USER" />
+        </tr>
       </table>
     </fieldset>
     <fieldset jwcid="@dialplan/AttendantMenuPanel" menu="ognl:attendant.menu">

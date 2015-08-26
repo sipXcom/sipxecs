@@ -17,6 +17,13 @@
                  displayName="message:label.did"
                  validators="spring-validators:validSipUserId"/>
         </tr>
+        <tr  jwcid="@common/FieldPanel" for="rule:locations" field="component:locations"
+             label="message:label.locations"
+             description="message:description.locations">
+            <span jwcid="locations@contrib:Palette" id="locations" 
+		        selected="ognl:rule.locationsList" model="ognl:locationsModel"
+		        rows="10" sort="literal:USER" />
+        </tr>
         <!-- after hours attendant -->
         <tr for="rule:afterHoursAttendant" jwcid="afterHoursAttendantPanel">
           <input jwcid="afterHoursAttendant" id="rule:afterHoursAttendant" type="text" />

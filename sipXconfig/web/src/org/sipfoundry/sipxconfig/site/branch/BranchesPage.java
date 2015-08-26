@@ -12,10 +12,12 @@ package org.sipfoundry.sipxconfig.site.branch;
 import java.util.List;
 
 import org.apache.tapestry.IPage;
+import org.apache.tapestry.annotations.Bean;
 import org.apache.tapestry.annotations.InjectObject;
 import org.apache.tapestry.annotations.InjectPage;
 import org.sipfoundry.sipxconfig.branch.BranchManager;
 import org.sipfoundry.sipxconfig.components.SipxBasePage;
+import org.sipfoundry.sipxconfig.components.SipxValidationDelegate;
 
 public abstract class BranchesPage extends SipxBasePage {
 
@@ -28,6 +30,9 @@ public abstract class BranchesPage extends SipxBasePage {
 
     @InjectPage(EditBranch.PAGE)
     public abstract EditBranch getEditBranchPage();
+
+    @Bean
+    public abstract SipxValidationDelegate getValidator();
 
     public abstract Integer getGroupId();
 

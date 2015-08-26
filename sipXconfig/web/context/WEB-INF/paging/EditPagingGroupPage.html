@@ -14,6 +14,13 @@
           <tr jwcid="@common/FieldPanel" for="description" field="component:description" label="message:label.description">
             <span jwcid="description@TextArea" id="description" value="ognl:group.description" cols="45" rows="5" validators="spring-validators:validFieldSize"/>
           </tr>
+          <tr  jwcid="@common/FieldPanel" for="page:locations" field="component:locations"
+             label="message:label.locations"
+             description="message:description.locations">
+            <span jwcid="locations@contrib:Palette" id="locations" 
+		        selected="ognl:group.locationsList" model="ognl:locationsModel"
+		        rows="10" sort="literal:USER" />
+          </tr>
           <tr jwcid="@common/FieldPanel" for="timeout" field="component:timeout" label="message:label.timeout">
             <span jwcid="timeout@TextField" id="timeout" value="ognl:group.timeout"
               translator="translator:integer" validators="spring-validators:required,min=0,max=600" displayName="message:label.timeout"/>
