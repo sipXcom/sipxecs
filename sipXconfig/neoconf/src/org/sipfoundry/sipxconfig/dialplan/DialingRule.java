@@ -151,6 +151,15 @@ public abstract class DialingRule extends BeanWithId implements NamedObject,
         return true;
     }
 
+    /**
+     * Applies to voicemail rules if external host is used. In case when external host:port is also used as a gateway
+     * in long distance or custom rules, this method needs to return true because need to be added in authrules.xml
+     */
+    @Override
+    public boolean isExternalAuthorizationChecked() {
+        return false;
+    }
+
     public final List<Permission> getPermissions() {
         List<String> permissionNames = getPermissionNames();
         List<Permission> permissions = new ArrayList<Permission>(permissionNames.size());
@@ -332,5 +341,13 @@ public abstract class DialingRule extends BeanWithId implements NamedObject,
     @Override
     public String getConfigChangeType() {
         return DialingRule.class.getSimpleName();
+    }
+
+    public String getExternalHostname() {
+        return null;
+    }
+
+    public List<String> getExternalPermissionNames() {
+        return Collections.emptyList();
     }
 }

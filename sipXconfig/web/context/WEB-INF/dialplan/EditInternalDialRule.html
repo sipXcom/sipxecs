@@ -66,6 +66,15 @@
                translator="translator:integer" validators="spring-validators:min=1025,max=65535"
                displayName="message:label.mediaServerPort"/>
         </tr>
+        <tr jwcid="@common/FieldPanel"
+          field="component:authorized"
+          label="message:label.authorized"
+          description="message:description.authorized"
+          for="dialplan:authorized">
+            <span jwcid="authorized@Checkbox" id="dialplan:authorized"
+               value="ognl:rule.externalAuthorizationChecked"
+               displayName="message:label.authorized"/>
+        </tr>        
       </tbody>
     </table>
   </fieldset>
