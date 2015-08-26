@@ -15,9 +15,12 @@ import org.apache.tapestry.annotations.InjectObject;
 import org.apache.tapestry.annotations.Persist;
 import org.apache.tapestry.event.PageBeginRenderListener;
 import org.apache.tapestry.event.PageEvent;
+import org.apache.tapestry.form.IPropertySelectionModel;
 import org.sipfoundry.sipxconfig.acccode.AuthCode;
 import org.sipfoundry.sipxconfig.acccode.AuthCodeManager;
+import org.sipfoundry.sipxconfig.branch.BranchManager;
 import org.sipfoundry.sipxconfig.common.CoreContext;
+import org.sipfoundry.sipxconfig.components.ObjectSelectionModel;
 import org.sipfoundry.sipxconfig.components.PageWithCallback;
 import org.sipfoundry.sipxconfig.components.SipxValidationDelegate;
 import org.sipfoundry.sipxconfig.components.TapestryUtils;
@@ -36,6 +39,9 @@ public abstract class EditAuthCode extends PageWithCallback implements PageBegin
     @InjectObject(value = "spring:coreContext")
     public abstract CoreContext getCoreContext();
 
+    @InjectObject("spring:branchManager")
+    public abstract BranchManager getBranchManager();
+
     public abstract AuthCode getAuthCode();
 
     public abstract void setAuthCode(AuthCode code);
@@ -44,6 +50,13 @@ public abstract class EditAuthCode extends PageWithCallback implements PageBegin
     public abstract Integer getAuthCodeId();
 
     public abstract void setAuthCodeId(Integer codeId);
+
+    public IPropertySelectionModel getLocationsModel() {
+        ObjectSelectionModel model = new ObjectSelectionModel();
+        model.setCollection(getBranchManager().getBranches());
+        model.setLabelExpression("name");
+        return model;
+    }
 
     public void pageBeginRender(PageEvent event) {
         AuthCode code = getAuthCode();

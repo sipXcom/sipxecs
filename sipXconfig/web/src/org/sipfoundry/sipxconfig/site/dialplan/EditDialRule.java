@@ -19,7 +19,9 @@ import org.apache.tapestry.callback.PageCallback;
 import org.apache.tapestry.event.PageBeginRenderListener;
 import org.apache.tapestry.event.PageEvent;
 import org.apache.tapestry.form.IPropertySelectionModel;
+import org.sipfoundry.sipxconfig.branch.BranchManager;
 import org.sipfoundry.sipxconfig.components.NamedValuesSelectionModel;
+import org.sipfoundry.sipxconfig.components.ObjectSelectionModel;
 import org.sipfoundry.sipxconfig.components.SipxBasePage;
 import org.sipfoundry.sipxconfig.device.ModelSource;
 import org.sipfoundry.sipxconfig.dialplan.AutoAttendantManager;
@@ -63,6 +65,9 @@ public abstract class EditDialRule extends SipxBasePage implements PageBeginRend
     @InjectObject("spring:emergencyConfigurableModelSource")
     public abstract ModelSource<PhoneModel> getEmergencyConfigurableModelSource();
 
+    @InjectObject("spring:branchManager")
+    public abstract BranchManager getBranchManager();
+
     @Persist
     public abstract Integer getRuleId();
 
@@ -98,6 +103,13 @@ public abstract class EditDialRule extends SipxBasePage implements PageBeginRend
     public IPropertySelectionModel getMediaServerTypeModel() {
         Map<String, String> types2Labels = getMediaServerFactory().getBeanIdsToLabels();
         return new NamedValuesSelectionModel(types2Labels);
+    }
+
+    public IPropertySelectionModel getLocationsModel() {
+        ObjectSelectionModel model = new ObjectSelectionModel();
+        model.setCollection(getBranchManager().getBranches());
+        model.setLabelExpression("name");
+        return model;
     }
 
     public void pageBeginRender(PageEvent event_) {

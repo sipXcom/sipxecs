@@ -22,13 +22,17 @@ import org.apache.tapestry.IPage;
 import org.apache.tapestry.PageRedirectException;
 import org.apache.tapestry.annotations.Asset;
 import org.apache.tapestry.annotations.InitialValue;
+import org.apache.tapestry.annotations.InjectObject;
 import org.apache.tapestry.annotations.InjectPage;
 import org.apache.tapestry.annotations.InjectState;
 import org.apache.tapestry.annotations.Persist;
 import org.apache.tapestry.event.PageBeginRenderListener;
 import org.apache.tapestry.event.PageEvent;
+import org.apache.tapestry.form.IPropertySelectionModel;
+import org.sipfoundry.sipxconfig.branch.BranchManager;
 import org.sipfoundry.sipxconfig.common.CoreContext;
 import org.sipfoundry.sipxconfig.common.User;
+import org.sipfoundry.sipxconfig.components.ObjectSelectionModel;
 import org.sipfoundry.sipxconfig.components.PageWithCallback;
 import org.sipfoundry.sipxconfig.components.TapestryUtils;
 import org.sipfoundry.sipxconfig.conference.Bridge;
@@ -103,11 +107,15 @@ public abstract class EditConference extends PageWithCallback implements PageBeg
 
     public abstract void setAutoReload(boolean autoReload);
 
-//    @InjectObject("spring:sipxServiceManager")
-//    public abstract SipxServiceManager getSipxServiceManager();
-//
-//    @InjectObject("spring:sipxProcessContext")
-//    public abstract SipxProcessContext getProcessContext();
+    @InjectObject("spring:branchManager")
+    public abstract BranchManager getBranchManager();
+
+    public IPropertySelectionModel getLocationsModel() {
+        ObjectSelectionModel model = new ObjectSelectionModel();
+        model.setCollection(getBranchManager().getBranches());
+        model.setLabelExpression("name");
+        return model;
+    }
 
     public void pageBeginRender(PageEvent event_) {
         if (getTransientConference() != null) {

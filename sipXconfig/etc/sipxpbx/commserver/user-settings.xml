@@ -153,6 +153,19 @@
         <integer />
       </type>
     </setting>
+    <setting name="inherit-location">
+      <type>
+        <enum>
+          <option>
+            <value>true</value>
+          </option>
+          <option>
+            <value>false</value>
+          </option>
+        </enum>
+      </type>
+      <value>false</value>
+    </setting>
   </group>
   <group name="extcontact" hidden="yes">
     <setting name="enabled">

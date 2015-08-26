@@ -18,6 +18,10 @@
       <key column="paging_group_id" />
       <many-to-many column="user_id" class="org.sipfoundry.sipxconfig.common.User" />
     </set>
+    <set name="locations" table="branch_paging_group">
+      <key column="paging_group_id" />
+      <many-to-many column="branch_id" class="org.sipfoundry.sipxconfig.branch.Branch" />
+    </set>
   </class>
 
   <query name="countPagingGroupWithSameName">

@@ -11,7 +11,10 @@
             <input id="conferences:prefix" jwcid="conferencePrefix@TextField" value="ognl:conferencePrefix" />
         </tr>
         <tr jwcid="@conference/BridgeSelector" bridge="ognl:bridge" />
-
+        <tr jwcid="@common/FieldPanel" field="component:inheritLocation"
+            for="conferences:inheritLocation" label="message:label.inheritLocation">
+            <input id="conferences:inheritLocation" jwcid="inheritLocation@Checkbox" value="ognl:locationInherited" />
+        </tr>
     </table>
     <ul class="form-actions">
       <li><input id="submit:ok" jwcid="@Submit" value="OK" action="listener:ok" /></li>
