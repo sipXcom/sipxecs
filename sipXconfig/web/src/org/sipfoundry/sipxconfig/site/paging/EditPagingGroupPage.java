@@ -18,8 +18,11 @@ import org.apache.tapestry.IRequestCycle;
 import org.apache.tapestry.annotations.InjectObject;
 import org.apache.tapestry.annotations.Persist;
 import org.apache.tapestry.event.PageEvent;
+import org.apache.tapestry.form.IPropertySelectionModel;
+import org.sipfoundry.sipxconfig.branch.BranchManager;
 import org.sipfoundry.sipxconfig.common.CoreContext;
 import org.sipfoundry.sipxconfig.common.User;
+import org.sipfoundry.sipxconfig.components.ObjectSelectionModel;
 import org.sipfoundry.sipxconfig.components.TapestryUtils;
 import org.sipfoundry.sipxconfig.paging.PagingConfiguration;
 import org.sipfoundry.sipxconfig.paging.PagingContext;
@@ -41,6 +44,9 @@ public abstract class EditPagingGroupPage extends UserBasePage {
 
     @InjectObject(value = "spring:pagingContext")
     public abstract PagingContext getPagingContext();
+
+    @InjectObject("spring:branchManager")
+    public abstract BranchManager getBranchManager();
 
     @Persist(value = "client")
     public abstract Integer getGroupId();
@@ -65,6 +71,13 @@ public abstract class EditPagingGroupPage extends UserBasePage {
         setGroupId(groupId);
         setGroup(getPagingContext().getPagingGroupById(groupId));
         setReturnPage(returnPage);
+    }
+
+    public IPropertySelectionModel getLocationsModel() {
+        ObjectSelectionModel model = new ObjectSelectionModel();
+        model.setCollection(getBranchManager().getBranches());
+        model.setLabelExpression("name");
+        return model;
     }
 
     @Override

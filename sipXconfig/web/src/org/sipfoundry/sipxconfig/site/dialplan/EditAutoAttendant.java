@@ -15,7 +15,10 @@ import org.apache.tapestry.annotations.InjectObject;
 import org.apache.tapestry.annotations.Persist;
 import org.apache.tapestry.event.PageBeginRenderListener;
 import org.apache.tapestry.event.PageEvent;
+import org.apache.tapestry.form.IPropertySelectionModel;
 import org.apache.tapestry.valid.IValidationDelegate;
+import org.sipfoundry.sipxconfig.branch.BranchManager;
+import org.sipfoundry.sipxconfig.components.ObjectSelectionModel;
 import org.sipfoundry.sipxconfig.components.PageWithCallback;
 import org.sipfoundry.sipxconfig.components.SipxValidationDelegate;
 import org.sipfoundry.sipxconfig.components.TapestryUtils;
@@ -42,6 +45,9 @@ public abstract class EditAutoAttendant extends PageWithCallback implements Page
 
     public abstract void setAttendant(AutoAttendant attendant);
 
+    @InjectObject("spring:branchManager")
+    public abstract BranchManager getBranchManager();
+
     public void reset() {
         getAttendant().resetToFactoryDefault();
     }
@@ -61,6 +67,13 @@ public abstract class EditAutoAttendant extends PageWithCallback implements Page
         aa = getAutoAttendantManager().newAutoAttendantWithDefaultGroup();
         aa.resetToFactoryDefault();
         setAttendant(aa);
+    }
+
+    public IPropertySelectionModel getLocationsModel() {
+        ObjectSelectionModel model = new ObjectSelectionModel();
+        model.setCollection(getBranchManager().getBranches());
+        model.setLabelExpression("name");
+        return model;
     }
 
     public String getActionName(AttendantMenuAction action) {

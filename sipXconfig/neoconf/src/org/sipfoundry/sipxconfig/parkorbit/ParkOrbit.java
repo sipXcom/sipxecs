@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.sipfoundry.sipxconfig.address.Address;
 import org.sipfoundry.sipxconfig.address.AddressManager;
+import org.sipfoundry.sipxconfig.branch.Branch;
 import org.sipfoundry.sipxconfig.cfgmgt.DeployConfigOnEdit;
 import org.sipfoundry.sipxconfig.common.NamedObject;
 import org.sipfoundry.sipxconfig.common.Replicable;
@@ -45,6 +46,7 @@ public class ParkOrbit extends BackgroundMusic implements NamedObject, DeployCon
     private AddressManager m_addressManager;
     private Location m_location;
     private Registrar m_registrar;
+    private Set<Branch> m_locations = new HashSet<Branch>();
 
     public String getDescription() {
         return m_description;
@@ -70,6 +72,23 @@ public class ParkOrbit extends BackgroundMusic implements NamedObject, DeployCon
 
     public void setExtension(String extension) {
         m_extension = extension;
+    }
+
+    public Set<Branch> getLocations() {
+        return m_locations;
+    }
+
+    public void setLocations(Set<Branch> locations) {
+        m_locations = locations;
+    }
+
+    public List<Branch> getLocationsList() {
+        return new ArrayList<Branch>(m_locations);
+    }
+
+    public void setLocationsList(List<Branch> locations) {
+        m_locations.clear();
+        m_locations.addAll(locations);
     }
 
     @Deprecated

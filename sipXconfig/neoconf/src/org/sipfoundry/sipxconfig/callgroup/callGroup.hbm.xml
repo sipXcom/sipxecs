@@ -42,6 +42,10 @@
       <list-index column="position" />
       <one-to-many class="UserRing" />
     </list>
+    <set name="locations" table="branch_call_group">
+      <key column="call_group_id" />
+      <many-to-many column="branch_id" class="org.sipfoundry.sipxconfig.branch.Branch" />
+    </set>
   </class>
 
   <query name="userRingsForUserId">
