@@ -81,4 +81,23 @@ public interface IDialingRule {
      * @return
      */
     boolean isEnablable();
+
+    /**
+     * Can be implemented by mapping rules that has the option to use an external host (Voicemail)
+     * Example: Voicemail mapping rule can use an external host (Exchange UM Server) to store the voicemail
+     * The same host with same port can be saved as gateway and used also for a custom or long distance rule
+     * The same port can be used either for voicemail or for long distance calls. authrules.xml will display
+     * this host:port with LongDistance permission and
+     * also with Voicemail permission (implement getExternalPermissionNames).
+     * authrules.xml already rejects all other traffic
+     */
+    public String getExternalHostname();
+
+    /**
+     * Set of permissions for the external hostname usage
+     * @return set of permissions
+     */
+    public List<String> getExternalPermissionNames();
+
+    public abstract boolean isExternalAuthorizationChecked();
 }
