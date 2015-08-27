@@ -1740,13 +1740,13 @@
             </option>
           </enum>
         </type>
-        <value>1</value>
+        <value>2</value>
       </setting>
       <setting name="facility.set" hidden="yes">
         <type>
           <boolean />
         </type>
-        <value>1</value>
+        <value>2</value>
       </setting>
           <setting name="facility">
         <type>
@@ -2358,7 +2358,7 @@
       </setting>
       <setting name="transport">
         <type refid="transport" />
-        <value>UDPonly</value>
+        <value>TCPonly</value>
       </setting>
     </group>
   </group>
@@ -2367,7 +2367,7 @@
         <type>
           <boolean />
         </type>
-        <value>0</value>
+        <value>1</value>
     </setting>
     <group name="serverFeatureControl">
       <setting name="cf">
