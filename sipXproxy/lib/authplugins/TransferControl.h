@@ -113,6 +113,9 @@ class TransferControl : public AuthPlugin
    static const char* RecognizerConfigKey1;
    static const char* RecognizerConfigKey2;
   private:
+   /// Helper function that rewrites the target in case x-sipx-retarget is found in the request uri
+   void handleInviteWithRetarget(const Url& requestUri, SipMessage& request);
+
    friend AuthPlugin* getAuthPlugin(const UtlString& name);
    
    SipRouter* mpSipRouter;
