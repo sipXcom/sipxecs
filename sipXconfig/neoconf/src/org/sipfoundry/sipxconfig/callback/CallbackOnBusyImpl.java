@@ -49,14 +49,14 @@ import org.sipfoundry.sipxconfig.snmp.ProcessProvider;
 import org.sipfoundry.sipxconfig.snmp.SnmpManager;
 import org.springframework.beans.factory.annotation.Required;
 
-public class CallbackOnBusyImpl implements FeatureProvider, CallbackOnBusy, ProcessProvider, DnsProvider, AddressProvider {
-
-    private static final String CBB = "cbb";
+public class CallbackOnBusyImpl implements FeatureProvider, CallbackOnBusy,
+    ProcessProvider, DnsProvider, AddressProvider {
 
     public static final AddressType CBB_SIP_ADDRESS = AddressType.sipTcp("cbb-sip");
     private static final Collection<AddressType> ADDRESSES = Arrays.asList(new AddressType[] {
-            CBB_SIP_ADDRESS
-        });
+        CBB_SIP_ADDRESS
+    });
+    private static final String CBB = "cbb";
 
     private BeanWithSettingsDao<CallbackSettings> m_settingsDao;
     private FeatureManager m_featureManager;
@@ -148,7 +148,8 @@ public class CallbackOnBusyImpl implements FeatureProvider, CallbackOnBusy, Proc
         for (Location location : locations) {
             Address address = null;
             if (type.equals(CBB_SIP_ADDRESS)) {
-                address = new Address(CBB_SIP_ADDRESS, location.getAddress(), m_fsFeature.getSettings(location).getFreeswitchSipPort());
+                address = new Address(CBB_SIP_ADDRESS,
+                        location.getAddress(), m_fsFeature.getSettings(location).getFreeswitchSipPort());
             }
             addresses.add(address);
         }
