@@ -317,8 +317,6 @@ TransferControl::authorizeAndModify(const UtlString& id,    /**< The authenticat
            UtlString uri;
            UtlString protocol;
 
-           OS_LOG_INFO(FAC_SIP, "TransferControl[%s]::authorizeAndModify - Receiving " << SIPX_RETARGET_URI_PARAM << " contact " << retargetContact.data());
-
            std::vector<std::string> hostAndPort;
            std::string retargetContactStr = retargetContact.data();
            boost::split(hostAndPort, retargetContactStr, boost::is_any_of(":"));
@@ -338,14 +336,13 @@ TransferControl::authorizeAndModify(const UtlString& id,    /**< The authenticat
            request.setFirstHeaderLine(method, uri, protocol);
 
            //
-           // Check if the new uri is a registered binding. If it is, adapt the route to its path
+           // Check if the new uri is a registered binding. If it is adapt the route to its path
            //
            RegDB::Bindings bindings;
            if (mpSipRouter->getRegDBInstance()->getUnexpiredRegisteredBinding(newUri, bindings) && (1 == bindings.size()))
            {
              if (!bindings.front().getPath().empty())
              {
-               OS_LOG_INFO(FAC_SIP, "TransferControl[%s]::authorizeAndModify - Adding new Route " << bindings.front().getPath());
                request.setRouteField(bindings.front().getPath().c_str());
              }
            }
