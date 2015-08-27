@@ -126,11 +126,6 @@ public:
       const Url& binding,
       bool preferPrimary = false);
 
-    bool getUnexpiredRegisteredBinding(
-      const Url& registeredBinding,
-      Bindings& bindings,
-      bool preferPrimary = false);
-
     void cleanAndPersist(int currentExpireTime);
 
     void clearAllBindings();
