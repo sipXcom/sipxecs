@@ -45,8 +45,13 @@ public class AdminSettings extends PersistableSettings implements DeployConfigOn
     private static final String AUTHENTICATION_EMAIL_ADDRESS = "configserver-config/email-address";
     private static final String CORS_DOMAIN_SETTING = "configserver-config/corsDomains";
     private static final String NEW_LDAP_USERS_GROUP_PREFIX = "ldap-management/newUserGroupPrefix";
+    private static final String PASSWORD_POLICY = "configserver-config/password-policy";
+    private static final String DEFAULT_PASSWORD = "configserver-config/password-default";
+    private static final String DEFAULT_PASSWORD_CONFIRM = "configserver-config/password-default-confirm";
+    private static final String VMPIN_DEFAULT = "configserver-config/vmpin-default";
+    private static final String VMPIN_DEFAULT_CONFIRM = "configserver-config/vmpin-default-confirm";
     private static final String POSTGRES_PASSWORD = "configserver-config/postgres-pwd";
-
+    private static final String POSTGRES_PASSWORD_CONFIRM = "configserver-config/postgres-pwd-confirm";
     private PasswordPolicy m_passwordPolicy;
     private String[] m_logLevelKeys;
 
@@ -68,19 +73,31 @@ public class AdminSettings extends PersistableSettings implements DeployConfigOn
     }
 
     public String getSelectedPolicy() {
-        return getSettingValue("configserver-config/password-policy");
+        return getSettingValue(PASSWORD_POLICY);
     }
 
     public String getDefaultPassword() {
-        return getSettingValue("configserver-config/password-default");
+        return getSettingValue(DEFAULT_PASSWORD);
+    }
+
+    public String getDefaultPasswordConfirmed() {
+        return getSettingValue(DEFAULT_PASSWORD_CONFIRM);
+    }
+
+    public String getDefaultVmPin() {
+        return getSettingValue(VMPIN_DEFAULT);
+    }
+
+    public String getVmpinDefaultConfirmed() {
+        return getSettingValue(VMPIN_DEFAULT_CONFIRM);
     }
 
     public String getPostgresPassword() {
         return getSettingValue(POSTGRES_PASSWORD);
     }
 
-    public String getDefaultVmPin() {
-        return getSettingValue("configserver-config/vmpin-default");
+    public String getPostgresPasswordConfirmed() {
+        return getSettingValue(POSTGRES_PASSWORD_CONFIRM);
     }
 
     public int getAge() {
@@ -178,7 +195,7 @@ public class AdminSettings extends PersistableSettings implements DeployConfigOn
     }
 
     public class AdminSettingsDefaults {
-        @SettingEntry(path = "configserver-config/password-policy")
+        @SettingEntry(path = PASSWORD_POLICY)
         public String getDefaultPolicy() {
             return m_passwordPolicy.getDefaultPolicy();
         }

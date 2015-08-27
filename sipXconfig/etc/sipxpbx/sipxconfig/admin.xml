@@ -73,8 +73,18 @@
       <type>
         <string minLen="8" password="yes"/>
       </type>
+    </setting>
+    <setting name="password-default-confirm">
+      <type>
+    	<string minLen="8" password="yes"/> 
+      </type>
     </setting>    
     <setting name="vmpin-default">
+      <type>
+        <string minLen="4" password="yes"/>
+      </type>
+    </setting>
+    <setting name="vmpin-default-confirm">
       <type>
         <string minLen="4" password="yes"/>
       </type>
@@ -83,7 +93,12 @@
       <type>
         <string minLen="8" password="yes"/>
       </type>
-    </setting>    
+    </setting>
+    <setting name="postgres-pwd-confirm">
+      <type>
+        <string minLen="8" password="yes"/>
+      </type>
+    </setting>        
     <setting name="externalAliases.aliasAddins" advanced="yes">
       <type>
         <string/>

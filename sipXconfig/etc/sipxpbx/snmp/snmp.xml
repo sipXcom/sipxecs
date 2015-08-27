@@ -13,5 +13,10 @@
       </type>
       <value>public</value>
     </setting>
+    <setting name="community_string_confirm" >
+      <type>
+        <string minLen="6" password="yes"></string>
+      </type>      
+    </setting>
   </group>
 </model>
