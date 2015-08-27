@@ -26,7 +26,6 @@ const char* TransferControl::RecognizerConfigKey2 = "ADDITIONAL_EXCHANGE_SERVER_
 
 const char* SIP_METHOD_URI_PARAMETER = "method";
 const char* SIP_SIPX_REFERROR_HEADER = "X-sipX-referror";
-const char* SIPX_RETARGET_URI_PARAM  = "x-sipx-retarget";
 
 static const std::string SUPPRESSED_RING_INDICATOR("SIP/2.0 100 Suppressed Ring Indicator");
 
@@ -309,43 +308,9 @@ TransferControl::authorizeAndModify(const UtlString& id,    /**< The authenticat
                SipXSignedHeader::remove(request, SIP_SIPX_LOCATION_INFO);
             }
          }
-
-         UtlString retargetContact;
-         requestUri.getUrlParameter(SIPX_RETARGET_URI_PARAM, retargetContact, 0);
-         if (!retargetContact.isNull())
+         else
          {
-           UtlString uri;
-           UtlString protocol;
-
-           std::vector<std::string> hostAndPort;
-           std::string retargetContactStr = retargetContact.data();
-           boost::split(hostAndPort, retargetContactStr, boost::is_any_of(":"));
-
-           Url newUri(requestUri);
-           newUri.setHostAddress(hostAndPort[0].c_str());
-           if (2 == hostAndPort.size() && !hostAndPort[1].empty())
-           {
-             newUri.setHostPort(::atoi(hostAndPort[1].c_str()));
-           }
-
-           newUri.removeUrlParameter(SIPX_RETARGET_URI_PARAM);
-           newUri.getUri(uri);
-
-           request.getRequestProtocol(&protocol);
-
-           request.setFirstHeaderLine(method, uri, protocol);
-
-           //
-           // Check if the new uri is a registered binding. If it is adapt the route to its path
-           //
-           RegDB::Bindings bindings;
-           if (mpSipRouter->getRegDBInstance()->getUnexpiredRegisteredBinding(newUri, bindings) && (1 == bindings.size()))
-           {
-             if (!bindings.front().getPath().empty())
-             {
-               request.setRouteField(bindings.front().getPath().c_str());
-             }
-           }
+            // INVITE without Replaces: is not a transfer - ignore it.
          }
       }
       else if (mpSipRouter->suppressAlertIndicatorForTransfers() && method.compareTo(SIP_NOTIFY_METHOD) == 0)
