@@ -485,6 +485,7 @@
     <antcall target="call-restrictions" />
     <antcall target="add_vm_authorization" />
     <antcall target="openacd-permission-update4" />
+  	<antcall target="add_location_call_restrictions" />
   </target>
 
   <target name="plugin-patches">
@@ -1485,6 +1486,9 @@
   </target>
   <target name="openacd-permission-update4" unless="openacd-permission-update4">
     <db-patch patch="openacd-permission-update4"/>
+  </target>
+  <target name="add_location_call_restrictions" unless="add_location_call_restrictions">
+  	<db-patch patch="add_location_call_restrictions"/>
   </target>
 
 	<!--
