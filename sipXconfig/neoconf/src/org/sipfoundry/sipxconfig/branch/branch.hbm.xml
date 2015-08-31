@@ -12,11 +12,22 @@
     <property name="description" />
     <property name="phoneNumber" />
     <property name="faxNumber" />
-    <property name="timeZone" />
+    <property name="timeZone" />  
 	<many-to-one name="address" class="org.sipfoundry.sipxconfig.phonebook.Address"
     unique="true"
     cascade="all"
     column="address_id"/>
+    <component name="routes" class="BranchRoutes">
+      <list name="domains" table="branch_route_domain">
+        <key column="branch_id" foreign-key="fk_branch_route_domain" />
+        <index column="index" />
+        <element type="string" column="domain" not-null="true" />
+      </list>
+      <list name="subnets" table="branch_route_subnet">
+        <key column="branch_id" foreign-key="fk_branch_route_subnet" />
+        <index column="index" />
+        <element type="string" column="subnet" not-null="true" />
+      </list>
+    </component>        
   </class>
-
 </hibernate-mapping>

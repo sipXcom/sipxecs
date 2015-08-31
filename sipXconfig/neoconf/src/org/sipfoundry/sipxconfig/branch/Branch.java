@@ -9,20 +9,32 @@
  */
 package org.sipfoundry.sipxconfig.branch;
 
+import static org.sipfoundry.commons.mongo.MongoConstants.LOCATION_NAME;
+import static org.sipfoundry.commons.mongo.MongoConstants.LOCATION_RESTRICTIONS_DOMAINS;
+import static org.sipfoundry.commons.mongo.MongoConstants.LOCATION_RESTRICTIONS_SUBNETS;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import org.sipfoundry.sipxconfig.common.BeanWithId;
 import org.sipfoundry.sipxconfig.common.NamedObject;
+import org.sipfoundry.sipxconfig.common.Replicable;
+import org.sipfoundry.sipxconfig.commserver.imdb.AliasMapping;
+import org.sipfoundry.sipxconfig.commserver.imdb.DataSet;
 import org.sipfoundry.sipxconfig.phonebook.Address;
 import org.sipfoundry.sipxconfig.systemaudit.SystemAuditable;
 
 
-public class Branch extends BeanWithId implements NamedObject, SystemAuditable {
+public class Branch extends BeanWithId implements NamedObject, SystemAuditable, Replicable {
     private String m_name;
     private String m_description;
     private Address m_address = new Address();
     private String m_phoneNumber;
     private String m_faxNumber;
     private String m_timeZone;
+    private BranchRoutes m_routes = new BranchRoutes();
 
     public String getName() {
         return m_name;
@@ -84,5 +96,52 @@ public class Branch extends BeanWithId implements NamedObject, SystemAuditable {
     @Override
     public String getConfigChangeType() {
         return Branch.class.getSimpleName();
+    }
+
+    public BranchRoutes getRoutes() {
+        return m_routes;
+    }
+
+    public void setRoutes(BranchRoutes routes) {
+        m_routes = routes;
+    }
+
+    @Override
+    public Set<DataSet> getDataSets() {
+        return null;
+    }
+
+    @Override
+    public String getIdentity(String domainName) {
+        return null;
+    }
+
+    @Override
+    public Collection<AliasMapping> getAliasMappings(String domainName) {
+        return null;
+    }
+
+    @Override
+    public boolean isValidUser() {
+        return false;
+    }
+
+    @Override
+    public Map<String, Object> getMongoProperties(String domain) {
+        Map<String, Object> props = new HashMap<String, Object>();
+        props.put(LOCATION_NAME, getName());
+        props.put(LOCATION_RESTRICTIONS_DOMAINS, m_routes.getDomains());
+        props.put(LOCATION_RESTRICTIONS_SUBNETS, m_routes.getSubnets());
+        return props;
+    }
+
+    @Override
+    public String getEntityName() {
+        return getClass().getSimpleName();
+    }
+
+    @Override
+    public boolean isReplicationEnabled() {
+        return true;
     }
 }

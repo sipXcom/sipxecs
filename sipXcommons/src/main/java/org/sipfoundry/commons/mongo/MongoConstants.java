@@ -177,4 +177,9 @@ public interface MongoConstants {
     //phones
     static final String SERIAL_NUMBER = "mac";
 
+    //location
+    static final String LOCATION_NAME="loc";
+    static final String LOCATION_RESTRICTIONS_DOMAINS="loc_restr_dom";
+    static final String LOCATION_RESTRICTIONS_SUBNETS="loc_restr_sbnet";
+
 }

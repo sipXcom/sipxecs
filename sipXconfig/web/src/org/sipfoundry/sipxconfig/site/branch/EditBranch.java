@@ -8,28 +8,46 @@
  */
 package org.sipfoundry.sipxconfig.site.branch;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 import org.apache.tapestry.annotations.Bean;
+import org.apache.tapestry.annotations.InitialValue;
 import org.apache.tapestry.annotations.InjectObject;
 import org.apache.tapestry.annotations.Persist;
 import org.apache.tapestry.event.PageBeginRenderListener;
 import org.apache.tapestry.event.PageEvent;
-import org.apache.tapestry.form.IPropertySelectionModel;
-import org.apache.tapestry.form.StringPropertySelectionModel;
 import org.sipfoundry.sipxconfig.branch.Branch;
 import org.sipfoundry.sipxconfig.branch.BranchManager;
+import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.components.PageWithCallback;
 import org.sipfoundry.sipxconfig.components.SipxValidationDelegate;
-import org.sipfoundry.sipxconfig.components.TapestryUtils;
-import org.sipfoundry.sipxconfig.time.NtpManager;
-
-import com.davekoelle.AlphanumComparator;
 
 public abstract class EditBranch extends PageWithCallback implements PageBeginRenderListener {
 
     public static final String PAGE = "branch/EditBranch";
+
+    private static final String BRANCH_TAB = "branch";
+
+    private static final String ASSOCIATED_TAB = "associated";
+
+    private static final String CALL_RESTRICTIONS_TAB = "callRestrictions";
+
+    @Persist
+    public abstract Integer getBranchId();
+
+    public abstract void setBranchId(Integer branchId);
+
+    public abstract Branch getBranch();
+
+    public abstract void setBranch(Branch branch);
+
+    @Persist
+    @InitialValue("literal:branch")
+    public abstract String getTab();
+
+    public abstract void setTab(String tab);
 
     @Bean
     public abstract SipxValidationDelegate getValidator();
@@ -37,68 +55,33 @@ public abstract class EditBranch extends PageWithCallback implements PageBeginRe
     @InjectObject("spring:branchManager")
     public abstract BranchManager getBranchManager();
 
-    @InjectObject("spring:ntpManager")
-    public abstract NtpManager getTimeManager();
+    public Collection<String> getAvailableTabNames() {
+        Collection<String> tabNames = new ArrayList<String>();
+        tabNames.addAll(Arrays.asList(BRANCH_TAB, ASSOCIATED_TAB, CALL_RESTRICTIONS_TAB));
+        return tabNames;
+    }
 
-    public abstract Branch getBranch();
-
-    public abstract void setBranch(Branch branch);
-
-    @Persist
-    public abstract Integer getBranchId();
-
-    public abstract void setBranchId(Integer branchId);
-
-    public abstract String getTimezoneType();
-
-    public abstract void setTimezoneType(String type);
-
-    public abstract IPropertySelectionModel getTimezoneTypeModel();
-
-    public abstract void setTimezoneTypeModel(IPropertySelectionModel model);
-
-    @Override
     public void pageBeginRender(PageEvent event_) {
-        Integer branchId = getBranchId();
-        Branch branch;
-        if (branchId != null) {
-            branch = getBranchManager().getBranch(branchId);
+        Branch branch = getBranch();
+        if (branch != null) {
+            // make sure we have correct bean ID persisted
+            if (!branch.isNew()) {
+                setBranchId(branch.getId());
+            }
+            return;
+        }
+        if (getBranchId() != null) {
+            branch = getBranchManager().getBranch(getBranchId());
         } else {
             branch = new Branch();
+            setTab(BRANCH_TAB);
         }
-        // Init. the timezone dropdown menu.
-        List<String> timezoneList = getTimeManager().getAvailableTimezones();
-
-        // Sort list alphanumerically.
-        Collections.sort(timezoneList, new AlphanumComparator());
-        StringPropertySelectionModel model = new StringPropertySelectionModel(
-                timezoneList.toArray(new String[timezoneList.size()]));
-        setTimezoneTypeModel(model);
-
         setBranch(branch);
     }
 
-    public String getBranchTimezone() {
-        if (getBranch().getTimeZone() == null) {
-            return getTimeManager().getSystemTimezone();
-        } else {
-            return getBranch().getTimeZone();
-        }
-    }
-
-    public void setBranchTimeZone(String timeZone) {
-        getBranch().setTimeZone(timeZone);
-    }
-
-    /*
-     * If the input is valid, then save changes to the branch.
-     */
-    public void apply() {
-        if (!TapestryUtils.isValid(this)) {
-            return;
-        }
-        Branch branch = getBranch();
-        getBranchManager().saveBranch(branch);
-        setBranchId(branch.getId());
+    @Override
+    public String getBreadCrumbTitle() {
+        return null == getBranchId() ? "&crumb.new.branch"
+            : getBranchManager().getBranch(getBranchId()).getName();
     }
 }
