@@ -46,8 +46,7 @@ public final class SipxUtil {
         String[] fileList = folder.list();
         if (fileList != null && fileList.length > 0) {
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 }
