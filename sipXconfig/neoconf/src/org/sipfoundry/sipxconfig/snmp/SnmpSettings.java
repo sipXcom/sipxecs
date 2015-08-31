@@ -27,6 +27,7 @@ import org.sipfoundry.sipxconfig.setting.SettingEntry;
 public class SnmpSettings extends PersistableSettings implements DeployConfigOnEdit {
     private static final String FIX_DEAD_PROCESSES = "cfdat/fix_dead_processes";
     private static final String COMMUNITY_STRING = "cfdat/community_string";
+    private static final String COMMUNITY_STRING_CONFIRM = "cfdat/community_string_confirm";
     private boolean m_restartDefault;
 
     public SnmpSettings() {
@@ -68,5 +69,9 @@ public class SnmpSettings extends PersistableSettings implements DeployConfigOnE
 
     public String getCommunityString() {
         return getSettingValue(COMMUNITY_STRING);
+    }
+
+    public String getCommunityStringConfirmed() {
+        return getSettingValue(COMMUNITY_STRING_CONFIRM);
     }
 }

@@ -119,7 +119,7 @@
     </setting>
     <setting name="outboundProxy.transport">
       <type refid="transport-4.0" />
-      <value>UDPOnly</value>
+      <value>TCPOnly</value>
     </setting>
     <setting name="serverFeatureControl.cf">
       <type>
@@ -182,7 +182,7 @@
         <setting name="transport">
           <profileName>server.1.transport</profileName>
           <type refid="transport-4.0" />
-          <value>UDPOnly</value>
+          <value>TCPOnly</value>
         </setting>
         <setting name="expires">
           <profileName>server.1.expires</profileName>
@@ -249,7 +249,7 @@
         <setting name="transport">
           <profileName>server.2.transport</profileName>
           <type refid="transport-4.0" />
-          <value>UDPOnly</value>
+          <value>TCPOnly</value>
         </setting>
         <setting name="expires">
           <profileName>server.2.expires</profileName>

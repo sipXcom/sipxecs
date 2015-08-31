@@ -16,10 +16,12 @@
  */
 package org.sipfoundry.sipxconfig.site.snmp;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.tapestry.annotations.Bean;
 import org.apache.tapestry.annotations.InjectObject;
 import org.apache.tapestry.event.PageBeginRenderListener;
 import org.apache.tapestry.event.PageEvent;
+import org.sipfoundry.sipxconfig.common.UserException;
 import org.sipfoundry.sipxconfig.components.PageWithCallback;
 import org.sipfoundry.sipxconfig.components.SipxValidationDelegate;
 import org.sipfoundry.sipxconfig.snmp.SnmpManager;
@@ -46,6 +48,11 @@ public abstract class Snmp extends PageWithCallback implements PageBeginRenderLi
     }
 
     public void apply() {
+    	String communityString = getSettings().getCommunityString();
+        String communityStringConfirmed = getSettings().getCommunityStringConfirmed();
+        if (!StringUtils.equals(communityString, communityStringConfirmed)) {
+        	throw new UserException(getMessages().getMessage("error.unconfirmed.community"));
+        }
         getSnmpManager().saveSettings(getSettings());
     }
 }
