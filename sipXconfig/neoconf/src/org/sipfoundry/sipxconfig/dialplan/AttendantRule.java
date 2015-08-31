@@ -26,6 +26,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.sipfoundry.sipxconfig.branch.Branch;
 import org.sipfoundry.sipxconfig.common.Replicable;
 import org.sipfoundry.sipxconfig.common.SipUri;
 import org.sipfoundry.sipxconfig.commserver.imdb.AliasMapping;
@@ -63,6 +64,7 @@ public class AttendantRule extends DialingRule implements Replicable {
     private boolean m_liveAttendantEnabled = true;
     private String m_liveAttendantCode;
     private Date m_liveAttendantExpire;
+    private Set<Branch> m_locations = new HashSet<Branch>();
 
     @Override
     public void appendToGenerationRules(List<DialingRule> rules) {
@@ -92,6 +94,7 @@ public class AttendantRule extends DialingRule implements Replicable {
         ar.m_afterHoursAttendant = (ScheduledAttendant) m_afterHoursAttendant.clone();
         ar.m_workingTimeAttendant = (WorkingTime) m_workingTimeAttendant.clone();
         ar.m_holidayAttendant = (Holiday) m_holidayAttendant.clone();
+        ar.m_locations = new HashSet<Branch>(m_locations);
         return ar;
     }
 
@@ -228,6 +231,23 @@ public class AttendantRule extends DialingRule implements Replicable {
 
     public void setLiveAttendantExpire(Date expire) {
         this.m_liveAttendantExpire = expire;
+    }
+
+    public Set<Branch> getLocations() {
+        return m_locations;
+    }
+
+    public void setLocations(Set<Branch> locations) {
+        m_locations = locations;
+    }
+
+    public List<Branch> getLocationsList() {
+        return new ArrayList<Branch>(m_locations);
+    }
+
+    public void setLocationsList(List<Branch> locations) {
+        m_locations.clear();
+        m_locations.addAll(locations);
     }
 
     @Required

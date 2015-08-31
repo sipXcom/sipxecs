@@ -33,6 +33,10 @@
       <key column="auto_attendant_id" />
       <many-to-many column="group_id" class="org.sipfoundry.sipxconfig.setting.Group" />
     </set>
+    <set name="locations" table="branch_auto_attendant">
+      <key column="auto_attendant_id" />
+      <many-to-many column="branch_id" class="org.sipfoundry.sipxconfig.branch.Branch" />
+    </set>
   </class>
 
   <class name="AttendantSpecialMode" table="attendant_special_mode">

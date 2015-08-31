@@ -16,14 +16,18 @@ import java.util.List;
 import org.apache.tapestry.AbstractPage;
 import org.apache.tapestry.IPage;
 import org.apache.tapestry.IRequestCycle;
+import org.apache.tapestry.annotations.InjectObject;
 import org.apache.tapestry.components.IPrimaryKeyConverter;
 import org.apache.tapestry.event.PageBeginRenderListener;
 import org.apache.tapestry.event.PageEvent;
+import org.apache.tapestry.form.IPropertySelectionModel;
 import org.apache.tapestry.valid.IValidationDelegate;
+import org.sipfoundry.sipxconfig.branch.BranchManager;
 import org.sipfoundry.sipxconfig.callgroup.CallGroup;
 import org.sipfoundry.sipxconfig.callgroup.CallGroupContext;
 import org.sipfoundry.sipxconfig.common.BeanWithId;
 import org.sipfoundry.sipxconfig.common.PrimaryKeySource;
+import org.sipfoundry.sipxconfig.components.ObjectSelectionModel;
 import org.sipfoundry.sipxconfig.components.PageWithCallback;
 import org.sipfoundry.sipxconfig.components.TapestryUtils;
 import org.sipfoundry.sipxconfig.site.user.SelectUsers;
@@ -45,6 +49,16 @@ public abstract class EditCallGroup extends PageWithCallback implements PageBegi
     public abstract Collection getNewUsersIds();
 
     public abstract void setNewUsersIds(Collection participantsIds);
+
+    @InjectObject("spring:branchManager")
+    public abstract BranchManager getBranchManager();
+
+    public IPropertySelectionModel getLocationsModel() {
+        ObjectSelectionModel model = new ObjectSelectionModel();
+        model.setCollection(getBranchManager().getBranches());
+        model.setLabelExpression("name");
+        return model;
+    }
 
     public void pageBeginRender(PageEvent event_) {
         addNewUsers();

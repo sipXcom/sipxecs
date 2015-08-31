@@ -11,14 +11,19 @@ package org.sipfoundry.sipxconfig.dialplan;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.sipfoundry.sipxconfig.branch.Branch;
 import org.sipfoundry.sipxconfig.cfgmgt.DeployConfigOnEdit;
 import org.sipfoundry.sipxconfig.common.DialPad;
 import org.sipfoundry.sipxconfig.common.NamedObject;
@@ -60,6 +65,7 @@ public class AutoAttendant extends BeanWithGroups implements NamedObject, Deploy
     private String m_lang = LocalizationContext.DEFAULT;
     private String m_allowDial = StringUtils.EMPTY;
     private String m_denyDial = StringUtils.EMPTY;
+    private Set<Branch> m_locations = new HashSet<Branch>();
 
     @Override
     protected Setting loadSettings() {
@@ -211,6 +217,23 @@ public class AutoAttendant extends BeanWithGroups implements NamedObject, Deploy
 
     private String getLocaleSysDirectory() {
         return String.format("%s/stdprompts_%s", m_sysDirectory, m_lang);
+    }
+
+    public Set<Branch> getLocations() {
+        return m_locations;
+    }
+
+    public void setLocations(Set<Branch> locations) {
+        m_locations = locations;
+    }
+
+    public List<Branch> getLocationsList() {
+        return new ArrayList<Branch>(m_locations);
+    }
+
+    public void setLocationsList(List<Branch> locations) {
+        m_locations.clear();
+        m_locations.addAll(locations);
     }
 
     /**
