@@ -94,6 +94,7 @@ public class AttendantRule extends DialingRule implements Replicable {
         ar.m_afterHoursAttendant = (ScheduledAttendant) m_afterHoursAttendant.clone();
         ar.m_workingTimeAttendant = (WorkingTime) m_workingTimeAttendant.clone();
         ar.m_holidayAttendant = (Holiday) m_holidayAttendant.clone();
+        ar.m_locations = new HashSet<Branch>(m_locations);
         return ar;
     }
 

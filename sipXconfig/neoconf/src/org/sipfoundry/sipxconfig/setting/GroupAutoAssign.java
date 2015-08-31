@@ -169,7 +169,8 @@ public class GroupAutoAssign {
             userConference.setName(user.getUserName() + "-conference");
             userConference.setOwner(user);
             userConference.setEnabled(true);
-            SettingValue inheritLocation = conferenceGroup.getSettingValue(new SettingImpl(CONFERENCE_INHERIT_LOCATION));
+            SettingValue inheritLocation = conferenceGroup.
+                    getSettingValue(new SettingImpl(CONFERENCE_INHERIT_LOCATION));
             if (inheritLocation != null && Boolean.valueOf(inheritLocation.getValue())) {
                 userConference.getLocations().add(user.getBranch());
             }
