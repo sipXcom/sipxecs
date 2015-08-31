@@ -16,6 +16,37 @@
           validators="validators:required"
           displayName="message:label.name"/>
       </label>
+      <div jwcid="@If" condition="ognl:gateway.model.hasSerialNumber" renderTag="false">
+        <label jwcid="@common/FieldPanel" for="gateway:serial"
+          field="component:gatewaySerial"
+          label="message:label.serial"
+          description="message:description.serial">
+          <input jwcid="gatewaySerial@TextField" id="gateway:serial" maxlength="255"
+            value="ognl:gateway.serialNumber"
+            validators="ognl:serialNumberValidators"
+            translator="ognl:serialNumberTranslator"
+            displayName="message:label.serial"/>
+        </label>
+      </div>
+      <label jwcid="@common/FieldPanel" for="gateway:description"
+        field="component:gatewayDescription"
+        label="message:label.description">
+        <textarea jwcid="gatewayDescription@TextArea" id="gateway:description" cols="45" rows="5"
+          value="ognl:gateway.description"
+          validators="spring-validators:validFieldSize"
+          displayName="message:label.description"/>
+      </label>
+      <div jwcid="@If" condition="ognl:gateway.model.versions.length > 0" renderTag="false">
+      <tr jwcid="@common/FieldPanel"
+        for="gateway:version"
+        label="message:label.firmwareVersion"
+        field="component:selectVersion">
+        <td jwcid="selectVersion@PropertySelection"
+          model="ognl:versions"
+          value="ognl:gateway.deviceVersion"
+          displayName="message:label.firmwareVersion"/>
+      </tr>
+      </div>
       <span jwcid="@If" condition="ognl:sipTrunk">
       <tr jwcid="@common/FieldPanel" for="gateway:useSipXBridge" field="component:useSipXBridge"
 	      label="message:label.useSipXBridge">
@@ -25,7 +56,6 @@
                onchange="javascript:this.form.submit();"
          />
       </tr>
-
       <span jwcid="@If" condition="ognl:gateway.useSipXBridge && moreThanOneBrdigeSbcs">
         <label jwcid="@common/FieldPanel" for="gateway:route" field="ognl:null"
                label="message:label.route" description="message:description.route">
@@ -34,7 +64,7 @@
         </label>
       </span>
       </span>
-         <span jwcid="@If" condition="ognl:sipTrunk && !gateway.useSipXBridge">
+      <span jwcid="@If" condition="ognl:sipTrunk && !gateway.useSipXBridge">
         <label jwcid="@common/FieldPanel" for="gateway:outboundAddress"
         field="component:outboundAddress"
         label="message:label.outboundAddress"
@@ -64,7 +94,7 @@
           </select>
         </label>
       </span>
-     <label jwcid="@common/FieldPanel" for="gateway:address"
+      <label jwcid="@common/FieldPanel" for="gateway:address"
         field="component:gatewayAddress"
         label="message:label.address"
         description="message:description.address">
@@ -95,29 +125,6 @@
           </label>
         </div>  
       </div>
-      <div jwcid="@If" condition="ognl:gateway.model.hasSerialNumber" renderTag="false">
-        <label jwcid="@common/FieldPanel" for="gateway:serial"
-          field="component:gatewaySerial"
-          label="message:label.serial"
-          description="message:description.serial">
-          <input jwcid="gatewaySerial@TextField" id="gateway:serial" maxlength="255"
-            value="ognl:gateway.serialNumber"
-            validators="ognl:serialNumberValidators"
-            translator="ognl:serialNumberTranslator"
-            displayName="message:label.serial"/>
-        </label>
-      </div>
-      <div jwcid="@If" condition="ognl:gateway.model.versions.length > 0" renderTag="false">
-      <tr jwcid="@common/FieldPanel"
-        for="gateway:version"
-        label="message:label.firmwareVersion"
-        field="component:selectVersion">
-        <td jwcid="selectVersion@PropertySelection"
-          model="ognl:versions"
-          value="ognl:gateway.deviceVersion"
-          displayName="message:label.firmwareVersion"/>
-      </tr>
-      </div>
       <div jwcid="@If" condition="ognl:gateway.model.locationAware" renderTag="false">
         <tr  jwcid="@common/FieldPanel" for="gateway:site" field="component:site"
           label="message:label.site"
@@ -141,14 +148,6 @@
            <span jwcid="shared@Checkbox" id="gateway:shared" value="ognl:gateway.shared"/>
         </tr>
       </div>
-      <label jwcid="@common/FieldPanel" for="gateway:description"
-        field="component:gatewayDescription"
-        label="message:label.description">
-        <textarea jwcid="gatewayDescription@TextArea" id="gateway:description" cols="45" rows="5"
-          value="ognl:gateway.description"
-          validators="spring-validators:validFieldSize"
-          displayName="message:label.description"/>
-      </label>
     </tbody>
   </table>
 </fieldset>

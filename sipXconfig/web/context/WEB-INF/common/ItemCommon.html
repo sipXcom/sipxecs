@@ -18,6 +18,13 @@
           value="ognl:#this.item.name"/>
      </tr>
     </span>
+    <tr jwcid="@common/FieldPanel" for="item:description"  field="component:description" label="message:description">
+        <textarea jwcid="description@TextArea" id="item:description"
+          value="ognl:#this.item.description"
+          validators="validators:maxLength=255[Maximum allowed characters is 255]"
+          cols="45" rows="5">
+        </textarea>
+    </tr>
     <span jwcid="ifUseExtensionSelect@If" condition="ognl:useExtensionSelect" renderTag="false">
       <tr jwcid="@common/FieldPanel" label="message:extension">
 	    <input jwcid="extensionSelected@TextField" id="item:extension"
@@ -51,13 +58,6 @@
           maxlength="15"/>
       </tr>
     </span>
-    <tr jwcid="@common/FieldPanel" for="item:description"  field="component:description" label="message:description">
-        <textarea jwcid="description@TextArea" id="item:description"
-          value="ognl:#this.item.description"
-          validators="validators:maxLength=255[Maximum allowed characters is 255]"
-          cols="45" rows="5">
-        </textarea>
-    </tr>
     <tr jwcid="@RenderBody" />
     </tbody>
   </table>
