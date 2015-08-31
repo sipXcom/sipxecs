@@ -63,6 +63,7 @@ public class CallGroup extends AbstractCallSequence implements Replicable, Syste
             ringClone.setCallGroup(clone);
             clone.insertRing(ringClone);
         }
+        clone.setLocations(new HashSet<Branch>(m_locations));
         return clone;
     }
 
