@@ -15,6 +15,10 @@
     <property name="description" />
     <property name="code" />
     <many-to-one name="internalUser" column="internal_user_id" class="org.sipfoundry.sipxconfig.common.InternalUser" cascade="all"/>
+    <set name="locations" table="branch_auth_code">
+      <key column="auth_code_id" />
+      <many-to-many column="branch_id" class="org.sipfoundry.sipxconfig.branch.Branch" />
+    </set>
   </class>
 
   <query name="authCodeByCode">

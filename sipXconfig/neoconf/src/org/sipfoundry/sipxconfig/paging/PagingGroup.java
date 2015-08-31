@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.sipfoundry.sipxconfig.branch.Branch;
 import org.sipfoundry.sipxconfig.cfgmgt.DeployConfigOnEdit;
 import org.sipfoundry.sipxconfig.common.BeanWithId;
 import org.sipfoundry.sipxconfig.common.User;
@@ -36,6 +37,8 @@ public class PagingGroup extends BeanWithId implements DeployConfigOnEdit, Syste
     private int m_timeout = 60;       // default to 60 seconds
 
     private Set<User> m_users = new HashSet<User>();
+
+    private Set<Branch> m_locations = new HashSet<Branch>();
 
     public String getDescription() {
         return m_description;
@@ -91,6 +94,23 @@ public class PagingGroup extends BeanWithId implements DeployConfigOnEdit, Syste
 
     public void setTimeout(int timeout) {
         m_timeout = timeout;
+    }
+
+    public Set<Branch> getLocations() {
+        return m_locations;
+    }
+
+    public void setLocations(Set<Branch> locations) {
+        m_locations = locations;
+    }
+
+    public List<Branch> getLocationsList() {
+        return new ArrayList<Branch>(m_locations);
+    }
+
+    public void setLocationsList(List<Branch> locations) {
+        m_locations.clear();
+        m_locations.addAll(locations);
     }
 
     @Override

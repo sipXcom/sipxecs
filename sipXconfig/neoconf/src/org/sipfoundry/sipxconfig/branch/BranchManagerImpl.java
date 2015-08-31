@@ -87,22 +87,27 @@ public class BranchManagerImpl extends SipxHibernateDaoSupport<Branch> implement
      */
     @Override
     public void deleteBranches(Collection<Integer> branchIds) {
-        List<String> sqlUpdates = new ArrayList<String>();
-        Collection<Branch> branches = new ArrayList<Branch>(branchIds.size());
-        for (Integer id : branchIds) {
-            Branch branch = getBranch(id);
-            branches.add(branch);
-            sqlUpdates.add("update users set branch_id=null where branch_id=" + id);
-            sqlUpdates.add("update group_storage set branch_id=null where branch_id=" + id);
-            sqlUpdates.add("delete from branch where branch_id=" + id);
-            getHibernateTemplate().evict(branch);
-        }
-        if (!sqlUpdates.isEmpty()) {
-            m_jdbcTemplate.batchUpdate(sqlUpdates.toArray(new String[sqlUpdates.size()]));
-            for (Branch branch : branches) {
-                getDaoEventPublisher().publishDelete(branch);
+        try {
+            List<String> sqlUpdates = new ArrayList<String>();
+            Collection<Branch> branches = new ArrayList<Branch>(branchIds.size());
+            for (Integer id : branchIds) {
+                Branch branch = getBranch(id);
+                branches.add(branch);
+                sqlUpdates.add("update users set branch_id=null where branch_id=" + id);
+                sqlUpdates.add("update group_storage set branch_id=null where branch_id=" + id);
+                sqlUpdates.add("delete from branch where branch_id=" + id);
+                getHibernateTemplate().evict(branch);
             }
+            if (!sqlUpdates.isEmpty()) {
+                m_jdbcTemplate.batchUpdate(sqlUpdates.toArray(new String[sqlUpdates.size()]));
+                for (Branch branch : branches) {
+                    getDaoEventPublisher().publishDelete(branch);
+                }
+            }
+        } catch (Exception ex) {
+            throw new UserException("&branches.delete.err");
         }
+
     }
 
     @Override

@@ -14,9 +14,12 @@ import java.util.List;
 import org.apache.tapestry.annotations.InjectObject;
 import org.apache.tapestry.event.PageBeginRenderListener;
 import org.apache.tapestry.event.PageEvent;
+import org.apache.tapestry.form.IPropertySelectionModel;
 import org.apache.tapestry.valid.IValidationDelegate;
 import org.apache.tapestry.valid.ValidatorException;
+import org.sipfoundry.sipxconfig.branch.BranchManager;
 import org.sipfoundry.sipxconfig.commserver.Location;
+import org.sipfoundry.sipxconfig.components.ObjectSelectionModel;
 import org.sipfoundry.sipxconfig.components.PageWithCallback;
 import org.sipfoundry.sipxconfig.components.TapestryUtils;
 import org.sipfoundry.sipxconfig.feature.FeatureManager;
@@ -42,6 +45,16 @@ public abstract class EditParkOrbit extends PageWithCallback implements PageBegi
 
     @InjectObject("spring:featureManager")
     public abstract FeatureManager getFeatureManager();
+
+    @InjectObject("spring:branchManager")
+    public abstract BranchManager getBranchManager();
+
+    public IPropertySelectionModel getLocationsModel() {
+        ObjectSelectionModel model = new ObjectSelectionModel();
+        model.setCollection(getBranchManager().getBranches());
+        model.setLabelExpression("name");
+        return model;
+    }
 
     public void pageBeginRender(PageEvent event_) {
         if (getParkServers() == null) {
