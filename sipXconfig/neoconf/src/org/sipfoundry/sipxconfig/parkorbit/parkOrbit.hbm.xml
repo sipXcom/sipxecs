@@ -41,6 +41,10 @@
       <many-to-many column="group_id" class="org.sipfoundry.sipxconfig.setting.Group" />
     </set>
     <many-to-one name="location" class="org.sipfoundry.sipxconfig.commserver.Location" column="location_id" />
+    <set name="locations" table="branch_park_orbit">
+      <key column="park_orbit_id" />
+      <many-to-many column="branch_id" class="org.sipfoundry.sipxconfig.branch.Branch" />
+    </set>
   </class>
 
   <query name="parkOrbitIdsWithAlias">

@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,6 +36,7 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.sipfoundry.sipxconfig.address.Address;
 import org.sipfoundry.sipxconfig.address.AddressManager;
+import org.sipfoundry.sipxconfig.branch.Branch;
 import org.sipfoundry.sipxconfig.cfgmgt.DeployConfigOnEdit;
 import org.sipfoundry.sipxconfig.common.Replicable;
 import org.sipfoundry.sipxconfig.common.SipUri;
@@ -98,6 +100,7 @@ public class Conference extends BeanWithSettings implements Replicable, DeployCo
     private String m_audioDirectory;
     private LocalizationContext m_localizationContext;
     private String m_promptsDir;
+    private Set<Branch> m_locations = new HashSet<Branch>();
 
     public void setLocalizationContext(LocalizationContext localizationContext) {
         m_localizationContext = localizationContext;
@@ -274,6 +277,23 @@ public class Conference extends BeanWithSettings implements Replicable, DeployCo
 
     public boolean hasOwner() {
         return m_owner != null;
+    }
+
+    public Set<Branch> getLocations() {
+        return m_locations;
+    }
+
+    public void setLocations(Set<Branch> locations) {
+        m_locations = locations;
+    }
+
+    public List<Branch> getLocationsList() {
+        return new ArrayList<Branch>(m_locations);
+    }
+
+    public void setLocationsList(List<Branch> locations) {
+        m_locations.clear();
+        m_locations.addAll(locations);
     }
 
     public Setting getConfigSettings() {

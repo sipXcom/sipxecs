@@ -11,6 +11,15 @@
     useExtension="ognl:true"
     nameValidator="spring-validators:required,validSipUserId"
     useDid="ognl:true"/>
+   <table>
+     <fieldset  jwcid="@common/FieldPanel" for="callGroup:locations" field="component:locations"
+       label="message:label.locations"
+       description="message:description.locations">
+         <span jwcid="locations@contrib:Palette" id="locations" 
+	       selected="ognl:callGroup.locationsList" model="ognl:locationsModel"
+           rows="10" sort="literal:USER" />
+     </fieldset>
+   </table>
   <fieldset jwcid="ringTable@admin/UserRingTable" rings="ognl:callGroup.rings"
     idConverter="ognl:idConverter" useFwdTimers="ognl:callGroup.useFwdTimers"/>
   <fieldset>

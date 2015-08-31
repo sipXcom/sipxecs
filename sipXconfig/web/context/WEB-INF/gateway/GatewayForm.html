@@ -127,6 +127,13 @@
             value="ognl:gateway.branch"/>
         </tr>
       </div>
+      <tr  jwcid="@common/FieldPanel" for="gateway:locations" field="component:locations"
+        label="message:label.locations"
+        description="message:description.locations">
+        <span jwcid="locations@contrib:Palette" id="locations" 
+		        selected="ognl:gateway.locationsList" model="ognl:locationsModel"
+		        rows="10" sort="literal:USER" />
+      </tr>
       <div jwcid="@If" condition="ognl:gateway.model.sharedAware" renderTag="false">
 	    <tr jwcid="@common/FieldPanel" for="gateway:shared" field="component:shared"
 	        label="message:label.shared"
