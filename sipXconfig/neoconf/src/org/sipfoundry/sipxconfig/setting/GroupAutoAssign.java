@@ -15,6 +15,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.sipfoundry.sipxconfig.branch.Branch;
 import org.sipfoundry.sipxconfig.callgroup.AbstractRing;
 import org.sipfoundry.sipxconfig.forwarding.CallSequence;
 import org.sipfoundry.sipxconfig.forwarding.ForwardingContext;
@@ -172,7 +173,10 @@ public class GroupAutoAssign {
             SettingValue inheritLocation = conferenceGroup.
                     getSettingValue(new SettingImpl(CONFERENCE_INHERIT_LOCATION));
             if (inheritLocation != null && Boolean.valueOf(inheritLocation.getValue())) {
-                userConference.getLocations().add(user.getBranch());
+                Branch userLocation = user.getBranch();
+                if (userLocation != null) {
+                    userConference.getLocations().add(userLocation);
+                }
             }
             String displayName = user.getDisplayName();
             if (StringUtils.isEmpty(displayName)) {
