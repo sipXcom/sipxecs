@@ -10,6 +10,7 @@ package org.sipfoundry.sipxcallback;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Date;
 import java.util.HashMap;
 
 import org.apache.log4j.Logger;
@@ -20,6 +21,7 @@ import org.sipfoundry.commons.freeswitch.FreeSwitchEventSocketInterface;
 import org.sipfoundry.commons.freeswitch.Hangup;
 import org.sipfoundry.commons.freeswitch.eslrequest.EslRequestScopeRunnable;
 import org.sipfoundry.sipxcallback.common.CallbackException;
+import org.sipfoundry.sipxcallback.common.CallbackLegs;
 import org.sipfoundry.sipxcallback.common.CallbackService;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -69,10 +71,6 @@ public abstract class CallbackCallHandler extends EslRequestScopeRunnable {
 
     /**
      * Marks the callee user for callback on busy
-     * 
-     * @param fses
-     * @throws CallbackException
-     * @throws InterruptedException
      */
     public final void run(FreeSwitchEventSocketInterface fses) {
         HashMap<String, String> variables = fses.getVariables();
@@ -91,7 +89,8 @@ public abstract class CallbackCallHandler extends EslRequestScopeRunnable {
             return;
         }
         try {
-            m_callbackService.updateCallbackInformation(calleeUserName,callerURL, true);
+            CallbackLegs callbackLegs = new CallbackLegs(calleeUserName,callerURL, new Date().getTime());
+            m_callbackService.updateCallbackInfoToMongo(callbackLegs, true);
         } catch (CallbackException e) {
             // callback user not found
             LOG.warn("Callback user " + calleeUserName + " was not found.");

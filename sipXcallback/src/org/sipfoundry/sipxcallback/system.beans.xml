@@ -55,7 +55,7 @@
     <property name="callbackService" ref="callbackService" />
     <property name="taskExecutor" ref="taskExecutor" />
     <property name="callbackThread" ref="callbackThread" />
-    <property name="hazelcastInstance" ref="hazelcastInstance" />
+    <property name="expires" value="${callback-duration}" />
   </bean>
 
   <bean id="callbackThread" class="org.sipfoundry.sipxcallback.CallbackThread" scope="prototype">
@@ -63,14 +63,12 @@
     <property name="sipxchangeDomainName" value="${callback.sipxchangeDomainName}" />
     <property name="callerPrompt" value="${conf.dir}/sipxcallback/prompts/caller.wav" />
     <property name="requestedCallbackPrompt" value="${conf.dir}/sipxcallback/prompts/requested_a_callback.wav" />
-    <property name="butTheyAreBusyPrompt" value="${conf.dir}/sipxcallback/prompts/but_they_are_busy.wav" />
-    <property name="isNotAnsweringPrompt" value="${conf.dir}/sipxcallback/prompts/is_not_answering.wav" />
-    <property name="hazelcastInstance" ref="hazelcastInstance" />
   </bean>
 
   <bean id="callbackServiceImpl" class="org.sipfoundry.sipxcallback.common.CallbackServiceImpl">
     <property name="imdbTemplate" ref="imdb" />
     <property name="expires" value="${callback-duration}" />
+    <property name="hazelcastInstance" ref="hazelcastInstance" />
   </bean>
 
   <bean id="callbackService" class="org.springframework.aop.framework.ProxyFactoryBean">
@@ -79,7 +77,7 @@
   </bean> 
 
   <task:scheduled-tasks>
-    <task:scheduled ref="callbackTimer" method="run" fixed-delay="60000" />
+    <task:scheduled ref="callbackTimer" method="run" fixed-delay="60000" initial-delay="5000" />
   </task:scheduled-tasks>
 
   <bean id="hazelcastInstance" class="com.hazelcast.core.Hazelcast" factory-method="newHazelcastInstance">
