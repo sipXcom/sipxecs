@@ -523,8 +523,6 @@ void DialogTracker::applyPatchedSdpPreview( SipMessage& sipMessage )
 
 void DialogTracker::removeUnwantedElements( SipMessage& request )
 {
-  // Note: Temporarily disabling this code due to the UC-3500 tracker
-#if 0
    // if the Contact header contains a +sip.rendering field parameter with a
    // "no" or "unknown" value then this routine will take it out as it can
    // lead to unidirectional media streams being setup and those cause
@@ -550,7 +548,6 @@ void DialogTracker::removeUnwantedElements( SipMessage& request )
          }
       }
    }
-#endif /* if 0 */
    // ... add code to remove other unwanted elements here ...
 }
 
