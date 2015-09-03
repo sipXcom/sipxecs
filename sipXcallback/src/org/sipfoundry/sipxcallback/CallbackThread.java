@@ -20,17 +20,13 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.sipfoundry.commons.freeswitch.BridgeCommand;
 import org.sipfoundry.commons.freeswitch.Broadcast;
-import org.sipfoundry.commons.freeswitch.ChannelExists;
 import org.sipfoundry.commons.freeswitch.FreeSwitchEvent;
 import org.sipfoundry.commons.freeswitch.FreeSwitchEventSocketInterface;
-import org.sipfoundry.commons.freeswitch.Hangup;
 import org.sipfoundry.commons.freeswitch.OriginateCommand;
 import org.sipfoundry.sipxcallback.common.CallbackException;
+import org.sipfoundry.sipxcallback.common.CallbackLegs;
 import org.sipfoundry.sipxcallback.common.CallbackService;
 import org.springframework.beans.factory.annotation.Required;
-
-import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.IMap;
 
 public class CallbackThread extends Thread {
 
@@ -39,27 +35,25 @@ public class CallbackThread extends Thread {
     private static final String ORIGINATE_PROPERTIES = "{ignore_early_media=true,originate_timeout=20,fail_on_single_reject=USER_BUSY,hangup_after_bridge=true,origination_caller_id_number=00000000}";
     public static final String BEAN_NAME = "callbackThread";
 
+    private CallbackLegs m_callbackLegs;
     private String m_callerUID;
     private String m_calleeUID;
-    private String m_calleeName;
     private String m_callerName;
     private FreeSwitchEventSocketInterface m_fsCmdSocket;
     private CallbackService m_callbackService;
     private String sipxchangeDomainName;
-    private HazelcastInstance m_hazelcastInstance;
 
     private String m_callerPrompt;
     private String m_requestedCallbackPrompt;
-    private String m_butTheyAreBusyPrompt;
-    private String m_isNotAnsweringPrompt;
 
-    public void initiate(String calleeName, String callerName, FreeSwitchEventSocketInterface fsCmdSocket) {
-        this.m_calleeName = calleeName;
-        callerName = callerName.replace(";", ".");
-        this.m_callerName = callerName.split("@")[0];
-        this.m_callerUID = StringUtils.join(new String[] { "sofia/", sipxchangeDomainName, "/", callerName });
-        this.m_calleeUID = m_callerUID.replace(m_callerName, m_calleeName);
-        this.m_fsCmdSocket = fsCmdSocket;
+    public void initiate(CallbackLegs callbackLegs, FreeSwitchEventSocketInterface fsCmdSocket) {
+        m_callbackLegs = callbackLegs;
+        String callerName = callbackLegs.getCallerName().replace(";", ".");
+        m_callerName = callerName.split("@")[0];
+        m_callerUID = StringUtils.join(new String[] { "sofia/", sipxchangeDomainName, "/", callerName });
+        m_calleeUID = m_callerUID.replace(m_callerName, callbackLegs.getCalleeName());
+        m_callerUID = m_callerUID.split("/")[2];
+        m_fsCmdSocket = fsCmdSocket;
     }
 
     @Override
@@ -77,6 +71,9 @@ public class CallbackThread extends Thread {
             } catch (InterruptedException e) {
                 LOG.error(e);
             }
+        } else {
+            // B caller did not answer, add the callback request to the hazelcast queue
+            m_callbackService.getHazelcastCallbackQueue().add(m_callbackLegs);
         }
     }
 
@@ -87,15 +84,11 @@ public class CallbackThread extends Thread {
      *  - if user A responds: bridge A and B<br>
      *  - if user A busy: say "user A called you but he is busy"<br>
      *  - if user A does not answer: say "user A called you but he does not answer"<br>
-     * @throws InterruptedException 
      */
     private void handleCalleeResponse(String responseContent) throws InterruptedException {
-        // remove the callback flag from B user
-        String callerURL = m_callerUID.split("/")[2];
         try {
-            m_callbackService.updateCallbackInformation(m_calleeName, callerURL, false);
-            IMap<Object, Object> hazelcastMap = m_hazelcastInstance.getMap(CallbackTimer.HAZELCAST_CALLS);
-            hazelcastMap.remove(m_calleeName);
+         // remove the callback flag from B user
+            m_callbackService.updateCallbackInfoToMongo(m_callbackLegs, false);
         } catch (CallbackException e) {
             LOG.error(e);
             return;
@@ -107,54 +100,12 @@ public class CallbackThread extends Thread {
         new Broadcast(m_fsCmdSocket, calleeUUID, m_callerPrompt, false).startResponse();
         new Broadcast(m_fsCmdSocket, calleeUUID, m_callerName, true).startResponse();
         new Broadcast(m_fsCmdSocket, calleeUUID, m_requestedCallbackPrompt, false).startResponse();
-        Thread.sleep(4000);
+        Thread.sleep(CallbackTimer.THREAD_WAIT_TIME);
 
-        // check to see if called channel is not hung up
-        if (!new ChannelExists(m_fsCmdSocket, calleeUUID).isUUIDActive()) {
-            return;
-        }
+        // bridge B and A legs
+        BridgeCommand bridge = new BridgeCommand(m_fsCmdSocket, calleeUUID, m_callerUID, sipxchangeDomainName);
+        bridge.start();
 
-        // originate a call to A user
-        String originateProperties = ORIGINATE_PROPERTIES.replace("00000000", m_calleeName);
-        OriginateCommand originateCallerCmd = new OriginateCommand(m_fsCmdSocket,
-                originateProperties + m_callerUID);
-        FreeSwitchEvent responseCaller = originateCallerCmd.originate();
-
-        // check to see if called channel is not hung up
-        String responseCallerContent = responseCaller.getContent();
-        if (!new ChannelExists(m_fsCmdSocket, calleeUUID).isUUIDActive()) {
-            String callerUUID = getUUIDFromResponseContent(responseCallerContent);
-            new Hangup(m_fsCmdSocket, callerUUID).startResponse();
-            return;
-        }
-
-        // finish the callback process
-        if (responseCallerContent.startsWith(ORIGINATE_RESPONSE_OK)) {
-            handleCallbackSuccess(responseCallerContent, calleeUUID);
-        } else if (responseCallerContent.contains("USER_BUSY")) {
-            handleCallerAnswer(calleeUUID, m_butTheyAreBusyPrompt);
-        } else {
-            handleCallerAnswer(calleeUUID, m_isNotAnsweringPrompt);
-        }
-    }
-
-    /**
-     * A user responded: bridge B and A calls
-     */
-    private void handleCallbackSuccess(String responseCallerContent, String calleeUUID) {
-        LOG.debug(m_callerUID + " answered the call, bridging this call with " + m_calleeUID);
-        String callerUUID = getUUIDFromResponseContent(responseCallerContent);
-        BridgeCommand bridge = new BridgeCommand(m_fsCmdSocket, calleeUUID, callerUUID);
-        bridge.startResponse();
-    }
-
-    /**
-     * if A user did not answer, play prompt to B user and hangup 
-     */
-    private void handleCallerAnswer(String calleeUUID, String promptName) throws InterruptedException {
-        new Broadcast(m_fsCmdSocket, calleeUUID, promptName, false).startResponse();
-        Thread.sleep(3000);
-        new Hangup(m_fsCmdSocket, calleeUUID).startResponse();
     }
 
     private String getUUIDFromResponseContent(String responseContent){
@@ -177,22 +128,8 @@ public class CallbackThread extends Thread {
     }
 
     @Required
-    public void setButTheyAreBusyPrompt(String butTheyAreBusyPrompt) {
-        this.m_butTheyAreBusyPrompt = butTheyAreBusyPrompt;
-    }
-
-    @Required
-    public void setIsNotAnsweringPrompt(String isNotAnsweringPrompt) {
-        this.m_isNotAnsweringPrompt = isNotAnsweringPrompt;
-    }
-
-    @Required
     public void setSipxchangeDomainName(String sipxchangeDomainName) {
         this.sipxchangeDomainName = sipxchangeDomainName;
     }
 
-    @Required
-    public void setHazelcastInstance(HazelcastInstance hazelcastInstance) {
-        m_hazelcastInstance = hazelcastInstance;
-    }
 }
