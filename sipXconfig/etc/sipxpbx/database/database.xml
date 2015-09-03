@@ -484,6 +484,7 @@
     <antcall target="openacd-add-pstn-agent" />
     <antcall target="call-restrictions" />
     <antcall target="add_vm_authorization" />
+    <antcall target="openacd-permission-update4" />
   </target>
 
   <target name="plugin-patches">
@@ -1481,6 +1482,9 @@
   </target>
   <target name="add_vm_authorization" unless="add_vm_authorization">
   	<db-patch patch="add_vm_authorization"/>
+  </target>
+  <target name="openacd-permission-update4" unless="openacd-permission-update4">
+    <db-patch patch="openacd-permission-update4"/>
   </target>
 
 	<!--
