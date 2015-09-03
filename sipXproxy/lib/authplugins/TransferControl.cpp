@@ -106,7 +106,8 @@ void TransferControl::handleInviteWithRetarget(const Url& requestUri, SipMessage
     UtlString protocol;
     UtlString method;
 
-    OS_LOG_INFO(FAC_SIP, "TransferControl[%s]::authorizeAndModify - Receiving " << SIPX_RETARGET_URI_PARAM << " contact " << retargetContact.data());
+    OS_LOG_INFO(FAC_SIP, "TransferControl[" << mInstanceName.data() << "]::handleInviteWithRetarget - Receiving "
+                      << SIPX_RETARGET_URI_PARAM << " contact " << retargetContact.data());
 
     std::vector<std::string> hostAndPort;
     std::string retargetContactStr = retargetContact.data();
@@ -135,9 +136,16 @@ void TransferControl::handleInviteWithRetarget(const Url& requestUri, SipMessage
     {
       if (!bindings.front().getPath().empty())
       {
-        OS_LOG_INFO(FAC_SIP, "TransferControl[%s]::authorizeAndModify - Adding new Route " << bindings.front().getPath());
+        OS_LOG_INFO(FAC_SIP, "TransferControl[" << mInstanceName.data() << "]::handleInviteWithRetarget - Adding new internal Route "
+                              << bindings.front().getPath());
         request.setRouteField(bindings.front().getPath().c_str());
       }
+    }
+    else
+    {
+      OS_LOG_INFO(FAC_SIP, "TransferControl[" << mInstanceName.data() << "]::handleInviteWithRetarget - Adding new external Route "
+                                    << uri.data());
+      request.setRouteField(uri.data());
     }
   }
 }
