@@ -167,6 +167,10 @@
       </type>
       <value>20000</value>     
     </setting>
+    <setting name="SIPX_PROXY_LOG_AUTH_CODES" advanced="yes">
+      <type><boolean /></type>
+      <value>0</value>
+    </setting>
     <setting name="SIPX_SUPPRESS_ALERT_INDICATOR_IN_TRANSFERS" advanced="yes">
       <type refid="true-false"/>
       <value>false</value>
@@ -232,10 +236,6 @@
     <setting name="IDENTITY_VALIDITY_SECONDS">
       <type><integer min="10" required="yes"/></type>
       <value>300</value>
-    </setting>
-    <setting name="LOG_AUTH_CODES" advanced="yes">
-      <type><boolean /></type>
-      <value>0</value>
     </setting>
   </group>
   <group name="msftxchghack"  advanced="yes">
