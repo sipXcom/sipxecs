@@ -37,14 +37,6 @@ public class BridgeCommand extends CallCommand {
         m_command += "event-lock: true";
     }
 
-    /**
-     * Overloaded constructor to handle uuid_bridge commands
-     */
-    public BridgeCommand(FreeSwitchEventSocketInterface fses, String uuid1, String uuid2) {
-        super(fses);
-        m_command = "uuid_bridge " + uuid1 + " " + uuid2;
-        m_sendAsApi = true;
-    }
 
     public boolean start() {
         if(m_uuid == null) {

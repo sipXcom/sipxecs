@@ -25,12 +25,13 @@ public class CallbackLegs implements Serializable{
 
     private String m_calleeName;
     private String m_callerName;
-    private boolean m_processing;
+    private long m_date;
 
-    public CallbackLegs(String calleeName, String callerName) {
+    public CallbackLegs(String calleeName, String callerName, long date) {
         super();
         this.m_calleeName = calleeName;
         this.m_callerName = callerName;
+        this.m_date = date;
     }
 
     public String getCalleeName() {
@@ -49,12 +50,45 @@ public class CallbackLegs implements Serializable{
         this.m_callerName = callerName;
     }
 
-    public boolean isProcessing() {
-        return m_processing;
+    public long getDate() {
+        return m_date;
     }
 
-    public void setProcessing(boolean processing) {
-        this.m_processing = processing;
+    public void setDate(long date) {
+        this.m_date = date;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result
+                + ((m_calleeName == null) ? 0 : m_calleeName.hashCode());
+        result = prime * result
+                + ((m_callerName == null) ? 0 : m_callerName.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        CallbackLegs other = (CallbackLegs) obj;
+        if (m_calleeName == null) {
+            if (other.m_calleeName != null)
+                return false;
+        } else if (!m_calleeName.equals(other.m_calleeName))
+            return false;
+        if (m_callerName == null) {
+            if (other.m_callerName != null)
+                return false;
+        } else if (!m_callerName.equals(other.m_callerName))
+            return false;
+        return true;
     }
 
 }

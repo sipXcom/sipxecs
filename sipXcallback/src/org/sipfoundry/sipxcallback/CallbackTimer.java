@@ -20,39 +20,36 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.text.ParseException;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.sipfoundry.commons.freeswitch.ConfBasicThread;
 import org.sipfoundry.commons.freeswitch.FreeSwitchEventSocket;
+import org.sipfoundry.sipxcallback.common.CallbackException;
 import org.sipfoundry.sipxcallback.common.CallbackLegs;
 import org.sipfoundry.sipxcallback.common.CallbackService;
+import org.sipfoundry.sipxcallback.common.CallbackServiceImpl;
 import org.sipfoundry.sipxcallback.common.FreeSwitchConfigurationImpl;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import com.hazelcast.core.Cluster;
-import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IQueue;
-import com.hazelcast.core.Member;
 
 /**
  *  Daemon task class that handles callback requests registered in the system
  */
 public class CallbackTimer {
     private static final Logger LOG = Logger.getLogger("org.sipfoundry.sipxcallback");
-    public static final String HAZELCAST_CALLS = "calls";
     public static final long THREAD_WAIT_TIME = 4000;
 
     private CallbackService m_callbackService;
     private ThreadPoolTaskExecutor m_taskExecutor;
     private CallbackThread m_callbackThread;
+    private int m_expires;
 
     private FreeSwitchConfigurationImpl fsConfig;
     private FreeSwitchEventSocket m_fsCmdSocket;
-    private HazelcastInstance m_hazelcastInstance;
 
-    public void run() throws ParseException, InterruptedException {
+    public void run() throws ParseException, InterruptedException, CallbackException {
         if (m_fsCmdSocket == null) {
             try {
                 if (m_fsCmdSocket == null) {
@@ -66,29 +63,31 @@ public class CallbackTimer {
             }
         }
 
-        IQueue<CallbackLegs> hazelcastQueue = m_hazelcastInstance.getQueue(HAZELCAST_CALLS);
+        // make sure callback_queue is initiated
+        m_callbackService.initiateCallbackQueue();
 
-        // update hazelcast queue with calls pending only on primary (oldest hazelcast instance)
-        Cluster hazelcastCluster = m_hazelcastInstance.getCluster();
-        Set<Member> hazelcastMembers = hazelcastCluster.getMembers();
-        // run setup of the callback operations on the oldest member (the primary)
-        if (hazelcastCluster.getLocalMember().equals(hazelcastMembers.iterator().next())){
-            LOG.debug("Hazelcast instance is primary :: run setup of callback actions.");
-            Set<CallbackLegs> calls = m_callbackService.runCallbackTimer();
-            hazelcastQueue.addAll(calls);
-        }
+        IQueue<CallbackLegs> hazelcastQueue = m_callbackService.getHazelcastCallbackQueue();
         LOG.debug("Retrieving data from hazelcast queue");
-        while (!hazelcastQueue.isEmpty()) {
+        boolean queueIsEmpty = hazelcastQueue.isEmpty();
+        while (!queueIsEmpty) {
             CallbackLegs callbackLegs = hazelcastQueue.poll();
-            executeCallbackThread(callbackLegs.getCalleeName(), callbackLegs.getCallerName());
-            Thread.sleep(THREAD_WAIT_TIME);
+            queueIsEmpty = hazelcastQueue.isEmpty();
+            long currentDate = CallbackServiceImpl.getCurrentTimestamp();
+            long timeDiff = currentDate - callbackLegs.getDate();
+            if (timeDiff < m_expires * 60000) {
+                executeCallbackThread(callbackLegs);
+                Thread.sleep(THREAD_WAIT_TIME);
+            } else {
+                //callback request expired, remove it from mongo
+                m_callbackService.updateCallbackInfoToMongo(callbackLegs, false);
+            }
         }
     }
 
-    private void executeCallbackThread(String calleeName, String callerName) {
+    private void executeCallbackThread(CallbackLegs callbackLegs) {
         try {
             if (m_taskExecutor.getThreadPoolExecutor().getQueue().isEmpty()) {
-                m_callbackThread.initiate(calleeName, callerName, m_fsCmdSocket);
+                m_callbackThread.initiate(callbackLegs, m_fsCmdSocket);
                 m_taskExecutor.execute(m_callbackThread);
             } else {
                 LOG.debug("Wait for queue to become empty and look "+
@@ -135,7 +134,8 @@ public class CallbackTimer {
     }
 
     @Required
-    public void setHazelcastInstance(HazelcastInstance hazelcastInstance) {
-        m_hazelcastInstance = hazelcastInstance;
+    public void setExpires(int expires) {
+        m_expires = expires;
     }
+
 }

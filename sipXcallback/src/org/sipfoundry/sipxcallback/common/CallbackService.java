@@ -16,18 +16,25 @@
  */
 package org.sipfoundry.sipxcallback.common;
 
-import java.util.Set;
+import com.hazelcast.core.IQueue;
 
 public interface CallbackService {
 
-    public void updateCallbackInformation(String calleeUserName,
-            String callerChannelName, boolean insertNewRequest)
+    /**
+     * Persists callback info into mongo db
+     */
+    public void updateCallbackInfoToMongo(CallbackLegs callbackLegs, boolean insertNewRequest)
             throws CallbackException;
 
     /**
-     * Method used to assemble callback information and decide what requests are expired.
-     * @return a Map which consists of calleeName and callerName from which you can build the callback thread
+     * Returns the hazelcast queue used to store callback requests
      */
-    public Set<CallbackLegs> runCallbackTimer();
+    public IQueue<CallbackLegs> getHazelcastCallbackQueue();
+
+    
+    /**
+     * Method used to initiate the hazelcast callback queue 
+     */
+    public void initiateCallbackQueue();
 
 }
