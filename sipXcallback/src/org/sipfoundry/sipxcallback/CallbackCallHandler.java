@@ -41,9 +41,6 @@ public abstract class CallbackCallHandler extends EslRequestScopeRunnable {
 
     @Override
     public void runEslRequest() {
-        LOG.debug("runEslRequest ::run Starting SipXcallback thread with client "
-                + m_clientSocket);
-
         FreeSwitchEventSocketInterface fses = getFsEventSocket();
         try {
             if (fses.connect(m_clientSocket, null)) {
