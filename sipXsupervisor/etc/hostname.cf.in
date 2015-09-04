@@ -41,17 +41,24 @@ bundle edit_line sysconfig_network {
 }
 
 bundle edit_line hosts_contents {
-  
+
+  vars:
+    any::
+     "host_servers" slist => readstringlist("$(sipx.SIPX_CFDATA)/servers", "(.$(sipx.net_domain)=(.*?)end|$(sipx.host))", "\n", 100, 4000);
+     "ip_servers" int => readstringarray("ips", "$(sipx.SIPX_CFDATA)/servers", "(=\d|\send)", "[\s]", 100, 4000);
+
   # ipv6 not supported, but ipv6 style host names shouldn't hurt.
   insert_lines:
 "$(sys.ipv4) $(sipx.host).$(sipx.net_domain) $(sipx.host)";
+"$(ips[$(host_servers).$(sipx.net_domain)][1]) $(host_servers).$(sipx.net_domain) $(host_servers) # sipXcom cluster";
 "127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4";
 "::1         localhost localhost.localdomain localhost6 localhost6.localdomain6";
 
   # complex regex because multi-line in delete_lines does not do what you think it should
   delete_lines:  
 "(^|.*\s)($(sipx.host)|$(sys.ipv4)|$(sipx.host).$(sipx.net_domain)|127\.0\.0\.1|::1)(\s.*|$)";
+"(.*)# sipXcom cluster";
 
   reports:
-      
+
 }
