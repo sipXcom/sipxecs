@@ -23,6 +23,7 @@ import org.sipfoundry.commons.freeswitch.Broadcast;
 import org.sipfoundry.commons.freeswitch.FreeSwitchEvent;
 import org.sipfoundry.commons.freeswitch.FreeSwitchEventSocketInterface;
 import org.sipfoundry.commons.freeswitch.OriginateCommand;
+import org.sipfoundry.commons.freeswitch.Set;
 import org.sipfoundry.sipxcallback.common.CallbackException;
 import org.sipfoundry.sipxcallback.common.CallbackLegs;
 import org.sipfoundry.sipxcallback.common.CallbackService;
@@ -82,8 +83,7 @@ public class CallbackThread extends Thread {
      *  - remove the callback flag from B user<br>
      *  - originate a call to A user<br>
      *  - if user A responds: bridge A and B<br>
-     *  - if user A busy: say "user A called you but he is busy"<br>
-     *  - if user A does not answer: say "user A called you but he does not answer"<br>
+     *  - if user A busy: goes to his voicemail
      */
     private void handleCalleeResponse(String responseContent) throws InterruptedException {
         try {
@@ -103,9 +103,10 @@ public class CallbackThread extends Thread {
         Thread.sleep(CallbackTimer.THREAD_WAIT_TIME);
 
         // bridge B and A legs
+        Set set = new Set(m_fsCmdSocket, calleeUUID, "ringback", "${us-ring}");
+        set.start();
         BridgeCommand bridge = new BridgeCommand(m_fsCmdSocket, calleeUUID, m_callerUID, sipxchangeDomainName);
         bridge.start();
-
     }
 
     private String getUUIDFromResponseContent(String responseContent){
