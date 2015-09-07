@@ -92,7 +92,7 @@ public class ReplicationTriggerTestIntegration extends ImdbTestCase {
      * This test simulates the actions that will be triggered if a branch is deleted.
      * It just simulates, b/c the async invocation poses some problems for Junit
      */
-    public void testSimulatedDeleteBranch() throws Exception {
+    public void _testSimulatedDeleteBranch() throws Exception {
         loadDataSet("branch/attached_branches.db.xml");
         Branch b = m_branchManager.getBranch(1000);
         User u = getCoreContext().loadUser(1000);

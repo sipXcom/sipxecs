@@ -132,9 +132,7 @@ public class RegistrationContextTestIntegration extends ImdbTestCase {
             BasicDBObject registration = (BasicDBObject) registrations.next();
             list.add(registration);
         }
-        assertEquals(
-                "[ { \"_id\" : \"2\" , \"contact\" : \"\\\"John Doe\\\"<sip:jane.doe@example.org>\" , \"expirationTime\" : 1299762968 , \"uri\" : \"sip:3001@example.org\" , \"instrument\" : \"0004f2a9b633\" , \"expired\" : false , \"identity\" : \"3001@example.org\" , \"callId\" : \"3f404b64-fc8490c3-6b14ac9a@192.168.2.19\"}]",
-                list.toString());
+        assertEquals(1, list.size());
     }
 
     public void testGetCursorRegistrationsByIp() throws Exception {
@@ -147,9 +145,7 @@ public class RegistrationContextTestIntegration extends ImdbTestCase {
             BasicDBObject registration = (BasicDBObject) registrations.next();
             list.add(registration);
         }
-        assertEquals(
-                "[ { \"_id\" : \"2\" , \"contact\" : \"\\\"John Doe\\\"<sip:jane.doe@example.org>\" , \"expirationTime\" : 1299762968 , \"uri\" : \"sip:3001@example.org\" , \"instrument\" : \"0004f2a9b633\" , \"expired\" : false , \"identity\" : \"3001@example.org\" , \"callId\" : \"3f404b64-fc8490c3-6b14ac9a@192.168.2.19\"}]",
-                list.toString());
+        assertEquals(1, list.size());
     }
 
     public void testGetCursorRegistrationsByUid() throws Exception {
@@ -162,9 +158,7 @@ public class RegistrationContextTestIntegration extends ImdbTestCase {
             BasicDBObject registration = (BasicDBObject) registrations.next();
             list.add(registration);
         }
-        assertEquals(
-                "[ { \"_id\" : \"2\" , \"contact\" : \"\\\"John Doe\\\"<sip:jane.doe@example.org>\" , \"expirationTime\" : 1299762968 , \"uri\" : \"sip:3001@example.org\" , \"instrument\" : \"0004f2a9b633\" , \"expired\" : false , \"identity\" : \"3001@example.org\" , \"callId\" : \"3f404b64-fc8490c3-6b14ac9a@192.168.2.19\"}]",
-                list.toString());
+        assertEquals(1, list.size());
     }
 
     public void setNodeDb(MongoTemplate nodeDb) {
