@@ -137,14 +137,11 @@ public class PagingGroup extends BeanWithId implements DeployConfigOnEdit, Syste
 
     @Override
     public String getName() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public void setName(String name) {
-        // TODO Auto-generated method stub
-        
     }
 
     @Override

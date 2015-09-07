@@ -44,7 +44,8 @@ import org.sipfoundry.sipxconfig.setting.type.SettingType;
 import org.sipfoundry.sipxconfig.systemaudit.SystemAuditable;
 import org.springframework.beans.factory.annotation.Required;
 
-public class AutoAttendant extends BeanWithGroups implements NamedObject, DeployConfigOnEdit, SystemAuditable, Replicable {
+public class AutoAttendant extends BeanWithGroups implements NamedObject, DeployConfigOnEdit, SystemAuditable,
+    Replicable {
     public static final Log LOG = LogFactory.getLog(AutoAttendant.class);
     public static final String BEAN_NAME = "autoAttendant";
     public static final String OPERATOR_ID = "operator";
