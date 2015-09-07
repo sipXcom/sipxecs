@@ -12,6 +12,7 @@ package org.sipfoundry.sipxconfig.callgroup;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
+import org.sipfoundry.commons.mongo.MongoConstants;
 import org.sipfoundry.commons.security.Md5Encoder;
 import org.sipfoundry.sipxconfig.branch.Branch;
 import org.sipfoundry.sipxconfig.common.Replicable;
@@ -285,7 +287,13 @@ public class CallGroup extends AbstractCallSequence implements Replicable, Syste
 
     @Override
     public Map<String, Object> getMongoProperties(String domain) {
-        return Collections.emptyMap();
+        Map<String, Object> props = new HashMap<String, Object>();
+        List<String> locations = new ArrayList<String>();
+        for (Branch branch : m_locations) {
+            locations.add(branch.getName());
+        }
+        props.put(MongoConstants.LOCATIONS, locations);
+        return props;
     }
 
     @Override
