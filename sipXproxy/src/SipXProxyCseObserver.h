@@ -61,6 +61,7 @@ public:
                                      const char* address,
                                      int port );
 
+   void setLogAuthCodes(bool logAuthCodes);
 /* //////////////////////////// PROTECTED ///////////////////////////////// */
 protected:
 
@@ -75,6 +76,7 @@ private:
    OsTimer*                  mpCleanupMapTimer;
    OsCallback*               mpCleanupTimeoutCallback;
    OsMutex                   mCallTransMutex;
+   bool _logAuthCodes;
    
    /// no copy constructor or assignment operator
    SipXProxyCseObserver(const SipXProxyCseObserver& rSipXProxyCseObserver);
@@ -84,5 +86,11 @@ private:
 };
 
 /* ============================ INLINE METHODS ============================ */
+
+
+inline void SipXProxyCseObserver::setLogAuthCodes(bool logAuthCodes)
+{
+  _logAuthCodes = logAuthCodes;
+}
 
 #endif  // _SipXProxyCseObserver_h_

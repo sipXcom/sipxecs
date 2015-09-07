@@ -167,6 +167,10 @@
       </type>
       <value>20000</value>     
     </setting>
+    <setting name="SIPX_PROXY_LOG_AUTH_CODES" advanced="yes">
+      <type><boolean /></type>
+      <value>0</value>
+    </setting>
     <setting name="SIPX_SUPPRESS_ALERT_INDICATOR_IN_TRANSFERS" advanced="yes">
       <type refid="true-false"/>
       <value>false</value>

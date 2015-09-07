@@ -42,6 +42,6 @@ public class Set extends CallCommand {
     public Set(FreeSwitchEventSocketInterface fses, String chan_uuid, String variable, String value) {
         super(fses);
         m_uuid = chan_uuid;
-        m_command = "event\nexecute-app-arg: " + variable + "=" + value;
-    }      
+        m_command = "set\nexecute-app-arg: " + variable + "=" + value;
+    }
 }

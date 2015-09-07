@@ -61,6 +61,7 @@ public interface MongoConstants {
     static final String FAX_NUMBER = "fax";
     static final String LOCATION = "loctn"; // this is different than loc field in user
                                             // location db
+    static final String LOCATIONS = "locations";
     static final String HOME_PHONE_NUMBER = "hmph";
     static final String CELL_PHONE_NUMBER = "cell";
     static final String AVATAR = "avt";
