@@ -16,6 +16,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tapestry.IComponent;
 import org.apache.tapestry.IPage;
@@ -42,6 +44,7 @@ import org.sipfoundry.sipxconfig.setting.SettingUtil;
 import org.sipfoundry.sipxconfig.setting.type.EnumSetting;
 
 public abstract class EditPhoneDefaults extends PhoneBasePage implements PageBeginRenderListener {    
+    private static final Log LOG = LogFactory.getLog(EditPhoneDefaults.class);
 
     public static final String PAGE = "phone/EditPhoneDefaults";
 
@@ -63,7 +66,7 @@ public abstract class EditPhoneDefaults extends PhoneBasePage implements PageBeg
     public abstract PhoneModel getPhoneModel();
 
     public abstract void setPhoneModel(PhoneModel model);
-
+	
     public abstract Group getGroup();
 
     public abstract void setGroup(Group group);
@@ -148,8 +151,13 @@ public abstract class EditPhoneDefaults extends PhoneBasePage implements PageBeg
 
     public void apply() {
         getSettingDao().saveGroup(getGroup());
-        getPhoneContext().applyGroupFirmwareVersion(getGroup(),
-            DeviceVersion.getDeviceVersion(getPhone().getBeanId() + getDeviceVersion().getVersionId()), getPhone().getModelId());
+		try {
+			getPhoneContext().applyGroupFirmwareVersion(getGroup(),
+           	DeviceVersion.getDeviceVersion(getPhone().getBeanId() + getDeviceVersion().getVersionId()), getPhone().getModelId());
+		}
+		catch(Exception e) {
+			LOG.debug("EditPhoneDefaults:apply()", e);
+		} 
     }
 
     public IPage cancel(IRequestCycle cycle) {
