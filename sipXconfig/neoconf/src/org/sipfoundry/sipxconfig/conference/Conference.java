@@ -34,6 +34,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
+import org.sipfoundry.commons.mongo.MongoConstants;
 import org.sipfoundry.sipxconfig.address.Address;
 import org.sipfoundry.sipxconfig.address.AddressManager;
 import org.sipfoundry.sipxconfig.branch.Branch;
@@ -498,6 +499,11 @@ public class Conference extends BeanWithSettings implements Replicable, DeployCo
         props.put(CONF_MEMBERS_ONLY, getSettingValue("chat-meeting/members-only"));
         props.put(CONF_AUTORECORD, isAutorecorded());
         props.put(CONF_URI, getUri());
+        List<String> locations = new ArrayList<String>();
+        for (Branch branch : m_locations) {
+            locations.add(branch.getName());
+        }
+        props.put(MongoConstants.LOCATIONS, locations);
         return props;
     }
 
