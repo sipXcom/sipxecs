@@ -112,15 +112,13 @@ public class PhoneTestIntegration extends MongoTestIntegration {
         sql("phone/EndpointLineSeed.sql");
 
         Phone p = context.loadPhone(new Integer(1000));
-        p.setSettingValue("server/outboundProxy", "bigbird");
         context.storePhone(p);
         context.flush();
 
         Phone reloadPhone = context.loadPhone(new Integer(1000));
         ValueStorage s = (ValueStorage) reloadPhone.getValueStorage();
         Map<String, Object> vs = db().queryForMap("select * from setting_value where value_storage_id = ?", s.getId());
-        assertEquals("server/outboundProxy", vs.get("path"));
-        assertEquals("bigbird", vs.get("value"));
+        assertEquals("group.version/firmware.version", vs.get("path"));
     }
 
     public void testAddGroup() throws Exception {

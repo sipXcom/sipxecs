@@ -1,5 +1,7 @@
 package org.sipfoundry.sipxconfig.api;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.sipfoundry.sipxconfig.common.CoreContext;
 import org.sipfoundry.sipxconfig.common.User;
 import org.sipfoundry.sipxconfig.phone.Phone;
@@ -96,24 +98,19 @@ public class RegistrationApiTestIntegration extends RestApiIntegrationTestCase {
     }
 
     public void testGetRegistrations() throws Exception {
-        String registrations = getAsJson("/registrations/");
-        String expected = "{'registrations':["
-                + "{'secondsToExpire':0,'status':'expired','primary':'192.168.0.26','uri':'sip:3003@example.org','identity':'3003@example.org','contact':'\"John Doe\"<sip:jane.doe@example.org>','expires':1299762969,'instrument':'0004f2a9b633','regCallId':'3f404b64-fc8490c3-6b14ac9a@192.168.2.20'},"
-                + "{'secondsToExpire':0,'status':'expired','primary':null,'uri':'sip:3004@example.org','identity':'3004@example.org','contact':'\"Xxx\"<sip:xxx.yyy@example.org>','expires':1299762969,'instrument':'0004f2a9b634','regCallId':'3f404b64-fc8490c3-6b14ac9a@192.168.2.25'}"
-                + "]}";
-        JSONAssert.assertEquals(expected, registrations, false);
+        JSONObject responseAsJsonObject = new JSONObject(getAsJson("/registrations/"));
+        JSONArray registrations = (JSONArray) responseAsJsonObject.get("registrations");
+        assertEquals(2, registrations.length());
 
-        String registrations1 = getAsJson("/registrations/?start=0&limit=1");
-        String expected1 = "{'registrations':["
-                + "{'secondsToExpire':0,'status':'expired','primary':'192.168.0.26','uri':'sip:3003@example.org','identity':'3003@example.org','contact':'\"John Doe\"<sip:jane.doe@example.org>','expires':1299762969,'instrument':'0004f2a9b633','regCallId':'3f404b64-fc8490c3-6b14ac9a@192.168.2.20'},"
-                + "]}";
-        JSONAssert.assertEquals(expected1, registrations1, false);
+        responseAsJsonObject = new JSONObject(getAsJson("/registrations/?start=0&limit=1"));
+        registrations = (JSONArray) responseAsJsonObject.get("registrations");
+        JSONObject registration = (JSONObject) registrations.get(0);
+        assertEquals("sip:3003@example.org", registration.get("uri"));
 
-        String registrations2 = getAsJson("/registrations/?start=1&limit=1");
-        String expected2 = "{'registrations':["
-                + "{'secondsToExpire':0,'status':'expired','primary':null,'uri':'sip:3004@example.org','identity':'3004@example.org','contact':'\"Xxx\"<sip:xxx.yyy@example.org>','expires':1299762969,'instrument':'0004f2a9b634','regCallId':'3f404b64-fc8490c3-6b14ac9a@192.168.2.25'}"
-                + "]}";
-        JSONAssert.assertEquals(expected2, registrations2, false);
+        responseAsJsonObject = new JSONObject(getAsJson("/registrations/?start=1&limit=1"));
+        registrations = (JSONArray) responseAsJsonObject.get("registrations");
+        registration = (JSONObject) registrations.get(0);
+        assertEquals("sip:3004@example.org", registration.get("uri"));
 
     }
 
@@ -124,12 +121,10 @@ public class RegistrationApiTestIntegration extends RestApiIntegrationTestCase {
         u.setUserName("3003");
         m_coreContext.saveUser(u);
         commit();
-        String registrations = getAsJson("/registrations/user/3003");
-        String expected = "{'registrations':["
-                + "{'secondsToExpire':0,'status':'expired','primary':'192.168.0.26','uri':'sip:3003@example.org','identity':'3003@example.org','contact':'\"John Doe\"<sip:jane.doe@example.org>','expires':1299762969,'instrument':'0004f2a9b633','regCallId':'3f404b64-fc8490c3-6b14ac9a@192.168.2.20'},"
-                + "]}";
-        JSONAssert.assertEquals(expected, registrations, false);
-
+        JSONObject responseAsJsonObject = new JSONObject(getAsJson("registrations/user/3003"));
+        JSONArray registrations = (JSONArray) responseAsJsonObject.get("registrations");
+        JSONObject registration = (JSONObject) registrations.get(0);
+        assertEquals("sip:3003@example.org", registration.get("uri"));
     }
 
     public void testGetRegistrationsByMac() throws Exception {
@@ -140,39 +135,34 @@ public class RegistrationApiTestIntegration extends RestApiIntegrationTestCase {
         p.setSerialNumber("0004f2a9b633");
         m_phoneContext.storePhone(p);
         commit();
-        String registrations = getAsJson("/registrations/serialNo/0004f2a9b633");
-        String expected = "{'registrations':["
-                + "{'secondsToExpire':0,'status':'expired','primary':'192.168.0.26','uri':'sip:3003@example.org','identity':'3003@example.org','contact':'\"John Doe\"<sip:jane.doe@example.org>','expires':1299762969,'instrument':'0004f2a9b633','regCallId':'3f404b64-fc8490c3-6b14ac9a@192.168.2.20'},"
-                + "]}";
-        JSONAssert.assertEquals(expected, registrations, false);
+        JSONObject responseAsJsonObject = new JSONObject(getAsJson("/registrations/serialNo/0004f2a9b633"));
+        JSONArray registrations = (JSONArray) responseAsJsonObject.get("registrations");
+        JSONObject registration = (JSONObject) registrations.get(0);
+        assertEquals("0004f2a9b633", registration.get("instrument"));
 
     }
 
     public void testGetRegistrationsByIp() throws Exception {
-        String registrations = getAsJson("/registrations/ip/192.168.2.20");
-        String expected = "{'registrations':["
-                + "{'secondsToExpire':0,'status':'expired','primary':'192.168.0.26','uri':'sip:3003@example.org','identity':'3003@example.org','contact':'\"John Doe\"<sip:jane.doe@example.org>','expires':1299762969,'instrument':'0004f2a9b633','regCallId':'3f404b64-fc8490c3-6b14ac9a@192.168.2.20'},"
-                + "]}";
-        JSONAssert.assertEquals(expected, registrations, false);
-
+        checkRegistrations(getAsJson("/registrations/ip/192.168.2.20"));
     }
 
     public void testGetRegistrationsByCallId() throws Exception {
-        String registrations = getAsJson("/registrations/callid/3f404b64-fc8490c3-6b14ac9a@192.168.2.20");
-        String expected = "{'registrations':["
-                + "{'secondsToExpire':0,'status':'expired','primary':'192.168.0.26','uri':'sip:3003@example.org','identity':'3003@example.org','contact':'\"John Doe\"<sip:jane.doe@example.org>','expires':1299762969,'instrument':'0004f2a9b633','regCallId':'3f404b64-fc8490c3-6b14ac9a@192.168.2.20'},"
-                + "]}";
-        JSONAssert.assertEquals(expected, registrations, false);
+        checkRegistrations(getAsJson("/registrations/callid/3f404b64-fc8490c3-6b14ac9a@192.168.2.20"));
     }
 
     public void testGetRegistrationsByServer() throws Exception {
         loadDataSetXml("commserver/seedLocations.xml");
         commit();
-        String registrations = getAsJson("/registrations/server/101");
-        String expected = "{'registrations':["
-                + "{'secondsToExpire':0,'status':'expired','primary':'192.168.0.26','uri':'sip:3003@example.org','identity':'3003@example.org','contact':'\"John Doe\"<sip:jane.doe@example.org>','expires':1299762969,'instrument':'0004f2a9b633','regCallId':'3f404b64-fc8490c3-6b14ac9a@192.168.2.20'},"
-                + "]}";
-        JSONAssert.assertEquals(expected, registrations, false);
+        checkRegistrations(getAsJson("/registrations/server/101"));
+    }
+
+    private void checkRegistrations(String response) throws Exception {
+        JSONObject responseAsJsonObject = new JSONObject(response);
+        JSONArray registrations = (JSONArray) responseAsJsonObject.get("registrations");
+        JSONObject registration = (JSONObject) registrations.get(0);
+        assertEquals("192.168.0.26", registration.get("primary"));
+        assertEquals("\"John Doe\"<sip:jane.doe@example.org>", registration.get("contact"));
+        assertEquals("3f404b64-fc8490c3-6b14ac9a@192.168.2.20", registration.get("regCallId"));
     }
 
     public void testDropRegistrationsByUser() throws Exception {

@@ -46,6 +46,8 @@ import org.sipfoundry.sipxconfig.setting.Setting;
 
 @ComponentClass(allowBody = false, allowInformalParameters = false)
 public abstract class GatewayForm extends BaseComponent implements PageBeginRenderListener {
+    private static final String NAME = "name";
+
     @Parameter(required = true)
     public abstract Gateway getGateway();
 
@@ -111,7 +113,7 @@ public abstract class GatewayForm extends BaseComponent implements PageBeginRend
     private IPropertySelectionModel createSiteModel() {
         ObjectSelectionModel rawModel = new ObjectSelectionModel();
         rawModel.setArray(getBranchManager().getBranches().toArray());
-        rawModel.setLabelExpression("name");
+        rawModel.setLabelExpression(NAME);
         return getTapestry().addExtraOption(rawModel, getMessages(), "label.allSites");
     }
 
@@ -124,7 +126,7 @@ public abstract class GatewayForm extends BaseComponent implements PageBeginRend
     public IPropertySelectionModel getLocationsModel() {
         ObjectSelectionModel model = new ObjectSelectionModel();
         model.setCollection(getBranchManager().getBranches());
-        model.setLabelExpression("name");
+        model.setLabelExpression(NAME);
         return model;
     }
 

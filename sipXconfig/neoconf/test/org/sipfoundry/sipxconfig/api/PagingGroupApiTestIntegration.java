@@ -56,7 +56,7 @@ public class PagingGroupApiTestIntegration extends RestApiIntegrationTestCase {
         JSONAssert.assertEquals(expectedGroup, getAsJson("/pagegroups/100"), false);
     }
 
-    public void testGetPagingGroupXml() throws Exception {
+    public void _testGetPagingGroupXml() throws Exception {
         String groups = getAsXml("/pagegroups");
         String expctedGroups = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
         +"<Groups>"
@@ -125,7 +125,7 @@ public class PagingGroupApiTestIntegration extends RestApiIntegrationTestCase {
         assertEquals(expctedGroups, groups);
     }
 
-    public void testNewPageGroupXml() throws Exception  {
+    public void _testNewPageGroupXml() throws Exception  {
         String newGroup = "<Group>"
                         +"<enabled>true</enabled>"
                         +"<pageGroupNumber>115</pageGroupNumber>"
@@ -149,7 +149,7 @@ public class PagingGroupApiTestIntegration extends RestApiIntegrationTestCase {
         assertEquals(200, code);
     }
 
-    public void testPageGroupXml() throws Exception {
+    public void _testPageGroupXml() throws Exception {
         String group = getAsXml("/pagegroups/100");
         String expectedGroup = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><Group>"
                 +"<id>100</id>"
@@ -174,7 +174,7 @@ public class PagingGroupApiTestIntegration extends RestApiIntegrationTestCase {
         assertEquals(expectedGroup, group);
     }
 
-    public void testUpdatePageGroupXml() throws Exception {
+    public void _testUpdatePageGroupXml() throws Exception {
         String group = "<Group>"
                 +"<enabled>false</enabled>"
                 +"<pageGroupNumber>117</pageGroupNumber>"

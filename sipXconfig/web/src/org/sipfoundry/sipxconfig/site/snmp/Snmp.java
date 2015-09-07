@@ -48,10 +48,10 @@ public abstract class Snmp extends PageWithCallback implements PageBeginRenderLi
     }
 
     public void apply() {
-    	String communityString = getSettings().getCommunityString();
+        String communityString = getSettings().getCommunityString();
         String communityStringConfirmed = getSettings().getCommunityStringConfirmed();
         if (!StringUtils.equals(communityString, communityStringConfirmed)) {
-        	throw new UserException(getMessages().getMessage("error.unconfirmed.community"));
+            throw new UserException(getMessages().getMessage("error.unconfirmed.community"));
         }
         getSnmpManager().saveSettings(getSettings());
     }

@@ -20,7 +20,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.httpclient.Header;
@@ -151,7 +150,7 @@ public class RestRedirectorResource extends UserResource {
     }
 
     private byte[] invokeIvrFallback(String methodType, String relativeUri, Representation entity)
-            throws ResourceException {
+        throws ResourceException {
         byte[] result = null;
         Address ivrGoodAddress = m_mailboxManager.getLastGoodIvrNode();
         if (ivrGoodAddress != null) {
@@ -181,7 +180,7 @@ public class RestRedirectorResource extends UserResource {
     }
 
     private byte[] invokeMethod(Address address, String methodType, String relativeUri, Representation entity)
-            throws ResourceException {
+        throws ResourceException {
         if (StringUtils.equals(methodType, GET)) {
             return m_httpInvoker.invokeGet(address.toString() + relativeUri);
         } else if (StringUtils.equals(methodType, POST)) {
@@ -265,7 +264,7 @@ public class RestRedirectorResource extends UserResource {
                 stream = method.getResponseBodyAsStream();
                 Header[] headers = method.getResponseHeaders();
                 for (Header header : headers) {
-                    if (StringUtils.equalsIgnoreCase(header.getName(),"Content-Type")) {
+                    if (StringUtils.equalsIgnoreCase(header.getName(), "Content-Type")) {
                         MediaType m = MimeType.getMediaTypeByMime(header.getValue());
                         if (m != null) {
                             Variant variant = new Variant(m);
