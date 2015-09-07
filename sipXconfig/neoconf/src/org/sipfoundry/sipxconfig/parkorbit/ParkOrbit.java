@@ -13,11 +13,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.sipfoundry.commons.mongo.MongoConstants;
 import org.sipfoundry.sipxconfig.address.Address;
 import org.sipfoundry.sipxconfig.address.AddressManager;
 import org.sipfoundry.sipxconfig.branch.Branch;
@@ -212,7 +214,13 @@ public class ParkOrbit extends BackgroundMusic implements NamedObject, DeployCon
 
     @Override
     public Map<String, Object> getMongoProperties(String domain) {
-        return Collections.emptyMap();
+        Map<String, Object> props = new HashMap<String, Object>();
+        List<String> locations = new ArrayList<String>();
+        for (Branch branch : m_locations) {
+            locations.add(branch.getName());
+        }
+        props.put(MongoConstants.LOCATIONS, locations);
+        return props;
     }
 
     @Override
