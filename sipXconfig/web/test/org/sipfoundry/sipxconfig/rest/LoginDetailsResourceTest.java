@@ -105,13 +105,18 @@ public class LoginDetailsResourceTest extends TestCase {
 
         List<WebRtcGateway> wrtcList = new ArrayList<WebRtcGateway>();
 
-        WebRtcGateway gateway = createMock(WebRtcGateway.class);
-        gateway.getAddress();
-        expectLastCall().andReturn("1.5.4.6").times(1);
-        gateway.getWsPort();
-        expectLastCall().andReturn("5064").times(1);
-
-        replay(gateway);
+        WebRtcGateway gateway = new WebRtcGateway() {
+            
+            @Override
+            public Integer getWsPort() {
+                return 5064;
+            }
+            
+            @Override
+            public String getAddress() {
+                return "1.5.4.6";
+            }
+        };
 
         wrtcList.add(gateway);
         m_gatewayContext.getGatewayByType(WebRtcGateway.class);
