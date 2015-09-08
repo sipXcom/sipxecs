@@ -47,7 +47,8 @@ dist_cfplugins_DATA = \
 	sendmail.cf \
 	logrotate.cf \
 	archive.cf \
-	zz_sipxlogwatcher.cf
+	zz_sipxlogwatcher.cf \
+	kernel.cf
 
 fwconfdir = $(SIPX_CONFDIR)/firewall
 dist_fwconf_DATA = \
