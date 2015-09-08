@@ -17,6 +17,8 @@
 
 package org.sipfoundry.sipxconfig.phone.yealink;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.sipfoundry.sipxconfig.device.DeviceVersion;
 import org.sipfoundry.sipxconfig.phone.PhoneModel;
 
@@ -24,6 +26,8 @@ import org.sipfoundry.sipxconfig.phone.PhoneModel;
  * Static differences in yealink models
 */
 public final class YealinkModel extends PhoneModel {
+
+    private static final Log LOG = LogFactory.getLog(YealinkModel.class);
     /** Firmware 6x or beyond */
     public static final DeviceVersion VER_6X = new DeviceVersion(YealinkPhone.BEAN_ID, "6X");
     public static final DeviceVersion VER_7X = new DeviceVersion(YealinkPhone.BEAN_ID, "7X");
@@ -41,12 +45,14 @@ public final class YealinkModel extends PhoneModel {
     private int m_dSSKeyCount;
 
     public YealinkModel() {
+        super(YealinkPhone.BEAN_ID);
+		setEmergencyConfigurable(false);
     }
-
+/*
     public YealinkModel(String beanId) {
         super(beanId);
     }
-
+*/
     public static DeviceVersion getPhoneDeviceVersion(String version) {
         for (DeviceVersion deviceVersion : SUPPORTED_VERSIONS) {
             if (deviceVersion.getName().contains(version)) {
@@ -55,13 +61,30 @@ public final class YealinkModel extends PhoneModel {
         }
         return VER_7X;
     }
+	
+	protected static boolean is40orLater(DeviceVersion v) {
+		LOG.debug("YealinkModel:is40orLater");
+        return true
+    }
+	
+	protected static int compareVersions(DeviceVersion deviceVersion, Integer[] testVersion) {
+        LOG.debug("YealinkModel:compareVersions");
+        return 0;
+    }
 
     public void setDefaultVersion(DeviceVersion value) {
+		LOG.debug("YealinkModel:setDefaultVersion");
         m_deviceVersion = value;
     }
 
     public DeviceVersion getDefaultVersion() {
-        return m_deviceVersion;
+		LOG.debug("YealinkModel:getDefaultVersion");
+		if(m_deviceVersion != null)
+		{
+			return m_deviceVersion;
+		} else {
+			return VER_7X;
+		}
     }
 
     public void setName(String value) {

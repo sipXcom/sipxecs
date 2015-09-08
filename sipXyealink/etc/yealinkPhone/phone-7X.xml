@@ -259,7 +259,7 @@
 	<!--// Specify the web language, the valid values are: English, Chinese_S, Turkish, Portuguese, Spanish, Italian, French, Russian, Deutsch and Czech. //-->
 	<setting name="lang.wui"><type refid="WebLanguage_type"/><value>English</value></setting>
 	<!--// Specify the LCD language, the valid values are: English (default), Chinese_S, Chinese_T, German, French, Turkish, Italian, Polish, Spanish and Portuguese. lang.gui = English //-->
-	<setting name="lang.gui" advanced="yes" if="yealinkPhone(SIPT|VP).*"><type refid="LcdLanguage_type"><string/></type><value>English</value></setting>
+	<setting name="lang.gui" advanced="yes" if="yealinkPhone(SIPT|VP).*"><type refid="LcdLanguage_type" /><value>English</value></setting>
 	<!--// 
 	#######################################################################################
 	##            Configure the access  URL of language file                             ##
@@ -279,7 +279,7 @@
 	    local_time.time_zone = +8
 	    local_time.time_zone_name = China(Beijing) //-->
 	<setting name="local_time.time_zone"><type refid="yealink-timezones_type"/><value>+8</value></setting>
-	<setting name="local_time.time_zone_name" advanced="yes"><type><string/></type></setting>
+	<setting name="local_time.time_zone_name" advanced="yes"><type refid="TimeZoneName_type"/><value>China(Beijing)</value></setting>
 	<!--// Configure the domain name or the IP address of the NTP server. The default value is cn.pool.ntp.org. //-->
 	<setting name="local_time.ntp_server1"><type><hostname/></type></setting>
 	<setting name="local_time.ntp_server2"><type><hostname/></type></setting>
@@ -1074,6 +1074,10 @@
 	</group>
     </group>
     <group name="e911" hidden="yes"> 
-      <setting name="location"><type><integer/></type></setting> 
+      <setting name="location"> 
+        <type> 
+          <integer/> 
+        </type> 
+      </setting> 
     </group>
 </model>

@@ -65,6 +65,18 @@
 	<!-- Assign a ringtone for account 1. The system ring tones are: common.wav (default), Ring1.wav, Ring2.wav-->
 	<!-- You can configure the custom ring tone (Family.wav) for the account 1, the value format is: account.1.ringtone.ring_type = Family.wav-->
 	<setting name="ringtone.ring_type"><type refid="yealink_ring_type"/><value>common</value></setting>
+	<!-- Enables or disables the ACD feature for account X. -->
+	<setting name="acd.enable"><type><boolean/></type><value>0</value></setting>
+	<!-- Enables or disables the IP phone to display the available or unavailable soft key after the phone logs into the ACD system. -->
+	<setting name="acd.available"><type><boolean/></type><value>0</value></setting>
+	<!--  Configures the user ID used to log in the ACD system. -->
+	<setting name="acd.user_id"><type><string/></type></setting>
+	<!--  Configures the password used to log in the ACD system.-->
+	<setting name="acd.password"><type><string/></type><value></value></setting>
+	<!--  Enables or disables the ACD auto available timer feature. If set to 1 (Enabled), the IP phone automatically changes the phone status to available.-->
+	<setting name="acd.auto_available"><type><boolean/></type><value>0</value></setting>
+	<!--  Specifies the length of time (in seconds) before the IP phone state is automatically reset to "available".-->
+	<setting name="acd.auto_available_timer"><type><integer min="0" max="120"/></type><value>60</value></setting>
     </group>
 
     <group name="advanced">
