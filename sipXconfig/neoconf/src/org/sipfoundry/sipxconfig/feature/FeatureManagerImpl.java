@@ -356,6 +356,11 @@ public class FeatureManagerImpl extends SipxHibernateDaoSupport implements BeanF
             // location.
             Location location = (Location) entity;
             if (location.isUninitialized()) {
+                m_jdbcTemplate.execute(format("delete from settings_location_group where settings_with_location_id in"
+                    + " (select settings_with_location_id from settings_with_location where location_id=%d)",
+                    location.getId()));
+                m_jdbcTemplate.execute(format("delete from settings_with_location where location_id=%d",
+                        location.getId()));
                 m_jdbcTemplate.execute(format("delete from feature_local where location_id=%d", location.getId()));
             }
             Set<LocationFeature> on = getEnabledLocationFeatures(location);
