@@ -1,0 +1,43 @@
+#
+# Copyright (c) 2015 eZuce, Inc. All rights reserved.
+#
+# This software is free software; you can redistribute it and/or modify it under
+# the terms of the Affero General Public License (AGPL) as published by the
+# Free Software Foundation; either version 3 of the License, or (at your option)
+# any later version.
+#
+# This software is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+# details.
+#
+
+bundle agent kernel {
+
+  classes:
+    "ipv6_anaconda_disabled" expression => fileexists("/etc/modprobe.d/ipv6.conf");
+
+  files:
+    !ipv6_anaconda_disabled::
+      # disable ipv6
+      "/etc/sysctl.conf"
+        comment => "Check ipv6 support",
+        perms => mog("0644","root","root"),
+        edit_line => disable_ipv6(),
+        classes => if_repaired("apply_kernel_updates");
+
+  commands:
+    apply_kernel_updates::
+      "/sbin/sysctl"
+        comment => "Apply kernel parameters - disable ipv6 support",
+        args => "-p";
+}
+
+bundle edit_line disable_ipv6 {
+  insert_lines:
+    "# sipxecs generated - disable ipv6 support";
+    "net.ipv6.conf.all.disable_ipv6 = 1";
+    "net.ipv6.conf.default.disable_ipv6 = 1";
+    "net.ipv6.conf.lo.disable_ipv6 = 1";
+    "net.ipv6.conf.eth0.disable_ipv6 = 1";
+}
