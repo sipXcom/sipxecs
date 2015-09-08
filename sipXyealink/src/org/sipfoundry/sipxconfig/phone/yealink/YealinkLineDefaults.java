@@ -163,4 +163,17 @@ public class YealinkLineDefaults {
         return rlsUri;
     }
 
+	@SettingEntry(paths = {
+            YealinkConstants.ACD_USER_ID_V7X_SETTING })
+    public String getAcdUserId() {
+        String acdUserId;
+        User u = m_line.getUser();
+        if (u != null) {
+            acdUserId = u.getUserName();
+        } else {
+            acdUserId = "";
+        }
+        return acdUserId;
+    }
+
 }

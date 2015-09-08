@@ -59,6 +59,7 @@ public abstract class YealinkConstants {
     public static final String BACKUP_OUTBOUND_PORT_V7X_SETTING = "basic/backup_outbound_port";
     public static final String VOICE_MAIL_NUMBER_V6X_SETTING = "Message/VoiceNumber";
     public static final String VOICE_MAIL_NUMBER_V7X_SETTING = "basic/voice_mail.number";
+	public static final String ACD_USER_ID_V7X_SETTING = "basic/acd.user_id";
 
     // Phone specific settings used in /etc/yealinkPhone/phone_XX.xml
     public static final String DNS_SERVER1_V6X_SETTING = "network-wan/DNS/PrimaryDNS";
