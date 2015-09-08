@@ -1,0 +1,109 @@
+<style>
+table { 
+    display: table;
+    border-collapse: separate;
+    border-spacing: 10px;
+    border-color: gray;
+}
+</style>
+<table>
+  <tr>    
+     <td><span jwcid="@Insert" value="message:feature.groups" /></td>
+     <td>
+       <span jwcid="@For" source="ognl:branchGroups" value="ognl:branchGroup">
+          <a id="editGroup" jwcid="editGroup@DirectLink" listener="listener:editGroup"
+            parameters="ognl:branchGroup.id">
+            <span jwcid="@Insert" value="ognl:branchGroup.name" />
+          </a>&nbsp;&nbsp;
+       </span>
+     </td>
+  </tr>
+  <tr>    
+     <td><span jwcid="@Insert" value="message:feature.conferences" /></td>
+     <td>
+       <span jwcid="@For" source="ognl:branchConferences" value="ognl:branchConference">
+          <a id="editConference" jwcid="editConference@DirectLink" listener="listener:editConference"
+            parameters="ognl:branchConference.id">
+            <span jwcid="@Insert" value="ognl:branchConference.name" />
+          </a>&nbsp;&nbsp;
+       </span>
+     </td>
+  </tr>
+  <tr>    
+     <td><span jwcid="@Insert" value="message:feature.gateways" /></td>
+     <td>
+       <span jwcid="@For" source="ognl:branchGateways" value="ognl:branchGateway">
+          <a id="editGateway" jwcid="editGateway@DirectLink" listener="listener:editGateway"
+            parameters="ognl:branchGateway.id">
+            <span jwcid="@Insert" value="ognl:branchGateway.name" />
+          </a>&nbsp;&nbsp;
+       </span>
+     </td>
+  </tr>
+  <tr>    
+     <td><span jwcid="@Insert" value="message:feature.authCodes" /></td>
+     <td>
+       <span jwcid="@For" source="ognl:branchAuthCodes" value="ognl:branchAuthCode">
+          <a id="editAuthCode" jwcid="editAuthCode@DirectLink" listener="listener:editAuthCode"
+            parameters="ognl:branchAuthCode.id">
+            <span jwcid="@Insert" value="ognl:branchAuthCode.code" />
+          </a>&nbsp;&nbsp;
+       </span>
+     </td>
+  </tr>
+  <tr>    
+     <td><span jwcid="@Insert" value="message:feature.autoAttendants" /></td>
+     <td>
+       <span jwcid="@For" source="ognl:branchAutoAttendants" value="ognl:branchAutoAttendant">
+          <a id="editAutoAttendant" jwcid="editAutoAttendant@DirectLink" listener="listener:editAutoAttendant"
+            parameters="ognl:branchAutoAttendant">
+            <span jwcid="@Insert" value="ognl:branchAutoAttendant.name" />
+          </a>&nbsp;&nbsp;
+       </span>
+     </td>
+  </tr>
+  <tr>    
+     <td><span jwcid="@Insert" value="message:feature.parkOrbits" /></td>
+     <td>
+       <span jwcid="@For" source="ognl:branchParkOrbits" value="ognl:branchParkOrbit">
+          <a id="editParkOrbit" jwcid="editParkOrbit@DirectLink" listener="listener:editParkOrbit"
+            parameters="ognl:branchParkOrbit.id">
+            <span jwcid="@Insert" value="ognl:branchParkOrbit.name" />
+          </a>&nbsp;&nbsp;
+       </span>
+     </td>
+  </tr>
+  <tr>    
+     <td><span jwcid="@Insert" value="message:feature.callGroups" /></td>
+     <td>
+       <span jwcid="@For" source="ognl:branchCallGroups" value="ognl:branchCallGroup">
+          <a id="editCallGroup" jwcid="editCallGroup@DirectLink" listener="listener:editCallGroup"
+            parameters="ognl:branchCallGroup.id">
+            <span jwcid="@Insert" value="ognl:branchCallGroup.name" />
+          </a>&nbsp;&nbsp;
+       </span>
+     </td>
+  </tr>
+  <tr>    
+     <td><span jwcid="@Insert" value="message:feature.pagingGroups" /></td>
+     <td>
+       <span jwcid="@For" source="ognl:branchPagingGroups" value="ognl:branchPagingGroup">
+          <a id="editPagingGroup" jwcid="editPagingGroup@DirectLink" listener="listener:editPagingGroup"
+            parameters="ognl:branchPagingGroup.id">
+            <span jwcid="@Insert" value="ognl:branchPagingGroup.pageGroupNumber" />
+          </a>&nbsp;&nbsp;
+       </span>
+     </td>
+  </tr>
+  <tr>    
+     <td><span jwcid="@Insert" value="message:feature.callQueue" /></td>
+     <td>
+       <span jwcid="@For" source="ognl:branchFreeswitchExtensions" value="ognl:branchFreeswitchExtension">
+          <a id="editCallQueue" jwcid="editCallQueue@DirectLink" listener="listener:editFreeswitchExtensions"
+            parameters="ognl:branchFreeswitchExtension.id">
+            <span jwcid="@Insert" value="ognl:branchFreeswitchExtension.name" />
+          </a>&nbsp;&nbsp;
+       </span>
+     </td>
+  </tr>  
+</table>  
