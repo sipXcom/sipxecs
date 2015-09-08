@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-<bean id="yealinkPhone" class="org.sipfoundry.sipxconfig.phone.yealink.YealinkPhone" scope="prototype" parent="abstractPhone">
+<bean id="yealink" class="org.sipfoundry.sipxconfig.phone.yealink.YealinkPhone" scope="prototype" parent="abstractPhone">
     <property name="registrarSettings" ref="registrarSettings"/>
     <property name="uploadManager" ref="uploadManager"/>
     <property name="ldapManager" ref="ldapManager"/>
@@ -16,7 +16,7 @@
       class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean" />
 
 <bean id="yealinkModel" class="org.sipfoundry.sipxconfig.phone.yealink.YealinkModel" parent="abstractPhoneModel" abstract="true">
-	<property name="beanId" value="yealinkPhone" />
+	<!-- <property name="beanId" value="yealinkPhone" /> -->
 	<property name="vendor" value="Yealink"/>
 	<property name="restartSupported" value="true" />
 	<property name="versions">
@@ -27,12 +27,12 @@
 	<property name="defaultVersion">
 	    <ref local="org.sipfoundry.sipxconfig.phone.yealink.YealinkModel.VER_7X"/>
 	</property>
-	<property name="profileTemplate" value="yealinkPhone/config_v6x_titan.vm" />
-	<property name="directoryProfileTemplate" value="yealinkPhone/directory.xml.vm" />
+	<property name="profileTemplate" value="yealink/config_v6x_titan.vm" />
+	<property name="directoryProfileTemplate" value="yealink/directory.xml.vm" />
 </bean>
 
 <bean id="yealinkPhoneSIPT12P" parent="yealinkModel">
-	<property name="beanId" value="yealinkPhone" />
+	<!-- <property name="beanId" value="yealinkPhone" /> -->
 	<property name="label" value="Yealink SIP-T12(P)" />
 	<property name="name" value="T12" />
 	<property name="maxLineCount" value="2" />
@@ -47,7 +47,7 @@
 </bean>
 
 <bean id="yealinkPhoneSIPT18P" parent="yealinkModel">
-	<property name="beanId" value="yealinkPhone" />
+	<!-- <property name="beanId" value="yealinkPhone" /> -->
 	<property name="label" value="Yealink SIP-T18(P)" />
 	<property name="name" value="T18" />
 	<property name="maxLineCount" value="2" />
@@ -251,7 +251,7 @@
 
 <bean id="yealinkFiles" class="org.sipfoundry.sipxconfig.upload.UploadSpecification">
 	<property name="beanId" value="yealinkUpload"/>
-	<property name="modelFilePath" value="yealinkPhone/upload.xml" />
+	<property name="modelFilePath" value="yealink/upload.xml" />
 	<property name="label" value="Yealink Phones" />
 </bean>
 

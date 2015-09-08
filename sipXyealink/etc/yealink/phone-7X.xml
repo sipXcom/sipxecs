@@ -713,10 +713,26 @@
 	</group>
     </group>
     <group name="distinctive-ringer">
-	<collection name="alert-info" size="10">
-	    <setting name="text"><type><string/></type></setting>
-	    <setting name="ringer"><type refid="ringer_type"/><value>1</value></setting>
-	</collection>
+		<setting name="distinctive_ringtones.alert-info.1.text"><type><string/></type></setting>
+		<setting name="distinctive_ringtones.alert-info.1.ringer"><type refid="ringer_type"/><value>Ring1.wav</value></setting>
+		<setting name="distinctive_ringtones.alert-info.2.text"><type><string/></type></setting>
+		<setting name="distinctive_ringtones.alert-info.2.ringer"><type refid="ringer_type"/><value>Ring1.wav</value></setting>
+		<setting name="distinctive_ringtones.alert-info.3.text"><type><string/></type></setting>
+		<setting name="distinctive_ringtones.alert-info.3.ringer"><type refid="ringer_type"/><value>Ring1.wav</value></setting>
+		<setting name="distinctive_ringtones.alert-info.4.text"><type><string/></type></setting>
+		<setting name="distinctive_ringtones.alert-info.4.ringer"><type refid="ringer_type"/><value>Ring1.wav</value></setting>
+		<setting name="distinctive_ringtones.alert-info.5.text"><type><string/></type></setting>
+		<setting name="distinctive_ringtones.alert-info.5.ringer"><type refid="ringer_type"/><value>Ring1.wav</value></setting>
+		<setting name="distinctive_ringtones.alert-info.6.text"><type><string/></type></setting>
+		<setting name="distinctive_ringtones.alert-info.6.ringer"><type refid="ringer_type"/><value>Ring1.wav</value></setting>
+		<setting name="distinctive_ringtones.alert-info.7.text"><type><string/></type></setting>
+		<setting name="distinctive_ringtones.alert-info.7.ringer"><type refid="ringer_type"/><value>Ring1.wav</value></setting>
+		<setting name="distinctive_ringtones.alert-info.8.text"><type><string/></type></setting>
+		<setting name="distinctive_ringtones.alert-info.8.ringer"><type refid="ringer_type"/><value>Ring1.wav</value></setting>
+		<setting name="distinctive_ringtones.alert-info.9.text"><type><string/></type></setting>
+		<setting name="distinctive_ringtones.alert-info.9.ringer"><type refid="ringer_type"/><value>Ring1.wav</value></setting>
+		<setting name="distinctive_ringtones.alert-info.10.text"><type><string/></type></setting>
+		<setting name="distinctive_ringtones.alert-info.10.ringer"><type refid="ringer_type"/><value>Ring1.wav</value></setting>
     </group>
     <group name="tones" if="yealinkPhone((SIPT[1-4])|(W5)).*">
 	<!--// Define the voice tone, the valid values can be Custom (default) or voice tone of different countries. For example, United States, France, Germany and so on. voice.tone.country = Custom //-->
