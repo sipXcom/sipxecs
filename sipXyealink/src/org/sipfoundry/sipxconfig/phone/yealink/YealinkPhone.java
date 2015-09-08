@@ -130,7 +130,7 @@ public class YealinkPhone extends Phone {
         super.setDeviceVersion(version);
         DeviceVersion myVersion = getDeviceVersion();
         if (myVersion == YealinkModel.VER_7X) {
-            getModel().setProfileTemplate("yealinkPhone/config_v7x.vm");
+            getModel().setProfileTemplate("yealink/config_v7x.vm");
             getModel().setSettingsFile("phone-7X.xml");
             getModel().setLineSettingsFile("line-7X.xml");
         } else {

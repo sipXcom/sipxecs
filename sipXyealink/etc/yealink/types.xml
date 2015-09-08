@@ -26,14 +26,14 @@
 </type>
 <type id="ringer_type">
     <enum>
-	<option><value>1</value></option>
-	<option><value>2</value></option>
-	<option><value>3</value></option>
-	<option><value>4</value></option>
-	<option><value>5</value></option>
-	<option><value>6</value></option>
-	<option><value>7</value></option>
-	<option><value>8</value></option>
+	<option><value>Ring1.wav</value></option>
+	<option><value>Ring2.wav</value></option>
+	<option><value>Ring3.wav</value></option>
+	<option><value>Ring4.wav</value></option>
+	<option><value>Ring5.wav</value></option>
+	<option><value>Ring6.wav</value></option>
+	<option><value>Ring7.wav</value></option>
+	<option><value>Ring8.wav</value></option>
     </enum>
 </type>
 <type id="pc_port_mode_type">
