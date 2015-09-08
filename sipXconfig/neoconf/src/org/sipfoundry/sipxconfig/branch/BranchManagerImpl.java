@@ -17,6 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
@@ -33,6 +34,7 @@ public class BranchManagerImpl extends SipxHibernateDaoSupport<Branch> implement
     private static final Log LOG = LogFactory.getLog(BranchManagerImpl.class);
     private static final String NAME_PROP_NAME = "name";
     private static final String UPDATE_BRANCH_TIMEZONE = "update_branch_tz";
+
     private JdbcTemplate m_jdbcTemplate;
     private NtpManager m_ntpManager;
 
@@ -137,6 +139,14 @@ public class BranchManagerImpl extends SipxHibernateDaoSupport<Branch> implement
     public List<Branch> loadBranchesByPage(final int firstRow, final int pageSize, final String[] orderBy,
             final boolean orderAscending) {
         return loadBeansByPage(Branch.class, null, null, firstRow, pageSize, orderBy, orderAscending);
+    }
+
+    @Override
+    public List<?> getFeatureNames(Integer branchId, String sqlQuery, Class<?> c) {
+        Query q = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sqlQuery).addEntity(c);
+        q.setInteger("branchId", branchId);
+        List<?> names = q.list();
+        return names;
     }
 
     @Override

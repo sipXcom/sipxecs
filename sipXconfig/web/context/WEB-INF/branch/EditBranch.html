@@ -13,6 +13,9 @@
       </form>
     </div>
     <div jwcid="associatedTab@Block">
+      <form jwcid="associatedForm@Form" delegate="bean:validator">
+        <span jwcid="@branch/AssociatedPanel" branch="ognl:branch" callback="ognl:callback"/>
+      </form>    
     </div>
     <div jwcid="callRestrictionsTab@Block">    
 	  <form jwcid="callRestrictions@Form" delegate="bean:validator">
