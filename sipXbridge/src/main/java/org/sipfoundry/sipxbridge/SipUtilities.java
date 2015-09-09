@@ -1135,10 +1135,10 @@ class SipUtilities {
 							Integer fmt = new Integer(format.toString());
 							if (!codecs.contains(fmt)) {
 								/*
-								 * Preserve the telephone event lines -- this upsets
+								 * Preserve the telephone event lines and reserved payload -- this upsets
 								 * some ITSPs otherwise. AT&T Hack.
 								 */
-								if (fmt != 100 && fmt != 101) {
+								if (fmt != 100 && fmt != 101 && fmt != 19) {
 									it1.remove();
 								}
 							}
