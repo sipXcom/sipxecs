@@ -29,6 +29,7 @@ const char* EntityRecord::pin_fld(){ static std::string fld = "pntk"; return fld
 const char* EntityRecord::authType_fld(){ static std::string fld = "authtp"; return fld.c_str(); }
 const char* EntityRecord::location_fld(){ static std::string fld = "loc"; return fld.c_str(); }
 const char* EntityRecord::permission_fld(){ static std::string fld = "prm"; return fld.c_str(); }
+const char* EntityRecord::allowed_locations_fld(){ static std::string fld = "locations"; return fld.c_str(); }
 const char* EntityRecord::entity_fld(){ static std::string fld = "ent"; return fld.c_str(); }
 const char* EntityRecord::authc_fld(){ static std::string fld = "authc"; return fld.c_str(); }
 
@@ -50,6 +51,9 @@ const char* EntityRecord::staticUserLocContact_fld(){ static std::string fld = "
 const char* EntityRecord::staticUserLocFromUri_fld(){ static std::string fld = "from"; return fld.c_str(); }
 const char* EntityRecord::staticUserLocToUri_fld(){ static std::string fld = "to"; return fld.c_str(); }
 const char* EntityRecord::staticUserLocCallId_fld(){ static std::string fld = "cid"; return fld.c_str(); }
+const char* EntityRecord::loc_restr_dom_fld(){ static std::string fld = "loc_restr_dom"; return fld.c_str(); }
+const char* EntityRecord::loc_restr_sbnet_fld(){ static std::string fld = "loc_restr_sbnet"; return fld.c_str(); }
+const char* EntityRecord::entity_branch_str(){ static std::string fld = "branch"; return fld.c_str(); }
 
 const char* EntityRecord::vmOnDnd_fld(){ static std::string fld = "vmondnd"; return fld.c_str(); };
 
@@ -70,6 +74,7 @@ EntityRecord::EntityRecord(const EntityRecord& entity)
     _authType = entity._authType;
     _location = entity._location;
     _permissions = entity._permissions;
+    _allowedLocations = entity._allowedLocations;
     _entity = entity._entity;
     _authc = entity._authc;
     _callerId = entity._callerId;
@@ -77,6 +82,8 @@ EntityRecord::EntityRecord(const EntityRecord& entity)
     _callForwardTime = entity._callForwardTime;
     _staticUserLoc = entity._staticUserLoc;
     _vmOnDnd = entity._vmOnDnd;
+    _locRestrDom = entity._locRestrDom;
+    _locRestrSbnet = entity._locRestrSbnet;
 }
 
 EntityRecord::~EntityRecord()
@@ -101,6 +108,7 @@ void EntityRecord::swap(EntityRecord& entity)
     std::swap(_authType, entity._authType);
     std::swap(_location, entity._location);
     std::swap(_permissions, entity._permissions);
+    std::swap(_allowedLocations, entity._allowedLocations);
     std::swap(_entity, entity._entity);
     std::swap(_authc, entity._authc);
     std::swap(_callerId, entity._callerId);
@@ -108,6 +116,8 @@ void EntityRecord::swap(EntityRecord& entity)
     std::swap(_callForwardTime, entity._callForwardTime);
     std::swap(_staticUserLoc, entity._staticUserLoc);
     std::swap(_vmOnDnd, entity._vmOnDnd);
+    std::swap(_locRestrDom, entity._locRestrDom);
+    std::swap(_locRestrSbnet, entity._locRestrSbnet);
 }
 
 void EntityRecord::fillStaticUserLoc(StaticUserLoc& userLoc, const mongo::BSONObj& innerObj)
@@ -172,6 +182,16 @@ EntityRecord& EntityRecord::operator = (const mongo::BSONObj& bsonObj)
 	{
 		_vmOnDnd = bsonObj.getBoolField(EntityRecord::vmOnDnd_fld());
 	}
+  
+  if (bsonObj.hasField(EntityRecord::loc_restr_dom_fld()))
+	{
+		_locRestrDom = bsonObj.getStringField(EntityRecord::loc_restr_dom_fld());
+	}
+  
+  if (bsonObj.hasField(EntityRecord::loc_restr_sbnet_fld()))
+	{
+		_locRestrSbnet = bsonObj.getStringField(EntityRecord::loc_restr_sbnet_fld());
+	}
 
 	if (bsonObj.hasField(EntityRecord::callerId_fld()))
 	{
@@ -198,6 +218,21 @@ EntityRecord& EntityRecord::operator = (const mongo::BSONObj& bsonObj)
 				iter != permissions.end(); iter++)
 			{
 				_permissions.insert(iter->String());
+			}
+		}
+	}
+  
+  if (bsonObj.hasField(EntityRecord::allowed_locations_fld()))
+	{
+		mongo::BSONElement obj = bsonObj[EntityRecord::allowed_locations_fld()];
+		if ( obj.isABSONObj() &&  obj.type() == mongo::Array)
+		{
+			std::vector<mongo::BSONElement> locations = obj.Array();
+			_allowedLocations.clear();
+			for (std::vector<mongo::BSONElement>::iterator iter = locations.begin();
+				iter != locations.end(); iter++)
+			{
+				_allowedLocations.insert(iter->String());
 			}
 		}
 	}

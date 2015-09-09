@@ -20,6 +20,7 @@
 #include "sipdb/MongoDB.h"
 #include "sipdb/MongoMod.h"
 #include <boost/algorithm/string.hpp>
+#include <boost/asio.hpp>
 #include <vector>
 
 using namespace std;
@@ -58,6 +59,78 @@ static std::string validate_identity_string(const std::string& identity)
   }
 
   return identity;
+}
+
+static bool wildcard_compare(const char* wild, const std::string& str)
+{
+  const char* string = str.c_str();
+
+  const char *cp = NULL, *mp = NULL;
+
+  while ((*string) && (*wild != '*')) {
+    if ((*wild != *string) && (*wild != '?')) {
+      return 0;
+    }
+    wild++;
+    string++;
+  }
+
+  while (*string) {
+    if (*wild == '*') {
+      if (!*++wild) {
+        return 1;
+      }
+      mp = wild;
+      cp = string+1;
+    } else if ((*wild == *string) || (*wild == '?')) {
+      wild++;
+      string++;
+    } else {
+      wild = mp;
+      string = cp++;
+    }
+  }
+
+  while (*wild == '*') {
+    wild++;
+  }
+  return !*wild;
+}
+
+static bool cidr_compare(const std::string& cidr, const std::string& ip)
+{
+  std::vector<std::string> cidr_tokens;
+  boost::split(cidr_tokens, cidr, boost::is_any_of("/-"), boost::token_compress_on);
+
+  unsigned bits = 24;
+  std::string start_ip;
+  if (cidr_tokens.size() == 2)
+  {
+    bits = (unsigned)::atoi(cidr_tokens[1].c_str());
+    start_ip = cidr_tokens[0];
+  }
+  else
+  {
+    start_ip = cidr;
+  }
+
+  boost::system::error_code ec;
+  boost::asio::ip::address_v4 ipv4;
+  ipv4 = boost::asio::ip::address_v4::from_string(ip, ec);
+  if (!ec)
+  {
+    unsigned long ipv4ul = ipv4.to_ulong();
+    boost::asio::ip::address_v4 start_ip_ipv4;
+    start_ip_ipv4 = boost::asio::ip::address_v4::from_string(start_ip, ec);
+    if (!ec)
+    {
+      long double numHosts = pow((long double)2, (int)(32-bits)) - 1;
+      unsigned long start_ip_ipv4ul = start_ip_ipv4.to_ulong();
+      unsigned long ceiling = start_ip_ipv4ul + numHosts;
+      return ipv4ul >= start_ip_ipv4ul && ipv4ul <= ceiling;
+    }
+  }
+  return false;
 }
 
 bool EntityDB::findByIdentity(const string& ident, EntityRecord& entity) const
@@ -102,6 +175,101 @@ bool EntityDB::findByIdentity(const string& ident, EntityRecord& entity) const
   conn->done();
   return false;
 }
+
+void EntityDB::getEntitiesByType(const std::string& entityType, Entities& entities, bool nocache)
+{
+  MongoDB::ReadTimer readTimer(const_cast<EntityDB&>(*this));
+  OS_LOG_INFO(FAC_ODBC, "EntityDB::getEntitiesByType - Finding entity records for type " << entityType << " from namespace " << _ns);
+
+  //
+  // Check if we have it in cache
+  //
+  if (!nocache)
+  {
+    EntityTypeCacheable pCacheObj = const_cast<EntityTypeCache&>(_typeCache).get(entityType);
+    if (pCacheObj)
+    {
+      OS_LOG_DEBUG(FAC_ODBC, "EntityDB::getEntitiesByType - " << entityType << " is present in namespace " << _ns << " (CACHED)");
+      entities = *pCacheObj;
+      return;
+    }
+  }
+  
+  mongo::BSONObj query = BSON(EntityRecord::entity_fld() << entityType);
+
+  MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getReadQueryTimeout()));
+
+  mongo::BSONObjBuilder builder;
+  BaseDB::nearest(builder, query);
+
+  BSONObjects objects;
+  conn->get()->findN(objects, _ns, readQueryMaxTimeMS(builder.obj()), 0, mongo::QueryOption_SlaveOk);
+
+  entities.clear();
+  for (BSONObjects::iterator iter = objects.begin(); iter != objects.end(); iter++)
+  {
+    if (!iter->isEmpty())
+    {
+      EntityRecord entity;
+      entity = (*iter);
+      entities.push_back(entity);
+    }
+  }
+  
+  if (entities.empty())
+  {
+    OS_LOG_DEBUG(FAC_ODBC, entityType << " is NOT present in namespace " << _ns);
+    OS_LOG_INFO(FAC_ODBC, "EntityDB::getEntitiesByType - Unable to find entity record for type " << entityType << " from namespace " << _ns);
+  }
+  else
+  {
+    const_cast<EntityTypeCache&>(_typeCache).add(entityType, EntityTypeCacheable(new Entities(entities)));
+    OS_LOG_DEBUG(FAC_ODBC, "EntityDB::getEntitiesByType - " << entityType << " is present in namespace " << _ns);
+  }
+  
+  conn->done();
+}
+
+void EntityDB::getCallerLocation(CallerLocations& locations, const std::string& identity, const std::string& host, const std::string& address)
+{
+  Entities entities;
+  getEntitiesByType(EntityRecord::entity_branch_str(), entities);
+  
+  EntityRecord userEntity;
+  if (findByIdentity(identity, userEntity) && !userEntity.location().empty())
+  {
+    OS_LOG_INFO(FAC_ODBC, "EntityDB::getCallerLocation - Inserting location " 
+      << userEntity.location() << " for identity " << identity);
+    locations.insert(userEntity.location());
+  }
+  
+  //
+  // Get locations by domain or subnet
+  //
+  for (Entities::iterator iter = entities.begin(); iter != entities.end(); iter++)
+  {
+    if (!iter->loc_restr_dom().empty())
+    {
+      if (!iter->location().empty() && wildcard_compare(iter->loc_restr_dom().c_str(), host))
+      {
+        OS_LOG_INFO(FAC_ODBC, "EntityDB::getCallerLocation - Inserting location " 
+          << iter->location() << " for domain " << host << " matching " << iter->loc_restr_dom());
+        locations.insert(iter->location());
+      }
+    }
+    
+    if (!iter->loc_restr_sbnet().empty())
+    {
+      if (!iter->location().empty() && cidr_compare(iter->loc_restr_sbnet(), address))
+      {
+        OS_LOG_INFO(FAC_ODBC, "EntityDB::getCallerLocation - Inserting location " 
+          << iter->location() << " for address " << address << " matching " << iter->loc_restr_sbnet());
+        locations.insert(iter->location());
+      }
+    }
+  }
+}
+ 
 
 bool EntityDB::findByUserId(const string& uid, EntityRecord& entity) const
 {

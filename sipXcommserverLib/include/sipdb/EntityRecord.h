@@ -142,9 +142,9 @@ public:
     //
     std::string& location();
     static const char* location_fld();
-
-     //
-    // User Location
+    
+    //
+    // Call Forward Time
     //
     int& callForwardTime();
     static const char* callForwardTime_fld();
@@ -154,6 +154,9 @@ public:
     //
     std::set<std::string>& permissions();
     static const char* permission_fld();
+    
+    std::set<std::string>& allowedLocations();
+    static const char* allowed_locations_fld();
 
     //
     // Permission array to which the user has access to
@@ -166,6 +169,20 @@ public:
     //
     std::string& authc();
     static const char* authc_fld();
+    
+    //
+    // Inbound location filter by domain
+    //
+    std::string& loc_restr_dom();
+    static const char* loc_restr_dom_fld();
+    
+    //
+    // Inbound location filter by IP
+    //
+    std::string& loc_restr_sbnet();
+    static const char* loc_restr_sbnet_fld();
+    
+    static const char* entity_branch_str();
 
     //
     // Caller alias to be sent to certain target domains
@@ -217,10 +234,13 @@ private:
     std::string _location;
     std::string _authc;
     CallerId _callerId;
+    std::string _locRestrDom;
+    std::string _locRestrSbnet;
     //bool _ignoreUserCallerId;
     //bool _transformCallerExtension;
     int _callForwardTime;
     std::set<std::string> _permissions;
+    std::set<std::string> _allowedLocations;
     std::string _entity;
     std::vector<Alias> _aliases;
     std::vector<StaticUserLoc> _staticUserLoc;
@@ -282,6 +302,11 @@ inline std::set<std::string>& EntityRecord::permissions()
     return _permissions;
 }
 
+inline std::set<std::string>& EntityRecord::allowedLocations()
+{
+  return _allowedLocations;
+}
+
 inline std::string& EntityRecord::entity()
 {
     return _entity;
@@ -310,6 +335,16 @@ inline std::vector<EntityRecord::StaticUserLoc>& EntityRecord::staticUserLoc()
 inline bool& EntityRecord::vmOnDnd()
 {
   return _vmOnDnd;
+}
+
+inline std::string& EntityRecord::loc_restr_dom()
+{
+  return _locRestrDom;
+}
+
+inline std::string& EntityRecord::loc_restr_sbnet()
+{
+  return _locRestrSbnet;
 }
 
 #endif	/* ENTITYRECORD_H */
