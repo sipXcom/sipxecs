@@ -486,6 +486,7 @@
     <antcall target="add_vm_authorization" />
     <antcall target="openacd-permission-update4" />
   	<antcall target="add_location_call_restrictions" />
+    <antcall target="migrate-yealinkPhone-to-yealink" />
   </target>
 
   <target name="plugin-patches">
@@ -1489,6 +1490,11 @@
   </target>
   <target name="add_location_call_restrictions" unless="add_location_call_restrictions">
   	<db-patch patch="add_location_call_restrictions"/>
+  </target>
+  <target name="migrate-yealinkPhone-to-yealink" unless="migrate-yealinkPhone-to-yealink">
+    <sipx-sql>
+      UPDATE "public"."phone" SET "bean_id"='yealink' WHERE ("bean_id"='yealinkPhone');
+    </sipx-sql>
   </target>
 
 	<!--
