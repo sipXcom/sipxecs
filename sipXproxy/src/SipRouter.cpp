@@ -76,6 +76,9 @@ static const int DISPATCH_MAX_YIELD_TIME_IN_SEC = 32;
 static const int MAX_DISPATCH_DELAY_IN_MS = 200; // This is 5 messages per sec which is so poor!
 static const int ALARM_ON_CONSECUTIVE_YIELD = 5;
 
+static const char* X_SIPX_CALLER_LOCATIONS = "X-Sipx-Caller-Locations";
+static const char* X_SIPX_CALLER_LOCATIONS_DONE = "X-Sipx-Caller-Locations-Done";
+
 // STRUCTS
 // TYPEDEFS
 // FORWARD DECLARATIONS
@@ -916,6 +919,73 @@ void SipRouter::addRuriParams(SipMessage& sipRequest, const UtlString& ruriParam
   }
 }
 
+void SipRouter::identifyCallerLocation(SipMessage& sipRequest)
+{
+  UtlString method;
+  sipRequest.getRequestMethod(&method);
+  if (method.compareTo( SIP_INVITE_METHOD ) != 0)
+  {
+    return;
+  }
+  
+  if( !sipRequest.getHeaderValue( 0, X_SIPX_CALLER_LOCATIONS ) && !sipRequest.getHeaderValue( 0, X_SIPX_CALLER_LOCATIONS_DONE ))
+  {
+    UtlString sendAddress;
+    int sendPort;
+    Url fromUrl;
+    Url toUrl;
+    UtlString toTag;
+    UtlString identity;
+    UtlString host;
+    EntityDB::CallerLocations callerLocations;
+    
+    sipRequest.getSendAddress(&sendAddress, &sendPort);
+    sipRequest.getFromUrl(fromUrl);
+    sipRequest.getToUrl(toUrl);
+    fromUrl.getIdentity(identity);
+    fromUrl.getHostAddress(host);
+    toUrl.getFieldParameter("tag", toTag);
+    
+    if (!toTag.isNull())
+    {
+      //
+      // This is a mid-dialog request
+      //
+      return;
+    }
+    
+    SipRouter::getEntityDBInstance()->getCallerLocation(callerLocations, identity.data(), host.data(), sendAddress.data());
+    
+    if (!callerLocations.empty())
+    {
+      std::ostringstream locHeader;
+      
+      int iterCount = 0;
+      for (EntityDB::CallerLocations::iterator iter = callerLocations.begin(); iter != callerLocations.end(); iter++)
+      {
+        if (!iter->empty())
+        {
+          locHeader << *iter;
+          if (iterCount < callerLocations.size() - 0)
+          {
+            locHeader << ", ";
+          }
+        }
+        iterCount++;
+      }
+      
+      if (!locHeader.str().empty())
+      {
+        sipRequest.setHeaderValue(X_SIPX_CALLER_LOCATIONS, locHeader.str().c_str(), 0);
+      }
+      else
+      {
+        sipRequest.setHeaderValue(X_SIPX_CALLER_LOCATIONS_DONE, "true", 0);
+      }
+    }
+  }
+}
+
 SipRouter::ProxyAction SipRouter::proxyMessage(SipMessage& sipRequest, SipMessage& sipResponse)
 {
    ProxyAction returnedAction = SendRequest;
@@ -959,6 +1029,11 @@ SipRouter::ProxyAction SipRouter::proxyMessage(SipMessage& sipRequest, SipMessag
         RouteState routeState(sipRequest, removedRoutes, mRouteHostPort);
         removedRoutes.destroyAll(); // done with routes - discard them.
 
+        //
+        // identify the caller location
+        //
+        identifyCallerLocation(sipRequest);
+        
         if( !sipRequest.getHeaderValue( 0, SIP_SIPX_SPIRAL_HEADER ))
         {
            // Apply NAT mapping info to all non-spiraling requests to make
@@ -1244,6 +1319,8 @@ SipRouter::ProxyAction SipRouter::proxyMessage(SipMessage& sipRequest, SipMessag
               // If the request contained our proprietary spiral header then remove it
               // since spiraling is complete.
               sipRequest.removeHeader( SIP_SIPX_SPIRAL_HEADER, 0 );
+              sipRequest.removeHeader( X_SIPX_CALLER_LOCATIONS, 0 );
+              sipRequest.removeHeader( X_SIPX_CALLER_LOCATIONS_DONE, 0 );
            }
         }
 

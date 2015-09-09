@@ -35,6 +35,11 @@ public:
 	typedef std::set<std::string> Permissions;
   typedef Poco::ExpireCache<std::string, EntityRecord> ExpireCache;
   typedef Poco::SharedPtr<EntityRecord> ExpireCacheable;
+  
+  typedef Poco::ExpireCache<std::string, Entities> EntityTypeCache;
+  typedef Poco::SharedPtr<Entities> EntityTypeCacheable;
+  typedef std::vector<mongo::BSONObj> BSONObjects;
+  typedef std::set<std::string> CallerLocations;
 
 	void init()
 	{
@@ -42,14 +47,14 @@ public:
 	}
 
 	EntityDB(const MongoDB::ConnectionInfo& info) :
-		BaseDB(info, NS), _cache(1000 * ENTITYDB_CACHE_EXPIRE)
+		BaseDB(info, NS), _cache(1000 * ENTITYDB_CACHE_EXPIRE), _typeCache(1000 * ENTITYDB_CACHE_EXPIRE)
 	{
 		init();
 	}
 
 
 	EntityDB(const MongoDB::ConnectionInfo& info, const std::string& ns) :
-		BaseDB(info, ns), _cache(1000 * ENTITYDB_CACHE_EXPIRE)
+		BaseDB(info, ns), _cache(1000 * ENTITYDB_CACHE_EXPIRE), _typeCache(1000 * ENTITYDB_CACHE_EXPIRE)
 	{
 		init();
 	}
@@ -67,6 +72,8 @@ public:
 	bool findByAliasUserId(const std::string& alias, EntityRecord& entity) const;
   bool findByAliasIdentity(const std::string& identity, EntityRecord& entity) const;
 
+  void getCallerLocation(CallerLocations& locations, const std::string& identity, const std::string& host, const std::string& address);
+  
 	/// Retrieve the SIP credential check values for a given identity and realm
 	bool getCredential(const Url& uri, const UtlString& realm, UtlString& userid, UtlString& passtoken,
 			UtlString& authType) const;
@@ -80,6 +87,10 @@ public:
 	void getAliasContacts(const Url& aliasIdentity, Aliases& aliases, bool& isUserIdentity) const;
 	
 	bool tail(std::vector<std::string>& opLogs);
+  
+  void getEntitiesByType(const std::string& entityType, Entities& entities, bool nocache = false);
+  // Return a vector of entity records matching entityType.
+  // The result is cached
 
 	std::string& ns() {
 	  return _ns;
@@ -88,6 +99,7 @@ public:
 private:
   mongo::BSONElement _lastTailId;
   ExpireCache _cache;
+  EntityTypeCache _typeCache;
 };
 
 #endif	/* ENTITYDB_H */

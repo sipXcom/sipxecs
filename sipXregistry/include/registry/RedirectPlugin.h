@@ -21,6 +21,8 @@
 #include "os/OsConfigDb.h"
 #include "net/SipUserAgent.h"
 #include "utl/UtlContainableAtomic.h"
+#include "sipdb/EntityDB.h"
+#include <set>
 
 // DEFINES
 #define REGISTRAR_ID_TOKEN "~~id~registrar"
@@ -501,8 +503,13 @@ public:
 
    const std::string getDiversionHeader() const;
    void setDiversionHeader(const std::string& diversion);
+   
+   bool isAllowedLocation(const UtlString& contact, const RedirectPlugin& plugin) const;
 private:
-   ContactList( const UtlString& requestString /* for logging purposes */ );
+   ContactList( const UtlString& requestString /* for logging purposes */,
+           EntityDB* pEntityDb,
+           const std::string& callerLocation // comma delimited caller location
+           );
 
    void resetWasModifiedFlag( void );
    bool wasListModified( void ) const;
@@ -511,6 +518,9 @@ private:
    bool                    mbListWasModified;
    std::vector<UtlString>  mContactList;
    std::string _diversion;
+   EntityDB* _pEntityDb;
+   std::string _callerLocation;
+   std::set<std::string> _callerLocationTokens;
 
    friend class SipRedirectServer;
    friend class ContactListTest;
