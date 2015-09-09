@@ -1,0 +1,143 @@
+<type id="ToneCountry_type">
+	<enum>
+		<option><value>Custom</value></option>
+		<option><value>Australia</value></option>
+		<option><value>Austria</value></option>
+		<option><value>Brazil</value></option>
+		<option><value>Belgium</value></option>
+		<option><value>China</value></option>
+		<option><value>Czech</value></option>
+		<option><value>Denmark</value></option>
+		<option><value>Finland</value></option>
+		<option><value>France</value></option>
+		<option><value>Germany</value></option>
+		<option><value>Great Britain</value></option>
+		<option><value>Greece</value></option>
+		<option><value>Hungary</value></option>
+		<option><value>Lithuania</value></option>
+		<option><value>India</value></option>
+		<option><value>Italy</value></option>
+		<option><value>Japan</value></option>
+		<option><value>Mexico</value></option>
+		<option><value>New Zealand</value></option>
+		<option><value>Netherlands</value></option>
+		<option><value>Norway</value></option>
+		<option><value>Portugal</value></option>
+		<option><value>Spain</value></option>
+		<option><value>Switzerland</value></option>
+		<option><value>Sweden</value></option>
+		<option><value>Russia</value></option>
+		<option><value>United States</value></option>
+		<option><value>Chile</value></option>
+		<option><value>Czech ETSI</value></option>
+	</enum>
+</type>
+
+<type id="WebLanguage_type">
+	<enum>
+		<option><value>English</value></option>
+		<option><value>Chinese_S</value></option>
+		<option><value>Turkish</value></option>
+		<option><value>Portuguese</value></option>
+		<option><value>Spanish</value></option>
+		<option><value>Italian</value></option>
+		<option><value>French</value></option>
+		<option><value>Russian</value></option>
+		<option><value>German</value></option>
+		<option><value>Czech</value></option>
+	</enum>
+</type>
+
+<type id="LcdLanguage_type">
+	<enum>
+		<option><value>English</value></option>
+		<option><value>Chinese_S</value></option>
+		<option><value>Chinese_T</value></option>
+		<option><value>German</value></option>
+		<option><value>French</value></option>
+		<option><value>Turkish</value></option>
+		<option><value>Italian</value></option>
+		<option><value>Polish</value></option>
+		<option><value>Spanish</value></option>
+		<option><value>Portuguese</value></option>
+	</enum>
+</type>
+
+<type id="CheckSyncReboot_type">
+	<enum>
+	<option><label>Only if reboot=true</label><value>0</value></option>
+	<option><label>Force</label><value>1</value></option>
+	<option><label>Ignore</label><value>2</value></option>
+	</enum>
+</type>
+
+<type id="TimeZoneName_type">
+	<enum>
+		<option><value>UnitedKingdom(London)</value></option>
+		<option><value>Morocco</value></option>
+		<option><value>Albania(Tirane)</value></option>
+		<option><value>Austria(Vienna)</value></option>
+		<option><value>Belgium(Brussels)</value></option>
+		<option><value>Caicos</value></option>
+		<option><value>Chad</value></option>
+		<option><value>Croatia(Zagreb)</value></option>
+		<option><value>CzechRepublic(Prague)</value></option>
+		<option><value>Denmark(Kopenhagen)</value></option>
+		<option><value>France(Paris)</value></option>
+		<option><value>Germany(Berlin)</value></option>
+		<option><value>Hungary(Budapest)</value></option>
+		<option><value>Italy(Rome)</value></option>
+		<option><value>Luxembourg(Luxembourg)</value></option>
+		<option><value>Macedonia(Skopje)</value></option>
+		<option><value>Netherlands(Amsterdam)</value></option>
+		<option><value>Namibia(Windhoek)</value></option>
+		<option><value>Estonia(Tallinn)</value></option>
+		<option><value>Finland(Helsinki)</value></option>
+		<option><value>GazaStrip(Gaza)</value></option>
+		<option><value>Greece(Athens)</value></option>
+		<option><value>Israel(TelAviv)</value></option>
+		<option><value>Jordan(Amman)</value></option>
+		<option><value>Latvia(Riga)</value></option>
+		<option><value>Lebanon(Beirut)</value></option>
+		<option><value>Moldova(Kishinev)</value></option>
+		<option><value>Russia(Kaliningrad)</value></option>
+		<option><value>Romania(Bucharest)</value></option>
+		<option><value>Syria(Damascus)</value></option>
+		<option><value>Turkey(Ankara)</value></option>
+		<option><value>Ukraine(Kyiv,Odessa)</value></option>
+		<option><value>Syria(Damascus)</value></option>
+		<option><value>EastAfricaTime</value></option>
+		<option><value>Iraq(Baghdad)</value></option>
+		<option><value>Russia(Moscow)</value></option>
+		<option><value>Iran(Teheran)</value></option>
+		<option><value>Armenia(Yerevan)</value></option>
+		<option><value>Azerbaijan(Baku)</value></option>
+		<option><value>Georgia(Tbilisi)</value></option>
+		<option><value>Kazakhstan(Aktau)</value></option>
+		<option><value>Russia(Samara)</value></option>
+		<option><value>Kyrgyzstan(Bishkek)</value></option>
+		<option><value>Pakistan(Islamabad)</value></option>
+		<option><value>Russia(Chelyabinsk)</value></option>
+		<option><value>India(Calcutta)</value></option>
+		<option><value>Kazakhstan(Astana,Almaty)</value></option>
+		<option><value>Russia(Novosibirsk,Omsk)</value></option>
+		<option><value>Russia(Krasnoyarsk)</value></option>
+		<option><value>Thailand(Bangkok)</value></option>
+		<option><value>China(Beijing)</value></option>
+		<option><value>Singapore(Singapore)</value></option>
+		<option><value>Australia(Perth)</value></option>
+		<option><value>Korea(Seoul)</value></option>
+		<option><value>Japan(Tokyo)</value></option>
+		<option><value>Australia(Adelaide)</value></option>
+		<option><value>Australia(Darwin)</value></option>
+		<option><value>Australia(Sydney,Melbourne,Canberra)</value></option>
+		<option><value>Australia(Brisbane)</value></option>
+		<option><value>Australia(Hobart)</value></option>
+		<option><value>Russia(Vladivostok)</value></option>
+		<option><value>Australia(LordHoweIslands)</value></option>
+		<option><value>NewCaledonia(Noumea)</value></option>
+		<option><value>NewZealand(Wellington,Auckland)</value></option>
+		<option><value>NewZealand(ChathamIslands)</value></option>
+		<option><value>Tonga(Nukualofa)</value></option>
+	</enum>
+</type>
