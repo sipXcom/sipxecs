@@ -34,7 +34,7 @@ public abstract class YealinkConstants {
             + "27,34,35,38,39,40,41,42,45,46,47";
     public static final String DKTYPES_V71 = "0,11,12,13,14,15,16,17,18,22,23,24,25,27,34,35,38,40";
 
-    // Line specific settings used in /etc/yealinkPhone/line_XX.xml
+    // Line specific settings used in /etc/yealink/line_XX.xml
     public static final String USER_ID_V6X_SETTING = "account/UserName";
     public static final String USER_ID_V7X_SETTING = "basic/user_name";
     public static final String AUTH_ID_V6X_SETTING = "account/AuthName";
@@ -59,8 +59,9 @@ public abstract class YealinkConstants {
     public static final String BACKUP_OUTBOUND_PORT_V7X_SETTING = "basic/backup_outbound_port";
     public static final String VOICE_MAIL_NUMBER_V6X_SETTING = "Message/VoiceNumber";
     public static final String VOICE_MAIL_NUMBER_V7X_SETTING = "basic/voice_mail.number";
+	public static final String ACD_USER_ID_V7X_SETTING = "basic/acd.user_id";
 
-    // Phone specific settings used in /etc/yealinkPhone/phone_XX.xml
+    // Phone specific settings used in /etc/yealink/phone_XX.xml
     public static final String DNS_SERVER1_V6X_SETTING = "network-wan/DNS/PrimaryDNS";
     public static final String DNS_SERVER1_V7X_SETTING = "network-wan/DNS/network.primary_dns";
     public static final String DNS_SERVER2_V6X_SETTING = "network-wan/DNS/SecondaryDNS";
