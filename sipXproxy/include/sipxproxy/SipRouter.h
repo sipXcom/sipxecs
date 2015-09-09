@@ -309,6 +309,8 @@ class SipRouter : public OsServerTask
    //
    void performPreRoutingChecks(SipMessage& sipRequest);
    // @cond INCLUDENOCOPY
+   
+   void identifyCallerLocation(SipMessage& sipRequest);
 
    // There is no copy constructor.
    SipRouter(const SipRouter& rsipRouter);

@@ -20,6 +20,8 @@
 #include "registry/RedirectSuspend.h"
 #include "utl/PluginHooks.h"
 #include "registry/RedirectPlugin.h"
+#include "registry/SipRegistrar.h"
+#include <boost/algorithm/string.hpp>
 
 #include <sipdb/RegDB.h> // for mongo exceptions
 
@@ -31,7 +33,7 @@
 // EXTERNAL VARIABLES
 // CONSTANTS
 const char* SipRedirectServer::AuthorityLevelPrefix  = "_AUTHORITY_LEVEL";
-
+static const char* X_SIPX_CALLER_LOCATIONS = "X-Sipx-Caller-Locations";
 // STRUCTS
 // TYPEDEFS
 // FORWARD DECLARATIONS
@@ -214,9 +216,6 @@ void SipRedirectServer::processRedirect(const SipMessage* pMessage,
                                         RedirectSuspend* suspendObject)
 {
    ErrorDescriptor errorDescriptor;
-
-   // Extract the request URI.
-
    // This code is not strictly correct, as the request could have:
    //    Route: <registrar [added by proxy]>,
    //           sip:[user]@[domain],
@@ -233,6 +232,7 @@ void SipRedirectServer::processRedirect(const SipMessage* pMessage,
    // Currently, we trust that all Route values refer to the registrar
    // and blindly remove them from any ACK that we must forward directly.
 
+   // Extract the request URI.
    UtlString stringUri;
    pMessage->getRequestUri(&stringUri);
    // The requestUri is an addr-spec, not a name-addr.
@@ -241,7 +241,7 @@ void SipRedirectServer::processRedirect(const SipMessage* pMessage,
                  "SipRedirectServer::processRedirect "
                  "Starting to process request URI '%s'",
                  stringUri.data());
-
+   
    /*
     * Normalize the port in the Request URI
     *   This is not strictly kosher, but it solves interoperability problems.
@@ -276,7 +276,11 @@ void SipRedirectServer::processRedirect(const SipMessage* pMessage,
    RedirectPlugin* redirector;
    // Authority level of the last redirector to have modified the contact list.
    ssize_t contactListAuthorityLevel = LOWEST_AUTHORITY_LEVEL;
-   ContactList contactList( stringUri );
+   
+   std::string sipxCallerLocations;
+   sipxCallerLocations = pMessage->getHeaderValue( 0, X_SIPX_CALLER_LOCATIONS ) ? pMessage->getHeaderValue( 0, X_SIPX_CALLER_LOCATIONS ) : std::string();
+   
+   ContactList contactList( stringUri, mpRegistrar->getEntityDB(), sipxCallerLocations );
 
    int i;                       // Iterator sequence number.
    for (i = 0; (redirector = static_cast <RedirectPlugin*> (iterator.next())) && !willError;

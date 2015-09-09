@@ -17,6 +17,7 @@
 #include "os/OsFS.h"
 #include "sipdb/ResultSet.h"
 #include "registry/SipRedirectServer.h"
+#include <boost/algorithm/string.hpp>
 
 // DEFINES
 #define UNINITIALIZED_WARNING_CODE  (-1)
@@ -245,10 +246,82 @@ bool ErrorDescriptor::shouldRequestBeAppendedToResponse( void ) const
    return mAppendRequestToResponse;
 }
 
-ContactList::ContactList( const UtlString& requestString ) :
+ContactList::ContactList( 
+  const UtlString& requestString, 
+  EntityDB* pEntityDb,
+  const std::string& callerLocation) :
    mRequestString( requestString ),
-   mbListWasModified( false )
+   mbListWasModified( false ),
+   _pEntityDb(pEntityDb),
+   _callerLocation(callerLocation)
 {
+  if (!_callerLocation.empty())
+  {
+    boost::to_lower(_callerLocation);
+    boost::split(_callerLocationTokens, _callerLocation, boost::is_any_of(","), boost::token_compress_on);
+  }
+}
+
+bool ContactList::isAllowedLocation(const UtlString& contact, const RedirectPlugin& plugin) const
+{
+  if (_callerLocationTokens.empty())
+    return true;
+  
+  Url requestUri(contact, TRUE);
+  UtlString host;
+  UtlString user;
+  std::ostringstream identity;
+  
+  requestUri.getHostAddress(host);
+  requestUri.getUserId(user);
+  
+  if (contact.first("sipxecs-line-id") != UtlString::UTLSTRING_NOT_FOUND)
+  {
+    //
+    // This is a gateway call.  Gateway identity does not have a user
+    //
+    UtlString lineId;
+    requestUri.getUrlParameter("sipxecs-line-id", lineId, 0);
+    identity << host.data() << ";" << "sipxecs-line-id=" << lineId.data();
+  }
+  else
+  {
+    identity << user.data() << "@" << host.data();
+  }
+  
+  EntityRecord entity;
+  if (!_pEntityDb->findByIdentity(identity.str(), entity))
+  {
+    //
+    // no identity found.  
+    //
+    return true;
+  }
+  
+  if (entity.allowedLocations().empty())
+  {
+    //
+    // no location specified
+    //
+    return true;
+  }
+  
+  bool foundMatch = false;
+  for (std::set<std::string>::iterator iter = entity.allowedLocations().begin(); iter != entity.allowedLocations().end(); iter++)
+  {
+    std::string loc = *iter;
+    boost::trim(loc);
+    boost::to_lower(loc);
+    
+    if (_callerLocationTokens.find(loc) != _callerLocationTokens.end())
+    {
+      OS_LOG_INFO(FAC_SIP, "ContactList::isAllowedLocation() found matching location " << loc << " for contact " << contact << " from " << plugin.name().data());
+      foundMatch = true;
+      break;
+    }
+  }
+    
+  return foundMatch;
 }
 
 bool ContactList::add( const Url& contactUrl, const RedirectPlugin& plugin )
@@ -258,6 +331,12 @@ bool ContactList::add( const Url& contactUrl, const RedirectPlugin& plugin )
 
 bool ContactList::add( const UtlString& contact, const RedirectPlugin& plugin )
 {
+   if (!isAllowedLocation(contact, plugin))
+   {
+     OS_LOG_WARNING(FAC_SIP, "ContactList::add() revoked insertion of contact " << contact << " from " << plugin.name().data() << " Invalid Caller Location: " << _callerLocation);
+     return false;
+   }
+   
    mbListWasModified = true;
    mContactList.push_back( contact );
    Os::Logger::instance().log(FAC_SIP, PRI_NOTICE, "ContactList::add(): %s added contact for '%s':\n"
