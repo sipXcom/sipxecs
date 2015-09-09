@@ -1,3 +1,8 @@
+/**
+ * Copyright (C) 2015 sipXcom, certain elements licensed under a Contributor Agreement.
+ * Contributors retain copyright to elements licensed under a Contributor Agreement.
+ * Licensed to the User under the LGPL license.
+ */
 package org.sipfoundry.sipxconfig.site.branch;
 
 import java.util.List;
@@ -84,31 +89,40 @@ public abstract class AssociatedPanel extends BaseComponent implements PageBegin
     public abstract FreeswitchExtension getBranchFreeswitchExtension();
 
     public void pageBeginRender(PageEvent event) {
-        List<?> groups = getBranchManager().getFeatureNames(getBranch().getId(), BranchManager.GROUP_BY_BRANCH, Group.class);
+        List<?> groups = getBranchManager().getFeatureNames(getBranch().getId(),
+                BranchManager.GROUP_BY_BRANCH, Group.class);
         setBranchGroups(groups);
 
-        List<?> conferences = getBranchManager().getFeatureNames(getBranch().getId(), BranchManager.CONFERENCES_BY_BRANCH, Conference.class);
+        List<?> conferences = getBranchManager().getFeatureNames(getBranch().getId(),
+                BranchManager.CONFERENCES_BY_BRANCH, Conference.class);
         setBranchConferences(conferences);
 
-        List<?> gateways = getBranchManager().getFeatureNames(getBranch().getId(), BranchManager.GATEWAYS_BY_BRANCH, Gateway.class);
+        List<?> gateways = getBranchManager().getFeatureNames(getBranch().getId(),
+                BranchManager.GATEWAYS_BY_BRANCH, Gateway.class);
         setBranchGateways(gateways);
 
-        List<?> authCodes = getBranchManager().getFeatureNames(getBranch().getId(), BranchManager.AUTH_CODES_BY_BRANCH, AuthCode.class);
+        List<?> authCodes = getBranchManager().getFeatureNames(getBranch().getId(),
+                BranchManager.AUTH_CODES_BY_BRANCH, AuthCode.class);
         setBranchAuthCodes(authCodes);
 
-        List<?> autoAttendants = getBranchManager().getFeatureNames(getBranch().getId(), BranchManager.AUTO_ATTENDANDS_BY_BRANCH, AutoAttendant.class);
+        List<?> autoAttendants = getBranchManager().getFeatureNames(getBranch().getId(),
+                BranchManager.AUTO_ATTENDANDS_BY_BRANCH, AutoAttendant.class);
         setBranchAutoAttendants(autoAttendants);
 
-        List<?> parkOrbits = getBranchManager().getFeatureNames(getBranch().getId(), BranchManager.PARKS_BY_BRANCH, ParkOrbit.class);
+        List<?> parkOrbits = getBranchManager().getFeatureNames(getBranch().getId(),
+                BranchManager.PARKS_BY_BRANCH, ParkOrbit.class);
         setBranchParkOrbits(parkOrbits);
 
-        List<?> callGroups = getBranchManager().getFeatureNames(getBranch().getId(), BranchManager.CALL_GROUP_BY_BRANCH, CallGroup.class);
+        List<?> callGroups = getBranchManager().getFeatureNames(getBranch().getId(),
+                BranchManager.CALL_GROUP_BY_BRANCH, CallGroup.class);
         setBranchCallGroups(callGroups);
 
-        List<?> pagingGroups = getBranchManager().getFeatureNames(getBranch().getId(), BranchManager.PAGING_GROUP_BY_BRANCH, PagingGroup.class);
+        List<?> pagingGroups = getBranchManager().getFeatureNames(getBranch().getId(),
+                BranchManager.PAGING_GROUP_BY_BRANCH, PagingGroup.class);
         setBranchPagingGroups(pagingGroups);
 
-        List<?> freeswitchExtensions = getBranchManager().getFeatureNames(getBranch().getId(), BranchManager.CALL_QUEUE_BY_BRANCH, FreeswitchExtension.class);
+        List<?> freeswitchExtensions = getBranchManager().getFeatureNames(getBranch().getId(),
+                BranchManager.CALL_QUEUE_BY_BRANCH, FreeswitchExtension.class);
         setBranchFreeswitchExtensions(freeswitchExtensions);
     }
 
@@ -163,7 +177,7 @@ public abstract class AssociatedPanel extends BaseComponent implements PageBegin
     }
 
     public IPage editFreeswitchExtensions(IRequestCycle cycle, Integer freeswitchExtensionId) {
-        LocationsAware page = (LocationsAware)cycle.getPage("plugin/CallQueueEditQueue");
+        LocationsAware page = (LocationsAware) cycle.getPage("plugin/CallQueueEditQueue");
         page.setFeatureId(freeswitchExtensionId);
         return page;
     }
