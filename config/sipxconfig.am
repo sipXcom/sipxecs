@@ -46,6 +46,7 @@ sipxconfig_neoconf_PKGS = \
 	org.restlet \
 	org.restlet.ext.json \
 	org.restlet.ext.spring \
+	org.restlet.ext.fileupload \
 	spring-aop \
 	spring-beans \
 	spring-context \
