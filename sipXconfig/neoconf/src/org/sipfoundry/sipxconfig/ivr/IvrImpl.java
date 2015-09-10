@@ -82,7 +82,7 @@ public class IvrImpl implements FeatureProvider, AddressProvider, Ivr, ProcessPr
         boolean setDefault = (backupHost == null);
         if (!setDefault) {
             Location location = m_configManager.getLocationManager().getLocationByAddress(backupHost);
-            setDefault = !m_featureManager.isFeatureEnabled(Ivr.FEATURE, location);
+            setDefault = location == null ? true : !m_featureManager.isFeatureEnabled(Ivr.FEATURE, location);
         }
         if (setDefault) {
             List<Location> locations = m_featureManager.getLocationsForEnabledFeature(Ivr.FEATURE);
