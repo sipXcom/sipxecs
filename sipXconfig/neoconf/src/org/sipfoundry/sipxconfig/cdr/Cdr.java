@@ -12,6 +12,7 @@ package org.sipfoundry.sipxconfig.cdr;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
 import org.sipfoundry.sipxconfig.dialplan.CallTag;
 import org.sipfoundry.sipxconfig.common.SipUri;
 
@@ -82,6 +83,19 @@ public class Cdr implements Serializable {
     private boolean m_callerInternal;
     private String m_calleeRoute;
 
+    private boolean m_privacy;
+    private int m_limit;
+    private String m_privacyExcluded = StringUtils.EMPTY;
+
+    public Cdr(boolean privacy, int limit, String privacyExcluded) {
+        m_privacy = privacy;
+        m_limit = limit;
+        m_privacyExcluded = privacyExcluded;
+    }
+
+    public Cdr() {
+    }
+
     public String getCalleeAor() {
         return m_calleeAor;
     }
@@ -101,11 +115,17 @@ public class Cdr implements Serializable {
     public void setCalleeAor(String calleeAor) {
         m_calleeAor = calleeAor;
         m_callee = SipUri.extractUser(calleeAor);
+        if (m_privacy) {
+            m_callee = maskAor(m_callee);
+        }
     }
 
     public void setCalleeContact(String calleeContact) {
         m_calleeContact = calleeContact;
         m_recipient = SipUri.extractUser(calleeContact);
+        if (m_privacy) {
+            m_recipient = maskAor(m_recipient);
+        }
     }
 
     public String getCallerAor() {
@@ -127,6 +147,9 @@ public class Cdr implements Serializable {
     public void setCallerAor(String callerAor) {
         m_callerAor = callerAor;
         m_caller = SipUri.extractFullUser(callerAor);
+        if (m_privacy) {
+            m_caller = maskAor(m_caller);
+        }
     }
 
     public void setCallerContact(String callerContact) {
@@ -188,7 +211,6 @@ public class Cdr implements Serializable {
     public void setCallId(String callid) {
         m_callid = callid;
     }
-
 
     public String getReference() {
         return m_reference;
@@ -291,5 +313,26 @@ public class Cdr implements Serializable {
         return callType;
     }
 
+     private String maskAor(String aor) {
+        String mask = "***";
+        if (aor.length() > m_limit) {
+            return aor.substring(0, aor.length() - 3) + mask;
+        } else {
+            if (aor.length() == m_limit) {
+                String[] exclude = m_privacyExcluded.split(" ");
+                boolean isExcluded = false;
+                for (String prefix : exclude) {
+                    if (StringUtils.isNotEmpty(prefix) && aor.startsWith(prefix)) {
+                        isExcluded = true;
+                        break;
+                    }
+                }
+                if (!isExcluded) {
+                    return aor.substring(0, aor.length() - 3) + mask;
+                }
+            }
+        }
+        return aor;
+    }
 
 }
