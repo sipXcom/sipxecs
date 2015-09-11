@@ -116,5 +116,21 @@
       </type>
       <value />
     </setting>
+    <setting name="SIP_CALLRESOLVER_PRIVACY" advanced="yes">
++      <type refid="enablestate" />
++      <value>DISABLE</value>
++    </setting>
++    <setting name="SIP_CALLRESOLVER_PRIVACY_LENGTH" advanced="yes">
++      <type>
++        <integer min="4" max="25" />
++      </type>
++      <value>5</value>
++    </setting>
++    <setting name="SIP_CALLRESOLVER_PRIVACY_EXCLUDE" advanced="yes">
++      <type>
++        <string />
++      </type>
++      <value></value>
++    </setting>
   </group>
 </model>
