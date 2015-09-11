@@ -595,7 +595,7 @@ SipRegistrar::getRegistrarServer()
 void
 SipRegistrar::startRedirectServer()
 {
-   mRedirectServer = new SipRedirectServer(mConfigDb, mSipUserAgent);
+   mRedirectServer = new SipRedirectServer(mConfigDb, mSipUserAgent, this);
    mRedirectMsgQ = mRedirectServer->getMessageQueue();
    mRedirectServer->start();
 }
