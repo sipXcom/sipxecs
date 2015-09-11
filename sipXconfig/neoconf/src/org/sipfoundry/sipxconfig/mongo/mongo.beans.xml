@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
 
   <bean id="mongoDbFactory" class="org.sipfoundry.commons.mongo.MongoSpringFactory">
     <property name="configFile" value="${sysdir.etc}/mongo-client.ini" />
@@ -9,6 +10,17 @@
   <bean id="mongoManager" class="org.springframework.aop.framework.ProxyFactoryBean" parent="abstractDao">
     <property name="target" ref="mongoManagerImpl"/>
     <property name="proxyInterfaces" value="org.sipfoundry.sipxconfig.mongo.MongoManager"/>
+  </bean>
+
+  <bean id="sysProps" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+    <property name="targetObject" value="#{@systemProperties}"/>
+    <property name="targetMethod" value="putAll"/>
+    <property name="arguments">
+      <util:properties>
+        <prop key="com.mongodb.updaterConnectTimeoutMS">5000</prop>
+        <prop key="com.mongodb.updaterSocketTimeoutMS">5000</prop>
+      </util:properties>
+    </property>
   </bean>
 
   <bean id="mongoManagerImpl" class="org.sipfoundry.sipxconfig.mongo.MongoManagerImpl">
