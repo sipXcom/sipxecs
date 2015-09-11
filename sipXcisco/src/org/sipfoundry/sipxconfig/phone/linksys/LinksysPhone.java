@@ -22,8 +22,6 @@ import org.sipfoundry.sipxconfig.phone.LineInfo;
 import org.sipfoundry.sipxconfig.setting.Setting;
 import org.sipfoundry.sipxconfig.setting.SettingEntry;
 
-import static org.sipfoundry.sipxconfig.common.SipUri.stripSipPrefix;
-
 /**
  * Linksys942 phone.
  */
@@ -139,13 +137,13 @@ public class LinksysPhone extends Linksys {
             return  SipUri.stripSipPrefix(mohUri);
         }
 
-        @SettingEntry(path = "Call_Feature_Settings/Voice_Mail_Server")
-        public String getVoicemailServer() {
+        @SettingEntry(path = "Call_Feature_Settings/Mailbox_ID")
+        public String getMailboxId() {
             User user = m_line.getUser();
             if (user != null) {
-                return stripSipPrefix(user.getAddrSpec(m_defaults.getDomainName()));
+                return user.getUserName();
             }
-            return null;
+            return "";
         }
     }
 
