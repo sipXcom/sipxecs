@@ -227,6 +227,8 @@ class SipRedirectServerPrivateStorageIterator;
  *
  */
 
+class SipRegistrar;
+
 class SipRedirectServer : public OsServerTask
 {
    friend class SipRedirectServerPrivateStorageIterator;
@@ -234,7 +236,8 @@ class SipRedirectServer : public OsServerTask
   public:
 
    SipRedirectServer(OsConfigDb*   pOsConfigDb,  ///< Configuration parameters
-                     SipUserAgent* pSipUserAgent ///< User Agent to use when sending responses
+                     SipUserAgent* pSipUserAgent, ///< User Agent to use when sending responses
+                     SipRegistrar* pSipRegistrar
                      );
 
    virtual ~SipRedirectServer();
