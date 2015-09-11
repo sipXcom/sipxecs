@@ -940,11 +940,12 @@
 	    <!--// Specify whether to display the BSFT directory on the web user interface; 0-Disabled, 1-Enable (default);	Require reboot; //-->
 	    <setting name="bw.behave_bw_dir" if="yealinkPhone((SIPT[1-4])|(W5)).*"><type><boolean/></type><value>0</value></setting>
 	    <!--// Enable or disable the feature key synchronization; 0-Disabled (default), 1-Enabled; //-->
-	    <setting name="bw.feature_key_sync"><type><boolean/></type><value>0</value></setting>
+	    <!-- Moved following setting to iant group! We need ability to enable this setting -->
+	    <!-- <setting name="bw.feature_key_sync"><type><boolean/></type><value>0</value></setting> //-->
 	</group>
     </group>
 	<group name="iant" hidden="no">
-		<setting name="bw.feature_key_sync"><type><boolean/></type><value>1</value></setting>
+		<setting name="bw.feature_key_sync"><type><boolean/></type><value>0</value></setting>
 		<setting name="bw.enable"><type><boolean/></type><value>0</value></setting>
 		<setting name="sip.notify_reboot_enable"><type refid="CheckSyncReboot_type"/><value>0</value></setting>
 	</group>
