@@ -338,7 +338,8 @@ public class Cdr implements Serializable {
                 for (String prefix : exclude) {
                     if (StringUtils.isNotEmpty(prefix)
                             && tempAor.startsWith(prefix)) {
-                        return tempAor;
+                        // Return unmodified (with Displayname)
+                        return aor;
                     }
                 }
                 return tempAor.substring(0, tempAor.length() - m_limit) + m_mask;
