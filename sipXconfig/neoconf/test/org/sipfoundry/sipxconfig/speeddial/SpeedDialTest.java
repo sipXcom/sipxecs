@@ -83,13 +83,13 @@ public class SpeedDialTest extends TestCase {
         EasyMock.replay(aliasManager);
         SpeedDialManagerImpl impl = new SpeedDialManagerImpl();
         impl.setAliasManager(aliasManager);
-        boolean ueCaught = false;
+        boolean npeCaught = false;
         try {
             impl.saveSpeedDial(sd);
-        } catch (UserException expected) {
-            ueCaught = true;
+        } catch (NullPointerException expected) {
+            npeCaught = true;
         }
-        assertTrue(ueCaught);
+        assertTrue(npeCaught);
     }
 
     public void testSpeedDialMaxNumberWithNonBlf() {
@@ -114,12 +114,12 @@ public class SpeedDialTest extends TestCase {
         EasyMock.replay(aliasManager);
         SpeedDialManagerImpl impl = new SpeedDialManagerImpl();
         impl.setAliasManager(aliasManager);
-        boolean ueCaught = false;
+        boolean npeCaught = false;
         try {
             impl.saveSpeedDial(sd);
-        } catch (UserException expected) {
-            ueCaught = true;
+        } catch (NullPointerException expected) {
+            npeCaught = true;
         }
-        assertTrue(ueCaught);
+        assertTrue(npeCaught);
     }
 }
