@@ -30,6 +30,22 @@ public class CdrSettings extends PersistableSettings implements DeployConfigOnEd
         return (Integer) getSettingTypedValue("callresolver/SIP_CALLRESOLVER_AGENT_PORT");
     }
 
+    public boolean getPrivacyStatus() {
+        return (Boolean) getSettingTypedValue("callresolver/SIP_CALLRESOLVER_PRIVACY");
+    }
+
+    public int getPrivacyMinLength() {
+        return (Integer) getSettingTypedValue("callresolver/SIP_CALLRESOLVER_PRIVACY_LENGTH");
+    }
+
+    public String getPrivacyExcludeList() {
+        String excludeList = (String) getSettingTypedValue("callresolver/SIP_CALLRESOLVER_PRIVACY_EXCLUDE");
+        if (excludeList == null) {
+            return "";
+        }
+        return excludeList;
+    }
+
     @Override
     protected Setting loadSettings() {
         return getModelFilesContext().loadModelFile("sipxcallresolver/sipxcallresolver.xml");
