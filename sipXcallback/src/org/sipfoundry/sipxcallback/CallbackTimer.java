@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.text.ParseException;
+import java.util.Queue;
 
 import org.apache.log4j.Logger;
 import org.sipfoundry.commons.freeswitch.ConfBasicThread;
@@ -32,7 +33,7 @@ import org.sipfoundry.sipxcallback.common.FreeSwitchConfigurationImpl;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import com.hazelcast.core.IQueue;
+import com.hazelcast.core.IAtomicReference;
 
 /**
  *  Daemon task class that handles callback requests registered in the system
@@ -66,20 +67,27 @@ public class CallbackTimer {
         // make sure callback_queue is initiated
         m_callbackService.initiateCallbackQueue();
 
-        IQueue<CallbackLegs> hazelcastQueue = m_callbackService.getHazelcastCallbackQueue();
+        Queue<CallbackLegs> hazelcastQueue = m_callbackService.getCallbackQueue();
         LOG.debug("Retrieving data from hazelcast queue");
         boolean queueIsEmpty = hazelcastQueue.isEmpty();
         while (!queueIsEmpty) {
             CallbackLegs callbackLegs = hazelcastQueue.poll();
             queueIsEmpty = hazelcastQueue.isEmpty();
-            long currentDate = CallbackServiceImpl.getCurrentTimestamp();
-            long timeDiff = currentDate - callbackLegs.getDate();
-            if (timeDiff < m_expires * 60000) {
-                executeCallbackThread(callbackLegs);
-                Thread.sleep(THREAD_WAIT_TIME);
+            IAtomicReference<Boolean> reference = m_callbackService.getAtomicReference(callbackLegs.getCalleeName());
+            Boolean calleeIsProcessing = reference.get();
+            // process this request ONLY if this callee is not currently beeing processed by another callback thread
+            if (calleeIsProcessing == null || calleeIsProcessing.equals(false)) {
+                long currentDate = CallbackServiceImpl.getCurrentTimestamp();
+                long timeDiff = currentDate - callbackLegs.getDate();
+                if (timeDiff < m_expires * 60000) {
+                    executeCallbackThread(callbackLegs);
+                    Thread.sleep(THREAD_WAIT_TIME);
+                } else {
+                    //callback request expired, remove it from mongo
+                    m_callbackService.updateCallbackInfoToMongo(callbackLegs, false);
+                }
             } else {
-                //callback request expired, remove it from mongo
-                m_callbackService.updateCallbackInfoToMongo(callbackLegs, false);
+                hazelcastQueue.add(callbackLegs);
             }
         }
     }
