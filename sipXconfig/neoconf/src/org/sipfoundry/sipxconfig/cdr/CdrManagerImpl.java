@@ -413,7 +413,7 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
 
         @Override
         public void processRow(ResultSet rs) throws SQLException {
-            Cdr cdr = new Cdr();
+            Cdr cdr = new Cdr(m_privacy, m_privacyLimit, m_privacyExcluded);
             cdr.setCalleeAor(rs.getString(CALLEE_AOR));
             cdr.setCallerAor(rs.getString(CALLER_AOR));
             cdr.setCallId(rs.getString(CALL_ID));
