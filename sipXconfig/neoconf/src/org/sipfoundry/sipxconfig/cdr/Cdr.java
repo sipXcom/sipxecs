@@ -62,6 +62,7 @@ public class Cdr implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final String CALLTAG_DELIM = ",";
+    private static final String USER_NAME_DELIM = " - ";
 
     private String m_callerAor;
     private String m_calleeAor;
@@ -93,7 +94,6 @@ public class Cdr implements Serializable {
     private String m_mask = StringUtils.EMPTY;
 
     public Cdr(boolean privacy, int limit, String privacyExcluded) {
-        LOG.debug("Cdr:Cdr: Creating privacy CDR");
         m_privacy = privacy;
         m_limit = limit;
         m_privacyExcluded = privacyExcluded;
@@ -106,72 +106,58 @@ public class Cdr implements Serializable {
     }
 
     public String getCalleeAor() {
-        LOG.debug("Cdr:getCalleeAor");
         return m_calleeAor;
     }
 
     public String getCalleeContact() {
-        LOG.debug("Cdr:getCalleeContact");
         return m_calleeContact;
     }
 
     public String getCallee() {
-        LOG.debug("Cdr:getCallee");
         return m_callee;
     }
 
     public String getRecipient() {
-        LOG.debug("Cdr:getRecipient");
         return m_recipient;
     }
 
     public void setCalleeAor(String calleeAor) {
         m_calleeAor = calleeAor;
         m_callee = SipUri.extractUser(calleeAor);
-        LOG.debug("Cdr:setCalleeAor:m_callee: "+m_callee);
         if (m_privacy) {
             m_callee = maskAor(m_callee);
-            LOG.debug("Cdr:setCalleeAor:m_callee(MASK): "+m_callee);
         }
     }
 
     public void setCalleeContact(String calleeContact) {
         m_calleeContact = calleeContact;
         m_recipient = SipUri.extractUser(calleeContact);
-        LOG.debug("Cdr:setCalleeContact:m_recipient: "+m_recipient);
         if (m_privacy) {
             m_recipient = maskAor(m_recipient);
-            LOG.debug("Cdr:setCalleeContact:m_recipient(MASK): "+m_recipient);
         }
     }
 
     public String getCallerAor() {
-        LOG.debug("Cdr:getCallerAor");
         return m_callerAor;
     }
 
     public String getCallerContact() {
-        LOG.debug("Cdr:getCallerContact");
         return m_callerContact;
     }
 
     public String getCaller() {
-        LOG.debug("Cdr:getCaller");
         return m_caller;
     }
 
     public String getOriginator() {
-        LOG.debug("Cdr:getOriginator");
         return m_originator;
     }
 
     public void setCallerAor(String callerAor) {
         m_callerAor = callerAor;
         m_caller = SipUri.extractFullUser(callerAor);
-        LOG.debug("Cdr:setCallerAor:m_caller: "+m_caller);
         if (m_privacy) {
             m_caller = maskAor(m_caller);
-            LOG.debug("Cdr:setCallerAor:m_caller(MASK): "+m_caller);
         }
     }
 
@@ -336,12 +322,12 @@ public class Cdr implements Serializable {
         return callType;
     }
 
-     private String maskAor(String aor) {
+    private String maskAor(String aor) {
         if (aor != null) {
             String tempAor;
-            if (aor.contains(" - ")) {
+            if (aor.contains(USER_NAME_DELIM)) {
                 // AOR contains displayname, remove for correct check
-                tempAor = aor.substring(aor.indexOf(" - ") + 3);
+                tempAor = aor.substring(aor.indexOf(USER_NAME_DELIM) + 3);
             } else {
                 tempAor = aor;
             }
