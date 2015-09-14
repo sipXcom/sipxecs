@@ -160,9 +160,7 @@ public class SpeedDialManagerImpl extends SipxHibernateDaoSupport<SpeedDial> imp
     }
 
     private void verifyBlfs(List<Button> buttons) {
-        int count = 0;
         for (Button button : buttons) {
-            count++;
             if (button.isBlf()) {
                 String number = button.getNumber();
                 if (!UserValidationUtils.isValidEmail(number) && !m_aliasManager.isAliasInUse(number)) {
@@ -170,9 +168,6 @@ public class SpeedDialManagerImpl extends SipxHibernateDaoSupport<SpeedDial> imp
                     throw new UserException("&error.notValidBlf", number);
                 }
             }
-        }
-        if (count > MAX_BUTTONS) {
-            throw new UserException("&error.speedDialExceedsMaxNumber", MAX_BUTTONS);
         }
     }
 
