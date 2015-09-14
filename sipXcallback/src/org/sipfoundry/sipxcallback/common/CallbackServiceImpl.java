@@ -92,7 +92,7 @@ public class CallbackServiceImpl implements CallbackService {
         callbackList.add(callback);
         if (callbackLegs != null) {
             // add the request also in the hazelcast call queue
-            IQueue<CallbackLegs> callbackQueue = getHazelcastCallbackQueue();
+            IQueue<CallbackLegs> callbackQueue = getCallbackQueue();
             boolean isUpdated = false;
             for (CallbackLegs oldCallbackLegs : callbackQueue) {
                 if (oldCallbackLegs.equals(callbackLegs)) {
@@ -102,7 +102,7 @@ public class CallbackServiceImpl implements CallbackService {
                 }
             }
             if (!isUpdated) {
-                getHazelcastCallbackQueue().add(callbackLegs);
+                getCallbackQueue().add(callbackLegs);
             }
         }
     }
@@ -198,7 +198,7 @@ public class CallbackServiceImpl implements CallbackService {
     }
 
     @Override
-    public IQueue<CallbackLegs> getHazelcastCallbackQueue() {
+    public IQueue<CallbackLegs> getCallbackQueue() {
         return m_hazelcastInstance.getQueue(HAZELCAST_CALLBACK_QUEUE);
     }
 
@@ -216,10 +216,15 @@ public class CallbackServiceImpl implements CallbackService {
                 LOG.debug("Setting up Hazelcast callback queue.");
                 initiated.set(new Boolean(true));
                 Set<CallbackLegs> calls = setupCallbackRequest();
-                getHazelcastCallbackQueue().clear();
-                getHazelcastCallbackQueue().addAll(calls);
+                getCallbackQueue().clear();
+                getCallbackQueue().addAll(calls);
             }
         }
+    }
+
+    @Override
+    public IAtomicReference<Boolean> getAtomicReference(String key) {
+        return m_hazelcastInstance.getAtomicReference(key);
     }
 
 }

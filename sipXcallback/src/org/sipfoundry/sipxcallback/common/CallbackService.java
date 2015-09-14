@@ -16,7 +16,9 @@
  */
 package org.sipfoundry.sipxcallback.common;
 
-import com.hazelcast.core.IQueue;
+import java.util.Queue;
+
+import com.hazelcast.core.IAtomicReference;
 
 public interface CallbackService {
 
@@ -27,14 +29,18 @@ public interface CallbackService {
             throws CallbackException;
 
     /**
-     * Returns the hazelcast queue used to store callback requests
+     * Returns the queue used to store callback requests
      */
-    public IQueue<CallbackLegs> getHazelcastCallbackQueue();
+    public Queue<CallbackLegs> getCallbackQueue();
 
-    
     /**
-     * Method used to initiate the hazelcast callback queue 
+     * Method used to initiate the callback queue 
      */
     public void initiateCallbackQueue();
+
+    /**
+     * Method used to initiate the callback queue 
+     */
+    public IAtomicReference<Boolean> getAtomicReference(String key);
 
 }
