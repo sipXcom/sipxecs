@@ -134,7 +134,9 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
     public List<Cdr> getCdrs(Date from, Date to, CdrSearch search, User user, int limit, int offset) {
         CdrsStatementCreator psc = new SelectAll(from, to, search, user, (user != null) ? (user.getTimezone())
                 : m_tz, limit, offset);
-        CdrsResultReader resultReader = new CdrsResultReader((user != null) ? (user.getTimezone()) : (getTimeZone()), getSettings().getPrivacyStatus(), getSettings().getPrivacyMinLength(), getSettings().getPrivacyExcludeList());
+        CdrsResultReader resultReader = new CdrsResultReader((user != null) ? (user.getTimezone()) : (getTimeZone()),
+                getSettings().getPrivacyStatus(), getSettings().getPrivacyMinLength(),
+                getSettings().getPrivacyExcludeList());
 
         getJdbcTemplate().query(psc, resultReader);
         return resultReader.getResults();
