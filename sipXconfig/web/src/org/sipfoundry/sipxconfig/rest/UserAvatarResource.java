@@ -71,7 +71,8 @@ public class UserAvatarResource extends Resource {
                 }
                 if (fileList == null || fileList.size() != 1) {
                     LOG.error("Wrong file list size. You have to send one file avatar to upload");
-                    throw new ResourceException(Status.CLIENT_ERROR_EXPECTATION_FAILED, "Zero or more than one avatar to upload");
+                    throw new ResourceException(Status.CLIENT_ERROR_EXPECTATION_FAILED,
+                            "Zero or more than one avatar to upload");
                 }
 
                 try {
