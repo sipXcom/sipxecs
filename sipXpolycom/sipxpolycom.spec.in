@@ -50,6 +50,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_localstatedir}/sipxdata/configserver/phone/profile/tftproot/ezLogo320x160.jpg
 %{_localstatedir}/sipxdata/configserver/phone/profile/tftproot/ezLogo320x240.jpg
 %{_localstatedir}/sipxdata/configserver/phone/profile/tftproot/ezLogo800x480.jpg
-
+%{_localstatedir}/sipxdata/configserver/phone/profile/tftproot/ezLogo480x272.jpg
+%{_localstatedir}/sipxdata/configserver/phone/profile/tftproot/ezLogo208x104.jpg
 
 

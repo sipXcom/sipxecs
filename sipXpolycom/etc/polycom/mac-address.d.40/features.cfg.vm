@@ -128,12 +128,12 @@
   <bg>
     <bg.VVX_1500>
       <bg.VVX_1500.color bg.VVX_1500.color.selection="$group.getSetting('selection').Value">
-        <bg.VVX_1500.color.bm bg.VVX_1500.color.bm.1.name="$group.getSetting('bm.1.em.name').Value" />
+        <bg.VVX_1500.color.bm bg.VVX_1500.color.bm.1.em.name="$group.getSetting('bm.1.em.name').Value" bg.VVX_1500.color.bm.1.name="$group.getSetting('bm.1.name').Value" />
       </bg.VVX_1500.color>
     </bg.VVX_1500>
   </bg>
 #end
-#elseif($phone.Model.ModelId == "polycom670")
+#elseif($phone.Model.ModelId == "polycom670" || $phone.Model.ModelId == "polycom650" )
 #set ($group = $cfg.EndpointSettings.getSetting('background').getSetting('polycom670bg'))
 #if($group.getSetting('enabled').Value == 1)
   <bg>
