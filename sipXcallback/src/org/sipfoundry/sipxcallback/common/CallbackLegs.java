@@ -24,13 +24,13 @@ import java.io.Serializable;
 public class CallbackLegs implements Serializable{
 
     private String m_calleeName;
-    private String m_callerName;
+    private String m_callerUID;
     private long m_date;
 
     public CallbackLegs(String calleeName, String callerName, long date) {
         super();
         this.m_calleeName = calleeName;
-        this.m_callerName = callerName;
+        this.m_callerUID = callerName;
         this.m_date = date;
     }
 
@@ -42,12 +42,16 @@ public class CallbackLegs implements Serializable{
         this.m_calleeName = calleeName;
     }
 
-    public String getCallerName() {
-        return m_callerName;
+    public String getCallerUID() {
+        return m_callerUID;
     }
 
-    public void setCallerName(String callerName) {
-        this.m_callerName = callerName;
+    public void setCallerUID(String callerUID) {
+        this.m_callerUID = callerUID;
+    }
+
+    public String getCallerName() {
+        return m_callerUID.split("@")[0];
     }
 
     public long getDate() {
@@ -65,7 +69,7 @@ public class CallbackLegs implements Serializable{
         result = prime * result
                 + ((m_calleeName == null) ? 0 : m_calleeName.hashCode());
         result = prime * result
-                + ((m_callerName == null) ? 0 : m_callerName.hashCode());
+                + ((m_callerUID == null) ? 0 : m_callerUID.hashCode());
         return result;
     }
 
@@ -83,10 +87,10 @@ public class CallbackLegs implements Serializable{
                 return false;
         } else if (!m_calleeName.equals(other.m_calleeName))
             return false;
-        if (m_callerName == null) {
-            if (other.m_callerName != null)
+        if (m_callerUID == null) {
+            if (other.m_callerUID != null)
                 return false;
-        } else if (!m_callerName.equals(other.m_callerName))
+        } else if (!m_callerUID.equals(other.m_callerUID))
             return false;
         return true;
     }
