@@ -12,9 +12,13 @@ package org.sipfoundry.sipxconfig.branch;
 import static org.sipfoundry.commons.mongo.MongoConstants.LOCATION_NAME;
 import static org.sipfoundry.commons.mongo.MongoConstants.LOCATION_RESTRICTIONS_DOMAINS;
 import static org.sipfoundry.commons.mongo.MongoConstants.LOCATION_RESTRICTIONS_SUBNETS;
+import static org.sipfoundry.commons.mongo.MongoConstants.LOCATION_ASSOCIATIONS;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,6 +39,7 @@ public class Branch extends BeanWithId implements NamedObject, SystemAuditable, 
     private String m_faxNumber;
     private String m_timeZone;
     private BranchRoutes m_routes = new BranchRoutes();
+    private Set<Branch> m_locations = new HashSet<Branch>();
 
     public String getName() {
         return m_name;
@@ -121,6 +126,32 @@ public class Branch extends BeanWithId implements NamedObject, SystemAuditable, 
         return null;
     }
 
+    public Set<Branch> getLocations() {
+        return m_locations;
+    }
+
+    public void setLocations(Set<Branch> locations) {
+        m_locations = locations;
+    }
+
+    public List<Branch> getLocationsList() {
+        return new ArrayList<Branch>(m_locations);
+    }
+
+    public List<String> getLocationsNamesList() {
+        List<String> names = new ArrayList<String>();
+        List<Branch> locations = getLocationsList();
+        for (Branch branch : locations) {
+            names.add(branch.getName());
+        }
+        return names;
+    }
+
+    public void setLocationsList(List<Branch> locations) {
+        m_locations.clear();
+        m_locations.addAll(locations);
+    }
+
     @Override
     public boolean isValidUser() {
         return false;
@@ -132,6 +163,7 @@ public class Branch extends BeanWithId implements NamedObject, SystemAuditable, 
         props.put(LOCATION_NAME, getName());
         props.put(LOCATION_RESTRICTIONS_DOMAINS, m_routes.getDomains());
         props.put(LOCATION_RESTRICTIONS_SUBNETS, m_routes.getSubnets());
+        props.put(LOCATION_ASSOCIATIONS, getLocationsNamesList());
         return props;
     }
 
