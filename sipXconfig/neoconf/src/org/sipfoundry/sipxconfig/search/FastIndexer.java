@@ -15,7 +15,6 @@ import java.io.Serializable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.hibernate.type.Type;
@@ -58,15 +57,15 @@ public class FastIndexer implements Indexer {
     }
 
     private synchronized void internalRemoveBean(Object bean, Serializable id) {
-        IndexReader reader = null;
+        IndexWriter writer = null;
         try {
-            reader = m_indexSource.getReader();
+            writer = m_indexSource.getWriter(false);
             Term idTerm = m_beanAdaptor.getIdentityTerm(bean, id);
-            reader.deleteDocuments(idTerm);
+            writer.deleteDocuments(idTerm);
         } catch (IOException e) {
             LOG.error(e);
         } finally {
-            LuceneUtils.closeQuietly(reader);
+            LuceneUtils.closeQuietly(writer);
         }
     }
 

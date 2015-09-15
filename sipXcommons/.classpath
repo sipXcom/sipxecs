@@ -74,7 +74,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/ldapbp.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/log4j-1.2.15.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/logkit-1.0.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/lucene-core-3.2.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/mime-dir-j-api-2.2.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/mime-dir-j-vcard4j-1.4.1-patch.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/nekohtml-1.9.12.jar"/>
@@ -195,5 +194,9 @@
 	<classpathentry exported="true" kind="lib" path="lib/jsonassert-1.2.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xstream-1.4.8.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/org.restlet.ext.fileupload-1.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/elasticsearch-1.7.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/lucene-core-4.10.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/lucene-queryparser-4.10.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/lucene-analyzers-common-4.10.4.jar"/>
 	<classpathentry kind="output" path="bin.eclipse/classes"/>
 </classpath>
