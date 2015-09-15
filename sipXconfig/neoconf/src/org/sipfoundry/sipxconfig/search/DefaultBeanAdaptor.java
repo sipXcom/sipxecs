@@ -188,7 +188,7 @@ public class DefaultBeanAdaptor implements BeanAdaptor {
     private String fieldsToString(Document doc, String[] fields) {
         StringBuffer buffer = new StringBuffer();
         for (int i = 0; i < fields.length; i++) {
-            Field field = doc.getField(fields[i]);
+            Field field = (Field) doc.getField(fields[i]);
             if (field == null) {
                 continue;
             }
