@@ -512,10 +512,10 @@ public class PhonebookManagerImpl extends SipxHibernateDaoSupport<Phonebook> imp
 
         Map<String, PhonebookEntry> usersToEntries = new HashMap<String, PhonebookEntry>();
         try {
-            Analyzer analyzer=new StandardAnalyzer();
-            IndexWriterConfig iwc=new IndexWriterConfig(Version.LUCENE_4_10_4,analyzer);
+            Analyzer analyzer = new StandardAnalyzer();
+            IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_4_10_4, analyzer);
             iwc.setOpenMode(OpenMode.CREATE);
-            IndexWriter indexWriter=new IndexWriter(index,iwc);
+            IndexWriter indexWriter = new IndexWriter(index, iwc);
             for (PhonebookEntry entry : phonebookEntries) {
                 Document doc = null;
                 User user = getUserForEntry(entry);

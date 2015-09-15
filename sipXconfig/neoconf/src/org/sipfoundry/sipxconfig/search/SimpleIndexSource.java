@@ -72,9 +72,9 @@ public class SimpleIndexSource implements IndexSource {
     }
 
     public IndexWriter getWriter(boolean createNew) throws IOException {
-        IndexWriterConfig iwc=new IndexWriterConfig(Version.LUCENE_4_10_4,m_analyzer);
-        iwc.setOpenMode(createNew ? OpenMode.CREATE : OpenMode.APPEND);
-        IndexWriter writer=new IndexWriter(getDirectory(),iwc);
+        IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_4_10_4, m_analyzer);
+        iwc.setOpenMode(createNew || m_createIndex ? OpenMode.CREATE : OpenMode.APPEND);
+        IndexWriter writer = new IndexWriter(getDirectory(), iwc);
         m_createIndex = false;
         return writer;
     }

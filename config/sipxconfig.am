@@ -42,6 +42,7 @@ sipxconfig_neoconf_PKGS = \
 	lucene-core \
 	lucene-analyzers-common \
 	lucene-queryparser \
+	lucene-suggest \
 	mime-dir-j-vcard4j \
 	mongo \
 	mysql-connector-java \
