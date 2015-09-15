@@ -73,10 +73,13 @@ public class CallbackTimer {
         while (!queueIsEmpty) {
             CallbackLegs callbackLegs = hazelcastQueue.poll();
             queueIsEmpty = hazelcastQueue.isEmpty();
-            IAtomicReference<Boolean> reference = m_callbackService.getAtomicReference(callbackLegs.getCalleeName());
-            Boolean calleeIsProcessing = reference.get();
+            IAtomicReference<Boolean> calleeReference = m_callbackService.getAtomicReference(callbackLegs.getCalleeName());
+            Boolean calleeIsProcessing = calleeReference.get();
+            IAtomicReference<Boolean> callerReference = m_callbackService.getAtomicReference(callbackLegs.getCallerName());
+            Boolean callerIsProcessing = callerReference.get();
             // process this request ONLY if this callee is not currently beeing processed by another callback thread
-            if (calleeIsProcessing == null || calleeIsProcessing.equals(false)) {
+            if ((calleeReference.isNull() || calleeIsProcessing.equals(false))
+                    && (callerReference.isNull() || callerIsProcessing.equals(false))) {
                 long currentDate = CallbackServiceImpl.getCurrentTimestamp();
                 long timeDiff = currentDate - callbackLegs.getDate();
                 if (timeDiff < m_expires * 60000) {
