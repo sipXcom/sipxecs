@@ -27,7 +27,7 @@ public class Broadcast extends CallCommand {
         if (!isSay) {
             m_command = "uuid_broadcast " + m_uuid + " " + params + " aleg";
         } else {
-            m_command = "uuid_broadcast " + m_uuid + " say::en\\snumber\\spronounced\\s" + params + " aleg";
+            m_command = "uuid_broadcast " + m_uuid + " say::en\\stelephone_number\\siterated\\s" + params + " aleg";
         }
     }
 

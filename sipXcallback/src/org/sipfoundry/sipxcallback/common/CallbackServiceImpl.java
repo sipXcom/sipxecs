@@ -59,7 +59,7 @@ public class CallbackServiceImpl implements CallbackService {
     @Override
     public void updateCallbackInfoToMongo(CallbackLegs callbackLegs, boolean insertNewRequest)
             throws CallbackException {
-        String callerChannelName = callbackLegs.getCallerName();
+        String callerChannelName = callbackLegs.getCallerUID();
         if (callerChannelName.contains(".")) {
             callerChannelName = callerChannelName.replace(".", ";");
         }
@@ -88,7 +88,7 @@ public class CallbackServiceImpl implements CallbackService {
     }
 
     private void insertNewObject(CallbackLegs callbackLegs, BasicDBList callbackList) {
-        DBObject callback = new BasicDBObject(callbackLegs.getCallerName(), getCurrentTimestamp());
+        DBObject callback = new BasicDBObject(callbackLegs.getCallerUID(), getCurrentTimestamp());
         callbackList.add(callback);
         if (callbackLegs != null) {
             // add the request also in the hazelcast call queue
