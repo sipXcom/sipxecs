@@ -28,6 +28,12 @@
         <index column="index" />
         <element type="string" column="subnet" not-null="true" />
       </list>
-    </component>        
+    </component>
+
+    <set name="locations" table="branch_branch">
+      <key column="branch_id" />
+      <many-to-many column="associated_branch_id" class="org.sipfoundry.sipxconfig.branch.Branch" />
+    </set>
+
   </class>
 </hibernate-mapping>

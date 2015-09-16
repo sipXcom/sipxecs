@@ -37,7 +37,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -49,17 +48,20 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.Searcher;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
@@ -510,8 +512,10 @@ public class PhonebookManagerImpl extends SipxHibernateDaoSupport<Phonebook> imp
 
         Map<String, PhonebookEntry> usersToEntries = new HashMap<String, PhonebookEntry>();
         try {
-            IndexWriter indexWriter = new IndexWriter(index, new StandardAnalyzer(Version.LUCENE_30,
-                    new HashSet<String>()), true, IndexWriter.MaxFieldLength.LIMITED);
+            Analyzer analyzer = new StandardAnalyzer();
+            IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_4_10_4, analyzer);
+            iwc.setOpenMode(OpenMode.CREATE);
+            IndexWriter indexWriter = new IndexWriter(index, iwc);
             for (PhonebookEntry entry : phonebookEntries) {
                 Document doc = null;
                 User user = getUserForEntry(entry);
@@ -525,10 +529,10 @@ public class PhonebookManagerImpl extends SipxHibernateDaoSupport<Phonebook> imp
                 indexWriter.addDocument(doc);
             }
 
-            indexWriter.optimize();
             indexWriter.close();
 
-            Searcher searcher = new IndexSearcher(index);
+            DirectoryReader dirReader = DirectoryReader.open(index);
+            IndexSearcher searcher = new IndexSearcher(dirReader);
             List<Document> searchResults = doSearch(searcher, queryString);
             List<PhonebookEntry> entryResults = new ArrayList<PhonebookEntry>();
             for (Document doc : searchResults) {
@@ -550,7 +554,7 @@ public class PhonebookManagerImpl extends SipxHibernateDaoSupport<Phonebook> imp
     /*
      * @param queryString A case-insensitive query string
      */
-    private List<Document> doSearch(Searcher searcher, String queryString) throws IOException, ParseException {
+    private List<Document> doSearch(IndexSearcher searcher, String queryString) throws IOException, ParseException {
         Term searchTerm = new Term(FIELD_CONTENT, queryString.toLowerCase());
         Query query = new PrefixQuery(searchTerm);
         // max number of returned docs set to 20000

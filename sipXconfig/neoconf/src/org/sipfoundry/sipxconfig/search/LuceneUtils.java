@@ -29,13 +29,6 @@ public final class LuceneUtils {
         if (searcher == null) {
             return;
         }
-        try {
-            searcher.close();
-        } catch (IOException e) {
-            LOG.error(ERROR, e);
-        } catch (IllegalStateException e) {
-            LOG.error(ERROR, e);
-        }
     }
 
     public static void closeQuietly(IndexWriter writer) {
