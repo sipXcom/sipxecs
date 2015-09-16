@@ -13,11 +13,15 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 
 /**
  * Naive implementation, always return FS directory, do not try to cache or optimize anything,
@@ -32,10 +36,6 @@ public class SimpleIndexSource implements IndexSource {
     private boolean m_createIndex;
 
     private Analyzer m_analyzer;
-
-    private int m_maxFieldLength = IndexWriter.DEFAULT_MAX_FIELD_LENGTH;
-
-    private int m_minMergeDocs = IndexWriter.DEFAULT_MAX_BUFFERED_DOCS;
 
     private Directory getDirectory() {
         try {
@@ -66,31 +66,23 @@ public class SimpleIndexSource implements IndexSource {
         m_analyzer = analyzer;
     }
 
-    public void setMinMergeDocs(int minMergeDocs) {
-        m_minMergeDocs = minMergeDocs;
-    }
-
-    public void setMaxFieldLength(int maxFieldLength) {
-        m_maxFieldLength = maxFieldLength;
-    }
-
     public IndexReader getReader() throws IOException {
         ensureIndexExists();
-        return IndexReader.open(getDirectory(), false);
+        return DirectoryReader.open(getDirectory());
     }
 
     public IndexWriter getWriter(boolean createNew) throws IOException {
-        IndexWriter writer = new IndexWriter(getDirectory(), m_analyzer, createNew
-                || m_createIndex, IndexWriter.MaxFieldLength.LIMITED);
-        writer.setMaxFieldLength(m_maxFieldLength);
-        writer.setMaxBufferedDocs(m_minMergeDocs);
+        IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_4_10_4, m_analyzer);
+        iwc.setOpenMode(createNew || m_createIndex ? OpenMode.CREATE : OpenMode.APPEND);
+        IndexWriter writer = new IndexWriter(getDirectory(), iwc);
         m_createIndex = false;
         return writer;
     }
 
     public IndexSearcher getSearcher() throws IOException {
         ensureIndexExists();
-        return new IndexSearcher(getDirectory());
+        DirectoryReader dirReader = DirectoryReader.open(getDirectory());
+        return new IndexSearcher(dirReader);
     }
 
     private void ensureIndexExists() throws IOException {

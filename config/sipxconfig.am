@@ -40,6 +40,9 @@ sipxconfig_neoconf_PKGS = \
 	js-1.7R4 \
 	ldapbp \
 	lucene-core \
+	lucene-analyzers-common \
+	lucene-queryparser \
+	lucene-suggest \
 	mime-dir-j-vcard4j \
 	mongo \
 	mysql-connector-java \
@@ -105,10 +108,11 @@ sipxconfig_neoconf_PKGS = \
 	jcl-over-slf4j \
 	spring-messaging \
 	jaudiotagger \
-    spring-websocket \
-    hazelcast-all \
-    reflections \
-    guava
+	spring-websocket \
+	hazelcast-all \
+	reflections \
+	guava \
+	elasticsearch
 
 sipxconfig_web_PKGS = \
 	$(sipxconfig_neoconf_PKGS) \

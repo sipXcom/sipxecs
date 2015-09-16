@@ -51,7 +51,7 @@ public class CallbackThread extends Thread {
 
     public void initiate(CallbackLegs callbackLegs, FreeSwitchEventSocketInterface fsCmdSocket) {
         m_callbackLegs = callbackLegs;
-        String callerName = callbackLegs.getCallerName().replace(";", ".");
+        String callerName = callbackLegs.getCallerUID().replace(";", ".");
         m_callerName = callerName.split("@")[0];
         m_callerUID = StringUtils.join(new String[] { "sofia/", sipxchangeDomainName, "/", callerName });
         m_calleeUID = m_callerUID.replace(m_callerName, callbackLegs.getCalleeName());
@@ -62,29 +62,32 @@ public class CallbackThread extends Thread {
     @Override
     public void run() {
         LOG.debug("Originating call to " + m_calleeUID);
+        // mark callee and caller as processing (so as not to receive other callbacks)
+        IAtomicReference<Boolean> calleeReference = m_callbackService.getAtomicReference(m_callbackLegs.getCalleeName());
+        calleeReference.set(new Boolean(true));
+        IAtomicReference<Boolean> callerReference = m_callbackService.getAtomicReference(m_callbackLegs.getCallerName());
+        callerReference.set(new Boolean(true));
 
-        // mark this callee user as in process (so as not to receive other callbacks)
-        IAtomicReference<Boolean> reference = m_callbackService.getAtomicReference(m_callbackLegs.getCalleeName());
-        reference.set(new Boolean(true));
-
-        String originateProperties = ORIGINATE_PROPERTIES.replace("00000000", m_callerName);
-        OriginateCommand originateCalleeCmd = new OriginateCommand(m_fsCmdSocket,
-                originateProperties + m_calleeUID);
-        FreeSwitchEvent responseCallee = originateCalleeCmd.originate();
-        String responseContent = responseCallee.getContent();
-        if ((responseContent != null) && (responseContent.startsWith(ORIGINATE_RESPONSE_OK))) {
-            LOG.debug(m_calleeUID + " answered the call");
-            try {
+        try {
+            String originateProperties = ORIGINATE_PROPERTIES.replace("00000000", m_callerName);
+            OriginateCommand originateCalleeCmd = new OriginateCommand(m_fsCmdSocket,
+                    originateProperties + m_calleeUID);
+            FreeSwitchEvent responseCallee = originateCalleeCmd.originate();
+            String responseContent = responseCallee.getContent();
+            if ((responseContent != null) && (responseContent.startsWith(ORIGINATE_RESPONSE_OK))) {
+                LOG.debug(m_calleeUID + " answered the call");
                 handleCalleeResponse(responseContent);
-            } catch (InterruptedException e) {
-                LOG.error(e);
+            } else {
+                // B caller did not answer, add the callback request to the hazelcast queue
+                m_callbackService.getCallbackQueue().add(m_callbackLegs);
             }
-        } else {
-            // B caller did not answer, add the callback request to the hazelcast queue
-            m_callbackService.getCallbackQueue().add(m_callbackLegs);
+        } catch (Exception e) {
+            LOG.error(e);
+        } finally {
+            // remove mark for callee and caller as beeing in use
+            calleeReference.destroy();
+            callerReference.destroy();
         }
-        // remove mark for this callee user as beeing processed
-        reference.set(null);
     }
 
     /**
@@ -96,7 +99,7 @@ public class CallbackThread extends Thread {
      */
     private void handleCalleeResponse(String responseContent) throws InterruptedException {
         try {
-         // remove the callback flag from B user
+            // remove the callback flag from B user
             m_callbackService.updateCallbackInfoToMongo(m_callbackLegs, false);
         } catch (CallbackException e) {
             LOG.error(e);

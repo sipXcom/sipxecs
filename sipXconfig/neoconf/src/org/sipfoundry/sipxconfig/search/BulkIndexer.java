@@ -53,13 +53,7 @@ public class BulkIndexer implements Indexer {
     }
 
     public void close() {
-        try {
-            m_writer.optimize();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            LuceneUtils.closeQuietly(m_writer);
-        }
+        LuceneUtils.closeQuietly(m_writer);
     }
 
     public void setIndexSource(IndexSource indexSource) {

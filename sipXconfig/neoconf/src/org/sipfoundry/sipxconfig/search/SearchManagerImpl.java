@@ -20,8 +20,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
@@ -170,7 +170,7 @@ public class SearchManagerImpl implements SearchManager {
         }
         SortField[] sfs = new SortField[sortFields.length];
         for (int i = 0; i < sfs.length; i++) {
-            sfs[i] = new SortField(sortFields[i], SortField.STRING, !orderAscending);
+            sfs[i] = new SortField(sortFields[i], SortField.Type.STRING, !orderAscending);
         }
         return new Sort(sfs);
     }
