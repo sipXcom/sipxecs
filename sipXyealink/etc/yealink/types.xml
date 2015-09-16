@@ -333,6 +333,9 @@
 	<option><value>0</value></option>
 	<option><value>2</value></option>
 	<option><value>4</value></option>
+	<option><value>6</value></option>
+	<option><value>8</value></option>
+	<option><value>10</value></option>
     </enum>
 </type>
 <type id="DTMF-types">
