@@ -4,7 +4,7 @@
     device.syslog.serverName.set="1"
     device.syslog.serverName="testdriver.example.org"
     device.syslog.transport.set="1"
-    device.syslog.transport="1"
+    device.syslog.transport="2"
     device.syslog.facility.set="1"
     device.syslog.facility="16"
     device.syslog.renderLevel.set="1"
