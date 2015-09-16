@@ -69,6 +69,10 @@
 	<setting name="acd.enable"><type><boolean/></type><value>0</value></setting>
 	<!-- Enables or disables the IP phone to display the available or unavailable soft key after the phone logs into the ACD system. -->
 	<setting name="acd.available"><type><boolean/></type><value>0</value></setting>
+	<!--  Set "available" on login -->
+	<setting name="acd.initial_state"><type><boolean/></type><value>0</value></setting>
+	<!--  Enable Auto Login if ACD was logged in before reboot -->
+	<setting name="acd.auto_login_enable"><type><boolean/></type><value>0</value></setting>
 	<!--  Configures the user ID used to log in the ACD system. -->
 	<setting name="acd.user_id"><type><string/></type></setting>
 	<!--  Configures the password used to log in the ACD system.-->
@@ -77,6 +81,7 @@
 	<setting name="acd.auto_available"><type><boolean/></type><value>0</value></setting>
 	<!--  Specifies the length of time (in seconds) before the IP phone state is automatically reset to "available".-->
 	<setting name="acd.auto_available_timer"><type><integer min="0" max="120"/></type><value>60</value></setting>
+	
     </group>
 
     <group name="advanced">
