@@ -23,7 +23,7 @@
       voIpProt.SIP.ms-forking="0"
       voIpProt.SIP.keepalive.sessionTimers="0"
       voIpProt.SIP.requestURI.E164.addGlobalPrefix=""
-      voIpProt.SIP.tcpFastFailover="0"
+      voIpProt.SIP.tcpFastFailover="1"
       voIpProt.SIP.allowTransferOnProceeding="2"
       voIpProt.SIP.serverFeatureControl.cf="0"
       voIpProt.SIP.serverFeatureControl.dnd="0"
@@ -31,7 +31,7 @@
       <outboundProxy
         voIpProt.SIP.outboundProxy.address=""
         voIpProt.SIP.outboundProxy.port="5060"
-        voIpProt.SIP.outboundProxy.transport="UDPonly"
+        voIpProt.SIP.outboundProxy.transport="TCPonly"
       />
       <alertInfo            
         voIpProt.SIP.alertInfo.1.class="9"            
