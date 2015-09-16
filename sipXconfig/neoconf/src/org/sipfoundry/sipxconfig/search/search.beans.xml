@@ -5,7 +5,7 @@
 
   <bean id="analyzer" class="org.apache.lucene.analysis.standard.StandardAnalyzer">
     <constructor-arg>
-      <bean id="org.apache.lucene.util.Version.LUCENE_30"
+      <bean id="org.apache.lucene.util.Version.LUCENE_4_10_4"
          class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean" />
     </constructor-arg>
   </bean>
@@ -13,8 +13,6 @@
   <bean id="indexSource" class="org.sipfoundry.sipxconfig.search.SimpleIndexSource">
     <property name="indexDirectoryName" value="${sysdir.tmp}/index"/>
     <property name="analyzer" ref="analyzer"/>
-    <property name="maxFieldLength" value="255"/>
-    <property name="minMergeDocs" value="250"/>
   </bean>
 
   <bean id="fastIndexer" class="org.sipfoundry.sipxconfig.search.FastIndexer">

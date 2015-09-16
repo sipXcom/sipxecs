@@ -5268,13 +5268,13 @@
         <type>
 	      <string />
 	    </type>
-        <value>ezLogo320x240.jpg</value>        
+        <value>ezLogo208x104.jpg</value>        
       </setting>
        <setting name="bm.1.name">
         <type>
           <string />
         </type>
-        <value>ezLogo320x240.jpg</value>        
+        <value>ezLogo208x104.jpg</value>        
       </setting>
     </group>
 	<group name="polycomVVX500bg" hidden="no">
@@ -5320,13 +5320,65 @@
         <type>
 	      <string />
 	    </type>
-        <value>ezLogo800x480.jpg</value>        
+        <value>ezLogo480x272.jpg</value>        
       </setting>
        <setting name="bm.1.name">
         <type>
           <string />
         </type>
-        <value>ezLogo800x480.jpg</value>        
+        <value>ezLogo480x272.jpg</value>        
+      </setting>
+    </group>
+    <group name="polycomVVX1500bg" hidden="no">
+	  <setting name="enabled">
+		<type>
+		  <boolean />
+		</type>
+		<value>1</value>
+	  </setting>
+      <setting name="selection">
+        <type>
+          <string />
+        </type>
+        <value>3,1</value>
+      </setting>
+      <setting name="bm.1.name">
+        <type>
+          <string />
+        </type>
+        <value>ezLogo800x480.jpg</value>
+      </setting>
+      <setting name="bm.1.em.name">
+        <type>
+          <string />
+        </type>
+        <value>ezLogo800x480.jpg</value>
+      </setting>
+    </group>
+    <group name="polycom450bg" hidden="no">
+	  <setting name="enabled">
+		<type>
+		  <boolean />
+		</type>
+		<value>1</value>
+	  </setting>
+      <setting name="selection">
+        <type>
+          <string />
+        </type>
+        <value>3,1</value>
+      </setting>
+      <setting name="bm.1.name">
+        <type>
+          <string />
+        </type>
+        <value>ezLogo250x116.jpg</value>
+      </setting>
+      <setting name="bm.1.adj">
+        <type>
+          <string />
+        </type>
+        <value>-6</value>
       </setting>
     </group>
     <group name="polycom550bg" hidden="no">
@@ -5385,52 +5437,6 @@
           <string />
         </type>
         <value>ezLogo320x160.jpg</value>
-      </setting>
-    </group>
-    <group name="polycom450bg" hidden="no">
-	  <setting name="enabled">
-		<type>
-		  <boolean />
-		</type>
-		<value>1</value>
-	  </setting>
-      <setting name="selection">
-        <type>
-          <string />
-        </type>
-        <value>3,1</value>
-      </setting>
-      <setting name="bm.1.name">
-        <type>
-          <string />
-        </type>
-        <value>ezLogo250x116.jpg</value>
-      </setting>
-      <setting name="bm.1.adj">
-        <type>
-          <string />
-        </type>
-        <value>-6</value>
-      </setting>
-    </group>
-    <group name="polycomVVX1500bg" hidden="no">
-	  <setting name="enabled">
-		<type>
-		  <boolean />
-		</type>
-		<value>1</value>
-	  </setting>
-      <setting name="selection">
-        <type>
-          <string />
-        </type>
-        <value>3,1</value>
-      </setting>
-      <setting name="bm.1.em.name">
-        <type>
-          <string />
-        </type>
-        <value>ezLogo800x480.jpg</value>
       </setting>
     </group>
   </group>
