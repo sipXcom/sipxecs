@@ -105,9 +105,6 @@ public interface MongoConstants {
     static final String CONF_DESCRIPTION = "cnfdescr";
     static final String CONF_OWNER = "cnfown";
     static final String CONF_PIN = "cnfpin";
-    static final String CONF_MODERATED = "cnfmod";
-    static final String CONF_PUBLIC = "cnfpbl";
-    static final String CONF_MEMBERS_ONLY = "cnfmonly";
     static final String CONF_URI = "cnfuri";
     static final String PERMISSIONS = "prm";
     static final String CFWDTIME = "cfwdtm";

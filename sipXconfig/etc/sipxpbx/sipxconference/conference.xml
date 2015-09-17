@@ -96,26 +96,6 @@
     </setting>
     <setting name="FS_BRIDGE_CONFERENCE.REMOTE_ADMIT.SECRET" hidden="yes" />
   </group>
-  <group name="chat-meeting">
-    <setting name="moderated">
-      <type>
-        <boolean />
-      </type>
-      <value>0</value>
-    </setting>
-    <setting name="public">
-      <type>
-        <boolean />
-      </type>
-      <value>1</value>
-    </setting>
-    <setting name="members-only" hidden="yes">
-      <type>
-        <boolean />
-      </type>
-      <value>0</value>
-    </setting>
-  </group>
   <group name="conference">
     <setting name="language">
       <type>

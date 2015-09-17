@@ -45,7 +45,6 @@ public abstract class EditConference extends PageWithCallback implements PageBeg
     public static final String PAGE = "conference/EditConference";
     public static final String TAB_CONFIG = "config";
     public static final String TAB_PARTICIPANTS = "participants";
-    private static final String TAB_CHAT = "chat";
 
     private static final Log LOG = LogFactory.getLog(EditConference.class);
 
@@ -165,11 +164,7 @@ public abstract class EditConference extends PageWithCallback implements PageBeg
         if (conference.isNew()) {
             return asList(TAB_CONFIG);
         }
-        if (!conference.isEnabled()) {
-            // participants are only visible for enabled conferences
-            return asList(TAB_CONFIG, TAB_CHAT);
-        }
-        return asList(TAB_CONFIG, TAB_PARTICIPANTS, TAB_CHAT);
+        return asList(TAB_CONFIG, TAB_PARTICIPANTS);
     }
 
     public void apply() {
