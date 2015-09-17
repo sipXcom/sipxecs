@@ -114,12 +114,6 @@ public class UserConferenceResource extends UserResource {
             if (repr.m_moh != null) {
                 conf.setMohSource(repr.m_moh);
             }
-            if (repr.m_publicRoom != null) {
-                conf.setPublicRoom(repr.m_publicRoom);
-            }
-            if (repr.m_moderatedRoom != null) {
-                conf.setModeratedRoom(repr.m_moderatedRoom);
-            }
 
             m_conferenceBridgeContext.saveConference(conf);
         }
@@ -155,8 +149,6 @@ public class UserConferenceResource extends UserResource {
         private final Boolean m_sendActiveVideoOnly;
         private final Integer m_maxMembers;
         private final String m_moh;
-        private final Boolean m_moderatedRoom;
-        private final Boolean m_publicRoom;
 
         public RepresentableFull(Conference conference) {
             m_enabled = conference.isEnabled();
@@ -170,8 +162,6 @@ public class UserConferenceResource extends UserResource {
             m_sendActiveVideoOnly = conference.isVideoToggleFloor();
             m_maxMembers = conference.getConfMaxMembers();
             m_moh = conference.getMohSource();
-            m_moderatedRoom = conference.isModeratedRoom();
-            m_publicRoom = conference.isPublicRoom();
         }
     }
 
