@@ -63,9 +63,9 @@ public abstract class EditGroupForm extends BaseComponent {
 
         Group group = getGroup();
         if (equalsIgnoreCase(User.GROUP_RESOURCE_ID, group.getResource())) {
-            getCoreContext().saveGroup(group);
+            getCoreContext().storeGroup(group);
         } else if (equalsIgnoreCase(Phone.GROUP_RESOURCE_ID, group.getResource())) {
-            getPhoneContext().saveGroup(group);
+            getPhoneContext().storeGroup(group);
         } else {
             getSettingContext().saveGroup(group);
         }

@@ -200,7 +200,7 @@ public class UserGroupsResource extends Resource {
             // copy values over to existing item
             try {
                 updateUserGroup(userGroup, userGroupRestInfo);
-                m_coreContext.saveGroup(userGroup);
+                m_coreContext.storeGroup(userGroup);
             } catch (Exception exception) {
                 RestUtilities.setResponseError(getResponse(), ERROR_UPDATE_FAILED, parameterInfo.getValue(),
                         exception.getLocalizedMessage());
@@ -214,7 +214,7 @@ public class UserGroupsResource extends Resource {
         // if not single, add new item
         try {
             userGroup = createUserGroup(userGroupRestInfo);
-            m_coreContext.saveGroup(userGroup);
+            m_coreContext.storeGroup(userGroup);
         } catch (Exception exception) {
             RestUtilities.setResponseError(getResponse(), ERROR_CREATE_FAILED, exception.getLocalizedMessage());
             return;
