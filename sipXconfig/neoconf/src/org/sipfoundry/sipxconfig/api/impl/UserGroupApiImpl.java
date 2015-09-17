@@ -41,7 +41,7 @@ public class UserGroupApiImpl extends GroupApiImpl implements UserGroupApi {
     public Response newUserGroup(GroupBean groupBean) {
         Group group = new Group();
         GroupBean.convertToUserGroup(groupBean, group);
-        m_coreContext.saveGroup(group);
+        m_coreContext.storeGroup(group);
         return Response.ok().entity(group.getId()).build();
     }
 
@@ -84,7 +84,7 @@ public class UserGroupApiImpl extends GroupApiImpl implements UserGroupApi {
         Group group = getUserGroupByIdOrName(groupId);
         if (group != null) {
             GroupBean.convertToUserGroup(groupBean, group);
-            m_coreContext.saveGroup(group);
+            m_coreContext.storeGroup(group);
             return Response.ok().entity(group.getId()).build();
         }
         return Response.status(Status.NOT_FOUND).build();

@@ -290,7 +290,7 @@ public class PhoneContextImpl extends SipxHibernateDaoSupport implements BeanFac
     }
 
     @Override
-    public void saveGroup(Group group) {
+    public void storeGroup(Group group) {
         m_settingDao.saveGroup(group);
     }
 
