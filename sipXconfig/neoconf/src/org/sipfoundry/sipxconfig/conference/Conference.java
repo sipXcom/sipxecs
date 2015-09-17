@@ -13,12 +13,9 @@ import static org.sipfoundry.commons.mongo.MongoConstants.CONF_AUTORECORD;
 import static org.sipfoundry.commons.mongo.MongoConstants.CONF_DESCRIPTION;
 import static org.sipfoundry.commons.mongo.MongoConstants.CONF_ENABLED;
 import static org.sipfoundry.commons.mongo.MongoConstants.CONF_EXT;
-import static org.sipfoundry.commons.mongo.MongoConstants.CONF_MEMBERS_ONLY;
-import static org.sipfoundry.commons.mongo.MongoConstants.CONF_MODERATED;
 import static org.sipfoundry.commons.mongo.MongoConstants.CONF_NAME;
 import static org.sipfoundry.commons.mongo.MongoConstants.CONF_OWNER;
 import static org.sipfoundry.commons.mongo.MongoConstants.CONF_PIN;
-import static org.sipfoundry.commons.mongo.MongoConstants.CONF_PUBLIC;
 import static org.sipfoundry.commons.mongo.MongoConstants.CONF_URI;
 
 import java.io.File;
@@ -81,8 +78,6 @@ public class Conference extends BeanWithSettings implements Replicable, DeployCo
     public static final String QUICKSTART = "fs-conf-conference/quickstart";
     public static final String VIDEO = "fs-conf-conference/video";
     public static final String VIDEO_TOGGLE_FLOOR = "fs-conf-conference/video-toogle-floor";
-    public static final String MODERATED_ROOM = "chat-meeting/moderated";
-    public static final String PUBLIC_ROOM = "chat-meeting/public";
 
     private static final String ALIAS_RELATION = "conference";
     private boolean m_enabled;
@@ -246,22 +241,6 @@ public class Conference extends BeanWithSettings implements Replicable, DeployCo
 
     public boolean isMohFilesSrcEnabled() {
         return getSettingValue(MOH).equals(MOH_FILES_SOURCE);
-    }
-
-    public boolean isModeratedRoom() {
-        return (Boolean) getSettingTypedValue(MODERATED_ROOM);
-    }
-
-    public void setModeratedRoom(Boolean moderatedRoom) {
-        setSettingTypedValue(MODERATED_ROOM, moderatedRoom);
-    }
-
-    public boolean isPublicRoom() {
-        return (Boolean) getSettingTypedValue(PUBLIC_ROOM);
-    }
-
-    public void setPublicRoom(Boolean publicRoom) {
-        setSettingTypedValue(PUBLIC_ROOM, publicRoom);
     }
 
     public String getUri() {
@@ -494,9 +473,6 @@ public class Conference extends BeanWithSettings implements Replicable, DeployCo
             props.put(CONF_OWNER, StringUtils.EMPTY);
         }
         props.put(CONF_PIN, getParticipantAccessCode());
-        props.put(CONF_MODERATED, getSettingValue(MODERATED_ROOM));
-        props.put(CONF_PUBLIC, getSettingValue(PUBLIC_ROOM));
-        props.put(CONF_MEMBERS_ONLY, getSettingValue("chat-meeting/members-only"));
         props.put(CONF_AUTORECORD, isAutorecorded());
         props.put(CONF_URI, getUri());
         List<String> locations = new ArrayList<String>();
