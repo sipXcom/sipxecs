@@ -15,7 +15,7 @@ import com.smartgwt.client.types.DSOperationType;
 
 public abstract class PagedPhonebookDataSource extends PhonebookDataSource {
 
-    public static final int PAGE_SIZE = 12;
+    public static final int PAGE_SIZE = 500;
     private int m_pageNumber;
 
     public PagedPhonebookDataSource(String id) {
