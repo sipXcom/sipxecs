@@ -43,7 +43,7 @@ public abstract class GroupMusicOnHoldComponent extends AbstractMusicOnHoldCompo
         if (!TapestryUtils.isValid(this)) {
             return;
         }
-        getCoreContext().saveGroup(getGroup());
+        getCoreContext().storeGroup(getGroup());
         getConfigManager().configureEverywhere(MusicOnHoldManager.FEATURE);
     }
 

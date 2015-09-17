@@ -713,7 +713,7 @@ public abstract class CoreContextImpl extends SipxHibernateDaoSupport<User> impl
     }
 
     @Override
-    public void saveGroup(Group group) {
+    public void storeGroup(Group group) {
         m_settingDao.saveGroup(group);
     }
 

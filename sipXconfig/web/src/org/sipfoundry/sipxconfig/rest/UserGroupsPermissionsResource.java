@@ -198,7 +198,7 @@ public class UserGroupsPermissionsResource extends Resource {
             // copy values over to existing item
             try {
                 updateUserGroupPermission(userGroup, userGroupPermissionRestInfo);
-                m_coreContext.saveGroup(userGroup);
+                m_coreContext.storeGroup(userGroup);
             } catch (Exception exception) {
                 RestUtilities.setResponseError(getResponse(), ERROR_UPDATE_FAILED, parameterInfo.getValue(),
                         exception.getLocalizedMessage());
