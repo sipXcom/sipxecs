@@ -31,12 +31,13 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.hazelcast.core.IAtomicReference;
 
-public class CallbackThread extends Thread {
+public class CallbackExecutor {
 
     private static final Logger LOG = Logger.getLogger("org.sipfoundry.sipxcallback");
     private static final String ORIGINATE_RESPONSE_OK = "+OK ";
     private static final String ORIGINATE_PROPERTIES = "{ignore_early_media=true,originate_timeout=20,fail_on_single_reject=USER_BUSY,hangup_after_bridge=true,origination_caller_id_number=00000000}";
-    public static final String BEAN_NAME = "callbackThread";
+    public static final String AROUND = "@";
+    public static final String SOFIA = "sofia/";
 
     private CallbackLegs m_callbackLegs;
     private String m_callerUID;
@@ -52,21 +53,27 @@ public class CallbackThread extends Thread {
     public void initiate(CallbackLegs callbackLegs, FreeSwitchEventSocketInterface fsCmdSocket) {
         m_callbackLegs = callbackLegs;
         String callerName = callbackLegs.getCallerUID().replace(";", ".");
-        m_callerName = callerName.split("@")[0];
-        m_callerUID = StringUtils.join(new String[] { "sofia/", sipxchangeDomainName, "/", callerName });
-        m_calleeUID = m_callerUID.replace(m_callerName, callbackLegs.getCalleeName());
+        String[] callerNameSplit = callerName.split(AROUND);
+        m_callerName = callerNameSplit[0];
+        m_callerUID = StringUtils.join(new String[] { SOFIA, sipxchangeDomainName, "/", callerName });
+        m_calleeUID = StringUtils.join(new String[] { SOFIA, sipxchangeDomainName, "/", callbackLegs.getCalleeName(),
+                AROUND, callerNameSplit[1] });
         m_callerUID = m_callerUID.split("/")[2];
         m_fsCmdSocket = fsCmdSocket;
     }
 
-    @Override
-    public void run() {
+    /**
+     * Returns true if the processing was successful.
+     */
+    public boolean execute(CallbackLegs callbackLegs, FreeSwitchEventSocketInterface fsCmdSocket) {
+        initiate(callbackLegs, fsCmdSocket);
         LOG.debug("Originating call to " + m_calleeUID);
         // mark callee and caller as processing (so as not to receive other callbacks)
         IAtomicReference<Boolean> calleeReference = m_callbackService.getAtomicReference(m_callbackLegs.getCalleeName());
         calleeReference.set(new Boolean(true));
         IAtomicReference<Boolean> callerReference = m_callbackService.getAtomicReference(m_callbackLegs.getCallerName());
         callerReference.set(new Boolean(true));
+        boolean callbackSuccessful = false;
 
         try {
             String originateProperties = ORIGINATE_PROPERTIES.replace("00000000", m_callerName);
@@ -77,12 +84,12 @@ public class CallbackThread extends Thread {
             if ((responseContent != null) && (responseContent.startsWith(ORIGINATE_RESPONSE_OK))) {
                 LOG.debug(m_calleeUID + " answered the call");
                 handleCalleeResponse(responseContent);
-            } else {
-                // B caller did not answer, add the callback request to the hazelcast queue
-                m_callbackService.getCallbackQueue().add(m_callbackLegs);
+                callbackSuccessful = true;
             }
+            return callbackSuccessful;
         } catch (Exception e) {
             LOG.error(e);
+            return callbackSuccessful;
         } finally {
             // remove mark for callee and caller as beeing in use
             calleeReference.destroy();

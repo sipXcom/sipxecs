@@ -45,20 +45,13 @@
     <constructor-arg><ref bean="fsConfig"/></constructor-arg>
   </bean>
 
-  <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-    <property name="corePoolSize" value="10" />
-    <property name="maxPoolSize" value="1000" />
-    <property name="queueCapacity" value="1005" />
-  </bean>
-
   <bean id="callbackTimer" class="org.sipfoundry.sipxcallback.CallbackTimer">
     <property name="callbackService" ref="callbackService" />
-    <property name="taskExecutor" ref="taskExecutor" />
-    <property name="callbackThread" ref="callbackThread" />
+    <property name="callbackExecutor" ref="callbackExecutor" />
     <property name="expires" value="${callback-duration}" />
   </bean>
 
-  <bean id="callbackThread" class="org.sipfoundry.sipxcallback.CallbackThread" scope="prototype">
+  <bean id="callbackExecutor" class="org.sipfoundry.sipxcallback.CallbackExecutor">
     <property name="callbackService" ref="callbackService" />
     <property name="sipxchangeDomainName" value="${callback.sipxchangeDomainName}" />
     <property name="callerPrompt" value="${conf.dir}/sipxcallback/prompts/caller.wav" />
