@@ -34,13 +34,18 @@ public interface CallbackService {
     public Queue<CallbackLegs> getCallbackQueue();
 
     /**
-     * Method used to initiate the callback queue 
+     * Method used to initiate the callback queue
      */
     public void initiateCallbackQueue();
 
     /**
-     * Method used to initiate the callback queue 
+     * Retrieve an atomic reference
      */
     public IAtomicReference<Boolean> getAtomicReference(String key);
+
+    /**
+     * Check if the caller or callee of this request is in use
+     */
+    public boolean isCallbackLegsFreeToProcess(CallbackLegs callbackLegs);
 
 }

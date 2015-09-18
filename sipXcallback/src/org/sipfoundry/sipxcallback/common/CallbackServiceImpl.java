@@ -227,4 +227,15 @@ public class CallbackServiceImpl implements CallbackService {
         return m_hazelcastInstance.getAtomicReference(key);
     }
 
+    @Override
+    public boolean isCallbackLegsFreeToProcess(CallbackLegs callbackLegs) {
+        IAtomicReference<Boolean> calleeReference = getAtomicReference(callbackLegs.getCalleeName());
+        Boolean calleeIsProcessing = calleeReference.get();
+        IAtomicReference<Boolean> callerReference = getAtomicReference(callbackLegs.getCallerName());
+        Boolean callerIsProcessing = callerReference.get();
+        // process this request ONLY if this callee is not currently beeing processed by another callback thread
+        return ((calleeReference.isNull() || calleeIsProcessing.equals(false))
+                && (callerReference.isNull() || callerIsProcessing.equals(false)));
+    }
+
 }
