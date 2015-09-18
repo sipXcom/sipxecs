@@ -1048,7 +1048,7 @@ class SipUtilities {
 					for (Iterator it1 = formats.iterator(); it1.hasNext();) {
 						Object format = it1.next();
 						int fmt = new Integer(format.toString());
-						if (fmt != 100 && fmt != 101) {
+						if (fmt != 100 && fmt != 101 && fmt != 19) {
 							retval.add(fmt);
 						}
 					}
