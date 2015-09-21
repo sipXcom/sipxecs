@@ -196,6 +196,7 @@ any::
     <load module=\"mod_say_en\"/>
     <load module=\"mod_say_de\"/>
     <load module=\"mod_ivr\"/>
+    <load module=\"mod_vp8\"/>
 ";
 
   has_mods_part::

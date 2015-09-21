@@ -36,7 +36,10 @@
       </option>
       <option>
         <value>H264</value>
-      </option>                                           
+      </option>
+      <option>
+        <value>vp8</value>
+      </option>
     </multi-enum>
   </type>
   <type id="true-false">
