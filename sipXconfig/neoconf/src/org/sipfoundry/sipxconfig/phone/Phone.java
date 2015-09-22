@@ -12,6 +12,8 @@ package org.sipfoundry.sipxconfig.phone;
 import static org.sipfoundry.commons.mongo.MongoConstants.GROUPS;
 import static org.sipfoundry.commons.mongo.MongoConstants.SERIAL_NUMBER;
 import static org.sipfoundry.commons.mongo.MongoConstants.TIMESTAMP;
+import static org.sipfoundry.commons.mongo.MongoConstants.LINES;
+import static org.sipfoundry.commons.mongo.MongoConstants.PHONE_MODEL;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -240,6 +242,14 @@ public abstract class Phone extends Device implements Replicable, SystemAuditabl
         return m_lines;
     }
 
+    public List<String> getUserNamesLines() {
+        List<String> usernameLines = new ArrayList<String>();
+        for (Line line : m_lines) {
+            usernameLines.add(line.getUserName());
+        }
+        return usernameLines;
+    }
+
     public void setLines(List<Line> lines) {
         m_lines = lines;
     }
@@ -390,6 +400,8 @@ public abstract class Phone extends Device implements Replicable, SystemAuditabl
         props.put(SERIAL_NUMBER, getSerialNumber());
         props.put(TIMESTAMP, System.currentTimeMillis());
         props.put(GROUPS, Arrays.asList(getGroupsNames().split(" ")));
+        props.put(LINES, getUserNamesLines());
+        props.put(PHONE_MODEL, getModel().getLabel());
         return props;
     }
 

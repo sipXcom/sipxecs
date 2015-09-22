@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE model PUBLIC "-//SIPFoundry//sipXconfig//Model specification 2.0//EN"
+  "http://www.sipfoundry.org/sipXconfig/dtd/setting_2_0.dtd">
+<model>
+ <type id="true-false">
+    <boolean>
+      <true>
+        <value>true</value>
+      </true>
+      <false>
+        <value>false</value>
+      </false>
+    </boolean>
+  </type>
+  <group name="net.java.sip.communicator.impl.protocol.sip.acc">  
+    <setting name="ACCOUNT_UID">
+      <value />
+    </setting>
+    <setting name="PASSWORD" hidden="true">
+      <value/>
+    </setting>
+    <setting name="IS_ACCOUNT_DISABLED">
+      <type refid="true-false" />
+      <value>false</value>
+    </setting>
+    <setting name="PROTOCOL_NAME" hidden = "true">
+      <value>SIP</value>
+    </setting>
+    <setting name="SERVER_ADDRESS">
+      <value/>
+    </setting>    
+    <setting name="USER_ID">
+      <value/>
+    </setting>        
+  </group>
+  <group name="net.java.sip.communicator.impl.protocol.jabber.acc">  
+    <setting name="ACCOUNT_UID">
+      <value />
+    </setting>
+    <setting name="PASSWORD" hidden="true">
+      <value/>
+    </setting>
+    <setting name="IS_ACCOUNT_DISABLED">
+      <type refid="true-false" />
+      <value>false</value>
+    </setting>
+    <setting name="PROTOCOL_NAME" hidden = "true">
+      <value>Jabber</value>
+    </setting>
+    <setting name="RESOURCE">
+      <value>jitsi</value>
+    </setting>
+    <setting name="RESOURCE_PRIORITY">
+      <value>30</value>
+    </setting>        
+    <setting name="SERVER_ADDRESS">
+      <value/>
+    </setting>
+    <setting name="SERVER_PORT">
+      <value>5222</value>
+    </setting>      
+    <setting name="USER_ID">
+      <value/>
+    </setting>        
+  </group>  
+</model>
