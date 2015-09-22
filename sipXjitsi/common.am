@@ -1,0 +1,23 @@
+sipxjitsi_PKGS = \
+	log4j \
+	commons-lang \
+	commons-io \
+	commons-logging \ 
+	commons-beanutils \
+	javax.servlet-api \
+	commons-collections \
+	spring-security-config \
+	spring-security-core \
+	spring-beans \
+	spring-web \
+	spring-webmvc \
+	spring-security-web \
+	spring-context \
+	spring-core \
+	sipxcommons \
+	sipxconfig-neoconf \
+	velocity \
+	spring-data-commons \
+	spring-data-mongodb \
+	mongo-java-driver \
+	dom4j

@@ -1,0 +1,49 @@
+Name: @PACKAGE@
+Version: @VERSION@
+Release: @PACKAGE_REVISION@
+
+Summary: Jitsi provisioning module
+License: LGPL
+Group: Productivity/Telephony/SIP/Servers
+Vendor: SipXcom
+Packager: SIPfoundry <sipx-dev@sipxcom.org>
+Url: http://www.sipxcom.org
+
+%if %{_vendor} == suse
+BuildRequires: java-1_6_0-sun-devel
+%else
+BuildRequires: java-1.7.0-openjdk-devel
+%endif
+BuildRequires: automake
+BuildRequires: sipxcommons >= %version
+BuildRequires: sipxconfig >= %version
+
+Requires: sipxconfig
+
+Source: %name-%version.tar.gz
+
+Prefix: %_prefix
+BuildRoot: %{_tmppath}/%name-%version-root
+
+%description
+Configuration support jitsi phones
+
+%prep
+%setup -q
+
+%build
+%configure
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make DESTDIR=$RPM_BUILD_ROOT install
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(644,root,root,755)
+%{_sysconfdir}/sipxpbx/jitsi/*
+%{_datadir}/java/sipXecs/sipXconfig/jitsiprov.war
+%{_datadir}/java/sipXecs/sipXconfig/plugins/sipXjitsiphoneplugin.jar

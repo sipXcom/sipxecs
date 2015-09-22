@@ -1,0 +1,22 @@
+#foreach ($line in $lines.entrySet())
+net.java.sip.communicator.impl.protocol.sip.acc$line.key=acc$line.key
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.ACCOUNT_UID=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip.acc/ACCOUNT_UID')
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.PASSWORD=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip.acc/PASSWORD')
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.SERVER_ADDRESS=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip.acc/SERVER_ADDRESS')
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.USER_ID=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip.acc/USER_ID')
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.PROTOCOL_NAME=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip.acc/PROTOCOL_NAME')
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.IS_ACCOUNT_DISABLED=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip.acc/IS_ACCOUNT_DISABLED')
+#if($line.getValue().getUser().isImEnabled())
+#set($xmppKey = $line.key + 1)
+net.java.sip.communicator.impl.protocol.jabber.acc$xmppKey=acc$xmppKey
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.ACCOUNT_UID=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber.acc/ACCOUNT_UID')
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.PASSWORD=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber.acc/PASSWORD')
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.SERVER_ADDRESS=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber.acc/SERVER_ADDRESS')
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.SERVER_PORT=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber.acc/SERVER_PORT')
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.USER_ID=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber.acc/USER_ID')
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.PROTOCOL_NAME=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber.acc/PROTOCOL_NAME')
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.RESOURCE=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber.acc/RESOURCE')
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.RESOURCE_PRIORITY=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber.acc/RESOURCE_PRIORITY')
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.IS_ACCOUNT_DISABLED=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber.acc/IS_ACCOUNT_DISABLED')
+#end
+#end
