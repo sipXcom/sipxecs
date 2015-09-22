@@ -32,18 +32,34 @@
 />
 #end
   </mb>
-#if ($phone.model.isSupported("desktopIntegration"))
-<apps>
+
+
 #set ($apps = $cfg.EndpointSettings.getSetting('apps'))
 #if ($apps)
-  <apps.ucdesktop
-#foreach ($setting in $cfg.getSettings($apps))
-    apps.${setting.ProfileName}="$!{setting.Value}"
+<apps>
+  <WEB 
+#set ($push = $cfg.EndpointSettings.getSetting('apps').getSetting('push'))
+#foreach ($setting in $cfg.getSettings($push))
+    apps.push.${setting.ProfileName}="$!{setting.value}"
 #end
   />
+  <statePolling 
+#set ($statePolling = $cfg.EndpointSettings.getSetting('apps').getSetting('statePolling'))
+#foreach ($setting in $cfg.getSettings($statePolling))
+    apps.statePolling.${setting.ProfileName}="$!{setting.value}"
 #end
+  />
+#set ($ucdesktop = $cfg.EndpointSettings.getSetting('apps').getSetting('ucdesktop'))
+#if ($phone.model.isSupported("desktopIntegration"))
+  <apps.ucdesktop
+#foreach ($setting in $cfg.getSettings($ucdesktop))
+    apps.ucdesktop.${setting.ProfileName}="$!{setting.Value}"
+#end
+  />
 </apps>
 #end
+#end
+
 #if ($phone.model.isSupported("exchangeIntegration"))
 #set ($calendar = $cfg.EndpointSettings.getSetting('calendar/exchange'))
 #if($calendar)
