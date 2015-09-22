@@ -48,6 +48,16 @@
         </New>
       </Arg>
     </Call>
+    <Call name="addHandler">
+      <Arg>
+        <New class="org.eclipse.jetty.webapp.WebAppContext">
+          <Set name="contextPath">/jitsiprov</Set>
+          <Set name="war"><SystemProperty name="jetty.lib.dir"/>/jitsiprov.war</Set>
+          <Set name="extractWAR">true</Set>
+          <Set name="tempDirectory"><SystemProperty name="jetty.tmp.dir"/>/jitsiprov</Set>
+        </New>
+      </Arg>
+    </Call>    
   </Ref>
 
   <New id="httpConfig" class="org.eclipse.jetty.server.HttpConfiguration">

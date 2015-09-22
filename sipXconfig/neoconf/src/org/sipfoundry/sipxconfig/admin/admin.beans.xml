@@ -30,6 +30,7 @@
       <list>
         <value>log4j.logger.org.sipfoundry.sipxconfig</value>
         <value>log4j.logger.org.apache.cxf.interceptor</value>
+        <value>log4j.logger.org.sipxcom.sipxconfig</value>        
       </list>
     </property>
   </bean>
