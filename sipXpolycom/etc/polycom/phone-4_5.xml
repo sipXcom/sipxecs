@@ -3832,91 +3832,53 @@
         </setting>
       </group>
   </group>
-    <group name="apps">
-      <group name="push">
-        <setting name="messageType">
-          <type refid="push_message_type"/>
-          <value>4</value>
-        </setting>
-        <setting name="username">
-          <type>
-            <string />
-          </type>
-          <value></value>
-        </setting>
-        <setting name="password">
-          <type>
-            <string />
-          </type>
-          <value></value>
-        </setting>
-      </group>
-      <group name="statePolling">
-        <setting name="responseMode">
-          <type refid="statePolling_responseMode"/>
-          <value>0</value>
-        </setting>
-        <setting name="username">
-          <type>
-            <string />
-          </type>
-          <value></value>
-        </setting>
-        <setting name="password">
-          <type>
-            <string />
-          </type>
-          <value></value>
-        </setting>
-      </group>
-      <group name="ucdesktop"  if="desktopIntegration">
-        <setting name="adminEnabled">
-          <type>
-            <boolean />
-          </type>
-          <value>1</value>
-        </setting>
-        <setting name="desktopUserName">
-          <type>
-            <string />
-          </type>
-          <value></value>
-        </setting>
-        <setting name="enabled">
-          <type>
-            <boolean />
-          </type>
-          <value>1</value>
-        </setting>
-        <setting name="orientation">
-          <type>
-            <enum>
-              <option>
-                <value>Unspecified</value>
-              </option>
-              <option>
-                <value>Left</value>
-              </option>
-              <option>
-                <value>Right</value>
-              </option>
-            </enum>
-          </type>
-          <value>Unspecified</value>
-        </setting>
-        <setting name="ServerAddress">
-          <type>
-            <string />
-          </type>
-          <value></value>
-        </setting>
-        <setting name="ServerPort">
-          <type>
-            <integer min="1" max="65535"/>
-          </type>
-          <value>24800</value>
-        </setting>
-      </group>
+    <group name="apps" if="desktopIntegration">
+      <setting name="ucdesktop.adminEnabled">
+        <type>
+          <boolean />
+        </type>
+        <value>1</value>
+      </setting>
+      <setting name="ucdesktop.desktopUserName">
+        <type>
+		  <string />
+		</type>
+        <value></value>
+      </setting>
+      <setting name="ucdesktop.enabled">
+        <type>
+          <boolean />
+        </type>
+        <value>1</value>
+      </setting>
+      <setting name="ucdesktop.orientation">
+        <type>
+          <enum>
+            <option>
+              <value>Unspecified</value>
+            </option>
+            <option>
+              <value>Left</value>
+            </option>
+            <option>
+              <value>Right</value>
+            </option>
+          </enum>
+        </type>
+        <value>Unspecified</value>
+      </setting>
+      <setting name="ucdesktop.ServerAddress">
+        <type>
+		  <string />
+		</type>
+        <value></value>
+      </setting>
+      <setting name="ucdesktop.ServerPort">
+        <type>
+          <integer min="1" max="65535"/>
+        </type>
+        <value>24800</value>
+      </setting>
     </group>
     <group name="ptt" if="4.0.X||4.1.X||4.1.0||4.1.2||4.1.3||4.1.4||4.1.5||4.1.6||4.1.7||4.1.8||5.0.0||5.0.1||5.0.2||5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0">
       <setting name="address">
