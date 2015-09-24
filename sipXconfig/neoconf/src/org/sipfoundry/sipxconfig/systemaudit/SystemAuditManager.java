@@ -21,12 +21,15 @@ import java.util.List;
 
 import org.sipfoundry.sipxconfig.common.User;
 import org.sipfoundry.sipxconfig.common.event.HibernateEntityChangeProvider;
+import org.sipfoundry.sipxconfig.feature.LocationFeature;
 
 /**
  * This interface handles operations like building and saving ConfigChange
  * objects
  */
 public interface SystemAuditManager extends HibernateEntityChangeProvider {
+
+    public static final LocationFeature FEATURE = new LocationFeature("systemaudit");
 
     /**
      * This method only handles UserProfile saves, which don't go through

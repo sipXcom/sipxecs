@@ -199,5 +199,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/lucene-queryparser-4.10.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/lucene-analyzers-common-4.10.4.jar"/>
 	<classpathentry kind="lib" path="lib/lucene-suggest-4.10.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/gson-2.3.1.jar"/>
 	<classpathentry kind="output" path="bin.eclipse/classes"/>
 </classpath>

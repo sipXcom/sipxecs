@@ -36,7 +36,8 @@ dist_cfinputs_DATA = \
 	snmp.cf \
 	snmptrap.cf \
 	tftp.cf \
-	zz_apache.cf
+	zz_apache.cf \
+	elasticsearch.cf
 
 cfdefaultsdir = $(SIPX_CFDATA)/defaults
 cfdefaults_DATA = \

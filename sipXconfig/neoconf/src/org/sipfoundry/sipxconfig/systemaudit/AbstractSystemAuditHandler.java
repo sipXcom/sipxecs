@@ -77,7 +77,7 @@ public abstract class AbstractSystemAuditHandler {
     public ConfigChange buildConfigChange(ConfigChangeAction configChangeAction,
             String configChangeType, String userName, String ipAddress) {
         ConfigChange configChange = new ConfigChange();
-        configChange.setConfigChangeAction(configChangeAction);
+        configChange.setAction(configChangeAction.getAction());
         configChange.setConfigChangeType(configChangeType);
         configChange.setUserName(userName);
         configChange.setIpAddress(ipAddress);
@@ -137,10 +137,6 @@ public abstract class AbstractSystemAuditHandler {
 
     public CoreContext getCoreContext() {
         return m_coreContext;
-    }
-
-    public boolean isSystemAuditEnabled() {
-        return m_adminContext.isSystemAuditEnabled();
     }
 
     @Required

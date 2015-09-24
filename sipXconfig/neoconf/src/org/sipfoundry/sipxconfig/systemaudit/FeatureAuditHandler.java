@@ -39,9 +39,6 @@ public class FeatureAuditHandler extends AbstractSystemAuditHandler {
     private FeatureManager m_featureManager;
 
     public void handleFeaturesConfigChange(FeatureChangeRequest request) throws SystemAuditException {
-        if (!isSystemAuditEnabled()) {
-            return;
-        }
         Map<Location, Set<LocationFeature>> enabledByLocation = request.getNewlyEnabledByLocation();
         handleFeaturesList(enabledByLocation, ConfigChangeAction.ENABLED, true);
         Map<Location, Set<LocationFeature>> disabledByLocation = request.getNewlyDisabledByLocation();
@@ -54,9 +51,6 @@ public class FeatureAuditHandler extends AbstractSystemAuditHandler {
     }
 
     public void handlePrecommitFeaturesConfigChange(FeatureManager manager, FeatureChangeValidator validator) {
-        if (!isSystemAuditEnabled()) {
-            return;
-        }
         FeatureChangeRequest request = validator.getRequest();
         handlePrecommitFeaturesByLocation(manager, request);
         handlePrecommitGlobalFeatures(manager, request);
