@@ -63,6 +63,7 @@
   <bean id="systemAuditCleanup" class="org.sipfoundry.sipxconfig.systemaudit.SystemAuditCleanup">
     <property name="elasticsearchService" ref="elasticsearchService" />
     <property name="adminContext" ref="adminContext" />
+    <property name="featureManager" ref="featureManager" />
   </bean>
 
   <task:scheduled-tasks>

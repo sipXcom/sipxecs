@@ -39,12 +39,15 @@ import org.sipfoundry.sipxconfig.feature.FeatureProvider;
 import org.sipfoundry.sipxconfig.feature.GlobalFeature;
 import org.sipfoundry.sipxconfig.feature.LocationFeature;
 import org.sipfoundry.sipxconfig.setting.Group;
+import org.sipfoundry.sipxconfig.snmp.ProcessDefinition;
+import org.sipfoundry.sipxconfig.snmp.ProcessProvider;
+import org.sipfoundry.sipxconfig.snmp.SnmpManager;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 
 public class SystemAuditManagerImpl implements SystemAuditManager, FeatureListener,
-        ApplicationListener<ApplicationEvent>, DaoEventListener, FeatureProvider {
+        ApplicationListener<ApplicationEvent>, DaoEventListener, FeatureProvider, ProcessProvider {
 
     private static final Log LOG = LogFactory.getLog(SystemAuditManagerImpl.class);
     private static final String LOG_ERROR_MESSAGE = "Exception when processing entry for System Audit: ";
@@ -239,6 +242,12 @@ public class SystemAuditManagerImpl implements SystemAuditManager, FeatureListen
             m_isSystemAuditOn = m_featureManager.isFeatureEnabled(FEATURE);
         }
         return m_isSystemAuditOn;
+    }
+
+    @Override
+    public Collection<ProcessDefinition> getProcessDefinitions(SnmpManager manager, Location location) {
+        return (isSystemAuditOn() ? Collections.singleton(ProcessDefinition.sipxByRegex("systemaudit",
+                ".*-Dprocname=sipxconfig.*")) : null);
     }
 
 }
