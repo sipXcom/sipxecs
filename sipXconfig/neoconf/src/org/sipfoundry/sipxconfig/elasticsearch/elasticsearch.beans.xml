@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+  <bean id="elasticsearchService" class="org.springframework.aop.framework.ProxyFactoryBean">
+    <property name="proxyInterfaces" value="org.sipfoundry.sipxconfig.elasticsearch.ElasticsearchService" />
+    <property name="target" ref="elasticsearchServiceImpl" />
+  </bean>
+
+  <bean id="elasticsearchServiceImpl" class="org.sipfoundry.sipxconfig.elasticsearch.ElasticsearchServiceImpl" init-method="init">
+    <property name="hostName" value="localhost" />
+    <property name="port" value="9300" />
+    <property name="gson" ref="gson" />
+  </bean>
+
+  <bean id="elasticsearchConfig" class="org.sipfoundry.sipxconfig.elasticsearch.ElasticsearchConfig"/>
+
+  <bean id="gson" class="com.google.gson.Gson" factory-bean="gsonBuilder" factory-method="create" depends-on="gsonBuilderConfig"/>
+
+  <bean id="gsonBuilder" class="com.google.gson.GsonBuilder"/>
+
+  <bean id="gsonBuilderConfig" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+      <property name="targetObject" ref="gsonBuilder" />
+      <property name="targetMethod" value="excludeFieldsWithoutExposeAnnotation" />
+  </bean>
+
+</beans>

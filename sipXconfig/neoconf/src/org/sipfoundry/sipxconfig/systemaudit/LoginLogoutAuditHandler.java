@@ -47,9 +47,6 @@ public class LoginLogoutAuditHandler extends AbstractSystemAuditHandler {
 
     private void loginSuccess(InteractiveAuthenticationSuccessEvent loginSuccessEvent)
         throws SystemAuditException {
-        if (!isSystemAuditEnabled()) {
-            return;
-        }
         ConfigChange configChange = buildConfigChange(ConfigChangeAction.LOGIN,
                 ConfigChangeType.LOGIN_LOGOUT.getName());
         configChange.setDetails(SUCCESS);
@@ -57,9 +54,6 @@ public class LoginLogoutAuditHandler extends AbstractSystemAuditHandler {
     }
 
     private void loginFailed(AbstractAuthenticationFailureEvent loginFailedEvent) throws SystemAuditException {
-        if (!isSystemAuditEnabled()) {
-            return;
-        }
         Authentication authentication = loginFailedEvent.getAuthentication();
         String userName = (String) authentication.getPrincipal();
         ConfigChange configChange = buildConfigChange(ConfigChangeAction.LOGIN,
@@ -69,9 +63,6 @@ public class LoginLogoutAuditHandler extends AbstractSystemAuditHandler {
     }
 
     private void logout(HttpSessionDestroyedEvent logoutEvent) throws Exception {
-        if (!isSystemAuditEnabled()) {
-            return;
-        }
         HttpSession session = logoutEvent.getSession();
         Object userSession = (Object) session.getAttribute("state:sipXconfig-web:userSession");
         if (userSession != null) {

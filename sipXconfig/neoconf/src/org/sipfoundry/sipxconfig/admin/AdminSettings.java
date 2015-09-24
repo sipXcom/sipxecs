@@ -33,7 +33,6 @@ import org.springframework.beans.factory.annotation.Required;
  */
 public class AdminSettings extends PersistableSettings implements DeployConfigOnEdit {
 
-    public static final String SYSTEM_AUDIT = "configserver-config/systemAudit";
     public static final String HAZELCAST_NOTIFICATION = "configserver-config/hazelcastNotification";
     private static final Log LOG = LogFactory.getLog(AdminSettings.class);
 
@@ -52,6 +51,7 @@ public class AdminSettings extends PersistableSettings implements DeployConfigOn
     private static final String VMPIN_DEFAULT_CONFIRM = "configserver-config/vmpin-default-confirm";
     private static final String POSTGRES_PASSWORD = "configserver-config/postgres-pwd";
     private static final String POSTGRES_PASSWORD_CONFIRM = "configserver-config/postgres-pwd-confirm";
+    private static final String SYSTEM_AUDIT_KEEP_CHANGES = "config-change-audit/keep-changes";
     private PasswordPolicy m_passwordPolicy;
     private String[] m_logLevelKeys;
 
@@ -98,6 +98,10 @@ public class AdminSettings extends PersistableSettings implements DeployConfigOn
 
     public String getPostgresPasswordConfirmed() {
         return getSettingValue(POSTGRES_PASSWORD_CONFIRM);
+    }
+
+    public int getSystemAuditKeepChanges() {
+        return (Integer) getSettingTypedValue(SYSTEM_AUDIT_KEEP_CHANGES);
     }
 
     public int getAge() {
@@ -152,14 +156,6 @@ public class AdminSettings extends PersistableSettings implements DeployConfigOn
         String noSpaces = validateDomainList(corsDomains);
         LOG.warn("Setting CORS domains " + corsDomains + " " + noSpaces);
         setSettingValue(CORS_DOMAIN_SETTING, noSpaces);
-    }
-
-    public boolean isSystemAuditEnabled() {
-        return (Boolean) getSettingTypedValue(SYSTEM_AUDIT);
-    }
-
-    public void setSystemAuditEnabled(boolean systemAuditEnabled) {
-        setSettingTypedValue(SYSTEM_AUDIT, systemAuditEnabled);
     }
 
     public void setHazelcastNotification(boolean notification) {

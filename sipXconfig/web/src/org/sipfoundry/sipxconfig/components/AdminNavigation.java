@@ -72,7 +72,4 @@ public abstract class AdminNavigation extends BaseComponent {
         return enabled;
     }
 
-    public boolean isSystemAuditEnabled() {
-        return getAdminContext().isSystemAuditEnabled();
-    }
 }

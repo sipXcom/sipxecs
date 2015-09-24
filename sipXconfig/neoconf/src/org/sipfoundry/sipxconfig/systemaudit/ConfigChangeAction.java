@@ -18,7 +18,6 @@
 package org.sipfoundry.sipxconfig.systemaudit;
 
 import org.apache.commons.lang.enums.Enum;
-import org.sipfoundry.sipxconfig.common.EnumUserType;
 
 public final class ConfigChangeAction extends Enum {
 
@@ -49,21 +48,12 @@ public final class ConfigChangeAction extends Enum {
     }
 
     public String getAction() {
-        return m_action;
+        return this.equals(ALL) ? null : m_action;
     }
 
     @Override
     public String toString() {
         return m_action;
-    }
-
-    /**
-     * Used for Hibernate type translation
-     */
-    public static class UserType extends EnumUserType {
-        public UserType() {
-            super(ConfigChangeAction.class);
-        }
     }
 
     public static ConfigChangeAction getEnum(String value) {

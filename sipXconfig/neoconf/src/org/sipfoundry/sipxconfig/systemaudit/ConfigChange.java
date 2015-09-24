@@ -21,24 +21,53 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.sipfoundry.sipxconfig.common.BeanWithId;
+import org.sipfoundry.sipxconfig.elasticsearch.ElasticsearchBean;
 
-public class ConfigChange extends BeanWithId {
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-    private Date m_dateTime = new Date();
+public class ConfigChange implements ElasticsearchBean {
+
+    public static final String DATE_TIME = "dateTime";
+    public static final String USER_NAME = "userName";
+    public static final String DETAILS = "details";
+    public static final String ACTION = "action";
+    public static final String CONFIG_CHANGE_TYPE = "configChangeType";
+    public static final String IP_ADDRESS = "ipAddress";
+
+    private String m_id;
+    @Expose
+    @SerializedName(DATE_TIME)
+    private long m_dateTime = new Date().getTime();
+    @Expose
+    @SerializedName(USER_NAME)
     private String m_userName;
+    @Expose
+    @SerializedName(IP_ADDRESS)
     private String m_ipAddress;
-    private ConfigChangeAction m_configChangeAction;
+    @Expose
+    @SerializedName(ACTION)
+    private String m_action;
+    @Expose
+    @SerializedName(CONFIG_CHANGE_TYPE)
     private String m_configChangeType;
+    @Expose
+    @SerializedName(DETAILS)
     private String m_details;
+    @Expose
+    @SerializedName("values")
     private List<ConfigChangeValue> m_values = new ArrayList<ConfigChangeValue>(0);
 
     public ConfigChange() {
     }
 
+    public ConfigChange(String id) {
+        this();
+        this.m_id = id;
+    }
+
     public void addValue(ConfigChangeValue values) {
-        m_values.add(values);
-        values.setConfigChange(this);
+        this.m_values.add(values);
     }
 
     public List<ConfigChangeValue> getValues() {
@@ -46,7 +75,7 @@ public class ConfigChange extends BeanWithId {
     }
 
     public void setValues(List<ConfigChangeValue> values) {
-        m_values = values;
+        this.m_values = values;
     }
 
     public String getConfigChangeType() {
@@ -58,10 +87,10 @@ public class ConfigChange extends BeanWithId {
     }
 
     public Date getDateTime() {
-        return m_dateTime;
+        return new Date(m_dateTime);
     }
 
-    public void setDateTime(Date dateTime) {
+    public void setDateTime(long dateTime) {
         this.m_dateTime = dateTime;
     }
 
@@ -89,12 +118,21 @@ public class ConfigChange extends BeanWithId {
         this.m_details = identifier;
     }
 
-    public ConfigChangeAction getConfigChangeAction() {
-        return m_configChangeAction;
+    public String getAction() {
+        return m_action;
     }
 
-    public void setConfigChangeAction(ConfigChangeAction configChangeAction) {
-        this.m_configChangeAction = configChangeAction;
+    public void setAction(String action) {
+        this.m_action = action;
+    }
+
+    @Override
+    public String getPrimaryKey() {
+        return m_id;
+    }
+
+    public void setId(String id) {
+        this.m_id = id;
     }
 
 }

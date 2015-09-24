@@ -28,20 +28,15 @@ import org.sipfoundry.sipxconfig.systemaudit.SystemAuditFilter;
 
 public class ConfigChangeTableModel implements IBasicTableModel {
     private ConfigChangeContext m_configChangeContext;
-    private Integer m_groupId;
     private SystemAuditFilter m_filter;
+    List<ConfigChange> m_page;
 
-    public ConfigChangeTableModel(ConfigChangeContext configChangeContext, Integer groupId, SystemAuditFilter filter) {
+    public ConfigChangeTableModel(ConfigChangeContext configChangeContext, SystemAuditFilter filter) {
         setConfigChangeContext(configChangeContext);
-        setGroupId(groupId);
         m_filter = filter;
     }
 
     public ConfigChangeTableModel() {
-    }
-
-    public void setGroupId(Integer groupId) {
-        m_groupId = groupId;
     }
 
     public void setConfigChangeContext(ConfigChangeContext configChangeContext) {
@@ -56,8 +51,12 @@ public class ConfigChangeTableModel implements IBasicTableModel {
             boolean orderAscending) {
         String orderBy = objSortColumn != null ? objSortColumn.getColumnName() : null;
         String[] orderByArray = new String[]{orderBy};
-        List<ConfigChange> page = m_configChangeContext.loadConfigChangesByPage(
-                m_groupId, firstRow, pageSize, orderByArray, orderAscending, m_filter);
-        return page.iterator();
+        m_page = m_configChangeContext.loadConfigChangesByPage(firstRow, pageSize, orderByArray, orderAscending, m_filter);
+        return m_page.iterator();
     }
+
+    List<ConfigChange> getPage() {
+        return m_page;
+    }
+
 }

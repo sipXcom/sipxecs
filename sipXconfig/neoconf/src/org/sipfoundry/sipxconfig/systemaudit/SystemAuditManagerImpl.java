@@ -18,6 +18,8 @@
 package org.sipfoundry.sipxconfig.systemaudit;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -26,17 +28,23 @@ import org.hibernate.collection.AbstractPersistentCollection;
 import org.sipfoundry.sipxconfig.branch.Branch;
 import org.sipfoundry.sipxconfig.common.User;
 import org.sipfoundry.sipxconfig.common.event.DaoEventListener;
+import org.sipfoundry.sipxconfig.commserver.Location;
+import org.sipfoundry.sipxconfig.elasticsearch.ElasticsearchService;
+import org.sipfoundry.sipxconfig.feature.Bundle;
 import org.sipfoundry.sipxconfig.feature.FeatureChangeRequest;
 import org.sipfoundry.sipxconfig.feature.FeatureChangeValidator;
 import org.sipfoundry.sipxconfig.feature.FeatureListener;
 import org.sipfoundry.sipxconfig.feature.FeatureManager;
+import org.sipfoundry.sipxconfig.feature.FeatureProvider;
+import org.sipfoundry.sipxconfig.feature.GlobalFeature;
+import org.sipfoundry.sipxconfig.feature.LocationFeature;
 import org.sipfoundry.sipxconfig.setting.Group;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 
 public class SystemAuditManagerImpl implements SystemAuditManager, FeatureListener,
-        ApplicationListener<ApplicationEvent>, DaoEventListener {
+        ApplicationListener<ApplicationEvent>, DaoEventListener, FeatureProvider {
 
     private static final Log LOG = LogFactory.getLog(SystemAuditManagerImpl.class);
     private static final String LOG_ERROR_MESSAGE = "Exception when processing entry for System Audit: ";
@@ -44,12 +52,17 @@ public class SystemAuditManagerImpl implements SystemAuditManager, FeatureListen
     private GeneralAuditHandler m_generalAuditHandler;
     private FeatureAuditHandler m_featureAuditHandler;
     private LoginLogoutAuditHandler m_loginLogoutAuditHandler;
+    private FeatureManager m_featureManager;
+    private Boolean m_isSystemAuditOn;
 
     @Override
     public void onConfigChangeAction(final Object entity,
             final ConfigChangeAction configChangeAction,
             final String[] properties, final Object[] oldValues,
             final Object[] newValues) {
+        if (!isSystemAuditOn()) {
+            return;
+        }
         if (entity instanceof SystemAuditable) {
             try {
                 m_generalAuditHandler.handleConfigChange(
@@ -72,6 +85,8 @@ public class SystemAuditManagerImpl implements SystemAuditManager, FeatureListen
         } catch (Exception e) {
             LOG.error(LOG_ERROR_MESSAGE, e);
         }
+        validator.requiredOnSameHost(FEATURE, ElasticsearchService.FEATURE);
+        validator.primaryLocationOnly(FEATURE);
     }
 
     /**
@@ -86,6 +101,7 @@ public class SystemAuditManagerImpl implements SystemAuditManager, FeatureListen
         } catch (Exception e) {
             LOG.error(LOG_ERROR_MESSAGE, e);
         }
+        m_isSystemAuditOn = m_featureManager.isFeatureEnabled(FEATURE);
     }
 
     /**
@@ -103,6 +119,9 @@ public class SystemAuditManagerImpl implements SystemAuditManager, FeatureListen
     @Override
     public void onConfigChangeCollectionUpdate(final Object collection,
             final Serializable key) {
+        if (!isSystemAuditOn()) {
+            return;
+        }
         //need to clearDirty the collection to avoid infinite loops
         if (collection instanceof AbstractPersistentCollection) {
             ((AbstractPersistentCollection) collection).clearDirty();
@@ -124,6 +143,9 @@ public class SystemAuditManagerImpl implements SystemAuditManager, FeatureListen
      * hibernate but are persisted in mongo db
      */
     public void auditUserProfile(User user) {
+        if (!isSystemAuditOn()) {
+            return;
+        }
         if (!user.isNew()) {
             try {
                 m_generalAuditHandler.handleUserProfileConfigChange(user);
@@ -148,8 +170,16 @@ public class SystemAuditManagerImpl implements SystemAuditManager, FeatureListen
         m_loginLogoutAuditHandler = loginLogoutAuditHandler;
     }
 
+    @Required
+    public void setFeatureManager(FeatureManager featureManager) {
+        m_featureManager = featureManager;
+    }
+
     @Override
     public void auditLicenseUpload(String licenseName) {
+        if (!isSystemAuditOn()) {
+            return;
+        }
         try {
             m_generalAuditHandler.handleLicenseUpload(licenseName);
         } catch (Exception e) {
@@ -159,6 +189,9 @@ public class SystemAuditManagerImpl implements SystemAuditManager, FeatureListen
 
     @Override
     public void auditServiceRestart(String serverName, List<String> serviceNameList) {
+        if (!isSystemAuditOn()) {
+            return;
+        }
         try {
             m_generalAuditHandler.handleServiceRestart(serverName, serviceNameList);
         } catch (Exception e) {
@@ -182,6 +215,30 @@ public class SystemAuditManagerImpl implements SystemAuditManager, FeatureListen
     @Override
     public void onSave(Object entity) {
         // Do nothing
+    }
+
+    @Override
+    public Collection<GlobalFeature> getAvailableGlobalFeatures(FeatureManager featureManager) {
+        return null;
+    }
+
+    @Override
+    public Collection<LocationFeature> getAvailableLocationFeatures(FeatureManager featureManager, Location l) {
+        return Collections.singleton(FEATURE);
+    }
+
+    @Override
+    public void getBundleFeatures(FeatureManager featureManager, Bundle b) {
+        if (b == Bundle.CORE) {
+            b.addFeature(FEATURE);
+        }
+    }
+
+    private boolean isSystemAuditOn() {
+        if (m_isSystemAuditOn == null) {
+            m_isSystemAuditOn = m_featureManager.isFeatureEnabled(FEATURE);
+        }
+        return m_isSystemAuditOn;
     }
 
 }

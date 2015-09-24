@@ -5,16 +5,16 @@
 	<form jwcid="@Form">
 		<table>
 			<tr jwcid="@common/FieldPanel" label="message:dateTime">
-				<td jwcid="@TextField" value="ognl:configChange.dateTime"
+				<td jwcid="@TextField" value="ognl:dateTime"
 					readonly="readonly" disabled="true" />
 			</tr>
-			<span jwcid="@If" condition="ognl:configChange.userName != null" renderTag="false">
+			<span jwcid="@If" condition="ognl:userName != null" renderTag="false">
 				<tr jwcid="@common/FieldPanel" label="message:user">
-					<td jwcid="@TextField" value="ognl:configChange.userName"
+					<td jwcid="@TextField" value="ognl:userName"
 						readonly="readonly" disabled="true" />
 				</tr>
 				<tr jwcid="@common/FieldPanel" label="message:ipAddress">
-					<td jwcid="@TextField" value="ognl:configChange.ipAddress"
+					<td jwcid="@TextField" value="ognl:ipAddress"
 						readonly="readonly" disabled="true" />
 				</tr>
 			</span>
@@ -33,7 +33,7 @@
 		</table>
 
 		<div  jwcid="@If" condition="ognl:hasConfigChangeValues" renderTag="false">
-            <span jwcid="configChangeValuesTable"class="component" source="ognl:tableModel"/>
+            <span jwcid="configChangeValuesTable" configChange="ognl:configChange" class="component" source="ognl:tableModel"/>
         </div>
 
 		<ul class="form-actions">

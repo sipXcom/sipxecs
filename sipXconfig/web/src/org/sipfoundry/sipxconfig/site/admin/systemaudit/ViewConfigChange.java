@@ -17,6 +17,9 @@
 
 package org.sipfoundry.sipxconfig.site.admin.systemaudit;
 
+import java.util.Date;
+import java.util.List;
+
 import org.apache.tapestry.annotations.Bean;
 import org.apache.tapestry.annotations.InjectObject;
 import org.apache.tapestry.annotations.Persist;
@@ -25,17 +28,17 @@ import org.apache.tapestry.event.PageBeginRenderListener;
 import org.apache.tapestry.event.PageEvent;
 import org.sipfoundry.sipxconfig.components.PageWithCallback;
 import org.sipfoundry.sipxconfig.components.SipxValidationDelegate;
-import org.sipfoundry.sipxconfig.systemaudit.ConfigChange;
 import org.sipfoundry.sipxconfig.systemaudit.ConfigChangeAction;
 import org.sipfoundry.sipxconfig.systemaudit.ConfigChangeContext;
+import org.sipfoundry.sipxconfig.systemaudit.ConfigChangeValue;
 
 public abstract class ViewConfigChange extends PageWithCallback implements PageBeginRenderListener {
 
     public static final String PAGE = "admin/systemaudit/ViewConfigChange";
 
     @Persist
-    public abstract ConfigChange getConfigChange();
-    public abstract void setConfigChange(ConfigChange configChange);
+    public abstract List<ConfigChangeValue> getValues();
+    public abstract void setValues(List<ConfigChangeValue> configChange);
 
     @Persist
     public abstract String getConfigChangeType();
@@ -49,17 +52,32 @@ public abstract class ViewConfigChange extends PageWithCallback implements PageB
     public abstract String getDetails();
     public abstract void setDetails(String details);
 
+    @Persist
+    public abstract Date getDateTime();
+    public abstract void setDateTime(Date dateTime);
+
+    @Persist
+    public abstract String getUserName();
+    public abstract void setUserName(String userName);
+
+    @Persist
+    public abstract String getIpAddress();
+    public abstract void setIpAddress(String ipAddress);
+
     @InjectObject(value = "spring:configChangeContext")
     public abstract ConfigChangeContext getConfigChangeContext();
 
     @Bean
     public abstract SipxValidationDelegate getValidator();
 
+    @Bean
+    public abstract ConfigChangeSqueezeAdapter getConfigChangeConverter();
+
     public void pageBeginRender(PageEvent event_) {
     }
 
     public IBasicTableModel getTableModel() {
-        return new ConfigChangeValueTableModel(getConfigChangeContext(), getConfigChange());
+        return new ConfigChangeValueTableModel(getValues());
     }
 
     public String cancel() {
@@ -67,11 +85,11 @@ public abstract class ViewConfigChange extends PageWithCallback implements PageB
     }
 
     public boolean getHasConfigChangeValues() {
-        return !getConfigChange().getValues().isEmpty();
+        return !getValues().isEmpty();
     }
 
     public String getQuickHelp() {
-        if (getConfigChange().getConfigChangeAction().equals(ConfigChangeAction.MODIFIED)) {
+        if (getConfigChangeAction().equals(ConfigChangeAction.MODIFIED.getAction())) {
             return getMessages().getMessage("systemaudit.modifiedaction.quick.help");
         } else {
             return getMessages().getMessage("systemaudit.quick.help");

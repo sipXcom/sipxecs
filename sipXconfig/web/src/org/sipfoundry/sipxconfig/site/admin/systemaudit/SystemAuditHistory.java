@@ -34,7 +34,6 @@ import org.apache.tapestry.IRequestCycle;
 import org.apache.tapestry.annotations.Bean;
 import org.apache.tapestry.annotations.InjectObject;
 import org.apache.tapestry.annotations.Persist;
-import org.apache.tapestry.contrib.table.model.IBasicTableModel;
 import org.apache.tapestry.event.PageBeginRenderListener;
 import org.apache.tapestry.event.PageEvent;
 import org.apache.tapestry.form.IPropertySelectionModel;
@@ -207,9 +206,8 @@ public abstract class SystemAuditHistory extends BaseComponent implements PageBe
         }
     }
 
-    public IBasicTableModel getTableModel() {
-        return new ConfigChangeTableModel(getConfigChangeContext(),
-                getGroupId(), getCurrentFilter());
+    public ConfigChangeTableModel getTableModel() {
+        return new ConfigChangeTableModel(getConfigChangeContext(), getCurrentFilter());
     }
 
     private Set<Group> getGroups() {
@@ -244,8 +242,9 @@ public abstract class SystemAuditHistory extends BaseComponent implements PageBe
             localizedDetails = getMessages().getMessage(
                     details.replaceAll(" ", "").toLowerCase());
         }
-        SystemAuditFilter filter = new SystemAuditFilter(getStartDate(),
-                getEndDate(), getType(), getAction(), getUser(), details,
+        String type = (getType() == null || getType().equals(ConfigChangeType.ALL.getValue())) ? null : getType();
+        String action = (getAction() == null || getAction().equals(ConfigChangeAction.ALL.getValue())) ? null : getAction().getAction();
+        SystemAuditFilter filter = new SystemAuditFilter(getStartDate(), getEndDate(), type, action, getUser(), details,
                 localizedDetails, getGroups());
         return filter;
     }

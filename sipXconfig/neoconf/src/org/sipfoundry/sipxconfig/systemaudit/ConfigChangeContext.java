@@ -20,24 +20,21 @@ package org.sipfoundry.sipxconfig.systemaudit;
 import java.io.PrintWriter;
 import java.util.List;
 
-import org.sipfoundry.sipxconfig.common.DataObjectSource;
-import org.sipfoundry.sipxconfig.setting.Group;
-
 /**
  * This interface contains DAO methods for ConfigChangeObjects
  */
-public interface ConfigChangeContext extends DataObjectSource<ConfigChange> {
+public interface ConfigChangeContext {
 
+    static final String SYSTEM_AUDIT = "audit";
+    static final String COMMA_SEPARATOR = ",";
     String GROUP_RESOURCE_ID = "configChange";
 
     public List<ConfigChange> getConfigChanges();
 
     public int getConfigChangesCount(SystemAuditFilter filter);
 
-    public List<ConfigChange> loadConfigChangesByPage(Integer groupId, int firstRow, int pageSize,
+    public List<ConfigChange> loadConfigChangesByPage(int firstRow, int pageSize,
             String[] orderBy, boolean orderAscending, SystemAuditFilter filter);
-
-    public List<Group> getGroups();
 
     /**
      * Method to store a ConfigChange using a different session. This is because
@@ -46,6 +43,8 @@ public interface ConfigChangeContext extends DataObjectSource<ConfigChange> {
      *
      * @param configChange
      * @throws SystemAuditException
+     * @throws ExecutionException
+     * @throws InterruptedException
      */
     public void storeConfigChange(ConfigChange configChange) throws SystemAuditException;
 
@@ -54,7 +53,6 @@ public interface ConfigChangeContext extends DataObjectSource<ConfigChange> {
      */
     public void dumpSystemAuditLogs(PrintWriter writer, SystemAuditFilter filter);
 
-    public List<ConfigChangeValue> loadConfigChangeValuesByPage(Integer configChangeId, Integer groupId,
-            int firstRow, int pageSize, String[] orderBy, boolean orderAscending);
+    public ConfigChange getConfigChangeById(String id);
 
 }
