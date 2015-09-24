@@ -23,16 +23,15 @@ public class ConfigChangeTest extends TestCase {
     public void testConfigChangeFields() {
         ConfigChange configChange = new ConfigChange();
 
-        configChange.setConfigChangeAction(ConfigChangeAction.ADDED);
-        assertEquals(ConfigChangeAction.ADDED,
-                configChange.getConfigChangeAction());
+        configChange.setAction(ConfigChangeAction.ADDED.getAction());
+        assertEquals(ConfigChangeAction.ADDED.getAction(),configChange.getAction());
         configChange.setConfigChangeType(ConfigChangeType.PHONE.getName());
         assertEquals(ConfigChangeType.PHONE.getName(), configChange.getConfigChangeType());
 
         configChange.setIpAddress("localhost");
         configChange.setUserName("superadmin");
 
-        ConfigChangeValue configChangeValue = new ConfigChangeValue(configChange);
+        ConfigChangeValue configChangeValue = new ConfigChangeValue();
         configChangeValue.setPropertyName("description");
         configChangeValue.setValueBefore("oldDescription");
         configChangeValue.setValueAfter("newDescription");
@@ -42,7 +41,7 @@ public class ConfigChangeTest extends TestCase {
     }
 
     public void testConfigChangeValueFields() {
-        ConfigChangeValue configChangeValue = new ConfigChangeValue(new ConfigChange());
+        ConfigChangeValue configChangeValue = new ConfigChangeValue();
         configChangeValue.setPropertyName("description");
         assertEquals("description", configChangeValue.getPropertyName());
         configChangeValue.setValueBefore("oldDescription");

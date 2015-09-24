@@ -22,47 +22,34 @@ import java.util.List;
 
 import org.apache.tapestry.contrib.table.model.IBasicTableModel;
 import org.apache.tapestry.contrib.table.model.ITableColumn;
-import org.sipfoundry.sipxconfig.systemaudit.ConfigChange;
-import org.sipfoundry.sipxconfig.systemaudit.ConfigChangeContext;
 import org.sipfoundry.sipxconfig.systemaudit.ConfigChangeValue;
 
 public class ConfigChangeValueTableModel implements IBasicTableModel {
 
-    private ConfigChangeContext m_configChangeContext;
-    private ConfigChange m_configChange;
-
-    public ConfigChangeValueTableModel(ConfigChangeContext configChangeContext, ConfigChange configChange) {
-        setConfigChange(configChange);
-        setConfigChangeContext(configChangeContext);
-    }
+    private List<ConfigChangeValue> m_values;
 
     public ConfigChangeValueTableModel() {
     }
 
-    public ConfigChange getConfigChange() {
-        return m_configChange;
+    public ConfigChangeValueTableModel(List<ConfigChangeValue> values) {
+        setValues(values);
     }
 
-    public void setConfigChange(ConfigChange configChange) {
-        this.m_configChange = configChange;
+    public List<ConfigChangeValue> getValues() {
+        return m_values;
+    }
+
+    public void setValues(List<ConfigChangeValue> configChange) {
+        this.m_values = configChange;
     }
 
     public int getRowCount() {
-        return m_configChange.getValues().size();
+        return m_values.size();
     }
 
     public Iterator<ConfigChangeValue> getCurrentPageRows(int firstRow,
             int pageSize, ITableColumn objSortColumn, boolean orderAscending) {
-        String orderBy = objSortColumn != null ? objSortColumn.getColumnName()
-                : null;
-        String[] orderByArray = new String[] {orderBy};
-        List<ConfigChangeValue> page = m_configChangeContext
-                .loadConfigChangeValuesByPage(getConfigChange().getId(), null, firstRow, pageSize,
-                        orderByArray, orderAscending);
-        return page.iterator();
+        return m_values.iterator();
     }
 
-    public void setConfigChangeContext(ConfigChangeContext configChangeContext) {
-        m_configChangeContext = configChangeContext;
-    }
 }

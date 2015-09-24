@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd">
 
   <bean id="configChangeContext" class="org.springframework.aop.framework.ProxyFactoryBean" parent="abstractDao">
     <property name="proxyInterfaces" value="org.sipfoundry.sipxconfig.systemaudit.ConfigChangeContext" />
     <property name="target" ref="configChangeContextImpl" />
   </bean>
 
-  <bean id="configChangeContextImpl" class="org.sipfoundry.sipxconfig.systemaudit.ConfigChangeContextImpl" parent="abstractDaoImpl">
-    <property name="settingDao" ref="settingDao" />
+  <bean id="configChangeContextImpl" class="org.sipfoundry.sipxconfig.systemaudit.ConfigChangeContextImpl">
+    <property name="auditExecutor" ref="auditExecutor" />
+    <property name="elasticsearchService" ref="elasticsearchService" />
     <property name="coreContext" ref="coreContext" />
   </bean>
 
@@ -22,6 +23,7 @@
     <property name="generalAuditHandler" ref="generalAuditHandler" />
     <property name="featureAuditHandler" ref="featureAuditHandler" />
     <property name="loginLogoutAuditHandler" ref="loginLogoutAuditHandler" />
+    <property name="featureManager" ref="featureManager" />
   </bean>
 
   <bean id="abstractSystemAuditHandler" class="org.sipfoundry.sipxconfig.systemaudit.AbstractSystemAuditHandler" abstract="true">
@@ -56,6 +58,21 @@
             <value>org.sipfoundry.sipxconfig</value>
         </list>
     </property>
+  </bean>
+
+  <bean id="systemAuditCleanup" class="org.sipfoundry.sipxconfig.systemaudit.SystemAuditCleanup">
+    <property name="elasticsearchService" ref="elasticsearchService" />
+    <property name="adminContext" ref="adminContext" />
+  </bean>
+
+  <task:scheduled-tasks>
+    <task:scheduled ref="systemAuditCleanup" method="run" fixed-delay="86400000"/>
+  </task:scheduled-tasks>
+
+  <bean id="auditExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+    <property name="corePoolSize" value="5" />
+    <property name="maxPoolSize" value="1000" />
+    <property name="queueCapacity" value="1005" />
   </bean>
 
 </beans>

@@ -68,9 +68,6 @@ public class GeneralAuditHandler extends AbstractSystemAuditHandler {
      */
     public void handleConfigChange(SystemAuditable auditedEntity, ConfigChangeAction configChangeAction,
             String[] properties, Object[] oldValues, Object[] newValues) throws Exception {
-        if (!isSystemAuditEnabled()) {
-            return;
-        }
         ConfigChange configChange = buildConfigChange(configChangeAction, auditedEntity.getConfigChangeType());
         configChange.setDetails(auditedEntity.getEntityIdentifier());
 
@@ -107,7 +104,7 @@ public class GeneralAuditHandler extends AbstractSystemAuditHandler {
                     String settingDefaultValue = setting.getDefaultValue();
                     if (settingValue != null && settingDefaultValue != null
                             && !settingValue.equals(settingDefaultValue)) {
-                        ConfigChangeValue configChangeValue = new ConfigChangeValue(configChange);
+                        ConfigChangeValue configChangeValue = new ConfigChangeValue();
                         configChangeValue.setPropertyName(setting.getPath());
                         configChangeValue.setValueBefore(settingDefaultValue);
                         configChangeValue.setValueAfter(settingValue);
@@ -116,7 +113,7 @@ public class GeneralAuditHandler extends AbstractSystemAuditHandler {
                 }
             }
             if (!configChangeValues.isEmpty()) {
-                configChange.setConfigChangeAction(ConfigChangeAction.MODIFIED);
+                configChange.setAction(ConfigChangeAction.MODIFIED.getAction());
                 configChange.setValues(configChangeValues);
             }
         }
@@ -163,7 +160,7 @@ public class GeneralAuditHandler extends AbstractSystemAuditHandler {
             Object valueAfterObject) throws IllegalAccessException, InvocationTargetException,
             NoSuchMethodException, SystemAuditException {
 
-        ConfigChangeValue configChangeValue = new ConfigChangeValue(configChange);
+        ConfigChangeValue configChangeValue = new ConfigChangeValue();
         configChangeValue.setPropertyName(property);
         boolean isValueClassName = false;
         if (valueBeforeObject != null) {
@@ -191,9 +188,6 @@ public class GeneralAuditHandler extends AbstractSystemAuditHandler {
      * Handles Hibernate collections update calls (both Set and Map versions)
      */
     public void handleCollectionUpdate(Object collection, Serializable key) throws Exception {
-        if (!isSystemAuditEnabled()) {
-            return;
-        }
         if (collection instanceof PersistentMap) {
             handlePersistentMap(((PersistentMap) collection));
         } else if (collection instanceof PersistentCollection) {
@@ -239,7 +233,7 @@ public class GeneralAuditHandler extends AbstractSystemAuditHandler {
                 return;
             }
 
-            ConfigChangeValue configChangeValue = new ConfigChangeValue(configChange);
+            ConfigChangeValue configChangeValue = new ConfigChangeValue();
             StringBuilder valueBeforeBuilder = new StringBuilder();
             StringBuilder valueAfterBuilder = new StringBuilder();
             while (newIterator.hasNext() || oldIterator.hasNext()) {
@@ -331,7 +325,7 @@ public class GeneralAuditHandler extends AbstractSystemAuditHandler {
     private void handleConfigChangeValue(SystemAuditable systemAuditable, ConfigChange configChange,
             Object valueKey, Map<Object, Object[]> oldPersistentMap,
             PersistentMap newPersistentMap) {
-        ConfigChangeValue configChangeValue = new ConfigChangeValue(configChange);
+        ConfigChangeValue configChangeValue = new ConfigChangeValue();
         configChangeValue.setPropertyName(valueKey.toString());
         Object valueBefore = oldPersistentMap.get(valueKey);
         Object valueAfter = newPersistentMap.get(valueKey);
@@ -389,9 +383,6 @@ public class GeneralAuditHandler extends AbstractSystemAuditHandler {
      */
     public void handleUserProfileConfigChange(User user) throws SystemAuditException,
             IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-        if (!isSystemAuditEnabled()) {
-            return;
-        }
         UserProfile newUserProfile = user.getUserProfile();
         UserProfile oldUserProfile = m_userProfileService.getUserProfile(user.getId().toString());
         ConfigChange configChange = buildConfigChange(ConfigChangeAction.MODIFIED, user.getConfigChangeType());
@@ -453,9 +444,6 @@ public class GeneralAuditHandler extends AbstractSystemAuditHandler {
     }
 
     public void handleLicenseUpload(String licenseName) throws SystemAuditException {
-        if (!isSystemAuditEnabled()) {
-            return;
-        }
         ConfigChange configChange = buildConfigChange(ConfigChangeAction.ADDED,
                 ConfigChangeType.LICENSE_UPLOAD.getName());
         configChange.setDetails(licenseName);
@@ -464,15 +452,11 @@ public class GeneralAuditHandler extends AbstractSystemAuditHandler {
 
     public void handleServiceRestart(String serverName,
             List<String> serviceNameList) throws SystemAuditException {
-        if (!isSystemAuditEnabled()) {
-            return;
-        }
         ConfigChange configChange = buildConfigChange(
                 ConfigChangeAction.SERVICE_RESTART, ConfigChangeType.SERVER.getName());
         configChange.setDetails(serverName);
         for (String serviceName : serviceNameList) {
-            ConfigChangeValue configChangeValue = new ConfigChangeValue(
-                    configChange);
+            ConfigChangeValue configChangeValue = new ConfigChangeValue();
             configChangeValue.setPropertyName(serviceName);
             configChange.addValue(configChangeValue);
         }

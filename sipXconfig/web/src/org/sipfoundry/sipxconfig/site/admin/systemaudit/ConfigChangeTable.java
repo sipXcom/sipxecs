@@ -19,6 +19,8 @@ package org.sipfoundry.sipxconfig.site.admin.systemaudit;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 import org.apache.tapestry.BaseComponent;
 import org.apache.tapestry.IActionListener;
@@ -37,6 +39,7 @@ import org.sipfoundry.sipxconfig.security.UserDetailsImpl;
 import org.sipfoundry.sipxconfig.systemaudit.ConfigChange;
 import org.sipfoundry.sipxconfig.systemaudit.ConfigChangeContext;
 import org.sipfoundry.sipxconfig.systemaudit.ConfigChangeType;
+import org.sipfoundry.sipxconfig.systemaudit.ConfigChangeValue;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -49,7 +52,7 @@ public abstract class ConfigChangeTable extends BaseComponent implements PageBeg
     public abstract ConfigChange getConfigChange();
 
     @Parameter(required = true)
-    public abstract Object getSource();
+    public abstract ConfigChangeTableModel getSource();
 
     @Asset("/images/user.png")
     public abstract IAsset getNormalUserIcon();
@@ -78,25 +81,35 @@ public abstract class ConfigChangeTable extends BaseComponent implements PageBeg
     @Parameter
     public abstract IActionListener getUserListener();
 
+    public abstract int getCurrentRowId();
+
     public void pageBeginRender(PageEvent event_) {
     }
 
-    public IPage viewConfigChange(ConfigChange configChange, String configChangeType,
-            String configChangeAction, String details) {
+    public IPage viewConfigChange(List<ConfigChangeValue> configChangeValues, String configChangeType,
+            String configChangeAction, String details, Date dateTime, String userName, String ipAddress) {
         ViewConfigChange page = getViewConfigChangePage();
-        page.setConfigChange(configChange);
+        page.setValues(configChangeValues);
         page.setConfigChangeType(configChangeType);
         page.setConfigChangeAction(configChangeAction);
         page.setDetails(details);
+        page.setDateTime(dateTime);
+        page.setUserName(userName);
+        page.setIpAddress(ipAddress);
+
         return page;
+    }
+
+    public ConfigChangeSqueezer getConverter() {
+        return new ConfigChangeSqueezer((getSource().getPage()));
     }
 
     public String getConfigChangeType() {
         return getMessages().getMessage(getConfigChange().getConfigChangeType());
     }
 
-    public String getConfigChangeAction() {
-        return getMessages().getMessage(getConfigChange().getConfigChangeAction().getAction());
+    public String getAction() {
+        return getMessages().getMessage(getConfigChange().getAction());
     }
 
     public IAsset getUserIcon() {

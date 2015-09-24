@@ -37,6 +37,7 @@ BuildRequires: net-snmp-libs >= 5.7.1
 BuildRequires: net-snmp-devel >= 5.7.1
 BuildRequires: net-snmp-agent-libs >= 5.7.1
 BuildRequires: pcre-devel
+BuildRequires: elasticsearch >= 1.7.2
 
 BuildRequires: sipxcommons >= %version
 BuildRequires: sipxcdr-client >= %version

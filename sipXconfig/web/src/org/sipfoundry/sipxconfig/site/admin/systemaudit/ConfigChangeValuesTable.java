@@ -54,6 +54,9 @@ public abstract class ConfigChangeValuesTable extends BaseComponent implements P
     public abstract ConfigChangeValue getConfigChangeValue();
 
     @Parameter(required = true)
+    public abstract ConfigChange getConfigChange();
+
+    @Parameter(required = true)
     public abstract Object getSource();
 
     @InjectObject(value = "spring:tapestry")
@@ -100,7 +103,7 @@ public abstract class ConfigChangeValuesTable extends BaseComponent implements P
         // custom localization
         String localizedValue = getSystemAuditLocalizationProvider()
                 .getLocalizedPropertyName(
-                        getConfigChangeValue().getConfigChange(),
+                        getConfigChange(),
                         getConfigChangeValue().getPropertyName(), value);
         if (localizedValue != null) {
             return localizedValue;
@@ -121,8 +124,7 @@ public abstract class ConfigChangeValuesTable extends BaseComponent implements P
 
     private String getLocalizeSettingValue(String propertyName, String value) {
         try {
-            ConfigChange configChange = getConfigChangeValue()
-                    .getConfigChange();
+            ConfigChange configChange = getConfigChange();
             Setting setting = null;
             if (configChange.getConfigChangeType().equals(
                     ConfigChangeType.SETTINGS.getName())) {
@@ -192,8 +194,7 @@ public abstract class ConfigChangeValuesTable extends BaseComponent implements P
 
     private String getLocalizedPropertyName(String message) {
         try {
-            ConfigChange configChange = getConfigChangeValue()
-                    .getConfigChange();
+            ConfigChange configChange = getConfigChange();
             if (configChange.getConfigChangeType().equals(
                     ConfigChangeType.SETTINGS.getName())) {
                 return getLocalizedSettingsMessage(configChange, message);

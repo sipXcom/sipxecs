@@ -17,35 +17,25 @@
 
 package org.sipfoundry.sipxconfig.systemaudit;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
-import org.sipfoundry.sipxconfig.common.BeanWithId;
+import com.google.gson.annotations.Expose;
 
-public class ConfigChangeValue extends BeanWithId {
+public class ConfigChangeValue implements Serializable {
 
     public static final List<String> EXCEPTED_PROPERTIES = Arrays.asList(
             "pintoken", "sip_password", "voicemailPintoken");
 
-    private ConfigChange m_configChange;
+    @Expose
     private String m_propertyName;
+    @Expose
     private String m_valueBefore;
+    @Expose
     private String m_valueAfter;
 
     public ConfigChangeValue() {
-    }
-
-    public ConfigChangeValue(ConfigChange configChange) {
-        super();
-        this.m_configChange = configChange;
-    }
-
-    public ConfigChange getConfigChange() {
-        return m_configChange;
-    }
-
-    public void setConfigChange(ConfigChange configChange) {
-        this.m_configChange = configChange;
     }
 
     public String getValueBefore() {

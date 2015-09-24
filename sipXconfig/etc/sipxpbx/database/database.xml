@@ -489,6 +489,7 @@
     <antcall target="migrate-yealinkPhone-to-yealink" />
   	<antcall target="add_location_location" />
     <antcall target="remove_chat_meeting_setting" />
+  	<antcall target="system_audit_remove" />
   </target>
 
   <target name="plugin-patches">
@@ -1503,6 +1504,9 @@
   </target>
   <target name="remove_chat_meeting_setting" unless="remove_chat_meeting_setting">
     <db-patch patch="remove_chat_meeting_setting"/>
+  </target>
+  <target name="system_audit_remove" unless="system_audit_remove">
+    <db-patch patch="system_audit_remove"/>
   </target>
 
 	<!--
