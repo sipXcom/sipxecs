@@ -70,9 +70,9 @@
   </task:scheduled-tasks>
 
   <bean id="auditExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-    <property name="corePoolSize" value="5" />
-    <property name="maxPoolSize" value="1000" />
-    <property name="queueCapacity" value="1005" />
+    <property name="corePoolSize" value="100" />
+    <property name="maxPoolSize" value="5000" />
+    <property name="queueCapacity" value="5050" />
   </bean>
 
 </beans>

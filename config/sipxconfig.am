@@ -112,7 +112,8 @@ sipxconfig_neoconf_PKGS = \
 	hazelcast-all \
 	reflections \
 	guava \
-	elasticsearch
+	elasticsearch \
+	gson
 
 sipxconfig_web_PKGS = \
 	$(sipxconfig_neoconf_PKGS) \
