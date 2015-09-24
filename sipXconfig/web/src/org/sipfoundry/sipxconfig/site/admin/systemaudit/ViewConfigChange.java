@@ -70,9 +70,6 @@ public abstract class ViewConfigChange extends PageWithCallback implements PageB
     @Bean
     public abstract SipxValidationDelegate getValidator();
 
-    @Bean
-    public abstract ConfigChangeSqueezeAdapter getConfigChangeConverter();
-
     public void pageBeginRender(PageEvent event_) {
     }
 
