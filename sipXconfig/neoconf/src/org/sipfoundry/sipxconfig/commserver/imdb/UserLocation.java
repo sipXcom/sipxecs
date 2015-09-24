@@ -16,6 +16,9 @@
  */
 package org.sipfoundry.sipxconfig.commserver.imdb;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mongodb.DBObject;
 
 import org.sipfoundry.commons.userdb.profile.Address;
@@ -40,6 +43,7 @@ import static org.sipfoundry.commons.mongo.MongoConstants.HOME_ZIP;
 import static org.sipfoundry.commons.mongo.MongoConstants.JOB_DEPT;
 import static org.sipfoundry.commons.mongo.MongoConstants.JOB_TITLE;
 import static org.sipfoundry.commons.mongo.MongoConstants.LOCATION;
+import static org.sipfoundry.commons.mongo.MongoConstants.LOCATIONS;
 import static org.sipfoundry.commons.mongo.MongoConstants.OFFICE_CITY;
 import static org.sipfoundry.commons.mongo.MongoConstants.OFFICE_COUNTRY;
 import static org.sipfoundry.commons.mongo.MongoConstants.OFFICE_DESIGNATION;
@@ -59,12 +63,15 @@ public class UserLocation extends AbstractDataSetGenerator {
     public void generate(Replicable entity, DBObject top) {
         if (entity instanceof User) {
             User user = (User) entity;
+            List<String> locations = new ArrayList<String>();
             Branch site = user.getSite();
             if (site != null) {
                 top.put(USER_LOCATION, site.getName());
+                locations.add(site.getName());
             } else {
                 top.removeField(USER_LOCATION);
             }
+            top.put(LOCATIONS, locations);
 
             UserProfile profile = user.getUserProfile();
             if (profile != null) {
