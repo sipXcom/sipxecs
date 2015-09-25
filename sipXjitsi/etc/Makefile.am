@@ -6,7 +6,8 @@ dist_cfg_DATA = \
 	jitsi/line.xml \
 	jitsi/jitsi.properties.vm \
 	jitsi/phone.properties \
-	jitsi/phone.xml
+	jitsi/phone.xml \
+	jitsi/types.xml
 
 cfg_DATA = \
 	jitsiconf.properties	

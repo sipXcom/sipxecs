@@ -19,10 +19,10 @@ import org.sipfoundry.sipxconfig.setting.SettingEntry;
 public class JitsiPhone extends Phone {
     public static final String MIME_TYPE_PLAIN = "text/plain";
 
-    private static final String SIP_ACC_SETTING_ACCOUNT_UID = "net.java.sip.communicator.impl.protocol.sip.acc/ACCOUNT_UID";
-    private static final String SIP_ACC_SETTING_PASSWORD = "net.java.sip.communicator.impl.protocol.sip.acc/PASSWORD";
-    private static final String SIP_ACC_SETTING_SERVER_ADDRESS = "net.java.sip.communicator.impl.protocol.sip.acc/SERVER_ADDRESS";
-    private static final String SIP_ACC_SETTING_USER_ID = "net.java.sip.communicator.impl.protocol.sip.acc/USER_ID";
+    private static final String SIP_ACC_SETTING_ACCOUNT_UID = "net.java.sip.communicator.impl.protocol.sip/acc/ACCOUNT_UID";
+    private static final String SIP_ACC_SETTING_PASSWORD = "net.java.sip.communicator.impl.protocol.sip/acc/PASSWORD";
+    private static final String SIP_ACC_SETTING_SERVER_ADDRESS = "net.java.sip.communicator.impl.protocol.sip/connection/SERVER_ADDRESS";
+    private static final String SIP_ACC_SETTING_USER_ID = "net.java.sip.communicator.impl.protocol.sip/acc/USER_ID";
 
     private static final String JABBER_ACC_SETTING_ACCOUNT_UID = "net.java.sip.communicator.impl.protocol.jabber.acc/ACCOUNT_UID";
     private static final String JABBER_ACC_SETTING_PASSWORD = "net.java.sip.communicator.impl.protocol.jabber.acc/PASSWORD";
