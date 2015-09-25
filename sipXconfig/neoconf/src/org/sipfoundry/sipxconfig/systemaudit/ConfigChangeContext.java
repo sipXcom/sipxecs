@@ -25,7 +25,7 @@ import java.util.List;
  */
 public interface ConfigChangeContext {
 
-    static final String SYSTEM_AUDIT = "audit";
+    static final String SYSTEM_AUDIT_INDEX = "audit";
     static final String COMMA_SEPARATOR = ",";
     String GROUP_RESOURCE_ID = "configChange";
 

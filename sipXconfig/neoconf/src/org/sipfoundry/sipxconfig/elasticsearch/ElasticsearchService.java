@@ -17,8 +17,9 @@
 package org.sipfoundry.sipxconfig.elasticsearch;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
+import org.elasticsearch.action.bulk.BulkResponse;
+import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.sipfoundry.sipxconfig.feature.LocationFeature;
 
@@ -28,7 +29,9 @@ public interface ElasticsearchService {
     public static String CONFIG = "Config";
     public static final LocationFeature FEATURE = new LocationFeature("elasticsearch");
 
-    void storeStructure(String index, Object source) throws InterruptedException, ExecutionException;
+    IndexResponse storeStructure(String index, ElasticsearchBean source);
+
+    BulkResponse storeBulkStructures(String index, List<ElasticsearchBean> source);
 
     <T extends ElasticsearchBean> List<T> searchDocs(String indexName, QueryBuilder queryBuilder,
             int start, int size, Class<T> clazz, String orderBy, boolean orderAscending);

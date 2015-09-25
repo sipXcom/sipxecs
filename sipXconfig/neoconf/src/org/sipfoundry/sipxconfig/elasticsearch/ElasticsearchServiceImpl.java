@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,6 +29,7 @@ import org.elasticsearch.action.count.CountRequestBuilder;
 import org.elasticsearch.action.count.CountResponse;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
@@ -87,13 +87,38 @@ public class ElasticsearchServiceImpl implements ElasticsearchService, FeaturePr
         m_gson = gson;
     }
 
-    @Override
-    public void storeStructure(String index, Object source)
-        throws InterruptedException, ExecutionException {
+    public void setClient(Client client) {
+        m_client = client;
+    }
+
+    private IndexRequest getIndexRequest(String index, ElasticsearchBean source) {
         IndexRequest indexRequest = new IndexRequest(index, CONFIG);
         String sourceString = m_gson.toJson(source);
         indexRequest.source(sourceString);
-        m_client.index(indexRequest).actionGet();
+        return indexRequest;
+    }
+
+    @Override
+    public IndexResponse storeStructure(String index, ElasticsearchBean source) {
+        IndexRequest indexRequest = getIndexRequest(index, source);
+        return m_client.index(indexRequest).actionGet();
+    }
+
+    @Override
+    public BulkResponse storeBulkStructures(String index, List<ElasticsearchBean> source) {
+        BulkRequestBuilder bulkRequest = m_client.prepareBulk();
+        for (ElasticsearchBean elasticsearchBean : source) {
+            bulkRequest.add(getIndexRequest(index, elasticsearchBean));
+        }
+        if (bulkRequest.numberOfActions() <= 0) {
+            return null;
+        }
+        BulkResponse bulkResponse = bulkRequest.execute().actionGet();
+        if (bulkResponse.hasFailures()) {
+            LOG.error("Perstisting in elasticsearch encountered errors:"
+                    + bulkResponse.buildFailureMessage());
+        }
+        return bulkResponse;
     }
 
     @Override
