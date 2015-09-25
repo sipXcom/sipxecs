@@ -8,8 +8,8 @@
     <property name="target" ref="configChangeContextImpl" />
   </bean>
 
-  <bean id="configChangeContextImpl" class="org.sipfoundry.sipxconfig.systemaudit.ConfigChangeContextImpl">
-    <property name="auditExecutor" ref="auditExecutor" />
+  <bean id="configChangeContextImpl" class="org.sipfoundry.sipxconfig.systemaudit.ConfigChangeContextImpl" >
+    <property name="configChangeLoader" ref="configChangeLoader" />
     <property name="elasticsearchService" ref="elasticsearchService" />
     <property name="coreContext" ref="coreContext" />
   </bean>
@@ -70,10 +70,12 @@
     <task:scheduled ref="systemAuditCleanup" method="run" fixed-delay="86400000"/>
   </task:scheduled-tasks>
 
-  <bean id="auditExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-    <property name="corePoolSize" value="100" />
-    <property name="maxPoolSize" value="5000" />
-    <property name="queueCapacity" value="5050" />
+  <bean id="configChangeLoader" class="org.sipfoundry.sipxconfig.systemaudit.ConfigChangeLoader">
+    <property name="elasticsearchService" ref="elasticsearchService" />
   </bean>
+
+  <task:scheduled-tasks>
+    <task:scheduled ref="configChangeLoader" method="run" fixed-delay="30000"/>
+  </task:scheduled-tasks>
 
 </beans>
