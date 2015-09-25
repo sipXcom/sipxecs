@@ -1,37 +1,163 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE model PUBLIC "-//SIPFoundry//sipXconfig//Model specification 2.0//EN"
-  "http://www.sipfoundry.org/sipXconfig/dtd/setting_2_0.dtd">
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!DOCTYPE model PUBLIC "-//SIPFoundry//sipXconfig//Model specification 2.0//EN" "http://www.sipfoundry.org/sipXconfig/dtd/setting_2_0.dtd"[
+<!ENTITY types SYSTEM "types.xml">
+]>
+
 <model>
- <type id="true-false">
-    <boolean>
-      <true>
-        <value>true</value>
-      </true>
-      <false>
+  &types;  
+  <group name="net.java.sip.communicator.impl.protocol.sip">
+    <group name="acc"> 
+      <setting name="ACCOUNT_UID">
+        <value/>
+      </setting>
+      <setting name="PASSWORD" hidden="true">
+        <value/>
+      </setting>
+      <setting name="IS_ACCOUNT_DISABLED">
+        <type refid="true-false" />
         <value>false</value>
-      </false>
-    </boolean>
-  </type>
-  <group name="net.java.sip.communicator.impl.protocol.sip.acc">  
-    <setting name="ACCOUNT_UID">
-      <value />
-    </setting>
-    <setting name="PASSWORD" hidden="true">
-      <value/>
-    </setting>
-    <setting name="IS_ACCOUNT_DISABLED">
-      <type refid="true-false" />
-      <value>false</value>
-    </setting>
-    <setting name="PROTOCOL_NAME" hidden = "true">
-      <value>SIP</value>
-    </setting>
-    <setting name="SERVER_ADDRESS">
-      <value/>
-    </setting>    
-    <setting name="USER_ID">
-      <value/>
-    </setting>        
+      </setting>
+      <setting name="PROTOCOL_NAME" hidden = "true">
+        <value>SIP</value>
+      </setting>
+      <setting name="USER_ID">
+        <value/>
+      </setting>
+      <setting name="DISPLAY_NAME">
+        <value></value>
+      </setting>
+    </group>
+    <group name="connection">
+      <setting name="AUTHORIZATION_NAME">
+        <value></value>
+      </setting>
+      <setting name="SERVER_ADDRESS">
+        <value/>
+      </setting>
+      <setting name="SERVER_PORT">
+        <value>5060</value>
+      </setting>
+      <group name="proxy">
+        <setting name="PROXY_AUTO_CONFIG">
+          <type refid="true-false"/>
+          <value>true</value>
+        </setting>
+        <setting name="PROXY_ADDRESS">
+          <value/>
+        </setting>
+        <setting name="PROXY_PORT">
+          <value/>
+        </setting>
+        <setting name="PREFFERED_TRANSPORT">
+          <type refid="protocol"/>
+          <value/>
+        </setting>        
+      </group>
+      <group name="keep_alive">
+        <setting name = "KEEP_ALIVE_METHOD">
+          <type refid = "keep_alive"/>
+          <value>NONE</value>
+        </setting>
+        <setting name = "KEEP_ALIVE_INTERVAL">
+          <value>25</value>
+        </setting>
+      </group>
+      <group name="voicemail">
+        <setting name = "VOICEMAIL_ENABLED">
+          <type refid = "true-false"/>
+          <value>true</value>
+        </setting>
+        <setting name = "VOICEMAIL_URI">
+          <value/>
+        </setting>
+        <setting name = "VOICEMAIL_CHECK_URI">
+          <value/>
+        </setting>        
+      </group>      
+      <group name="dtmf">
+        <setting name="DTMF_METHOD">
+          <type refid="dtmf-method"/>
+          <value>AUTO_DTMF</value>
+        </setting>
+        <setting name="DTMF_MINIMAL_TONE_DURATION">
+          <value>70</value>
+        </setting>        
+      </group> 
+    </group> 
+    <group name="security">
+      <setting name="DEFAULT_ENCRYPTION">
+        <type refid="true-false" />
+        <value>true</value>
+      </setting>
+      <setting name="ENCRYPTION_PROTOCOL" advanced="true">
+        <type refid="protocol_status" />
+        <value>ZRTP</value>
+      </setting>
+      <setting name="DEFAULT_SIPZRTP_ATTRIBUTE" advanced="true">
+        <type refid="true-false" />
+        <value>false</value>
+      </setting>
+      <setting name="SDES_CIPHER_SUITES" advanced="true">
+        <type refid="cipher_suites" />
+        <value>AES_CM_128_HMAC_SHA1_80</value>
+      </setting>
+      <setting name="SAVP_OPTION">
+        <type refid="savp_option" />
+        <value>0</value>
+      </setting>                   
+    </group>
+    <group name="presence">
+      <group name="presence_opt">
+        <setting name="IS_PRESENCE_ENABLED">
+          <type refid="true-false" />
+          <value>true</value>
+        </setting>
+        <setting name="FORCE_P2P_MODE">
+          <type refid="true-false" />
+          <value>false</value>
+        </setting>
+        <setting name="POLLING_PERIOD">
+          <value>30</value>
+        </setting>
+        <setting name="SUBSCRIPTION_EXPIRATION">
+          <value>3600</value>
+        </setting>
+      </group>
+      <group name="contact_list_opt">
+        <setting name="TYPE">
+          <type refid="presence_clist_type" />
+          <value>Local</value>
+        </setting>
+        <setting name="OPT_CLIST_PASSWORD">
+          <value></value>
+        </setting>
+        <setting name="OPT_CLIST_SERVER_URI">
+          <value></value>
+        </setting>
+        <setting name="OPT_CLIST_USER">
+          <value></value>
+        </setting>
+        <setting name="OPT_CLIST_USE_SIP_CREDETIALS">
+          <type refid="true-false" />
+          <value>false</value>
+        </setting>
+      </group>
+    </group>
+    <group name="encodings">
+      <setting name="OVERRIDE_ENCODINGS">
+        <type refid="true-false" />
+        <value>false</value>
+      </setting>
+      <setting name="audio">
+        <type refid="audio_encodings"/>
+        <value>G722/8000|GSM/8000|PCMA/8000|PCMU/8000|SILK/16000|SILK/24000|iLBC/8000|opus/48000|speex/16000|speex/32000|speex/8000|telephone-event/8000</value>
+      </setting>
+      <setting name="video">
+        <type refid="video_encodings"/>
+        <value>H264/90000</value>
+      </setting>
+    </group>
   </group>
   <group name="net.java.sip.communicator.impl.protocol.jabber.acc">  
     <setting name="ACCOUNT_UID">
@@ -62,5 +188,5 @@
     <setting name="USER_ID">
       <value/>
     </setting>        
-  </group>  
+  </group>
 </model>

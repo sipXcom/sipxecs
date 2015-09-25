@@ -1,11 +1,111 @@
 #foreach ($line in $lines.entrySet())
 net.java.sip.communicator.impl.protocol.sip.acc$line.key=acc$line.key
-net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.ACCOUNT_UID=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip.acc/ACCOUNT_UID')
-net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.PASSWORD=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip.acc/PASSWORD')
-net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.SERVER_ADDRESS=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip.acc/SERVER_ADDRESS')
-net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.USER_ID=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip.acc/USER_ID')
-net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.PROTOCOL_NAME=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip.acc/PROTOCOL_NAME')
-net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.IS_ACCOUNT_DISABLED=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip.acc/IS_ACCOUNT_DISABLED')
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.ACCOUNT_UID=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/acc/ACCOUNT_UID')
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.PASSWORD=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/acc/PASSWORD')
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.USER_ID=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/acc/USER_ID')
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.PROTOCOL_NAME=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/acc/PROTOCOL_NAME')
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.IS_ACCOUNT_DISABLED=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/acc/IS_ACCOUNT_DISABLED')
+#set ($displayName = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/acc/DISPLAY_NAME'))
+#if($displayName)
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.DISPLAY_NAME=$displayName
+#end
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.SERVER_ADDRESS=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/connection/SERVER_ADDRESS')
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.SERVER_PORT=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/connection/SERVER_PORT')
+#set ($authorizationName = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/connection/AUTHORIZATION_NAME'))
+#if($authorizationName)
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.AUTHORIZATION_NAME=$authorizationName
+#end
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.PROXY_AUTO_CONFIG=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/connection/proxy/PROXY_AUTO_CONFIG')
+#set ($proxyAddress = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/connection/proxy/PROXY_ADDRESS'))
+#if($proxyAddress)
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.PROXY_ADDRESS=$proxyAddress
+#end
+#set ($proxyPort = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/connection/proxy/PROXY_PORT'))
+#if($proxyPort)
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.PROXY_PORT=$proxyPort
+#end
+#set ($proxyPrefTransport = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/connection/proxy/PREFFERED_TRANSPORT'))
+#if($proxyPrefTransport)
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.PREFFERED_TRANSPORT=$proxyPrefTransport
+#end
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.KEEP_ALIVE_METHOD=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/connection/keep_alive/KEEP_ALIVE_METHOD')
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.KEEP_ALIVE_INTERVAL=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/connection/keep_alive/KEEP_ALIVE_INTERVAL')
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.VOICEMAIL_ENABLED=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/connection/voicemail/VOICEMAIL_ENABLED')
+#set ($voicemailUri = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/connection/voicemail/VOICEMAIL_URI'))
+#if($voicemailUri)
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.VOICEMAIL_URI=$voicemailUri
+#end
+#set ($voicemailUri = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/connection/voicemail/VOICEMAIL_URI'))
+#if($voicemailUri)
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.VOICEMAIL_URI=$voicemailUri
+#end
+#set ($voicemailCheckUri = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/connection/voicemail/VOICEMAIL_CHECK_URI'))
+#if($voicemailCheckUri)
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.VOICEMAIL_CHECK_URI=$voicemailCheckUri
+#end
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.DTMF_METHOD=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/connection/dtmf/DTMF_METHOD')
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.DTMF_MINIMAL_TONE_DURATION=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/connection/dtmf/DTMF_MINIMAL_TONE_DURATION')
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.DEFAULT_ENCRYPTION=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/security/DEFAULT_ENCRYPTION')
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.DEFAULT_SIPZRTP_ATTRIBUTE=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/security/DEFAULT_SIPZRTP_ATTRIBUTE')
+#set($encrProtocol = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/security/ENCRYPTION_PROTOCOL'))
+#if($encrProtocol)
+#set($i=0)
+#foreach($value in $encrProtocol.split("[|]"))
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.ENCRYPTION_PROTOCOL_STATUS.$value=true
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.ENCRYPTION_PROTOCOL.$value=$i
+#set($i=$i+1)
+#end
+#end
+#set($cipherSuites = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/security/SDES_CIPHER_SUITES'))
+#if($cipherSuites)
+#set($concatenatedValue='')
+#foreach($value in $cipherSuites.split("[|]"))
+#if($concatenatedValue != '')
+#set($concatenatedValue=$concatenatedValue +','+$value)
+#else
+#set($concatenatedValue=$value)
+#end
+#end
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.SDES_CIPHER_SUITES=$concatenatedValue
+#end
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.SAVP_OPTION=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/security/SAVP_OPTION')
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.IS_PRESENCE_ENABLED=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/presence/presence_opt/IS_PRESENCE_ENABLED')
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.FORCE_P2P_MODE=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/presence/presence_opt/FORCE_P2P_MODE')
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.POLLING_PERIOD=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/presence/presence_opt/POLLING_PERIOD')
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.SUBSCRIPTION_EXPIRATION=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/presence/presence_opt/SUBSCRIPTION_EXPIRATION')
+#set($presenceType=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/presence/contact_list_opt/TYPE'))
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.$presenceType=true
+#set($optClistPwd=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/presence/contact_list_opt/OPT_CLIST_PASSWORD'))
+#if($optClistPwd)
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.OPT_CLIST_PASSWORD=$optClistPwd
+#end
+#set($optClistSvUri=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/presence/contact_list_opt/OPT_CLIST_SERVER_URI'))
+#if($optClistSvUri)
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.OPT_CLIST_SERVER_URI=$optClistSvUri
+#end
+#set($optClistUser=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/presence/contact_list_opt/OPT_CLIST_USER'))
+#if($optClistUser)
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.OPT_CLIST_USER=$optClistUser
+#end
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.OPT_CLIST_USE_SIP_CREDETIALS=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/presence/contact_list_opt/OPT_CLIST_USE_SIP_CREDETIALS')
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.OVERRIDE_ENCODINGS=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/encodings/OVERRIDE_ENCODINGS')
+#foreach($codec in $line.getValue().getSettings().getSetting('net.java.sip.communicator.impl.protocol.sip/encodings/audio').getType().getEnums().entrySet())
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.Encodings.$codec.key=0
+#end
+#foreach($codec in $line.getValue().getSettings().getSetting('net.java.sip.communicator.impl.protocol.sip/encodings/video').getType().getEnums().entrySet())
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.Encodings.$codec.key=0
+#end
+#set($i=100)
+#set($audioEncoding = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/encodings/audio'))
+#foreach($value in $audioEncoding.split("[|]"))
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.Encodings.$value=$i
+#set($i=$i - 1)
+#end
+#set($videoEncoding = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/encodings/video'))
+#foreach($value in $videoEncoding.split("[|]"))
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.Encodings.$value=$i
+#set($i=$i - 1)
+#end
 #if($line.getValue().getUser().isImEnabled())
 #set($xmppKey = $line.key + 1)
 net.java.sip.communicator.impl.protocol.jabber.acc$xmppKey=acc$xmppKey
