@@ -33,7 +33,6 @@ import org.sipfoundry.sipxconfig.common.CoreContext;
 import org.sipfoundry.sipxconfig.elasticsearch.ElasticsearchService;
 import org.sipfoundry.sipxconfig.setting.Group;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 public class ConfigChangeContextImpl implements ConfigChangeContext {
 
@@ -41,21 +40,20 @@ public class ConfigChangeContextImpl implements ConfigChangeContext {
     private static final String FIRST_DELIMTER = ":*";
     private static final String LAST_DELIMTER = "*";
 
-    private ThreadPoolTaskExecutor m_auditExecutor;
-
     private ElasticsearchService m_elasticsearchService;
     private CoreContext m_coreContext;
+    private ConfigChangeLoader m_configChangeLoader;
 
     @Override
     public List<ConfigChange> getConfigChanges() {
         List<ConfigChange> docs = m_elasticsearchService.searchDocs(
-                SYSTEM_AUDIT, null, 0, Integer.MAX_VALUE, ConfigChange.class, null, true);
+                SYSTEM_AUDIT_INDEX, null, 0, Integer.MAX_VALUE, ConfigChange.class, null, true);
         return docs;
     }
 
     @Override
     public ConfigChange getConfigChangeById(String id) {
-        ConfigChange configChange = m_elasticsearchService.searchDocById(SYSTEM_AUDIT, id, ConfigChange.class);
+        ConfigChange configChange = m_elasticsearchService.searchDocById(SYSTEM_AUDIT_INDEX, id, ConfigChange.class);
         return configChange;
     }
 
@@ -64,32 +62,23 @@ public class ConfigChangeContextImpl implements ConfigChangeContext {
             boolean orderAscending, SystemAuditFilter filter) {
         QueryBuilder queryBuilder = getQueryBuilder(filter);
         List<ConfigChange> docs = m_elasticsearchService.searchDocs(
-                SYSTEM_AUDIT, queryBuilder, firstRow, pageSize, ConfigChange.class, orderBy[0], orderAscending);
+                SYSTEM_AUDIT_INDEX, queryBuilder, firstRow, pageSize, ConfigChange.class, orderBy[0], orderAscending);
         return docs;
     }
 
     @Override
     public void storeConfigChange(final ConfigChange configChange) throws SystemAuditException {
-        if (m_auditExecutor.getThreadPoolExecutor().getQueue().isEmpty()) {
-            m_auditExecutor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        m_elasticsearchService.storeStructure(SYSTEM_AUDIT, configChange);
-                    } catch (Exception e) {
-                        LOG.error("Error while persisting audit event in Elasticsearch: ", e);
-                    }
-                }
-            });
-        } else {
-            LOG.debug("Wait for queue to become empty to persist audit event in Elasticsearch");
+        try {
+            m_configChangeLoader.addConfigChangeToQueue(configChange);
+        } catch (Exception e) {
+            LOG.error("Error persisting System Audit event:", e);
         }
     }
 
     @Override
     public int getConfigChangesCount(SystemAuditFilter filter) {
         QueryBuilder queryBuilder = getQueryBuilder(filter);
-        return m_elasticsearchService.countDocs(SYSTEM_AUDIT, queryBuilder);
+        return m_elasticsearchService.countDocs(SYSTEM_AUDIT_INDEX, queryBuilder);
     }
 
     /**
@@ -139,7 +128,7 @@ public class ConfigChangeContextImpl implements ConfigChangeContext {
             boolean orderAscending, SystemAuditFilter filter) {
         QueryBuilder queryBuilder = getQueryBuilder(filter);
         List<ConfigChange> docs = m_elasticsearchService.searchDocs(
-                SYSTEM_AUDIT, queryBuilder, 0, Integer.MAX_VALUE, ConfigChange.class, null, true);
+                SYSTEM_AUDIT_INDEX, queryBuilder, 0, Integer.MAX_VALUE, ConfigChange.class, null, true);
         return docs;
     }
 
@@ -177,8 +166,8 @@ public class ConfigChangeContextImpl implements ConfigChangeContext {
     }
 
     @Required
-    public void setAuditExecutor(ThreadPoolTaskExecutor auditExecutor) {
-        m_auditExecutor = auditExecutor;
+    public void setConfigChangeLoader(ConfigChangeLoader configChangeLoader) {
+        m_configChangeLoader = configChangeLoader;
     }
 
 }

@@ -15,5 +15,10 @@
 	<classpathentry kind="lib" path="test/lib/jetty-server-8.1.15.v20140411.jar"/>
 	<classpathentry kind="lib" path="test/lib/jetty-util-8.1.15.v20140411.jar"/>
 	<classpathentry kind="lib" path="test/lib/geronimo-servlet_3.0_spec-1.0.jar"/>
+	<classpathentry kind="lib" path="test/lib/lucene-queries-4.10.4.jar"/>
+	<classpathentry kind="lib" path="test/lib/lucene-join-4.10.4.jar"/>
+	<classpathentry kind="lib" path="test/lib/lucene-sandbox-4.10.4.jar"/>
+	<classpathentry kind="lib" path="test/lib/lucene-highlighter-4.10.4.jar"/>
+	<classpathentry kind="lib" path="test/lib/lucene-memory-4.10.4.jar"/>
 	<classpathentry kind="output" path="bin.eclipse"/>
 </classpath>

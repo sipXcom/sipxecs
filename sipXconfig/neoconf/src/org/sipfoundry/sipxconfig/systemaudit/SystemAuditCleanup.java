@@ -49,7 +49,7 @@ public class SystemAuditCleanup {
                     .rangeQuery(ConfigChange.DATE_TIME);
             dateQuery.to(getDeleteDate().getTime());
             queryBuilder.must(dateQuery);
-            m_elasticsearchService.deleteDocs(ConfigChangeContext.SYSTEM_AUDIT,
+            m_elasticsearchService.deleteDocs(ConfigChangeContext.SYSTEM_AUDIT_INDEX,
                     queryBuilder);
         } catch (Exception e) {
             LOG.error("Error while doing System Audit cleanup: ", e);

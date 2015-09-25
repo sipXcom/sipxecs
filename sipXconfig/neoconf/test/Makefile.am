@@ -18,7 +18,12 @@ test_jetty_PKGS = \
 	jetty-io \
 	jetty-security \
 	jetty-server \
-	jetty-util
+	jetty-util \
+	lucene-highlighter \
+	lucene-join \
+	lucene-memory \
+	lucene-queries \
+	lucene-sandbox
 
 test_RESOURCES = \
 	$(shell cd $(srcdir); find org -not -name '*.java') \
