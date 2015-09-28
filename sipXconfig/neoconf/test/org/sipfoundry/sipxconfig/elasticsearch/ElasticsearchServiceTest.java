@@ -28,6 +28,7 @@ import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.node.Node;
 import org.elasticsearch.node.NodeBuilder;
+import org.sipfoundry.sipxconfig.search.SearchableBean;
 import org.sipfoundry.sipxconfig.systemaudit.ConfigChange;
 import org.sipfoundry.sipxconfig.systemaudit.ConfigChangeValue;
 import org.sipfoundry.sipxconfig.systemaudit.SystemAuditException;
@@ -72,9 +73,9 @@ public class ElasticsearchServiceTest extends TestCase {
     public void testStoreElasticsearchBean() {
         try {
             waitForRefresh();
-            ElasticsearchBean testConfigChange = buildElasticsearchBean("Added", "Phone",
+            SearchableBean testConfigChange = buildElasticsearchBean("Added", "Phone",
                     "52658", "200", "192.168.1.1", null, null, null);
-            IndexResponse response = m_elasticsearchService.storeStructure(INDEX, testConfigChange);
+            IndexResponse response = (IndexResponse) m_elasticsearchService.storeStructure(INDEX, testConfigChange);
             assertNotNull(response.getId());
         } catch (Exception e) {
             fail(e.getMessage());
@@ -84,17 +85,17 @@ public class ElasticsearchServiceTest extends TestCase {
     public void testOperations() {
         try {
             waitForRefresh();
-            ElasticsearchBean testConfigChange1 = buildElasticsearchBean("Added", "Phone",
+            SearchableBean testConfigChange1 = buildElasticsearchBean("Added", "Phone",
                     "52658", "200", "192.168.1.1", null, null, null);
-            ElasticsearchBean testConfigChange2 = buildElasticsearchBean("Modified", "User",
+            SearchableBean testConfigChange2 = buildElasticsearchBean("Modified", "User",
                     UNIQUE_DETAILS, "200", "192.168.1.1", null, null, null);
-            ElasticsearchBean testConfigChange3 = buildElasticsearchBean("Added", "Phone",
+            SearchableBean testConfigChange3 = buildElasticsearchBean("Added", "Phone",
                     "52658", "200", "192.168.1.1", null, null, null);
-            List<ElasticsearchBean> docs = new ArrayList<ElasticsearchBean>();
+            List<SearchableBean> docs = new ArrayList<SearchableBean>();
             docs.add(testConfigChange1);
             docs.add(testConfigChange2);
             docs.add(testConfigChange3);
-            BulkResponse response = m_elasticsearchService.storeBulkStructures(INDEX, docs);
+            BulkResponse response = (BulkResponse) m_elasticsearchService.storeBulkStructures(INDEX, docs);
             assert(response.hasFailures());
 
             List<ConfigChange> searchResponse = m_elasticsearchService.searchDocs(
@@ -122,8 +123,8 @@ public class ElasticsearchServiceTest extends TestCase {
     public void testStoreBulkEmptyElasticsearchBeans() {
         try {
             waitForRefresh();
-            List<ElasticsearchBean> docs = new ArrayList<ElasticsearchBean>();
-            BulkResponse response = m_elasticsearchService.storeBulkStructures(INDEX, docs);
+            List<SearchableBean> docs = new ArrayList<SearchableBean>();
+            BulkResponse response = (BulkResponse) m_elasticsearchService.storeBulkStructures(INDEX, docs);
             assertNull(response);
         } catch (Exception e) {
             fail(e.getMessage());
@@ -134,13 +135,13 @@ public class ElasticsearchServiceTest extends TestCase {
         try {
             waitForRefresh();
 
-            ElasticsearchBean testConfigChange1 = buildElasticsearchBean("Added", "Phone",
+            SearchableBean testConfigChange1 = buildElasticsearchBean("Added", "Phone",
                     "52658", "200", "192.168.1.1", null, null, null);
-            ElasticsearchBean testConfigChange2 = buildElasticsearchBean("Modified", "User",
+            SearchableBean testConfigChange2 = buildElasticsearchBean("Modified", "User",
                     UNIQUE_DETAILS, "200", "192.168.1.1", null, null, null);
-            ElasticsearchBean testConfigChange3 = buildElasticsearchBean("Added", "Phone",
+            SearchableBean testConfigChange3 = buildElasticsearchBean("Added", "Phone",
                     "52658", "200", "192.168.1.1", null, null, null);
-            List<ElasticsearchBean> docs = new ArrayList<ElasticsearchBean>();
+            List<SearchableBean> docs = new ArrayList<SearchableBean>();
             docs.add(testConfigChange1);
             docs.add(testConfigChange2);
             docs.add(testConfigChange3);
@@ -157,7 +158,7 @@ public class ElasticsearchServiceTest extends TestCase {
         m_client.admin().indices().refresh(new RefreshRequest(INDEX));
     }
 
-    protected ElasticsearchBean buildElasticsearchBean(String action, String type,
+    protected SearchableBean buildElasticsearchBean(String action, String type,
             String details, String userName, String ipAddress,
             String propertyName, String before, String after)
             throws SystemAuditException {

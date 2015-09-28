@@ -26,15 +26,15 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.sipfoundry.sipxconfig.admin.AdminContext;
 import org.sipfoundry.sipxconfig.admin.AdminSettings;
-import org.sipfoundry.sipxconfig.elasticsearch.ElasticsearchService;
 import org.sipfoundry.sipxconfig.feature.FeatureManager;
+import org.sipfoundry.sipxconfig.search.SearchableService;
 import org.springframework.beans.factory.annotation.Required;
 
 public class SystemAuditCleanup {
 
     private static final Log LOG = LogFactory.getLog(SystemAuditCleanup.class);
 
-    private ElasticsearchService m_elasticsearchService;
+    private SearchableService m_searchableService;
     private AdminContext m_adminContext;
     private FeatureManager m_featureManager;
 
@@ -49,7 +49,7 @@ public class SystemAuditCleanup {
                     .rangeQuery(ConfigChange.DATE_TIME);
             dateQuery.to(getDeleteDate().getTime());
             queryBuilder.must(dateQuery);
-            m_elasticsearchService.deleteDocs(ConfigChangeContext.SYSTEM_AUDIT_INDEX,
+            m_searchableService.deleteDocs(ConfigChangeContext.SYSTEM_AUDIT_INDEX,
                     queryBuilder);
         } catch (Exception e) {
             LOG.error("Error while doing System Audit cleanup: ", e);
@@ -65,8 +65,8 @@ public class SystemAuditCleanup {
     }
 
     @Required
-    public void setElasticsearchService(ElasticsearchService elasticsearchService) {
-        m_elasticsearchService = elasticsearchService;
+    public void setSearchableService(SearchableService searchableService) {
+        m_searchableService = searchableService;
     }
 
     @Required

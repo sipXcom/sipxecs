@@ -30,7 +30,7 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.sipfoundry.sipxconfig.common.CoreContext;
-import org.sipfoundry.sipxconfig.elasticsearch.ElasticsearchService;
+import org.sipfoundry.sipxconfig.search.SearchableService;
 import org.sipfoundry.sipxconfig.setting.Group;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -40,20 +40,20 @@ public class ConfigChangeContextImpl implements ConfigChangeContext {
     private static final String FIRST_DELIMTER = ":*";
     private static final String LAST_DELIMTER = "*";
 
-    private ElasticsearchService m_elasticsearchService;
+    private SearchableService m_searchableService;
     private CoreContext m_coreContext;
     private ConfigChangeLoader m_configChangeLoader;
 
     @Override
     public List<ConfigChange> getConfigChanges() {
-        List<ConfigChange> docs = m_elasticsearchService.searchDocs(
+        List<ConfigChange> docs = m_searchableService.searchDocs(
                 SYSTEM_AUDIT_INDEX, null, 0, Integer.MAX_VALUE, ConfigChange.class, null, true);
         return docs;
     }
 
     @Override
     public ConfigChange getConfigChangeById(String id) {
-        ConfigChange configChange = m_elasticsearchService.searchDocById(SYSTEM_AUDIT_INDEX, id, ConfigChange.class);
+        ConfigChange configChange = m_searchableService.searchDocById(SYSTEM_AUDIT_INDEX, id, ConfigChange.class);
         return configChange;
     }
 
@@ -61,7 +61,7 @@ public class ConfigChangeContextImpl implements ConfigChangeContext {
     public List<ConfigChange> loadConfigChangesByPage(int firstRow, int pageSize, String[] orderBy,
             boolean orderAscending, SystemAuditFilter filter) {
         QueryBuilder queryBuilder = getQueryBuilder(filter);
-        List<ConfigChange> docs = m_elasticsearchService.searchDocs(
+        List<ConfigChange> docs = m_searchableService.searchDocs(
                 SYSTEM_AUDIT_INDEX, queryBuilder, firstRow, pageSize, ConfigChange.class, orderBy[0], orderAscending);
         return docs;
     }
@@ -78,7 +78,7 @@ public class ConfigChangeContextImpl implements ConfigChangeContext {
     @Override
     public int getConfigChangesCount(SystemAuditFilter filter) {
         QueryBuilder queryBuilder = getQueryBuilder(filter);
-        return m_elasticsearchService.countDocs(SYSTEM_AUDIT_INDEX, queryBuilder);
+        return m_searchableService.countDocs(SYSTEM_AUDIT_INDEX, queryBuilder);
     }
 
     /**
@@ -127,7 +127,7 @@ public class ConfigChangeContextImpl implements ConfigChangeContext {
     private List<ConfigChange> loadConfigChangesByFilter(String[] orderBy,
             boolean orderAscending, SystemAuditFilter filter) {
         QueryBuilder queryBuilder = getQueryBuilder(filter);
-        List<ConfigChange> docs = m_elasticsearchService.searchDocs(
+        List<ConfigChange> docs = m_searchableService.searchDocs(
                 SYSTEM_AUDIT_INDEX, queryBuilder, 0, Integer.MAX_VALUE, ConfigChange.class, null, true);
         return docs;
     }
@@ -156,8 +156,8 @@ public class ConfigChangeContextImpl implements ConfigChangeContext {
     }
 
     @Required
-    public void setElasticsearchService(ElasticsearchService elasticsearchService) {
-        m_elasticsearchService = elasticsearchService;
+    public void setSearchableService(SearchableService searchableService) {
+        m_searchableService = searchableService;
     }
 
     @Required

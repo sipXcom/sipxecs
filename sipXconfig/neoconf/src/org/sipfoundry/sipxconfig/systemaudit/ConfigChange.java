@@ -21,12 +21,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.sipfoundry.sipxconfig.elasticsearch.ElasticsearchBean;
+import org.sipfoundry.sipxconfig.search.SearchableBean;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ConfigChange implements ElasticsearchBean {
+public class ConfigChange implements SearchableBean {
 
     public static final String DATE_TIME = "dateTime";
     public static final String USER_NAME = "userName";

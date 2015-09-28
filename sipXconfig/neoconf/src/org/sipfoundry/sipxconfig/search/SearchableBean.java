@@ -14,11 +14,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
  * details.
  */
-package org.sipfoundry.sipxconfig.elasticsearch;
+package org.sipfoundry.sipxconfig.search;
 
 import org.sipfoundry.sipxconfig.common.PrimaryKeySource;
 
-public interface ElasticsearchBean extends PrimaryKeySource {
+/**
+ * Generic interface to mark a persistable entity used for different purposes (ex. SystemAudit).
+ */
+public interface SearchableBean extends PrimaryKeySource {
 
     public void setId(String id);
 

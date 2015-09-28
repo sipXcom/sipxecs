@@ -31,14 +31,14 @@ public class ElasticsearchConfig implements ConfigProvider {
 
     @Override
     public void replicate(ConfigManager manager, ConfigRequest request) throws IOException {
-        if (!request.applies(ElasticsearchService.FEATURE)) {
+        if (!request.applies(ElasticsearchServiceImpl.FEATURE)) {
             return;
         }
         FeatureManager featureManager = manager.getFeatureManager();
         Set<Location> locations = request.locations(manager);
         for (Location location : locations) {
             File dir = manager.getLocationDataDirectory(location);
-            boolean enabled = featureManager.isFeatureEnabled(ElasticsearchService.FEATURE, location);
+            boolean enabled = featureManager.isFeatureEnabled(ElasticsearchServiceImpl.FEATURE, location);
             ConfigUtils.enableCfengineClass(dir, "elasticsearch.cfdat", enabled, "elasticsearch");
         }
     }
