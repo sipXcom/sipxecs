@@ -23,9 +23,9 @@ import java.util.List;
  */
 public interface SearchableService {
 
-    Object storeStructure(String index, SearchableBean source);
+    void storeDoc(String index, SearchableBean source);
 
-    Object storeBulkStructures(String index, List<SearchableBean> source);
+    void storeBulkDocs(String index, List<SearchableBean> source);
 
     <T extends SearchableBean> List<T> searchDocs(String index, Object filter,
             int start, int size, Class<T> clazz, String orderBy, boolean orderAscending);

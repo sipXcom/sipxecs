@@ -23,8 +23,6 @@ import junit.framework.TestCase;
 
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.refresh.RefreshRequest;
-import org.elasticsearch.action.bulk.BulkResponse;
-import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.node.Node;
 import org.elasticsearch.node.NodeBuilder;
@@ -75,8 +73,10 @@ public class ElasticsearchServiceTest extends TestCase {
             waitForRefresh();
             SearchableBean testConfigChange = buildElasticsearchBean("Added", "Phone",
                     "52658", "200", "192.168.1.1", null, null, null);
-            IndexResponse response = (IndexResponse) m_elasticsearchService.storeStructure(INDEX, testConfigChange);
-            assertNotNull(response.getId());
+            m_elasticsearchService.storeDoc(INDEX, testConfigChange);
+            Thread.sleep(2000L);
+            int docCount = m_elasticsearchService.countDocs(INDEX, null);
+            assertEquals(docCount, 1);
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -95,8 +95,7 @@ public class ElasticsearchServiceTest extends TestCase {
             docs.add(testConfigChange1);
             docs.add(testConfigChange2);
             docs.add(testConfigChange3);
-            BulkResponse response = (BulkResponse) m_elasticsearchService.storeBulkStructures(INDEX, docs);
-            assert(response.hasFailures());
+            m_elasticsearchService.storeBulkDocs(INDEX, docs);
 
             List<ConfigChange> searchResponse = m_elasticsearchService.searchDocs(
                     INDEX, null, 0, 10, ConfigChange.class, ConfigChange.ACTION, true);
@@ -124,8 +123,8 @@ public class ElasticsearchServiceTest extends TestCase {
         try {
             waitForRefresh();
             List<SearchableBean> docs = new ArrayList<SearchableBean>();
-            BulkResponse response = (BulkResponse) m_elasticsearchService.storeBulkStructures(INDEX, docs);
-            assertNull(response);
+            m_elasticsearchService.storeBulkDocs(INDEX, docs);
+            assertTrue(true);
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -145,7 +144,7 @@ public class ElasticsearchServiceTest extends TestCase {
             docs.add(testConfigChange1);
             docs.add(testConfigChange2);
             docs.add(testConfigChange3);
-            m_elasticsearchService.storeBulkStructures(INDEX, docs);
+            m_elasticsearchService.storeBulkDocs(INDEX, docs);
 
             int docCount = m_elasticsearchService.countDocs(INDEX, null);
             assert(docCount > 0);
