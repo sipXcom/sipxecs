@@ -33,7 +33,7 @@ public class ConfigChangeLoader {
         List<SearchableBean> persistableConfigChanges = new ArrayList<SearchableBean>();
         m_configChangeQueue.drainTo(persistableConfigChanges);
         if (!persistableConfigChanges.isEmpty()) {
-            m_searchableService.storeBulkStructures(
+            m_searchableService.storeBulkDocs(
                     ConfigChangeContext.SYSTEM_AUDIT_INDEX, persistableConfigChanges);
         }
     }

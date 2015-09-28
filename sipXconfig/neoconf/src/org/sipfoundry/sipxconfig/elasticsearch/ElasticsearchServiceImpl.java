@@ -108,26 +108,25 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
     }
 
     @Override
-    public Object storeStructure(String index, SearchableBean source) {
+    public void storeDoc(String index, SearchableBean source) {
         IndexRequest indexRequest = getIndexRequest(index, source);
-        return m_client.index(indexRequest).actionGet();
+        m_client.index(indexRequest).actionGet();
     }
 
     @Override
-    public Object storeBulkStructures(String index, List<SearchableBean> source) {
+    public void storeBulkDocs(String index, List<SearchableBean> source) {
         BulkRequestBuilder bulkRequest = m_client.prepareBulk();
         for (SearchableBean elasticsearchBean : source) {
             bulkRequest.add(getIndexRequest(index, elasticsearchBean));
         }
         if (bulkRequest.numberOfActions() <= 0) {
-            return null;
+            return;
         }
         BulkResponse bulkResponse = bulkRequest.execute().actionGet();
         if (bulkResponse.hasFailures()) {
-            LOG.error("Perstisting in searchable object encountered errors:"
+            LOG.error("Perstisting searchable object encountered errors:"
                     + bulkResponse.buildFailureMessage());
         }
-        return bulkResponse;
     }
 
     @Override
