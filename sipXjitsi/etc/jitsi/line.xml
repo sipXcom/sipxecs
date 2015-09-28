@@ -43,6 +43,10 @@
           <type refid="true-false"/>
           <value>true</value>
         </setting>
+        <setting name="FORCE_PROXY_BYPASS">
+          <type refid="true-false"/>
+          <value>true</value>
+        </setting>        
         <setting name="PROXY_ADDRESS">
           <value/>
         </setting>

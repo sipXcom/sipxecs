@@ -16,6 +16,7 @@ net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.SERVER_PORT=$lin
 net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.AUTHORIZATION_NAME=$authorizationName
 #end
 net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.PROXY_AUTO_CONFIG=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/connection/proxy/PROXY_AUTO_CONFIG')
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.FORCE_PROXY_BYPASS=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/connection/proxy/FORCE_PROXY_BYPASS')
 #set ($proxyAddress = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/connection/proxy/PROXY_ADDRESS'))
 #if($proxyAddress)
 net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.PROXY_ADDRESS=$proxyAddress
