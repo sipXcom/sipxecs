@@ -10,7 +10,7 @@
 
   <bean id="configChangeContextImpl" class="org.sipfoundry.sipxconfig.systemaudit.ConfigChangeContextImpl" >
     <property name="configChangeLoader" ref="configChangeLoader" />
-    <property name="elasticsearchService" ref="elasticsearchService" />
+    <property name="searchableService" ref="searchableService" />
     <property name="coreContext" ref="coreContext" />
   </bean>
 
@@ -61,7 +61,7 @@
   </bean>
 
   <bean id="systemAuditCleanup" class="org.sipfoundry.sipxconfig.systemaudit.SystemAuditCleanup">
-    <property name="elasticsearchService" ref="elasticsearchService" />
+    <property name="searchableService" ref="searchableService" />
     <property name="adminContext" ref="adminContext" />
     <property name="featureManager" ref="featureManager" />
   </bean>
@@ -71,7 +71,7 @@
   </task:scheduled-tasks>
 
   <bean id="configChangeLoader" class="org.sipfoundry.sipxconfig.systemaudit.ConfigChangeLoader">
-    <property name="elasticsearchService" ref="elasticsearchService" />
+    <property name="searchableService" ref="searchableService" />
   </bean>
 
   <task:scheduled-tasks>

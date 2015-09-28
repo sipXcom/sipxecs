@@ -29,7 +29,7 @@ import org.sipfoundry.sipxconfig.branch.Branch;
 import org.sipfoundry.sipxconfig.common.User;
 import org.sipfoundry.sipxconfig.common.event.DaoEventListener;
 import org.sipfoundry.sipxconfig.commserver.Location;
-import org.sipfoundry.sipxconfig.elasticsearch.ElasticsearchService;
+import org.sipfoundry.sipxconfig.elasticsearch.ElasticsearchServiceImpl;
 import org.sipfoundry.sipxconfig.feature.Bundle;
 import org.sipfoundry.sipxconfig.feature.FeatureChangeRequest;
 import org.sipfoundry.sipxconfig.feature.FeatureChangeValidator;
@@ -88,7 +88,7 @@ public class SystemAuditManagerImpl implements SystemAuditManager, FeatureListen
         } catch (Exception e) {
             LOG.error(LOG_ERROR_MESSAGE, e);
         }
-        validator.requiredOnSameHost(FEATURE, ElasticsearchService.FEATURE);
+        validator.requiredOnSameHost(FEATURE, ElasticsearchServiceImpl.FEATURE);
         validator.primaryLocationOnly(FEATURE);
     }
 
