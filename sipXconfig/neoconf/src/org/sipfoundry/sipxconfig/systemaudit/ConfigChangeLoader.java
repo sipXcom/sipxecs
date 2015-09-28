@@ -20,20 +20,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.LinkedTransferQueue;
 
-import org.sipfoundry.sipxconfig.elasticsearch.ElasticsearchBean;
-import org.sipfoundry.sipxconfig.elasticsearch.ElasticsearchService;
+import org.sipfoundry.sipxconfig.search.SearchableBean;
+import org.sipfoundry.sipxconfig.search.SearchableService;
 import org.springframework.beans.factory.annotation.Required;
 
 public class ConfigChangeLoader {
 
     private LinkedTransferQueue<ConfigChange> m_configChangeQueue = new LinkedTransferQueue<ConfigChange>();
-    private ElasticsearchService m_elasticsearchService;
+    private SearchableService m_searchableService;
 
     public void run() {
-        List<ElasticsearchBean> persistableConfigChanges = new ArrayList<ElasticsearchBean>();
+        List<SearchableBean> persistableConfigChanges = new ArrayList<SearchableBean>();
         m_configChangeQueue.drainTo(persistableConfigChanges);
         if (!persistableConfigChanges.isEmpty()) {
-            m_elasticsearchService.storeBulkStructures(
+            m_searchableService.storeBulkStructures(
                     ConfigChangeContext.SYSTEM_AUDIT_INDEX, persistableConfigChanges);
         }
     }
@@ -43,8 +43,8 @@ public class ConfigChangeLoader {
     }
 
     @Required
-    public void setElasticsearchService(ElasticsearchService elasticsearchService) {
-        m_elasticsearchService = elasticsearchService;
+    public void setSearchableService(SearchableService searchableService) {
+        m_searchableService = searchableService;
     }
 
 }
