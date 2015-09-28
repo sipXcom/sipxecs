@@ -39,6 +39,8 @@ import org.sipfoundry.sipxconfig.feature.FeatureProvider;
 import org.sipfoundry.sipxconfig.feature.GlobalFeature;
 import org.sipfoundry.sipxconfig.feature.LocationFeature;
 import org.sipfoundry.sipxconfig.setting.Group;
+import org.sipfoundry.sipxconfig.setup.SetupListener;
+import org.sipfoundry.sipxconfig.setup.SetupManager;
 import org.sipfoundry.sipxconfig.snmp.ProcessDefinition;
 import org.sipfoundry.sipxconfig.snmp.ProcessProvider;
 import org.sipfoundry.sipxconfig.snmp.SnmpManager;
@@ -47,7 +49,7 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 
 public class SystemAuditManagerImpl implements SystemAuditManager, FeatureListener,
-        ApplicationListener<ApplicationEvent>, DaoEventListener, FeatureProvider, ProcessProvider {
+        ApplicationListener<ApplicationEvent>, DaoEventListener, FeatureProvider, ProcessProvider, SetupListener {
 
     private static final Log LOG = LogFactory.getLog(SystemAuditManagerImpl.class);
     private static final String LOG_ERROR_MESSAGE = "Exception when processing entry for System Audit: ";
@@ -248,6 +250,22 @@ public class SystemAuditManagerImpl implements SystemAuditManager, FeatureListen
     public Collection<ProcessDefinition> getProcessDefinitions(SnmpManager manager, Location location) {
         return (isSystemAuditOn() ? Collections.singleton(ProcessDefinition.sipxByRegex("systemaudit",
                 ".*-Dprocname=sipxconfig.*")) : null);
+    }
+
+    @Override
+    public boolean setup(SetupManager manager) {
+        if (manager.isFalse(FEATURE.getId())) {
+            Location primary = manager.getConfigManager().getLocationManager().getPrimaryLocation();
+            if (primary == null) {
+                return false;
+            }
+
+            manager.getFeatureManager().enableLocationFeature(ElasticsearchServiceImpl.FEATURE, primary, true);
+            manager.getFeatureManager().enableLocationFeature(FEATURE, primary, true);
+            manager.setTrue(FEATURE.getId());
+        }
+
+        return true;
     }
 
 }
