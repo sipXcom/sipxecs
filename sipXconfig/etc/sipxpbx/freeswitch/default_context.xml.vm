@@ -49,6 +49,9 @@
 #if(${orbit.enabled})
   <extension name="ParkOrbit${orbit.name}">
     <condition field="destination_number" expression="^${orbit.extension}${dollar}">
+#if ($maxForwards)
+      <action application="set" data="max_forwards=$maxForwards"/>
+#end
 #if(!${orbit.isMultipleCalls()})
       <action inline="true" application="set" data="slot_count=${dollar}{fifo(count QPark${orbit.extension})}"/>
       <action inline="true" application="set" data="slot_count=${dollar}{slot_count:-9:2}"/>
@@ -82,6 +85,9 @@
   </extension>
   <extension name="UnPark${orbit.name}">
     <condition field="destination_number" expression="^(${orbit.unparkExtension}|${orbit.callPickupExtension})${dollar}">
+#if ($maxForwards)
+      <action application="set" data="max_forwards=$maxForwards"/>
+#end
       <action application="fifo" data="QPark${orbit.extension} out nowait"/>
     </condition>
   </extension>
@@ -89,6 +95,9 @@
 #end
   <extension name="transferPark">
     <condition field="destination_number" expression="^transferPark(\d+)$">
+#if ($maxForwards)
+      <action application="set" data="max_forwards=$maxForwards"/>
+#end
       <action application="set" data="ringback=${us-ring}"/>
       <action application="bridge" data="#if( $simplify ){api_on_answer='uuid_simplify ${uuid}'}#end
 sofia/${domainName}/$1@${domainName}"/>
