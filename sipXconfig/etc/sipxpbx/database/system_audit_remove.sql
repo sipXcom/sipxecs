@@ -1,10 +1,10 @@
 insert into feature_local (feature_id, location_id) select 'systemaudit',l.location_id from
-location l, setting_value s where l.name='Primary' and s.path='configserver-config/systemAudit';
+location l where not exists(select 1 from setting_value where path='configserver-config/systemAudit');
 insert into setup (setup_id) select 'systemaudit' from
 location l, setting_value s where l.name='Primary' and s.path='configserver-config/systemAudit';
 
 insert into feature_local (feature_id, location_id) select 'elasticsearch',l.location_id from
-location l, setting_value s where l.name='Primary' and s.path='configserver-config/systemAudit';
+location l where not exists(select 1 from setting_value where path='configserver-config/systemAudit');
 
 delete from setting_value where path='configserver-config/systemAudit';
 
