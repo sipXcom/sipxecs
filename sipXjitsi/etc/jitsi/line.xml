@@ -163,34 +163,75 @@
       </setting>
     </group>
   </group>
-  <group name="net.java.sip.communicator.impl.protocol.jabber.acc">  
-    <setting name="ACCOUNT_UID">
-      <value />
-    </setting>
-    <setting name="PASSWORD" hidden="true">
-      <value/>
-    </setting>
-    <setting name="IS_ACCOUNT_DISABLED">
-      <type refid="true-false" />
-      <value>false</value>
-    </setting>
-    <setting name="PROTOCOL_NAME" hidden = "true">
-      <value>Jabber</value>
-    </setting>
-    <setting name="RESOURCE">
-      <value>jitsi</value>
-    </setting>
-    <setting name="RESOURCE_PRIORITY">
-      <value>30</value>
-    </setting>        
-    <setting name="SERVER_ADDRESS">
-      <value/>
-    </setting>
-    <setting name="SERVER_PORT">
-      <value>5222</value>
-    </setting>      
-    <setting name="USER_ID">
-      <value/>
-    </setting>        
+  <group name="net.java.sip.communicator.impl.protocol.jabber">
+    <group name="acc">  
+      <setting name="ACCOUNT_UID">
+        <value />
+      </setting>
+      <setting name="PASSWORD" hidden="true">
+        <value/>
+      </setting>
+      <setting name="IS_ACCOUNT_DISABLED">
+        <type refid="true-false" />
+        <value>false</value>
+      </setting>
+      <setting name="PROTOCOL_NAME" hidden = "true">
+        <value>Jabber</value>
+      </setting>
+      <setting name="USER_ID">
+        <value/>
+      </setting>      
+    </group>
+    <group name="connection">
+      <setting name="GMAIL_NOTIFICATIONS_ENABLED">
+        <type refid="true-false" />
+        <value>false</value>    
+      </setting>
+      <setting name="GOOGLE_CONTACTS_ENABLED">
+        <type refid="true-false" />
+        <value>true</value>    
+      </setting>
+      <setting name="ALLOW_NON_SECURE">
+        <type refid="true-false" />
+        <value>false</value>    
+      </setting>
+      <setting name="CARBON_DISABLED">
+        <type refid="true-false" />
+        <value>false</value>    
+      </setting>
+      <group name="server_options">
+        <setting name="IS_SERVER_OVERRIDDEN">
+          <type refid="true-false" />
+          <value>false</value>    
+        </setting>      
+        <setting name="SERVER_ADDRESS">
+          <value/>
+        </setting>
+        <setting name="SERVER_PORT">
+          <value>5222</value>
+        </setting>
+      </group>
+      <group name="resource">
+        <setting name="AUTO_GENERATE_RESOURCE">
+          <type refid="true-false" />
+          <value>false</value>    
+        </setting>
+        <setting name="RESOURCE">
+          <value>jitsi</value>
+        </setting>
+        <setting name="RESOURCE_PRIORITY">
+          <value>30</value>
+        </setting>
+      </group>
+      <group name="dtmf">
+        <setting name="DTMF_METHOD">
+          <type refid="dtmf-method"/>
+          <value>AUTO_DTMF</value>
+        </setting>
+        <setting name="DTMF_MINIMAL_TONE_DURATION">
+          <value>70</value>
+        </setting>        
+      </group>
+    </group>                
   </group>
 </model>
