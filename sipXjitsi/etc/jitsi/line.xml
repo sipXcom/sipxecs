@@ -232,6 +232,97 @@
           <value>70</value>
         </setting>        
       </group>
-    </group>                
+    </group>
+    <group name="security">
+      <setting name="DEFAULT_ENCRYPTION">
+        <type refid="true-false" />
+        <value>true</value>
+      </setting>
+      <setting name="ENCRYPTION_PROTOCOL" advanced="true">
+        <type refid="protocol_status" />
+        <value>ZRTP</value>
+      </setting>
+      <setting name="DEFAULT_SIPZRTP_ATTRIBUTE" advanced="true">
+        <type refid="true-false" />
+        <value>false</value>
+      </setting>
+      <setting name="SDES_CIPHER_SUITES" advanced="true">
+        <type refid="cipher_suites" />
+        <value>AES_CM_128_HMAC_SHA1_80</value>
+      </setting>                 
+    </group>
+    <group name="ice">
+      <setting name="ICE_ENABLED">
+        <type refid="true-false" />
+        <value>true</value>
+      </setting>
+      <setting name="UPNP_ENABLED">
+        <type refid="true-false" />
+        <value>true</value>
+      </setting>
+      <setting name="AUTO_DISCOVER_STUN">
+        <type refid="true-false" />
+        <value>true</value>
+      </setting>
+      <setting name="USE_DEFAULT_STUN_SERVER">
+        <type refid="true-false" />
+        <value>true</value>
+      </setting>
+      <setting name="STUN_ADDRESS">
+        <value/>
+      </setting>
+      <setting name="STUN_PORT">
+        <value/>
+      </setting>
+      <setting name="STUN_IS_TURN_SUPPORTED">
+        <value/>
+      </setting>
+      <setting name="STUN_USERNAME">
+        <value/>
+      </setting>
+      <setting name="STUN_PASSWORD">
+        <value/>
+      </setting>
+      <setting name="JINGLE_NODES_ENABLED">
+        <type refid="true-false" />
+        <value>true</value>
+      </setting>
+      <setting name="AUTO_DISCOVER_JINGLE_NODES">
+        <type refid="true-false" />
+        <value>true</value>
+      </setting>
+      <setting name="JINGLE_NODES_ADDRESS">
+        <value/>
+      </setting>
+      <setting name="JINGLE_NODES_IS_RELAY_SUPPORTED">
+        <value/>
+      </setting>
+    </group>
+    <group name="telephony">
+      <setting name="CALLING_DISABLED">
+        <type refid="true-false" />
+        <value>false</value>
+      </setting>
+      <setting name="OVERRIDE_PHONE_SUFFIX">
+        <value/>
+      </setting>
+      <setting name="TELEPHONY_BYPASS_GTALK_CAPS">
+        <value/>
+      </setting>      
+    </group>
+    <group name="encodings">
+      <setting name="OVERRIDE_ENCODINGS">
+        <type refid="true-false" />
+        <value>false</value>
+      </setting>
+      <setting name="audio">
+        <type refid="audio_encodings"/>
+        <value>G722/8000|GSM/8000|PCMA/8000|PCMU/8000|SILK/16000|SILK/24000|iLBC/8000|opus/48000|speex/16000|speex/32000|speex/8000|telephone-event/8000</value>
+      </setting>
+      <setting name="video">
+        <type refid="video_encodings"/>
+        <value>H264/90000</value>
+      </setting>
+    </group>        
   </group>
 </model>
