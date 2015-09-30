@@ -26,6 +26,7 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.sipfoundry.sipxconfig.admin.AdminContext;
 import org.sipfoundry.sipxconfig.admin.AdminSettings;
+import org.sipfoundry.sipxconfig.elasticsearch.ElasticsearchServiceImpl;
 import org.sipfoundry.sipxconfig.feature.FeatureManager;
 import org.sipfoundry.sipxconfig.search.SearchableService;
 import org.springframework.beans.factory.annotation.Required;
@@ -39,7 +40,8 @@ public class SystemAuditCleanup {
     private FeatureManager m_featureManager;
 
     public void run() {
-        if (!m_featureManager.isFeatureEnabled(SystemAuditManager.FEATURE)) {
+        if (!m_featureManager.isFeatureEnabled(ElasticsearchServiceImpl.FEATURE)
+                || !m_featureManager.isFeatureEnabled(SystemAuditManager.FEATURE)) {
             return;
         }
         LOG.warn("Starting System Audit cleanup");
