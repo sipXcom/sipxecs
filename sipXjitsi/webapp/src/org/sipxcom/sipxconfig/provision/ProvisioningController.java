@@ -13,6 +13,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.sipfoundry.sipxconfig.security.UserDetailsImpl;
 import org.sipxcom.sipxconfig.pojo.Entity;
 import org.sipxcom.sipxconfig.provision.dao.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +47,9 @@ public class ProvisioningController {
         }
         String provisionPath = props.getProperty("provision.dir");
 
-        Entity user = (Entity)auth.getPrincipal();
-        String uid = user.getUid();
+        UserDetailsImpl user = (UserDetailsImpl)auth.getPrincipal();
+        String uid = user.getUsername();
+        LOG.info("Authenticated username " + uid);
 
         StringBuilder builder = new StringBuilder();
         //make sure to recreate line settings (avoid duplicates when multiple jitsi logins)
