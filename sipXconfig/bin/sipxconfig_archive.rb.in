@@ -53,6 +53,12 @@ class Backup < ArchiveBase
     cmd "mongodump --db profiles --collection fs.chunks" or
       raise "Could not backup avatar database"
 	add_additional_databases()
+    cmd "service elasticsearch start" or
+      raise "Could not start service elasticsearch"
+    cmd "curl -XPUT 'http://localhost:9200/_snapshot/sipXcom_backup' -d '{ \"type\": \"fs\", \"settings\": { \"location\": \"/tmp/elasticsearch_backup/\", \"compress\": true }}'" or
+      raise "Could not create elasticsearch snapshot repository"
+    cmd "curl -XPUT 'http://localhost:9200/_snapshot/sipXcom_backup/elasticsearch_backup?wait_for_completion=true' -d '{ \"indices\": \"audit\" }'" or
+      raise "Could not create elasticsearch snapshot"
     cmd "echo @PACKAGE_VERSION@ > version" or
       raise "Could not generate version file"
     if params.has_key?(:no_device_files)
@@ -72,9 +78,9 @@ class Backup < ArchiveBase
 
     # by stripping @localstatedir@ we can backup/restore from/to source/production machines
     localstatedir = '@localstatedir@'[1..-1]
-    cmd "tar --transform='s,^#{localstatedir}/,var/,' -cvzf #{params[:file]} db.tar version dump/ #{attachments.join('/ ')}" or
+    cmd "tar --transform='s,^#{localstatedir}/,var/,' -cvzf #{params[:file]} db.tar version dump/ /tmp/elasticsearch_backup/ #{attachments.join('/ ')}" or
       raise "Could not archive databases"
-    FileUtils.rm_rf(['db.tar', 'version', 'dump'])
+    FileUtils.rm_rf(['db.tar', 'version', 'dump', '/tmp/elasticsearch_backup/'])
   end
 end
 
@@ -92,6 +98,7 @@ class Restore < ArchiveBase
 
   def run(params)
     pre_mongo = false
+    pre_elasticsearch = false
     backup_domain = nil
     backup_sip_domain = nil
     backup_host = nil
@@ -105,6 +112,7 @@ class Restore < ArchiveBase
       v = File.read("#{@tmpdir}/version").split(".")
       dev = (v[0].to_i == '0'.to_i and v[1].to_i == '0'.to_i)
       pre_mongo = !(dev or (v[0].to_i == '4'.to_i and v[1].to_i > '4'.to_i) or v[0].to_i > '4'.to_i or v[0].to_i >= '14'.to_i)
+      pre_elasticsearch = !(dev or (v[0].to_i >= '14'.to_i and v[1].to_i >= '10'.to_i))
     else
       raise "Not a known archive, version file is missing."
     end
@@ -147,6 +155,17 @@ class Restore < ArchiveBase
     else
       sql_exec(@restoredb, "insert into setup(setup_id) values ('migrate_profiles');") or
           raise "Failed to trigger user profile migration."
+    end
+
+    if !pre_elasticsearch
+      cmd "tar -zxvf #{params[:file]} -C / tmp/elasticsearch_backup" or
+        raise "Failed to extract elasticsearch backup from archive"
+      cmd "curl -XPUT 'http://localhost:9200/_snapshot/sipXcom_backup' -d '{ \"type\": \"fs\", \"settings\": { \"location\": \"/tmp/elasticsearch_backup/\", \"compress\": true }}'" or
+        raise "Could not create elasticsearch snapshot repository"
+      cmd "curl -XDELETE 'http://localhost:9200/audit/'" or
+        raise "Failed to remove old audit index"
+      cmd "curl -XPOST 'http://localhost:9200/_snapshot/sipXcom_backup/elasticsearch_backup/_restore'" or
+        raise "Failed to restore elasticsearch snapshot"
     end
 
     if params.has_key?(:reset_password)

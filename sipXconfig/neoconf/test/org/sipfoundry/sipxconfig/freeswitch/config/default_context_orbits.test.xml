@@ -8,6 +8,7 @@
   </extension>
   <extension name="ParkOrbitTest">
     <condition field="destination_number" expression="^12345$">
+      <action application="set" data="max_forwards=20"/>
       <action inline="true" application="set" data="slot_count=${fifo(count QPark12345)}"/>
       <action inline="true" application="set" data="slot_count=${slot_count:-9:2}"/>
     </condition>
@@ -33,11 +34,13 @@
   </extension>
   <extension name="UnParkTest">
     <condition field="destination_number" expression="^(\*412345|\*7812345)$">
+      <action application="set" data="max_forwards=20"/>
       <action application="fifo" data="QPark12345 out nowait"/>
     </condition>
   </extension>
   <extension name="ParkOrbitTransfer">
     <condition field="destination_number" expression="^1111$">
+      <action application="set" data="max_forwards=20"/>
       <action application="set" data="fifo_music=/var/sipxdata/parkserver/music/default.wav"/>
       <condition field="${sip_h_X-sipX-referror}" expression="." break="on-true">
         <action application="log" data="INFO extracting referror from sip_h_X-sipX-referror"/>
@@ -61,11 +64,13 @@
   </extension>
   <extension name="UnParkTransfer">
     <condition field="destination_number" expression="^(\*41111|\*781111)$">
+      <action application="set" data="max_forwards=20"/>
       <action application="fifo" data="QPark1111 out nowait"/>
     </condition>
   </extension>
   <extension name="ParkOrbitBare">
     <condition field="destination_number" expression="^2222$">
+      <action application="set" data="max_forwards=20"/>
       <action application="set" data="fifo_music=/var/sipxdata/parkserver/music/default.wav"/>
       <condition field="${sip_h_X-sipX-referror}" expression="." break="on-true">
         <action application="log" data="INFO extracting referror from sip_h_X-sipX-referror"/>
@@ -87,11 +92,13 @@
   </extension>
   <extension name="UnParkBare">
     <condition field="destination_number" expression="^(\*42222|\*782222)$">
+      <action application="set" data="max_forwards=20"/>
       <action application="fifo" data="QPark2222 out nowait"/>
     </condition>
   </extension>
   <extension name="ParkOrbitFull">
     <condition field="destination_number" expression="^5555$">
+      <action application="set" data="max_forwards=20"/>
       <action application="set" data="fifo_music=/var/sipxdata/parkserver/music/custom.wav"/>
       <condition field="${sip_h_X-sipX-referror}" expression="." break="on-true">
         <action application="log" data="INFO extracting referror from sip_h_X-sipX-referror"/>
@@ -115,11 +122,13 @@
   </extension>
   <extension name="UnParkFull">
     <condition field="destination_number" expression="^(\*45555|\*785555)$">
+      <action application="set" data="max_forwards=20"/>
       <action application="fifo" data="QPark5555 out nowait"/>
     </condition>
   </extension>
   <extension name="transferPark">
     <condition field="destination_number" expression="^transferPark(\d+)$">
+      <action application="set" data="max_forwards=20"/>
       <action application="set" data="ringback=${us-ring}"/>
       <action application="bridge" data="sofia/ezuce.ro/$1@ezuce.ro"/>
     </condition>
