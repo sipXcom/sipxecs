@@ -32,9 +32,7 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
-import org.elasticsearch.client.Requests;
 import org.elasticsearch.client.transport.TransportClient;
-import org.elasticsearch.cluster.metadata.IndexMetaData;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.index.query.IdsQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
@@ -68,20 +66,13 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
 
     private static final Log LOG = LogFactory.getLog(ElasticsearchServiceImpl.class);
     private static final String FILTERING_ERROR_MESSAGE = "Filtering is supported only by QueryBuilder objects.";
-    private static final String CONFIG = "Config";
+    private static final String CONFIG = "config";
+    private static final String ELASTICSEARCH_REGEXP = ".*/java -Xms256m -Xmx1g -Djava.awt.headless=true";
 
     private Client m_client;
     private String m_hostName;
     private int m_port;
     private Gson m_gson;
-
-    public void init() {
-        if (m_client == null) {
-            m_client = new TransportClient()
-                    .addTransportAddress(new InetSocketTransportAddress(
-                            m_hostName, m_port));
-        }
-    }
 
     @Required
     public void setHostName(String hostName) {
@@ -98,6 +89,19 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
         m_gson = gson;
     }
 
+    private Client getClient() {
+        if (m_client == null) {
+            try {
+                m_client = new TransportClient()
+                        .addTransportAddress(new InetSocketTransportAddress(
+                                m_hostName, m_port));
+            } catch (Exception e) {
+                LOG.debug("Cannot create elasticsearch client, probably elasticsearh service is not up yet.", e);
+            }
+        }
+        return m_client;
+    }
+
     public void setClient(Client client) {
         m_client = client;
     }
@@ -112,12 +116,12 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
     @Override
     public void storeDoc(String index, SearchableBean source) {
         IndexRequest indexRequest = getIndexRequest(index, source);
-        m_client.index(indexRequest).actionGet();
+        getClient().index(indexRequest).actionGet();
     }
 
     @Override
     public void storeBulkDocs(String index, List<SearchableBean> source) {
-        BulkRequestBuilder bulkRequest = m_client.prepareBulk();
+        BulkRequestBuilder bulkRequest = getClient().prepareBulk();
         for (SearchableBean elasticsearchBean : source) {
             bulkRequest.add(getIndexRequest(index, elasticsearchBean));
         }
@@ -137,7 +141,7 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
         if (!checkIndexExists(indexName)) {
             return new ArrayList<T>();
         }
-        SearchRequestBuilder searchBuilder = m_client.prepareSearch(indexName)
+        SearchRequestBuilder searchBuilder = getClient().prepareSearch(indexName)
                 .setFrom(start).setSize(size).setTypes(CONFIG);
         if (orderBy != null) {
             searchBuilder.addSort(orderBy, orderAscending ? SortOrder.ASC : SortOrder.DESC);
@@ -169,7 +173,7 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
         if (!checkIndexExists(indexName)) {
             return null;
         }
-        SearchRequestBuilder req = m_client.prepareSearch(indexName);
+        SearchRequestBuilder req = getClient().prepareSearch(indexName);
         IdsQueryBuilder qb = QueryBuilders.idsQuery().addIds(id);
         req.setQuery(qb);
         SearchResponse response = req.execute().actionGet();
@@ -179,7 +183,7 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
     @Override
     public Collection<ProcessDefinition> getProcessDefinitions(SnmpManager manager, Location location) {
         boolean enabled = manager.getFeatureManager().isFeatureEnabled(FEATURE, location);
-        return (enabled ? Collections.singleton(ProcessDefinition.sysv(ELASTICSEARCH, true)) : null);
+        return (enabled ? Collections.singleton(ProcessDefinition.sysvByRegex(ELASTICSEARCH, ELASTICSEARCH_REGEXP, true)) : null);
     }
 
     @Override
@@ -213,7 +217,7 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
         if (!checkIndexExists(indexName)) {
             return 0;
         }
-        CountRequestBuilder countBuilder = m_client.prepareCount().setIndices(indexName);
+        CountRequestBuilder countBuilder = getClient().prepareCount().setIndices(indexName);
         if (filter != null) {
             if (!(filter instanceof QueryBuilder)) {
                 LOG.error(FILTERING_ERROR_MESSAGE);
@@ -226,7 +230,7 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
     }
 
     private boolean checkIndexExists(String indexName) {
-        return m_client.admin().indices().prepareExists(indexName).execute()
+        return getClient().admin().indices().prepareExists(indexName).execute()
                 .actionGet().isExists();
     }
 
@@ -235,7 +239,7 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
         if (!checkIndexExists(indexName)) {
             return;
         }
-        SearchRequestBuilder searchBuilder = m_client.prepareSearch(indexName)
+        SearchRequestBuilder searchBuilder = getClient().prepareSearch(indexName)
                 .setTypes(CONFIG)
                 .setSize(Integer.MAX_VALUE);
 
@@ -251,7 +255,7 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
         SearchHit[] searchHits = response.getHits().getHits();
         if (searchHits.length > 0) {
             // Create bulk request
-            final BulkRequestBuilder bulkRequest = m_client.prepareBulk().setRefresh(true);
+            final BulkRequestBuilder bulkRequest = getClient().prepareBulk().setRefresh(true);
 
             // Add search results to bulk request
             for (final SearchHit searchHit : searchHits) {

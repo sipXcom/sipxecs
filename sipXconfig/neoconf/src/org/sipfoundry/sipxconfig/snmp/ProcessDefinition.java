@@ -60,6 +60,12 @@ public final class ProcessDefinition {
         return pd;
     }
 
+    public static ProcessDefinition sipxByRegex(String process, String regexp, boolean hideFromGlobalServiceScript) {
+        ProcessDefinition pd = sipxByRegex(process, regexp);
+        pd.setHideFromGlobalServiceScript(hideFromGlobalServiceScript);
+        return pd;
+    }
+
     public static ProcessDefinition sipxByRegex(String process, String regexp, String service) {
         ProcessDefinition pd = new ProcessDefinition(process, regexp);
         pd.setSipxServiceName(service);
