@@ -127,5 +127,117 @@ net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.RESOURCE=$line.getV
 net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.RESOURCE_PRIORITY=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber/connection/resource/RESOURCE_PRIORITY')
 net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.DTMF_METHOD=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber/connection/dtmf/DTMF_METHOD')
 net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.DTMF_MINIMAL_TONE_DURATION=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber/connection/dtmf/DTMF_MINIMAL_TONE_DURATION')
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.DEFAULT_ENCRYPTION=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber/security/DEFAULT_ENCRYPTION')
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.DEFAULT_SIPZRTP_ATTRIBUTE=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber/security/DEFAULT_SIPZRTP_ATTRIBUTE')
+#set($encrProtocol = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber/security/ENCRYPTION_PROTOCOL'))
+#if($encrProtocol)
+#set($i=0)
+#foreach($value in $encrProtocol.split("[|]"))
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.ENCRYPTION_PROTOCOL_STATUS.$value=true
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.ENCRYPTION_PROTOCOL.$value=$i
+#set($i=$i+1)
+#end
+#end
+#set($cipherSuites = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber/security/SDES_CIPHER_SUITES'))
+#if($cipherSuites)
+#set($concatenatedValue='')
+#foreach($value in $cipherSuites.split("[|]"))
+#if($concatenatedValue != '')
+#set($concatenatedValue=$concatenatedValue +','+$value)
+#else
+#set($concatenatedValue=$value)
+#end
+#end
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.SDES_CIPHER_SUITES=$concatenatedValue
+#end
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.ICE_ENABLED=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber/ice/ICE_ENABLED')
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.UPNP_ENABLED=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber/ice/UPNP_ENABLED')
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.AUTO_DISCOVER_STUN=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber/ice/AUTO_DISCOVER_STUN')
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.USE_DEFAULT_STUN_SERVER=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber/ice/USE_DEFAULT_STUN_SERVER')
+#set($stunAddresses = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber/ice/STUN_ADDRESS'))
+#if($stunAddresses)
+#set($i=0)
+#foreach($value in $stunAddresses.split("[|]"))
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.STUN${i}ADDRESS=$value
+#set($i=$i+1)
+#end
+#end
+#set($stunPort = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber/ice/STUN_PORT'))
+#if($stunPort)
+#set($i=0)
+#foreach($value in $stunPort.split("[|]"))
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.STUN${i}PORT=$value
+#set($i=$i+1)
+#end
+#end
+#set($stunSupported = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber/ice/STUN_IS_TURN_SUPPORTED'))
+#if($stunSupported)
+#set($i=0)
+#foreach($value in $stunSupported.split("[|]"))
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.STUN${i}IS_TURN_SUPPORTED=$value
+#set($i=$i+1)
+#end
+#end
+#set($stunUsername = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber/ice/STUN_USERNAME'))
+#if($stunUsername)
+#set($i=0)
+#foreach($value in $stunUsername.split("[|]"))
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.STUN${i}USERNAME=$value
+#set($i=$i+1)
+#end
+#end
+#set($stunPassw = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber/ice/STUN_PASSWORD'))
+#if($stunPassw)
+#set($i=0)
+#foreach($value in $stunPassw.split("[|]"))
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.STUN${i}.PASSWORD=$value
+#set($i=$i+1)
+#end
+#end
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.JINGLE_NODES_ENABLED=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber/ice/JINGLE_NODES_ENABLED')
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.AUTO_DISCOVER_JINGLE_NODES=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber/ice/AUTO_DISCOVER_JINGLE_NODES')
+#set($jingleAddress = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber/ice/JINGLE_NODES_ADDRESS'))
+#if($jingleAddress)
+#set($i=0)
+#foreach($value in $jingleAddress.split("[|]"))
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.JINGLENODES${i}ADDRESS=$value
+#set($i=$i+1)
+#end
+#end
+#set($jingleRelay = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber/ice/JINGLE_NODES_IS_RELAY_SUPPORTED'))
+#if($jingleRelay)
+#set($i=0)
+#foreach($value in $jingleRelay.split("[|]"))
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.JINGLENODES${i}IS_RELAY_SUPPORTED=$value
+#set($i=$i+1)
+#end
+#end
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.CALLING_DISABLED=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber/telephony/CALLING_DISABLED')
+#set($telDomain = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber/telephony/OVERRIDE_PHONE_SUFFIX'))
+#if($telDomain)
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.OVERRIDE_PHONE_SUFFIX=$telDomain
+#end
+#set($gtalkDomain = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber/telephony/TELEPHONY_BYPASS_GTALK_CAPS'))
+#if($gtalkDomain)
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.TELEPHONY_BYPASS_GTALK_CAPS=$gtalkDomain
+#end
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.OVERRIDE_ENCODINGS=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber/encodings/OVERRIDE_ENCODINGS')
+#foreach($codec in $line.getValue().getSettings().getSetting('net.java.sip.communicator.impl.protocol.jabber/encodings/audio').getType().getEnums().entrySet())
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.Encodings.$codec.key=0
+#end
+#foreach($codec in $line.getValue().getSettings().getSetting('net.java.sip.communicator.impl.protocol.jabber/encodings/video').getType().getEnums().entrySet())
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.Encodings.$codec.key=0
+#end
+#set($i=100)
+#set($audioEncoding = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber/encodings/audio'))
+#foreach($value in $audioEncoding.split("[|]"))
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.Encodings.$value=$i
+#set($i=$i - 1)
+#end
+#set($videoEncoding = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.jabber/encodings/video'))
+#foreach($value in $videoEncoding.split("[|]"))
+net.java.sip.communicator.impl.protocol.jabber.acc${xmppKey}.Encodings.$value=$i
+#set($i=$i - 1)
+#end
 #end
 #end
