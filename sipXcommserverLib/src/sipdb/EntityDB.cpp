@@ -232,39 +232,95 @@ void EntityDB::getEntitiesByType(const std::string& entityType, Entities& entiti
 
 void EntityDB::getCallerLocation(CallerLocations& locations, const std::string& identity, const std::string& host, const std::string& address)
 {
-  Entities entities;
-  getEntitiesByType(EntityRecord::entity_branch_str(), entities);
+  Entities branches;
+  getEntitiesByType(EntityRecord::entity_branch_str(), branches);
   
   EntityRecord userEntity;
-  if (findByIdentity(identity, userEntity) && !userEntity.location().empty())
-  {
-    OS_LOG_INFO(FAC_ODBC, "EntityDB::getCallerLocation - Inserting location " 
-      << userEntity.location() << " for identity " << identity);
-    locations.insert(userEntity.location());
+  if (findByIdentity(identity, userEntity) && !userEntity.allowedLocations().empty())
+  {   
+    //
+    // Now that we have the locations for this user, check for branch associated locations
+    //
+    for (std::set<std::string>::iterator locations_iter = userEntity.allowedLocations().begin(); locations_iter != userEntity.allowedLocations().end(); locations_iter++)
+    {
+      for (Entities::iterator branch_iter = branches.begin(); branch_iter != branches.end(); branch_iter++)
+      {
+        if (branch_iter->location() == *locations_iter)
+        {
+          //
+          // Get the branch loc_assoc array and insert it in the location set of this user
+          //
+          for (std::set<std::string>::iterator assoc_iter = branch_iter->associatedLocations().begin(); assoc_iter != branch_iter->associatedLocations().end(); assoc_iter++)
+          {
+            OS_LOG_INFO(FAC_ODBC, "EntityDB::getCallerLocation - Inserting location " 
+              << branch_iter->location() << "/" << *assoc_iter << " for identity " << identity);
+            locations.insert(*assoc_iter);
+          }
+        }
+      }
+    }
+    
+    return;
   }
   
   //
   // Get locations by domain or subnet
   //
-  for (Entities::iterator iter = entities.begin(); iter != entities.end(); iter++)
+  for (Entities::iterator host_iter = branches.begin(); host_iter != branches.end(); host_iter++)
   {
-    if (!iter->loc_restr_dom().empty())
+    if (!host.empty() && !host_iter->loc_restr_dom().empty() && !host_iter->allowedLocations().empty())
     {
-      if (!iter->location().empty() && wildcard_compare(iter->loc_restr_dom().c_str(), host))
+      if (wildcard_compare(host_iter->loc_restr_dom().c_str(), host))
       {
-        OS_LOG_INFO(FAC_ODBC, "EntityDB::getCallerLocation - Inserting location " 
-          << iter->location() << " for domain " << host << " matching " << iter->loc_restr_dom());
-        locations.insert(iter->location());
+        //
+        // Now that we have the locations for this user, check for branch associated locations
+        //
+        for (std::set<std::string>::iterator locations_iter = userEntity.allowedLocations().begin(); locations_iter != userEntity.allowedLocations().end(); locations_iter++)
+        {
+          for (Entities::iterator branch_iter = branches.begin(); branch_iter != branches.end(); branch_iter++)
+          {
+            if (branch_iter->location() == *locations_iter)
+            {
+              //
+              // Get the branch loc_assoc array and insert it in the location set of this user
+              //
+              for (std::set<std::string>::iterator assoc_iter = branch_iter->associatedLocations().begin(); assoc_iter != branch_iter->associatedLocations().end(); assoc_iter++)
+              {
+                OS_LOG_INFO(FAC_ODBC, "EntityDB::getCallerLocation - Inserting location " 
+                  << branch_iter->location() << "/" << *assoc_iter << " for identity " << identity << " using filter " << host_iter->loc_restr_dom());
+                locations.insert(*assoc_iter);
+              }
+            }
+          }
+        }
       }
     }
     
-    if (!iter->loc_restr_sbnet().empty())
+    if (address.empty() && !host_iter->loc_restr_sbnet().empty() && !host_iter->allowedLocations().empty())
     {
-      if (!iter->location().empty() && cidr_compare(iter->loc_restr_sbnet(), address))
+      if (cidr_compare(host_iter->loc_restr_sbnet(), address))
       {
-        OS_LOG_INFO(FAC_ODBC, "EntityDB::getCallerLocation - Inserting location " 
-          << iter->location() << " for address " << address << " matching " << iter->loc_restr_sbnet());
-        locations.insert(iter->location());
+        //
+        // Now that we have the locations for this user, check for branch associated locations
+        //
+        for (std::set<std::string>::iterator locations_iter = userEntity.allowedLocations().begin(); locations_iter != userEntity.allowedLocations().end(); locations_iter++)
+        {
+          for (Entities::iterator branch_iter = branches.begin(); branch_iter != branches.end(); branch_iter++)
+          {
+            if (branch_iter->location() == *locations_iter)
+            {
+              //
+              // Get the branch loc_assoc array and insert it in the location set of this user
+              //
+              for (std::set<std::string>::iterator assoc_iter = branch_iter->associatedLocations().begin(); assoc_iter != branch_iter->associatedLocations().end(); assoc_iter++)
+              {
+                OS_LOG_INFO(FAC_ODBC, "EntityDB::getCallerLocation - Inserting location " 
+                  << branch_iter->location() << "/" << *assoc_iter << " for identity " << identity << " using filter " << host_iter->loc_restr_sbnet());
+                locations.insert(*assoc_iter);
+              }
+            }
+          }
+        }
       }
     }
   }
