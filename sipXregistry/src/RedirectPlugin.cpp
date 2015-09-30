@@ -267,7 +267,7 @@ bool ContactList::isAllowedLocation(const UtlString& contact, const RedirectPlug
   if (_callerLocationTokens.empty())
     return true;
   
-  Url requestUri(contact, TRUE);
+  Url requestUri(contact, FALSE); // contact is a name-addr
   UtlString host;
   UtlString user;
   std::ostringstream identity;
@@ -290,11 +290,15 @@ bool ContactList::isAllowedLocation(const UtlString& contact, const RedirectPlug
   }
   
   EntityRecord entity;
+  
+  
+  
   if (!_pEntityDb->findByIdentity(identity.str(), entity))
   {
     //
     // no identity found.  
     //
+    OS_LOG_INFO(FAC_SIP, "ContactList::isAllowedLocation() - did not match any location retriction for identity " << identity.str());
     return true;
   }
   
@@ -333,7 +337,8 @@ bool ContactList::add( const UtlString& contact, const RedirectPlugin& plugin )
 {
    if (!isAllowedLocation(contact, plugin))
    {
-     OS_LOG_WARNING(FAC_SIP, "ContactList::add() revoked insertion of contact " << contact << " from " << plugin.name().data() << " Invalid Caller Location: " << _callerLocation);
+    OS_LOG_WARNING(FAC_SIP, "ContactList::add() revoked insertion of contact " << contact << " from " << plugin.name().data() 
+      << " Invalid Caller Location: " << _callerLocation " for destination " << contact.data());
      return false;
    }
    

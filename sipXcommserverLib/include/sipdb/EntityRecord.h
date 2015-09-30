@@ -157,6 +157,9 @@ public:
     
     std::set<std::string>& allowedLocations();
     static const char* allowed_locations_fld();
+    
+    std::set<std::string>& associatedLocations();
+    static const char* associated_locations_fld();
 
     //
     // Permission array to which the user has access to
@@ -241,6 +244,7 @@ private:
     int _callForwardTime;
     std::set<std::string> _permissions;
     std::set<std::string> _allowedLocations;
+    std::set<std::string> _associatedLocations;
     std::string _entity;
     std::vector<Alias> _aliases;
     std::vector<StaticUserLoc> _staticUserLoc;
@@ -305,6 +309,11 @@ inline std::set<std::string>& EntityRecord::permissions()
 inline std::set<std::string>& EntityRecord::allowedLocations()
 {
   return _allowedLocations;
+}
+
+inline std::set<std::string>& EntityRecord::associatedLocations()
+{
+  return _associatedLocations;
 }
 
 inline std::string& EntityRecord::entity()
