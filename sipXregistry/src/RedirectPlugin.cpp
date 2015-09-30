@@ -338,7 +338,7 @@ bool ContactList::add( const UtlString& contact, const RedirectPlugin& plugin )
    if (!isAllowedLocation(contact, plugin))
    {
     OS_LOG_WARNING(FAC_SIP, "ContactList::add() revoked insertion of contact " << contact << " from " << plugin.name().data() 
-      << " Invalid Caller Location: " << _callerLocation " for destination " << contact.data());
+      << " Invalid Caller Location: " << _callerLocation << " for destination " << contact.data());
      return false;
    }
    
