@@ -32,7 +32,9 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.client.Requests;
 import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.cluster.metadata.IndexMetaData;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.index.query.IdsQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
@@ -132,6 +134,9 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
     @Override
     public <T extends SearchableBean> List<T> searchDocs(String indexName, Object filter,
             int start, int size, Class<T> clazz, String orderBy, boolean orderAscending) {
+        if (!checkIndexExists(indexName)) {
+            return new ArrayList<T>();
+        }
         SearchRequestBuilder searchBuilder = m_client.prepareSearch(indexName)
                 .setFrom(start).setSize(size).setTypes(CONFIG);
         if (orderBy != null) {
@@ -161,6 +166,9 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
 
     @Override
     public <T extends SearchableBean> T searchDocById(String indexName, String id, Class<T> clazz) {
+        if (!checkIndexExists(indexName)) {
+            return null;
+        }
         SearchRequestBuilder req = m_client.prepareSearch(indexName);
         IdsQueryBuilder qb = QueryBuilders.idsQuery().addIds(id);
         req.setQuery(qb);
@@ -202,6 +210,9 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
 
     @Override
     public int countDocs(String indexName, Object filter) {
+        if (!checkIndexExists(indexName)) {
+            return 0;
+        }
         CountRequestBuilder countBuilder = m_client.prepareCount().setIndices(indexName);
         if (filter != null) {
             if (!(filter instanceof QueryBuilder)) {
@@ -214,8 +225,16 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
         return (int) response.getCount();
     }
 
+    private boolean checkIndexExists(String indexName) {
+        return m_client.admin().indices().prepareExists(indexName).execute()
+                .actionGet().isExists();
+    }
+
     @Override
     public void deleteDocs(String indexName, Object filter) {
+        if (!checkIndexExists(indexName)) {
+            return;
+        }
         SearchRequestBuilder searchBuilder = m_client.prepareSearch(indexName)
                 .setTypes(CONFIG)
                 .setSize(Integer.MAX_VALUE);

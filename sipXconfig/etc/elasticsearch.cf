@@ -21,6 +21,31 @@ bundle agent elasticsearch {
       "any" usebundle => "elasticsearch_systemctl_running";
     !fedora16_or_greater::
       "any" usebundle => "elasticsearch_sysv_running";
+    primary::
+      "any" usebundle => elasticsearch_config;
+}
+
+bundle agent elasticsearch_config {
+  files:
+    any::
+      "/etc/elasticsearch/elasticsearch.yml",
+        comment => "configure elasticsearch",
+        create => "true",
+        perms => mog("644", "root", "root"),
+        edit_line => elasticsearch_config_file,
+        classes => if_repaired("restart_elasticsearch");
+}
+
+bundle edit_line elasticsearch_config_file {
+  insert_lines:
+    any::
+      "/etc/elasticsearch/elasticsearch.yml"
+        insert_type => "file";
+      "path.repo: \"/tmp/\"";
+
+  delete_lines:
+    any::
+      ".*";
 }
 
 bundle agent elasticsearch_sysv_running {
