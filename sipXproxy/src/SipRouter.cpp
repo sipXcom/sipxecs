@@ -78,6 +78,7 @@ static const int ALARM_ON_CONSECUTIVE_YIELD = 5;
 
 static const char* X_SIPX_CALLER_LOCATIONS = "X-Sipx-Caller-Locations";
 static const char* X_SIPX_CALLER_LOCATIONS_DONE = "X-Sipx-Caller-Locations-Done";
+static const char* X_SIPX_CALLER_LOCATIONS_AUTH_ID = "X-Sipx-Caller-Locations-Auth-Id";
 
 // STRUCTS
 // TYPEDEFS
@@ -928,7 +929,11 @@ void SipRouter::identifyCallerLocation(SipMessage& sipRequest)
     return;
   }
   
-  if( !sipRequest.getHeaderValue( 0, X_SIPX_CALLER_LOCATIONS ) && !sipRequest.getHeaderValue( 0, X_SIPX_CALLER_LOCATIONS_DONE ))
+  UtlString authIdentity;
+  SipXauthIdentity sipxIdentity(sipRequest, SipXauthIdentity::AuthIdentityHeaderName, SipXauthIdentity::allowUnbound);
+  bool hasAuthIdentity = sipxIdentity.getIdentity(authIdentity);
+  
+  if(hasAuthIdentity || (!sipRequest.getHeaderValue( 0, X_SIPX_CALLER_LOCATIONS ) && !sipRequest.getHeaderValue( 0, X_SIPX_CALLER_LOCATIONS_DONE )))
   {
     UtlString sendAddress;
     int sendPort;
@@ -936,6 +941,7 @@ void SipRouter::identifyCallerLocation(SipMessage& sipRequest)
     Url toUrl;
     UtlString toTag;
     UtlString identity;
+    
     UtlString host;
     EntityDB::CallerLocations callerLocations;
     
@@ -954,7 +960,31 @@ void SipRouter::identifyCallerLocation(SipMessage& sipRequest)
       return;
     }
     
+    
+    if (hasAuthIdentity)
+    {
+      identity = authIdentity;
+      
+      //
+      // Check if the request already has been checked using the auth-identity
+      //
+      if (sipRequest.getHeaderValue(0, X_SIPX_CALLER_LOCATIONS_AUTH_ID))
+      {
+        if (identity.compareTo(sipRequest.getHeaderValue(0, X_SIPX_CALLER_LOCATIONS_AUTH_ID)) == 0)
+        {
+          //
+          // Bail out.  we already got the locations for this guy
+          //
+          return;
+        }
+      }
+    }
+    
+    
+    
+    OS_LOG_INFO(FAC_SIP, "SipRouter::identifyCallerLocation - determining location for identity " << identity.data());
     SipRouter::getEntityDBInstance()->getCallerLocation(callerLocations, identity.data(), host.data(), sendAddress.data());
+
     
     if (!callerLocations.empty())
     {
@@ -976,7 +1006,12 @@ void SipRouter::identifyCallerLocation(SipMessage& sipRequest)
       
       if (!locHeader.str().empty())
       {
+        OS_LOG_INFO(FAC_SIP, "SipRouter::identifyCallerLocation - setting location for identity " << identity.data() << " to " << locHeader.str());
         sipRequest.setHeaderValue(X_SIPX_CALLER_LOCATIONS, locHeader.str().c_str(), 0);
+        if (hasAuthIdentity)
+        {
+          sipRequest.setHeaderValue(X_SIPX_CALLER_LOCATIONS_AUTH_ID, identity.data(), 0);
+        }
       }
       else
       {
@@ -1321,6 +1356,7 @@ SipRouter::ProxyAction SipRouter::proxyMessage(SipMessage& sipRequest, SipMessag
               sipRequest.removeHeader( SIP_SIPX_SPIRAL_HEADER, 0 );
               sipRequest.removeHeader( X_SIPX_CALLER_LOCATIONS, 0 );
               sipRequest.removeHeader( X_SIPX_CALLER_LOCATIONS_DONE, 0 );
+              sipRequest.removeHeader( X_SIPX_CALLER_LOCATIONS_AUTH_ID, 0 );
            }
         }
 
