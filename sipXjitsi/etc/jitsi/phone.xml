@@ -1,5 +1,129 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE model PUBLIC "-//SIPFoundry//sipXconfig//Model specification 2.0//EN"
-  "http://www.sipfoundry.org/sipXconfig/dtd/setting_2_0.dtd">
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!DOCTYPE model PUBLIC "-//SIPFoundry//sipXconfig//Model specification 2.0//EN" "http://www.sipfoundry.org/sipXconfig/dtd/setting_2_0.dtd"[
+<!ENTITY types SYSTEM "types.xml">
+]>
+
 <model>
+  &types;  
+  <group name="GUI">
+    <group name="MainFrame">
+      <setting name="height">
+        <value>600</value>
+      </setting>
+      <setting name="width">
+        <value>250</value>
+      </setting>
+      <setting name="x">
+        <value>1164</value>
+      </setting>
+      <setting name="y">
+        <value>339</value>
+      </setting>      
+    </group>
+    <group name="File">
+      <setting name="SHOW_ACCOUNT_CONFIG">
+        <type refid="true-false"/>
+        <value>true</value>
+      </setting>
+      <setting name="CONTACT_ADD_DISABLED">
+        <type refid="true-false"/>
+        <value>false</value>
+      </setting>
+      <setting name="CREATE_GROUP_DISABLED">
+        <type refid="true-false"/>
+        <value>false</value>
+      </setting>
+      <setting name="GO_TO_CHATROOM_DISABLED">
+        <type refid="true-false"/>
+        <value>false</value>
+      </setting>    
+    </group>
+    <group name="Tools">
+      <setting name="AUTO_ANSWER_MENU_DISABLED">
+        <type refid="true-false"/>
+        <value>false</value>
+      </setting>
+      <setting name="SHOW_OPTIONS_WINDOW">
+        <type refid="true-false"/>
+        <value>false</value>
+      </setting>          
+    </group>
+    <group name="Options">
+      <setting name="General">
+        <type refid="true-false"/>
+        <value>false</value>
+      </setting>
+      <setting name="Video">
+        <type refid="true-false"/>
+        <value>false</value>
+      </setting>
+      <setting name="Security">
+        <type refid="true-false"/>
+        <value>false</value>
+      </setting>
+      <setting name="Events">
+        <type refid="true-false"/>
+        <value>false</value>
+      </setting>
+      <setting name="Chat">
+        <type refid="true-false"/>
+        <value>false</value>
+      </setting>
+      <setting name="Advanced">
+        <type refid="true-false"/>
+        <value>false</value>
+      </setting>
+      <group name="Advanced_group">
+        <setting name="H264">
+          <type refid="true-false"/>
+          <value>false</value>
+        </setting>
+        <setting name="Global">
+          <type refid="true-false"/>
+          <value>false</value>
+        </setting>
+        <setting name="SIP">
+          <type refid="true-false"/>
+          <value>false</value>
+        </setting>
+        <setting name="Contact_sources">
+          <type refid="true-false"/>
+          <value>false</value>
+        </setting>
+        <setting name="Keybindings">
+          <type refid="true-false"/>
+          <value>false</value>
+        </setting>
+        <setting name="Plug_ins">
+          <type refid="true-false"/>
+          <value>false</value>
+        </setting>
+        <setting name="Skings">
+          <type refid="true-false"/>
+          <value>false</value>
+        </setting>
+        <setting name="Call_Recording">
+          <type refid="true-false"/>
+          <value>false</value>
+        </setting>
+        <setting name="Logging">
+          <type refid="true-false"/>
+          <value>false</value>
+        </setting>
+        <setting name="Provisioning">
+          <type refid="true-false"/>
+          <value>false</value>
+        </setting>
+        <setting name="DNS">
+          <type refid="true-false"/>
+          <value>true</value>
+        </setting>
+        <setting name="TLS">
+          <type refid="true-false"/>
+          <value>false</value>
+        </setting>        
+      </group>
+    </group>    
+  </group>
 </model>
