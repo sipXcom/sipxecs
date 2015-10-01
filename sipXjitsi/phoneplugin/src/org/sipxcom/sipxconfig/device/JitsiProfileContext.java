@@ -27,6 +27,7 @@ public class JitsiProfileContext extends ProfileContext<JitsiPhone> {
 
     public void mapDataInContext(Map<String, Object> context) {
         JitsiPhone phone = getDevice();
+        context.put("phone", phone);
         List<Line> lines = phone.getLines();
 
         HashMap<Long, Line> linesSettings = new HashMap<Long, Line>();
