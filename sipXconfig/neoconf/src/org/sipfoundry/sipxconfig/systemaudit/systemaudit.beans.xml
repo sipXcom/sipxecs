@@ -67,15 +67,16 @@
   </bean>
 
   <task:scheduled-tasks>
-    <task:scheduled ref="systemAuditCleanup" method="run" fixed-delay="86400000"/>
+    <task:scheduled ref="systemAuditCleanup" method="run" fixed-delay="86400000" initial-delay="3600000"/>
   </task:scheduled-tasks>
 
   <bean id="configChangeLoader" class="org.sipfoundry.sipxconfig.systemaudit.ConfigChangeLoader">
     <property name="searchableService" ref="searchableService" />
+    <property name="featureManager" ref="featureManager" />
   </bean>
 
   <task:scheduled-tasks>
-    <task:scheduled ref="configChangeLoader" method="run" fixed-delay="30000"/>
+    <task:scheduled ref="configChangeLoader" method="run" fixed-delay="30000" initial-delay="30000"/>
   </task:scheduled-tasks>
 
 </beans>

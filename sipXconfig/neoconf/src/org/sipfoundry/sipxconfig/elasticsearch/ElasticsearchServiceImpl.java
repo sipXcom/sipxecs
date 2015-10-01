@@ -32,6 +32,7 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.client.transport.NoNodeAvailableException;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.index.query.IdsQueryBuilder;
@@ -66,6 +67,7 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
 
     private static final Log LOG = LogFactory.getLog(ElasticsearchServiceImpl.class);
     private static final String FILTERING_ERROR_MESSAGE = "Filtering is supported only by QueryBuilder objects.";
+    private static final String NO_NODE_AVAILABLE_ERROR_MESSAGE = "No available nodes in ElasticSearch.";
     private static final String CONFIG = "config";
     private static final String ELASTICSEARCH_REGEXP = ".*/java -Xms256m -Xmx1g -Djava.awt.headless=true";
 
@@ -116,7 +118,11 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
     @Override
     public void storeDoc(String index, SearchableBean source) {
         IndexRequest indexRequest = getIndexRequest(index, source);
-        getClient().index(indexRequest).actionGet();
+        try {
+            getClient().index(indexRequest).actionGet();
+        } catch (NoNodeAvailableException e) {
+            LOG.debug(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
+        }
     }
 
     @Override
@@ -128,10 +134,14 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
         if (bulkRequest.numberOfActions() <= 0) {
             return;
         }
-        BulkResponse bulkResponse = bulkRequest.execute().actionGet();
-        if (bulkResponse.hasFailures()) {
-            LOG.error("Perstisting searchable object encountered errors:"
-                    + bulkResponse.buildFailureMessage());
+        try {
+            BulkResponse bulkResponse = bulkRequest.execute().actionGet();
+            if (bulkResponse.hasFailures()) {
+                LOG.error("Perstisting searchable object encountered errors:"
+                        + bulkResponse.buildFailureMessage());
+            }
+        } catch (NoNodeAvailableException e) {
+            LOG.debug(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
         }
     }
 
@@ -153,8 +163,13 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
             QueryBuilder queryBuilder = (QueryBuilder) filter;
             searchBuilder.setQuery(queryBuilder);
         }
-        SearchResponse response = searchBuilder.execute().actionGet();
-        return mapSearchResponseToObject(response, clazz);
+        try {
+            SearchResponse response = searchBuilder.execute().actionGet();
+            return mapSearchResponseToObject(response, clazz);
+        } catch (NoNodeAvailableException e) {
+            LOG.debug(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
+            return new ArrayList<T>();
+        }
     }
 
     private <T extends SearchableBean> List<T> mapSearchResponseToObject(SearchResponse response, Class<T> clazz) {
@@ -176,14 +191,20 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
         SearchRequestBuilder req = getClient().prepareSearch(indexName);
         IdsQueryBuilder qb = QueryBuilders.idsQuery().addIds(id);
         req.setQuery(qb);
-        SearchResponse response = req.execute().actionGet();
-        return mapSearchResponseToObject(response, clazz).get(0);
+        try {
+            SearchResponse response = req.execute().actionGet();
+            return mapSearchResponseToObject(response, clazz).get(0);
+        } catch (NoNodeAvailableException e) {
+            LOG.debug(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
+            return null;
+        }
     }
 
     @Override
     public Collection<ProcessDefinition> getProcessDefinitions(SnmpManager manager, Location location) {
         boolean enabled = manager.getFeatureManager().isFeatureEnabled(FEATURE, location);
-        return (enabled ? Collections.singleton(ProcessDefinition.sysvByRegex(ELASTICSEARCH, ELASTICSEARCH_REGEXP, true)) : null);
+        return (enabled ? Collections.singleton(ProcessDefinition.sysvByRegex(
+                ELASTICSEARCH, ELASTICSEARCH_REGEXP, true)) : null);
     }
 
     @Override
@@ -230,8 +251,13 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
     }
 
     private boolean checkIndexExists(String indexName) {
-        return getClient().admin().indices().prepareExists(indexName).execute()
+        try {
+            return getClient().admin().indices().prepareExists(indexName).execute()
                 .actionGet().isExists();
+        } catch (NoNodeAvailableException e) {
+            LOG.debug(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
+            return false;
+        }
     }
 
     @Override
@@ -250,24 +276,29 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
             QueryBuilder queryBuilder = (QueryBuilder) filter;
             searchBuilder.setQuery(queryBuilder);
         }
+        try {
+            SearchResponse response = searchBuilder.execute().actionGet();
+            SearchHit[] searchHits = response.getHits().getHits();
+            if (searchHits.length > 0) {
+                // Create bulk request
+                final BulkRequestBuilder bulkRequest = getClient()
+                        .prepareBulk().setRefresh(true);
 
-        SearchResponse response = searchBuilder.execute().actionGet();
-        SearchHit[] searchHits = response.getHits().getHits();
-        if (searchHits.length > 0) {
-            // Create bulk request
-            final BulkRequestBuilder bulkRequest = getClient().prepareBulk().setRefresh(true);
+                // Add search results to bulk request
+                for (final SearchHit searchHit : searchHits) {
+                    final DeleteRequest deleteRequest = new DeleteRequest(
+                            indexName, CONFIG, searchHit.getId());
+                    bulkRequest.add(deleteRequest);
+                }
 
-            // Add search results to bulk request
-            for (final SearchHit searchHit : searchHits) {
-                final DeleteRequest deleteRequest = new DeleteRequest(indexName, CONFIG, searchHit.getId());
-                bulkRequest.add(deleteRequest);
+                // Run bulk request
+                final BulkResponse bulkResponse = bulkRequest.execute().actionGet();
+                if (bulkResponse.hasFailures()) {
+                    LOG.error(bulkResponse.buildFailureMessage());
+                }
             }
-
-            // Run bulk request
-            final BulkResponse bulkResponse = bulkRequest.execute().actionGet();
-            if (bulkResponse.hasFailures()) {
-                LOG.error(bulkResponse.buildFailureMessage());
-            }
+        } catch (NoNodeAvailableException e) {
+            LOG.debug(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
         }
     }
 

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.LinkedTransferQueue;
 
+import org.sipfoundry.sipxconfig.feature.FeatureManager;
 import org.sipfoundry.sipxconfig.search.SearchableBean;
 import org.sipfoundry.sipxconfig.search.SearchableService;
 import org.springframework.beans.factory.annotation.Required;
@@ -28,8 +29,12 @@ public class ConfigChangeLoader {
 
     private LinkedTransferQueue<ConfigChange> m_configChangeQueue = new LinkedTransferQueue<ConfigChange>();
     private SearchableService m_searchableService;
+    private FeatureManager m_featureManager;
 
     public void run() {
+        if (!m_featureManager.isFeatureEnabled(SystemAuditManager.FEATURE)) {
+            return;
+        }
         List<SearchableBean> persistableConfigChanges = new ArrayList<SearchableBean>();
         m_configChangeQueue.drainTo(persistableConfigChanges);
         if (!persistableConfigChanges.isEmpty()) {
@@ -45,6 +50,11 @@ public class ConfigChangeLoader {
     @Required
     public void setSearchableService(SearchableService searchableService) {
         m_searchableService = searchableService;
+    }
+
+    @Required
+    public void setFeatureManager(FeatureManager featureManager) {
+        m_featureManager = featureManager;
     }
 
 }
