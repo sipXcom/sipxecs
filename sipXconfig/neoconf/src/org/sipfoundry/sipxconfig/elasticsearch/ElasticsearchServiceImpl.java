@@ -188,7 +188,7 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
 
     @Override
     public void featureChangePrecommit(FeatureManager manager, FeatureChangeValidator validator) {
-        validator.singleLocationOnly(FEATURE);
+        validator.primaryLocationOnly(FEATURE);
     }
 
     @Override
