@@ -292,14 +292,22 @@ bool ContactList::isAllowedLocation(const UtlString& contact, const RedirectPlug
   EntityRecord entity;
   
   
-  
-  if (!_pEntityDb->findByIdentity(identity.str(), entity))
+  if (identity.str().find("~~vm~") == 0 && !_pEntityDb->findByAliasIdentity(identity.str(), entity))
   {
     //
-    // no identity found.  
-    //
-    OS_LOG_INFO(FAC_SIP, "ContactList::isAllowedLocation() - did not match any location retriction for identity " << identity.str());
+    // no voice mail alias found.  
+    //  
+    OS_LOG_INFO(FAC_SIP, "ContactList::isAllowedLocation() - did not match any location restriction for voice mail identity " << identity.str());
     return true;
+  }
+  else if (!_pEntityDb->findByIdentity(identity.str(), entity))
+  {
+    //
+    // no identity nor voice mail alias found.  
+    //  
+    OS_LOG_INFO(FAC_SIP, "ContactList::isAllowedLocation() - did not match any location restriction for user identity " << identity.str());
+    return true;
+    
   }
   
   if (entity.allowedLocations().empty())
@@ -307,6 +315,7 @@ bool ContactList::isAllowedLocation(const UtlString& contact, const RedirectPlug
     //
     // no location specified
     //
+    OS_LOG_INFO(FAC_SIP, "ContactList::isAllowedLocation() No location restriction defined for contact " << contact << " from " << plugin.name().data());
     return true;
   }
   
