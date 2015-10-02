@@ -15,7 +15,8 @@
           maxlength="40"
           validators="ognl:nameValidator"
           displayName="message:name"
-          value="ognl:#this.item.name"/>
+          value="ognl:#this.item.name"
+          disabled="ognl:disableName"/>
      </tr>
     </span>
     <tr jwcid="@common/FieldPanel" for="item:description"  field="component:description" label="message:description">
