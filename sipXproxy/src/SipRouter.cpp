@@ -996,7 +996,7 @@ void SipRouter::identifyCallerLocation(SipMessage& sipRequest)
         if (!iter->empty())
         {
           locHeader << *iter;
-          if (iterCount < callerLocations.size() - 0)
+          if (iterCount < callerLocations.size() - 1)
           {
             locHeader << ", ";
           }
