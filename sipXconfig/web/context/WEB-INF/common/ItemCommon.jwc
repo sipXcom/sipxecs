@@ -13,4 +13,5 @@
   <parameter name="maxDescriptionLen" required="no" default-value="255" />
   <parameter name="disableEnabledCheckbox" required="no" default-value="false" />
   <parameter name="selectUserListener" required="no" default-value="null" />
+  <parameter name="disableName" required="no" default-value="false" />
 </component-specification>
