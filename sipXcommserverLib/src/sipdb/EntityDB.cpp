@@ -202,8 +202,21 @@ void EntityDB::getEntitiesByType(const std::string& entityType, Entities& entiti
   mongo::BSONObjBuilder builder;
   BaseDB::nearest(builder, query);
 
+  /** query N objects from the database into an array.  makes sense mostly when you want a small number of results.  if a huge number, use
+            query() and iterate the cursor.
+      void findN(vector<BSONObj>& out, const string&ns, Query query, int nToReturn, int nToSkip = 0, const BSONObj *fieldsToReturn = 0, int queryOptions = 0);
+    */
+      
   BSONObjects objects;
-  conn->get()->findN(objects, _ns, readQueryMaxTimeMS(builder.obj()), 0, mongo::QueryOption_SlaveOk);
+  conn->get()->findN(
+    objects, // out
+    _ns, // ns
+    readQueryMaxTimeMS(builder.obj()), // query
+    1024, // nToReturn
+    0, // nToSkip,
+    0, // fieldsToReturn
+    mongo::QueryOption_SlaveOk // queryOptions
+  );
 
   entities.clear();
   for (BSONObjects::iterator iter = objects.begin(); iter != objects.end(); iter++)
