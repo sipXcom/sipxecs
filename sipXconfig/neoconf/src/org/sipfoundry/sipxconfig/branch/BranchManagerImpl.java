@@ -97,6 +97,8 @@ public class BranchManagerImpl extends SipxHibernateDaoSupport<Branch> implement
                 branches.add(branch);
                 sqlUpdates.add("update users set branch_id=null where branch_id=" + id);
                 sqlUpdates.add("update group_storage set branch_id=null where branch_id=" + id);
+                sqlUpdates.add("delete from branch_route_domain where branch_id=" + id);
+                sqlUpdates.add("delete from branch_route_subnet where branch_id=" + id);
                 sqlUpdates.add("delete from branch where branch_id=" + id);
                 getHibernateTemplate().evict(branch);
             }
