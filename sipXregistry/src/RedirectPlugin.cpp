@@ -267,15 +267,15 @@ bool ContactList::isAllowedLocation(const UtlString& contact, const RedirectPlug
   if (_callerLocationTokens.empty())
     return true;
   
-  Url requestUri(contact, FALSE); // contact is a name-addr
+  Url requestUri(mRequestString, TRUE); // request-uri is an addr-spec
   UtlString host;
   UtlString user;
   std::ostringstream identity;
-  
+   
   requestUri.getHostAddress(host);
   requestUri.getUserId(user);
   
-  if (contact.first("sipxecs-line-id") != UtlString::UTLSTRING_NOT_FOUND)
+  if (mRequestString.first("sipxecs-line-id") != UtlString::UTLSTRING_NOT_FOUND)
   {
     //
     // This is a gateway call.  Gateway identity does not have a user
