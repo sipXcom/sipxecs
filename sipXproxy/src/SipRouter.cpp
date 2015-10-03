@@ -979,8 +979,24 @@ void SipRouter::identifyCallerLocation(SipMessage& sipRequest)
         }
       }
     }
-    
-    
+    else
+    {
+      //
+      // final check if the identity is an alias
+      //
+      if (mDomainName.compareTo(host.data()) != 0 && isLocalDomain(fromUrl, true))
+      {
+        host = mDomainName;
+        std::ostringstream realIdentity;
+        UtlString user;
+        fromUrl.getUserId(user);
+        realIdentity << user.data() << "@" << mDomainName.data();
+        
+        OS_LOG_INFO(FAC_SIP, "SipRouter::identifyCallerLocation - using " << realIdentity.str() << " instead of " << identity.data());
+        
+        identity = realIdentity.str();
+      }
+    }    
     
     OS_LOG_INFO(FAC_SIP, "SipRouter::identifyCallerLocation - determining location for identity " << identity.data());
     SipRouter::getEntityDBInstance()->getCallerLocation(callerLocations, identity.data(), host.data(), sendAddress.data());
