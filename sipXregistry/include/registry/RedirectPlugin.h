@@ -504,7 +504,7 @@ public:
    const std::string getDiversionHeader() const;
    void setDiversionHeader(const std::string& diversion);
    
-   bool isAllowedLocation(const UtlString& contact, const RedirectPlugin& plugin) const;
+   bool isAllowedLocation(const UtlString& contact, const RedirectPlugin& plugin);
 private:
    ContactList( const UtlString& requestString /* for logging purposes */,
            EntityDB* pEntityDb,
@@ -521,6 +521,8 @@ private:
    EntityDB* _pEntityDb;
    std::string _callerLocation;
    std::set<std::string> _callerLocationTokens;
+   bool _isTrustedLocation;
+   bool _hasProcessedLocation;
 
    friend class SipRedirectServer;
    friend class ContactListTest;
