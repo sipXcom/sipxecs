@@ -253,7 +253,9 @@ ContactList::ContactList(
    mRequestString( requestString ),
    mbListWasModified( false ),
    _pEntityDb(pEntityDb),
-   _callerLocation(callerLocation)
+   _callerLocation(callerLocation),
+   _isTrustedLocation(false),
+   _hasProcessedLocation(false)
 {
   if (!_callerLocation.empty())
   {
@@ -262,18 +264,41 @@ ContactList::ContactList(
   }
 }
 
-bool ContactList::isAllowedLocation(const UtlString& contact, const RedirectPlugin& plugin) const
+bool ContactList::isAllowedLocation(const UtlString& contact, const RedirectPlugin& plugin)
 {
-  if (_callerLocationTokens.empty())
+  if (_isTrustedLocation || _callerLocationTokens.empty())
+  {
+    OS_LOG_INFO(FAC_SIP, "ContactList::isAllowedLocation() No location restriction defined for contact " << contact.data() << " added by plugin " << plugin.name().data());
     return true;
+  }
   
+  //
+  // Check if we have already verified the location for this contact list
+  //  Simply allow or disallow further additions based on previous results
+  //
+  if (_hasProcessedLocation)
+  {
+    if (!_isTrustedLocation)
+    {
+      OS_LOG_WARNING(FAC_SIP, "ContactList::isAllowedLocation() REJECTED insertion of contact " << contact.data() << " added by plugin " << plugin.name().data() << " because of location restrictions");
+    }
+    return _isTrustedLocation;
+  }
+  _hasProcessedLocation = true;
+    
   Url requestUri(mRequestString, TRUE); // request-uri is an addr-spec
+  Url contactUri(contact, FALSE); // contact-uri is an name-addr
+  
   UtlString host;
   UtlString user;
+  UtlString contactUser;
+  UtlString contactHost;
   std::ostringstream identity;
    
   requestUri.getHostAddress(host);
   requestUri.getUserId(user);
+  contactUri.getUserId(contactUser);
+  contactUri.getHostAddress(contactHost);
   
   if (mRequestString.first("sipxecs-line-id") != UtlString::UTLSTRING_NOT_FOUND)
   {
@@ -283,6 +308,13 @@ bool ContactList::isAllowedLocation(const UtlString& contact, const RedirectPlug
     UtlString lineId;
     requestUri.getUrlParameter("sipxecs-line-id", lineId, 0);
     identity << host.data() << ";" << "sipxecs-line-id=" << lineId.data();
+  }
+  else if (mRequestString.first('*') == 0)
+  {
+    //
+    // This is a star code.  It won't match any identity so let us use the user of the contact
+    //
+    identity << contactUser.data() << "@" << host.data();
   }
   else
   {
@@ -298,6 +330,7 @@ bool ContactList::isAllowedLocation(const UtlString& contact, const RedirectPlug
     // no voice mail alias found.  
     //  
     OS_LOG_INFO(FAC_SIP, "ContactList::isAllowedLocation() - did not match any location restriction for voice mail identity " << identity.str());
+    _isTrustedLocation = true;
     return true;
   }
   else if (!_pEntityDb->findByIdentity(identity.str(), entity))
@@ -306,6 +339,7 @@ bool ContactList::isAllowedLocation(const UtlString& contact, const RedirectPlug
     // no identity nor voice mail alias found.  
     //  
     OS_LOG_INFO(FAC_SIP, "ContactList::isAllowedLocation() - did not match any location restriction for user identity " << identity.str());
+    _isTrustedLocation = true;
     return true;
     
   }
@@ -315,7 +349,8 @@ bool ContactList::isAllowedLocation(const UtlString& contact, const RedirectPlug
     //
     // no location specified
     //
-    OS_LOG_INFO(FAC_SIP, "ContactList::isAllowedLocation() No location restriction defined for contact " << contact << " from " << plugin.name().data());
+    OS_LOG_INFO(FAC_SIP, "ContactList::isAllowedLocation() No location restriction defined for contact " << contact.data() << " added by plugin " << plugin.name().data());
+    _isTrustedLocation = true;
     return true;
   }
   
@@ -328,10 +363,17 @@ bool ContactList::isAllowedLocation(const UtlString& contact, const RedirectPlug
     
     if (_callerLocationTokens.find(loc) != _callerLocationTokens.end())
     {
-      OS_LOG_INFO(FAC_SIP, "ContactList::isAllowedLocation() found matching location " << loc << " for contact " << contact << " from " << plugin.name().data());
+      OS_LOG_INFO(FAC_SIP, "ContactList::isAllowedLocation() found matching location " << loc << " for contact " << contact.data() << " added by plugin " << plugin.name().data());
       foundMatch = true;
       break;
     }
+  }
+  
+  _isTrustedLocation = foundMatch;
+  
+  if (!_isTrustedLocation)
+  {
+    OS_LOG_WARNING(FAC_SIP, "ContactList::isAllowedLocation() REJECTED insertion of contact " << contact.data() << " added by plugin " << plugin.name().data() << " because of location restrictions");
   }
     
   return foundMatch;
