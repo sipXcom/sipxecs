@@ -87,6 +87,9 @@ public:
   // Starts monitor thread and sets _isRunning variable true
   bool run();
 
+  // Sets _isRunning variable false
+  void requestStop();
+
   // Sets _isRunning variable false and then waits for the monitor thread to finish
   void stop();
 
