@@ -97,17 +97,18 @@ bool MongoOpLog::run()
   return true;
 }
 
+void MongoOpLog::requestStop()
+{
+  OS_LOG_INFO(FAC_SIP, "MongoOpLog::requestStop notify MongoOpLog thread");
+  _isRunning = false;
+}
+
 void MongoOpLog::stop()
 {
-  if (false == _isRunning)
-  {
-    return;
-  }
+  requestStop();
 
   OS_LOG_INFO(FAC_SIP, "MongoOpLog::stop:" <<
                        " stopping MongoOpLog thread");
-
-  _isRunning = false;
 
   if (_pThread)
   {
