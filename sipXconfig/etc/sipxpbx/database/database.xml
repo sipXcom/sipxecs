@@ -490,6 +490,7 @@
   	<antcall target="add_location_location" />
     <antcall target="remove_chat_meeting_setting" />
   	<antcall target="system_audit_remove" />
+  	<antcall target="openacd_autologout_agent_group" />
   </target>
 
   <target name="plugin-patches">
@@ -1507,6 +1508,9 @@
   </target>
   <target name="system_audit_remove" unless="system_audit_remove">
     <db-patch patch="system_audit_remove"/>
+  </target>
+  <target name="openacd_autologout_agent_group" unless="openacd_autologout_agent_group">
+    <db-patch patch="openacd_autologout_agent_group"/>
   </target>
 
 	<!--
