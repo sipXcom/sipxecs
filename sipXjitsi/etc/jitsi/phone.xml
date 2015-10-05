@@ -204,6 +204,29 @@
         <type refid="video_width"/>
         <value>Auto</value>
       </setting>      
-    </group>  
+    </group>
+  </group>
+  <group name="advanced">
+    <group name="h264">
+      <setting name="defaultProfile">
+        <type refid="h264_profile"/>
+        <value>main</value>
+      </setting>
+      <setting name="preferredMethod">
+        <type refid="h264_method"/>
+        <value>signaling</value>
+      </setting>
+      <setting name="preset">
+        <type refid="h264_preset"/>
+        <value>ultrafast</value>
+      </setting>
+      <setting name="defaultIntraRefresh">
+        <type refid="true-false"/>
+        <value>true</value>
+      </setting>
+      <setting name="keyint">
+        <value>150</value>
+      </setting>      
+    </group>
   </group>
 </model>
