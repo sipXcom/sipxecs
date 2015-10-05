@@ -26,7 +26,9 @@ import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.sipfoundry.commons.mongo.MongoConstants;
 import org.sipfoundry.sipxconfig.branch.Branch;
+import org.sipfoundry.sipxconfig.branch.BranchUtils;
 import org.sipfoundry.sipxconfig.common.Replicable;
 import org.sipfoundry.sipxconfig.common.SipUri;
 import org.sipfoundry.sipxconfig.commserver.imdb.AliasMapping;
@@ -324,10 +326,10 @@ public class AttendantRule extends DialingRule implements Replicable {
         AliasMapping liveAttendantAlias = new AliasMapping(getExtension(), liveContact, ALIAS_RELATION);
         AliasMapping attendantAlias = new AliasMapping(getExtension(), String.format(ATTENDANT_CONTACT,
             getAttendantIdentity(), domainName), ALIAS_RELATION);
-        if (m_liveAttendantEnabled) {
+        if (isLiveAttendant()) {
             mappings.add(liveAttendantAlias);
+            mappings.add(attendantAlias);
         }
-        mappings.add(attendantAlias);
 
         String[] aliases = getAttendantAliasesAsArray(getAttendantAliases());
         if (!StringUtils.isEmpty(m_did)) {
@@ -351,7 +353,7 @@ public class AttendantRule extends DialingRule implements Replicable {
         Map<String, Object> props = new HashMap<String, Object>();
         props.put(UID, m_liveAttendant);
         props.put(CONTACT, SipUri.format(StringUtils.EMPTY, getExtension(), domain));
-
+        props.put(MongoConstants.LOCATIONS, BranchUtils.getLocationsToReplicate(m_locations));
         return props;
     }
 
@@ -370,6 +372,6 @@ public class AttendantRule extends DialingRule implements Replicable {
      */
     @Override
     public boolean isReplicationEnabled() {
-        return isEnabled() && isLiveAttendant();
+        return isEnabled();
     }
 }
