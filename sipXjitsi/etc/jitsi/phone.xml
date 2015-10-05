@@ -124,6 +124,86 @@
           <value>false</value>
         </setting>        
       </group>
-    </group>    
+    </group>        
+  </group>
+  <group name="General">
+    <setting name="IS_MESSAGE_HISTORY_ENABLED">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>
+    <setting name="IS_RECENT_MESSAGES_DISABLED">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>
+    <setting name="IS_MESSAGE_HISTORY_SHOWN">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>
+    <setting name="MESSAGE_HISTORY_SIZE">      
+      <value>9</value>    
+    </setting>
+    <setting name="SEND_MESSAGE_COMMAND">
+      <type refid="message_command"/>
+      <value>Enter</value>    
+    </setting>
+    <setting name="SEND_TYPING_NOTIFICATIONS_ENABLED">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>
+    <setting name="AUTO_POPUP_NEW_MESSAGE">
+      <type refid="yes-no"/>
+      <value>yes</value>
+    </setting>
+    <setting name="chatalerter">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>
+    <setting name="LEAVE_CHATROOM_ON_WINDOW_CLOSE">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>
+    <setting name="statusupdate_enable">
+      <type refid="true-false"/>
+      <value>false</value>    
+    </setting>
+    <setting name="statusupdate_timer">
+    </setting>            
+    <setting name="POPUP_HANDLER">
+     <type refid="systray_popup"/>
+     <value></value>
+    </setting>
+    <setting name="locale">
+      <type refid="locale" />
+      <value>en</value>      
+    </setting>    
+  </group>
+  <group name="encodings">
+    <setting name="audio">
+      <type refid="audio_encodings"/>
+      <value>G722/8000|GSM/8000|PCMA/8000|PCMU/8000|SILK/16000|SILK/24000|iLBC/8000|opus/48000|speex/16000|speex/32000|speex/8000|telephone-event/8000</value>
+    </setting>
+    <setting name="video">
+      <type refid="video_encodings"/>
+      <value>H264/90000</value>
+    </setting>
+    <group name="video_settings">
+      <setting name="bitrate">
+        <value>128</value>
+      </setting>
+      <setting name="framerate">
+        <value>20</value>
+      </setting>
+      <setting name="maxbandwidth">
+        <value>256</value>
+      </setting>
+      <setting name="height">
+        <type refid="video_height"/>
+        <value>Auto</value>
+      </setting>
+      <setting name="width">
+        <type refid="video_width"/>
+        <value>Auto</value>
+      </setting>      
+    </group>  
   </group>
 </model>
