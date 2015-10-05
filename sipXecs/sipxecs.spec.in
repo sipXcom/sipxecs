@@ -138,6 +138,7 @@ Requires: sipxsupervisor >= %version
 Requires: sipxsqa-server >= %version
 Requires: sipxunidata >= %version
 Requires: sipxcallqueue
+Requires: sipxjitsi >= %version
 
 Obsoletes: %{name}-doc
 Obsoletes: epel-release
