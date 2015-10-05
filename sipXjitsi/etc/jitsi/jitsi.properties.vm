@@ -64,6 +64,11 @@ service.gui.AUTO_POPUP_NEW_MESSAGE=$phone.getSettingValue('General/AUTO_POPUP_NE
 service.gui.LEAVE_CHATROOM_ON_WINDOW_CLOSE=$phone.getSettingValue('General/LEAVE_CHATROOM_ON_WINDOW_CLOSE')
 service.gui.MESSAGE_HISTORY_SIZE=$phone.getSettingValue('General/MESSAGE_HISTORY_SIZE')
 service.gui.SEND_MESSAGE_COMMAND=$phone.getSettingValue('General/SEND_MESSAGE_COMMAND')
+net.java.sip.communicator.impl.neomedia.codec.video.h264.defaultProfile=$phone.getSettingValue('advanced/h264/defaultProfile')
+net.java.sip.communicator.impl.neomedia.codec.video.h264.preferredKeyFrameRequester=$phone.getSettingValue('advanced/h264/preferredMethod')
+org.jitsi.impl.neomedia.codec.video.h264.preset=$phone.getSettingValue('advanced/h264/preset')
+org.jitsi.impl.neomedia.codec.video.h264.defaultIntraRefresh=$phone.getSettingValue('advanced/h264/defaultIntraRefresh')
+org.jitsi.impl.neomedia.codec.video.h264.keyint=$phone.getSettingValue('advanced/h264/keyint')
 #foreach ($line in $lines.entrySet())
 net.java.sip.communicator.impl.protocol.sip.acc$line.key=acc$line.key
 net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.ACCOUNT_UID=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/acc/ACCOUNT_UID')
