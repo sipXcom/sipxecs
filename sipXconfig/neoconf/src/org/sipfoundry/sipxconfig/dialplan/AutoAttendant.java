@@ -27,6 +27,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sipfoundry.commons.mongo.MongoConstants;
 import org.sipfoundry.sipxconfig.branch.Branch;
+import org.sipfoundry.sipxconfig.branch.BranchUtils;
 import org.sipfoundry.sipxconfig.cfgmgt.DeployConfigOnEdit;
 import org.sipfoundry.sipxconfig.common.DialPad;
 import org.sipfoundry.sipxconfig.common.NamedObject;
@@ -350,11 +351,7 @@ public class AutoAttendant extends BeanWithGroups implements NamedObject, Deploy
     @Override
     public Map<String, Object> getMongoProperties(String domain) {
         Map<String, Object> props = new HashMap<String, Object>();
-        List<String> locations = new ArrayList<String>();
-        for (Branch branch : m_locations) {
-            locations.add(branch.getName());
-        }
-        props.put(MongoConstants.LOCATIONS, locations);
+        props.put(MongoConstants.LOCATIONS, BranchUtils.getLocationsToReplicate(m_locations));
         return props;
     }
 
