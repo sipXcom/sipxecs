@@ -8,6 +8,16 @@
     </false>
   </boolean>
 </type>
+<type id="yes-no">
+  <boolean>
+    <true>
+      <value>yes</value>
+    </true>
+    <false>
+      <value>no</value>
+    </false>
+  </boolean>
+</type>
 <type id="dtmf-method">
   <enum>
     <option>
@@ -120,4 +130,93 @@
     <option><value>red/90000</value></option>
     <option><value>ulpfec/90000</value></option>
   </multi-enum>
+</type>
+<type id="locale">
+  <enum>
+    <option>
+      <value>en</value>
+    </option>
+    <option>
+      <value>ro</value>
+    </option>
+    <option>
+      <value>de</value>
+    </option>
+    <option>
+      <value>fr</value>
+    </option>        
+  </enum>
+</type>
+<type id="message_command">
+  <enum>
+    <option>
+      <value>Enter</value>
+    </option>
+    <option>
+      <value>Ctrl-Enter</value>
+    </option>
+  </enum>
+</type>
+<type id="systray_popup">
+  <enum>
+    <option>
+      <value>Auto</value>
+    </option>  
+    <option>
+      <value>net.java.sip.communicator.impl.swingnotification.PopupMessageHandlerSwingImpl</value>
+    </option>
+    <option>
+      <value>net.java.sip.communicator.impl.osdependent.PopupMessageHandlerTrayIconImpl</value>
+    </option>
+  </enum>
+</type>
+<type id="video_width">
+  <enum>
+    <option>
+      <value>Auto</value>
+    </option>
+    <option>
+      <value>160</value>
+    </option>
+    <option>
+      <value>176</value>
+    </option>
+    <option>
+      <value>320</value>
+    </option>
+    <option>
+      <value>352</value>
+    </option>
+    <option>
+      <value>640</value>
+    </option>
+    <option>
+      <value>1280</value>
+    </option>     
+  </enum>
+</type>
+<type id="video_height">
+  <enum>
+    <option>
+      <value>100</value>
+    </option>
+    <option>
+      <value>144</value>
+    </option>
+    <option>
+      <value>200</value>
+    </option>
+    <option>
+      <value>240</value>
+    </option>
+    <option>
+      <value>288</value>
+    </option>
+    <option>
+      <value>480</value>
+    </option>
+    <option>
+      <value>720</value>
+    </option>
+  </enum>
 </type>
