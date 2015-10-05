@@ -220,3 +220,54 @@
     </option>
   </enum>
 </type>
+<type id="h264_profile">
+  <enum>
+    <option>
+      <value>baseline</value>
+    </option>
+    <option>
+      <value>main</value>
+    </option>
+    <option>
+      <value>high</value>
+    </option>    
+  </enum>
+</type>
+<type id="h264_method">
+  <enum>
+    <option>
+      <value>rtcp</value>
+    </option>
+    <option>
+      <value>signaling</value>
+    </option>    
+  </enum>
+</type>
+<type id="h264_preset">
+  <enum>
+    <option>
+      <value>ultrafast</value>
+    </option>
+    <option>
+      <value>superfast</value>
+    </option>
+    <option>
+      <value>veryfast</value>
+    </option>
+    <option>
+      <value>faster</value>
+    </option>
+    <option>
+      <value>fast</value>
+    </option>
+    <option>
+      <value>medium</value>
+    </option>
+    <option>
+      <value>slow</value>
+    </option>
+    <option>
+      <value>slower</value>
+    </option>    
+  </enum>
+</type>
