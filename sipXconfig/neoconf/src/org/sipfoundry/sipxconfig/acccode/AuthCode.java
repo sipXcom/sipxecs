@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.sipfoundry.commons.mongo.MongoConstants;
 import org.sipfoundry.sipxconfig.branch.Branch;
+import org.sipfoundry.sipxconfig.branch.BranchUtils;
 import org.sipfoundry.sipxconfig.common.BeanWithUserPermissions;
 
 public class AuthCode extends BeanWithUserPermissions {
@@ -68,11 +69,7 @@ public class AuthCode extends BeanWithUserPermissions {
         props.put(AUTH_CODE, m_code);
         props.put(UID, getInternalUser().getUserName());
         props.put(PASSTOKEN, getInternalUser().getSipPassword());
-        List<String> locations = new ArrayList<String>();
-        for (Branch branch : m_locations) {
-            locations.add(branch.getName());
-        }
-        props.put(MongoConstants.LOCATIONS, locations);
+        props.put(MongoConstants.LOCATIONS, BranchUtils.getLocationsToReplicate(m_locations));
         return props;
     }
 }
