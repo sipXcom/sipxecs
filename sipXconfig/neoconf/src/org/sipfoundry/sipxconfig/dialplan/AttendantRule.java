@@ -298,11 +298,7 @@ public class AttendantRule extends DialingRule implements Replicable {
 
     @Override
     public String getIdentity(String domainName) {
-        if (isLiveAttendant()) {
-            return SipUri.stripSipPrefix(SipUri.format(null, getExtension(), domainName));
-        }
-
-        return null;
+        return SipUri.stripSipPrefix(SipUri.format(null, getExtension(), domainName));
     }
 
     @Override
