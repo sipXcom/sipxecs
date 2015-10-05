@@ -300,19 +300,35 @@ bool ContactList::isAllowedLocation(const UtlString& contact, const RedirectPlug
   contactUri.getUserId(contactUser);
   contactUri.getHostAddress(contactHost);
   
+  //
+  // Note:  Fallback and Mapping rules may return contacts that will not be routed
+  // back to the registrar.  We therefore won't have any chance to evaluate the
+  // location of those contacts.  So far, we have identified gateways and * codes
+  // behave this way.  We therefore add some custom hack to evaluate based on the contact
+  // returned.
+  //
   if (mRequestString.first("sipxecs-line-id") != UtlString::UTLSTRING_NOT_FOUND)
   {
     //
-    // This is a gateway call.  Gateway identity does not have a user
+    // Gateway identity does not have a user
     //
     UtlString lineId;
     requestUri.getUrlParameter("sipxecs-line-id", lineId, 0);
     identity << host.data() << ";" << "sipxecs-line-id=" << lineId.data();
   }
+  else if (contact.first("sipxecs-line-id") != UtlString::UTLSTRING_NOT_FOUND)
+  {
+    //
+    // This is a gateway call returned by the fallback redirector.  Gateway identity does not have a user
+    //
+    UtlString lineId;
+    contactUri.getUrlParameter("sipxecs-line-id", lineId, 0);
+    identity << contactHost.data() << ";" << "sipxecs-line-id=" << lineId.data();
+  }
   else if (mRequestString.first('*') == 0)
   {
     //
-    // This is a star code.  It won't match any identity so let us use the user of the contact
+    // This is a star code.  It won't match any identity so let us use the user of the contact returned by mapping rules
     //
     identity << contactUser.data() << "@" << host.data();
   }
@@ -324,16 +340,10 @@ bool ContactList::isAllowedLocation(const UtlString& contact, const RedirectPlug
   EntityRecord entity;
   
   
-  if (identity.str().find("~~vm~") == 0 && !_pEntityDb->findByAliasIdentity(identity.str(), entity))
-  {
-    //
-    // no voice mail alias found.  
-    //  
-    OS_LOG_INFO(FAC_SIP, "ContactList::isAllowedLocation() - did not match any location restriction for voice mail identity " << identity.str());
-    _isTrustedLocation = true;
-    return true;
-  }
-  else if (!_pEntityDb->findByIdentity(identity.str(), entity))
+  //
+  // We check both actual identity and aliases to match the location.
+  //
+  if (!_pEntityDb->findByIdentity(identity.str(), entity))
   {
     //
     // no identity nor voice mail alias found.  
@@ -342,6 +352,15 @@ bool ContactList::isAllowedLocation(const UtlString& contact, const RedirectPlug
     _isTrustedLocation = true;
     return true;
     
+  }
+  else if (!_pEntityDb->findByAliasIdentity(identity.str(), entity))
+  {
+    //
+    // no voice mail alias found.  
+    //  
+    OS_LOG_INFO(FAC_SIP, "ContactList::isAllowedLocation() - did not match any location restriction for alias identity " << identity.str());
+    _isTrustedLocation = true;
+    return true;
   }
   
   if (entity.allowedLocations().empty())
