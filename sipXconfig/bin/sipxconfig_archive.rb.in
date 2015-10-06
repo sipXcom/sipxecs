@@ -112,7 +112,7 @@ class Restore < ArchiveBase
       v = File.read("#{@tmpdir}/version").split(".")
       dev = (v[0].to_i == '0'.to_i and v[1].to_i == '0'.to_i)
       pre_mongo = !(dev or (v[0].to_i == '4'.to_i and v[1].to_i > '4'.to_i) or v[0].to_i > '4'.to_i or v[0].to_i >= '14'.to_i)
-      pre_elasticsearch = !(dev or (v[0].to_i >= '14'.to_i and v[1].to_i >= '10'.to_i))
+      pre_elasticsearch = !(dev or (v[0].to_i >= '15'.to_i and v[1].to_i >= '10'.to_i))
     else
       raise "Not a known archive, version file is missing."
     end
