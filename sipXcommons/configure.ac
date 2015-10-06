@@ -1,5 +1,5 @@
 AC_PREREQ(2.57)
-AC_INIT(sipXcommons, 15.10, sipx-dev@list.sipfoundry.org)
+AC_INIT(sipXcommons, 15.12, sipx-dev@list.sipfoundry.org)
 AC_CONFIG_AUX_DIR(config)
 m4_include([config/java2.m4])
 m4_include([config/general.m4])
