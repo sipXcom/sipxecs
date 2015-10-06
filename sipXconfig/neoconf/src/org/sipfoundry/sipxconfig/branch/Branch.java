@@ -163,7 +163,7 @@ public class Branch extends BeanWithId implements NamedObject, SystemAuditable, 
         props.put(LOCATION_NAME, getName());
         props.put(LOCATION_RESTRICTIONS_DOMAINS, m_routes.getDomains());
         props.put(LOCATION_RESTRICTIONS_SUBNETS, m_routes.getSubnets());
-        props.put(LOCATION_ASSOCIATIONS, BranchUtils.getLocationsToReplicate(m_locations));
+        props.put(LOCATION_ASSOCIATIONS, getLocationsNamesList());
         return props;
     }
 
