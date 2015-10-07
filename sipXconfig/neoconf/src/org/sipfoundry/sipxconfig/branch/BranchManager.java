@@ -46,6 +46,13 @@ public interface BranchManager extends DataObjectSource<Branch> {
     public static final String GROUP_BY_BRANCH =
         "SELECT * from group_storage where resource = 'user' and branch_id = :branchId ";
 
+    public static final String AUTO_ATTENDANT_DIALING_RULES_BY_BRANCH =
+        "SELECT * from attendant_dialing_rule adr "
+        + "LEFT OUTER JOIN dialing_rule dr "
+        + "ON adr.attendant_dialing_rule_id=dr.dialing_rule_id "
+        + "JOIN branch_aa_dialing_rule badr "
+        + "ON adr.attendant_dialing_rule_id = badr.attendant_dialing_rule_id where badr.branch_id = :branchId";
+
     Branch getBranch(String name);
 
     Branch getBranch(Integer branchId);
