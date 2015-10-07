@@ -294,20 +294,11 @@ bool ContactList::isAllowedLocation(const UtlString& contact, const RedirectPlug
   UtlString contactUser;
   UtlString contactHost;
   std::ostringstream identity;
-  std::string domain = SipRedirectServer::getInstance()->sipUserAgent()->getDomain();
    
   requestUri.getHostAddress(host);
   requestUri.getUserId(user);
   contactUri.getUserId(contactUser);
   contactUri.getHostAddress(contactHost);
-  
-  //
-  //  Make sure we use the actual domain for domain aliases or we wont match identities correctly
-  //
-  if ( host.compareTo(domain.c_str()) != 0 && SipRedirectServer::getInstance()->sipUserAgent()->isMyHostAlias(requestUri))
-  {
-    host = domain.c_str();
-  }
   
   //
   // Note:  Fallback and Mapping rules may return contacts that will not be routed
