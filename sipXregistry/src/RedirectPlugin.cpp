@@ -354,23 +354,15 @@ bool ContactList::isAllowedLocation(const UtlString& contact, const RedirectPlug
   //
   if (!_pEntityDb->findByIdentity(identity.str(), entity))
   {
-    //
-    // no identity nor voice mail alias found.  
-    //  
     OS_LOG_INFO(FAC_SIP, "ContactList::isAllowedLocation() - did not match any location restriction for user identity " << identity.str());
-    _isTrustedLocation = true;
-    return true;
+    if (!_pEntityDb->findByAliasIdentity(identity.str(), entity))
+    {
+      OS_LOG_INFO(FAC_SIP, "ContactList::isAllowedLocation() - did not match any location restriction for alias identity " << identity.str());
+      _isTrustedLocation = true;
+      return true;
+    }
+  }
     
-  }
-  else if (!_pEntityDb->findByAliasIdentity(identity.str(), entity))
-  {
-    //
-    // no voice mail alias found.  
-    //  
-    OS_LOG_INFO(FAC_SIP, "ContactList::isAllowedLocation() - did not match any location restriction for alias identity " << identity.str());
-    _isTrustedLocation = true;
-    return true;
-  }
   
   if (entity.allowedLocations().empty())
   {
