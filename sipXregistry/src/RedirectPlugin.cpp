@@ -334,7 +334,7 @@ bool ContactList::isAllowedLocation(const UtlString& contact, const RedirectPlug
     contactUri.getUrlParameter("sipxecs-line-id", lineId, 0);
     identity << contactHost.data() << ";" << "sipxecs-line-id=" << lineId.data();
   }
-  else if (mRequestString.first('*') == 0)
+  else if (user.first('*') == 0)
   {
     //
     // This is a star code.  It won't match any identity so let us use the user of the contact returned by mapping rules
