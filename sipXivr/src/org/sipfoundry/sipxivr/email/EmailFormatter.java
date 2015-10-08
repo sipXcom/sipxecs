@@ -1,10 +1,10 @@
 /*
- * 
- * 
- * Copyright (C) 2009 Pingtel Corp., certain elements licensed under a Contributor Agreement.  
+ *
+ *
+ * Copyright (C) 2009 Pingtel Corp., certain elements licensed under a Contributor Agreement.
  * Contributors retain copyright to elements licensed under a Contributor Agreement.
  * Licensed to the User under the LGPL license.
- * 
+ *
  */
 
 package org.sipfoundry.sipxivr.email;
@@ -25,39 +25,39 @@ public class EmailFormatter implements ApplicationContextAware {
     private Object[] m_args;
     private User m_user;
     private ApplicationContext m_context;
-    
+
     /**
      * A formatter for e-mail messages.
-     * 
+     *
      * Provides the text parts of an e-mail message using MessageFormat templates.
-     * 
+     *
      * @param ivrConfig
      * @param mailbox
      * @param vmessage
      */
-    
+
     public void init(User user, VmMessage vmessage) {
         m_user = user;
         String fromDisplay = null;
         Object[] args = new Object[15];
         String fromUri = "";
         String fromUser = "";
-        
+
         if(vmessage != null) {
             fromUri = vmessage.getDescriptor().getFromUri();
             fromUser = ValidUsers.getUserPart(fromUri);
             fromDisplay = ValidUsers.getDisplayPart(fromUri);
             args[ 0] = new Long(vmessage.getDescriptor().getDurationSecsLong()*1000);    //  0 audio Duration in mS
             args[ 5] = vmessage.getMessageId();                  //  5 Message Id
-            args[ 6] = new Date(vmessage.getDescriptor().getTimeStampDate().getTime());        //  6 message timestamp         
+            args[ 6] = new Date(vmessage.getDescriptor().getTimeStampDate().getTime());        //  6 message timestamp
         }
-        
+
         if (fromDisplay==null) {
             fromDisplay = "";
         }
-        
+
         // Build original set of args
-       
+
         args[ 1] = fromUri;                                     //  1 From URI
         args[ 2] = fromUser;                                    //  2 From User Part (phone number, most likely)
         args[ 3] = fromDisplay;                                 //  3 From Display Name
@@ -65,13 +65,13 @@ public class EmailFormatter implements ApplicationContextAware {
         if (args[ 4] == null || StringUtils.equals("null", (String) args[ 4])) {
             args[ 4] = m_emailAddressUrl;
         }
-                                                                //  4 Portal Link URL             
+                                                                //  4 Portal Link URL
         // Using the existing args, add some more, recursively as they are defined with some of the above variables.
         args[ 7] = fmt("SenderName", args);                     //  7 Sender Name
         args[ 8] = fmt("SenderMailto", args);                   //  8 Sender mailto
         args[ 9] = fmt("HtmlTitle", args);                      //  9 html title
 
-        args[10] = String.format("%s/sipxconfig/mailbox/%s/inbox/", 
+        args[10] = String.format("%s",
                 args[ 4], m_user.getUserName());                      // 10 Portal URL (if needs to be re-written)
         args[11] = fmt("Sender", args);                         // 11 Sender (as url'ish)
         args[12] = fmt("SubjectFull", args);                    // 12 Subject (for Full)
@@ -97,11 +97,11 @@ public class EmailFormatter implements ApplicationContextAware {
         return m_context.getMessage(text, args, "Not Found", locale);
     }
 
-    
+
     public String getSender() {
         return fmt("Sender");
     }
-    
+
     /**
      * The Subject part of the e-mail
      * @return
@@ -109,9 +109,9 @@ public class EmailFormatter implements ApplicationContextAware {
     public String getSubject() {
         return fmt("SubjectFull");
     }
-    
+
     /**
-     * The HTML body part of the e-mail.  
+     * The HTML body part of the e-mail.
      * @return null or "" if there is none
      */
     public String getHtmlBody() {
