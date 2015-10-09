@@ -28,7 +28,6 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.sipfoundry.commons.mongo.MongoConstants;
 import org.sipfoundry.sipxconfig.branch.Branch;
-import org.sipfoundry.sipxconfig.branch.BranchUtils;
 import org.sipfoundry.sipxconfig.common.Replicable;
 import org.sipfoundry.sipxconfig.common.SipUri;
 import org.sipfoundry.sipxconfig.commserver.imdb.AliasMapping;
@@ -349,7 +348,11 @@ public class AttendantRule extends DialingRule implements Replicable {
         Map<String, Object> props = new HashMap<String, Object>();
         props.put(UID, m_liveAttendant);
         props.put(CONTACT, SipUri.format(StringUtils.EMPTY, getExtension(), domain));
-        props.put(MongoConstants.LOCATIONS, BranchUtils.getLocationsToReplicate(m_locations));
+        List<String> locations = new ArrayList<String>();
+        for (Branch branch : m_locations) {
+            locations.add(branch.getName());
+        }
+        props.put(MongoConstants.LOCATIONS, locations);
         return props;
     }
 

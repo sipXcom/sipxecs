@@ -35,7 +35,6 @@ import org.sipfoundry.commons.mongo.MongoConstants;
 import org.sipfoundry.sipxconfig.address.Address;
 import org.sipfoundry.sipxconfig.address.AddressManager;
 import org.sipfoundry.sipxconfig.branch.Branch;
-import org.sipfoundry.sipxconfig.branch.BranchUtils;
 import org.sipfoundry.sipxconfig.cfgmgt.DeployConfigOnEdit;
 import org.sipfoundry.sipxconfig.common.Replicable;
 import org.sipfoundry.sipxconfig.common.SipUri;
@@ -476,7 +475,11 @@ public class Conference extends BeanWithSettings implements Replicable, DeployCo
         props.put(CONF_PIN, getParticipantAccessCode());
         props.put(CONF_AUTORECORD, isAutorecorded());
         props.put(CONF_URI, getUri());
-        props.put(MongoConstants.LOCATIONS, BranchUtils.getLocationsToReplicate(m_locations));
+        List<String> locations = new ArrayList<String>();
+        for (Branch branch : m_locations) {
+            locations.add(branch.getName());
+        }
+        props.put(MongoConstants.LOCATIONS, locations);
         return props;
     }
 

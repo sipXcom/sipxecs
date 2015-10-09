@@ -67,7 +67,7 @@ public class UserLocation extends AbstractDataSetGenerator {
             Branch site = user.getSite();
             if (site != null) {
                 top.put(USER_LOCATION, site.getName());
-                locations.add("Location" + site.getId());
+                locations.add(site.getName());
             } else {
                 top.removeField(USER_LOCATION);
             }
