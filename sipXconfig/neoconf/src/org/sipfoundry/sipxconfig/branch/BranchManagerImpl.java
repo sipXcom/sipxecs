@@ -22,6 +22,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.sipfoundry.sipxconfig.common.DaoUtils;
+import org.sipfoundry.sipxconfig.common.Replicable;
 import org.sipfoundry.sipxconfig.common.SipxHibernateDaoSupport;
 import org.sipfoundry.sipxconfig.common.UserException;
 import org.sipfoundry.sipxconfig.setup.SetupListener;
@@ -99,6 +100,8 @@ public class BranchManagerImpl extends SipxHibernateDaoSupport<Branch> implement
                 sqlUpdates.add("update group_storage set branch_id=null where branch_id=" + id);
                 sqlUpdates.add("delete from branch_route_domain where branch_id=" + id);
                 sqlUpdates.add("delete from branch_route_subnet where branch_id=" + id);
+                sqlUpdates.add("delete from branch_branch where branch_id=" + id);
+                sqlUpdates.add("delete from branch_branch where associated_branch_id=" + id);
                 sqlUpdates.add("delete from branch where branch_id=" + id);
                 getHibernateTemplate().evict(branch);
             }
@@ -181,6 +184,13 @@ public class BranchManagerImpl extends SipxHibernateDaoSupport<Branch> implement
 
     public void setNtpManager(NtpManager ntpManager) {
         m_ntpManager = ntpManager;
+    }
+
+    @Override
+    public List<Replicable> getReplicables() {
+        List<Replicable> replicables = new ArrayList<Replicable>();
+        replicables.addAll(getBranches());
+        return replicables;
     }
 
 }

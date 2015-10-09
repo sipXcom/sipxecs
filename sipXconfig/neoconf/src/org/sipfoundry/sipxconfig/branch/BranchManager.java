@@ -14,8 +14,9 @@ import java.util.Collection;
 import java.util.List;
 
 import org.sipfoundry.sipxconfig.common.DataObjectSource;
+import org.sipfoundry.sipxconfig.common.ReplicableProvider;
 
-public interface BranchManager extends DataObjectSource<Branch> {
+public interface BranchManager extends DataObjectSource<Branch>, ReplicableProvider {
 
     public static final String CONFERENCES_BY_BRANCH = "SELECT * from meetme_conference mc JOIN branch_conference bc "
         + "ON mc.meetme_conference_id = bc.meetme_conference_id where bc.branch_id = :branchId";
@@ -45,6 +46,13 @@ public interface BranchManager extends DataObjectSource<Branch> {
 
     public static final String GROUP_BY_BRANCH =
         "SELECT * from group_storage where resource = 'user' and branch_id = :branchId ";
+
+    public static final String AUTO_ATTENDANT_DIALING_RULES_BY_BRANCH =
+        "SELECT * from attendant_dialing_rule adr "
+        + "LEFT OUTER JOIN dialing_rule dr "
+        + "ON adr.attendant_dialing_rule_id=dr.dialing_rule_id "
+        + "JOIN branch_aa_dialing_rule badr "
+        + "ON adr.attendant_dialing_rule_id = badr.attendant_dialing_rule_id where badr.branch_id = :branchId";
 
     Branch getBranch(String name);
 

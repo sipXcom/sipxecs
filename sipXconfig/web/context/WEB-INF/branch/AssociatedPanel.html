@@ -64,6 +64,17 @@ table {
      </td>
   </tr>
   <tr>    
+     <td><span jwcid="@Insert" value="message:feature.autoAttendantDialRules" /></td>
+     <td>
+       <span jwcid="@For" source="ognl:branchAttendantRules" value="ognl:branchDialingRule">
+          <a id="editAutoAttendantDialingRule" jwcid="editAutoAttendantDialingRule@DirectLink" listener="listener:editAutoAttendantDialingRule"
+            parameters="ognl:branchDialingRule.id">
+            <span jwcid="@Insert" value="ognl:branchDialingRule.name" />
+          </a>&nbsp;&nbsp;
+       </span>
+     </td>
+  </tr>  
+  <tr>    
      <td><span jwcid="@Insert" value="message:feature.parkOrbits" /></td>
      <td>
        <span jwcid="@For" source="ognl:branchParkOrbits" value="ognl:branchParkOrbit">
