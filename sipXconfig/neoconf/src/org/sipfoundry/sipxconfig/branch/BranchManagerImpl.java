@@ -22,6 +22,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.sipfoundry.sipxconfig.common.DaoUtils;
+import org.sipfoundry.sipxconfig.common.Replicable;
 import org.sipfoundry.sipxconfig.common.SipxHibernateDaoSupport;
 import org.sipfoundry.sipxconfig.common.UserException;
 import org.sipfoundry.sipxconfig.setup.SetupListener;
@@ -183,6 +184,13 @@ public class BranchManagerImpl extends SipxHibernateDaoSupport<Branch> implement
 
     public void setNtpManager(NtpManager ntpManager) {
         m_ntpManager = ntpManager;
+    }
+
+    @Override
+    public List<Replicable> getReplicables() {
+        List<Replicable> replicables = new ArrayList<Replicable>();
+        replicables.addAll(getBranches());
+        return replicables;
     }
 
 }

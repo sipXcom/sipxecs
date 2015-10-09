@@ -14,8 +14,9 @@ import java.util.Collection;
 import java.util.List;
 
 import org.sipfoundry.sipxconfig.common.DataObjectSource;
+import org.sipfoundry.sipxconfig.common.ReplicableProvider;
 
-public interface BranchManager extends DataObjectSource<Branch> {
+public interface BranchManager extends DataObjectSource<Branch>, ReplicableProvider {
 
     public static final String CONFERENCES_BY_BRANCH = "SELECT * from meetme_conference mc JOIN branch_conference bc "
         + "ON mc.meetme_conference_id = bc.meetme_conference_id where bc.branch_id = :branchId";
