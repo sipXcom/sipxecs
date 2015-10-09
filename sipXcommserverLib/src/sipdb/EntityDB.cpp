@@ -309,7 +309,7 @@ void EntityDB::getCallerLocation(CallerLocations& locations, const std::string& 
       }
     }
     
-    if (address.empty() && !host_iter->loc_restr_sbnet().empty() && !host_iter->allowedLocations().empty())
+    if (!address.empty() && !host_iter->loc_restr_sbnet().empty() && !host_iter->allowedLocations().empty())
     {
       if (cidr_compare(host_iter->loc_restr_sbnet(), address))
       {
