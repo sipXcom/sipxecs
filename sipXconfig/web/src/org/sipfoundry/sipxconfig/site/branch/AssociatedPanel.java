@@ -22,7 +22,9 @@ import org.sipfoundry.sipxconfig.callgroup.CallGroup;
 import org.sipfoundry.sipxconfig.common.CoreContext;
 import org.sipfoundry.sipxconfig.common.User;
 import org.sipfoundry.sipxconfig.conference.Conference;
+import org.sipfoundry.sipxconfig.dialplan.AttendantRule;
 import org.sipfoundry.sipxconfig.dialplan.AutoAttendant;
+import org.sipfoundry.sipxconfig.dialplan.DialingRule;
 import org.sipfoundry.sipxconfig.freeswitch.FreeswitchExtension;
 import org.sipfoundry.sipxconfig.gateway.Gateway;
 import org.sipfoundry.sipxconfig.paging.PagingGroup;
@@ -32,6 +34,7 @@ import org.sipfoundry.sipxconfig.site.admin.EditAuthCode;
 import org.sipfoundry.sipxconfig.site.admin.EditCallGroup;
 import org.sipfoundry.sipxconfig.site.conference.EditConference;
 import org.sipfoundry.sipxconfig.site.dialplan.EditAutoAttendant;
+import org.sipfoundry.sipxconfig.site.dialplan.EditDialRule;
 import org.sipfoundry.sipxconfig.site.gateway.EditGateway;
 import org.sipfoundry.sipxconfig.site.paging.EditPagingGroupPage;
 import org.sipfoundry.sipxconfig.site.park.EditParkOrbit;
@@ -88,6 +91,10 @@ public abstract class AssociatedPanel extends BaseComponent implements PageBegin
     public abstract void setBranchFreeswitchExtensions(List<?> branchFreeswitchExtensions);
     public abstract FreeswitchExtension getBranchFreeswitchExtension();
 
+    public abstract List<?> getBranchAttendantRules();
+    public abstract void setBranchAttendantRules(List<?> branchAttendantRules);
+    public abstract DialingRule getBranchDialingRule();
+
     public void pageBeginRender(PageEvent event) {
         List<?> groups = getBranchManager().getFeatureNames(getBranch().getId(),
                 BranchManager.GROUP_BY_BRANCH, Group.class);
@@ -124,6 +131,10 @@ public abstract class AssociatedPanel extends BaseComponent implements PageBegin
         List<?> freeswitchExtensions = getBranchManager().getFeatureNames(getBranch().getId(),
                 BranchManager.CALL_QUEUE_BY_BRANCH, FreeswitchExtension.class);
         setBranchFreeswitchExtensions(freeswitchExtensions);
+
+        List<?> branchAttendantRules = getBranchManager().getFeatureNames(getBranch().getId(),
+            BranchManager.AUTO_ATTENDANT_DIALING_RULES_BY_BRANCH, AttendantRule.class);
+        setBranchAttendantRules(branchAttendantRules);
     }
 
     public IPage editGroup(IRequestCycle cycle, Integer branchGroupId) {
@@ -179,6 +190,12 @@ public abstract class AssociatedPanel extends BaseComponent implements PageBegin
     public IPage editFreeswitchExtensions(IRequestCycle cycle, Integer freeswitchExtensionId) {
         LocationsAware page = (LocationsAware) cycle.getPage("plugin/CallQueueEditQueue");
         page.setFeatureId(freeswitchExtensionId);
+        return page;
+    }
+
+    public IPage editAutoAttendantDialingRule(IRequestCycle cycle, Integer ruleId) {
+        EditDialRule page = (EditDialRule) cycle.getPage(EditDialRule.ATTENDANT);
+        page.setRuleId(ruleId);
         return page;
     }
 
