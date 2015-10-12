@@ -344,7 +344,7 @@ public class Gateway extends Device implements Replicable, DeployConfigOnEdit, S
     }
 
     public boolean isShared() {
-        return m_shared;
+        return m_locations.isEmpty();
     }
 
     public void setShared(boolean shared) {
