@@ -31,7 +31,6 @@ import org.custommonkey.xmlunit.XMLTestCase;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.dom4j.Document;
 import org.easymock.classextension.EasyMock;
-import org.mozilla.javascript.edu.emory.mathcs.backport.java.util.Collections;
 import org.sipfoundry.sipxconfig.address.Address;
 import org.sipfoundry.sipxconfig.address.AddressManager;
 import org.sipfoundry.sipxconfig.branch.Branch;
@@ -152,7 +151,8 @@ public class FallbackRulesTest extends XMLTestCase {
         Transform t2 = createTransform("9444", "lisbon.example.org", "q=0.95", "expires=7200");
 
         Map<String, List<Transform>> siteTr = new LinkedHashMap<String, List<Transform>>();
-        siteTr.put("", Arrays.asList(t1, t2));
+        siteTr.put("Montreal", Arrays.asList(t1));
+        siteTr.put("Lisbon", Arrays.asList(t2));
 
         IDialingRule rule = createStrictMock(IDialingRule.class);
         rule.isInternal();
@@ -227,18 +227,20 @@ public class FallbackRulesTest extends XMLTestCase {
         Gateway montreal = new Gateway();
         montreal.setUniqueId(100);
         montreal.setAddress("montreal.example.org");
-        montreal.setLocationsList(Collections.singletonList(montrealSite));
+        montreal.setBranch(montrealSite);
+        montreal.setShared(false);
 
         Gateway lisbon = new Gateway();
         lisbon.setUniqueId(200);
         lisbon.setAddress("lisbon.example.org");
-        lisbon.setLocationsList(Collections.singletonList(lisbonSite));
+        lisbon.setBranch(lisbonSite);
         lisbon.setPrefix("9");
 
         Gateway shared = new Gateway();
         shared.setUniqueId(300);
         shared.setAddress("example.org");
         shared.setPrefix("8");
+        shared.setShared(false);
 
         CustomDialingRule rule = new CustomDialingRule();
         rule.setName("my test name");
