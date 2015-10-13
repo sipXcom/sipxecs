@@ -82,6 +82,9 @@ public:
         extensionLength = 0;
       }
     };
+    
+    typedef std::vector<std::string> LocationSubnet;
+    typedef std::vector<std::string> LocationDomain;
 
     EntityRecord();
 
@@ -176,13 +179,13 @@ public:
     //
     // Inbound location filter by domain
     //
-    std::string& loc_restr_dom();
+    LocationDomain& loc_restr_dom();
     static const char* loc_restr_dom_fld();
     
     //
     // Inbound location filter by IP
     //
-    std::string& loc_restr_sbnet();
+    LocationSubnet& loc_restr_sbnet();
     static const char* loc_restr_sbnet_fld();
     
     static const char* entity_branch_str();
@@ -237,8 +240,8 @@ private:
     std::string _location;
     std::string _authc;
     CallerId _callerId;
-    std::string _locRestrDom;
-    std::string _locRestrSbnet;
+    LocationDomain _locRestrDom;
+    LocationSubnet _locRestrSbnet;
     //bool _ignoreUserCallerId;
     //bool _transformCallerExtension;
     int _callForwardTime;
@@ -346,12 +349,12 @@ inline bool& EntityRecord::vmOnDnd()
   return _vmOnDnd;
 }
 
-inline std::string& EntityRecord::loc_restr_dom()
+inline EntityRecord::LocationDomain& EntityRecord::loc_restr_dom()
 {
   return _locRestrDom;
 }
 
-inline std::string& EntityRecord::loc_restr_sbnet()
+inline EntityRecord::LocationSubnet& EntityRecord::loc_restr_sbnet()
 {
   return _locRestrSbnet;
 }
