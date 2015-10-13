@@ -316,23 +316,23 @@ bool ContactList::isAllowedLocation(const UtlString& contact, const RedirectPlug
   // behave this way.  We therefore add some custom hack to evaluate based on the contact
   // returned.
   //
-  if (mRequestString.first("sipxecs-line-id") != UtlString::UTLSTRING_NOT_FOUND)
+  if (mRequestString.first("sipxecs-lineid") != UtlString::UTLSTRING_NOT_FOUND)
   {
     //
     // Gateway identity does not have a user
     //
     UtlString lineId;
-    requestUri.getUrlParameter("sipxecs-line-id", lineId, 0);
-    identity << host.data() << ";" << "sipxecs-line-id=" << lineId.data();
+    requestUri.getUrlParameter("sipxecs-lineid", lineId, 0);
+    identity << host.data() << ";" << "sipxecs-lineid=" << lineId.data();
   }
-  else if (contact.first("sipxecs-line-id") != UtlString::UTLSTRING_NOT_FOUND)
+  else if (contact.first("sipxecs-lineid") != UtlString::UTLSTRING_NOT_FOUND)
   {
     //
     // This is a gateway call returned by the fallback redirector.  Gateway identity does not have a user
     //
     UtlString lineId;
-    contactUri.getUrlParameter("sipxecs-line-id", lineId, 0);
-    identity << contactHost.data() << ";" << "sipxecs-line-id=" << lineId.data();
+    contactUri.getUrlParameter("sipxecs-lineid", lineId, 0);
+    identity << contactHost.data() << ";" << "sipxecs-lineid=" << lineId.data();
   }
   else if (user.first('*') == 0)
   {
