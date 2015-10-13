@@ -279,29 +279,35 @@ void EntityDB::getCallerLocation(CallerLocations& locations, const std::string& 
   {
     if (!host.empty() && !host_iter->loc_restr_dom().empty() && !host_iter->associatedLocations().empty()) // only if locations and wild card matching is specified by the branch
     {
-      if (wildcard_compare(host_iter->loc_restr_dom().c_str(), host))
+      for (EntityRecord::LocationDomain::iterator domainIter = host_iter->loc_restr_dom().begin(); domainIter != host_iter->loc_restr_dom().end(); domainIter++)
       {
-        OS_LOG_INFO(FAC_ODBC, "EntityDB::getCallerLocation - Inserting location based  on " << host_iter->loc_restr_dom() << " wildcard match for domain " << host); 
-        locations = host_iter->associatedLocations();
-        return;
-      }
-      else
-      {
-        OS_LOG_DEBUG(FAC_ODBC,"EntityDB::getCallerLocation - " << host_iter->location() << "/" << host_iter->loc_restr_dom() << " does not own domain " << host);
+        if (wildcard_compare(domainIter->c_str(), host))
+        {
+          OS_LOG_INFO(FAC_ODBC, "EntityDB::getCallerLocation - Inserting location based  on " << *domainIter << " wildcard match for domain " << host); 
+          locations = host_iter->associatedLocations();
+          return;
+        }
+        else
+        {
+          OS_LOG_DEBUG(FAC_ODBC,"EntityDB::getCallerLocation - " << host_iter->location() << "/" << *domainIter << " does not own domain " << host);
+        }
       }
     }
      
     if (!address.empty() && !host_iter->loc_restr_sbnet().empty() && !host_iter->associatedLocations().empty())
     {
-      if (cidr_compare(host_iter->loc_restr_sbnet(), address))
+      for (EntityRecord::LocationSubnet::iterator subnetIter = host_iter->loc_restr_sbnet().begin(); subnetIter != host_iter->loc_restr_sbnet().end(); subnetIter++)
       {
-        OS_LOG_INFO(FAC_ODBC, "EntityDB::getCallerLocation - Inserting location based  on " << host_iter->loc_restr_sbnet() << " CIDR match for address " << address); 
-        locations = host_iter->associatedLocations();
-        return;
-      }
-      else
-      {
-        OS_LOG_DEBUG(FAC_ODBC,"EntityDB::getCallerLocation - " << host_iter->location() << "/" << host_iter->loc_restr_sbnet() << " does not own address " << address);
+        if (cidr_compare(*subnetIter, address))
+        {
+          OS_LOG_INFO(FAC_ODBC, "EntityDB::getCallerLocation - Inserting location based  on " << *subnetIter << " CIDR match for address " << address); 
+          locations = host_iter->associatedLocations();
+          return;
+        }
+        else
+        {
+          OS_LOG_DEBUG(FAC_ODBC,"EntityDB::getCallerLocation - " << host_iter->location() << "/" << *subnetIter << " does not own address " << address);
+        }
       }
     }
   }
