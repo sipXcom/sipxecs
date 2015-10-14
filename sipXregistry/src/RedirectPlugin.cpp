@@ -315,7 +315,8 @@ bool ContactList::isAllowedLocation(const UtlString& contact, const RedirectPlug
   // location of those contacts.  So far, we have identified gateways and * codes
   // behave this way.  We therefore add some custom hack to evaluate based on the contact
   // returned.
-  //
+  // Uncomment the block below to bring back new locations handling for gateways
+#if 0
   if (mRequestString.first("sipxecs-lineid") != UtlString::UTLSTRING_NOT_FOUND)
   {
     //
@@ -334,7 +335,9 @@ bool ContactList::isAllowedLocation(const UtlString& contact, const RedirectPlug
     contactUri.getUrlParameter("sipxecs-lineid", lineId, 0);
     identity << contactHost.data() << ";" << "sipxecs-lineid=" << lineId.data();
   }
-  else if (user.first('*') == 0)
+
+#endif
+  if (user.first('*') == 0)
   {
     //
     // This is a star code.  It won't match any identity so let us use the user of the contact returned by mapping rules
