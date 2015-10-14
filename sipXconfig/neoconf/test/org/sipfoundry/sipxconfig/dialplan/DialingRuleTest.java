@@ -235,9 +235,9 @@ public class DialingRuleTest extends TestCase {
         assertEquals(3, siteTransforms.size());
         assertEquals(4, siteTransforms.get("Montreal").size());
         // lisbon, shared
-        assertEquals(4, siteTransforms.get("Lisbon").size());
+        assertEquals(2, siteTransforms.get("Lisbon").size());
         // shared, lisbon
-        assertEquals(4, siteTransforms.get("").size());
+        assertEquals(2, siteTransforms.get("").size());
     }
 
     public void testGetCallType() {
