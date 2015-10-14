@@ -946,6 +946,12 @@ void SipRouter::identifyCallerLocation(SipMessage& sipRequest)
     EntityDB::CallerLocations callerLocations;
     
     sipRequest.getSendAddress(&sendAddress, &sendPort);
+    
+    if (sendAddress.isNull())
+    {
+      OS_LOG_ERROR(FAC_SIP, "SipRouter::identifyCallerLocation - Unable to identity address.  CIDR matching can not be done.");
+    }
+    
     sipRequest.getFromUrl(fromUrl);
     sipRequest.getToUrl(toUrl);
     fromUrl.getIdentity(identity);

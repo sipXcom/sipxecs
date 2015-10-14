@@ -248,6 +248,8 @@ void EntityDB::getCallerLocation(CallerLocations& locations, const std::string& 
   Entities branches;
   getEntitiesByType(EntityRecord::entity_branch_str(), branches);
   
+  OS_LOG_INFO(FAC_ODBC, "EntityDB::getCallerLocation( identity=" << identity << ", host=" << host << ", address=" << address << ")");
+  
   EntityRecord userEntity;
   if (findByIdentity(identity, userEntity) && !userEntity.allowedLocations().empty())
   {   
@@ -260,15 +262,9 @@ void EntityDB::getCallerLocation(CallerLocations& locations, const std::string& 
       {
         if (branch_iter->location() == *locations_iter)
         {
-          //
-          // Get the branch loc_assoc array and insert it in the location set of this user
-          //
-          for (std::set<std::string>::iterator assoc_iter = branch_iter->associatedLocations().begin(); assoc_iter != branch_iter->associatedLocations().end(); assoc_iter++)
-          {
-            OS_LOG_INFO(FAC_ODBC, "EntityDB::getCallerLocation - Inserting location " 
-              << branch_iter->location() << "/" << *assoc_iter << " for identity " << identity);
-            locations.insert(*assoc_iter);
-          }
+          OS_LOG_INFO(FAC_ODBC, "EntityDB::getCallerLocation - Setting associated locations based  on identity " << identity << " branch " << branch_iter->location()); 
+          locations = branch_iter->associatedLocations();
+          return;
         }
       }
     }
@@ -279,66 +275,43 @@ void EntityDB::getCallerLocation(CallerLocations& locations, const std::string& 
   //
   // Get locations by domain or subnet
   //
-  for (Entities::iterator host_iter = branches.begin(); host_iter != branches.end(); host_iter++)
+  for (Entities::iterator host_iter = branches.begin(); host_iter != branches.end(); host_iter++) // this loop iterates the branch record we have queried
   {
-    if (!host.empty() && !host_iter->loc_restr_dom().empty() && !host_iter->allowedLocations().empty())
+    if (!host.empty() && !host_iter->loc_restr_dom().empty() && !host_iter->associatedLocations().empty()) // only if locations and wild card matching is specified by the branch
     {
-      if (wildcard_compare(host_iter->loc_restr_dom().c_str(), host))
+      for (EntityRecord::LocationDomain::iterator domainIter = host_iter->loc_restr_dom().begin(); domainIter != host_iter->loc_restr_dom().end(); domainIter++)
       {
-        //
-        // Now that we have the locations for this user, check for branch associated locations
-        //
-        for (std::set<std::string>::iterator locations_iter = userEntity.allowedLocations().begin(); locations_iter != userEntity.allowedLocations().end(); locations_iter++)
+        if (wildcard_compare(domainIter->c_str(), host))
         {
-          for (Entities::iterator branch_iter = branches.begin(); branch_iter != branches.end(); branch_iter++)
-          {
-            if (branch_iter->location() == *locations_iter)
-            {
-              //
-              // Get the branch loc_assoc array and insert it in the location set of this user
-              //
-              for (std::set<std::string>::iterator assoc_iter = branch_iter->associatedLocations().begin(); assoc_iter != branch_iter->associatedLocations().end(); assoc_iter++)
-              {
-                OS_LOG_INFO(FAC_ODBC, "EntityDB::getCallerLocation - Inserting location " 
-                  << branch_iter->location() << "/" << *assoc_iter << " for identity " << identity << " using filter " << host_iter->loc_restr_dom());
-                locations.insert(*assoc_iter);
-              }
-            }
-          }
+          OS_LOG_INFO(FAC_ODBC, "EntityDB::getCallerLocation - Inserting location based  on " << *domainIter << " wildcard match for domain " << host); 
+          locations = host_iter->associatedLocations();
+          return;
+        }
+        else
+        {
+          OS_LOG_DEBUG(FAC_ODBC,"EntityDB::getCallerLocation - " << host_iter->location() << "/" << *domainIter << " does not own domain " << host);
         }
       }
     }
-    
-    if (!address.empty() && !host_iter->loc_restr_sbnet().empty() && !host_iter->allowedLocations().empty())
+     
+    if (!address.empty() && !host_iter->loc_restr_sbnet().empty() && !host_iter->associatedLocations().empty())
     {
-      if (cidr_compare(host_iter->loc_restr_sbnet(), address))
+      for (EntityRecord::LocationSubnet::iterator subnetIter = host_iter->loc_restr_sbnet().begin(); subnetIter != host_iter->loc_restr_sbnet().end(); subnetIter++)
       {
-        //
-        // Now that we have the locations for this user, check for branch associated locations
-        //
-        for (std::set<std::string>::iterator locations_iter = userEntity.allowedLocations().begin(); locations_iter != userEntity.allowedLocations().end(); locations_iter++)
+        if (cidr_compare(*subnetIter, address))
         {
-          for (Entities::iterator branch_iter = branches.begin(); branch_iter != branches.end(); branch_iter++)
-          {
-            if (branch_iter->location() == *locations_iter)
-            {
-              //
-              // Get the branch loc_assoc array and insert it in the location set of this user
-              //
-              for (std::set<std::string>::iterator assoc_iter = branch_iter->associatedLocations().begin(); assoc_iter != branch_iter->associatedLocations().end(); assoc_iter++)
-              {
-                OS_LOG_INFO(FAC_ODBC, "EntityDB::getCallerLocation - Inserting location " 
-                  << branch_iter->location() << "/" << *assoc_iter << " for identity " << identity << " using filter " << host_iter->loc_restr_sbnet());
-                locations.insert(*assoc_iter);
-              }
-            }
-          }
+          OS_LOG_INFO(FAC_ODBC, "EntityDB::getCallerLocation - Inserting location based  on " << *subnetIter << " CIDR match for address " << address); 
+          locations = host_iter->associatedLocations();
+          return;
+        }
+        else
+        {
+          OS_LOG_DEBUG(FAC_ODBC,"EntityDB::getCallerLocation - " << host_iter->location() << "/" << *subnetIter << " does not own address " << address);
         }
       }
     }
   }
 }
- 
 
 bool EntityDB::findByUserId(const string& uid, EntityRecord& entity) const
 {
