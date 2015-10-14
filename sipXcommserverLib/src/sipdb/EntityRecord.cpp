@@ -185,15 +185,35 @@ EntityRecord& EntityRecord::operator = (const mongo::BSONObj& bsonObj)
 	{
 		_vmOnDnd = bsonObj.getBoolField(EntityRecord::vmOnDnd_fld());
 	}
-  
+   
   if (bsonObj.hasField(EntityRecord::loc_restr_dom_fld()))
 	{
-		_locRestrDom = bsonObj.getStringField(EntityRecord::loc_restr_dom_fld());
+		mongo::BSONElement obj = bsonObj[EntityRecord::loc_restr_dom_fld()];
+		if ( obj.isABSONObj() &&  obj.type() == mongo::Array)
+		{
+			std::vector<mongo::BSONElement> locations = obj.Array();
+			_locRestrDom.clear();
+			for (std::vector<mongo::BSONElement>::iterator iter = locations.begin();
+				iter != locations.end(); iter++)
+			{
+				_locRestrDom.push_back(iter->String());
+			}
+		}
 	}
   
   if (bsonObj.hasField(EntityRecord::loc_restr_sbnet_fld()))
 	{
-		_locRestrSbnet = bsonObj.getStringField(EntityRecord::loc_restr_sbnet_fld());
+		mongo::BSONElement obj = bsonObj[EntityRecord::loc_restr_sbnet_fld()];
+		if ( obj.isABSONObj() &&  obj.type() == mongo::Array)
+		{
+			std::vector<mongo::BSONElement> locations = obj.Array();
+			_locRestrSbnet.clear();
+			for (std::vector<mongo::BSONElement>::iterator iter = locations.begin();
+				iter != locations.end(); iter++)
+			{
+				_locRestrSbnet.push_back(iter->String());
+			}
+		}
 	}
 
 	if (bsonObj.hasField(EntityRecord::callerId_fld()))
