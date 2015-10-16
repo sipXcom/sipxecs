@@ -34,6 +34,11 @@
       <key column="branch_id" />
       <many-to-many column="associated_branch_id" class="org.sipfoundry.sipxconfig.branch.Branch" />
     </set>
+    
+    <set name="locationsInbound" table="branch_branch_inbound">
+      <key column="branch_id" />
+      <many-to-many column="associated_branch_id" class="org.sipfoundry.sipxconfig.branch.Branch" />
+    </set>    
 
   </class>
 </hibernate-mapping>

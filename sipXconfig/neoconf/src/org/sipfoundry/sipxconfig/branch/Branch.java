@@ -13,6 +13,7 @@ import static org.sipfoundry.commons.mongo.MongoConstants.LOCATION_NAME;
 import static org.sipfoundry.commons.mongo.MongoConstants.LOCATION_RESTRICTIONS_DOMAINS;
 import static org.sipfoundry.commons.mongo.MongoConstants.LOCATION_RESTRICTIONS_SUBNETS;
 import static org.sipfoundry.commons.mongo.MongoConstants.LOCATION_ASSOCIATIONS;
+import static org.sipfoundry.commons.mongo.MongoConstants.LOCATION_ASSOCIATIONS_INBOUND;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,6 +41,7 @@ public class Branch extends BeanWithId implements NamedObject, SystemAuditable, 
     private String m_timeZone;
     private BranchRoutes m_routes = new BranchRoutes();
     private Set<Branch> m_locations = new HashSet<Branch>();
+    private Set<Branch> m_locationsInbound = new HashSet<Branch>();
 
     public String getName() {
         return m_name;
@@ -134,8 +136,20 @@ public class Branch extends BeanWithId implements NamedObject, SystemAuditable, 
         m_locations = locations;
     }
 
+    public Set<Branch> getLocationsInbound() {
+        return m_locationsInbound;
+    }
+
+    public void setLocationsInbound(Set<Branch> locationsInbound) {
+        m_locationsInbound = locationsInbound;
+    }
+
     public List<Branch> getLocationsList() {
         return new ArrayList<Branch>(m_locations);
+    }
+
+    public List<Branch> getLocationsInboundList() {
+        return new ArrayList<Branch>(m_locationsInbound);
     }
 
     public List<String> getLocationsNamesList() {
@@ -147,9 +161,23 @@ public class Branch extends BeanWithId implements NamedObject, SystemAuditable, 
         return names;
     }
 
+    public List<String> getLocationsInboundNamesList() {
+        List<String> names = new ArrayList<String>();
+        List<Branch> locations = getLocationsInboundList();
+        for (Branch branch : locations) {
+            names.add(branch.getName());
+        }
+        return names;
+    }
+
     public void setLocationsList(List<Branch> locations) {
         m_locations.clear();
         m_locations.addAll(locations);
+    }
+
+    public void setLocationsInboundList(List<Branch> locations) {
+        m_locationsInbound.clear();
+        m_locationsInbound.addAll(locations);
     }
 
     @Override
@@ -164,6 +192,7 @@ public class Branch extends BeanWithId implements NamedObject, SystemAuditable, 
         props.put(LOCATION_RESTRICTIONS_DOMAINS, m_routes.getDomains());
         props.put(LOCATION_RESTRICTIONS_SUBNETS, m_routes.getSubnets());
         props.put(LOCATION_ASSOCIATIONS, getLocationsNamesList());
+        props.put(LOCATION_ASSOCIATIONS_INBOUND, getLocationsInboundNamesList());
         return props;
     }
 
