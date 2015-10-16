@@ -12,6 +12,14 @@
     itemDisplayName="message:label.subnet"
     validators="spring-validators:required,validIPv4subnet"
     source="ognl:branch.routes.subnets"/>
+  <br/>
+  <fieldset  jwcid="@common/FieldPanel" for="branch:locations" field="component:locations"
+    label="message:label.locations"
+    description="message:description.locations">
+    <span jwcid="locations@contrib:Palette" id="locations"
+	   selected="ognl:branch.locationsInboundList" model="ognl:locationsModel"
+	   rows="10" sort="literal:USER" />
+  </fieldset>
 <span jwcid="@common/FormActions"
   listener="listener:apply"
   callback="ognl:callback" />
