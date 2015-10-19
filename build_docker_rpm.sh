@@ -28,4 +28,4 @@ Sample:
     ;;
 esac
 done
-sudo docker run -e "SIPXCOM_VERSION=${VERSION}" --rm -t --privileged -v ${SOURCE_DIR}:/home/sipx/sipxcom dizzy/docker-dev-rpm:latest ${PROJECT}
+sudo docker run -e "SIPXCOM_VERSION=${VERSION}" --rm -t --privileged -v ${SOURCE_DIR}:/home/sipx/sipxcom dizzy/docker-dev-rpm:15.10 ${PROJECT}

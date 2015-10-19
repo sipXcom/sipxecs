@@ -164,6 +164,8 @@ public:
     std::set<std::string>& associatedLocations();
     static const char* associated_locations_fld();
 
+    std::set<std::string>& inboundAssociatedLocations();
+    static const char* inbound_associated_locations_fld();
     //
     // Permission array to which the user has access to
     //
@@ -248,6 +250,7 @@ private:
     std::set<std::string> _permissions;
     std::set<std::string> _allowedLocations;
     std::set<std::string> _associatedLocations;
+    std::set<std::string> _inboundAssociatedLocations;
     std::string _entity;
     std::vector<Alias> _aliases;
     std::vector<StaticUserLoc> _staticUserLoc;
@@ -317,6 +320,11 @@ inline std::set<std::string>& EntityRecord::allowedLocations()
 inline std::set<std::string>& EntityRecord::associatedLocations()
 {
   return _associatedLocations;
+}
+
+inline std::set<std::string>& EntityRecord::inboundAssociatedLocations()
+{
+  return _inboundAssociatedLocations;
 }
 
 inline std::string& EntityRecord::entity()
