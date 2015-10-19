@@ -23,6 +23,10 @@ BuildRequires: v8-devel
 BuildRequires: leveldb-devel
 BuildRequires: hiredis-devel
 BuildRequires: libpcap-devel
+BuildRequires: libevent-devel
+BuildRequires: xmlrpc-c-devel
+BuildRequires: libtool-ltdl-devel
+BuildRequires: libconfig-devel
 
 %if %{_vendor} == suse
 BuildRequires: pwdutils

@@ -31,6 +31,7 @@ const char* EntityRecord::location_fld(){ static std::string fld = "loc"; return
 const char* EntityRecord::permission_fld(){ static std::string fld = "prm"; return fld.c_str(); }
 const char* EntityRecord::allowed_locations_fld(){ static std::string fld = "locations"; return fld.c_str(); }
 const char* EntityRecord::associated_locations_fld(){ static std::string fld = "loc_assoc"; return fld.c_str(); }
+const char* EntityRecord::inbound_associated_locations_fld(){ static std::string fld = "loc_assoc_inbound"; return fld.c_str(); }
 const char* EntityRecord::entity_fld(){ static std::string fld = "ent"; return fld.c_str(); }
 const char* EntityRecord::authc_fld(){ static std::string fld = "authc"; return fld.c_str(); }
 
@@ -77,6 +78,7 @@ EntityRecord::EntityRecord(const EntityRecord& entity)
     _permissions = entity._permissions;
     _allowedLocations = entity._allowedLocations;
     _associatedLocations = entity._associatedLocations;
+    _inboundAssociatedLocations = entity._inboundAssociatedLocations;
     _entity = entity._entity;
     _authc = entity._authc;
     _callerId = entity._callerId;
@@ -112,6 +114,7 @@ void EntityRecord::swap(EntityRecord& entity)
     std::swap(_permissions, entity._permissions);
     std::swap(_allowedLocations, entity._allowedLocations);
     std::swap(_associatedLocations, entity._associatedLocations);
+    std::swap(_inboundAssociatedLocations, entity._inboundAssociatedLocations);
     std::swap(_entity, entity._entity);
     std::swap(_authc, entity._authc);
     std::swap(_callerId, entity._callerId);
@@ -271,6 +274,21 @@ EntityRecord& EntityRecord::operator = (const mongo::BSONObj& bsonObj)
 				iter != locations.end(); iter++)
 			{
 				_associatedLocations.insert(iter->String());
+			}
+		}
+	}
+  
+  if (bsonObj.hasField(EntityRecord::inbound_associated_locations_fld()))
+	{
+		mongo::BSONElement obj = bsonObj[EntityRecord::inbound_associated_locations_fld()];
+		if ( obj.isABSONObj() &&  obj.type() == mongo::Array)
+		{
+			std::vector<mongo::BSONElement> locations = obj.Array();
+			_inboundAssociatedLocations.clear();
+			for (std::vector<mongo::BSONElement>::iterator iter = locations.begin();
+				iter != locations.end(); iter++)
+			{
+				_inboundAssociatedLocations.insert(iter->String());
 			}
 		}
 	}

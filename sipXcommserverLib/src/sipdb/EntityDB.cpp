@@ -277,14 +277,14 @@ void EntityDB::getCallerLocation(CallerLocations& locations, const std::string& 
   //
   for (Entities::iterator host_iter = branches.begin(); host_iter != branches.end(); host_iter++) // this loop iterates the branch record we have queried
   {
-    if (!host.empty() && !host_iter->loc_restr_dom().empty() && !host_iter->associatedLocations().empty()) // only if locations and wild card matching is specified by the branch
+    if (!host.empty() && !host_iter->loc_restr_dom().empty() && !host_iter->inboundAssociatedLocations().empty()) // only if locations and wild card matching is specified by the branch
     {
       for (EntityRecord::LocationDomain::iterator domainIter = host_iter->loc_restr_dom().begin(); domainIter != host_iter->loc_restr_dom().end(); domainIter++)
       {
         if (wildcard_compare(domainIter->c_str(), host))
         {
           OS_LOG_INFO(FAC_ODBC, "EntityDB::getCallerLocation - Inserting location based  on " << *domainIter << " wildcard match for domain " << host); 
-          locations = host_iter->associatedLocations();
+          locations = host_iter->inboundAssociatedLocations();
           return;
         }
         else
@@ -294,14 +294,14 @@ void EntityDB::getCallerLocation(CallerLocations& locations, const std::string& 
       }
     }
      
-    if (!address.empty() && !host_iter->loc_restr_sbnet().empty() && !host_iter->associatedLocations().empty())
+    if (!address.empty() && !host_iter->loc_restr_sbnet().empty() && !host_iter->inboundAssociatedLocations().empty())
     {
       for (EntityRecord::LocationSubnet::iterator subnetIter = host_iter->loc_restr_sbnet().begin(); subnetIter != host_iter->loc_restr_sbnet().end(); subnetIter++)
       {
         if (cidr_compare(*subnetIter, address))
         {
           OS_LOG_INFO(FAC_ODBC, "EntityDB::getCallerLocation - Inserting location based  on " << *subnetIter << " CIDR match for address " << address); 
-          locations = host_iter->associatedLocations();
+          locations = host_iter->inboundAssociatedLocations();
           return;
         }
         else
