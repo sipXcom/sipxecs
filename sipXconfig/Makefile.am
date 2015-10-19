@@ -53,6 +53,7 @@ pub-get $(SRC_PUB_PACKAGES) : pubspec.yaml
 remove-extraneous-packages-symlinks :
 	find $(srcdir)/web \
 	  -name packages -type l \
+	  -not -path '$(srcdir)/web/packages' -prune \
 	  -not -path '$(srcdir)/web/context/WEB-INF/*' \
 	  -exec rm {} \;
 
