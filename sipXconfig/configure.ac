@@ -6,7 +6,7 @@ m4_include([config/sipXlib.m4])
 m4_include([config/java.m4])
 m4_include([config/java2.m4])
 m4_include([config/dart.m4])
-AM_INIT_AUTOMAKE(foreign tar-ustar)
+AM_INIT_AUTOMAKE(foreign tar-pax)
 SFAC_AUTOMAKE_VERSION([1.6])
 AC_CONFIG_SRCDIR([neoconf/src/org/sipfoundry/sipxconfig/common/User.java])
 SFAC_INIT_FLAGS
