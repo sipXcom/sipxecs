@@ -18,13 +18,17 @@ package org.sipfoundry.sipxconfig.sbc;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.sipfoundry.sipxconfig.bridge.BridgeSbc;
 import org.sipfoundry.sipxconfig.common.event.DaoEventListener;
 import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.feature.FeatureManager;
 import org.sipfoundry.sipxconfig.nattraversal.NatTraversal;
+import org.springframework.dao.DataAccessException;
 
 public class SbcOnEditListener implements DaoEventListener {
+    private static final Logger LOG = Logger.getLogger(SbcOnEditListener.class);
+
     private SbcDeviceManager m_sbcDeviceManager;
     private SbcManager m_sbcManager;
     private FeatureManager m_featureManager;
@@ -44,7 +48,11 @@ public class SbcOnEditListener implements DaoEventListener {
         } else if (entity instanceof Location) {
             BridgeSbc sbc = m_sbcDeviceManager.getBridgeSbc((Location) entity);
             if (sbc != null) {
-                m_sbcDeviceManager.deleteSbcDevice(sbc.getId());
+                try {
+                    m_sbcDeviceManager.deleteSbcDevice(sbc.getId());
+                } catch (DataAccessException dex) {
+                    LOG.error("Cannot delete SBC device " + dex.getStackTrace());
+                }
             }
         }
     }
