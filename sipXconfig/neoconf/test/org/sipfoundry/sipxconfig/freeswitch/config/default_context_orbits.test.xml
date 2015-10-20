@@ -11,7 +11,7 @@
       <action inline="true" application="set" data="slot_count=${fifo(count QPark12345)}"/>
       <action inline="true" application="set" data="slot_count=${slot_count:-9:2}"/>
     </condition>
-    <condition field="${slot_count}" expression="^\:0$|no" break="always">
+    <condition field="${slot_count}" expression="^\:0$|no" break="always" require-nested="false">
       <action application="set" data="fifo_music=/var/sipxdata/parkserver/music/default.wav"/>
       <condition field="${sip_h_X-sipX-referror}" expression="." break="on-true">
         <action application="log" data="INFO extracting referror from sip_h_X-sipX-referror"/>
@@ -37,7 +37,7 @@
     </condition>
   </extension>
   <extension name="ParkOrbitTransfer">
-    <condition field="destination_number" expression="^1111$">
+    <condition field="destination_number" expression="^1111$" require-nested="false">
       <action application="set" data="fifo_music=/var/sipxdata/parkserver/music/default.wav"/>
       <condition field="${sip_h_X-sipX-referror}" expression="." break="on-true">
         <action application="log" data="INFO extracting referror from sip_h_X-sipX-referror"/>
@@ -65,7 +65,7 @@
     </condition>
   </extension>
   <extension name="ParkOrbitBare">
-    <condition field="destination_number" expression="^2222$">
+    <condition field="destination_number" expression="^2222$" require-nested="false">
       <action application="set" data="fifo_music=/var/sipxdata/parkserver/music/default.wav"/>
       <condition field="${sip_h_X-sipX-referror}" expression="." break="on-true">
         <action application="log" data="INFO extracting referror from sip_h_X-sipX-referror"/>
@@ -91,7 +91,7 @@
     </condition>
   </extension>
   <extension name="ParkOrbitFull">
-    <condition field="destination_number" expression="^5555$">
+    <condition field="destination_number" expression="^5555$" require-nested="false">
       <action application="set" data="fifo_music=/var/sipxdata/parkserver/music/custom.wav"/>
       <condition field="${sip_h_X-sipX-referror}" expression="." break="on-true">
         <action application="log" data="INFO extracting referror from sip_h_X-sipX-referror"/>
