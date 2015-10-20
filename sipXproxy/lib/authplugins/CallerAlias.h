@@ -116,6 +116,7 @@ class CallerAlias : public AuthPlugin
       const UtlString& identity, ///< identity of caller in 'user@domain' form (no scheme)
       const UtlString& domain,   /**< domain and optional port for target
                                   *  ( 'example.com' or 'example.com:5099' ) */
+      const UtlString& fromField,// original SIP From field
       UtlString& callerAlias     /// returned alias
                         ) const;
    
