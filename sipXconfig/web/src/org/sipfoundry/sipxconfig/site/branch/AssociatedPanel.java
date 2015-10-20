@@ -6,7 +6,10 @@
 package org.sipfoundry.sipxconfig.site.branch;
 
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
+import org.apache.commons.collections.ListUtils;
 import org.apache.tapestry.BaseComponent;
 import org.apache.tapestry.IPage;
 import org.apache.tapestry.IRequestCycle;
@@ -104,8 +107,11 @@ public abstract class AssociatedPanel extends BaseComponent implements PageBegin
                 BranchManager.CONFERENCES_BY_BRANCH, Conference.class);
         setBranchConferences(conferences);
 
-        List<?> gateways = getBranchManager().getFeatureNames(getBranch().getId(),
+        List<?> branchGateways = getBranchManager().getFeatureNames(getBranch().getId(),
                 BranchManager.GATEWAYS_BY_BRANCH, Gateway.class);
+        List<?> sharedGateways = getBranchManager().getFeatureNames(BranchManager.SHARED_GATEWAYS, Gateway.class);
+        branchGateways.removeAll(sharedGateways);
+        List<?> gateways = ListUtils.union(branchGateways, sharedGateways);
         setBranchGateways(gateways);
 
         List<?> authCodes = getBranchManager().getFeatureNames(getBranch().getId(),

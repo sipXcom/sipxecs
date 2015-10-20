@@ -1,16 +1,3 @@
-create table branch_gateway
-(
-  gateway_id integer not null,
-  branch_id integer not null,
-  constraint branch_gateway_pkey primary key (gateway_id, branch_id),
-  constraint branch_gateway_fk1 foreign key (gateway_id)
-      references gateway (gateway_id) match simple
-      on update no action on delete no action,
-  constraint branch_gateway_fk2 foreign key (branch_id)
-      references branch (branch_id) match simple
-      on update no action on delete no action
-);
-
 create table branch_auth_code
 (
   auth_code_id integer not null,
