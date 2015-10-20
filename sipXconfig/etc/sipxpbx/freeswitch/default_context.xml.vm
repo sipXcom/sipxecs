@@ -48,7 +48,7 @@
 #foreach($orbit in $orbits)
 #if(${orbit.enabled})
   <extension name="ParkOrbit${orbit.name}">
-    <condition field="destination_number" expression="^${orbit.extension}${dollar}">
+    <condition field="destination_number" expression="^${orbit.extension}${dollar}"#if( ${orbit.isMultipleCalls()} ) require-nested="false"#end>
 #if ($maxForwards)
       <action application="set" data="max_forwards=$maxForwards"/>
 #end
@@ -56,7 +56,7 @@
       <action inline="true" application="set" data="slot_count=${dollar}{fifo(count QPark${orbit.extension})}"/>
       <action inline="true" application="set" data="slot_count=${dollar}{slot_count:-9:2}"/>
     </condition>
-    <condition field="${slot_count}" expression="^\:0$|no" break="always">
+    <condition field="${slot_count}" expression="^\:0$|no" break="always" require-nested="false">
 #end
 #set( $transfer_expression_referror = 'transf_ext=${regex(${sip_h_X-sipX-referror}|(.*)@|%1)}' )
 #set( $transfer_expression_auth = 'transf_ext=${regex(${sip_h_X-Sipx-Authidentity}|sip:(.*)@|%1)}' )
