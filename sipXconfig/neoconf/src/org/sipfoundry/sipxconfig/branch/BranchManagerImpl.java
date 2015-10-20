@@ -155,6 +155,13 @@ public class BranchManagerImpl extends SipxHibernateDaoSupport<Branch> implement
     }
 
     @Override
+    public List< ? > getFeatureNames(String sqlQuery, Class< ? > c) {
+        Query q = getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sqlQuery).addEntity(c);
+        List<?> names = q.list();
+        return names;
+    }
+
+    @Override
     public void clear() {
         removeAll(Branch.class);
     }
@@ -192,5 +199,4 @@ public class BranchManagerImpl extends SipxHibernateDaoSupport<Branch> implement
         replicables.addAll(getBranches());
         return replicables;
     }
-
 }
