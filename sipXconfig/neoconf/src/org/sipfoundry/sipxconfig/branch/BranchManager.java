@@ -21,8 +21,9 @@ public interface BranchManager extends DataObjectSource<Branch>, ReplicableProvi
     public static final String CONFERENCES_BY_BRANCH = "SELECT * from meetme_conference mc JOIN branch_conference bc "
         + "ON mc.meetme_conference_id = bc.meetme_conference_id where bc.branch_id = :branchId";
 
-    public static final String GATEWAYS_BY_BRANCH = "SELECT * from gateway gw JOIN branch_gateway bg "
-        + "ON gw.gateway_id = bg.gateway_id where bg.branch_id = :branchId";
+    public static final String GATEWAYS_BY_BRANCH = "SELECT * from gateway gw where gw.branch_id = :branchId";
+
+    public static final String SHARED_GATEWAYS = "SELECT * from gateway gw where gw.shared='TRUE'";
 
     public static final String AUTH_CODES_BY_BRANCH = "SELECT * from auth_code ac JOIN branch_auth_code bac "
         + "ON ac.auth_code_id = bac.auth_code_id where bac.branch_id = :branchId";
@@ -69,7 +70,15 @@ public interface BranchManager extends DataObjectSource<Branch>, ReplicableProvi
     List<Branch> loadBranchesByPage(final int firstRow, final int pageSize, final String[] orderBy,
             final boolean orderAscending);
 
+    /**
+     * returns features that apply to given branchId
+     * */
     List<?> getFeatureNames(Integer branchId, String sqlQuery, Class<?> c);
+
+    /**
+     * returns features that apply to all branches
+     * */
+    List<?> getFeatureNames(String sqlQuery, Class<?> c);
 
     void clear();
 }
