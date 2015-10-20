@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -75,8 +74,6 @@ public class Gateway extends Device implements Replicable, DeployConfigOnEdit, S
     private Branch m_branch;
 
     private boolean m_useSipXBridge = true; // default enabled
-
-    private Set<Branch> m_locations = new HashSet<Branch>();
 
     public Gateway() {
     }
@@ -185,23 +182,6 @@ public class Gateway extends Device implements Replicable, DeployConfigOnEdit, S
 
     public void setPorts(List<FxoPort> ports) {
         m_ports = ports;
-    }
-
-    public Set<Branch> getLocations() {
-        return m_locations;
-    }
-
-    public void setLocations(Set<Branch> locations) {
-        m_locations = locations;
-    }
-
-    public List<Branch> getLocationsList() {
-        return new ArrayList<Branch>(m_locations);
-    }
-
-    public void setLocationsList(List<Branch> locations) {
-        m_locations.clear();
-        m_locations.addAll(locations);
     }
 
     public void setModel(GatewayModel model) {
@@ -390,11 +370,12 @@ public class Gateway extends Device implements Replicable, DeployConfigOnEdit, S
     @Override
     public Map<String, Object> getMongoProperties(String domain) {
         Map<String, Object> props = new HashMap<String, Object>();
-        List<String> locations = new ArrayList<String>();
-        for (Branch branch : m_locations) {
-            locations.add(branch.getName());
+        if (m_branch != null) {
+            List<String> locations = new ArrayList<String>();
+            locations.add(m_branch.getName());
+            props.put(MongoConstants.LOCATIONS, locations);
         }
-        props.put(MongoConstants.LOCATIONS, locations);
+        props.put(MongoConstants.SHARED, m_shared);
         return props;
     }
 

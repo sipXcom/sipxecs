@@ -123,13 +123,6 @@ public abstract class GatewayForm extends BaseComponent implements PageBeginRend
         return new LocalizedOptionModelDecorator(rawModel, getMessages(), "addressTransport.");
     }
 
-    public IPropertySelectionModel getLocationsModel() {
-        ObjectSelectionModel model = new ObjectSelectionModel();
-        model.setCollection(getBranchManager().getBranches());
-        model.setLabelExpression(NAME);
-        return model;
-    }
-
     public void pageBeginRender(PageEvent event) {
         if (getAddressTransportModel() == null) {
             setAddressTransportModel(createTransportModel());
