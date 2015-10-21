@@ -183,5 +183,6 @@ public interface MongoConstants {
     static final String LOCATION_RESTRICTIONS_SUBNETS="loc_restr_sbnet";
     static final String LOCATION_ASSOCIATIONS="loc_assoc";
     static final String LOCATION_ASSOCIATIONS_INBOUND="loc_assoc_inbound";
+    static final String LOCATION_ASSOCIATIONS_FALLBACK="loc_assoc_fallback";
 
 }
