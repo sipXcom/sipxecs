@@ -34,6 +34,8 @@ public abstract class EditBranch extends PageWithCallback implements PageBeginRe
     private static final String CALL_RESTRICTIONS_TAB = "callRestrictions";
 
     private static final String CALL_PERMISSIONS_TAB = "callPermissions";
+    
+    private static final String CALL_FALLBACK_PERMISSIONS_TAB = "callFallbackPermissions";
 
     @Persist
     public abstract Integer getBranchId();
@@ -58,7 +60,8 @@ public abstract class EditBranch extends PageWithCallback implements PageBeginRe
 
     public Collection<String> getAvailableTabNames() {
         Collection<String> tabNames = new ArrayList<String>();
-        tabNames.addAll(Arrays.asList(BRANCH_TAB, ASSOCIATED_TAB, CALL_RESTRICTIONS_TAB, CALL_PERMISSIONS_TAB));
+        tabNames.addAll(Arrays.asList(
+            BRANCH_TAB, ASSOCIATED_TAB, CALL_RESTRICTIONS_TAB, CALL_PERMISSIONS_TAB, CALL_FALLBACK_PERMISSIONS_TAB));
         return tabNames;
     }
 

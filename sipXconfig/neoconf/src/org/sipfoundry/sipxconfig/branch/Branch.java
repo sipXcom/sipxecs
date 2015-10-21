@@ -14,6 +14,7 @@ import static org.sipfoundry.commons.mongo.MongoConstants.LOCATION_RESTRICTIONS_
 import static org.sipfoundry.commons.mongo.MongoConstants.LOCATION_RESTRICTIONS_SUBNETS;
 import static org.sipfoundry.commons.mongo.MongoConstants.LOCATION_ASSOCIATIONS;
 import static org.sipfoundry.commons.mongo.MongoConstants.LOCATION_ASSOCIATIONS_INBOUND;
+import static org.sipfoundry.commons.mongo.MongoConstants.LOCATION_ASSOCIATIONS_FALLBACK;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.sipfoundry.sipxconfig.common.BeanWithId;
 import org.sipfoundry.sipxconfig.common.NamedObject;
 import org.sipfoundry.sipxconfig.common.Replicable;
@@ -42,6 +44,7 @@ public class Branch extends BeanWithId implements NamedObject, SystemAuditable, 
     private BranchRoutes m_routes = new BranchRoutes();
     private Set<Branch> m_locations = new HashSet<Branch>();
     private Set<Branch> m_locationsInbound = new HashSet<Branch>();
+    private Branch m_fallbackBranch;
 
     public String getName() {
         return m_name;
@@ -180,6 +183,14 @@ public class Branch extends BeanWithId implements NamedObject, SystemAuditable, 
         m_locationsInbound.addAll(locations);
     }
 
+    public Branch getFallbackBranch() {
+        return m_fallbackBranch;
+    }
+
+    public void setFallbackBranch(Branch fallbackBranch) {
+        m_fallbackBranch = fallbackBranch;
+    }
+
     @Override
     public boolean isValidUser() {
         return false;
@@ -193,6 +204,11 @@ public class Branch extends BeanWithId implements NamedObject, SystemAuditable, 
         props.put(LOCATION_RESTRICTIONS_SUBNETS, m_routes.getSubnets());
         props.put(LOCATION_ASSOCIATIONS, getLocationsNamesList());
         props.put(LOCATION_ASSOCIATIONS_INBOUND, getLocationsInboundNamesList());
+        if (m_fallbackBranch != null) {
+            props.put(LOCATION_ASSOCIATIONS_FALLBACK, m_fallbackBranch.getName());
+        } else {
+            props.put(LOCATION_ASSOCIATIONS_FALLBACK, StringUtils.EMPTY);
+        }
         return props;
     }
 
