@@ -491,6 +491,7 @@
     <antcall target="remove_chat_meeting_setting" />
   	<antcall target="system_audit_remove" />
   	<antcall target="add_location_location_inbound" />
+  	<antcall target="add_fallback_branch" />
   </target>
 
   <target name="plugin-patches">
@@ -1511,6 +1512,9 @@
   </target>
   <target name="add_location_location_inbound" unless="add_location_location_inbound">
 	<db-patch patch="add_location_location_inbound"/>
+  </target>
+  <target name="add_fallback_branch" unless="add_fallback_branch">
+    <db-patch patch="add_fallback_branch"/>
   </target>	
 
 	<!--

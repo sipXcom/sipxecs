@@ -1,0 +1,17 @@
+<span jwcid="@common/QuickHelp" value="message:quick.help" />
+<fieldset>
+  <table>
+    <tbody>
+      <tr  jwcid="@common/FieldPanel" for="branch:locations" field="component:locations"
+        label="message:label.locations"
+        description="message:description.locations">
+        <select jwcid="locations@PropertySelection" id="locations"
+          model="ognl:locationsModel"
+          value="ognl:branch.fallbackBranch"/>
+      </tr>
+    </tbody>
+  </table>
+</fieldset>      
+<span jwcid="@common/FormActions"
+  listener="listener:apply"
+  callback="ognl:callback" />
