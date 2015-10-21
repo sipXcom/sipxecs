@@ -17,6 +17,7 @@
     unique="true"
     cascade="all"
     column="address_id"/>
+    <many-to-one name="fallbackBranch" column="fallback_branch_id" not-found="ignore" />
     <component name="routes" class="BranchRoutes">
       <list name="domains" table="branch_route_domain">
         <key column="branch_id" foreign-key="fk_branch_route_domain" />
