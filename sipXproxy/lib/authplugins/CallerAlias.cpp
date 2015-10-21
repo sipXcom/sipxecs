@@ -212,7 +212,7 @@ CallerAlias::authorizeAndModify(const UtlString& id,    /**< The authenticated i
 
             // look up any caller alias for this identity and contact domain
             UtlString callerAlias;
-            if (identityIsLocal && getCallerAlias(callerIdentity, targetDomain, callerAlias) )
+            if (identityIsLocal && getCallerAlias(callerIdentity, targetDomain, originalFromField, callerAlias) )
             {
                // found a caller alias, so rewrite the From information
                /*
@@ -362,6 +362,7 @@ static std::string string_right(const std::string& str, size_t size)
 bool CallerAlias::getCallerAlias (
   const UtlString& identity,
   const UtlString& domain,
+  const UtlString& fromField,
   UtlString& callerAlias_
 ) const
 {
@@ -407,7 +408,18 @@ bool CallerAlias::getCallerAlias (
                 userId = userId = buff;
             }
 
-            callerAlias = "<sip:";
+            // Preserve the Display Name portion of the original From header if possible
+            // Transforming the extension is commonly used to send calls to attached PBX or similar
+            size_t uriLoc = fromField.str().find("<");
+            if (uriLoc != std::string::npos && uriLoc > 0)
+            {
+                callerAlias = fromField.str().substr(0, uriLoc) + "<sip:";
+            }
+            else
+            {
+                callerAlias = "<sip:";
+            }
+
             callerAlias += userId;
             callerAlias += identity.str().substr(loc);
             callerAlias += ">";
