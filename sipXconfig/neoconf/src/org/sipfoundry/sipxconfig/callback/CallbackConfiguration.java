@@ -36,9 +36,6 @@ public class CallbackConfiguration implements ConfigProvider {
         if (!request.applies(CallbackOnBusy.FEATURE)) {
             return;
         }
-        if (!m_callbackImpl.isEnabled()) {
-            return;
-        }
 
         Set<Location> locations = request.locations(manager);
         Address fs = manager.getAddressManager().getSingleAddress(FreeswitchFeature.CALLBACK_EVENT_ADDRESS);
