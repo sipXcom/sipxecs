@@ -392,6 +392,10 @@ bool ContactList::isAllowedLocation(const UtlString& contact, const RedirectPlug
       foundMatch = true;
       break;
     }
+    else
+    {
+      OS_LOG_DEBUG(FAC_SIP, "ContactList::isAllowedLocation() - location " << loc << " for contact " << contact.data() << " does not match any item in " << _callerLocation);
+    }
   }
   
   _isTrustedLocation = foundMatch;
