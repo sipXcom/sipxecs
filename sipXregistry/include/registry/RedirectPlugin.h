@@ -505,10 +505,13 @@ public:
    void setDiversionHeader(const std::string& diversion);
    
    bool isAllowedLocation(const UtlString& contact, const RedirectPlugin& plugin);
+   
+   const std::string& getFallbackLocation() const;
 private:
    ContactList( const UtlString& requestString /* for logging purposes */,
            EntityDB* pEntityDb,
-           const std::string& callerLocation // comma delimited caller location
+           const std::string& callerLocation, // comma delimited caller location
+           const std::string& fallbackLocation
            );
 
    void resetWasModifiedFlag( void );
@@ -521,6 +524,7 @@ private:
    EntityDB* _pEntityDb;
    std::string _callerLocation;
    std::set<std::string> _callerLocationTokens;
+   std::string _fallbackLocation;
    bool _isTrustedLocation;
    bool _hasProcessedLocation;
 
@@ -538,6 +542,11 @@ inline const std::string ContactList::getDiversionHeader() const
 inline void ContactList::setDiversionHeader(const std::string& diversion)
 {
   _diversion = diversion;
+}
+
+inline const std::string&  ContactList::getFallbackLocation() const
+{
+  return _fallbackLocation;
 }
 
 /**
