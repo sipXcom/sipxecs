@@ -10,6 +10,12 @@
       <option><value>6</value></option>
     </enum>
   </type>
+  <group name="general">
+    <setting name="tmpDir">
+      <type><string/></type>
+      <value>/var/sipxdata/tmp</value>
+    </setting>
+  </group>
   <group name="ftp">  
     <setting name="url">
       <type><string required="yes"/></type>
