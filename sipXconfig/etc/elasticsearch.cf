@@ -17,12 +17,12 @@
 
 bundle agent elasticsearch {
   methods:
+    primary::
+      "any" usebundle => elasticsearch_config;
     fedora16_or_greater::
       "any" usebundle => "elasticsearch_systemctl_running";
     !fedora16_or_greater::
       "any" usebundle => "elasticsearch_sysv_running";
-    primary::
-      "any" usebundle => elasticsearch_config;
 }
 
 bundle agent elasticsearch_config {
@@ -37,26 +37,27 @@ bundle agent elasticsearch_config {
 }
 
 bundle edit_line elasticsearch_config_file {
-  insert_lines:
-    any::
-      "/etc/elasticsearch/elasticsearch.yml"
-        insert_type => "file";
-      "path.repo: \"/tmp/\"";
+  vars:
+    "tmpDir" slist => readstringlist("$(sipx.SIPX_CFDATA)/$(sipx.location_id)/elasticsearch.yml.part", "tmpDir=", "\n", 1, 4000);
 
   delete_lines:
     any::
-      ".*";
+      "path.repo.*";
+
+  insert_lines:
+    any::
+      "path.repo: [\"$(tmpDir)\", \"$(tmpDir)/elasticsearch_backup\"]";
 }
 
 bundle agent elasticsearch_sysv_running {
   vars:
     any::
       "service" string => "/etc/init.d/elasticsearch";
-      "service_command" string => "/usr/share/elasticsearch/bin/elasticsearch";
+      "service_command" string => "/usr/bin/java";
 
   methods:
     any::
-      "any" usebundle => find_service_by_command("$(service_command)", "elasticsearch_running","root");
+      "any" usebundle => find_sipxservice_by_command_regex("$(service_command)", "elasticsearch_running");
     !elasticsearch::
       "any" usebundle => rh_chkconfig_status("elasticsearch off");
     elasticsearch::
@@ -73,7 +74,7 @@ bundle agent elasticsearch_sysv_running {
         comment => "start elasticsearch",
         args => "start";
 
-    elasticsearch.elasticsearch_running.reload_elasticsearch::
+    elasticsearch.elasticsearch_running.restart_elasticsearch::
       "$(service)"
         comment => "restart elasticsearch",
         args => "restart";
@@ -107,7 +108,7 @@ bundle agent elasticsearch_systemctl_running {
         comment => "enable elasticsearch",
         args => "enable $(service)";
 
-    elasticsearch.elasticsearch_running.(reload_elasticsearch|restart_elasticsearch)::
+    elasticsearch.elasticsearch_running.restart_elasticsearch::
       "$(sipx.systemctl)"
         comment => "restart elasticsearch",
         args => "restart $(service)";
