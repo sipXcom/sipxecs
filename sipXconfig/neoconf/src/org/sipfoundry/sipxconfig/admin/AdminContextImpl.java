@@ -119,6 +119,12 @@ public class AdminContextImpl extends HibernateDaoSupport implements AdminContex
             if (!plan.isIncludeDeviceFiles()) {
                 m_backup.append(" --no-device-files");
             }
+            String tmpDirectory = settings.getTmpDir();
+            if (StringUtils.isNotBlank(tmpDirectory)) {
+                String tmpDir = " --tmp-dir ";
+                m_backup.append(tmpDir).append(tmpDirectory);
+                m_restore.append(tmpDir).append(tmpDirectory);
+            }
             if (settings.isKeepDomain()) {
                 m_restore.append(" --domain ")
                          .append(m_domainManager.getDomain().getName());
