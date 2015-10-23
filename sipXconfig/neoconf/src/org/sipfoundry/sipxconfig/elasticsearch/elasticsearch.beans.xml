@@ -8,7 +8,9 @@
     <property name="gson" ref="gson" />
   </bean>
 
-  <bean id="elasticsearchConfig" class="org.sipfoundry.sipxconfig.elasticsearch.ElasticsearchConfig"/>
+  <bean id="elasticsearchConfig" class="org.sipfoundry.sipxconfig.elasticsearch.ElasticsearchConfig">
+    <property name="backupManager" ref="backupManager" />
+  </bean>
 
   <bean id="gson" class="com.google.gson.Gson" factory-bean="gsonBuilder" factory-method="create" depends-on="gsonBuilderConfig"/>
 

@@ -20,6 +20,12 @@ public class BackupApiTest {
     @Test
     public void test() throws IOException {
         BackupApi api = new BackupApi();
+        BackupSettings settings = new BackupSettings();
+        BackupDbSettings backupDbSettings = new BackupDbSettings();
+        backupDbSettings.setSettings(TestHelper.loadSettings("backup/backup-db.xml"));
+        settings.setBackupDbSettings(backupDbSettings);
+        settings.setSettings(TestHelper.loadSettings("backup/backup.xml"));
+        settings.setModelFilesContext(TestHelper.getModelFilesContext(TestHelper.getSystemEtcDir()));
         BackupPlan plan = new BackupPlan();
         Map<String,String> archiveIds = new HashMap<String, String>();
         archiveIds.put("A", "Alpha");
@@ -34,17 +40,15 @@ public class BackupApiTest {
         plan.setEncodedDefinitionString("A,BEE,C");
         plan.setSchedules(Arrays.asList(s1));
         StringWriter actual = new StringWriter();
-        BackupSettings settings = new BackupSettings();
-        BackupDbSettings backupDbSettings = new BackupDbSettings();
-        backupDbSettings.setSettings(TestHelper.loadSettings("backup/backup-db.xml"));
-        settings.setBackupDbSettings(backupDbSettings);
-        settings.setSettings(TestHelper.loadSettings("backup/backup.xml"));
-        settings.setModelFilesContext(TestHelper.getModelFilesContext(TestHelper.getSystemEtcDir()));
 
         //test default value different than actual value
         settings.getDb().getSetting("includeDeviceFiles").setTypedValue(true);
         assertTrue(settings.getIncludeDeviceFiles().getDefaultValue().equals("0"));
         assertTrue(settings.getIncludeDeviceFiles().getValue().equals("1"));
+
+        //test default value different than actual value
+        String tmpTest = "/var/sipxdata/tmp";
+        assertTrue(settings.getTmpDir().equals(tmpTest));
 
         Map<String, List<String>> backups = new HashMap<String, List<String>>();
         backups.put("x", Arrays.asList("one", "two", "three"));
