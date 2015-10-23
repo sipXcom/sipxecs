@@ -249,11 +249,13 @@ bool ErrorDescriptor::shouldRequestBeAppendedToResponse( void ) const
 ContactList::ContactList( 
   const UtlString& requestString, 
   EntityDB* pEntityDb,
-  const std::string& callerLocation) :
+  const std::string& callerLocation,
+  const std::string& fallbackLocation) :
    mRequestString( requestString ),
    mbListWasModified( false ),
    _pEntityDb(pEntityDb),
    _callerLocation(callerLocation),
+   _fallbackLocation(fallbackLocation),
    _isTrustedLocation(false),
    _hasProcessedLocation(false)
 {
@@ -389,6 +391,10 @@ bool ContactList::isAllowedLocation(const UtlString& contact, const RedirectPlug
       OS_LOG_INFO(FAC_SIP, "ContactList::isAllowedLocation() found matching location " << loc << " for contact " << contact.data() << " added by plugin " << plugin.name().data());
       foundMatch = true;
       break;
+    }
+    else
+    {
+      OS_LOG_DEBUG(FAC_SIP, "ContactList::isAllowedLocation() - location " << loc << " for contact " << contact.data() << " does not match any item in " << _callerLocation);
     }
   }
   

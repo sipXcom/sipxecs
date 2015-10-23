@@ -163,6 +163,9 @@ public:
     
     std::set<std::string>& associatedLocations();
     static const char* associated_locations_fld();
+    
+    const std::string& associatedLocationFallback();
+    static const char* associated_location_fallback_fld();
 
     std::set<std::string>& inboundAssociatedLocations();
     static const char* inbound_associated_locations_fld();
@@ -251,6 +254,7 @@ private:
     std::set<std::string> _allowedLocations;
     std::set<std::string> _associatedLocations;
     std::set<std::string> _inboundAssociatedLocations;
+    std::string _associatedLocationFallback;
     std::string _entity;
     std::vector<Alias> _aliases;
     std::vector<StaticUserLoc> _staticUserLoc;
@@ -320,6 +324,11 @@ inline std::set<std::string>& EntityRecord::allowedLocations()
 inline std::set<std::string>& EntityRecord::associatedLocations()
 {
   return _associatedLocations;
+}
+
+inline const std::string& EntityRecord::associatedLocationFallback()
+{
+  return _associatedLocationFallback;
 }
 
 inline std::set<std::string>& EntityRecord::inboundAssociatedLocations()
