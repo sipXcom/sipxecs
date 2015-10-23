@@ -127,20 +127,23 @@
     </group>        
   </group>
   <group name="General">
+    <setting name="IS_MULTI_CHAT_WINDOW_ENABLED">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>  
     <setting name="IS_MESSAGE_HISTORY_ENABLED">
       <type refid="true-false"/>
       <value>true</value>
-    </setting>
-    <setting name="IS_RECENT_MESSAGES_DISABLED">
-      <type refid="true-false"/>
-      <value>false</value>
     </setting>
     <setting name="IS_MESSAGE_HISTORY_SHOWN">
       <type refid="true-false"/>
       <value>false</value>
     </setting>
-    <setting name="MESSAGE_HISTORY_SIZE">      
-      <value>9</value>    
+    <setting name="MESSAGE_HISTORY_SIZE">
+      <type>
+        <integer min="0" max="140" />
+      </type>          
+      <value>10</value>
     </setting>
     <setting name="SEND_MESSAGE_COMMAND">
       <type refid="message_command"/>
@@ -162,11 +165,19 @@
       <type refid="true-false"/>
       <value>true</value>
     </setting>
+    <setting name="IS_RECENT_MESSAGES_DISABLED">
+      <type refid="true-false-reverse"/>
+      <value>false</value>
+    </setting>    
     <setting name="statusupdate_enable">
       <type refid="true-false"/>
       <value>false</value>    
     </setting>
     <setting name="statusupdate_timer">
+      <type>
+        <integer min="1" max="180" />
+      </type>
+      <value>15</value>
     </setting>            
     <setting name="POPUP_HANDLER">
      <type refid="systray_popup"/>
@@ -175,6 +186,14 @@
     <setting name="locale">
       <type refid="locale" />
       <value>en</value>      
+    </setting>
+    <setting name="NORMALIZE_PHONE_NUMBER">
+      <type refid="true-false"/>
+      <value>true</value>    
+    </setting>    
+    <setting name="ACCEPT_PHONE_NUMBER_WITH_ALPHA_CHARS">
+      <type refid="true-false"/>
+      <value>true</value>    
     </setting>    
   </group>
   <group name="encodings">

@@ -8,6 +8,16 @@
     </false>
   </boolean>
 </type>
+<type id="true-false-reverse">
+  <boolean>
+    <true>
+      <value>false</value>
+    </true>
+    <false>
+      <value>true</value>
+    </false>
+  </boolean>
+</type>
 <type id="yes-no">
   <boolean>
     <true>

@@ -28,9 +28,12 @@ net.java.sip.communicator.plugin.dnsconfig.DISABLED=$phone.getSettingValue('GUI/
 net.java.sip.communicator.plugin.certconfig.DISABLED=$phone.getSettingValue('GUI/Options/Advanced_group/TLS')
 net.java.sip.communicator.plugin.statusupdate.enable=$phone.getSettingValue('General/statusupdate_enable')
 net.java.sip.communicator.plugin.statusupdate.timer=$phone.getSettingValue('General/statusupdate_timer')
+service.gui.IS_MULTI_CHAT_WINDOW_ENABLED=$phone.getSettingValue('General/IS_MULTI_CHAT_WINDOW_ENABLED')
 net.java.sip.communicator.service.msghistory.IS_MESSAGE_HISTORY_ENABLED=$phone.getSettingValue('General/IS_MESSAGE_HISTORY_ENABLED')
 net.java.sip.communicator.service.msghistory.IS_RECENT_MESSAGES_DISABLED=$phone.getSettingValue('General/IS_RECENT_MESSAGES_DISABLED')
 service.gui.IS_MESSAGE_HISTORY_SHOWN=$phone.getSettingValue('General/IS_MESSAGE_HISTORY_SHOWN')
+impl.gui.ACCEPT_PHONE_NUMBER_WITH_ALPHA_CHARS=$phone.getSettingValue('General/ACCEPT_PHONE_NUMBER_WITH_ALPHA_CHARS')
+impl.gui.NORMALIZE_PHONE_NUMBER=$phone.getSettingValue('General/NORMALIZE_PHONE_NUMBER')
 #foreach($codec in $phone.getSettings().getSetting('encodings/audio').getType().getEnums().entrySet())
 net.java.sip.communicator.impl.neomedia.codec.EncodingConfiguration.$codec.key=0
 #end
