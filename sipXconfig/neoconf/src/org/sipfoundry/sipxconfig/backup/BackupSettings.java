@@ -18,13 +18,14 @@ import static org.apache.commons.lang.StringUtils.isEmpty;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.sipfoundry.sipxconfig.cfgmgt.DeployConfigOnEdit;
+import org.sipfoundry.sipxconfig.elasticsearch.ElasticsearchServiceImpl;
 import org.sipfoundry.sipxconfig.feature.Feature;
 import org.sipfoundry.sipxconfig.rest.RestUtilities;
 import org.sipfoundry.sipxconfig.setting.PersistableSettings;
@@ -32,6 +33,9 @@ import org.sipfoundry.sipxconfig.setting.Setting;
 import org.springframework.beans.factory.annotation.Required;
 
 public class BackupSettings extends PersistableSettings implements DeployConfigOnEdit {
+
+    private static final String TMP_DIR = "general/tmpDir";
+
     private static final Log LOG = LogFactory.getLog(BackupSettings.class);
     private String m_localBackupPath;
     private BackupDbSettings m_backupDbSettings;
@@ -92,6 +96,11 @@ public class BackupSettings extends PersistableSettings implements DeployConfigO
         return m_backupDbSettings.getSettings().getSetting("db/includeDeviceFiles");
     }
 
+    @JsonIgnore
+    public String getTmpDir() {
+        return (String) getSettingTypedValue(TMP_DIR);
+    }
+
     public Setting getDbSettings() {
         return m_backupDbSettings.getSettings();
     }
@@ -103,7 +112,7 @@ public class BackupSettings extends PersistableSettings implements DeployConfigO
     @Override
     @JsonIgnore
     public Collection<Feature> getAffectedFeaturesOnChange() {
-        return Collections.singleton((Feature) BackupManager.FEATURE);
+        return Arrays.asList((Feature) BackupManager.FEATURE, (Feature) ElasticsearchServiceImpl.FEATURE);
     }
 
     @JsonIgnore
