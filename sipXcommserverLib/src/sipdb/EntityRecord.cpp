@@ -31,6 +31,7 @@ const char* EntityRecord::location_fld(){ static std::string fld = "loc"; return
 const char* EntityRecord::permission_fld(){ static std::string fld = "prm"; return fld.c_str(); }
 const char* EntityRecord::allowed_locations_fld(){ static std::string fld = "locations"; return fld.c_str(); }
 const char* EntityRecord::associated_locations_fld(){ static std::string fld = "loc_assoc"; return fld.c_str(); }
+const char* EntityRecord::associated_location_fallback_fld(){ static std::string fld = "loc_assoc_fallback"; return fld.c_str(); }
 const char* EntityRecord::inbound_associated_locations_fld(){ static std::string fld = "loc_assoc_inbound"; return fld.c_str(); }
 const char* EntityRecord::entity_fld(){ static std::string fld = "ent"; return fld.c_str(); }
 const char* EntityRecord::authc_fld(){ static std::string fld = "authc"; return fld.c_str(); }
@@ -78,6 +79,7 @@ EntityRecord::EntityRecord(const EntityRecord& entity)
     _permissions = entity._permissions;
     _allowedLocations = entity._allowedLocations;
     _associatedLocations = entity._associatedLocations;
+    _associatedLocationFallback = entity._associatedLocationFallback;
     _inboundAssociatedLocations = entity._inboundAssociatedLocations;
     _entity = entity._entity;
     _authc = entity._authc;
@@ -114,6 +116,7 @@ void EntityRecord::swap(EntityRecord& entity)
     std::swap(_permissions, entity._permissions);
     std::swap(_allowedLocations, entity._allowedLocations);
     std::swap(_associatedLocations, entity._associatedLocations);
+    std::swap(_associatedLocationFallback, entity._associatedLocationFallback);
     std::swap(_inboundAssociatedLocations, entity._inboundAssociatedLocations);
     std::swap(_entity, entity._entity);
     std::swap(_authc, entity._authc);
@@ -301,6 +304,11 @@ EntityRecord& EntityRecord::operator = (const mongo::BSONObj& bsonObj)
   if (bsonObj.hasField(EntityRecord::authc_fld()))
 	{
 	  _authc = bsonObj.getStringField(EntityRecord::authc_fld());
+	}
+  
+  if (bsonObj.hasField(EntityRecord::associated_location_fallback_fld()))
+	{
+	  _associatedLocationFallback = bsonObj.getStringField(EntityRecord::associated_location_fallback_fld());
 	}
 
 	if (bsonObj.hasField(EntityRecord::aliases_fld()))

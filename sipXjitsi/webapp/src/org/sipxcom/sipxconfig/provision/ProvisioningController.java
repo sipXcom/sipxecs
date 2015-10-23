@@ -77,11 +77,11 @@ public class ProvisioningController {
             return builder.toString();
         }
 
-        builder.append("provisioning.ALLOW_PREFIX=net.java|org.ice4j|java.net\n");
+        builder.append("provisioning.ALLOW_PREFIX=net.java|org.jitsi|service.gui|org.ice4j|plugin|impl.gui|systray|java.net\n");
         builder.append(content);
         builder.append('\n');
 
-        builder.append("provisioning.ENFORCE_PREFIX=net.java|org.ice4j|java.net\n");
+        builder.append("provisioning.ENFORCE_PREFIX=net.java|org.jitsi|service.gui|org.ice4j|plugin|impl.gui|systray|java.net\n");
 
         LOG.info("Provisioned content returned.");
 

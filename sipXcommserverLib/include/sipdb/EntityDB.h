@@ -72,7 +72,7 @@ public:
 	bool findByAliasUserId(const std::string& alias, EntityRecord& entity) const;
   bool findByAliasIdentity(const std::string& identity, EntityRecord& entity) const;
 
-  void getCallerLocation(CallerLocations& locations, const std::string& identity, const std::string& host, const std::string& address);
+  void getCallerLocation(CallerLocations& locations, std::string& fallbackLocation, const std::string& identity, const std::string& host, const std::string& address);
   
 	/// Retrieve the SIP credential check values for a given identity and realm
 	bool getCredential(const Url& uri, const UtlString& realm, UtlString& userid, UtlString& passtoken,
