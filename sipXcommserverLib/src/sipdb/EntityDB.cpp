@@ -243,7 +243,7 @@ void EntityDB::getEntitiesByType(const std::string& entityType, Entities& entiti
   conn->done();
 }
 
-void EntityDB::getCallerLocation(CallerLocations& locations, const std::string& identity, const std::string& host, const std::string& address)
+void EntityDB::getCallerLocation(CallerLocations& locations, std::string& fallbackLocation, const std::string& identity, const std::string& host, const std::string& address)
 {
   Entities branches;
   getEntitiesByType(EntityRecord::entity_branch_str(), branches);
@@ -264,6 +264,7 @@ void EntityDB::getCallerLocation(CallerLocations& locations, const std::string& 
         {
           OS_LOG_INFO(FAC_ODBC, "EntityDB::getCallerLocation - Setting associated locations based  on identity " << identity << " branch " << branch_iter->location()); 
           locations = branch_iter->associatedLocations();
+          fallbackLocation = branch_iter->associatedLocationFallback();
           return;
         }
       }
@@ -285,6 +286,7 @@ void EntityDB::getCallerLocation(CallerLocations& locations, const std::string& 
         {
           OS_LOG_INFO(FAC_ODBC, "EntityDB::getCallerLocation - Inserting location based  on " << *domainIter << " wildcard match for domain " << host); 
           locations = host_iter->inboundAssociatedLocations();
+          fallbackLocation = host_iter->associatedLocationFallback();
           return;
         }
         else
@@ -302,6 +304,7 @@ void EntityDB::getCallerLocation(CallerLocations& locations, const std::string& 
         {
           OS_LOG_INFO(FAC_ODBC, "EntityDB::getCallerLocation - Inserting location based  on " << *subnetIter << " CIDR match for address " << address); 
           locations = host_iter->inboundAssociatedLocations();
+          fallbackLocation = host_iter->associatedLocationFallback();
           return;
         }
         else

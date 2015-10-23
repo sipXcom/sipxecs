@@ -249,11 +249,13 @@ bool ErrorDescriptor::shouldRequestBeAppendedToResponse( void ) const
 ContactList::ContactList( 
   const UtlString& requestString, 
   EntityDB* pEntityDb,
-  const std::string& callerLocation) :
+  const std::string& callerLocation,
+  const std::string& fallbackLocation) :
    mRequestString( requestString ),
    mbListWasModified( false ),
    _pEntityDb(pEntityDb),
    _callerLocation(callerLocation),
+   _fallbackLocation(fallbackLocation),
    _isTrustedLocation(false),
    _hasProcessedLocation(false)
 {

@@ -122,8 +122,13 @@ SipRedirectorFallback::lookUp(
    {      
       UtlString callerLocation;
       UtlString callerInitialLineId;
+      
+      if (!contactList.getFallbackLocation().empty())
+      {
+        callerLocation = contactList.getFallbackLocation();
+      }
       // initial gateway contact retrieved following X-SipX-Location-Info headers takes precedence
-      if (OS_SUCCESS != getInitialGatewayContact(message, callerLocation, callerInitialLineId))
+      else if (OS_SUCCESS != getInitialGatewayContact(message, callerLocation, callerInitialLineId))
       {
         determineCallerLocation(message, callerLocation);
       }
