@@ -77,8 +77,9 @@ static const int MAX_DISPATCH_DELAY_IN_MS = 200; // This is 5 messages per sec w
 static const int ALARM_ON_CONSECUTIVE_YIELD = 5;
 
 static const char* X_SIPX_CALLER_LOCATIONS = "X-Sipx-Caller-Locations";
+static const char* X_SIPX_CALLER_LOCATION_FALLBACK = "X-Sipx-Caller-Location-Fallback";
 static const char* X_SIPX_CALLER_LOCATIONS_DONE = "X-Sipx-Caller-Locations-Done";
-static const char* X_SIPX_CALLER_LOCATIONS_AUTH_ID = "X-Sipx-Caller-Locations-Auth-Id";
+
 
 // STRUCTS
 // TYPEDEFS
@@ -929,11 +930,8 @@ void SipRouter::identifyCallerLocation(SipMessage& sipRequest)
     return;
   }
   
-  UtlString authIdentity;
-  SipXauthIdentity sipxIdentity(sipRequest, SipXauthIdentity::AuthIdentityHeaderName, SipXauthIdentity::allowUnbound);
-  bool hasAuthIdentity = sipxIdentity.getIdentity(authIdentity);
-  
-  if(hasAuthIdentity || (!sipRequest.getHeaderValue( 0, X_SIPX_CALLER_LOCATIONS ) && !sipRequest.getHeaderValue( 0, X_SIPX_CALLER_LOCATIONS_DONE )))
+ 
+  if(!sipRequest.getHeaderValue( 0, X_SIPX_CALLER_LOCATIONS ) && !sipRequest.getHeaderValue( 0, X_SIPX_CALLER_LOCATIONS_DONE ))
   {
     UtlString sendAddress;
     int sendPort;
@@ -944,6 +942,7 @@ void SipRouter::identifyCallerLocation(SipMessage& sipRequest)
     
     UtlString host;
     EntityDB::CallerLocations callerLocations;
+    std::string fallbackLocation;
     
     sipRequest.getSendAddress(&sendAddress, &sendPort);
     
@@ -965,47 +964,25 @@ void SipRouter::identifyCallerLocation(SipMessage& sipRequest)
       //
       return;
     }
-    
-    
-    if (hasAuthIdentity)
+    //
+    // final check if the identity is an alias
+    //
+    if (mDomainName.compareTo(host.data()) != 0 && isLocalDomain(fromUrl, true))
     {
-      identity = authIdentity;
-      
-      //
-      // Check if the request already has been checked using the auth-identity
-      //
-      if (sipRequest.getHeaderValue(0, X_SIPX_CALLER_LOCATIONS_AUTH_ID))
-      {
-        if (identity.compareTo(sipRequest.getHeaderValue(0, X_SIPX_CALLER_LOCATIONS_AUTH_ID)) == 0)
-        {
-          //
-          // Bail out.  we already got the locations for this guy
-          //
-          return;
-        }
-      }
+      host = mDomainName;
+      std::ostringstream realIdentity;
+      UtlString user;
+      fromUrl.getUserId(user);
+      realIdentity << user.data() << "@" << mDomainName.data();
+
+      OS_LOG_INFO(FAC_SIP, "SipRouter::identifyCallerLocation - using " << realIdentity.str() << " instead of " << identity.data());
+
+      identity = realIdentity.str();
     }
-    else
-    {
-      //
-      // final check if the identity is an alias
-      //
-      if (mDomainName.compareTo(host.data()) != 0 && isLocalDomain(fromUrl, true))
-      {
-        host = mDomainName;
-        std::ostringstream realIdentity;
-        UtlString user;
-        fromUrl.getUserId(user);
-        realIdentity << user.data() << "@" << mDomainName.data();
-        
-        OS_LOG_INFO(FAC_SIP, "SipRouter::identifyCallerLocation - using " << realIdentity.str() << " instead of " << identity.data());
-        
-        identity = realIdentity.str();
-      }
-    }    
+  
     
     OS_LOG_INFO(FAC_SIP, "SipRouter::identifyCallerLocation - determining location for identity " << identity.data());
-    SipRouter::getEntityDBInstance()->getCallerLocation(callerLocations, identity.data(), host.data(), sendAddress.data());
+    SipRouter::getEntityDBInstance()->getCallerLocation(callerLocations, fallbackLocation, identity.data(), host.data(), sendAddress.data());
 
     
     if (!callerLocations.empty())
@@ -1029,10 +1006,13 @@ void SipRouter::identifyCallerLocation(SipMessage& sipRequest)
       if (!locHeader.str().empty())
       {
         OS_LOG_INFO(FAC_SIP, "SipRouter::identifyCallerLocation - setting location for identity " << identity.data() << " to " << locHeader.str());
+        
         sipRequest.setHeaderValue(X_SIPX_CALLER_LOCATIONS, locHeader.str().c_str(), 0);
-        if (hasAuthIdentity)
+        
+        if (!fallbackLocation.empty())
         {
-          sipRequest.setHeaderValue(X_SIPX_CALLER_LOCATIONS_AUTH_ID, identity.data(), 0);
+          OS_LOG_INFO(FAC_SIP, "SipRouter::identifyCallerLocation - setting fallback location for identity " << identity.data() << " to " << fallbackLocation);
+          sipRequest.setHeaderValue(X_SIPX_CALLER_LOCATION_FALLBACK, fallbackLocation.c_str());
         }
       }
       else
@@ -1377,8 +1357,8 @@ SipRouter::ProxyAction SipRouter::proxyMessage(SipMessage& sipRequest, SipMessag
               // since spiraling is complete.
               sipRequest.removeHeader( SIP_SIPX_SPIRAL_HEADER, 0 );
               sipRequest.removeHeader( X_SIPX_CALLER_LOCATIONS, 0 );
+              sipRequest.removeHeader( X_SIPX_CALLER_LOCATION_FALLBACK, 0 );
               sipRequest.removeHeader( X_SIPX_CALLER_LOCATIONS_DONE, 0 );
-              sipRequest.removeHeader( X_SIPX_CALLER_LOCATIONS_AUTH_ID, 0 );
            }
         }
 
