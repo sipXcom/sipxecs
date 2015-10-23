@@ -34,6 +34,7 @@
 // CONSTANTS
 const char* SipRedirectServer::AuthorityLevelPrefix  = "_AUTHORITY_LEVEL";
 static const char* X_SIPX_CALLER_LOCATIONS = "X-Sipx-Caller-Locations";
+static const char* X_SIPX_CALLER_LOCATION_FALLBACK = "X-Sipx-Caller-Location-Fallback";
 // STRUCTS
 // TYPEDEFS
 // FORWARD DECLARATIONS
@@ -282,7 +283,9 @@ void SipRedirectServer::processRedirect(const SipMessage* pMessage,
    std::string sipxCallerLocations;
    sipxCallerLocations = pMessage->getHeaderValue( 0, X_SIPX_CALLER_LOCATIONS ) ? pMessage->getHeaderValue( 0, X_SIPX_CALLER_LOCATIONS ) : std::string();
    
-   ContactList contactList( stringUri, mpRegistrar->getEntityDB(), sipxCallerLocations );
+   std::string fallbackLocation;
+   fallbackLocation = pMessage->getHeaderValue( 0,X_SIPX_CALLER_LOCATION_FALLBACK ) ? pMessage->getHeaderValue( 0, X_SIPX_CALLER_LOCATION_FALLBACK ) : std::string();
+   ContactList contactList(stringUri, mpRegistrar->getEntityDB(), sipxCallerLocations, fallbackLocation);
 
    int i;                       // Iterator sequence number.
    for (i = 0; (redirector = static_cast <RedirectPlugin*> (iterator.next())) && !willError;
