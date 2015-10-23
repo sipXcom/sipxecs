@@ -17,17 +17,26 @@
 package org.sipfoundry.sipxconfig.elasticsearch;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.Set;
 
+import org.apache.commons.io.IOUtils;
+import org.sipfoundry.sipxconfig.backup.BackupManager;
+import org.sipfoundry.sipxconfig.backup.BackupSettings;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigProvider;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigRequest;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigUtils;
+import org.sipfoundry.sipxconfig.cfgmgt.LoggerKeyValueConfiguration;
 import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.feature.FeatureManager;
+import org.springframework.beans.factory.annotation.Required;
 
 public class ElasticsearchConfig implements ConfigProvider {
+
+    private BackupManager m_backupManager;
 
     @Override
     public void replicate(ConfigManager manager, ConfigRequest request) throws IOException {
@@ -40,7 +49,26 @@ public class ElasticsearchConfig implements ConfigProvider {
             File dir = manager.getLocationDataDirectory(location);
             boolean enabled = featureManager.isFeatureEnabled(ElasticsearchServiceImpl.FEATURE, location);
             ConfigUtils.enableCfengineClass(dir, "elasticsearch.cfdat", enabled, "elasticsearch");
+
+            BackupSettings backupSettings = m_backupManager.getSettings();
+            File f = new File(dir, "elasticsearch.yml.part");
+            Writer wtr = new FileWriter(f);
+            try {
+                write(wtr, backupSettings);
+            } finally {
+                IOUtils.closeQuietly(wtr);
+            }
         }
+    }
+
+    private void write(Writer wtr, BackupSettings backupSettings) throws IOException {
+        LoggerKeyValueConfiguration config = LoggerKeyValueConfiguration.equalsSeparated(wtr);
+        config.write("tmpDir", backupSettings.getTmpDir());
+    }
+
+    @Required
+    public void setBackupManager(BackupManager backupManager) {
+        m_backupManager = backupManager;
     }
 
 }

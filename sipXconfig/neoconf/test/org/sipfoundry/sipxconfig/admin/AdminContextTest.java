@@ -58,8 +58,8 @@ public class AdminContextTest {
         Location primary = new Location("one.example.org", "1.1.1.1");
         primary.setPrimary(true);
         ArchiveDefinition def = impl.getArchiveDefinitions(mgr, primary, plan, settings).iterator().next();
-        String base = "sipxconfig-archive --restore %s";
-        String baseBackup = "sipxconfig-archive --backup %s";
+        String base = "sipxconfig-archive --restore %s --tmp-dir /var/sipxdata/tmp";
+        String baseBackup = "sipxconfig-archive --backup %s --tmp-dir /var/sipxdata/tmp";
         assertEquals(base, def.getRestoreCommand());
         assertEquals(baseBackup, def.getBackupCommand());
         
@@ -72,9 +72,9 @@ public class AdminContextTest {
         plan.setIncludeDeviceFiles(false);
         def = impl.getArchiveDefinitions(mgr, primary, plan, settings).iterator().next();
         String options = " --domain example.com --fqdn test.example.com --crack-pin zzz --crack-passwd yyy --crack-pin-len 5";
-        String backupOptions = " --no-device-files";
         assertEquals(base + options, def.getRestoreCommand());
-        assertEquals(baseBackup + backupOptions, def.getBackupCommand());
+        baseBackup = "sipxconfig-archive --backup %s --no-device-files --tmp-dir /var/sipxdata/tmp";
+        assertEquals(baseBackup, def.getBackupCommand());
         verify(mgr);
     }
 }

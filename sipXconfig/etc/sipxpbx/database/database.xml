@@ -1528,6 +1528,9 @@
   <target name="openacd-permission-update5" unless="openacd-permission-update5">
     <db-patch patch="openacd-permission-update5"/>
   </target>
+  <target name="add_tmpdir_to_backup" unless="add_tmpdir_to_backup">
+    <db-patch patch="add_tmpdir_to_backup"/>
+  </target>
 
 	<!--
     - SUPPORT UTILITIES

@@ -17,6 +17,7 @@ import java.util.Map;
 import org.sipfoundry.sipxconfig.admin.AdminContext;
 import org.sipfoundry.sipxconfig.ivr.Ivr;
 import org.sipfoundry.sipxconfig.test.IntegrationTestCase;
+import org.sipfoundry.sipxconfig.test.TestHelper;
 
 public class BackupPlanTestIntegration extends IntegrationTestCase {
     private BackupManager m_backupManager;
@@ -27,6 +28,8 @@ public class BackupPlanTestIntegration extends IntegrationTestCase {
     }
 
     public void testStoreJob() throws Exception {
+        BackupSettings settings = new BackupSettings();
+        settings.setModelFilesContext(TestHelper.getModelFilesContext());
         BackupPlan plan = new BackupPlan(BackupType.local);
         Collection<String> defs = Arrays.asList(AdminContext.ARCHIVE, Ivr.ARCHIVE);
         plan.getDefinitionIds().addAll(defs);
