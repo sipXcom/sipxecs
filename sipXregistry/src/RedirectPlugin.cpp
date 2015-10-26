@@ -262,6 +262,7 @@ ContactList::ContactList(
   if (!_callerLocation.empty())
   {
     boost::to_lower(_callerLocation);
+    _callerLocation.erase(std::remove_if(_callerLocation.begin(), _callerLocation.end(), isspace), _callerLocation.end());
     boost::split(_callerLocationTokens, _callerLocation, boost::is_any_of(","), boost::token_compress_on);
   }
 }
