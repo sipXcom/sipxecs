@@ -6,6 +6,7 @@
     <property name="validUsers" ref="validUsers" />
     <property name="faxProcessor" ref="faxProcessor" />
     <property name="eslRequestController" ref="faxEslRequestController" />
+    <property name="faxReinvite" value="${fax.reinvite}" />
   </bean>
 
   <bean id="faxEslRequestController" class="org.sipfoundry.faxrx.FaxRxEslRequestController" scope="eslRequest">
