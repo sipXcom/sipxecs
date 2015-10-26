@@ -25,6 +25,7 @@ public class FaxRx extends SipxIvrApp {
 
     private ValidUsers m_validUsers;
     private FaxProcessor m_faxProcessor;
+    private boolean m_faxReinvite;
 
     @Override
     public void run() {
@@ -53,7 +54,10 @@ public class FaxRx extends SipxIvrApp {
 
         try {
             faxPathName = File.createTempFile("fax_" + getTimestamp() + "_", ".tiff");
-            controller.invokeSet("fax_enable_t38_request", "true");
+            if (m_faxReinvite) {
+                LOG.debug("Fax reinvite enabled, set fax_enable_t38_request to true");
+                controller.invokeSet("fax_enable_t38_request", "true");
+            }
             controller.invokeSet("fax_enable_t38", "true");
             faxReceive = controller.receiveFax(faxPathName.getAbsolutePath());
 
@@ -88,6 +92,10 @@ public class FaxRx extends SipxIvrApp {
 
     public void setFaxProcessor(FaxProcessor processor) {
         m_faxProcessor = processor;
+    }
+
+    public void setFaxReinvite(boolean faxReinvite) {
+        m_faxReinvite = faxReinvite;
     }
 
 }
