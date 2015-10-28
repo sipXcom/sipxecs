@@ -58,4 +58,6 @@ public interface AdminContext {
 
     boolean isHazelcastEnabled();
 
+    boolean isSyncExtAvatar();
+
 }

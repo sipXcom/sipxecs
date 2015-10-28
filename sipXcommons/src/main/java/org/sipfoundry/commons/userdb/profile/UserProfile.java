@@ -94,6 +94,8 @@ public class UserProfile {
     private boolean m_ldapManaged;
     private Date m_lastImportedDate;
     private Date m_disabledDate;
+    
+    private Date m_extAvatarSyncDate;
 
     @Indexed
     private String m_custom1;
@@ -418,6 +420,14 @@ public class UserProfile {
 
     public void setDisabledDate(Date disabledDate) {
         m_disabledDate = disabledDate;
+    }
+        
+    public Date getExtAvatarSyncDate() {
+        return m_extAvatarSyncDate;
+    }
+
+    public void setExtAvatarSyncDate(Date extAvatarSyncDate) {
+        m_extAvatarSyncDate = extAvatarSyncDate;
     }
 
     public void update(UserProfile object) {

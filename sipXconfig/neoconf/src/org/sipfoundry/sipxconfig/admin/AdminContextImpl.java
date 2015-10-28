@@ -236,4 +236,9 @@ public class AdminContextImpl extends HibernateDaoSupport implements AdminContex
     public boolean isHazelcastEnabled() {
         return (Boolean) getSettings().getSettingTypedValue(AdminSettings.HAZELCAST_NOTIFICATION);
     }
+
+    @Override
+    public boolean isSyncExtAvatar() {
+        return (Boolean) getSettings().getSettingTypedValue(AdminSettings.EXT_AVATAR_SYNC);
+    }
 }
