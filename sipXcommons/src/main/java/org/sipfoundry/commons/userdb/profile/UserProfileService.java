@@ -28,6 +28,8 @@ public interface UserProfileService {
     static final String PHANTOM = "PHANTOM";
 
     UserProfile getUserProfile(String userId);
+    
+    UserProfile getUserProfileByUsername(String userName); 
 
     void saveUserProfile(UserProfile profile);
 
@@ -62,6 +64,10 @@ public interface UserProfileService {
     void saveAvatar(String userName, InputStream is, boolean overwrite) throws AvatarUploadException;
 
     void deleteAvatar(String userName);
+    
+    void deleteExtAvatar(String userName);
+    
+    void deleteIntAvatar(String userName);
 
     List<UserProfile> getAllUserProfiles();
 
@@ -74,6 +80,8 @@ public interface UserProfileService {
     List<UserProfile> getUserProfilesToDisable(long age);
 
     List<UserProfile> getUserProfilesToDelete(long age);
+    
+    public List<UserProfile> getUserProfilesByExtAvatarUrl();
 
     int getEnabledUsersCount();
 
@@ -82,4 +90,6 @@ public interface UserProfileService {
     ObjectId getAvatarId(String userName);
 
     String getAvatarDBFileMD5(String userName);
+        
+    void saveExtAvatar(String userName, String url) throws AvatarUploadException;
 }

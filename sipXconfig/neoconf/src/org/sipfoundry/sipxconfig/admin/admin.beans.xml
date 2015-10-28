@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+  http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd">
 
   <bean id="adminContext" class="org.springframework.aop.framework.ProxyFactoryBean" parent="abstractDao">
     <property name="proxyInterfaces" value="org.sipfoundry.sipxconfig.admin.AdminContext"/>
@@ -64,5 +65,14 @@
     <property name="proxyLimitsConfig" ref="proxyResLimits" />
     <property name="publisherLimitsConfig" ref="publisherResLimits" />
     <property name="registrarLimitsConfig" ref="registrarResLimits" />
+  </bean> 
+
+  <bean id="syncExtAvatarTimer" class="org.sipfoundry.sipxconfig.admin.SyncExtAvatarTimer">
+    <property name="userProfileService" ref="userProfileService" />
+    <property name="adminContext" ref="adminContext"/>
   </bean>
+  
+  <task:scheduled-tasks>
+	<task:scheduled ref="syncExtAvatarTimer" method="syncExtAvatar" fixed-delay="21600000" />
+  </task:scheduled-tasks>
 </beans>

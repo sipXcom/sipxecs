@@ -70,5 +70,12 @@ public abstract class Avatar extends BaseComponent {
 
     public void extAvatar() {
         getCoreContext().saveUser(getUser());
+        try {
+            getUserAvatarService().saveExtAvatar(getUser().getUserName(), getUser().getUserProfile().getExtAvatar());
+        } catch (AvatarUploadException e) {
+            LOG.error("Cannot upload external avatar ", e);
+            TapestryUtils.getValidator(getPage()).record(
+                    new ValidatorException(getMessages().getMessage("err.avatar.upload")));
+        }
     }
 }

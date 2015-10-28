@@ -19,7 +19,10 @@ package org.sipfoundry.commons.userdb.profile;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,9 +32,12 @@ import javax.imageio.ImageIO;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -53,8 +59,10 @@ public class UserProfileServiceImpl implements UserProfileService {
     private static final String BRANCH_NAME = "m_branchName";
     private static final String BRANCH_ADDRESS = "m_branchAddress";
     private static final String AVATAR_NAME = "avatar_%s.png";
+    private static final String AVATAR_EXT_NAME = "avatar_ext_%s.png";
     private static final int LIMIT_DISABLE = 500;
     private static final int LIMIT_DELETE = 50;
+    private static final int LIMIT_EXT_AVATAR_SYNC = 500;
     private static String m_defaultId = "";
     private MongoTemplate m_template;
 
@@ -63,6 +71,12 @@ public class UserProfileServiceImpl implements UserProfileService {
         return m_template.findOne(new Query(Criteria.where(USER_ID).is(userId.toString())), UserProfile.class,
                 USER_PROFILE_COLLECTION);
     }
+    
+    @Override
+    public UserProfile getUserProfileByUsername(String userName) {
+        return m_template.findOne(new Query(Criteria.where(USERNAME).is(userName)), UserProfile.class,
+                USER_PROFILE_COLLECTION);
+    }    
 
     @Override
     public void saveUserProfile(UserProfile profile) {
@@ -201,7 +215,15 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     private GridFSDBFile getAvatarDBFile(String userName) {
         GridFS avatarFS = new GridFS(m_template.getDb());
-        GridFSDBFile imageForOutput = avatarFS.findOne(String.format(AVATAR_NAME, userName));
+        UserProfile userProfile = getUserProfileByUsername(userName);
+        GridFSDBFile imageForOutput = null;
+        if (userProfile != null) {
+            if (!userProfile.getUseExtAvatar()) {
+                imageForOutput = avatarFS.findOne(String.format(AVATAR_NAME, userName));
+            } else {
+                imageForOutput =avatarFS.findOne(String.format(AVATAR_EXT_NAME, userName));
+            }
+        }
         if (imageForOutput != null) {
             return imageForOutput;
         }
@@ -218,14 +240,31 @@ public class UserProfileServiceImpl implements UserProfileService {
         GridFSDBFile avatar = getAvatarDBFile(userName);
         return avatar != null ? avatar.getMD5() : null;
     }
+    
+    private void deleteAvatar(String userName, String avatarName) {
+        GridFS avatarFS = new GridFS(m_template.getDb());
+        avatarFS.remove(String.format(avatarName, userName));
+    }
+    
     @Override
     public void deleteAvatar(String userName) {
-        GridFS avatarFS = new GridFS(m_template.getDb());
-        avatarFS.remove(String.format(AVATAR_NAME, userName));
+        deleteIntAvatar(userName);
+        deleteExtAvatar(userName);
     }
-
+    
     @Override
-    public void saveAvatar(String userName, InputStream originalIs) throws AvatarUploadException {
+    public void deleteExtAvatar(String userName) {
+        deleteAvatar(userName, AVATAR_EXT_NAME);
+        
+    }
+    
+    @Override
+    public void deleteIntAvatar(String userName) {
+        deleteAvatar(userName, AVATAR_NAME);
+        
+    }    
+    
+    private void saveAvatar(String userName, InputStream originalIs, String avatarName) throws AvatarUploadException {
         ByteArrayOutputStream os = null;
         InputStream is = null;
         try {
@@ -235,7 +274,7 @@ public class UserProfileServiceImpl implements UserProfileService {
             os = new ByteArrayOutputStream();
             ImageIO.write(thumbnail, "png", os);
             is = new ByteArrayInputStream(os.toByteArray());
-            String fileName = String.format(AVATAR_NAME, userName);
+            String fileName = String.format(avatarName, userName);
             GridFS avatarFS = new GridFS(m_template.getDb());
             avatarFS.remove(fileName);
             GridFSInputFile gfsFile = avatarFS.createFile(is);
@@ -247,6 +286,29 @@ public class UserProfileServiceImpl implements UserProfileService {
             IOUtils.closeQuietly(originalIs);
             IOUtils.closeQuietly(is);
             IOUtils.closeQuietly(os);
+        }
+    }
+    
+    @Override
+    public void saveAvatar(String userName, InputStream originalIs) throws AvatarUploadException {
+        saveAvatar(userName, originalIs, AVATAR_NAME);
+    }
+    
+    @Override
+    public void saveExtAvatar(String userName, String url) throws AvatarUploadException {
+        File temp = null;
+        FileInputStream tempIs = null;
+        try {
+            try {
+                temp = File.createTempFile(String.format(AVATAR_EXT_NAME, userName), ".tmp");        
+                FileUtils.copyURLToFile(new URL(url), temp);
+                tempIs = new FileInputStream(temp);
+            } catch (Exception ex) {
+                throw new AvatarUploadException(ex);
+            }
+            saveAvatar(userName, tempIs, AVATAR_EXT_NAME);
+        } finally {
+            IOUtils.closeQuietly(tempIs);
         }
     }
 
@@ -304,6 +366,15 @@ public class UserProfileServiceImpl implements UserProfileService {
             property = "m_ldapManaged";
         }
         return getUserProfiles(firstRow, pageSize, property, enabled);
+    }
+    
+    @Override
+    public List<UserProfile> getUserProfilesByExtAvatarUrl() {
+        return m_template.find(
+            new Query(Criteria.where("m_useExtAvatar").is(true).
+                    and("m_extAvatar").exists(true)).                    
+                    limit(LIMIT_EXT_AVATAR_SYNC).with(new Sort(Sort.Direction.ASC, "m_extAvatarSyncDate")), 
+                    UserProfile.class, USER_PROFILE_COLLECTION);
     }
 
     private List<UserProfile> getUserProfiles(int firstRow, int pageSize, String property, boolean enabled) {

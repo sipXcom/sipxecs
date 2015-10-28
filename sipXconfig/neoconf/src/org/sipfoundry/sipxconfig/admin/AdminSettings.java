@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Required;
 public class AdminSettings extends PersistableSettings implements DeployConfigOnEdit {
 
     public static final String HAZELCAST_NOTIFICATION = "configserver-config/hazelcastNotification";
+    public static final String EXT_AVATAR_SYNC = "configserver-config/extAvatarSync";
     private static final Log LOG = LogFactory.getLog(AdminSettings.class);
 
     private static final String LDAP_MANAGEMENT_DISABLE = "ldap-management/disable";
@@ -164,6 +165,10 @@ public class AdminSettings extends PersistableSettings implements DeployConfigOn
 
     public boolean isHazelcastNotification() {
         return (Boolean) getSettingTypedValue(HAZELCAST_NOTIFICATION);
+    }
+
+    public boolean isSyncExtAvatar() {
+        return (Boolean) getSettingTypedValue(EXT_AVATAR_SYNC);
     }
 
     protected static String validateDomainList(String corsDomains) {
