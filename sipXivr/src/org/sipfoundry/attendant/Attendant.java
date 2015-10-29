@@ -334,11 +334,13 @@ public class Attendant extends SipxIvrApp {
         LOG.info("Attendant::failure");
         boolean playGoodbye = true;
         if (config.isTransferOnFailure()) {
-            String transferPrompt = config.getTransferPrompt();
-            if (transferPrompt != null) {
-                PromptList pl = controller.getPromptList();
-                pl.addPrompts(config.getTransferPrompt());
-                controller.play(pl, "");
+            if (config.isPlayPrompt()) {
+                String transferPrompt = config.getTransferPrompt();
+                if (transferPrompt != null) {
+                    PromptList pl = controller.getPromptList();
+                    pl.addPrompts(config.getTransferPrompt());
+                    controller.play(pl, "");
+                }
             }
 
             String dest = config.getTransferURL();
@@ -348,7 +350,9 @@ public class Attendant extends SipxIvrApp {
             }
             LOG.info("Attendant::failure Transfer on falure to " + dest);
 
-            controller.play("please_hold", "");
+            if (config.isPlayPrompt()) {
+                controller.play("please_hold", "");
+            }
             playGoodbye = false;
             String domainPart = ValidUsers.getDomainPart(dest);
             if (domainPart.equalsIgnoreCase(controller.getSipxchangeDomainName())) {
