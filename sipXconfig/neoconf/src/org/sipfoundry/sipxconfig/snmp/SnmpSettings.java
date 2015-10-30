@@ -68,7 +68,8 @@ public class SnmpSettings extends PersistableSettings implements DeployConfigOnE
     }
 
     public String getCommunityString() {
-        return getSettingValue(COMMUNITY_STRING);
+        String communityString = getSettingValue(COMMUNITY_STRING);
+        return communityString == null ? "" : communityString;
     }
 
     public String getCommunityStringConfirmed() {
