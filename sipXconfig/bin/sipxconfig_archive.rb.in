@@ -57,7 +57,7 @@ class Backup < ArchiveBase
     cmd "mongodump --out #{@tmpdir}/dump --db profiles --collection fs.chunks" or
       raise "Could not backup avatar database"
 	add_additional_databases()
-    cmd "echo @PACKAGE_VERSION@ > version" or
+    cmd "echo @PACKAGE_VERSION@ > #{@tmpdir}/version" or
       raise "Could not generate version file"
     if params.has_key?(:no_device_files)
       @attachments = [
