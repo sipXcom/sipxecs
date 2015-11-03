@@ -250,8 +250,14 @@
     </setting>
   </group>  
   <group name="voicemail">
-    <group name="security" hidden="yes">
-      <setting name="force-pin-change" advanced="yes">
+    <group name="security">
+      <setting name="force-pin-change" hidden="yes" advanced="yes">
+        <type>
+          <boolean />
+        </type>
+        <value>0</value>
+      </setting>
+      <setting name="auto-enter-pin-extension" advanced="yes">
         <type>
           <boolean />
         </type>

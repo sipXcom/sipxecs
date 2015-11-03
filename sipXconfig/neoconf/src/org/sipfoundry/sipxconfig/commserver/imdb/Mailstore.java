@@ -32,6 +32,7 @@ import static org.sipfoundry.commons.mongo.MongoConstants.DISPLAY_NAME;
 import static org.sipfoundry.commons.mongo.MongoConstants.DISTRIB_LISTS;
 import static org.sipfoundry.commons.mongo.MongoConstants.EMAIL;
 import static org.sipfoundry.commons.mongo.MongoConstants.FORCE_PIN_CHANGE;
+import static org.sipfoundry.commons.mongo.MongoConstants.AUTO_ENTER_PIN_EXTENSION;
 import static org.sipfoundry.commons.mongo.MongoConstants.FORWARD_DELETE_VOICEMAIL;
 import static org.sipfoundry.commons.mongo.MongoConstants.HASHED_PASSTOKEN;
 import static org.sipfoundry.commons.mongo.MongoConstants.HOST;
@@ -127,6 +128,7 @@ public class Mailstore extends AbstractDataSetGenerator {
         }
 
         top.put(FORCE_PIN_CHANGE, user.getSettingValue("voicemail/security/force-pin-change"));
+        top.put(AUTO_ENTER_PIN_EXTENSION, user.getSettingValue("voicemail/security/auto-enter-pin-extension"));
         String alternateEmailAddress = mp.getAlternateEmailAddress();
         boolean enableAltNotification = StringUtils.isNotBlank(alternateEmailAddress)
                 && mp.isEmailNotificationAlternateEnabled();

@@ -85,6 +85,7 @@ public class User {
     private boolean m_admin;
     private boolean m_hotelingEnabled;
     private boolean m_forcePinChange;
+    private boolean m_autoEnterPinExtension;
     private String m_vmLanguage;
     private Vector<String> m_callbackUsers;
 
@@ -727,6 +728,14 @@ public class User {
 
     public void setForcePinChange(String value) {
        m_forcePinChange = value.equals("1") || value.equals("true");
+    }
+
+    public boolean isAutoEnterPinExtension() {
+        return m_autoEnterPinExtension;
+    }
+
+    public void setAutoEnterPinExtension(String value) {
+        m_autoEnterPinExtension = value.equals("1") || value.equals("true");
     }
 
     public String getSipPassword() {

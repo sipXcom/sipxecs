@@ -30,7 +30,6 @@ import static org.sipfoundry.commons.mongo.MongoConstants.AVATAR;
 import static org.sipfoundry.commons.mongo.MongoConstants.BUTTONS;
 import static org.sipfoundry.commons.mongo.MongoConstants.CALL_FROM_ANY_IM;
 import static org.sipfoundry.commons.mongo.MongoConstants.CALL_IM;
-import static org.sipfoundry.commons.mongo.MongoConstants.CALLBACK_LIST;
 import static org.sipfoundry.commons.mongo.MongoConstants.CELL_PHONE_NUMBER;
 import static org.sipfoundry.commons.mongo.MongoConstants.COMPANY_NAME;
 import static org.sipfoundry.commons.mongo.MongoConstants.CONF_ENTRY_IM;
@@ -49,6 +48,7 @@ import static org.sipfoundry.commons.mongo.MongoConstants.ENTITY_NAME;
 import static org.sipfoundry.commons.mongo.MongoConstants.FAX_NUMBER;
 import static org.sipfoundry.commons.mongo.MongoConstants.FORWARD_DELETE_VOICEMAIL;
 import static org.sipfoundry.commons.mongo.MongoConstants.FORCE_PIN_CHANGE;
+import static org.sipfoundry.commons.mongo.MongoConstants.AUTO_ENTER_PIN_EXTENSION;
 import static org.sipfoundry.commons.mongo.MongoConstants.GROUPS;
 import static org.sipfoundry.commons.mongo.MongoConstants.HASHED_PASSTOKEN;
 import static org.sipfoundry.commons.mongo.MongoConstants.HOME_CITY;
@@ -727,6 +727,10 @@ public class ValidUsers {
 
         if (getStringValue(obj, FORCE_PIN_CHANGE) != null) {
             user.setForcePinChange(getStringValue(obj, FORCE_PIN_CHANGE));
+        }
+
+        if (getStringValue(obj, AUTO_ENTER_PIN_EXTENSION) != null) {
+            user.setAutoEnterPinExtension(getStringValue(obj, AUTO_ENTER_PIN_EXTENSION));
         }
 
         BasicDBList aliasesObj = (BasicDBList) obj.get(ALIASES);
