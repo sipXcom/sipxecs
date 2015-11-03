@@ -139,6 +139,7 @@ public interface MongoConstants {
     static final String ITEM = "itm";
     static final String DISTRIB_LISTS = "dlst";
     static final String FORCE_PIN_CHANGE= "fpchg";
+    static final String AUTO_ENTER_PIN_EXTENSION= "aepe";
     // AUTH CODE
     static final String AUTH_CODE = "authc";
     // GROUP
