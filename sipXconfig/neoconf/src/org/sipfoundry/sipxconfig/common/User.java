@@ -54,6 +54,7 @@ public class User extends AbstractUser implements Replicable {
     private static final String PHANTOM_USER = "phantom/enabled";
     private static final String FORCE_PIN_CHANGE = "voicemail/security/force-pin-change";
     private static final String AUTO_ENTER_PIN_EXTENSION = "voicemail/security/auto-enter-pin-extension";
+    private static final String AUTO_ENTER_PIN_EXTERNAL = "voicemail/security/auto-enter-pin-external";
     private String m_identity;
     private boolean m_validUser = true;
 
@@ -272,8 +273,16 @@ public class User extends AbstractUser implements Replicable {
         return (Boolean) getSettingTypedValue(AUTO_ENTER_PIN_EXTENSION);
     }
 
-    public void setAutoEnterPinExtension(boolean force) {
-        getSettings().getSetting(AUTO_ENTER_PIN_EXTENSION).setTypedValue(force);
+    public void setAutoEnterPinExtension(boolean autoExtension) {
+        getSettings().getSetting(AUTO_ENTER_PIN_EXTENSION).setTypedValue(autoExtension);
+    }
+
+    public boolean isAutoEnterPinExternal() {
+        return (Boolean) getSettingTypedValue(AUTO_ENTER_PIN_EXTERNAL);
+    }
+
+    public void setAutoEnterPinExternal(boolean autoExternal) {
+        getSettings().getSetting(AUTO_ENTER_PIN_EXTERNAL).setTypedValue(autoExternal);
     }
 
     public Integer getE911LocationId() {
