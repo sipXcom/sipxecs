@@ -72,9 +72,7 @@ public class VoiceMail extends SipxIvrApp {
         }
         
         if (action.equals("retrieve")) {
-            if (!controller.getCurrentUser().isAutoEnterPinExtension()) {
-                controller.login();
-            }
+            controller.login();
             if (controller.getCurrentUser() == null) {
                 return null;
             }

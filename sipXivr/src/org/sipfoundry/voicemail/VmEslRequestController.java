@@ -90,8 +90,19 @@ public class VmEslRequestController extends AbstractEslRequestController {
             ident = "Mailbox " + m_currentUser.getUserName();
             if (!m_currentUser.hasVoicemail() && !m_currentUser.isInDirectory()) {
                 m_currentUser = null;
+            } else {
+                if (m_currentUser.isAutoEnterPinExtension()) {
+                    setRedactDTMF(false);
+                    return;
+                }
             }
         } else {
+            User user = m_validUsers.getAutoEnterPinUserByExternalNumber(m_mailboxString);
+            if (user != null) {
+                m_currentUser = user;
+                setRedactDTMF(false);
+                return;
+            }
             ident = "Mailbox (unknown)";
         }
         PromptList welcomePl = getPromptList("welcome");
