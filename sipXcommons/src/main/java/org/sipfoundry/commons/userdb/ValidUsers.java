@@ -309,17 +309,15 @@ public class ValidUsers {
     /**
      * Retrieve a specific user based on their Cell Phone or Home Phone (as defined on user's contact information)
      * which has the Auto Enter Pin from External Number permission set to true. <br>
-     * The users Cell Phone or Home Phone needs to end in the provided externalNumber, this is to accommodate prefixes. <br>
      * If the method finds more than 1 user who share the same external number it will return null;
      */
-    public User getAutoEnterPinUserByExternalNumber(String externalNumber) {
+    public User getUserWithAutoEnterPinByExternalNumber(String externalNumber) {
         if (externalNumber == null) {
             return null;
         }
         QueryBuilder query = QueryBuilder.start(VALID_USER).is(Boolean.TRUE);
-        Pattern cellPattern = Pattern.compile(".*" + externalNumber);
-        BasicDBObject cell = new BasicDBObject(CELL_PHONE_NUMBER, cellPattern);
-        BasicDBObject home = new BasicDBObject(HOME_PHONE_NUMBER, cellPattern);
+        BasicDBObject cell = new BasicDBObject(CELL_PHONE_NUMBER, externalNumber);
+        BasicDBObject home = new BasicDBObject(HOME_PHONE_NUMBER, externalNumber);
         query.or(cell, home);
         query.and(AUTO_ENTER_PIN_EXTERNAL).is("1");
         DBObject queryUserName = query.get();
