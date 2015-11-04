@@ -49,6 +49,7 @@ import static org.sipfoundry.commons.mongo.MongoConstants.FAX_NUMBER;
 import static org.sipfoundry.commons.mongo.MongoConstants.FORWARD_DELETE_VOICEMAIL;
 import static org.sipfoundry.commons.mongo.MongoConstants.FORCE_PIN_CHANGE;
 import static org.sipfoundry.commons.mongo.MongoConstants.AUTO_ENTER_PIN_EXTENSION;
+import static org.sipfoundry.commons.mongo.MongoConstants.AUTO_ENTER_PIN_EXTERNAL;
 import static org.sipfoundry.commons.mongo.MongoConstants.GROUPS;
 import static org.sipfoundry.commons.mongo.MongoConstants.HASHED_PASSTOKEN;
 import static org.sipfoundry.commons.mongo.MongoConstants.HOME_CITY;
@@ -303,6 +304,30 @@ public class ValidUsers {
             }
         }
         return extractValidUser(aliasResult);
+    }
+
+    /**
+     * Retrieve a specific user based on their Cell Phone or Home Phone (as defined on user's contact information)
+     * which has the Auto Enter Pin from External Number permission set to true. <br>
+     * The users Cell Phone or Home Phone needs to end in the provided externalNumber, this is to accommodate prefixes. <br>
+     * If the method finds more than 1 user who share the same external number it will return null;
+     */
+    public User getAutoEnterPinUserByExternalNumber(String externalNumber) {
+        if (externalNumber == null) {
+            return null;
+        }
+        QueryBuilder query = QueryBuilder.start(VALID_USER).is(Boolean.TRUE);
+        Pattern cellPattern = Pattern.compile(".*" + externalNumber);
+        BasicDBObject cell = new BasicDBObject(CELL_PHONE_NUMBER, cellPattern);
+        BasicDBObject home = new BasicDBObject(HOME_PHONE_NUMBER, cellPattern);
+        query.or(cell, home);
+        query.and(AUTO_ENTER_PIN_EXTERNAL).is("1");
+        DBObject queryUserName = query.get();
+        DBCursor result = getEntityCollection().find(queryUserName);
+        if (result != null && result.size() == 1) {
+            return extractValidUser(result.one());
+        }
+        return null;
     }
 
     public User getUserByConferenceName(String conferenceName) {
@@ -731,6 +756,10 @@ public class ValidUsers {
 
         if (getStringValue(obj, AUTO_ENTER_PIN_EXTENSION) != null) {
             user.setAutoEnterPinExtension(getStringValue(obj, AUTO_ENTER_PIN_EXTENSION));
+        }
+
+        if (getStringValue(obj, AUTO_ENTER_PIN_EXTERNAL) != null) {
+            user.setAutoEnterPinExternal(getStringValue(obj, AUTO_ENTER_PIN_EXTERNAL));
         }
 
         BasicDBList aliasesObj = (BasicDBList) obj.get(ALIASES);

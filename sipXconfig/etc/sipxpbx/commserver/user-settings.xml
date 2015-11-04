@@ -263,6 +263,12 @@
         </type>
         <value>0</value>
       </setting>
+      <setting name="auto-enter-pin-external" advanced="yes">
+        <type>
+          <boolean />
+        </type>
+        <value>0</value>
+      </setting>
     </group>
     <group name="fax" hidden="yes">
       <setting name="extension">
