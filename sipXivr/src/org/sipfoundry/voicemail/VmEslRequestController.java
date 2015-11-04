@@ -97,7 +97,7 @@ public class VmEslRequestController extends AbstractEslRequestController {
                 }
             }
         } else {
-            User user = m_validUsers.getAutoEnterPinUserByExternalNumber(m_mailboxString);
+            User user = m_validUsers.getUserWithAutoEnterPinByExternalNumber(m_mailboxString);
             if (user != null) {
                 m_currentUser = user;
                 setRedactDTMF(false);
