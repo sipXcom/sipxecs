@@ -311,11 +311,15 @@ public class ValidUsers {
      * which has the Auto Enter Pin from External Number permission set to true. <br>
      * If the method finds more than 1 user who share the same external number it will return null;
      */
-    public User getUserWithAutoEnterPinByExternalNumber(String externalNumber) {
+    public User getUserWithAutoEnterPinByExternalNumber(String externalNumber, int matchLastDigits) {
         if (externalNumber == null) {
             return null;
         }
         QueryBuilder query = QueryBuilder.start(VALID_USER).is(Boolean.TRUE);
+        externalNumber = getExternalNumberLastDigits(externalNumber, matchLastDigits);
+        if (externalNumber == null) {
+            return null;
+        }
         BasicDBObject cell = new BasicDBObject(CELL_PHONE_NUMBER, externalNumber);
         BasicDBObject home = new BasicDBObject(HOME_PHONE_NUMBER, externalNumber);
         query.or(cell, home);
@@ -326,6 +330,18 @@ public class ValidUsers {
             return extractValidUser(result.one());
         }
         return null;
+    }
+
+    private String getExternalNumberLastDigits(String externalNumber, int matchLastDigits) {
+        String externalNumberToMatch;
+        if (matchLastDigits == 0) {
+            externalNumberToMatch = externalNumber;
+        } else if(externalNumber == null || externalNumber.length() < matchLastDigits) {
+            externalNumberToMatch = null;
+        } else {
+            externalNumberToMatch = externalNumber.substring(externalNumber.length() - matchLastDigits);
+        }
+        return externalNumberToMatch;
     }
 
     public User getUserByConferenceName(String conferenceName) {
