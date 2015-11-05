@@ -162,5 +162,11 @@
         </enum>
       </type>
     </setting>
+    <setting name="security.autoEnterPinExternalDigits" advanced="yes">
+      <type>
+        <integer min="0" max="15"/>
+      </type>
+      <value>0</value>
+    </setting>
   </group>
 </model>

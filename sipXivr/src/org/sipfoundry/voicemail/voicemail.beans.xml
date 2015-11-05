@@ -20,6 +20,7 @@
     <property name="voicemailConfiguration" ref="voicemailConfiguration" />
     <property name="recordRate" value="${record.rate}" />
     <property name="recordTime" value="${record.time}" />
+    <property name="autoEnterPinExternalDigits" value="${security.autoEnterPinExternalDigits}" />
   </bean>
 
   <bean id="depositAction" class="org.sipfoundry.voicemail.Deposit" scope="eslRequest">
