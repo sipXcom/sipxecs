@@ -44,6 +44,7 @@ public class VmEslRequestController extends AbstractEslRequestController {
     private ApplicationConfiguraton m_config;
     private int m_recordRate = 8000;
     private int m_recordTime = 300;
+    private int m_autoEnterPinExternalDigits = 0;
 
     @Override
     public void extractParameters(Hashtable<String, String> parameters) {
@@ -97,7 +98,8 @@ public class VmEslRequestController extends AbstractEslRequestController {
                 }
             }
         } else {
-            User user = m_validUsers.getUserWithAutoEnterPinByExternalNumber(m_mailboxString);
+            User user = m_validUsers.getUserWithAutoEnterPinByExternalNumber(
+                    m_mailboxString, m_autoEnterPinExternalDigits);
             if (user != null) {
                 m_currentUser = user;
                 setRedactDTMF(false);
@@ -281,6 +283,10 @@ public class VmEslRequestController extends AbstractEslRequestController {
 
     public void setRecordTime(int recordTime) {
         m_recordTime = recordTime;
+    }
+
+    public void setAutoEnterPinExternalDigits(int autoEnterPinExternalDigits) {
+        m_autoEnterPinExternalDigits = autoEnterPinExternalDigits;
     }
 
     private void extractCurrentUser(Hashtable<String, String> parameters) {
