@@ -1,0 +1,13 @@
+tcpdumplog_PKGS = \
+	sipxconfig-neoconf \
+	commons-io \
+	commons-lang \
+	commons-logging \
+	log4j \
+	sipxcommons \
+	postgresql \
+	javax.servlet \
+	jetty \
+	ws-commons-util \
+	xmlrpc-client \
+	xmlrpc-server

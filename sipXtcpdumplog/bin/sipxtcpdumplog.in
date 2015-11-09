@@ -1,0 +1,117 @@
+#!/bin/bash
+# sipxtcpdumplog - Startup script for sipxtcpdumplog
+
+# description: sipxtcpdumplog is a process that get tcpdump logs
+# processname: sipxtcpdumplog
+
+# Copyright (C) 2015 Karel Electronics Corp. All rights reserved.
+# Contributed to SIPfoundry under a Contributor Agreement
+#
+# This software is free software; you can redistribute it and/or modify it under
+# the terms of the Affero General Public License (AGPL) as published by the
+# Free Software Foundation; either version 3 of the License, or (at your option)
+# any later version.
+#
+# This software is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+# details.
+
+. /etc/rc.d/init.d/functions || exit 1
+CONFIG_FILES="@SIPX_CONFDIR@/sipxtcpdumplog.properties"
+. @SIPX_LIBEXECDIR@/sipx-utils.sh || exit 1
+pidfile=@SIPX_RUNDIR@/sipxtcpdumplog.pid
+. @SIPX_CONFDIR@/sipxtcpdumplog.properties
+shopt -s extglob
+
+[ -e @SIPX_CONFDIR@/sysconfig/$prog ] && . @SIPX_CONFDIR@/sysconfig/$prog
+
+# settings
+LOGDIR='@SIPX_LOGDIR@/tcpdump'
+TCPDUMP='/usr/sbin/tcpdump'
+
+##tcpdump -Z root -i any -C 50 -W 100 -w %FILE% &
+TCPDUMPARGS=(-Z root -i any -s 0 -C $SIP_TCPDUMP_FILE_SIZE -W $SIP_TCPDUMP_FILE_COUNT -w ) ## customize arguments here e.g. (-C 1 "another with spaces")
+TCPDUMPFILENAME='ucap-tcpdump-log.pcap'
+TCPDUMPPID=0
+# other variables
+Action=RUN
+Args=""
+Status=0
+
+# functions
+
+function checktcpdump {
+	[[ $TCPDUMPPID -ne 0 ]] && [[ -e /proc/$TCPDUMPPID ]] && kill -s 0 "$TCPDUMPPID" 2>/dev/null
+}
+
+function starttcpdump {
+    if [ ! -d "$LOGDIR" ]; then
+        mkdir $LOGDIR
+    fi
+
+	local OUTPUTFILE=$LOGDIR/${TCPDUMPFILENAME}
+	$TCPDUMP ${TCPDUMPARGS[@]} $OUTPUTFILE > /dev/null 2>&1 &
+	TCPDUMPPID=$!
+	echo $TCPDUMPPID > ${pidfile}
+
+	checktcpdump
+}
+
+function stoptcpdump {
+	TCPDUMPPID=$(<$pidfile)
+	kill -TERM "$TCPDUMPPID"
+	TCPDUMPPID=0
+}
+
+function catchsignals {
+	echo "Caught a signal."
+}
+
+restart() {
+  stoptcpdump
+  starttcpdump
+}
+
+function configtest() {
+    sipx_config_exists "$CONFIG_FILES"
+	Status=$(($Status+$?))
+
+	# Check that the log file is writable.
+	logfile="$LOGDIR"
+	if [ -e "$LOGDIR" -a ! -w "$LOGDIR" ]
+	then
+		echo "Log file '"$LOGDIR"' exists but is not writable by user." >&2
+		Status=1
+  fi
+}
+
+case "$1" in
+  nofork)
+    NoFork=1
+    starttcpdump
+    ;;
+  start)
+    starttcpdump
+    ;;
+  stop)
+    stoptcpdump
+    ;;
+  restart|reload|force-reload)
+    restart
+    ;;
+  condrestart)
+    [ -f ${pidfile} ] && restart || :
+    ;;
+  status)
+    status -p ${pidfile} tcpdump
+    ;;
+  configtest)
+    configtest
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|status|restart|reload|force-reload|condrestart|nofork}"
+    Status=1
+esac
+
+exit $Status

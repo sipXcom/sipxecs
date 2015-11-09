@@ -57,7 +57,8 @@ sipx_extra = \
   sipXcallQueue \
   sipXAocBilling \
   sipXtools \
-  sipXcallback
+  sipXcallback \
+  sipXtcpdumplog
 
 # sipxecs projects that are NOT essential for a running communication system
 # and are related to configuration system. Many are phone plugins
