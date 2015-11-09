@@ -50,6 +50,9 @@ public class Bundle {
     /** End-point provisioning */
     public static final Bundle PROVISION = new Bundle("provision");
 
+    /** Utility services tab */
+    public static final Bundle UTILITY_SERVICES = new Bundle("utility");
+
     //public static final Bundle SIP_TRUNKING = new Bundle("sipTrunking");
 
     private String m_id;

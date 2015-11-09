@@ -429,6 +429,7 @@ ISO_ADD_OS = \
   jpackage-utils-* \
   kbd-1.* \
   kbd-misc-* \
+  keyutils-* \
   kernel-2.* \
   kernel-firmware-* \
   kernel-headers-* \
@@ -445,6 +446,7 @@ ISO_ADD_OS = \
   libevent-1.* \
   libgomp-4.* \
   libgudev1-* \
+  libgssglue-* \
   libICE-* \
   libSM-* \
   libX11-1.* \
@@ -517,6 +519,7 @@ ISO_ADD_OS = \
   libthai-* \
   libtheora-* \
   libtiff-3.* \
+  libtirpc-* \
   libtool-ltdl-* \
   libudev-* \
   libusb-0.* \
@@ -561,6 +564,7 @@ ISO_ADD_OS = \
   net-tools-* \
   newt-0.* \
   newt-python-* \
+  nfs-utils-* \
   nspr-* \
   nss-3.* \
   nss-softokn-* \
@@ -659,6 +663,7 @@ ISO_ADD_OS = \
   regexp-1* \
   rhino-1.* \
   rootfiles-* \
+  rpcbind-* \
   rpm-4.* \
   rpm-build-4.8* \
   rpm-libs-* \
