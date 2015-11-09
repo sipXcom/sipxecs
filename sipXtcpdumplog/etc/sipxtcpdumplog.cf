@@ -1,0 +1,194 @@
+# Copyright (C) 2015 Karel Electronics Corp. All rights reserved.
+# Contributed to SIPfoundry under a Contributor Agreement
+#
+# This software is free software; you can redistribute it and/or modify it under
+# the terms of the Affero General Public License (AGPL) as published by the
+# Free Software Foundation; either version 3 of the License, or (at your option)
+# any later version.
+#
+# This software is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+# details.
+#
+# sipxtcpdumplog configuration and process management
+#
+
+bundle agent sipxtcpdumplog {
+  methods:
+    fedora16_or_greater::
+      "any" usebundle => "nfs_systemctl_running";
+    !fedora16_or_greater::
+      "any" usebundle => "nfs_sysv_running";
+    sipxtcpdumplog::
+      "any" usebundle => "sipxtcpdumplog_config";
+      "any" usebundle => "sipxtcpdumplog_setup";
+    any::
+      "any" usebundle => "sipxtcpdumplog_running";
+}
+
+bundle agent sipxtcpdumplog_config {
+  files:
+    any::
+      "$(sipx.SIPX_CONFDIR)/sipxtcpdumplog.properties"
+        comment => "install sipxtcpdumplog config $(this.promiser)",
+        create => "true",
+        perms => m("644"),
+        edit_line => sipxtcpdumplog_properties_contents,
+        classes => if_repaired("restart_sipxtcpdumplog");
+
+    any::
+      "$(sipx.SIPX_CONFDIR)/sipxtcpdumplog.xml"
+        comment => "install sipxtcpdumplog config $(this.promiser)",
+        create => "true",
+        perms => m("644"),
+        copy_from => copy_from_cfdata("$(sipx.location_id)/sipxtcpdumplog.xml"),
+        classes => if_repaired("restart_sipxtcpdumplog");
+
+    !primary.sipxtcpdumplog::
+      "/etc/exports"
+        comment => "secondary share the tcpdump log directory with the primary",
+        create => "false",
+        perms => m("644"),
+        edit_line => sipxtcpdumplog_nfsexport_contents;
+}
+
+bundle edit_line sipxtcpdumplog_properties_contents {
+  insert_lines:
+    any::
+      "$(sipx.SIPX_CFDATA)/$(sipx.location_id)/sipxtcpdumplog.properties.part"
+        insert_type => "file";
+  delete_lines:
+    any::
+      ".*";
+}
+
+bundle edit_line sipxtcpdumplog_nfsexport_contents {
+  insert_lines:
+    any::
+      "$(sipx.SIPX_LOGDIR)/tcpdump           $(sipx.master_address)(ro,sync,no_root_squash,no_subtree_check)";
+  delete_lines:
+    any::
+      ".*";
+}
+
+bundle agent sipxtcpdumplog_setup {
+  methods:
+    !src.sipxtcpdumplog::
+      "any" usebundle => rh_chkconfig_status("sipxtcpdumplog");
+}
+
+bundle agent sipxtcpdumplog_running {
+  vars:
+    any::
+      "service_command" string => "/usr/sbin/tcpdump";
+      "server_lines" slist => readstringlist("$(sipx.SIPX_CFDATA)/servers", " end", "\n", 100, 4000);
+
+  files:
+    any::
+      "/etc/netconfig"
+       create    => "false",
+       comment   => "comment out ipv6 entries in /etc/netconfig file",
+       edit_line => comment_ipv6,
+       perms => m("644");
+
+  methods:
+    any::
+      "any" usebundle => find_service_by_command("$(service_command)", "sipxtcpdumplog_running", "root");
+      "any" usebundle => mount_secondary("$(server_lines)");
+
+  commands:
+    !primary.sipxtcpdumplog::
+      "/usr/sbin/exportfs"
+        comment => "export nfs configuration",
+        args => "-a";
+
+    (!sipxtcpdumplog|stop_sipxecs).sipxtcpdumplog_running::
+      "$(sipx.SIPX_SERVICEDIR)/sipxtcpdumplog"
+        comment => "stop sipxtcpdumplog",
+        args => "stop",
+        contain => su("root");
+
+    sipxtcpdumplog.!sipxtcpdumplog_running::
+      "$(sipx.SIPX_SERVICEDIR)/sipxtcpdumplog"
+        comment => "start sipxtcpdumplog",
+        args => "start ",
+        contain => su("root");
+
+    sipxtcpdumplog.sipxtcpdumplog_running.(restart_sipxecs|restart_sipxtcpdumplog)::
+      "$(sipx.SIPX_SERVICEDIR)/sipxtcpdumplog"
+        comment => "restart sipxtcpdumplog",
+        args => "restart",
+        contain => su("root");
+}
+
+bundle agent mount_secondary(server_line)
+{
+  vars:
+    any::
+     "mount_options" slist => {"ro","bg","intr","soft","timeo=3"};
+
+  classes:
+     primary::
+       "nfs_extract_secondaries" expression => regextract("(.*)=[0-9] (.*)", "$(server_line)", "myarray");
+     primary.nfs_extract_secondaries::
+       "fqdn_is_primary" expression => strcmp("$(sipx.master_fqdn)","$(myarray[1])");
+
+  storage:
+     primary.nfs_extract_secondaries.!fqdn_is_primary::
+      "$(sipx.SIPX_LOGDIR)/tcpdump/$(myarray[1])" mount  => nfs_p("$(myarray[2])","$(sipx.SIPX_LOGDIR)/tcpdump","@(mount_options)");
+}
+
+bundle agent nfs_systemctl_running {
+  vars:
+    any::
+      "nfs_fedora_service" string => "nfs.service";
+      "rpc_fedora_service" string => "rpc.service";
+
+  classes:
+    # wrap w/fedora16_or_greater to avoid
+    fedora16_or_greater::
+      "nfs_running" expression => returnszero("$(sipx.systemctl) is-active $(nfs_fedora_service)","noshell");
+      "rpcbind_running" expression => returnszero("$(sipx.systemctl) is-active $(rpc_fedora_service)","noshell");
+
+  commands:
+    !rpcbind_running::
+      "$(sipx.systemctl)"
+        comment => "start rpcbind",
+        args => "start $(rpc_fedora_service)";
+
+    !nfs_running::
+      "$(sipx.systemctl)"
+        comment => "start nfs",
+        args => "start $(nfs_fedora_service)";
+}
+
+bundle agent nfs_sysv_running {
+  vars:
+    "nfs_service" string => "/etc/rc.d/init.d/nfs";
+    "rpcbind_service" string => "/etc/rc.d/init.d/rpcbind";
+
+  methods:
+    "any" usebundle => find_service_by_command("$(nfs_service)", "nfs_running", "root");
+    "any" usebundle => find_service_by_command("$(rpcbind_service)", "rpcbind_running", "root");
+
+  commands:
+    !rpcbind_running::
+      "$(rpcbind_service)"
+        comment => "start rpcbind",
+        args => "start";
+
+    !nfs_running::
+      "$(nfs_service)"
+        comment => "start nfs",
+        args => "start";
+}
+
+bundle edit_line comment_ipv6 {
+  replace_patterns:
+   "^(udp6)"
+      replace_with => comment("#");
+  replace_patterns:
+   "^(tcp6)"
+      replace_with => comment("#");
+}

@@ -1,0 +1,58 @@
+Name:     @PACKAGE@
+Version:  @VERSION@
+Release:  @PACKAGE_REVISION@
+
+Summary:  Tcpdump Log Server
+License:  Karel Commercial License
+Group:    Productivity/Telephony/SIP/Servers
+Vendor:   Karel Electronics Corp.
+Packager: Karel UCAP Team <ucap.team@karel.com.tr>
+Url:      http://www.karel.com.tr
+
+BuildRequires: automake
+BuildRequires: java-devel >= 1.6
+BuildRequires: zip
+BuildRequires: sipxcommons >= %version
+BuildRequires: sipxconfig >= %version
+
+Source:   %name-%version.tar.gz
+Obsoletes: %name-devel
+
+Requires: sipxcommons >= %version
+Requires: sipxconfig >= %version
+Requires: tcpdump
+Requires: nfs-utils
+
+Prefix:    %_prefix
+BuildRoot: %{_tmppath}/%name-%version-root
+
+%description
+Tcpdump Log Server
+
+%if %{_vendor} == suse
+%debug_package
+%endif
+
+%prep
+%setup -q
+
+%build
+%configure @SIPX_RPM_CONFIGURE_OPTIONS@
+cp config.log %name.configlog
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make DESTDIR=$RPM_BUILD_ROOT install
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_sysconfdir}/init.d/sipxtcpdumplog
+%{_datadir}/sipxecs/cfinputs/plugin.d/sipxtcpdumplog.cf
+
+%pre
+
+%post
