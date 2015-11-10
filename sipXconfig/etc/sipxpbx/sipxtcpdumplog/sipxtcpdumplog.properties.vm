@@ -1,0 +1,3 @@
+SIP_TCPDUMP_FILE_SIZE=$settings.getSetting('SIP_TCPDUMP_FILE_SIZE').Value
+SIP_TCPDUMP_FILE_COUNT=$settings.getSetting('SIP_TCPDUMP_FILE_COUNT').Value
+SIP_TCPDUMP_LOG_FILE=${service.logDir}/sipxtcpdumplog.log
