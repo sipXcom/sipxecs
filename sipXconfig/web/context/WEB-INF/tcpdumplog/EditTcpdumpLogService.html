@@ -1,0 +1,45 @@
+<div jwcid="@common/Border" useDojo="true" borderTitle="ognl:borderTitle">
+  <span jwcid="@common/TabNavigation" tabNames="ognl:{'configure', 'reports'}" selectedTab="ognl:tab"/>
+  <div id="settings-content">
+    <span jwcid="@RenderBlock" block="ognl:components.get(tab + 'Tab')" />
+  </div>
+  <div jwcid="configureTab@Block">
+      <span jwcid="@common/QuickHelp" value="message:quick.help" />
+      <span jwcid="@common/ErrorMsg"/>
+      <form jwcid="form@Form" delegate="bean:validator">
+        <fieldset jwcid="@setting/SettingsFieldset"
+            settings="ognl:settings.settings" />
+        <ul jwcid="formActions@common/FormActions" callback="ognl:callback"
+            listener="listener:apply"/>
+      </form>
+  </div>
+  <div jwcid="reportsTab@Block">
+   <form jwcid="reportsForm@Form" delegate="bean:validator">
+       <table jwcid="@common/Table" id="reports:list" class="component"
+         columns="serverFqdn, reportName, fileSize, modifiedDate"
+         usePager="ognl:true"
+         source="ognl:tableModel"
+         row="ognl:currentRow"
+         initialSortColumn="modifiedDate">
+         <span jwcid="serverFqdn@Block">
+             <span jwcid="@Insert" value="ognl:currentRow.serverFqdn"/>
+         </span>
+         <span jwcid="reportNameColumnValue@Block">
+           <span jwcid="downloadLink@common/DownloadLink"
+             id="downloadLink"
+             fileName="ognl:currentRow.reportName"
+             dirName="ognl:currentRow.dirName"
+             contentType="literal:application/vnd.tcpdump.pcap">
+             <span jwcid="@Insert" value="ognl:currentRow.reportName"/>
+           </span>
+         </span>
+         <span jwcid="fileSizeColumnValue@Block">
+             <span jwcid="@Insert" value="ognl:currentRow.fileSize"/>
+         </span>
+         <span jwcid="modifiedDateColumnValue@Block">
+             <span jwcid="@Insert" value="ognl:currentRow.modifiedDate"/>
+         </span>
+       </table>
+    </form>
+  </div>
+</div>

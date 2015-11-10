@@ -300,6 +300,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{sipxpbxconf}/sipxcallback/*
 %config(noreplace) %{sipxpbxconf}/unite/unitelite.conf
 %config(noreplace) %attr(755,sipx,sipx) %{_localstatedir}/sipxdata/parkserver/music
+%config(noreplace) %{sipxpbxconf}/sipxtcpdumplog/*
 
 %dir %attr(755,sipx,sipx) %{_localstatedir}/sipxdata/cfdata
 %{_localstatedir}/sipxdata/cfdata/defaults/*.cfdat
