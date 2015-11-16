@@ -32,7 +32,7 @@ TCPDUMP='/usr/sbin/tcpdump'
 
 ##tcpdump -Z root -i any -C 50 -W 100 -w %FILE% &
 TCPDUMPARGS=(-Z root -i any -s 0 -C $SIP_TCPDUMP_FILE_SIZE -W $SIP_TCPDUMP_FILE_COUNT -w ) ## customize arguments here e.g. (-C 1 "another with spaces")
-TCPDUMPFILENAME='ucap-tcpdump-log.pcap'
+TCPDUMPFILENAME='sipxecs-tcpdump-log.pcap'
 TCPDUMPPID=0
 # other variables
 Action=RUN
