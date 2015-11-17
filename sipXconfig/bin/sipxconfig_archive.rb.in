@@ -57,15 +57,20 @@ class Backup < ArchiveBase
     cmd "mongodump --out #{@tmpdir}/dump --db profiles --collection fs.chunks" or
       raise "Could not backup avatar database"
 	add_additional_databases()
-    cmd "service elasticsearch start" or
-      raise "Could not start service elasticsearch"
-    sleep 5
-    cmd "curl -XPUT 'http://localhost:9200/_snapshot/sipXcom_backup?wait_for_completion=true' -d '{ \"type\": \"fs\", \"settings\": { \"location\": \"#{@tmpdir}/elasticsearch_backup/\", \"compress\": true }}'" or
-      raise "Could not create elasticsearch snapshot repository"
-    cmd "curl -XDELETE 'http://localhost:9200/_snapshot/sipXcom_backup/elasticsearch_backup?wait_for_completion=true' -d '{ \"indices\": \"audit\" }'" or
-      raise "Could delete old elasticsearch snapshot"
-    cmd "curl -XPUT 'http://localhost:9200/_snapshot/sipXcom_backup/elasticsearch_backup?wait_for_completion=true' -d '{ \"indices\": \"audit\" }'" or
-      raise "Could not create elasticsearch snapshot"
+
+    elasticsearch_started = cmd "service elasticsearch status"
+    elasticsearch_folder = ""
+
+    if elasticsearch_started
+        cmd "curl -XPUT 'http://localhost:9200/_snapshot/sipXcom_backup?wait_for_completion=true' -d '{ \"type\": \"fs\", \"settings\": { \"location\": \"#{@tmpdir}/elasticsearch_backup/\", \"compress\": true }}'" or
+          raise "Could not create elasticsearch snapshot repository"
+        cmd "curl -XDELETE 'http://localhost:9200/_snapshot/sipXcom_backup/elasticsearch_backup?wait_for_completion=true' -d '{ \"indices\": \"audit\" }'" or
+          raise "Could delete old elasticsearch snapshot"
+        cmd "curl -XPUT 'http://localhost:9200/_snapshot/sipXcom_backup/elasticsearch_backup?wait_for_completion=true' -d '{ \"indices\": \"audit\" }'" or
+          raise "Could not create elasticsearch snapshot"
+        elasticsearch_folder="elasticsearch_backup/"
+    end
+
     cmd "echo @PACKAGE_VERSION@ > #{@tmpdir}/version" or
       raise "Could not generate version file"
     if params.has_key?(:no_device_files)
@@ -85,10 +90,12 @@ class Backup < ArchiveBase
 
     # by stripping @localstatedir@ we can backup/restore from/to source/production machines
     localstatedir = '@localstatedir@'[1..-1]
-    cmd "tar --directory #{@tmpdir} --transform='s,^#{localstatedir}/,var/,' -cvzf #{params[:file]} db.tar version dump/ elasticsearch_backup/ #{attachments.join('/ ')}" or
+    cmd "tar --directory #{@tmpdir} --transform='s,^#{localstatedir}/,var/,' -cvzf #{params[:file]} db.tar version dump/ #{elasticsearch_folder} #{attachments.join('/ ')}" or
       raise "Could not archive databases"
-    cmd "curl -XDELETE 'http://localhost:9200/_snapshot/sipXcom_backup?wait_for_completion=true'"
-    FileUtils.rm_rf(['db.tar', 'version', 'dump', 'elasticsearch_backup'])
+    if elasticsearch_started
+        cmd "curl -XDELETE 'http://localhost:9200/_snapshot/sipXcom_backup?wait_for_completion=true'"
+    end
+    FileUtils.rm_rf(["#{@tmpdir}/db.tar", "#{@tmpdir}/version", "#{@tmpdir}/dump", "#{@tmpdir}/elasticsearch_backup"])
   end
 end
 
@@ -169,7 +176,8 @@ class Restore < ArchiveBase
           raise "Failed to trigger user profile migration."
     end
 
-    if !pre_elasticsearch
+    elasticsearch_started = cmd "service elasticsearch status"
+    if (!pre_elasticsearch and elasticsearch_started)
       cmd "tar -zxvf #{params[:file]} -C / elasticsearch_backup" or
         raise "Failed to extract elasticsearch backup from archive"
       cmd "curl -XPUT 'http://localhost:9200/_snapshot/sipXcom_backup?wait_for_completion=true' -d '{ \"type\": \"fs\", \"settings\": { \"location\": \"#{@tmpdir}/elasticsearch_backup/\", \"compress\": true }}'" or

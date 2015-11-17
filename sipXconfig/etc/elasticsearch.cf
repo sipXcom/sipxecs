@@ -53,28 +53,25 @@ bundle agent elasticsearch_sysv_running {
   vars:
     any::
       "service" string => "/etc/init.d/elasticsearch";
-      "service_command" string => "/usr/bin/java";
 
   methods:
-    any::
-      "any" usebundle => find_sipxservice_by_command_regex("$(service_command)", "elasticsearch_running");
     !elasticsearch::
       "any" usebundle => rh_chkconfig_status("elasticsearch off");
     elasticsearch::
       "any" usebundle => rh_chkconfig_status("elasticsearch on");
 
   commands:
-    (!elasticsearch|stop_sipxecs).elasticsearch_running::
+    (!elasticsearch|stop_sipxecs)::
       "$(service)"
         comment => "stop elasticsearch",
         args => "stop";
 
-    elasticsearch.!elasticsearch_running::
+    elasticsearch::
       "$(service)"
         comment => "start elasticsearch",
         args => "start";
 
-    elasticsearch.elasticsearch_running.restart_elasticsearch::
+    elasticsearch.restart_elasticsearch::
       "$(service)"
         comment => "restart elasticsearch",
         args => "restart";
