@@ -313,7 +313,25 @@ UtlBoolean SipPersistentSubscriptionMgr::getNotifyDialogInfo(
       // because updateFromAndTo uses these words in relationship to
       // the SUBSCRIBE, whereas getNotifyDialogInfo uses these words
       // in relationship to the NOTIFY, which is the reverse order.
-      mDB.updateToTag(callId, localTag, remoteTag);
+      try
+      {
+        mDB.updateToTag(callId, localTag, remoteTag);
+      }
+#ifdef MONGO_assert
+      catch (mongo::DBException& e)
+      {
+
+         OS_LOG_ERROR( FAC_SIP, "SipSubscriptionMgr::getNotifyDialogInfo::mDB.updateToTag() Exception: "
+             << e.what() );
+         ret = FALSE;
+      }
+#endif
+      catch(...)
+      {
+        OS_LOG_ERROR( FAC_SIP, "SipSubscriptionMgr::getNotifyDialogInfo::mDB.updateToTag() Exception: "
+             << " UNKNOWN" );
+        ret = FALSE;
+      }
    }
 
    // The NOTIFY CSeq and XML version will be saved when our caller
