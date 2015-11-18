@@ -269,6 +269,12 @@
         </type>
         <value>0</value>
       </setting>
+      <setting name="days-to-keep-vm">
+        <type>
+          <integer min="1" max="365" advanced="yes"/>
+        </type>
+        <value>30</value>
+      </setting>
     </group>
     <group name="fax" hidden="yes">
       <setting name="extension">

@@ -168,5 +168,11 @@
       </type>
       <value>0</value>
     </setting>
+    <setting name="security.cleanupVoicemailHour" advanced="yes">
+      <type>
+        <integer min="0" max="23"/>
+      </type>
+      <value>0</value>
+    </setting>
   </group>
 </model>

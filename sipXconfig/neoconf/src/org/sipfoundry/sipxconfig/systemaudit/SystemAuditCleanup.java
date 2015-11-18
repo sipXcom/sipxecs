@@ -16,7 +16,6 @@
  */
 package org.sipfoundry.sipxconfig.systemaudit;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.logging.Log;
@@ -24,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
+import org.sipfoundry.commons.util.TimeZoneUtils;
 import org.sipfoundry.sipxconfig.admin.AdminContext;
 import org.sipfoundry.sipxconfig.admin.AdminSettings;
 import org.sipfoundry.sipxconfig.elasticsearch.ElasticsearchServiceImpl;
@@ -61,9 +61,7 @@ public class SystemAuditCleanup {
     private Date getDeleteDate() {
         AdminSettings adminSettings = m_adminContext.getSettings();
         int daysToKeep = adminSettings.getSystemAuditKeepChanges();
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_MONTH, -daysToKeep);
-        return calendar.getTime();
+        return TimeZoneUtils.getDateXDaysAgo(daysToKeep);
     }
 
     @Required

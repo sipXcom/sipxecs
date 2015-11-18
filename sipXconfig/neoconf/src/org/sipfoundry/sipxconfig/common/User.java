@@ -55,6 +55,7 @@ public class User extends AbstractUser implements Replicable {
     private static final String FORCE_PIN_CHANGE = "voicemail/security/force-pin-change";
     private static final String AUTO_ENTER_PIN_EXTENSION = "voicemail/security/auto-enter-pin-extension";
     private static final String AUTO_ENTER_PIN_EXTERNAL = "voicemail/security/auto-enter-pin-external";
+    private static final String DAYS_TO_KEEP_VM = "voicemail/security/days-to-keep-vm";
     private String m_identity;
     private boolean m_validUser = true;
 
@@ -283,6 +284,14 @@ public class User extends AbstractUser implements Replicable {
 
     public void setAutoEnterPinExternal(boolean autoExternal) {
         getSettings().getSetting(AUTO_ENTER_PIN_EXTERNAL).setTypedValue(autoExternal);
+    }
+
+    public Integer getDaysToKeepVM() {
+        return (Integer) getSettingTypedValue(DAYS_TO_KEEP_VM);
+    }
+
+    public void setDaysToKeepVM(Integer autoExternal) {
+        getSettings().getSetting(DAYS_TO_KEEP_VM).setTypedValue(autoExternal);
     }
 
     public Integer getE911LocationId() {

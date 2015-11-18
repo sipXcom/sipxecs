@@ -35,7 +35,7 @@ import org.sipfoundry.sipxconfig.snmp.SnmpManager;
 
 public class TcpdumpLogImpl implements FeatureProvider, ProcessProvider, TcpdumpLog {
 
-    private final String PROCESS = "sipxtcpdumplog";
+    private static final String PROCESS = "sipxtcpdumplog";
     private BeanWithSettingsDao<TcpdumpLogSettings> m_settingsDao;
 
     @Override
