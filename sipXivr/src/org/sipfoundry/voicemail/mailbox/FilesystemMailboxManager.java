@@ -19,8 +19,12 @@ package org.sipfoundry.voicemail.mailbox;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,6 +33,7 @@ import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.commons.lang.StringUtils;
 import org.sipfoundry.commons.userdb.User;
 import org.sipfoundry.commons.userdb.ValidUsers;
+import org.sipfoundry.commons.util.TimeZoneUtils;
 import org.sipfoundry.voicemail.mailbox.MessageDescriptor.Priority;
 
 public class FilesystemMailboxManager extends AbstractMailboxManager {
@@ -619,6 +624,24 @@ public class FilesystemMailboxManager extends AbstractMailboxManager {
             FileUtils.deleteDirectory(mailbox);
         } catch (IOException ex) {
             LOG.error(String.format("failed to delete mailbox for user %s", username), ex);
+        }
+    }
+
+    @Override
+    public void cleanupMailbox(String userName, int daysToKeepVM) {
+        Date deleteFrom = TimeZoneUtils.getDateXDaysAgo(daysToKeepVM);
+        try {
+            File mailbox = getUserDirectory(userName);
+            File[] files = mailbox.listFiles();
+            for (File file : files) {
+                BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
+                FileTime fileCreationTime = attr.creationTime();
+                if (fileCreationTime.toMillis() < deleteFrom.getTime()) {
+                    file.delete();
+                }
+            }
+        } catch (Exception ex) {
+            LOG.error(String.format("failed to delete mailbox for user %s", userName), ex);
         }
     }
 

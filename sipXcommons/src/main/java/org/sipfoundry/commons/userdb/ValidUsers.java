@@ -50,6 +50,7 @@ import static org.sipfoundry.commons.mongo.MongoConstants.FORWARD_DELETE_VOICEMA
 import static org.sipfoundry.commons.mongo.MongoConstants.FORCE_PIN_CHANGE;
 import static org.sipfoundry.commons.mongo.MongoConstants.AUTO_ENTER_PIN_EXTENSION;
 import static org.sipfoundry.commons.mongo.MongoConstants.AUTO_ENTER_PIN_EXTERNAL;
+import static org.sipfoundry.commons.mongo.MongoConstants.DAYS_TO_KEEP_VM;
 import static org.sipfoundry.commons.mongo.MongoConstants.GROUPS;
 import static org.sipfoundry.commons.mongo.MongoConstants.HASHED_PASSTOKEN;
 import static org.sipfoundry.commons.mongo.MongoConstants.HOME_CITY;
@@ -764,16 +765,24 @@ public class ValidUsers {
         }
         user.setAltAttachAudioToEmail(Boolean.valueOf(getStringValue(obj, ALT_ATTACH_AUDIO)));
 
-        if (getStringValue(obj, FORCE_PIN_CHANGE) != null) {
-            user.setForcePinChange(getStringValue(obj, FORCE_PIN_CHANGE));
+        String forcePinChange = getStringValue(obj, FORCE_PIN_CHANGE);
+        if (forcePinChange != null) {
+            user.setForcePinChange(forcePinChange);
         }
 
-        if (getStringValue(obj, AUTO_ENTER_PIN_EXTENSION) != null) {
-            user.setAutoEnterPinExtension(getStringValue(obj, AUTO_ENTER_PIN_EXTENSION));
+        String autoEnterPinExtension = getStringValue(obj, AUTO_ENTER_PIN_EXTENSION);
+        if (autoEnterPinExtension != null) {
+            user.setAutoEnterPinExtension(autoEnterPinExtension);
         }
 
-        if (getStringValue(obj, AUTO_ENTER_PIN_EXTERNAL) != null) {
-            user.setAutoEnterPinExternal(getStringValue(obj, AUTO_ENTER_PIN_EXTERNAL));
+        String autoEnterPinExternal = getStringValue(obj, AUTO_ENTER_PIN_EXTERNAL);
+        if (autoEnterPinExternal != null) {
+            user.setAutoEnterPinExternal(autoEnterPinExternal);
+        }
+
+        Integer daysToKeepVM = getIntegerValue(obj, DAYS_TO_KEEP_VM);
+        if (daysToKeepVM != null) {
+            user.setDaysToKeepVM(daysToKeepVM);
         }
 
         BasicDBList aliasesObj = (BasicDBList) obj.get(ALIASES);
@@ -902,6 +911,15 @@ public class ValidUsers {
         if (obj.keySet().contains(key)) {
             if (obj.get(key) != null) {
                 return obj.get(key).toString();
+            }
+        }
+        return null;
+    }
+
+    public static Integer getIntegerValue(DBObject obj, String key) {
+        if (obj.keySet().contains(key)) {
+            if (obj.get(key) != null) {
+                return Integer.parseInt(obj.get(key).toString());
             }
         }
         return null;

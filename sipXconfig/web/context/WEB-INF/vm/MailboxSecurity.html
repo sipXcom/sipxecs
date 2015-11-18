@@ -25,5 +25,13 @@
         id="voicemail:autoEnterPinExternal"
         value="ognl:autoEnterPinExternal" />
       </tr>
+      <tr jwcid="@common/FieldPanel" for="daysToKeepVM" field="component:daysToKeepVM"
+           label="message:label.daysToKeepVM"
+           description="message:description.daysToKeepVM">
+       <span jwcid="daysToKeepVM@TextField" id="daysToKeepVM"
+           value="ognl:agentGroup.daysToKeepVM"
+           translator="translator:integer" validators="spring-validators:min=1,max=365" size="30"
+           displayName="message:label.daysToKeepVM"/>
+      </tr>
   </table>
 </fieldset>
