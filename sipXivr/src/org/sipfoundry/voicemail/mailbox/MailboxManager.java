@@ -86,6 +86,8 @@ public interface MailboxManager {
 
     void deleteMailbox(String username);
 
+    void cleanupMailbox(String userName, int daysToKeepVM);
+
     void renameMailbox(User user, String oldUser);
 
     void migrate(String path);

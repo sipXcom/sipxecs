@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd">
 
   <bean id="mailboxManager" class="org.sipfoundry.voicemail.mailbox.FilesystemMailboxManager" init-method="init">
     <property name="mailstoreDirectory" value="${ivr.mailstoreDirectory}" />
@@ -19,5 +20,14 @@
   <bean id="messageDescriptorWriter" class="org.sipfoundry.voicemail.mailbox.MessageDescriptorWriter" />
 
   <bean id="messageDescriptorReader" class="org.sipfoundry.voicemail.mailbox.MessageDescriptorReader" />
+
+  <bean id="voicemailCleanup" class="org.sipfoundry.voicemail.mailbox.VoicemailCleanup">
+    <property name="mailboxManager" ref="mailboxManager" />
+    <property name="validUsers" ref="validUsers" />
+  </bean>
+
+  <task:scheduled-tasks>
+    <task:scheduled ref="voicemailCleanup" method="run" cron="* * ${security.cleanupVoicemailHour} * * *"/>
+  </task:scheduled-tasks>
 
 </beans>
