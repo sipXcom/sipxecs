@@ -958,6 +958,8 @@ public class Servlet extends HttpServlet {
         PHONE_MODEL_MAP.put("VVX_310", new PhoneModel("polycomVVX310", "Polycom VVX 310"));
         PHONE_MODEL_MAP.put("VVX_400", new PhoneModel("polycomVVX400", "Polycom VVX 400"));
         PHONE_MODEL_MAP.put("VVX_410", new PhoneModel("polycomVVX410", "Polycom VVX 410"));
+        PHONE_MODEL_MAP.put("VVX_101", new PhoneModel("polycomVVX101", "Polycom VVX 101"));
+        PHONE_MODEL_MAP.put("VVX_201", new PhoneModel("polycomVVX201", "Polycom VVX 201"));
 
         // Nortel IP 12x0, see:
         // -
