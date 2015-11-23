@@ -321,8 +321,10 @@ public class AttendantRule extends DialingRule implements Replicable {
         AliasMapping liveAttendantAlias = new AliasMapping(getExtension(), liveContact, ALIAS_RELATION);
         AliasMapping attendantAlias = new AliasMapping(getExtension(), String.format(ATTENDANT_CONTACT,
             getAttendantIdentity(), domainName), ALIAS_RELATION);
-        if (isLiveAttendant()) {
+        if (isLiveAttendantEnabled()) {
             mappings.add(liveAttendantAlias);
+        }
+        if (isLiveAttendant()) {
             mappings.add(attendantAlias);
         }
 
