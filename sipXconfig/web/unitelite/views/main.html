@@ -8,32 +8,34 @@
         data-ng-controller="profile"
         class="profile-wrapper">
         <div class="profile">
+          <!-- Profile bar -->
           <div class="row profile-bar unselectable">
-            <!-- Profile bar -->
-            <div class="col-xs-7">
-              <p>{{ name.user }}</p>
-            </div>
-            <div class="col-xs-5 main-buttons">
+            <div class="col-xs-1 main-buttons main-menu-btn">
               <button
                 data-ng-click="showMainMenuFn()"
                 data-ng-class="{'active': showMainMenu}"
-                class="btn btn-default animated pull-right"
+                class="btn btn-default animated pull-left"
                 title="Menu">
                 <i class="icon-hamburger"></i>
+              </button>
+            </div>
+            <div class="col-xs-7">
+              <p>{{ name.user }}</p>
+            </div>
+            <div class="col-xs-4 main-buttons">
+              <button type="button"
+                data-ng-click="showSearchFn()"
+                 data-ng-class="{'active': showSearch}"
+                class="btn btn-default pull-right"
+                title="Search">
+              <i class="icon-ic_search_black_24px"></i>
               </button>
               <button
                 data-ng-click="showDialFn()"
                 data-ng-class="{'active': showDial}"
                 class="btn btn-default pull-right"
                 title="Dialpad">
-                <i class="icon-uniE608"></i>
-              </button>
-              <button type="button"
-                data-ng-click="showSearchFn()"
-                data-ng-class="{'active': showSearch}"
-                class="btn btn-default pull-right"
-                title="Search">
-                <i class="icon-search"></i>
+                <i class="icon-ic_dialpad_black_24px"></i>
               </button>
             </div>
           </div> <!-- /Profile Bar -->
