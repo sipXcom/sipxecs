@@ -1,18 +1,3 @@
-/*
- * Copyright (c) eZuce, Inc. All rights reserved.
- * Contributed to SIPfoundry under a Contributor Agreement
- *
- * This software is free software; you can redistribute it and/or modify it under
- * the terms of the Affero General Public License (AGPL) as published by the
- * Free Software Foundation; either version 3 of the License, or (at your option)
- * any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
- * details.
- */
-
 
 @-webkit-keyframes spin {
   to {
@@ -72,13 +57,20 @@
   outline: none;
 }
 
+a {
+  color: #20783C;
+}
+a:hover {
+  color: #2BAB4A;
+}
+
 body, html {
   height: 100%;
 }
 
 body {
   background: #fafafa;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica", Avenir, Arial, sans-serif;
   color: #333;
   overflow: hidden;
   padding: 5px;
@@ -331,12 +323,12 @@ select.default {
   -webkit-animation: spin 1s linear infinite;
   -moz-animation: spin 1s linear infinite;
   animation: spin 2s linear infinite;
-  border-top-color: #006d9a;
+  border-top-color: #4AB757;
 }
 .spinner.small {
   font-size: 20px;
   border: 2px solid #F7F7F7;
-  border-top-color: #A7DCF1;
+  border-top-color: #4AB757;
 }
 .spinner-wrapper.inline {
   margin: 0px;
@@ -447,6 +439,10 @@ select.default {
   border: 1px solid #808080;
   overflow: hidden;
 }
+#webchat-main .left-side-view {
+  overflow-x:hidden;
+  overflow-y:auto;
+}
 #webchat-main .left-side-view,
 #webchat-main .right-side-view {
   height: 100%;
@@ -462,7 +458,7 @@ select.default {
   height: 0px;
 }
 #webchat-main .main-left-title {
-  color: #006d9a;
+  color: #20783C;
   padding: 0px 13px;
 }
 #webchat-main .main-left-title span.label {
@@ -486,7 +482,7 @@ select.default {
   font-weight: 400;
 }
 #webchat-main .main-left-title-wrapper i {
-  color: #006d9a;
+  color: #20783C;
   font-size: 12px;
   padding-left: 13px;
   float: left;
@@ -511,7 +507,9 @@ select.default {
   z-index: 10;
 }
 #webchat-main .profile-wrapper .profile-bar {
-  background-color: #006C9A;
+  background-color: #1B1A1B;
+  cursor: pointer;
+  border-bottom: 0px solid #fff;
 }
 #webchat-main .profile-wrapper .profile-bar .profile-status,
 #webchat-main .secview .profile-status {
@@ -551,11 +549,11 @@ select.default {
   border-radius: 0px;
   padding: 5px 9px;
   background: transparent;
-  width: 33%;
+  width: 50%;
 }
 #webchat-main .left-side-view .profile-bar .main-buttons .btn i {
   color: #fff;
-  font-size: 0.9em;
+  font-size: 1.6em;
   margin-left:0px;
 }
 #webchat-main .left-side-view .profile-bar .main-buttons .btn.clear {
@@ -569,6 +567,18 @@ select.default {
 }
 #webchat-main .left-side-view .profile-bar .main-buttons .btn {
   border-left: 1px solid #c6c7c8;
+}
+#webchat-main .left-side-view .profile-bar .main-buttons.main-menu-btn {
+  padding-left: 0px;
+}
+#webchat-main .left-side-view .profile-bar .main-buttons.main-menu-btn .btn {
+  width: 144%;
+  position: relative;
+  z-index: 9999;
+  padding-left: 8px;
+}
+#webchat-main .left-side-view .profile-bar .main-buttons.main-menu-btn .btn i {
+  font-size: 1.1em;
 }
 
 #webchat-main .left-side-view .profile-wrapper .well .btn.clear i {
@@ -695,7 +705,7 @@ select.default {
 
 #webchat-main .profile-wrapper .full-profile {
   position: absolute;
-  top: 30px;
+  // top: 30px;
   left: 0px;
   width: 100%;
   z-index: 1;
@@ -796,6 +806,15 @@ select.default {
   display: block;
   color: #BEB8B8;
 }
+#webchat-main .mainview .entry-photo.trigger {
+  cursor: pointer;
+}
+#webchat-main .mainview .entry-photo.trigger img:hover {
+  border-color: #2BAB4A;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(42, 171, 74, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(42, 171, 74, 0.6);
+}
 #webchat-main .mainview .entry-name {
   width: 80%;
 }
@@ -806,7 +825,7 @@ select.default {
   display: inline;
 }
 #webchat-main .mainview .entry-name .entry-name-big {
-  color: #4E616D;
+  color:#6D6E70;
   font-size: 1.1em;
   line-height: 1.1em;
   padding-top: 1px;
@@ -926,7 +945,7 @@ select.default {
   cursor: pointer;
 }
 #webchat-main .mainview .server-group:hover {
-  background: #fcf48d;
+  background: #FED571;
 }
 #webchat-main .mainview .server-group .entry-name {
   width: 100%;
@@ -1094,7 +1113,7 @@ select.default {
  */
 #webchat-main .left-side-view .main-menu {
   position: absolute;
-  top: 30px;
+  // top: 30px;
   left: 0px;
   width: 100%;
   border-top: 1px solid #c6c7c8;
@@ -1114,7 +1133,7 @@ select.default {
 #webchat-main .left-side-view .main-menu a {
   text-align: left;
   background: #fff;
-  color: #035A8C;
+  color: #20783C;
   border-bottom: 1px solid #c6c7c8;
   padding: 10px 10px;
   font-size: 0.9em;
@@ -1137,7 +1156,7 @@ select.default {
   box-shadow: 0px 0px 1px 0px #cccccc;
 }
 #webchat-main .left-side-view .main-menu .btn i {
-  color: #035A8C;
+  color: #20783C;
   display: inline-block;
   width: 22px;
 }
@@ -1175,7 +1194,7 @@ select.default {
   background: #fff;
 }
 #webchat-main .right-side-view .profile-bar-chat {
-  background: #0093D0;
+  background: #6D6E70;
   color: #fff;
   height: 30px;
   margin-bottom: 1px;
@@ -1184,7 +1203,7 @@ select.default {
   line-height: 2.2em;
 }
 #webchat-main .right-side-view .profile-bar-chat .btn {
-  color: #b6e5ed;
+  color: #A7A9AB;
   font-size: 0.9em;
   padding-right: 0px;
   padding-bottom: 0px;
@@ -1199,10 +1218,10 @@ select.default {
   border-bottom: 1px solid #ccc;
 }
 #webchat-main .right-side-view .message-list .message .name {
-  color: #4e686e;
+  color: #6D6E70;
 }
 #webchat-main .right-side-view .message-list .message.received .name {
-  color: #1a9ed5;
+  color: #20783C;
 }
 #webchat-main .right-side-view .message-list .message.sent .name {
   color: #006c9a;
@@ -1705,11 +1724,11 @@ select.default {
   cursor: default;
 }
 #webchat-main .right-side-view .settings-details .settings-title {
-  padding: 9px;
-  text-transform: none;
-  background: #9c9e9f;
-  color: #fff;
-  margin-bottom: 0px;
+ padding: 9px;
+ text-transform: none;
+ background: #A7A9AB;
+ color: #fff;
+ margin-bottom: 0px;
 }
 #webchat-main .right-side-view .settings-details .settings-title .spinner-wrapper {
   margin: 0px;
@@ -1749,16 +1768,16 @@ select.default {
   border-radius: 2px;
 }
 #webchat-main .right-side-view .settings-item {
-  color: #707070;
-  text-decoration:none;
-  cursor: pointer;
+ color: #1B1A1B;
+ text-decoration:none;
+ cursor: pointer;
 }
 
 #webchat-main .right-side-view div.settings-item.row:hover,
 #webchat-main .right-side-view div.settings-item.row:hover .arrow i,
 #webchat-main .right-side-view div.settings-item.row.active,
 #webchat-main .right-side-view div.settings-item.row.active i {
-  background-color:#faf28c;
+ background-color:#FED571;
 }
 
 #webchat-main .right-side-view .settings-item span:first-child {
@@ -1972,6 +1991,13 @@ select.default {
   margin-bottom: 10px;
 }
 
+#webchat-main .form-control:focus {
+  border-color: #2BAB4A;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(42, 171, 74, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(42, 171, 74, 0.6);
+}
+
 @media (max-width: @screen-xs-max) {
   #webchat-main .right-side-view .settings-item .settings-item-name {
     font-size: 1em;
@@ -2004,7 +2030,7 @@ select.default {
   }
   #webchat-main .left-side-view .profile-bar .main-buttons .btn:hover i,
   #webchat-main .left-side-view .profile-bar .main-buttons .btn.active i {
-    color: #006C9A;
+    color: #20783C;
   }
   #webchat-main .left-side-view .profile-bar .main-buttons .btn {
     font-size: 1.2vw;
@@ -2038,7 +2064,7 @@ select.default {
   }
   #webchat-main .left-side-view .profile-bar .main-buttons .btn:hover i,
   #webchat-main .left-side-view .profile-bar .main-buttons .btn.active i {
-    color: #006C9A;
+    color: #20783C;
   }
   #webchat-main .left-side-view .profile-bar .main-buttons .btn {
     font-size: 1.2vw;
@@ -2072,7 +2098,7 @@ select.default {
   }
   #webchat-main .left-side-view .profile-bar .main-buttons .btn:hover i,
   #webchat-main .left-side-view .profile-bar .main-buttons .btn.active i {
-    color: #006C9A;
+    color: #20783C;
   }
 
   #webchat-main .hide-me {
