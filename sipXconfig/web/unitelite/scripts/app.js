@@ -22,7 +22,7 @@ uniteWeb.config([
 
             restService.getLogindetails().
               then(function (data) {
-                restService.updateCredentials(data['login-details']['userName'], data['login-details']['pin']);
+                restService.updateCredentials(data['login-details']['userName']);
                 restService.connected = true;
               }, function (err) {
                 console.log(err);

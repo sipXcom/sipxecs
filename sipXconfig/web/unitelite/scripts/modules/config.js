@@ -10,7 +10,7 @@
    "keyPhotos": "uw:roster:photos",
    "prefix": "ouc",
    "authCookie": "oucunitewebauth",
-   "version": "1.1.0-beta",
+   "version": "0.7.8",
    "baseRest": "/sipxconfig/rest"
   })
 
