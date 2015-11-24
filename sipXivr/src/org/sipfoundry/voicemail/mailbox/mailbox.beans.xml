@@ -27,7 +27,7 @@
   </bean>
 
   <task:scheduled-tasks>
-    <task:scheduled ref="voicemailCleanup" method="run" cron="* * ${security.cleanupVoicemailHour} * * *"/>
+    <task:scheduled ref="voicemailCleanup" method="run" cron="0 0 ${security.cleanupVoicemailHour} * * *"/>
   </task:scheduled-tasks>
 
 </beans>
