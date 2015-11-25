@@ -1,6 +1,6 @@
 {
   "name": "angular-xml",
-  "version": "1.0.5",
+  "version": "1.0.8",
   "main": "angular-xml.js",
   "ignore": [
     "**/*.swp",
@@ -18,13 +18,13 @@
     "angular-mocks": "~1.2.22"
   },
   "homepage": "https://github.com/johngeorgewright/angular-xml",
-  "_release": "1.0.5",
+  "_release": "1.0.8",
   "_resolution": {
     "type": "version",
-    "tag": "v1.0.5",
-    "commit": "9e288746e0bd7e764e01073cd4227d0ffbad626a"
+    "tag": "v1.0.8",
+    "commit": "0d59fa940a2fac375bf83464239c3ba9835458a9"
   },
   "_source": "git://github.com/johngeorgewright/angular-xml.git",
-  "_target": "*",
+  "_target": "~1.0.7",
   "_originalSource": "angular-xml"
 }
