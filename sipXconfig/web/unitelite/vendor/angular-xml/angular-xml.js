@@ -35,10 +35,20 @@
     }
   }
 
+  function responseIsXml(response) {
+    var contentType = response.headers('content-type'),
+        XML = '/xml',
+        minIndex = 'text/xml'.indexOf(XML);
+    if (contentType) {
+      return contentType.indexOf(XML) >= minIndex;
+    } else {
+      return false;
+    }
+  }
+
   function xmlHttpInterceptorFactory($q, xmlFilter) {
     function responseHandler(response) {
-      var contentType = response.headers('content-type');
-      if (response && contentType === 'application/xml' || contentType === 'text/xml') {
+      if (response && responseIsXml(response)) {
         response.xml = xmlFilter(response.data);
         return response;
       } else {
