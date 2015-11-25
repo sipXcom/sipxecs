@@ -318,11 +318,9 @@ public class ValidUsers {
         }
         QueryBuilder query = QueryBuilder.start(VALID_USER).is(Boolean.TRUE);
         externalNumber = getExternalNumberLastDigits(externalNumber, matchLastDigits);
-        if (externalNumber == null) {
-            return null;
-        }
-        BasicDBObject cell = new BasicDBObject(CELL_PHONE_NUMBER, externalNumber);
-        BasicDBObject home = new BasicDBObject(HOME_PHONE_NUMBER, externalNumber);
+        Pattern cellPattern = Pattern.compile(".*" + externalNumber);
+        BasicDBObject cell = new BasicDBObject(CELL_PHONE_NUMBER, cellPattern);
+        BasicDBObject home = new BasicDBObject(HOME_PHONE_NUMBER, cellPattern);
         query.or(cell, home);
         query.and(AUTO_ENTER_PIN_EXTERNAL).is("1");
         DBObject queryUserName = query.get();
@@ -335,10 +333,8 @@ public class ValidUsers {
 
     private String getExternalNumberLastDigits(String externalNumber, int matchLastDigits) {
         String externalNumberToMatch;
-        if (matchLastDigits == 0) {
+        if (matchLastDigits == 0 || externalNumber == null || externalNumber.length() < matchLastDigits) {
             externalNumberToMatch = externalNumber;
-        } else if(externalNumber == null || externalNumber.length() < matchLastDigits) {
-            externalNumberToMatch = null;
         } else {
             externalNumberToMatch = externalNumber.substring(externalNumber.length() - matchLastDigits);
         }
