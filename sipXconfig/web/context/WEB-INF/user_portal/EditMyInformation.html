@@ -44,19 +44,6 @@
 	  <span jwcid="@If" condition="ognl:voicemailEnabled">
 		<tr jwcid="faxServicePanel@common/FaxServicePanel" mailboxPreferences="ognl:mailboxPreferences" user="ognl:loadedUser"/>
 	  </span>
-	  <fieldset>
-        <table>
-          <tr><td colspan="2"><h3><label jwcid="@Insert" value="message:label.security"/></h3></td></tr>
-          <tr jwcid="@common/FieldPanel" for="daysToKeepVM" field="component:daysToKeepVM"
-           label="message:label.daysToKeepVM"
-           description="message:description.daysToKeepVM">
-             <span jwcid="daysToKeepVM@TextField" id="daysToKeepVM"
-               value="ognl:userForEditing.daysToKeepVM"
-               translator="translator:integer" validators="spring-validators:min=1,max=365" size="30"
-               displayName="message:label.daysToKeepVM"/>
-          </tr>
-        </table>
-      </fieldset>
 	  <ul jwcid="@common/FormActions" listener="listener:save" callback="ognl:callback"/>
   </form>
 </div>
