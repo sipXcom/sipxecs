@@ -1,5 +1,5 @@
 Name: jasperserver
-Version: 6.1.1
+Version: 5.2.0
 Release: 1
 
 Summary: Jasperserver reports war file
