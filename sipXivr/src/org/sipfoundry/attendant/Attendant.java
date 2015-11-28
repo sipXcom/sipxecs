@@ -334,13 +334,11 @@ public class Attendant extends SipxIvrApp {
         LOG.info("Attendant::failure");
         boolean playGoodbye = true;
         if (config.isTransferOnFailure()) {
-            if (config.isPlayPrompt()) {
-                String transferPrompt = config.getTransferPrompt();
-                if (transferPrompt != null) {
-                    PromptList pl = controller.getPromptList();
-                    pl.addPrompts(config.getTransferPrompt());
-                    controller.play(pl, "");
-                }
+            String transferPrompt = config.getTransferPrompt();
+            if (transferPrompt != null) {
+                PromptList pl = controller.getPromptList();
+                pl.addPrompts(config.getTransferPrompt());
+                controller.play(pl, "");
             }
 
             String dest = config.getTransferURL();
