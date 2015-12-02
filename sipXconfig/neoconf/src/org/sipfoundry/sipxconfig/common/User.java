@@ -290,8 +290,8 @@ public class User extends AbstractUser implements Replicable {
         return (Integer) getSettingTypedValue(DAYS_TO_KEEP_VM);
     }
 
-    public void setDaysToKeepVM(Integer autoExternal) {
-        getSettings().getSetting(DAYS_TO_KEEP_VM).setTypedValue(autoExternal);
+    public void setDaysToKeepVM(Integer daysToKeepVm) {
+        getSettings().getSetting(DAYS_TO_KEEP_VM).setTypedValue(daysToKeepVm);
     }
 
     public Integer getE911LocationId() {
