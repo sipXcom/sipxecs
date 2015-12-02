@@ -20,6 +20,7 @@ import com.mongodb.DBObject;
 
 public class VoicemailCleanup {
 
+    private static final int DISABLE_VOICEMAIL_CLEANUP = 0;
     private static final Log LOG = LogFactory.getLog(VoicemailCleanup.class);
     private MailboxManager m_mailboxManager;
     private ValidUsers m_validUsers;
@@ -32,7 +33,7 @@ public class VoicemailCleanup {
             DBObject users = objects.next();
             String userName = ValidUsers.getStringValue(users, UID);
             Integer daysToKeepVM = ValidUsers.getIntegerValue(users, DAYS_TO_KEEP_VM);
-            if (daysToKeepVM != null) {
+            if (daysToKeepVM != null && daysToKeepVM != DISABLE_VOICEMAIL_CLEANUP) {
                 m_mailboxManager.cleanupMailbox(userName, daysToKeepVM);
             }
         }
