@@ -495,6 +495,7 @@
   	<antcall target="add_location_location_inbound" />
   	<antcall target="add_fallback_branch" />
     <antcall target="openacd-permission-update5" />
+  	<antcall target="modify-setting-value-table" />
   </target>
 
   <target name="plugin-patches">
@@ -1530,6 +1531,9 @@
   </target>
   <target name="add_tmpdir_to_backup" unless="add_tmpdir_to_backup">
     <db-patch patch="add_tmpdir_to_backup"/>
+  </target>
+  <target name="modify-setting-value-table" unless="modify-setting-value-table">
+    <db-patch patch="modify-setting-value-table"/>
   </target>
 
 	<!--
