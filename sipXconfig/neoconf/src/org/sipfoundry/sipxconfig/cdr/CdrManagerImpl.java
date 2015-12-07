@@ -650,8 +650,15 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
             return null;
         }
 
-        ArchiveDefinition def = new ArchiveDefinition(ARCHIVE, "sipxcdr-archive --backup %s",
-                "sipxcdr-archive --restore %s");
+        String tmpDir = "";
+        if (manualSettings != null) {
+            String tmpDirectory = manualSettings.getTmpDir();
+            if (StringUtils.isNotBlank(tmpDirectory)) {
+                tmpDir = " --tmp-dir " + tmpDirectory;
+            }
+        }
+        ArchiveDefinition def = new ArchiveDefinition(ARCHIVE, "sipxcdr-archive --backup %s" + tmpDir,
+                "sipxcdr-archive --restore %s" + tmpDir);
         return Collections.singleton(def);
     }
 
