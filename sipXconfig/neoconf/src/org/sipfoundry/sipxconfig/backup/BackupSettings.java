@@ -32,9 +32,6 @@ import org.sipfoundry.sipxconfig.setting.Setting;
 import org.springframework.beans.factory.annotation.Required;
 
 public class BackupSettings extends PersistableSettings implements DeployConfigOnEdit {
-
-    private static final String TMP_DIR = "general/tmpDir";
-
     private static final Log LOG = LogFactory.getLog(BackupSettings.class);
     private String m_localBackupPath;
     private BackupDbSettings m_backupDbSettings;
@@ -93,11 +90,6 @@ public class BackupSettings extends PersistableSettings implements DeployConfigO
 
     public Setting getIncludeDeviceFiles() {
         return m_backupDbSettings.getSettings().getSetting("db/includeDeviceFiles");
-    }
-
-    @JsonIgnore
-    public String getTmpDir() {
-        return (String) getSettingTypedValue(TMP_DIR);
     }
 
     public Setting getDbSettings() {
