@@ -24,7 +24,7 @@ class ArchiveBase
   def initialize
     @pguser = "postgres"
     @db = "SIPXCDR"
-    @tmpdir = "/tmp"
+    @tmpdir = "/var/sipxdata/tmp"
     @initd = "@SIPX_SERVICEDIR@"
   end
 
@@ -41,6 +41,10 @@ end
 
 class Backup < ArchiveBase
   def run(params)
+    if params.has_key?(:tmp_dir)
+        @tmpdir=params[:tmp_dir]
+    end
+    cmd "echo CDR Backup uses #{@tmpdir} as temporary dir."
     cmd "pg_dump -U #{@pguser} -F t #{@db} | gzip > #{params[:file]}" or 
       raise "Could not backup database"
   end
@@ -53,6 +57,11 @@ class Restore < ArchiveBase
   end
 
   def run(params)
+    if params.has_key?(:tmp_dir)
+        @tmpdir=params[:tmp_dir]
+    end
+    cmd "echo CDR Restore uses #{@tmpdir} as temporary dir."
+
     legacy_format = false
     unless cmd "tar -tzf #{params[:file]} toc.dat 2>/dev/null"
       cmd "tar -tzf #{params[:file]} db.tar" or
@@ -111,6 +120,11 @@ EOF
       "Restore the specified Configuration archive."){ |v|
     operation = Restore.new
     params[:file] = v
+  }
+
+  opts.on("--tmp-dir <tmp-dir>",
+      "Temporary backup file location"){ |v|
+    params[:tmp_dir] = v
   }
 
   opts.on("--verbose",
