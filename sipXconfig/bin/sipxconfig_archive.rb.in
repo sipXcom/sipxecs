@@ -8,7 +8,7 @@ class ArchiveBase
   def initialize
     @pguser = "postgres"
     @db = "SIPXCONFIG"
-    @tmpdir = "/var/sipxdata/tmp"
+    @tmpdir = "/tmp"
     @libexec = "@SIPX_LIBEXECDIR@"
     @initd = "@SIPX_SERVICEDIR@"
     @bindir = "@SIPX_BINDIR@"
@@ -44,20 +44,16 @@ class Backup < ArchiveBase
   end
 
   def run(params)
-    if params.has_key?(:tmp_dir)
-        @tmpdir=params[:tmp_dir]
-    end
-    cmd "echo Backup uses #{@tmpdir} as temporary dir."
-    cmd "pg_dump -U #{@pguser} -F t #{@db} --file=#{@tmpdir}/db.tar" or
+    cmd "pg_dump -U #{@pguser} -F t #{@db} > db.tar" or
       raise "Could not backup postgres database"
-    cmd "mongodump --out #{@tmpdir}/dump --db profiles --collection userProfile" or
+    cmd "mongodump --db profiles --collection userProfile" or
       raise "Could not backup user profiles database"
-    cmd "mongodump --out #{@tmpdir}/dump --db profiles --collection fs.files" or
+    cmd "mongodump --db profiles --collection fs.files" or
       raise "Could not backup avatar database"
-    cmd "mongodump --out #{@tmpdir}/dump --db profiles --collection fs.chunks" or
+    cmd "mongodump --db profiles --collection fs.chunks" or
       raise "Could not backup avatar database"
 	add_additional_databases()
-    cmd "echo @PACKAGE_VERSION@ > #{@tmpdir}/version" or
+    cmd "echo @PACKAGE_VERSION@ > version" or
       raise "Could not generate version file"
     if params.has_key?(:no_device_files)
       @attachments = [
@@ -76,7 +72,7 @@ class Backup < ArchiveBase
 
     # by stripping @localstatedir@ we can backup/restore from/to source/production machines
     localstatedir = '@localstatedir@'[1..-1]
-    cmd "tar --directory #{@tmpdir} --transform='s,^#{localstatedir}/,var/,' -cvzf #{params[:file]} db.tar version dump/ #{attachments.join('/ ')}" or
+    cmd "tar --transform='s,^#{localstatedir}/,var/,' -cvzf #{params[:file]} db.tar version dump/ #{attachments.join('/ ')}" or
       raise "Could not archive databases"
     FileUtils.rm_rf(['db.tar', 'version', 'dump'])
   end
@@ -95,10 +91,6 @@ class Restore < ArchiveBase
   end
 
   def run(params)
-    if params.has_key?(:tmp_dir)
-        @tmpdir=params[:tmp_dir]
-    end
-    cmd "echo Restore uses #{@tmpdir} as temporary dir."
     pre_mongo = false
     backup_domain = nil
     backup_sip_domain = nil
@@ -262,11 +254,6 @@ class Fetcher
 		"Do not include device uploaded files in backup."){
       @params[:no_device_files] = true
 	}
-
-    opts.on_tail("--tmp-dir <tmp-dir>",
-        "Temporary backup file location"){ |v|
-      @params[:tmp_dir] = v
-    }
 
 	opts.on("--restore <archive>",
 		"Restore the specified Configuration archive."){ |v|
