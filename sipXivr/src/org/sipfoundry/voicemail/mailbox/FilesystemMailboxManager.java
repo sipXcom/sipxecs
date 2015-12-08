@@ -30,6 +30,7 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.RegexFileFilter;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang.StringUtils;
 import org.sipfoundry.commons.userdb.User;
 import org.sipfoundry.commons.userdb.ValidUsers;
@@ -632,7 +633,8 @@ public class FilesystemMailboxManager extends AbstractMailboxManager {
         Date deleteFrom = TimeZoneUtils.getDateXDaysAgo(daysToKeepVM);
         try {
             File mailbox = getUserDirectory(userName);
-            File[] files = mailbox.listFiles();
+            List<File> files = (List<File>) FileUtils.listFiles(mailbox,
+                    TrueFileFilter.TRUE, TrueFileFilter.TRUE);
             for (File file : files) {
                 BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
                 FileTime fileCreationTime = attr.creationTime();
