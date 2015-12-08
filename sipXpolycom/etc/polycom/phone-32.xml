@@ -1204,7 +1204,7 @@
         <type>
           <boolean />
         </type>
-        <value>1</value>
+        <value>0</value>
       </setting>
       <setting name="max_throughput">
         <type>
@@ -1228,7 +1228,7 @@
         <type>
           <integer min="0" max="7" />
         </type>
-        <value>5</value>
+        <value>3</value>
       </setting>
     </group>
   </group>
