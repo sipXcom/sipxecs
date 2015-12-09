@@ -10,6 +10,7 @@
 package org.sipfoundry.sipxconfig.site.user;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -22,7 +23,6 @@ import org.sipfoundry.sipxconfig.phone.Phone;
 import org.sipfoundry.sipxconfig.phone.PhoneContext;
 import org.sipfoundry.sipxconfig.registrar.RegistrationContext;
 import org.sipfoundry.sipxconfig.site.user_portal.UserBasePage;
-import org.springframework.dao.support.DataAccessUtils;
 
 public abstract class UserRegistrations extends UserBasePage {
     public static final String PAGE = "user/UserRegistrations";
@@ -78,9 +78,13 @@ public abstract class UserRegistrations extends UserBasePage {
         return getMessages().format("helpText.counterpath", host, phone.getModelLabel());
     }
 
+    /**
+     * Returns the first registered Counterpath phone
+     */
     private Phone getCounterpathPhone() {
         Collection<Phone> phones = getPhoneContext().getPhonesByUserIdAndPhoneModel(getLoadedUser().getId(),
                 COUNTERPATH_MODEL);
-        return (Phone) DataAccessUtils.singleResult(phones);
+        Iterator<Phone> iterator = phones.iterator();
+        return iterator.hasNext() ? iterator.next() : null;
     }
 }
