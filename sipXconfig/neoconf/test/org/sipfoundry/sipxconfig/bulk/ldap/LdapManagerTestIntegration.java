@@ -162,7 +162,7 @@ public class LdapManagerTestIntegration extends IntegrationTestCase {
 
         commit();
         assertEquals(1, db().queryForLong("select count(*) from cron_schedule where "
-                + " cron_string = '0 15 0 ? * 4' and enabled = 'true'"));
+                + " cron_string = '0 15 0 ? * 3' and enabled = 'true'"));
     }
 
     public void testGetSetSchedule() throws Exception {
