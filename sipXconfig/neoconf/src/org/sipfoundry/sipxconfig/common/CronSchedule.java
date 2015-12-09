@@ -130,7 +130,7 @@ public class CronSchedule extends BeanWithId {
         String dayOfMonth = quartzFormat ? "?" : ANY;
         switch (m_type) {
         case WEEKLY:
-            return String.format("%s%d %d %s * %d", secs, m_min, m_hrs, dayOfMonth, m_dayOfWeek);
+            return String.format("%s%d %d %s * %d", secs, m_min, m_hrs, dayOfMonth, m_dayOfWeek - 1);
         case DAILY:
             return String.format("%s%d %d %s * *", secs, m_min, m_hrs, dayOfMonth);
         case HOURLY:
@@ -155,7 +155,7 @@ public class CronSchedule extends BeanWithId {
             setScheduledDay(ScheduledDay.EVERYDAY);
         } else {
             setType(Type.WEEKLY);
-            setDayOfWeek(Integer.parseInt(dowString));
+            setDayOfWeek(Integer.parseInt(dowString) + 1);
         }
         if (ANY.equals(hrsString)) {
             setHrs(0);

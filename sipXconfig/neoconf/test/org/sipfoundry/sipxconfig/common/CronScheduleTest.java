@@ -105,7 +105,7 @@ public class CronScheduleTest extends TestCase {
 
     public void testSetCronStringWeekly() {
         CronSchedule schedule = new CronSchedule();
-        schedule.setCronString("0 12 13 ? * 3");
+        schedule.setCronString("0 12 13 ? * 2");
 
         assertEquals(CronSchedule.Type.WEEKLY, schedule.getType());
         assertEquals(12, schedule.getMin());
@@ -139,7 +139,7 @@ public class CronScheduleTest extends TestCase {
         schedule.setDayOfWeek(Calendar.TUESDAY);
         schedule.setType(CronSchedule.Type.WEEKLY);
 
-        assertEquals("0 12 13 ? * 3", schedule.getCronString());
+        assertEquals("0 12 13 ? * 2", schedule.getCronString());
     }
 
     public void testSetTimeOfDay() throws Exception {
