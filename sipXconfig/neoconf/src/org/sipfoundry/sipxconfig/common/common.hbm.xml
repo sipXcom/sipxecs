@@ -107,7 +107,7 @@
   </query>
 
   <query name="usersForBranch">
-    <![CDATA[select distinct u from User u join u.groups as ug 
+    <![CDATA[select distinct u from User u left outer join u.groups as ug 
     where ug.branch = :branch
     or u.branch = :branch]]>
   </query>
