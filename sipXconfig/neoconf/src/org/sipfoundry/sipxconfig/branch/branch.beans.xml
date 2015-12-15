@@ -5,6 +5,8 @@
   <bean id="branchManagerImpl" class="org.sipfoundry.sipxconfig.branch.BranchManagerImpl" parent="abstractDaoImpl">
     <property name="configJdbcTemplate" ref="configJdbcTemplate" />
     <property name="ntpManager" ref="ntpManager" />
+    <property name="replicationManager" ref="replicationManager" />
+    <property name="coreContext" ref="coreContext" />
   </bean>
 
   <bean id="branchManager" class="org.springframework.aop.framework.ProxyFactoryBean" parent="abstractDao">
