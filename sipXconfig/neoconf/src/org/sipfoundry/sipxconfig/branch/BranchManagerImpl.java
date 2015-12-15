@@ -11,7 +11,9 @@ package org.sipfoundry.sipxconfig.branch;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -21,23 +23,32 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import org.sipfoundry.sipxconfig.common.CoreContext;
 import org.sipfoundry.sipxconfig.common.DaoUtils;
 import org.sipfoundry.sipxconfig.common.Replicable;
 import org.sipfoundry.sipxconfig.common.SipxHibernateDaoSupport;
+import org.sipfoundry.sipxconfig.common.User;
 import org.sipfoundry.sipxconfig.common.UserException;
+import org.sipfoundry.sipxconfig.common.event.DaoEventListener;
+import org.sipfoundry.sipxconfig.commserver.imdb.ReplicationManager;
+import org.sipfoundry.sipxconfig.setting.Group;
 import org.sipfoundry.sipxconfig.setup.SetupListener;
 import org.sipfoundry.sipxconfig.setup.SetupManager;
 import org.sipfoundry.sipxconfig.time.NtpManager;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
-public class BranchManagerImpl extends SipxHibernateDaoSupport<Branch> implements BranchManager, SetupListener {
+public class BranchManagerImpl extends SipxHibernateDaoSupport<Branch>
+        implements BranchManager, SetupListener, DaoEventListener {
     private static final Log LOG = LogFactory.getLog(BranchManagerImpl.class);
     private static final String NAME_PROP_NAME = "name";
     private static final String UPDATE_BRANCH_TIMEZONE = "update_branch_tz";
 
     private JdbcTemplate m_jdbcTemplate;
     private NtpManager m_ntpManager;
+    private ReplicationManager m_replicationManager;
+    private CoreContext m_coreContext;
 
     @Override
     public Branch getBranch(Integer branchId) {
@@ -93,8 +104,11 @@ public class BranchManagerImpl extends SipxHibernateDaoSupport<Branch> implement
         try {
             List<String> sqlUpdates = new ArrayList<String>();
             Collection<Branch> branches = new ArrayList<Branch>(branchIds.size());
+            Set<User> affectedUsers = new HashSet<User>();
             for (Integer id : branchIds) {
                 Branch branch = getBranch(id);
+                Collection<User> branchUsers = m_coreContext.getUsersForBranch(branch);
+                affectedUsers.addAll(branchUsers);
                 branches.add(branch);
                 sqlUpdates.add("update users set branch_id=null where branch_id=" + id);
                 sqlUpdates.add("update group_storage set branch_id=null where branch_id=" + id);
@@ -109,6 +123,14 @@ public class BranchManagerImpl extends SipxHibernateDaoSupport<Branch> implement
                 m_jdbcTemplate.batchUpdate(sqlUpdates.toArray(new String[sqlUpdates.size()]));
                 for (Branch branch : branches) {
                     getDaoEventPublisher().publishDelete(branch);
+                }
+                for (User user : affectedUsers) {
+                    // need to reload and replicate the affected users
+                    getHibernateTemplate().refresh(user);
+                    for (Group group : user.getGroups()) {
+                        getHibernateTemplate().refresh(group);
+                    }
+                    m_replicationManager.replicateEntity(user);
                 }
             }
         } catch (Exception ex) {
@@ -198,5 +220,30 @@ public class BranchManagerImpl extends SipxHibernateDaoSupport<Branch> implement
         List<Replicable> replicables = new ArrayList<Replicable>();
         replicables.addAll(getBranches());
         return replicables;
+    }
+
+    @Required
+    public void setReplicationManager(ReplicationManager replicationManager) {
+        m_replicationManager = replicationManager;
+    }
+
+    @Required
+    public void setCoreContext(CoreContext coreContext) {
+        m_coreContext = coreContext;
+    }
+
+    @Override
+    public void onDelete(Object entity) {
+    }
+
+    @Override
+    public void onSave(Object entity) {
+        if (entity instanceof Branch) {
+            Branch branch = (Branch) entity;
+            Collection<User> users = m_coreContext.getUsersForBranch(branch);
+            for (User user : users) {
+                m_replicationManager.replicateEntity(user);
+            }
+        }
     }
 }
