@@ -141,6 +141,7 @@ void CallStateEventBuilder_DB::observerEvent(int sequenceNumber, ///< for Observ
  */
 void CallStateEventBuilder_DB::callRequestEvent(int sequenceNumber,
                                                  const OsTime& timestamp,      ///< obtain using getCurTime(OsTime)
+                                                 const UtlString& requestUri,
                                                  const UtlString& contact,
                                                  const UtlString& references,
                                                  const UtlString& branch_id,
@@ -170,6 +171,10 @@ void CallStateEventBuilder_DB::callRequestEvent(int sequenceNumber,
       UtlString nbranchId;
       replaceSingleQuotes(branch_id, nbranchId);
       mBranchId = "\'" + nbranchId + "\',";
+
+      UtlString nrequestUri;
+      replaceSingleQuotes(requestUri, nrequestUri);
+      mRequestUri = "\'" + nrequestUri + "\',";
 
       char buffer[10];
       snprintf(buffer, 10, "%d", via_count);

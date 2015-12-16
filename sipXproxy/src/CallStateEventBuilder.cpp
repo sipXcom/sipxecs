@@ -178,6 +178,7 @@ void CallStateEventBuilder::observerEvent(int sequenceNumber, ///< for ObserverR
  */
 void CallStateEventBuilder::callRequestEvent(int sequenceNumber,
                                              const OsTime& timestamp,      ///< obtain using getCurTime(OsTime)
+                                             const UtlString& requestUri,
                                              const UtlString& contact,
                                              const UtlString& references,
                                              const UtlString& branch_id,
