@@ -55,6 +55,7 @@ class CallStateEventBuilder_DB : public CallStateEventBuilder
    /// Begin a Call Request Event - an INVITE without a to tag has been observed
    void callRequestEvent(int sequenceNumber,
                          const OsTime& timestamp,      ///< obtain using getCurTime(OsTime)
+                         const UtlString& requestUri,
                          const UtlString& contact,
                          const UtlString& references,
                          const UtlString& branch_id,
