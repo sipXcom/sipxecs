@@ -95,6 +95,8 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
     static final String CALLEE_ROUTE = "callee_route";
     static final String CALLEE_CONTACT = "callee_contact";
     static final String CALLER_CONTACT = "caller_contact";
+    static final String CALLED_NUMBER = "called_number";
+    static final String GATEWAY = "gateway";
 
     private int m_csvLimit;
     private int m_jsonLimit;
@@ -434,6 +436,8 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
             cdr.setFailureStatus(rs.getInt(FAILURE_STATUS));
             String termination = rs.getString(TERMINATION);
             cdr.setTermination(Termination.fromString(termination));
+            cdr.setCalledNumber(rs.getString(CALLED_NUMBER));
+            cdr.setGateway(rs.getInt(GATEWAY));
             m_cdrs.add(cdr);
         }
     }

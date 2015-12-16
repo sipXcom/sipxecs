@@ -246,6 +246,7 @@ void CallStateEventBuilder_XML::observerEvent(int sequenceNumber, ///< for Obser
  */
 void CallStateEventBuilder_XML::callRequestEvent(int sequenceNumber,
                                                  const OsTime& timestamp,      ///< obtain using getCurTime(OsTime)
+                                                 const UtlString& requestUri,
                                                  const UtlString& contact,
                                                  const UtlString& references,
                                                  const UtlString& branch_id,
