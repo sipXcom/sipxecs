@@ -10,7 +10,8 @@ dist_sql_DATA = \
 	database/contact.sql \
 	database/calldirection.sql \
 	database/cdrremote.sql \
-	database/transaction.sql
+	database/transaction.sql \
+	database/gateway.sql
 
 cfinputsdir = @SIPX_CFINPUTS@/plugin.d
 dist_cfinputs_DATA = \

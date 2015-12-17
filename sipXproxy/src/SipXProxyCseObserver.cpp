@@ -573,8 +573,10 @@ UtlBoolean SipXProxyCseObserver::handleMessage(OsMsg& eventMessage)
                               callIdBranchIdTime->setPaiPresent(&paiPresent);
                            }
                            else {
-                              mCallTransMutex.release();
-                              return(TRUE);
+                              if ( !requestUri.contains("sipxecs-lineid") ) {
+                                 mCallTransMutex.release();
+                                 return(TRUE);
+                              }
                            }
                         }
                         else {
@@ -584,7 +586,8 @@ UtlBoolean SipXProxyCseObserver::handleMessage(OsMsg& eventMessage)
                      }
                      mCallTransMutex.release();
                   }
-                  mpBuilder->callRequestEvent(mSequenceNumber, timeNow, contact, references, branchId, viaCount, paiPresent);
+
+                  mpBuilder->callRequestEvent(mSequenceNumber, timeNow, requestUri, contact, references, branchId, viaCount, paiPresent);
                   break;
                   
                case aCallSetup:
@@ -594,16 +597,11 @@ UtlBoolean SipXProxyCseObserver::handleMessage(OsMsg& eventMessage)
                   callIdBranchIdTime = (BranchTimePair*) mCallTransMap.findValue(&callId);
                   if ( callIdBranchIdTime && (0 == branchId.compareTo(callIdBranchIdTime)) ) {
                      if ( rspStatus > SIP_2XX_CLASS_CODE ) {
-                           mCallTransMap.destroy(&callId);
-                        }
-                     mCallTransMutex.release();
+                        mCallTransMap.destroy(&callId);
+                     }
                   }
-                  else
-                  {
-                     // CallId/BranchId are either not found or doesn't match.  Not a final response.
-                     mCallTransMutex.release();
-                     return(TRUE);
-                  }
+                  mCallTransMutex.release();
+
                   for (int rrNum = 0;
                        (!routeFound && sipMsg->getRecordRouteUri(rrNum, &recordRoute));
                        rrNum++
