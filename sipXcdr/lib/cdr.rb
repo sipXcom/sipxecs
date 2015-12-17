@@ -153,6 +153,7 @@ class CallLegs
   private
   def get_leg(cse)
     id = CallLeg.leg_id(cse)
+    puts cse.request_uri,"->", id
     @legs[id] ||= CallLeg.new(id, @log)
   end
 end
@@ -207,7 +208,10 @@ class Cdr
     @failure_status = nil
     @failure_reason = nil
     @call_direction = nil
-    
+    @called_number = nil
+    @gateway = nil
+    @contact_info = {}
+
     @got_original = false
     @log = log
     @legs = CallLegs.new(@log)
@@ -223,7 +227,8 @@ class Cdr
   FIELDS = [:call_id, :from_tag, :to_tag, :caller_aor, :callee_aor, 
   :start_time, :connect_time, :end_time,    
   :termination, :failure_status, :failure_reason, 
-  :call_direction, :reference, :caller_contact, :callee_contact, :caller_internal, :callee_route]
+  :call_direction, :reference, :caller_contact, :callee_contact, :caller_internal, :callee_route,
+  :called_number, :gateway ]
   
   attr_accessor(*FIELDS)
   
@@ -301,8 +306,14 @@ class Cdr
     original = !cse.to_tag
     @caller_internal = cse.caller_internal 
     @via_count = cse.via_count if (!@via_count || cse.via_count < @via_count) 
-    @branch_id = cse.branch_id if (!@branch_id || cse.via_count <= @via_count) 
+    @branch_id = cse.branch_id if (!@branch_id || cse.via_count <= @via_count)
     # bailout if we already have original request and this one is not
+
+    if cse.request_uri.include? "sipxecs-lineid"
+      called_number = Utils.contact_without_params(cse.request_uri)
+      gateway = Integer(/.*sipxecs-lineid=(\d+).*/.match(cse.request_uri)[1])
+      @contact_info[cse.branch_id] = [called_number, gateway]
+    end
     return if(@got_original && !original)
     
     # continue if we are original or if we are older 
@@ -323,6 +334,10 @@ class Cdr
   end
   
   def accept_call_setup(cse)
+    if @contact_info.has_key? cse.branch_id
+      @called_number = @contact_info[cse.branch_id][0]
+      @gateway = @contact_info[cse.branch_id][1]
+    end
     if !@start_time
         # probably a case where we've missed the request.  Setup necessary
         # info as if a request was seen.
@@ -370,7 +385,7 @@ class Cdr
     end
     @failure_reason = leg.failure_reason
     @failure_status = leg.failure_status
-    @callee_contact = leg.callee_contact  
+    @callee_contact = leg.callee_contact
   end
   
   # Map termination codes to human-readable strings
