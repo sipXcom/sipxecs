@@ -38,12 +38,6 @@ public interface MongoConstants {
     static final String ALT_EMAIL = "altemail";
     static final String ALT_NOTIFICATION = "altnotif";
     static final String ALT_ATTACH_AUDIO = "altattaudio";
-    static final String SYNC = "synch";
-    static final String HOST = "host";
-    static final String PORT = "port";
-    static final String TLS = "tls";
-    static final String ACCOUNT = "acnt";
-    static final String PASSWD = "pswd";
     static final String DISPLAY_NAME = "dspl";
     static final String HASHED_PASSTOKEN = "hshpstk";
     static final String IM_ENABLED = "imenbld";

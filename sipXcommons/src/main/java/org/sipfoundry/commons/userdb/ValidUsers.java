@@ -16,7 +16,6 @@
  */
 package org.sipfoundry.commons.userdb;
 
-import static org.sipfoundry.commons.mongo.MongoConstants.ACCOUNT;
 import static org.sipfoundry.commons.mongo.MongoConstants.ACTIVEGREETING;
 import static org.sipfoundry.commons.mongo.MongoConstants.ALIAS;
 import static org.sipfoundry.commons.mongo.MongoConstants.ALIASES;
@@ -26,6 +25,8 @@ import static org.sipfoundry.commons.mongo.MongoConstants.ALT_EMAIL;
 import static org.sipfoundry.commons.mongo.MongoConstants.ALT_IM_ID;
 import static org.sipfoundry.commons.mongo.MongoConstants.ALT_NOTIFICATION;
 import static org.sipfoundry.commons.mongo.MongoConstants.ATTACH_AUDIO;
+import static org.sipfoundry.commons.mongo.MongoConstants.AUTO_ENTER_PIN_EXTENSION;
+import static org.sipfoundry.commons.mongo.MongoConstants.AUTO_ENTER_PIN_EXTERNAL;
 import static org.sipfoundry.commons.mongo.MongoConstants.AVATAR;
 import static org.sipfoundry.commons.mongo.MongoConstants.BUTTONS;
 import static org.sipfoundry.commons.mongo.MongoConstants.CALL_FROM_ANY_IM;
@@ -39,6 +40,7 @@ import static org.sipfoundry.commons.mongo.MongoConstants.CONF_NAME;
 import static org.sipfoundry.commons.mongo.MongoConstants.CONF_OWNER;
 import static org.sipfoundry.commons.mongo.MongoConstants.CONF_PIN;
 import static org.sipfoundry.commons.mongo.MongoConstants.CONTACT;
+import static org.sipfoundry.commons.mongo.MongoConstants.DAYS_TO_KEEP_VM;
 import static org.sipfoundry.commons.mongo.MongoConstants.DESCR;
 import static org.sipfoundry.commons.mongo.MongoConstants.DIALPAD;
 import static org.sipfoundry.commons.mongo.MongoConstants.DISPLAY_NAME;
@@ -46,11 +48,8 @@ import static org.sipfoundry.commons.mongo.MongoConstants.DISTRIB_LISTS;
 import static org.sipfoundry.commons.mongo.MongoConstants.EMAIL;
 import static org.sipfoundry.commons.mongo.MongoConstants.ENTITY_NAME;
 import static org.sipfoundry.commons.mongo.MongoConstants.FAX_NUMBER;
-import static org.sipfoundry.commons.mongo.MongoConstants.FORWARD_DELETE_VOICEMAIL;
 import static org.sipfoundry.commons.mongo.MongoConstants.FORCE_PIN_CHANGE;
-import static org.sipfoundry.commons.mongo.MongoConstants.AUTO_ENTER_PIN_EXTENSION;
-import static org.sipfoundry.commons.mongo.MongoConstants.AUTO_ENTER_PIN_EXTERNAL;
-import static org.sipfoundry.commons.mongo.MongoConstants.DAYS_TO_KEEP_VM;
+import static org.sipfoundry.commons.mongo.MongoConstants.FORWARD_DELETE_VOICEMAIL;
 import static org.sipfoundry.commons.mongo.MongoConstants.GROUPS;
 import static org.sipfoundry.commons.mongo.MongoConstants.HASHED_PASSTOKEN;
 import static org.sipfoundry.commons.mongo.MongoConstants.HOME_CITY;
@@ -59,7 +58,6 @@ import static org.sipfoundry.commons.mongo.MongoConstants.HOME_PHONE_NUMBER;
 import static org.sipfoundry.commons.mongo.MongoConstants.HOME_STATE;
 import static org.sipfoundry.commons.mongo.MongoConstants.HOME_STREET;
 import static org.sipfoundry.commons.mongo.MongoConstants.HOME_ZIP;
-import static org.sipfoundry.commons.mongo.MongoConstants.HOST;
 import static org.sipfoundry.commons.mongo.MongoConstants.HOTELING;
 import static org.sipfoundry.commons.mongo.MongoConstants.ID;
 import static org.sipfoundry.commons.mongo.MongoConstants.IDENTITY;
@@ -86,25 +84,21 @@ import static org.sipfoundry.commons.mongo.MongoConstants.OFFICE_STREET;
 import static org.sipfoundry.commons.mongo.MongoConstants.OFFICE_ZIP;
 import static org.sipfoundry.commons.mongo.MongoConstants.OPERATOR;
 import static org.sipfoundry.commons.mongo.MongoConstants.PASSTOKEN;
-import static org.sipfoundry.commons.mongo.MongoConstants.PASSWD;
 import static org.sipfoundry.commons.mongo.MongoConstants.PERMISSIONS;
 import static org.sipfoundry.commons.mongo.MongoConstants.PERSONAL_ATT;
 import static org.sipfoundry.commons.mongo.MongoConstants.PINTOKEN;
 import static org.sipfoundry.commons.mongo.MongoConstants.PLAY_DEFAULT_VM;
-import static org.sipfoundry.commons.mongo.MongoConstants.PORT;
 import static org.sipfoundry.commons.mongo.MongoConstants.RELATION;
 import static org.sipfoundry.commons.mongo.MongoConstants.SPEEDDIAL;
-import static org.sipfoundry.commons.mongo.MongoConstants.SYNC;
 import static org.sipfoundry.commons.mongo.MongoConstants.TIMEZONE;
-import static org.sipfoundry.commons.mongo.MongoConstants.TLS;
 import static org.sipfoundry.commons.mongo.MongoConstants.UID;
+import static org.sipfoundry.commons.mongo.MongoConstants.UNIFIED_MESSAGING_LANGUAGE;
 import static org.sipfoundry.commons.mongo.MongoConstants.USERBUSYPROMPT;
 import static org.sipfoundry.commons.mongo.MongoConstants.USER_LOCATION;
 import static org.sipfoundry.commons.mongo.MongoConstants.VALID_USER;
 import static org.sipfoundry.commons.mongo.MongoConstants.VOICEMAILTUI;
 import static org.sipfoundry.commons.mongo.MongoConstants.VOICEMAIL_ENABLED;
 import static org.sipfoundry.commons.mongo.MongoConstants.VOICEMAIL_PINTOKEN;
-import static org.sipfoundry.commons.mongo.MongoConstants.UNIFIED_MESSAGING_LANGUAGE;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -121,7 +115,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.sipfoundry.commons.mongo.MongoConstants;
-import org.sipfoundry.commons.userdb.User.EmailFormats;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -791,27 +784,6 @@ public class ValidUsers {
                 }
             }
             user.setAliases(aliases);
-        }
-
-        if (obj.keySet().contains(SYNC)) {
-            ImapInfo imapInfo = new ImapInfo();
-            imapInfo.setSynchronize(Boolean.valueOf(getStringValue(obj, SYNC)));
-            imapInfo.setHost(getStringValue(obj, HOST));
-            imapInfo.setPort(getStringValue(obj, PORT));
-            imapInfo.setUseTLS(Boolean.valueOf(getStringValue(obj, TLS)));
-            imapInfo.setAccount(getStringValue(obj, ACCOUNT));
-            imapInfo.setPassword(getStringValue(obj, PASSWD));
-            user.setImapInfo(imapInfo);
-            if (imapInfo.isSynchronize()) {
-                user.setEmailFormat(EmailFormats.FORMAT_IMAP);
-                user.setAttachAudioToEmail(true);
-            }
-            // // If account isn't set, use the e-mail username
-            if (imapInfo.getAccount() == null || imapInfo.getAccount().length() == 0) {
-                if (user.getEmailAddress() != null) {
-                    imapInfo.setAccount(user.getEmailAddress().split("@")[0]);
-                }
-            }
         }
 
         // contact info related data

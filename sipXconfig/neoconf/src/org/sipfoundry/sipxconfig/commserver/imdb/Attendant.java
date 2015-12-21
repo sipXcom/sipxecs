@@ -16,7 +16,6 @@
  */
 package org.sipfoundry.sipxconfig.commserver.imdb;
 
-import static org.sipfoundry.commons.mongo.MongoConstants.ACCOUNT;
 import static org.sipfoundry.commons.mongo.MongoConstants.ALT_ATTACH_AUDIO;
 import static org.sipfoundry.commons.mongo.MongoConstants.ALT_EMAIL;
 import static org.sipfoundry.commons.mongo.MongoConstants.ALT_NOTIFICATION;
@@ -28,7 +27,6 @@ import static org.sipfoundry.commons.mongo.MongoConstants.CONF_EXIT_IM;
 import static org.sipfoundry.commons.mongo.MongoConstants.DISPLAY_NAME;
 import static org.sipfoundry.commons.mongo.MongoConstants.EMAIL;
 import static org.sipfoundry.commons.mongo.MongoConstants.HASHED_PASSTOKEN;
-import static org.sipfoundry.commons.mongo.MongoConstants.HOST;
 import static org.sipfoundry.commons.mongo.MongoConstants.IM_ADVERTISE_ON_CALL_STATUS;
 import static org.sipfoundry.commons.mongo.MongoConstants.IM_DISPLAY_NAME;
 import static org.sipfoundry.commons.mongo.MongoConstants.IM_ENABLED;
@@ -38,16 +36,11 @@ import static org.sipfoundry.commons.mongo.MongoConstants.IM_SHOW_ON_CALL_DETAIL
 import static org.sipfoundry.commons.mongo.MongoConstants.LEAVE_MESSAGE_BEGIN_IM;
 import static org.sipfoundry.commons.mongo.MongoConstants.LEAVE_MESSAGE_END_IM;
 import static org.sipfoundry.commons.mongo.MongoConstants.NOTIFICATION;
-import static org.sipfoundry.commons.mongo.MongoConstants.PASSWD;
 import static org.sipfoundry.commons.mongo.MongoConstants.PINTOKEN;
-import static org.sipfoundry.commons.mongo.MongoConstants.PORT;
-import static org.sipfoundry.commons.mongo.MongoConstants.SYNC;
-import static org.sipfoundry.commons.mongo.MongoConstants.TLS;
 import static org.sipfoundry.commons.mongo.MongoConstants.USERBUSYPROMPT;
 import static org.sipfoundry.commons.mongo.MongoConstants.VMONDND;
 import static org.sipfoundry.commons.mongo.MongoConstants.VOICEMAILTUI;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.sipfoundry.sipxconfig.common.Replicable;
 import org.sipfoundry.sipxconfig.common.User;
@@ -106,25 +99,6 @@ public class Attendant extends AbstractDataSetGenerator {
         } else {
             removeField(top, ALT_NOTIFICATION);
             removeField(top, ALT_ATTACH_AUDIO);
-        }
-
-        boolean imapServerConfigured = mp.isImapServerConfigured();
-        if (imapServerConfigured) {
-            top.put(SYNC, mp.isSynchronizeWithImapServer());
-            top.put(HOST, mp.getImapHost());
-            top.put(PORT, mp.getImapPort());
-            top.put(TLS, mp.getImapTLS());
-            top.put(ACCOUNT, StringUtils.defaultString(mp.getImapAccount()));
-            String pwd = StringUtils.defaultString(mp.getImapPassword());
-            String encodedPwd = new String(Base64.encodeBase64(pwd.getBytes()));
-            top.put(PASSWD, encodedPwd);
-        } else {
-            removeField(top, SYNC);
-            removeField(top, HOST);
-            removeField(top, PORT);
-            removeField(top, TLS);
-            removeField(top, ACCOUNT);
-            removeField(top, PASSWD);
         }
 
         ImAccount imAccount = new ImAccount(user);

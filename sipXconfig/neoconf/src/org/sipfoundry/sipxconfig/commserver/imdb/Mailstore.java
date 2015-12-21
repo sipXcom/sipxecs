@@ -16,28 +16,26 @@
  */
 package org.sipfoundry.sipxconfig.commserver.imdb;
 
-import static org.sipfoundry.commons.mongo.MongoConstants.ACCOUNT;
 import static org.sipfoundry.commons.mongo.MongoConstants.ACTIVEGREETING;
 import static org.sipfoundry.commons.mongo.MongoConstants.ALT_ATTACH_AUDIO;
 import static org.sipfoundry.commons.mongo.MongoConstants.ALT_EMAIL;
 import static org.sipfoundry.commons.mongo.MongoConstants.ALT_NOTIFICATION;
 import static org.sipfoundry.commons.mongo.MongoConstants.ATTACH_AUDIO;
+import static org.sipfoundry.commons.mongo.MongoConstants.AUTO_ENTER_PIN_EXTENSION;
+import static org.sipfoundry.commons.mongo.MongoConstants.AUTO_ENTER_PIN_EXTERNAL;
 import static org.sipfoundry.commons.mongo.MongoConstants.BUTTONS;
 import static org.sipfoundry.commons.mongo.MongoConstants.CALL_FROM_ANY_IM;
 import static org.sipfoundry.commons.mongo.MongoConstants.CALL_IM;
 import static org.sipfoundry.commons.mongo.MongoConstants.CONF_ENTRY_IM;
 import static org.sipfoundry.commons.mongo.MongoConstants.CONF_EXIT_IM;
+import static org.sipfoundry.commons.mongo.MongoConstants.DAYS_TO_KEEP_VM;
 import static org.sipfoundry.commons.mongo.MongoConstants.DIALPAD;
 import static org.sipfoundry.commons.mongo.MongoConstants.DISPLAY_NAME;
 import static org.sipfoundry.commons.mongo.MongoConstants.DISTRIB_LISTS;
 import static org.sipfoundry.commons.mongo.MongoConstants.EMAIL;
 import static org.sipfoundry.commons.mongo.MongoConstants.FORCE_PIN_CHANGE;
-import static org.sipfoundry.commons.mongo.MongoConstants.AUTO_ENTER_PIN_EXTENSION;
-import static org.sipfoundry.commons.mongo.MongoConstants.AUTO_ENTER_PIN_EXTERNAL;
-import static org.sipfoundry.commons.mongo.MongoConstants.DAYS_TO_KEEP_VM;
 import static org.sipfoundry.commons.mongo.MongoConstants.FORWARD_DELETE_VOICEMAIL;
 import static org.sipfoundry.commons.mongo.MongoConstants.HASHED_PASSTOKEN;
-import static org.sipfoundry.commons.mongo.MongoConstants.HOST;
 import static org.sipfoundry.commons.mongo.MongoConstants.IM_ADVERTISE_ON_CALL_STATUS;
 import static org.sipfoundry.commons.mongo.MongoConstants.IM_DISPLAY_NAME;
 import static org.sipfoundry.commons.mongo.MongoConstants.IM_ENABLED;
@@ -51,13 +49,9 @@ import static org.sipfoundry.commons.mongo.MongoConstants.LEAVE_MESSAGE_END_IM;
 import static org.sipfoundry.commons.mongo.MongoConstants.MOH;
 import static org.sipfoundry.commons.mongo.MongoConstants.NOTIFICATION;
 import static org.sipfoundry.commons.mongo.MongoConstants.OPERATOR;
-import static org.sipfoundry.commons.mongo.MongoConstants.PASSWD;
 import static org.sipfoundry.commons.mongo.MongoConstants.PERSONAL_ATT;
 import static org.sipfoundry.commons.mongo.MongoConstants.PINTOKEN;
 import static org.sipfoundry.commons.mongo.MongoConstants.PLAY_DEFAULT_VM;
-import static org.sipfoundry.commons.mongo.MongoConstants.PORT;
-import static org.sipfoundry.commons.mongo.MongoConstants.SYNC;
-import static org.sipfoundry.commons.mongo.MongoConstants.TLS;
 import static org.sipfoundry.commons.mongo.MongoConstants.UNIFIED_MESSAGING_LANGUAGE;
 import static org.sipfoundry.commons.mongo.MongoConstants.USERBUSYPROMPT;
 import static org.sipfoundry.commons.mongo.MongoConstants.VMONDND;
@@ -67,7 +61,6 @@ import static org.sipfoundry.sipxconfig.vm.DistributionList.SETTING_PATH_DISTRIB
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.sipfoundry.sipxconfig.common.DialPad;
 import org.sipfoundry.sipxconfig.common.Replicable;
@@ -146,25 +139,6 @@ public class Mailstore extends AbstractDataSetGenerator {
         } else {
             removeField(top, ALT_NOTIFICATION);
             removeField(top, ALT_ATTACH_AUDIO);
-        }
-
-        boolean imapServerConfigured = mp.isImapServerConfigured();
-        if (imapServerConfigured) {
-            top.put(SYNC, mp.isSynchronizeWithImapServer());
-            top.put(HOST, mp.getImapHost());
-            top.put(PORT, mp.getImapPort());
-            top.put(TLS, mp.getImapTLS());
-            top.put(ACCOUNT, StringUtils.defaultString(mp.getImapAccount()));
-            String pwd = StringUtils.defaultString(mp.getImapPassword());
-            String encodedPwd = new String(Base64.encodeBase64(pwd.getBytes()));
-            top.put(PASSWD, encodedPwd);
-        } else {
-            removeField(top, SYNC);
-            removeField(top, HOST);
-            removeField(top, PORT);
-            removeField(top, TLS);
-            removeField(top, ACCOUNT);
-            removeField(top, PASSWD);
         }
 
         ImAccount imAccount = new ImAccount(user);
