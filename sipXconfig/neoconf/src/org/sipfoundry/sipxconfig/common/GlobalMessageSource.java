@@ -19,6 +19,7 @@ import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Map;
 
+import org.sipfoundry.sipxconfig.Pluggable0ResourceBundleMessageSource;
 import org.sipfoundry.sipxconfig.PluggableResourceBundleMessageSource;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -91,9 +92,16 @@ public class GlobalMessageSource implements MessageSource, BeanFactoryAware {
 
     Collection<MessageSource> getDelegates() {
         if (m_delegates == null) {
-            Map<String, MessageSource> beans = m_beanFactory.getBeansOfType(MessageSource.class);
             //using LinkedHashSet to keep insertion order
-            LinkedHashSet<MessageSource> copy = new LinkedHashSet<MessageSource>(beans.values());
+            LinkedHashSet<MessageSource> copy = new LinkedHashSet<MessageSource>();
+            //pluggable 0 beans will be added first so plugin resource labels to come last
+            Map<String, Pluggable0ResourceBundleMessageSource> pluggable0Beans = m_beanFactory.
+                getBeansOfType(Pluggable0ResourceBundleMessageSource.class);
+            Collection<Pluggable0ResourceBundleMessageSource> pluggable0Values = pluggable0Beans.values();
+            //Add pluggable 0 values first - make sure they are not getting overwritten
+            copy.removeAll(pluggable0Values);
+            copy.addAll(pluggable0Values);
+            Map<String, MessageSource> beans = m_beanFactory.getBeansOfType(MessageSource.class);
             copy.addAll(beans.values());
             //pluggable beans will be added last so plugin resource labels to come first
             Map<String, PluggableResourceBundleMessageSource> pluggableBeans = m_beanFactory.
