@@ -40,7 +40,6 @@ public class User {
     private String m_altEmailAddress;
     private boolean m_attachAudioToEmail;
     private boolean m_altAttachAudioToEmail;
-    private ImapInfo m_imapInfo;
     private String m_cellNumber;
     private String m_homeNumber;
     private boolean m_imEnabled;
@@ -92,7 +91,7 @@ public class User {
     private Vector<String> m_callbackUsers;
 
     public enum EmailFormats {
-        FORMAT_NONE("NONE"), FORMAT_FULL("FULL"), FORMAT_MEDIUM("MEDIUM"), FORMAT_BRIEF("BRIEF"), FORMAT_IMAP("IMAP");
+        FORMAT_NONE("NONE"), FORMAT_FULL("FULL"), FORMAT_MEDIUM("MEDIUM"), FORMAT_BRIEF("BRIEF");
         private final String m_id;
 
         EmailFormats(String id) {
@@ -325,14 +324,6 @@ public class User {
 
     public void setAltEmailFormat(String emailFormat) {
         m_altEmailFormat = EmailFormats.valueOfById(emailFormat);
-    }
-
-    public ImapInfo getImapInfo() {
-        return m_imapInfo;
-    }
-
-    public void setImapInfo(ImapInfo imapInfo) {
-        m_imapInfo = imapInfo;
     }
 
     public void setCellNum(String cellNum) {

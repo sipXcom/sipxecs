@@ -15,10 +15,6 @@
     <property name="emailAddressUrl" value="${ivr.emailAddressUrl}" />
   </bean>
 
-  <bean id="IMAP" class="org.sipfoundry.sipxivr.email.EmailFormatterImap" scope="prototype">
-    <property name="emailAddressUrl" value="${ivr.emailAddressUrl}" />
-  </bean>
-
   <bean id="MEDIUM" class="org.sipfoundry.sipxivr.email.EmailFormatterMedium" scope="prototype">
     <property name="emailAddressUrl" value="${ivr.emailAddressUrls}" />
   </bean>

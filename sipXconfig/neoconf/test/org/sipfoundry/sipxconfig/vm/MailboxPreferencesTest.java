@@ -12,10 +12,6 @@ package org.sipfoundry.sipxconfig.vm;
 
 import static org.sipfoundry.sipxconfig.vm.MailboxPreferences.ACTIVE_GREETING;
 import static org.sipfoundry.sipxconfig.vm.MailboxPreferences.BUSY_PROMPT;
-import static org.sipfoundry.sipxconfig.vm.MailboxPreferences.IMAP_HOST;
-import static org.sipfoundry.sipxconfig.vm.MailboxPreferences.IMAP_PASSWORD;
-import static org.sipfoundry.sipxconfig.vm.MailboxPreferences.IMAP_PORT;
-import static org.sipfoundry.sipxconfig.vm.MailboxPreferences.IMAP_TLS;
 import static org.sipfoundry.sipxconfig.vm.MailboxPreferences.UNIFIED_MESSAGING_LANGUAGE;
 import static org.sipfoundry.sipxconfig.vm.MailboxPreferences.VOICEMAIL_TUI;
 
@@ -41,8 +37,6 @@ public class MailboxPreferencesTest extends XMLTestCase {
         user.setPermissionManager(pm);
         user.setEmailAddress("first@example.com");
         user.setAlternateEmailAddress("second@example.com");
-        user.setSettingValue(IMAP_HOST, "imap.host.exampl.com");
-        user.setSettingValue(IMAP_PASSWORD, "4321");
         user.setPrimaryEmailNotification(MailboxPreferences.AttachType.YES.getValue());
         user.setPrimaryEmailFormat(MailboxPreferences.MailFormat.MEDIUM.name());
         user.setPrimaryEmailAttachAudio(true);
@@ -55,10 +49,6 @@ public class MailboxPreferencesTest extends XMLTestCase {
 
         assertEquals("first@example.com", mailboxPrefs.getEmailAddress());
         assertEquals("second@example.com", mailboxPrefs.getAlternateEmailAddress());
-        assertEquals("imap.host.exampl.com", mailboxPrefs.getImapHost());
-        assertEquals("143", mailboxPrefs.getImapPort());
-        assertFalse(mailboxPrefs.getImapTLS());
-        assertEquals("4321", mailboxPrefs.getImapPassword());
         assertEquals(MailboxPreferences.AttachType.YES, mailboxPrefs.getAttachVoicemailToEmail());
         assertEquals(MailboxPreferences.MailFormat.MEDIUM, mailboxPrefs.getEmailFormat());
         assertEquals(true, mailboxPrefs.isIncludeAudioAttachment());
@@ -72,10 +62,6 @@ public class MailboxPreferencesTest extends XMLTestCase {
         MailboxPreferences mailboxPrefs = new MailboxPreferences();
         mailboxPrefs.setEmailAddress("first@example.com");
         mailboxPrefs.setAlternateEmailAddress("second@example.com");
-        mailboxPrefs.setImapHost("imap.host.exampl.com");
-        mailboxPrefs.setImapPort("143");
-        mailboxPrefs.setImapTLS(true);
-        mailboxPrefs.setImapPassword("4321");
         mailboxPrefs.setActiveGreeting(ActiveGreeting.EXTENDED_ABSENCE);
         mailboxPrefs.setLanguage("en");
         mailboxPrefs.setAttachVoicemailToEmail(MailboxPreferences.AttachType.YES);
@@ -93,10 +79,6 @@ public class MailboxPreferencesTest extends XMLTestCase {
 
         assertEquals("first@example.com", user.getEmailAddress());
         assertEquals("second@example.com", user.getAlternateEmailAddress());
-        assertEquals("imap.host.exampl.com", user.getSettingValue(IMAP_HOST));
-        assertEquals("143", user.getSettingValue(IMAP_PORT));
-        assertTrue((Boolean) user.getSettingTypedValue(IMAP_TLS));
-        assertEquals("4321", user.getSettingValue(IMAP_PASSWORD));
         assertEquals(ActiveGreeting.EXTENDED_ABSENCE.getId(), user.getSettingValue(ACTIVE_GREETING));
         assertEquals("en", user.getSettingValue(UNIFIED_MESSAGING_LANGUAGE));
         assertEquals(MailboxPreferences.AttachType.YES.getValue(), user.getPrimaryEmailNotification());
