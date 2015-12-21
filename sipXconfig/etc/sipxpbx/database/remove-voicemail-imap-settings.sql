@@ -1,0 +1,1 @@
+delete from setting_value where path in ('voicemail/imap/host','voicemail/imap/port','voicemail/imap/tls','voicemail/imap/account','voicemail/imap/password');

@@ -203,18 +203,6 @@
                   </simpleContent>
                </complexType>
             </element>
-            <element name="imap" minOccurs="0" maxOccurs="1">
-               <complexType>
-                  <sequence>
-                     <element name="host" type="normalizedString" minOccurs="0"/>
-                     <element name="port" type="normalizedString" minOccurs="0"/>
-                     <element name="useTLS" type="boolean" minOccurs="0"/>
-                     <element name="account" type="normalizedString" minOccurs="0"/>
-                     <element name="password" type="normalizedString" minOccurs="0"/>
-                  </sequence>
-                  <attribute name="synchronize" type="boolean" use="optional"/>
-               </complexType>
-            </element>
          </sequence>
       </complexType>
    </element>

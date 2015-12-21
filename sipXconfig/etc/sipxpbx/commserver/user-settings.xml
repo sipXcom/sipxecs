@@ -407,35 +407,6 @@
         <value>0</value>
       </setting>
     </group>
-    <group name="imap">
-      <setting name="host">
-        <type>
-          <hostname />
-        </type>
-      </setting>
-      <setting name="port">
-        <type>
-          <integer min="0" required="yes" />
-        </type>
-        <value>143</value>
-      </setting>
-      <setting name="tls">
-        <type>
-          <boolean />
-        </type>
-        <value>0</value>
-      </setting>
-      <setting name="account" hidden="yes">
-        <type>
-          <string />
-        </type>
-      </setting>
-      <setting name="password" hidden="yes">
-        <type>
-          <string password="yes" />
-        </type>
-      </setting>
-    </group>
   </group>
   <group name="im">
     <setting name="im-account">
