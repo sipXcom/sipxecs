@@ -227,4 +227,6 @@ public interface CoreContext extends DataObjectSource<User>, AliasOwner, Replica
     int getDisabledUsersCount();
 
     int getPhantomUsersCount();
+
+    int getPhantomUsersWithoutSuperadminCount();
 }
