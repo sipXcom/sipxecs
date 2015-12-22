@@ -82,6 +82,8 @@ public abstract class CoreContextImpl extends SipxHibernateDaoSupport<User> impl
         "select count(u.user_name) from users "
         + "u inner join setting_value v "
         + "on u.value_storage_id = v.value_storage_id and v.path='phantom/enabled'";
+    private static final String SQL_QUERY_PHANTOM_USERS_WITHOUT_SUPERADMIN =
+            SQL_QUERY_PHANTOM_USERS + " where u.user_type ='C' AND u.user_name != 'superadmin'";
     private static final String PHANTOM_USERS_QUERY = "select u from User u join u.valueStorage vs where "
         + "vs.databaseValues['phantom/enabled'] != null "
         + "and vs.databaseValues['phantom/enabled'] = '1'";
@@ -981,6 +983,13 @@ public abstract class CoreContextImpl extends SipxHibernateDaoSupport<User> impl
     public int getPhantomUsersCount() {
         Query q = getHibernateTemplate().getSessionFactory().getCurrentSession()
                 .createSQLQuery(SQL_QUERY_PHANTOM_USERS);
+        return ((Number) q.uniqueResult()).intValue();
+    }
+
+    @Override
+    public int getPhantomUsersWithoutSuperadminCount() {
+        Query q = getHibernateTemplate().getSessionFactory().getCurrentSession()
+                .createSQLQuery(SQL_QUERY_PHANTOM_USERS_WITHOUT_SUPERADMIN);
         return ((Number) q.uniqueResult()).intValue();
     }
 
