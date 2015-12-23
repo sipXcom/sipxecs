@@ -26,7 +26,11 @@ public class MongoFactory {
     public static final Mongo fromConnectionFile() throws UnknownHostException {
         if (connectionURL == null) {
             synchronized (FILE_LOCK) {
-                String configurationPath = System.getProperty("conf.dir", "/etc/sipxpbx");
+                String configurationPathDef = "/etc/sipxpbx";
+                if (MongoUtil.isFedora()) {
+                    configurationPathDef = "/usr/local/sipx/" + configurationPathDef;
+                }
+                String configurationPath = System.getProperty("conf.dir", configurationPathDef);
                 @SuppressWarnings("resource")
                 InputStream is = null;
                 String config = null;
@@ -52,6 +56,8 @@ public class MongoFactory {
 
         return fromConnectionString(connectionURL);
     }
+
+
 
     public static final Mongo fromConnectionString(String connectionUrl) throws UnknownHostException {
         MongoURI uri = new MongoURI(connectionUrl);
