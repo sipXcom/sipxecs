@@ -87,4 +87,13 @@ public final class MongoUtil {
         }
         return s;
     }
+
+    public static boolean isFedora() {
+        if (System.getProperty("os.name").equals("Linux")
+                && System.getProperty("os.version").contains("fc")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
