@@ -88,12 +88,15 @@ bundle agent mysql_sysv_running {
       "daemon" string => "/etc/init.d/mysqld";
       "service_user" string => "mysql";
 
+  classes:
+    "mysql_installed" expression => fileexists("$(service_command)");
+
   methods:
-    any::
+    mysql_installed::
       "any" usebundle => find_service_by_command("$(service_command)", "mysql_running", "$(service_user)");
-    mysql::
+    mysql_installed.mysql::
       "any" usebundle => rh_chkconfig_status("mysqld on");
-    !mysql::
+    mysql_installed.!mysql::
       "any" usebundle => rh_chkconfig_status("mysqld off");
 
   commands:
