@@ -29,11 +29,15 @@ import org.sipfoundry.sipxconfig.phonebook.PhonebookEntry;
 
 public class YealinkDirectoryConfiguration extends ProfileContext {
     private final Collection<PhonebookEntry> m_phonebookEntries;
+    private String phonebook_type;
 
     public YealinkDirectoryConfiguration(YealinkPhone device, Collection<PhonebookEntry> phonebookEntries,
             String profileTemplate) {
         super(device, profileTemplate);
         m_phonebookEntries = phonebookEntries;
+               
+        phonebook_type = device.getPhonebookType();
+        
     }
 
     public Collection<YealinkPhonebookEntry> getRows() {
@@ -47,7 +51,9 @@ public class YealinkDirectoryConfiguration extends ProfileContext {
         }
         return yealinkEntries;
     }
-
+    public String getPhonebookType(){
+        return phonebook_type; 
+    }
     private int getSize() {
         return null != m_phonebookEntries ? m_phonebookEntries.size() : 0;
     }
@@ -72,9 +78,13 @@ public class YealinkDirectoryConfiguration extends ProfileContext {
         private final String m_firstName;
         private String m_lastName;
         private final String m_contact;
+        private final String m_mobile;
+        private final String m_other;
 
         public YealinkPhonebookEntry(PhonebookEntry entry) {
             m_contact = entry.getNumber();
+            m_mobile = entry.getAddressBookEntry().getCellPhoneNumber();
+            m_other = entry.getAddressBookEntry().getHomePhoneNumber();
             m_lastName = entry.getLastName();
             m_firstName = entry.getFirstName();
         }
@@ -94,7 +104,12 @@ public class YealinkDirectoryConfiguration extends ProfileContext {
         public String getContact() {
             return m_contact;
         }
-
+        public String getMobile() {
+            return m_mobile;
+        }
+        public String getOther() {
+            return m_other;
+        }
         @Override
         public int hashCode() {
             return new HashCodeBuilder().append(m_contact).toHashCode();
