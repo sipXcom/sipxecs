@@ -154,7 +154,7 @@
           </option>
         </enum>
       </type>
-      <value>false</value>
+      <value>true</value>
     </setting>
     <setting name="ivr.backup_host">
       <type>
