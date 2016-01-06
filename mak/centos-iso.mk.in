@@ -703,6 +703,7 @@ ISO_ADD_OS = \
   tcl-8.* \
   tcp_wrappers-7* \
   tcp_wrappers-libs-* \
+  tcpdump-* \
   tftp-server-* \
   time-1.* \
   tk-* \
