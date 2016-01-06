@@ -97,13 +97,13 @@
       <type>
         <boolean/>
       </type>
-      <value>0</value>
+      <value>1</value>
     </setting>
     <setting name="FREESWITCH_SIMPLIFY">
       <type>
         <boolean/>
       </type>
-      <value>1</value>
+      <value>0</value>
     </setting>
     <setting name="FREESWITCH_USE_CALL_ID_AS_UUID_INBOUND">
       <type refid="true-false"/>
