@@ -497,6 +497,7 @@
     <antcall target="openacd-permission-update5" />
   	<antcall target="modify-setting-value-table" />
   	<antcall target="remove-voicemail-imap-settings" />
+  	<antcall target="add-release-on-ring-failure" />
   </target>
 
   <target name="plugin-patches">
@@ -1538,6 +1539,9 @@
   </target>
   <target name="remove-voicemail-imap-settings" unless="remove-voicemail-imap-settings">
     <db-patch patch="remove-voicemail-imap-settings"/>
+  </target>
+  <target name="add-release-on-ring-failure" unless="add-release-on-ring-failure">
+    <db-patch patch="add-release-on-ring-failure"/>
   </target>
 
 	<!--
