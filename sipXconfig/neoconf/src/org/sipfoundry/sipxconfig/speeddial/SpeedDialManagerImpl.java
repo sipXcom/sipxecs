@@ -148,7 +148,7 @@ public class SpeedDialManagerImpl extends SipxHibernateDaoSupport<SpeedDial> imp
 
     @Override
     public void saveSpeedDial(SpeedDial speedDial) {
-        verifyBlfs(speedDial.getButtons());
+        verifyBlfs(speedDial);
         if (speedDial.isNew()) {
             getHibernateTemplate().save(speedDial);
         } else {
@@ -159,16 +159,30 @@ public class SpeedDialManagerImpl extends SipxHibernateDaoSupport<SpeedDial> imp
         getDaoEventPublisher().publishSave(user);
     }
 
-    private void verifyBlfs(List<Button> buttons) {
-        for (Button button : buttons) {
+    private void verifyBlfs(SpeedDialButtons speedDial) {
+        for (Button button : speedDial.getButtons()) {
             if (button.isBlf()) {
                 String number = button.getNumber();
-                if (!UserValidationUtils.isValidEmail(number) && !m_aliasManager.isAliasInUse(number)) {
+                if (verifySubscriptionsToSelf(speedDial, number)
+                        || !UserValidationUtils.isValidEmail(number)
+                        && !m_aliasManager.isAliasInUse(number)) {
                     button.setBlf(false);
                     throw new UserException("&error.notValidBlf", number);
                 }
             }
         }
+    }
+
+    /**
+     * Do not allow presence subscriptions to self.
+     */
+    private boolean verifySubscriptionsToSelf(SpeedDialButtons speedDial, String number) {
+        boolean hasErrors = false;
+        if (speedDial instanceof SpeedDial) {
+            User user = ((SpeedDial) speedDial).getUser();
+            hasErrors = number.equals(user.getUserName());
+        }
+        return hasErrors;
     }
 
     /**
@@ -184,7 +198,7 @@ public class SpeedDialManagerImpl extends SipxHibernateDaoSupport<SpeedDial> imp
 
     @Override
     public void saveSpeedDialGroup(SpeedDialGroup speedDialGroup) {
-        verifyBlfs(speedDialGroup.getButtons());
+        verifyBlfs(speedDialGroup);
         if (speedDialGroup.isNew()) {
             getHibernateTemplate().save(speedDialGroup);
         } else {
