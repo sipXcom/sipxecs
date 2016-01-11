@@ -25,6 +25,7 @@ import java.util.List;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.sipfoundry.sipxconfig.device.ProfileContext;
+import org.sipfoundry.sipxconfig.phonebook.AddressBookEntry;
 import org.sipfoundry.sipxconfig.phonebook.PhonebookEntry;
 
 public class YealinkDirectoryConfiguration extends ProfileContext {
@@ -78,15 +79,22 @@ public class YealinkDirectoryConfiguration extends ProfileContext {
         private final String m_firstName;
         private String m_lastName;
         private final String m_contact;
-        private final String m_mobile;
-        private final String m_other;
+        private String m_mobile;
+        private String m_other;
 
         public YealinkPhonebookEntry(PhonebookEntry entry) {
-            m_contact = entry.getNumber();
-            m_mobile = entry.getAddressBookEntry().getCellPhoneNumber();
-            m_other = entry.getAddressBookEntry().getHomePhoneNumber();
+            AddressBookEntry address = entry.getAddressBookEntry();
+            m_contact = entry.getNumber();     
             m_lastName = entry.getLastName();
             m_firstName = entry.getFirstName();
+            if (address != null){
+                m_mobile = address.getCellPhoneNumber();
+                m_other = address.getHomePhoneNumber();
+            }
+            else{
+                m_mobile = "";
+                m_other = "";
+            }
         }
 
         public String getFirstName() {
