@@ -334,8 +334,6 @@ public:
     // Set the data to be used to generate a Reason header for any CANCEL
     // generated for any child transaction.
 
-    UtlString &getRequestUri(void) const;
-
     UtlSList& childTransactions();
 
     bool isMarkedForDeletion() const;
