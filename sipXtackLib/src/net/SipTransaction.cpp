@@ -6162,6 +6162,11 @@ void SipTransaction::setCancelReasonValue(const char* protocol,
    }
 }
 
+const UtlString &SipTransaction::getRequestUri() const
+{
+   return mRequestUri;
+}
+
 //: Determine best choice for protocol, based on message size
 //  Default is UDP, returns TCP only for large messages
 OsSocket::IpProtocolSocketType SipTransaction::getPreferredProtocol()
