@@ -83,7 +83,12 @@ private:
    SipXProxyCseObserver operator=(const SipXProxyCseObserver& rSipXProxyCseObserver);
 
    static void CleanupTransMap(void* userData, const intptr_t eventData);
+
+   // When local phone is forwarded to mobile phone, it is CDR information is problematical.
+   // Use Hash map structure for hide forwarding call request uri with its session call id.
+   UtlHashMap mCallIdRequiestUriMap;
 };
+
 
 /* ============================ INLINE METHODS ============================ */
 
