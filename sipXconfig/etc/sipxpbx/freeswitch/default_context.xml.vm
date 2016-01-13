@@ -67,6 +67,7 @@
         <action application="log" data="INFO extracting referror from sip_referred_by_user"/>
         <action application="set" data="transf_ext=${sip_referred_by_user}"/>
       </condition>
+      <action application="export" data="orig_caller=${ani}"/>
       <action application="set" data="fifo_orbit_exten=transferPark${transf_ext}:${orbit.parkTimeout}"/>
       <action application="set" data="fifo_orbit_dialplan=XML"/>
 #if(${orbit.isTransferAllowed()})
@@ -79,6 +80,7 @@
   </extension>
   <extension name="UnPark${orbit.name}">
     <condition field="destination_number" expression="^(${orbit.unparkExtension}|${orbit.callPickupExtension})${dollar}">
+      <action application="set" data="sip_callee_id_name=${orig_caller}"/>
       <action application="fifo" data="QPark${orbit.extension} out nowait"/>
     </condition>
   </extension>
