@@ -169,6 +169,7 @@ ISO_RM_LIST = \
   freeswitch-python-.* \
   freeswitch-skypopen-.* \
   freeswitch-spidermonkey-.* \
+  homer-* \
   net-snmp-perl-* \
   net-snmp-gui-* \
   nodejs-burrito-.* \
@@ -179,6 +180,7 @@ ISO_RM_LIST = \
   nodejs-snockets-.* \
   nodejs-runforcover-.* \
   sipxcustomcallerid.* \
+  sipxhomer-* \
   sipxsbc.* \
   sipxtest.* \
   xemacs-.* \
@@ -703,6 +705,7 @@ ISO_ADD_OS = \
   tcl-8.* \
   tcp_wrappers-7* \
   tcp_wrappers-libs-* \
+  tcpdump-* \
   tftp-server-* \
   time-1.* \
   tk-* \
