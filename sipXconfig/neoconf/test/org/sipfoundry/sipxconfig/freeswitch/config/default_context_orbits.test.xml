@@ -26,7 +26,6 @@
         <action application="log" data="INFO extracting referror from sip_referred_by_user"/>
         <action application="set" data="transf_ext=${sip_referred_by_user}"/>
       </condition>
-      <action application="export" data="orig_caller=${ani}"/>
       <action application="set" data="fifo_orbit_exten=transferPark${transf_ext}:120"/>
       <action application="set" data="fifo_orbit_dialplan=XML"/>
       <action application="fifo" data="QPark12345 in"/>
@@ -36,7 +35,6 @@
   <extension name="UnParkTest">
     <condition field="destination_number" expression="^(\*412345|\*7812345)$">
       <action application="set" data="max_forwards=20"/>
-      <action application="set" data="sip_callee_id_name=${orig_caller}"/>
       <action application="fifo" data="QPark12345 out nowait"/>
     </condition>
   </extension>
@@ -56,7 +54,6 @@
         <action application="log" data="INFO extracting referror from sip_referred_by_user"/>
         <action application="set" data="transf_ext=${sip_referred_by_user}"/>
       </condition>
-      <action application="export" data="orig_caller=${ani}"/>
       <action application="set" data="fifo_orbit_exten=transferPark${transf_ext}:120"/>
       <action application="set" data="fifo_orbit_dialplan=XML"/>
       <action application="set" data="fifo_caller_exit_key=0"/>
@@ -68,7 +65,6 @@
   <extension name="UnParkTransfer">
     <condition field="destination_number" expression="^(\*41111|\*781111)$">
       <action application="set" data="max_forwards=20"/>
-      <action application="set" data="sip_callee_id_name=${orig_caller}"/>
       <action application="fifo" data="QPark1111 out nowait"/>
     </condition>
   </extension>
@@ -88,7 +84,6 @@
         <action application="log" data="INFO extracting referror from sip_referred_by_user"/>
         <action application="set" data="transf_ext=${sip_referred_by_user}"/>
       </condition>
-      <action application="export" data="orig_caller=${ani}"/>
       <action application="set" data="fifo_orbit_exten=transferPark${transf_ext}:86400"/>
       <action application="set" data="fifo_orbit_dialplan=XML"/>
       <action application="fifo" data="QPark2222 in"/>
@@ -98,7 +93,6 @@
   <extension name="UnParkBare">
     <condition field="destination_number" expression="^(\*42222|\*782222)$">
       <action application="set" data="max_forwards=20"/>
-      <action application="set" data="sip_callee_id_name=${orig_caller}"/>
       <action application="fifo" data="QPark2222 out nowait"/>
     </condition>
   </extension>
@@ -118,7 +112,6 @@
         <action application="log" data="INFO extracting referror from sip_referred_by_user"/>
         <action application="set" data="transf_ext=${sip_referred_by_user}"/>
       </condition>
-      <action application="export" data="orig_caller=${ani}"/>
       <action application="set" data="fifo_orbit_exten=transferPark${transf_ext}:10"/>
       <action application="set" data="fifo_orbit_dialplan=XML"/>
       <action application="set" data="fifo_caller_exit_key=5"/>
@@ -130,7 +123,6 @@
   <extension name="UnParkFull">
     <condition field="destination_number" expression="^(\*45555|\*785555)$">
       <action application="set" data="max_forwards=20"/>
-      <action application="set" data="sip_callee_id_name=${orig_caller}"/>
       <action application="fifo" data="QPark5555 out nowait"/>
     </condition>
   </extension>
