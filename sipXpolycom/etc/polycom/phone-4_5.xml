@@ -1879,7 +1879,7 @@
       </type>
       <value>0</value>
     </setting>
-    <setting name="sip.persistentConnection.enable">
+    <setting name="sip.persistentConnection.enable" unless="polycomVVX101||polycomVVX201||polycomVVX300||polycomVVX310||polycomVVX400||polycomVVX410||polycomVVX500||polycomVVX600||polycomVVX1500">
       <type>
         <boolean />
       </type>
