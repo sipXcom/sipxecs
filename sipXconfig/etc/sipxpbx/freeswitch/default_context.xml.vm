@@ -73,7 +73,7 @@
         <action application="log" data="INFO extracting referror from sip_referred_by_user"/>
         <action application="set" data="transf_ext=${sip_referred_by_user}"/>
       </condition>
-      <action application="set_global" data="orig_caller=${caller_id_number}"/>
+      <action application="export" data="orig_caller=${ani}"/>
       <action application="set" data="fifo_orbit_exten=transferPark${transf_ext}:${orbit.parkTimeout}"/>
       <action application="set" data="fifo_orbit_dialplan=XML"/>
 #if(${orbit.isTransferAllowed()})
