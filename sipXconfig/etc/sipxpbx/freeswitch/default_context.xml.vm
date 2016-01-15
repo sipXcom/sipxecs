@@ -88,6 +88,7 @@
 #if ($maxForwards)
       <action application="set" data="max_forwards=$maxForwards"/>
 #end
+      <action application="set" data="sip_callee_id_name=${dollar}{lua(~stream:write(freeswitch.API():executeString(&quot;fifo list QPark${orbit.extension}&quot;):match('caller_id_number=&quot;(.-)&quot;'))}"/>
       <action application="fifo" data="QPark${orbit.extension} out nowait"/>
     </condition>
   </extension>
