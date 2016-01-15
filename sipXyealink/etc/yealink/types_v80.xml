@@ -160,3 +160,10 @@
 	<option><label>TKIP CCMP</label><value>TKIP CCMP</value></option>
 	</enum>
 </type>
+<type id="V8InfoType_type">
+    <enum>
+	<option><label>DTMF-Relay</label><value>1</value></option>
+	<option><label>DTMF</label><value>2</value></option>
+	<option><label>Telephone-Event</label><value>3</value></option>
+    </enum>
+</type>
