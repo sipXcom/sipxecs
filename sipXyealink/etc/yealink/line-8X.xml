@@ -100,7 +100,7 @@
 	<!-- Configure the DTMF type; 0-INBAND, 1-RFC2833 (default), 2-SIP INFO, 3-AUTO+SIP INFO;-->
 	<setting name="dtmf.type"><type refid="DTMFInbandTransfer_type"/><value>1</value></setting>
 	<!-- Configure the DTMF info type when using the SIP INFO; 0-Disabled (default), 1-DTMF-Relay, 2-DTMF, 3-Telephone-Event;-->
-	<setting name="dtmf.info_type"><type refid="InfoType_type"/><value>1</value></setting>
+	<setting name="dtmf.info_type"><type refid="V8InfoType_type"/><value>1</value></setting>
 	<!-- Configure the RFC2833 payload. It ranges from 96 to 225, the default value is 101.-->
 	<setting name="dtmf.dtmf_payload"><type><integer min="96" max="127"/></type><value>101</value></setting>
 

@@ -30,14 +30,14 @@ import org.sipfoundry.sipxconfig.phonebook.PhonebookEntry;
 
 public class YealinkDirectoryConfiguration extends ProfileContext {
     private final Collection<PhonebookEntry> m_phonebookEntries;
-    private String phonebook_type;
+    private String phonebookType;
 
     public YealinkDirectoryConfiguration(YealinkPhone device, Collection<PhonebookEntry> phonebookEntries,
             String profileTemplate) {
         super(device, profileTemplate);
         m_phonebookEntries = phonebookEntries;
                
-        phonebook_type = device.getPhonebookType();
+        phonebookType = device.getPhonebookType();
         
     }
 
@@ -53,7 +53,7 @@ public class YealinkDirectoryConfiguration extends ProfileContext {
         return yealinkEntries;
     }
     public String getPhonebookType(){
-        return phonebook_type; 
+        return phonebookType; 
     }
     private int getSize() {
         return null != m_phonebookEntries ? m_phonebookEntries.size() : 0;
