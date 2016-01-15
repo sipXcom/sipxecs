@@ -34,14 +34,16 @@ public class CallResource extends UserResource {
     private String m_to;
     private String m_from;
     private Status m_errorStatus;
+    private String PLUS = "+";
 
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
         String domain = m_domainManager.getDomain().getName();
         String to = (String) getRequest().getAttributes().get("to");
-        try {
-            to = URLDecoder.decode(to, "UTF-8").replaceAll("[\\[\\]\\(\\)\\.\\{\\}\\-]", "");
+        
+        try {           
+            to = URLDecoder.decode(to.replace(PLUS, "%2B"), "UTF-8").replaceAll("[\\[\\]\\(\\)\\.\\{\\}\\-]", "");
             if (!to.isEmpty() && to.matches(VALID_PHONE_OR_SIP_URI)) {
                 m_from = getUser().getAddrSpec(domain);
                 m_to = SipUri.fix(to, domain);
