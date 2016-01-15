@@ -100,6 +100,7 @@ public class YealinkPhone extends Phone {
     private static final String DIGIT_PATTERN = "%d";
     private static final String DIGIT_SRTING_PATTERN = "%d (%s)";
     private static final String PHONEBOOKTYPE = "contacts/RemotePhoneBook/phonebook_type";
+    private static final String DEFAULT_PHONEBOOK_TYPE = "2";
     
     // Common members
     private SpeedDial m_speedDial;
@@ -233,7 +234,7 @@ public class YealinkPhone extends Phone {
         if (!StringUtils.isEmpty(settingValue)) {
                     return settingValue;
                 }
-        return "2";
+        return DEFAULT_PHONEBOOK_TYPE;
     }
 
     // DSS keys routines
