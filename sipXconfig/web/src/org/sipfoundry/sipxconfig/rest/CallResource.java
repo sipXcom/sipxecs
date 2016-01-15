@@ -34,7 +34,7 @@ public class CallResource extends UserResource {
     private String m_to;
     private String m_from;
     private Status m_errorStatus;
-    private String PLUS = "+";
+    private static final String PLUS = "+";
 
     @Override
     public void init(Context context, Request request, Response response) {
