@@ -93,6 +93,10 @@ public class Cdr implements Serializable {
     private String m_privacyExcluded = StringUtils.EMPTY;
     private String m_mask = StringUtils.EMPTY;
 
+    private String m_calledNumberAor;
+    private String m_calledNumber;
+    private int m_trunkId;
+
     public Cdr(boolean privacy, int limit, String privacyExcluded) {
         m_privacy = privacy;
         m_limit = limit;
@@ -104,10 +108,6 @@ public class Cdr implements Serializable {
 
     public Cdr() {
     }
-
-    private String m_calledNumberAor;
-    private String m_calledNumber;
-    private int m_trunkId;
 
     public String getCalleeAor() {
         return m_calleeAor;
@@ -122,10 +122,11 @@ public class Cdr implements Serializable {
     }
 
     public String getRecipient() {
-        if(m_calledNumber!=null)
+        if (m_calledNumber != null) {
             return m_calledNumber;
-        else
+        } else {
             return m_recipient;
+        }
     }
 
     public void setCalleeAor(String calleeAor) {
