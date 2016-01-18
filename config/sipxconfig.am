@@ -113,7 +113,8 @@ sipxconfig_neoconf_PKGS = \
 	reflections \
 	guava \
 	elasticsearch \
-	gson
+	gson \ 
+	commons-cli
 
 sipxconfig_web_PKGS = \
 	$(sipxconfig_neoconf_PKGS) \
