@@ -35,7 +35,6 @@
   <extension name="UnParkTest">
     <condition field="destination_number" expression="^(\*412345|\*7812345)$">
       <action application="set" data="max_forwards=20"/>
-      <action application="set" data="sip_callee_id_name=${lua(~stream:write(freeswitch.API():executeString(&quot;fifo list QPark12345&quot;):match('caller_id_number=&quot;(.-)&quot;'))}"/>
       <action application="fifo" data="QPark12345 out nowait"/>
     </condition>
   </extension>
@@ -66,7 +65,6 @@
   <extension name="UnParkTransfer">
     <condition field="destination_number" expression="^(\*41111|\*781111)$">
       <action application="set" data="max_forwards=20"/>
-      <action application="set" data="sip_callee_id_name=${lua(~stream:write(freeswitch.API():executeString(&quot;fifo list QPark1111&quot;):match('caller_id_number=&quot;(.-)&quot;'))}"/>
       <action application="fifo" data="QPark1111 out nowait"/>
     </condition>
   </extension>
@@ -95,7 +93,6 @@
   <extension name="UnParkBare">
     <condition field="destination_number" expression="^(\*42222|\*782222)$">
       <action application="set" data="max_forwards=20"/>
-      <action application="set" data="sip_callee_id_name=${lua(~stream:write(freeswitch.API():executeString(&quot;fifo list QPark2222&quot;):match('caller_id_number=&quot;(.-)&quot;'))}"/>
       <action application="fifo" data="QPark2222 out nowait"/>
     </condition>
   </extension>
@@ -126,7 +123,6 @@
   <extension name="UnParkFull">
     <condition field="destination_number" expression="^(\*45555|\*785555)$">
       <action application="set" data="max_forwards=20"/>
-      <action application="set" data="sip_callee_id_name=${lua(~stream:write(freeswitch.API():executeString(&quot;fifo list QPark5555&quot;):match('caller_id_number=&quot;(.-)&quot;'))}"/>
       <action application="fifo" data="QPark5555 out nowait"/>
     </condition>
   </extension>
