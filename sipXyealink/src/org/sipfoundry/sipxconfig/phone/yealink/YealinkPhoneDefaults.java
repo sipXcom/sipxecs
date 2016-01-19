@@ -45,14 +45,18 @@ public class YealinkPhoneDefaults {
     }
 
     @SettingEntry(paths = {
-            YealinkConstants.LOCAL_TIME_SERVER1_V6X_SETTING, YealinkConstants.LOCAL_TIME_SERVER1_V7X_SETTING
+            YealinkConstants.LOCAL_TIME_SERVER1_V6X_SETTING, 
+        YealinkConstants.LOCAL_TIME_SERVER1_V7X_SETTING,
+        YealinkConstants.LOCAL_TIME_SERVER1_V8X_SETTING
             })
     public String getTimeServer1() {
         return m_defaults.getNtpServer();
     }
 
     @SettingEntry(paths = {
-            YealinkConstants.LOCAL_TIME_SERVER2_V6X_SETTING, YealinkConstants.LOCAL_TIME_SERVER2_V7X_SETTING
+            YealinkConstants.LOCAL_TIME_SERVER2_V6X_SETTING, 
+        YealinkConstants.LOCAL_TIME_SERVER2_V7X_SETTING,
+        YealinkConstants.LOCAL_TIME_SERVER2_V8X_SETTING
             })
     public String getTimeServer2() {
         return m_defaults.getAlternateNtpServer();
@@ -63,7 +67,9 @@ public class YealinkPhoneDefaults {
     }
 
     @SettingEntry(paths = {
-            YealinkConstants.LOCAL_TIME_ZONE_V6X_SETTING, YealinkConstants.LOCAL_TIME_ZONE_V7X_SETTING
+            YealinkConstants.LOCAL_TIME_ZONE_V6X_SETTING,
+        YealinkConstants.LOCAL_TIME_ZONE_V7X_SETTING,
+        YealinkConstants.LOCAL_TIME_ZONE_V8X_SETTING
             })
     public String getTimeZone() {
         Integer tz = getZone().getOffsetInHours();
@@ -71,7 +77,9 @@ public class YealinkPhoneDefaults {
     }
 
     @SettingEntry(paths = {
-            YealinkConstants.SYSLOG_SERVER_V6X_SETTING, YealinkConstants.SYSLOG_SERVER_V7X_SETTING
+            YealinkConstants.SYSLOG_SERVER_V6X_SETTING, 
+        YealinkConstants.SYSLOG_SERVER_V7X_SETTING,
+        YealinkConstants.SYSLOG_SERVER_V8X_SETTING
             })
     public String getSyslogdIP() {
         AddressManager addressManager = m_defaults.getAddressManager();
@@ -91,7 +99,9 @@ public class YealinkPhoneDefaults {
     }
 
     @SettingEntry(paths = {
-            YealinkConstants.DNS_SERVER1_V6X_SETTING, YealinkConstants.DNS_SERVER1_V7X_SETTING
+            YealinkConstants.DNS_SERVER1_V6X_SETTING, 
+        YealinkConstants.DNS_SERVER1_V7X_SETTING,
+        YealinkConstants.DNS_SERVER1_V8X_SETTING
             })
     public String getNameServer1() {
         AddressManager addressManager = m_defaults.getAddressManager();
@@ -103,7 +113,9 @@ public class YealinkPhoneDefaults {
 
     // TODO: Get Second DNS server intead of dublicate first
     @SettingEntry(paths = {
-            YealinkConstants.DNS_SERVER2_V6X_SETTING, YealinkConstants.DNS_SERVER2_V7X_SETTING
+            YealinkConstants.DNS_SERVER2_V6X_SETTING, 
+        YealinkConstants.DNS_SERVER2_V7X_SETTING,
+        YealinkConstants.DNS_SERVER2_V8X_SETTING
             })
     public String getNameServer2() {
         AddressManager addressManager = m_defaults.getAddressManager();
@@ -114,42 +126,54 @@ public class YealinkPhoneDefaults {
     }
 
     @SettingEntry(paths = {
-            YealinkConstants.REMOTE_PHONEBOOK_0_NAME_V6X_SETTING, YealinkConstants.REMOTE_PHONEBOOK_0_NAME_V7X_SETTING
+            YealinkConstants.REMOTE_PHONEBOOK_0_NAME_V6X_SETTING,
+        YealinkConstants.REMOTE_PHONEBOOK_0_NAME_V7X_SETTING,
+        YealinkConstants.REMOTE_PHONEBOOK_0_NAME_V8X_SETTING
             })
     public String getPhonebook0Name() {
         return getPhonebookName(0);
     }
 
     @SettingEntry(paths = {
-            YealinkConstants.REMOTE_PHONEBOOK_1_NAME_V6X_SETTING, YealinkConstants.REMOTE_PHONEBOOK_1_NAME_V7X_SETTING
+            YealinkConstants.REMOTE_PHONEBOOK_1_NAME_V6X_SETTING, 
+        YealinkConstants.REMOTE_PHONEBOOK_1_NAME_V7X_SETTING,
+        YealinkConstants.REMOTE_PHONEBOOK_1_NAME_V8X_SETTING
             })
     public String getPhonebook1Name() {
         return getPhonebookName(1);
     }
 
     @SettingEntry(paths = {
-            YealinkConstants.REMOTE_PHONEBOOK_2_NAME_V6X_SETTING, YealinkConstants.REMOTE_PHONEBOOK_2_NAME_V7X_SETTING
+            YealinkConstants.REMOTE_PHONEBOOK_2_NAME_V6X_SETTING, 
+        YealinkConstants.REMOTE_PHONEBOOK_2_NAME_V7X_SETTING,
+        YealinkConstants.REMOTE_PHONEBOOK_2_NAME_V8X_SETTING
             })
     public String getPhonebook2Name() {
         return getPhonebookName(2);
     }
 
     @SettingEntry(paths = {
-            YealinkConstants.REMOTE_PHONEBOOK_3_NAME_V6X_SETTING, YealinkConstants.REMOTE_PHONEBOOK_3_NAME_V7X_SETTING
+            YealinkConstants.REMOTE_PHONEBOOK_3_NAME_V6X_SETTING, 
+        YealinkConstants.REMOTE_PHONEBOOK_3_NAME_V7X_SETTING,
+        YealinkConstants.REMOTE_PHONEBOOK_3_NAME_V8X_SETTING
             })
     public String getPhonebook3Name() {
         return getPhonebookName(3);
     }
 
     @SettingEntry(paths = {
-            YealinkConstants.REMOTE_PHONEBOOK_4_NAME_V6X_SETTING, YealinkConstants.REMOTE_PHONEBOOK_4_NAME_V7X_SETTING
+            YealinkConstants.REMOTE_PHONEBOOK_4_NAME_V6X_SETTING,
+        YealinkConstants.REMOTE_PHONEBOOK_4_NAME_V7X_SETTING,
+        YealinkConstants.REMOTE_PHONEBOOK_4_NAME_V8X_SETTING
             })
     public String getPhonebook4Name() {
         return getPhonebookName(4);
     }
 
     @SettingEntry(paths = {
-            YealinkConstants.REMOTE_PHONEBOOK_0_URL_V6X_SETTING, YealinkConstants.REMOTE_PHONEBOOK_0_URL_V7X_SETTING
+            YealinkConstants.REMOTE_PHONEBOOK_0_URL_V6X_SETTING, 
+        YealinkConstants.REMOTE_PHONEBOOK_0_URL_V7X_SETTING,
+        YealinkConstants.REMOTE_PHONEBOOK_0_URL_V8X_SETTING
             })
     public String getPhonebook0URL() {
         return String.format("tftp://%s/%s-0-%s", getTFTPServer(), m_phone.getSerialNumber(),
@@ -157,7 +181,9 @@ public class YealinkPhoneDefaults {
     }
 
     @SettingEntry(paths = {
-            YealinkConstants.REMOTE_PHONEBOOK_1_URL_V6X_SETTING, YealinkConstants.REMOTE_PHONEBOOK_1_URL_V7X_SETTING
+            YealinkConstants.REMOTE_PHONEBOOK_1_URL_V6X_SETTING, 
+        YealinkConstants.REMOTE_PHONEBOOK_1_URL_V7X_SETTING,
+        YealinkConstants.REMOTE_PHONEBOOK_1_URL_V8X_SETTING
             })
     public String getPhonebook1URL() {
         return String.format("tftp://%s/%s-1-%s", getTFTPServer(), m_phone.getSerialNumber(),
@@ -165,7 +191,9 @@ public class YealinkPhoneDefaults {
     }
 
     @SettingEntry(paths = {
-            YealinkConstants.REMOTE_PHONEBOOK_2_URL_V6X_SETTING, YealinkConstants.REMOTE_PHONEBOOK_2_URL_V7X_SETTING
+            YealinkConstants.REMOTE_PHONEBOOK_2_URL_V6X_SETTING, 
+        YealinkConstants.REMOTE_PHONEBOOK_2_URL_V7X_SETTING,
+        YealinkConstants.REMOTE_PHONEBOOK_2_URL_V8X_SETTING
             })
     public String getPhonebook2URL() {
         return String.format("tftp://%s/%s-2-%s", getTFTPServer(), m_phone.getSerialNumber(),
@@ -173,7 +201,9 @@ public class YealinkPhoneDefaults {
     }
 
     @SettingEntry(paths = {
-            YealinkConstants.REMOTE_PHONEBOOK_3_URL_V6X_SETTING, YealinkConstants.REMOTE_PHONEBOOK_3_URL_V7X_SETTING
+            YealinkConstants.REMOTE_PHONEBOOK_3_URL_V6X_SETTING, 
+        YealinkConstants.REMOTE_PHONEBOOK_3_URL_V7X_SETTING,
+        YealinkConstants.REMOTE_PHONEBOOK_3_URL_V8X_SETTING
             })
     public String getPhonebook3URL() {
         return String.format("tftp://%s/%s-3-%s", getTFTPServer(), m_phone.getSerialNumber(),
@@ -181,7 +211,9 @@ public class YealinkPhoneDefaults {
     }
 
     @SettingEntry(paths = {
-            YealinkConstants.REMOTE_PHONEBOOK_4_URL_V6X_SETTING, YealinkConstants.REMOTE_PHONEBOOK_4_URL_V7X_SETTING
+            YealinkConstants.REMOTE_PHONEBOOK_4_URL_V6X_SETTING, 
+        YealinkConstants.REMOTE_PHONEBOOK_4_URL_V7X_SETTING,
+        YealinkConstants.REMOTE_PHONEBOOK_4_URL_V8X_SETTING
             })
     public String getPhonebook4URL() {
         return String.format("tftp://%s/%s-4-%s", getTFTPServer(), m_phone.getSerialNumber(),
@@ -191,7 +223,8 @@ public class YealinkPhoneDefaults {
     @SettingEntry(paths = {
             YealinkConstants.FIRMWARE_SERVER_ADDRESS_SETTING, YealinkConstants.XML_BROWSER_SERVER_V6X_SETTING,
             YealinkConstants.XML_BROWSER_SERVER_V7X_SETTING, YealinkConstants.ACTION_URI_LIMIT_IP_V6X_SETTING,
-            YealinkConstants.ACTION_URI_LIMIT_IP_V7X_SETTING
+            YealinkConstants.ACTION_URI_LIMIT_IP_V7X_SETTING,
+            YealinkConstants.XML_BROWSER_SERVER_V8X_SETTING,YealinkConstants.ACTION_URI_LIMIT_IP_V8X_SETTING
             })
     public String getServerIP() {
         return getTFTPServer();
@@ -204,7 +237,8 @@ public class YealinkPhoneDefaults {
     }
 
     @SettingEntry(paths = {
-            YealinkConstants.FIRMWARE_URL_V6X_SETTING, YealinkConstants.FIRMWARE_URL_V7X_SETTING
+            YealinkConstants.FIRMWARE_URL_V6X_SETTING, YealinkConstants.FIRMWARE_URL_V7X_SETTING,
+        YealinkConstants.FIRMWARE_URL_V8X_SETTING
             })
     public String getURL() {
         YealinkModel model = (YealinkModel) m_phone.getModel();
@@ -214,6 +248,7 @@ public class YealinkPhoneDefaults {
     @SettingEntry(paths = {
             YealinkConstants.AUTOPROVISIONING_SERVER_URL_V6X_SETTING,
             YealinkConstants.AUTOPROVISIONING_SERVER_URL_V7X_SETTING,
+            YealinkConstants.AUTOPROVISIONING_SERVER_URL_V8X_SETTING
             })
     public String getstrServerURL() {
         return String.format("tftp://%s/", getTFTPServer());
@@ -233,7 +268,8 @@ public class YealinkPhoneDefaults {
     }
 
     @SettingEntry(paths = {
-            YealinkConstants.LOGO_FILE_NAME_V6X_SETTING, YealinkConstants.LOGO_FILE_NAME_V7X_SETTING
+            YealinkConstants.LOGO_FILE_NAME_V6X_SETTING, YealinkConstants.LOGO_FILE_NAME_V7X_SETTING,
+        YealinkConstants.LOGO_FILE_NAME_V8X_SETTING
             })
     public String getLogoURL() {
         return String.format("tftp://%s/yealinkLogo132x64.dob", getTFTPServer());

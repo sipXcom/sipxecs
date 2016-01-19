@@ -35,3 +35,5 @@ sipXconfig/packages/logging
 sipXconfig/packages/path
 sipXconfig/packages/unmodifiable_collection
 pubspec.lock
+/sipXyealink/nbproject/private/
+/sipXyealink/build/
