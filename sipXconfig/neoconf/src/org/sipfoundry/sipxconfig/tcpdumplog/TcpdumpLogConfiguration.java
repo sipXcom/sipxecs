@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
@@ -30,6 +31,7 @@ import org.sipfoundry.sipxconfig.cfgmgt.ConfigRequest;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigUtils;
 import org.sipfoundry.sipxconfig.cfgmgt.KeyValueConfiguration;
 import org.sipfoundry.sipxconfig.commserver.Location;
+import org.sipfoundry.sipxconfig.domain.Domain;
 import org.sipfoundry.sipxconfig.feature.FeatureManager;
 import org.sipfoundry.sipxconfig.setting.Setting;
 import org.springframework.beans.factory.annotation.Required;
@@ -51,6 +53,13 @@ public class TcpdumpLogConfiguration implements ConfigProvider {
 
         FeatureManager fm = manager.getFeatureManager();
         Set<Location> locations = request.locations(manager);
+        File gdir = manager.getGlobalDataDirectory();
+        Writer servers = new FileWriter(new File(gdir, "tcpdumpservers"));
+        try {
+            writeServers(servers, fm.getLocationsForEnabledFeature(TcpdumpLog.FEATURE));
+        } finally {
+            IOUtils.closeQuietly(servers);
+        }
         for (Location location : locations) {
             File dir = manager.getLocationDataDirectory(location);
             boolean enabled = fm.isFeatureEnabled(TcpdumpLog.FEATURE, location);
@@ -65,6 +74,15 @@ public class TcpdumpLogConfiguration implements ConfigProvider {
                 write(config, settings);
             } finally {
                 IOUtils.closeQuietly(config);
+            }
+        }
+    }
+
+    void writeServers(Writer wtr, List<Location> locations) throws IOException {
+        KeyValueConfiguration config = KeyValueConfiguration.colonSeparated(wtr);
+        for (Location location : locations) {
+            if (!location.isPrimary()) {
+                config.write(location.getFqdn(), location.getAddress());
             }
         }
     }
