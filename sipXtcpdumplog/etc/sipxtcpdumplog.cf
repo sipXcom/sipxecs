@@ -82,7 +82,7 @@ bundle agent sipxtcpdumplog_running {
   vars:
     any::
       "service_command" string => "/usr/sbin/tcpdump";
-      "server_lines" slist => readstringlist("$(sipx.SIPX_CFDATA)/servers", " end", "\n", 100, 4000);
+      "server_lines" slist => readstringlist("$(sipx.SIPX_CFDATA)/tcpdumpservers", "", "\n", 100, 4000);
 
   files:
     any::
@@ -91,6 +91,13 @@ bundle agent sipxtcpdumplog_running {
        comment   => "comment out ipv6 entries in /etc/netconfig file",
        edit_line => comment_ipv6,
        perms => m("644");
+
+   !sipxtcpdumplog::
+      "$(sipx.SIPX_LOGDIR)/tcpdump"
+        delete => tidyfiles,
+        file_select => tcpdump_file,
+        depth_search => recurse("0"),
+        comment => "remove tcp dumps";
 
   methods:
     any::
@@ -130,7 +137,7 @@ bundle agent mount_secondary(server_line)
 
   classes:
      primary::
-       "nfs_extract_secondaries" expression => regextract("(.*)=[0-9] (.*)", "$(server_line)", "myarray");
+       "nfs_extract_secondaries" expression => regextract("(.*) : (.*)", "$(server_line)", "myarray");
      primary.nfs_extract_secondaries::
        "fqdn_is_primary" expression => strcmp("$(sipx.master_fqdn)","$(myarray[1])");
 
@@ -182,6 +189,12 @@ bundle agent nfs_sysv_running {
       "$(nfs_service)"
         comment => "start nfs",
         args => "start";
+}
+
+body file_select tcpdump_file
+{
+  leaf_name => { "sipxecs-tcpdump-log.pcap.*" };
+  file_result => "leaf_name";
 }
 
 bundle edit_line comment_ipv6 {
