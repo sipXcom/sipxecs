@@ -81,6 +81,7 @@
 	<option><value>404</value></option>
 	<option><value>480</value></option>
 	<option><value>486</value></option>
+	<option><value>603</value></option>
     </enum>
 </type>
 <type id="RingerDevice_type">
@@ -211,6 +212,7 @@
 	<option><label>INBAND</label><value>0</value></option>
 	<option><label>RFC2833</label><value>1</value></option>
 	<option><label>SIP INFO</label><value>2</value></option>
+        <option><label>RFC2833+SIPINFO</label><value>3</value></option>
     </enum>
 </type>
 <type id="Conference_type">
@@ -310,6 +312,7 @@
 	<option><value>2</value></option>
 	<option><value>3</value></option>
 	<option><value>4</value></option>
+        <option><value>5</value></option>
     </enum>
 </type>
 <type id="SIPTransport_type">
@@ -667,7 +670,9 @@
 </type>
 <type id="yealink_backlight_time_type">
     <enum>
+	<option><value>0</value></option>
 	<option><value>1</value></option>
+	<option><value>15</value></option>
 	<option><value>60</value></option>
 	<option><value>120</value></option>
 	<option><value>300</value></option>
@@ -710,8 +715,10 @@
 <type id="expansion-panels">
     <enum>
         <option><label>None</label><value></value></option>
+        <option><label>EXP 20</label><value>Exp20</value></option>
         <option><label>EXP 38</label><value>Exp38</value></option>
         <option><label>EXP 39</label><value>Exp39</value></option>
+        <option><label>EXP 40</label><value>Exp40</value></option>
     </enum>
 </type>
 <type id="KBDLock_type">
@@ -749,5 +756,18 @@
         <option><label>Theme 2</label><value>1</value></option>
         <option><label>Theme 3</label><value>2</value></option>
         <option><label>Theme 4</label><value>3</value></option>
+    </enum>
+</type>
+<type id="Srtp_encryption_type">
+    <enum>
+	<option><label>Disable</label><value>0</value></option>
+	<option><label>Optional</label><value>1</value></option>
+	<option><label>Compulsory</label><value>2</value></option>
+    </enum>
+</type>
+<type id="Yealink_phonebook_type">
+    <enum>
+	<option><value>1</value></option>
+	<option><value>2</value></option>
     </enum>
 </type>

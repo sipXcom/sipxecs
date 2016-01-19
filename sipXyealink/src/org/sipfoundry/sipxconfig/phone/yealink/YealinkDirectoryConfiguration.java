@@ -25,15 +25,20 @@ import java.util.List;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.sipfoundry.sipxconfig.device.ProfileContext;
+import org.sipfoundry.sipxconfig.phonebook.AddressBookEntry;
 import org.sipfoundry.sipxconfig.phonebook.PhonebookEntry;
 
 public class YealinkDirectoryConfiguration extends ProfileContext {
     private final Collection<PhonebookEntry> m_phonebookEntries;
+    private String phonebookType;
 
     public YealinkDirectoryConfiguration(YealinkPhone device, Collection<PhonebookEntry> phonebookEntries,
             String profileTemplate) {
         super(device, profileTemplate);
         m_phonebookEntries = phonebookEntries;
+               
+        phonebookType = device.getPhonebookType();
+        
     }
 
     public Collection<YealinkPhonebookEntry> getRows() {
@@ -47,7 +52,9 @@ public class YealinkDirectoryConfiguration extends ProfileContext {
         }
         return yealinkEntries;
     }
-
+    public String getPhonebookType(){
+        return phonebookType; 
+    }
     private int getSize() {
         return null != m_phonebookEntries ? m_phonebookEntries.size() : 0;
     }
@@ -72,11 +79,22 @@ public class YealinkDirectoryConfiguration extends ProfileContext {
         private final String m_firstName;
         private String m_lastName;
         private final String m_contact;
+        private String m_mobile;
+        private String m_other;
 
         public YealinkPhonebookEntry(PhonebookEntry entry) {
-            m_contact = entry.getNumber();
+            AddressBookEntry address = entry.getAddressBookEntry();
+            m_contact = entry.getNumber();     
             m_lastName = entry.getLastName();
             m_firstName = entry.getFirstName();
+            if (address != null){
+                m_mobile = address.getCellPhoneNumber();
+                m_other = address.getHomePhoneNumber();
+            }
+            else{
+                m_mobile = "";
+                m_other = "";
+            }
         }
 
         public String getFirstName() {
@@ -94,7 +112,12 @@ public class YealinkDirectoryConfiguration extends ProfileContext {
         public String getContact() {
             return m_contact;
         }
-
+        public String getMobile() {
+            return m_mobile;
+        }
+        public String getOther() {
+            return m_other;
+        }
         @Override
         public int hashCode() {
             return new HashCodeBuilder().append(m_contact).toHashCode();

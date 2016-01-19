@@ -72,12 +72,15 @@ import org.sipfoundry.sipxconfig.upload.yealink.YealinkUpload;
  * Yealink abstract phone.
  */
 public class YealinkPhone extends Phone {
+
     public static final String BEAN_ID = "yealink";
     private static final Log LOG = LogFactory.getLog(YealinkPhone.class);
-    private static final String SIPT46_PATTERN = "yealinkPhoneSIPT4[6-8].*";
-    private static final String SIPT412_PATTERN = "yealinkPhoneSIPT4[12].*";
+    private static final String OPERATOR_PATTERN = "yealinkPhoneSIPT[29|46|48].*";
+    private static final String SIPT46_PATTERN = "yealinkPhoneSIPT4[6-9].*";
+    private static final String SIPT412_PATTERN = "yealinkPhoneSIPT4[012].*";
     private static final String SIPT4_PATTERN = "yealinkPhoneSIPT4.*";
     private static final String SIPT13_PATTERN = "yealinkPhoneSIPT[1-3].*";
+    private static final String SIPT268_PATTERN = "yealinkPhoneSIPT[26|28|38].*";
     private static final String ENUM = "enum";
     private static final String TYPE = "type";
     private static final String ZERO = "0";
@@ -91,12 +94,14 @@ public class YealinkPhone extends Phone {
     private static final String XMLPB_TYPE = "XMLPB_type";
     private static final String XML_PHONEBOOK = "xml_phonebook";
     private static final String LINE_COUNTER_PATTERN = ".*/((incoming_lines|dial_out_lines|"
-        + "dial_out_default_line)\\[\\d+\\])";
+            + "dial_out_default_line)\\[\\d+\\])";
     private static final String COMMON_VALUE = "common";
     private static final String MEMORY_KEYS_PATTERN = "DSSKeys/memory-keys/memorykey/.+";
     private static final String DIGIT_PATTERN = "%d";
     private static final String DIGIT_SRTING_PATTERN = "%d (%s)";
-
+    private static final String PHONEBOOKTYPE = "contacts/RemotePhoneBook/phonebook_type";
+    private static final String DEFAULT_PHONEBOOK_TYPE = "2";
+    
     // Common members
     private SpeedDial m_speedDial;
 
@@ -129,7 +134,11 @@ public class YealinkPhone extends Phone {
     public void setDeviceVersion(DeviceVersion version) {
         super.setDeviceVersion(version);
         DeviceVersion myVersion = getDeviceVersion();
-        if (myVersion == YealinkModel.VER_7X) {
+        if (myVersion == YealinkModel.VER_8X) {
+            getModel().setProfileTemplate("yealink/config_v8x.vm");
+            getModel().setSettingsFile("phone-8X.xml");
+            getModel().setLineSettingsFile("line-8X.xml");
+        } else if (myVersion == YealinkModel.VER_7X) {
             getModel().setProfileTemplate("yealink/config_v7x.vm");
             getModel().setSettingsFile("phone-7X.xml");
             getModel().setLineSettingsFile("line-7X.xml");
@@ -215,6 +224,18 @@ public class YealinkPhone extends Phone {
     public String getDirectedCallPickupString() {
         return getPhoneContext().getPhoneDefaults().getDirectedCallPickupCode();
     }
+    
+    public String getPhonebookType(){
+        //Setting setting = getSettings().getSetting(PHONEBOOKTYPE);
+        Setting settings = getSettings();
+        Setting setting = settings.getSetting(PHONEBOOKTYPE);
+        String settingValue = (null == setting ? null : (setting.getValue() == null ? null : setting
+                        .getValue()));
+        if (!StringUtils.isEmpty(settingValue)) {
+                    return settingValue;
+                }
+        return DEFAULT_PHONEBOOK_TYPE;
+    }
 
     // DSS keys routines
     private boolean isDSSLineKey(Integer i) {
@@ -251,6 +272,11 @@ public class YealinkPhone extends Phone {
     }
 
     private String getDSSEnumId() {
+        // switch(getModel().get)
+        
+        if (getDeviceVersion() == YealinkModel.VER_8X && getModel().getModelId().matches(OPERATOR_PATTERN)) {
+            return "DSSKeyType_80_type";
+        }
         if (getModel().getModelId().matches(SIPT4_PATTERN)) {
             return "DSSKeyType_71_type";
         }
@@ -266,10 +292,10 @@ public class YealinkPhone extends Phone {
         setting.addSetting(createSetting(STRING_VALUE, null, LABEL_VALUE, null));
         if (getModel().getModelId().matches(SIPT4_PATTERN)) {
             setting.addSetting(createSetting(ENUM, LINE_TYPE, LINE_VALUE, ONE)); // Set
-                                                                                 // line
-                                                                                 // keys
-                                                                                 // for
-                                                                                 // SIPT4X
+            // line
+            // keys
+            // for
+            // SIPT4X
         } else {
             setting.addSetting(createSetting(ENUM, LINE_TYPE, LINE_VALUE, ZERO));
         }
@@ -295,15 +321,21 @@ public class YealinkPhone extends Phone {
     }
 
     private void addProgramableKeySettings(SettingArray setting) {
-        setting.addSetting(createSetting(ENUM, "PKeyType_70_type", TYPE, null));
+        DeviceVersion myVersion = getDeviceVersion();
+
+        if (myVersion == YealinkModel.VER_8X) {
+            setting.addSetting(createSetting(ENUM, "PKeyType_80_type", TYPE, null));
+        } else {
+            setting.addSetting(createSetting(ENUM, "PKeyType_70_type", TYPE, null));
+        }
         setting.addSetting(createSetting(STRING_VALUE, null, VALUE, null));
         setting.addSetting(createSetting(STRING_VALUE, null, LABEL_VALUE, null));
         if (getModel().getModelId().matches(SIPT4_PATTERN)) {
             setting.addSetting(createSetting(ENUM, LINE_TYPE, LINE_VALUE, null)); // Set
-                                                                                  // line
-                                                                                  // keys
-                                                                                  // for
-                                                                                  // SIPT4X
+            // line
+            // keys
+            // for
+            // SIPT4X
         } else {
             setting.addSetting(createSetting(ENUM, LINE_TYPE, LINE_VALUE, null));
         }
@@ -320,18 +352,23 @@ public class YealinkPhone extends Phone {
 
         SettingArray lineKeys = (SettingArray) settings.getSetting("DSSKeys/line-keys/linekey");
         if (null != lineKeys) {
+            /* lineKeys.setSize(getMaxLineCount()
+                    + (getModel().getModelId().matches(SIPT4_PATTERN) ? getMaxDSSKeyCount() : 0));*/
             lineKeys.setSize(getMaxLineCount()
-                    + (getModel().getModelId().matches(SIPT4_PATTERN) ? getMaxDSSKeyCount() : 0));
+                    + getMaxDSSKeyCount());
             addLineKeySettings(lineKeys);
         }
-        SettingArray memoryKeys = (SettingArray) settings.getSetting("DSSKeys/memory-keys/memorykey");
-        if (null != memoryKeys) {
-            memoryKeys.setSize(getMaxDSSKeyCount());
-            addMemoryKeySettings(memoryKeys);
+        SettingArray memoryKeys;
+        if(getModel().getModelId().matches(SIPT268_PATTERN)){
+            memoryKeys = (SettingArray) settings.getSetting("DSSKeys/memory-keys/memorykey");
+            if (null != memoryKeys) {
+                memoryKeys.setSize(getMaxDSSKeyCount());
+                addMemoryKeySettings(memoryKeys);
+            }
         }
         SettingArray programableKeys = (SettingArray) settings.getSetting("DSSKeys/programable-keys/programablekey");
         if (null != programableKeys) {
-            programableKeys.setSize(15);
+            programableKeys.setSize(14);
             addProgramableKeySettings(programableKeys);
         }
 
@@ -339,11 +376,18 @@ public class YealinkPhone extends Phone {
         settings.acceptVisitor(new PhonebooksSelectSetter(".*/xml_phonebook\\[\\d+\\]"));
         settings.acceptVisitor(new RingtonesSetter(
                 "(distinctive-ringer/alert-info/ringer\\[\\d+\\])|preference/phone_setting\\.ring_type"));
-        settings.acceptVisitor(new DSSKeySetter("DSSKeys/(line|memory)-keys/(line|memory)key/type\\[\\d+\\]",
-                getModel().getModelId().matches(SIPT4_PATTERN) ? YealinkConstants.DKTYPES_V71
-                        : YealinkConstants.DKTYPES_V70));
-        settings.acceptVisitor(new DSSKeySetter("DSSKeys/programable-keys/programablekey/type\\[\\d+\\]",
-                YealinkConstants.PKTYPES_V70));
+        if (getDeviceVersion() == YealinkModel.VER_8X){
+            settings.acceptVisitor(new DSSKeySetter("DSSKeys/(line|memory)-keys/(line|memory)key/type\\[\\d+\\]",
+                    YealinkConstants.DKTYPES_V80));
+            settings.acceptVisitor(new DSSKeySetter("DSSKeys/programable-keys/programablekey/type\\[\\d+\\]",
+                    YealinkConstants.PKTYPES_V80));
+        }else{
+            settings.acceptVisitor(new DSSKeySetter("DSSKeys/(line|memory)-keys/(line|memory)key/type\\[\\d+\\]",
+                    getModel().getModelId().matches(SIPT4_PATTERN) ? YealinkConstants.DKTYPES_V71
+                    : YealinkConstants.DKTYPES_V70));
+            settings.acceptVisitor(new DSSKeySetter("DSSKeys/programable-keys/programablekey/type\\[\\d+\\]",
+                    YealinkConstants.PKTYPES_V70));
+        }
         // Commmon
         settings.acceptVisitor(new LineCountSetter(".*/((line|line_id)\\[\\d+\\])", 1, !getModel().getModelId()
                 .matches(SIPT4_PATTERN)));
@@ -387,10 +431,10 @@ public class YealinkPhone extends Phone {
 
     @Override
     public Profile[] getProfileTypes() {
-        Profile[] profileTypes = new Profile[] {
+        Profile[] profileTypes = new Profile[]{
             new DeviceProfile(getDeviceFilename())
         };
-
+        
         if (getPhonebookManager().getPhonebookManagementEnabled()) {
             if (getModel().isSupported(YealinkConstants.FEATURE_PHONEBOOK)) {
                 PhonebookManager pbm = getPhonebookManager();
@@ -489,8 +533,8 @@ public class YealinkPhone extends Phone {
     }
 
     /**
-     * Each subclass must decide how as much of this generic line information translates into its
-     * own setting model.
+     * Each subclass must decide how as much of this generic line information
+     * translates into its own setting model.
      */
     @Override
     protected void setLineInfo(Line line, LineInfo info) {
@@ -504,8 +548,8 @@ public class YealinkPhone extends Phone {
     }
 
     /**
-     * Each subclass must decide how as much of this generic line information can be contructed
-     * from its own setting model.
+     * Each subclass must decide how as much of this generic line information
+     * can be contructed from its own setting model.
      */
     @Override
     protected LineInfo getLineInfo(Line line) {
@@ -522,6 +566,7 @@ public class YealinkPhone extends Phone {
     // Static profile classes
 
     static class DeviceProfile extends Profile {
+
         public DeviceProfile(String name) {
             super(name, YealinkConstants.MIME_TYPE_PLAIN);
         }
@@ -562,6 +607,7 @@ public class YealinkPhone extends Phone {
     }
 
     static class YealinkSettingExpressionEvaluator implements SettingExpressionEvaluator {
+
         private final String m_model;
 
         public YealinkSettingExpressionEvaluator(String model) {
@@ -574,8 +620,8 @@ public class YealinkPhone extends Phone {
     }
 
     // Private settings related classes
-
     private class PhonebooksSetter extends YealinkEnumSetter {
+
         private Collection<Phonebook> m_pbs = new ArrayList<Phonebook>();
 
         public PhonebooksSetter(String pattern) {
@@ -643,6 +689,7 @@ public class YealinkPhone extends Phone {
     }
 
     private class LineCountSetter extends YealinkEnumSetter {
+
         private Integer m_base = 0;
         private boolean m_hasAuto;
 
@@ -791,7 +838,7 @@ public class YealinkPhone extends Phone {
                 return 28;
             }
             if (i == 1) {
-                return 22;
+                return 61;
             }
             if (i == 2) {
                 return 5;
@@ -803,10 +850,13 @@ public class YealinkPhone extends Phone {
                 return 28;
             }
             if (i == 5) {
-                return 29;
+                return 61;
             }
             if (i == 8) {
                 return 33;
+            }
+            if (i == 13) {
+                return 2;
             }
             return 0;
         }
