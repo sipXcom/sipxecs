@@ -205,3 +205,49 @@ bundle edit_line comment_ipv6 {
    "^(tcp6)"
       replace_with => comment("#");
 }
+
+bundle agent unmount_tcpdump {
+
+  methods:
+    primary::
+      "any" usebundle => "sipx_module";
+      "any" usebundle => "unmount_tcpdump_do";
+}
+
+bundle agent unmount_tcpdump_do {
+
+  methods:
+    "any" usebundle => "unmount_directory";
+    "any" usebundle => "remove_mounted_dirs"; 
+
+}
+
+bundle agent unmount_directory {
+   vars:
+      "servers" slist => readstringlist("$(sipx.SIPX_CFDATA)/tcpdumpunmount", "", "\n", 100, 4000);
+
+  storage:
+    primary::
+      "$(sipx.SIPX_LOGDIR)/tcpdump/$(servers)" mount => unmount_server($(servers));
+
+}
+
+bundle agent remove_mounted_dirs {
+   vars:
+      "servers" slist => readstringlist("$(sipx.SIPX_CFDATA)/tcpdumpunmount", "", "\n", 100, 4000);
+
+  files:
+    "$(sipx.SIPX_LOGDIR)/tcpdump/$(servers)"
+      delete => delete_tcpdump_dirs,
+      comment => "Remove mounted directories within $(sipx.SIPX_LOGDIR)/tcpdump/$(servers)";
+
+}
+
+body delete delete_tcpdump_dirs {
+  dirlinks => "delete";
+  rmdirs   => "true";
+}
+
+body mount unmount_server(server) {
+     unmount => "true";
+}
