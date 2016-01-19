@@ -17,9 +17,22 @@
 
 package org.sipfoundry.sipxconfig.tcpdumplog;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
+import org.sipfoundry.sipxconfig.cfgmgt.RunRequest;
 import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.feature.Bundle;
 import org.sipfoundry.sipxconfig.feature.FeatureChangeRequest;
@@ -36,7 +49,9 @@ import org.sipfoundry.sipxconfig.snmp.SnmpManager;
 public class TcpdumpLogImpl implements FeatureProvider, ProcessProvider, TcpdumpLog {
 
     private static final String PROCESS = "sipxtcpdumplog";
+    private static final Log LOG = LogFactory.getLog(TcpdumpLog.class);
     private BeanWithSettingsDao<TcpdumpLogSettings> m_settingsDao;
+    private ConfigManager m_configManager;
 
     @Override
     public Collection<GlobalFeature> getAvailableGlobalFeatures(FeatureManager featureManager) {
@@ -75,11 +90,48 @@ public class TcpdumpLogImpl implements FeatureProvider, ProcessProvider, Tcpdump
 
     @Override
     public void featureChangePostcommit(FeatureManager manager, FeatureChangeRequest request) {
+        Map<Location, Set<LocationFeature>> disabledServices = request.getNewlyDisabledByLocation();
+
+        List<String> serversToUnmount = new ArrayList<>();
+        for (Location location : disabledServices.keySet()) {
+            if (!location.isPrimary()) {
+                Set<LocationFeature> features = disabledServices.get(location);
+                if (features.contains(FEATURE)) {
+                    serversToUnmount.add(location.getFqdn());
+                }
+            }
+        }
+
+        if (!serversToUnmount.isEmpty()) {
+            Writer servers = null;
+            try {
+                File gdir = m_configManager.getGlobalDataDirectory();
+                servers = new FileWriter(new File(gdir, "tcpdumpunmount"));
+                for (String server : serversToUnmount) {
+                    servers.write(server);
+                    servers.write('\n');
+                }
+
+            } catch (IOException ex) {
+                LOG.error("failed to unmount tcpdump directories " + ex.getMessage());
+            } finally {
+                IOUtils.closeQuietly(servers);
+            }
+
+            Location primary = m_configManager.getLocationManager().getPrimaryLocation();
+            RunRequest runRequest = new RunRequest("Unmounting tcpdump directories", Collections.singleton(primary));
+            runRequest.setBundles("unmount_tcpdump");
+            m_configManager.run(runRequest);
+        }
     }
 
     @Override
     public Collection<ProcessDefinition> getProcessDefinitions(SnmpManager manager, Location location) {
         boolean enabled = manager.getFeatureManager().isFeatureEnabled(FEATURE, location);
         return (enabled ? Collections.singleton(ProcessDefinition.sipx("tcpdump", PROCESS, PROCESS)) : null);
+    }
+
+    public void setConfigManager(ConfigManager configManager) {
+        m_configManager = configManager;
     }
 }
