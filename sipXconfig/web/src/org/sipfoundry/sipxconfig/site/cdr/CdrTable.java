@@ -28,6 +28,8 @@ import org.sipfoundry.sipxconfig.common.User;
 import org.sipfoundry.sipxconfig.components.TapestryUtils;
 import org.sipfoundry.sipxconfig.dialplan.CallTag;
 import org.sipfoundry.sipxconfig.domain.DomainManager;
+import org.sipfoundry.sipxconfig.gateway.Gateway;
+import org.sipfoundry.sipxconfig.gateway.GatewayContext;
 import org.sipfoundry.sipxconfig.sip.SipService;
 import org.sipfoundry.sipxconfig.site.UserSession;
 
@@ -45,6 +47,9 @@ public abstract class CdrTable extends BaseComponent {
 
     @InjectObject(value = "service:tapestry.ognl.ExpressionEvaluator")
     public abstract ExpressionEvaluator getExpressionEvaluator();
+
+    @InjectObject(value = "spring:gatewayContext")
+    public abstract GatewayContext getGatewayContext();
 
     @Parameter
     public abstract Object getSource();
@@ -222,5 +227,18 @@ public abstract class CdrTable extends BaseComponent {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Returns the name of the gateway if found, if not returns the gateway ID
+     */
+    public String getGateway() {
+        Integer gatewayId = getRow().getGateway();
+        try {
+            Gateway gateway = getGatewayContext().getGateway(gatewayId);
+            return gateway.getName();
+        } catch (Exception e) {
+            return gatewayId.toString();
+        }
     }
 }
