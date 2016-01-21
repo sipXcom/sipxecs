@@ -1,6 +1,6 @@
 <table jwcid="@common/StatsTable" id="cdr:stats:list" class="component"
   source="ognl:source"
-  columns="caller, callee, recipient, =startTimeColumn, duration, termination"
+  columns="caller, callee, recipient, gateway, =startTimeColumn, duration, termination"
   row="ognl:row"
   usePager="true">
   <span jwcid="terminationColumnValue@Block">
@@ -12,6 +12,10 @@
     <span jwcid="@Insert"
       value="ognl:row.duration"
       format="bean:durationFormat" />
+  </span>
+
+  <span jwcid="gatewayColumnValue@Block">
+     <span jwcid="@Insert" value="ognl:gateway"/>
   </span>
 
   <span jwcid="recipientColumnValue@Block">
