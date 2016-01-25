@@ -41,11 +41,11 @@ rotate 14
 missingok
 
 # Normal C/C++ procs and non-daemon related log files. Uses default which is to rotate w/o copytruncate
-$(sipx.SIPX_LOGDIR)/sipregistrar.log $(sipx.SIPX_LOGDIR)/sipstatus.log $(sipx.SIPX_LOGDIR)/sipxagent.log $(sipx.SIPX_LOGDIR)/sipxhomer.log $(sipx.SIPX_LOGDIR)/sipxlogwatcher.log $(sipx.SIPX_LOGDIR)/sipxpage.log $(sipx.SIPX_LOGDIR)/sipxpark.log $(sipx.SIPX_LOGDIR)/sipXproxy.log $(sipx.SIPX_LOGDIR)/sipxrls.log $(sipx.SIPX_LOGDIR)/sipxsaa.log $(sipx.SIPX_LOGDIR)/sipxsqa.log $(sipx.SIPX_LOGDIR)/snmpd.log $(sipx.SIPX_LOGDIR)/snmptrap-email-handler.log $(sipx.SIPX_LOGDIR)/backup.log $(sipx.SIPX_LOGDIR)/*-alarms.log {
+$(sipx.SIPX_LOGDIR)/sipregistrar.log $(sipx.SIPX_LOGDIR)/sipstatus.log $(sipx.SIPX_LOGDIR)/sipxagent.log $(sipx.SIPX_LOGDIR)/sipxhomer.log $(sipx.SIPX_LOGDIR)/sipxlogwatcher.log $(sipx.SIPX_LOGDIR)/sipxpage.log $(sipx.SIPX_LOGDIR)/sipxpark.log $(sipx.SIPX_LOGDIR)/sipXproxy.log $(sipx.SIPX_LOGDIR)/sipxrls.log $(sipx.SIPX_LOGDIR)/sipxsaa.log $(sipx.SIPX_LOGDIR)/sipxsqa.log $(sipx.SIPX_LOGDIR)/snmpd.log $(sipx.SIPX_LOGDIR)/snmptrap-email-handler.log $(sipx.SIPX_LOGDIR)/backup.log $(sipx.SIPX_LOGDIR)/*-alarms.log $(sipx.SIPX_LOGDIR)/sipxsecurity.log {
 }
 
 # Java does not reopen log file periodically, make a copy and truncate current log file. May lose some data, but this will be addressed in future release.
-$(sipx.SIPX_LOGDIR)/sipxacccode.log $(sipx.SIPX_LOGDIR)/sipxprovision.log $(sipx.SIPX_LOGDIR)/sipxbridge.log $(sipx.SIPX_LOGDIR)/sipxcallresolver.log $(sipx.SIPX_LOGDIR)/sipximbot.log $(sipx.SIPX_LOGDIR)/sipxivr.log $(sipx.SIPX_LOGDIR)/sipxopenfire.log  $(sipx.SIPX_LOGDIR)/sipxrecording.log $(sipx.SIPX_LOGDIR)/sipxrelay.log $(sipx.SIPX_LOGDIR)/sipxrest.log $(sipx.SIPX_LOGDIR)/sipxconfig.log  $(sipx.SIPX_LOGDIR)/sipxconfig-audit.log $(sipx.SIPX_LOGDIR)/sipxconfig-ldap.log $(sipx.SIPX_LOGDIR)/sipxcallback.log {
+$(sipx.SIPX_LOGDIR)/sipxacccode.log $(sipx.SIPX_LOGDIR)/sipxprovision.log $(sipx.SIPX_LOGDIR)/sipxbridge.log $(sipx.SIPX_LOGDIR)/sipxcallresolver.log $(sipx.SIPX_LOGDIR)/sipximbot.log $(sipx.SIPX_LOGDIR)/sipxivr.log $(sipx.SIPX_LOGDIR)/sipxopenfire.log  $(sipx.SIPX_LOGDIR)/sipxrecording.log $(sipx.SIPX_LOGDIR)/sipxrelay.log $(sipx.SIPX_LOGDIR)/sipxrest.log $(sipx.SIPX_LOGDIR)/sipxconfig.log  $(sipx.SIPX_LOGDIR)/sipxconfig-audit.log $(sipx.SIPX_LOGDIR)/sipxconfig-ldap.log $(sipx.SIPX_LOGDIR)/sipxcallback.log $(sipx.SIPX_LOGDIR)/snmp-fix-process-cron.log $(sipx.SIPX_LOGDIR)/run_erl.log {
    copytruncate
 }
 
