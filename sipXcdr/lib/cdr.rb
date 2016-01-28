@@ -310,10 +310,11 @@ class Cdr
     # bailout if we already have original request and this one is not
 
     if cse.request_uri.include? "sipxecs-lineid"
-      called_number = Utils.contact_without_params(cse.request_uri)
-      gateway = Integer(/.*sipxecs-lineid=(\d+).*/.match(cse.request_uri)[1])
-      @contact_info[cse.branch_id] = [called_number, gateway]
+      @called_number = Utils.contact_without_params(cse.request_uri)
+      @gateway = Integer(/.*sipxecs-lineid=(\d+).*/.match(cse.request_uri)[1])
+      @contact_info[cse.branch_id] = [@called_number, @gateway]
     end
+
     return if(@got_original && !original)
     
     # continue if we are original or if we are older 
@@ -334,10 +335,6 @@ class Cdr
   end
   
   def accept_call_setup(cse)
-    if @contact_info.has_key? cse.branch_id
-      @called_number = @contact_info[cse.branch_id][0]
-      @gateway = @contact_info[cse.branch_id][1]
-    end
     if !@start_time
         # probably a case where we've missed the request.  Setup necessary
         # info as if a request was seen.
