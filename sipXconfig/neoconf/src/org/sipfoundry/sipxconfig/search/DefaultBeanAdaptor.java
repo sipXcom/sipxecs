@@ -11,6 +11,7 @@ package org.sipfoundry.sipxconfig.search;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -35,6 +36,7 @@ import org.sipfoundry.sipxconfig.gateway.Gateway;
 import org.sipfoundry.sipxconfig.parkorbit.ParkOrbit;
 import org.sipfoundry.sipxconfig.phone.Phone;
 import org.sipfoundry.sipxconfig.setting.Group;
+import org.sipfoundry.sipxconfig.setting.ValueStorage;
 import org.sipfoundry.sipxconfig.upload.Upload;
 
 public class DefaultBeanAdaptor implements BeanAdaptor {
@@ -58,7 +60,8 @@ public class DefaultBeanAdaptor implements BeanAdaptor {
      * List of fields that will be part of index name
      */
     private static final String[] NAME_FIELDS = {
-        "lastName", "firstName", "name", "extension", "userName", "serialNumber", "host", "code"
+        "lastName", "firstName", "name", "extension", "userName", "serialNumber", "host", "code", 
+        User.FAX_EXTENSION_SETTING, User.DID_SETTING
     };
 
     /**
@@ -137,6 +140,19 @@ public class DefaultBeanAdaptor implements BeanAdaptor {
                 String alias = (String) a.next();
                 document.add(new Field("alias", alias, Field.Store.NO, Field.Index.ANALYZED));
                 document.add(new Field(Indexer.DEFAULT_FIELD, alias, Field.Store.NO, Field.Index.ANALYZED));
+            }
+            return true;
+        }  else if (state instanceof ValueStorage) {
+            // handle settings values
+            ValueStorage valueStorage = (ValueStorage) state;
+            Map databaseValues = valueStorage.getDatabaseValues();
+            Set<String> keySet = databaseValues.keySet();
+            for (String key : keySet) {
+                if (Arrays.binarySearch(FIELDS, key) >= 0) {
+                    String value = databaseValues.get(key).toString();
+                    document.add(new Field(key, value, Field.Store.YES, Field.Index.ANALYZED));
+                    document.add(new Field(Indexer.DEFAULT_FIELD, value, Field.Store.NO, Field.Index.ANALYZED));
+                }
             }
             return true;
         }
