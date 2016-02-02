@@ -26,6 +26,7 @@ class CdrWriter < Dao
             log.warn("Database error occurred for 5 times successively, skipping to the next CDR")
           end
           row = CdrWriter.row_from_cdr(cdr)
+          @last_row = row
           sth.execute(*row)
           check_purge(dbh)
           CdrWriter.cleanRetries()
@@ -33,7 +34,7 @@ class CdrWriter < Dao
       end
     end
   rescue DBI::DatabaseError => e
-    log.error("#{e.err}, #{e.errstr}")
+    log.error("cdr_writer.rb:: values = #{@last_row.join(', ')} ---- Error = #{e.err}, #{e.errstr}")
     CdrWriter.countRetries()
     retry        
   end
@@ -46,7 +47,7 @@ class CdrWriter < Dao
   end
   
   def purge_now(dbh, start_time_cdr)
-    log.debug("Purging CDRs older than #{start_time_cdr}")  
+    log.debug("cdr_writer.rb:: Purging CDRs older than #{start_time_cdr}")  
     sql = CdrWriter.delete_sql
     dbh.prepare(sql) do | sth |
       sth.execute(start_time_cdr)
@@ -58,7 +59,7 @@ class CdrWriter < Dao
       Cdr::FIELDS.collect { | f | cdr.send(f) }
     end
     
-    def insert_sql()
+    def insert_sql
       field_names = Cdr::FIELDS.collect { | f | f.to_s }
       field_str = field_names.join(', ')
       value_str = (['?'] * field_names.size).join(', ')
