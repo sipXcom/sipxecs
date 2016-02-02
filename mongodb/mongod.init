@@ -99,6 +99,7 @@ start() {
     [ -x $exec ] || exit 5
     echo -n $"Starting $prog: "
     daemon --pidfile=${pidfile} --user mongodb "$exec --quiet $options run >> $logfile 2>&1 &"
+    [ -n "$starttime" ] && sleep $starttime # Wait some time
     retval=$?
     [ -n "$starttime" ] && sleep $starttime # Wait some time
     echo
@@ -108,6 +109,7 @@ start() {
 
 stop() {
     echo -n $"Stopping $prog: "
+    [ -n "$stoptime" ] && sleep $stoptime
     killproc_nice -p ${pidfile} -d 300 $prog
     retval=$?
     [ -n "$stoptime" ] && sleep $stoptime
