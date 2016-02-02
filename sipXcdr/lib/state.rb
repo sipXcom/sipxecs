@@ -49,14 +49,15 @@ class State
       # that feed the cse_queue.
       myThread = Thread.current
       myThread.priority = 2
-      @log.debug("State Thread priority =  #{myThread.priority}") if @log
+      @log.debug("state.rb:: State Thread priority =  #{myThread.priority}") if @log
       while item = @cse_queue.shift
         if item.kind_of?(Array)
-          @log.debug("Start #{item[0]}") if @log
+          @log.debug("state.rb:: Start #{item[0]}") if @log
           housekeeping(*item)
-          @log.debug("Finished #{item[0]}") if @log
+          @log.debug("state.rb:: Finished #{item[0]}") if @log
         else          
           accept(item)
+          #@log.debug("state.rb:: Accepted #{item}") if @log
         end            
       end
       flush_failed()
@@ -82,7 +83,7 @@ class State
   end
   
   def to_s
-    "Generation #{@generation}, Retired: #{@retired_calls.size}, Failed: #{@failed_calls.size}, Waiting: #{@cdrs.size}, CSE Queue: #{@cse_queue.length}"
+    "state.rb:: Generation #{@generation}, Retired: #{@retired_calls.size}, Failed: #{@failed_calls.size}, Waiting: #{@cdrs.size}, CSE Queue: #{@cse_queue.length}"
   end
   
   # Analyze CSE, add CDR to queue if completed
@@ -95,7 +96,7 @@ class State
           # Synchronize event in order to trigger advancing last_event_time
           if ( @last_event_time.to_time() < cse.event_time.to_time() )
              @last_event_time = cse.event_time
-             @log.debug("CSE last event time updated to #{@last_event_time}") if @log
+             @log.debug("state.rb:: CSE last event time updated to #{@last_event_time}") if @log
           end
        end                 
        return
@@ -103,7 +104,7 @@ class State
        @last_event_time = cse.event_time
     end
 
-    @log.debug("CSE #{cse.event_type}") if @log
+    #@log.debug("CSE #{cse.event_type}") if @log
 
     call_id = cse.call_id
     
@@ -231,7 +232,10 @@ class State
     @failed_calls.delete_if do |key, value|
       cdr = value.cdr
       start_time = cdr.start_time
-      notify(cdr) if start_time && (@last_event_time.to_time() - start_time.to_time() > max_wait_time)
+      if start_time && (@last_event_time.to_time() - start_time.to_time() > max_wait_time)
+        notify(cdr) 
+	true
+      end
     end
   end
 
