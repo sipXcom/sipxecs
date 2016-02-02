@@ -63,7 +63,7 @@ bundle edit_line snmptrapd_conf {
 
   insert_lines:
     any::
-      "authCommunity   log,execute,net public";
+      "authCommunity   log,execute,net $(sipx.snmp_community_string)";
       "traphandle $(alarm_types) $(sipx.SIPX_LIBEXECDIR)/snmptrap-email-handler --send \
 --in $(sipx.SIPX_CFDATA)/$(sipx.location_id)/snmptrap-emails.yaml";
 
