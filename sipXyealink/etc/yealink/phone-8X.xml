@@ -534,7 +534,7 @@
 	    <!--// Configure the sending volume of Speaker, Handset and Headset. It ranges from 1 to 53, the default values are 25, 35, 29. Require reboot; //-->
 	    <setting name="voice.handfree_send" if="yealinkPhone((SIPT[1-4])|(W5)).*"><type><integer min="-50" max="50"/></type><value>0</value></setting>
 	    <setting name="voice.handset_send" if="yealinkPhone((SIPT[1-4])|(W5)).*"><type><integer min="-50" max="50"/></type><value>0</value></setting>
-	    <setting name="voice.headset_send" if="yealinkPhone((SIPT[1-4])|(W5)).*"><type><integer min="-50" max="5"/></type><value>0</value></setting>
+	    <setting name="voice.headset_send" if="yealinkPhone((SIPT[1-4])|(W5)).*"><type><integer min="-50" max="50"/></type><value>0</value></setting>
 	    <!--// Configure the receiving volume of Speaker, //-->
             <setting name="voice.side_tone" advanced="yes"><type><integer min="-100" max="0"/></type><value>-25</value></setting>
             <!--// Configure the receiving volume of Speaker, Handset and Headset. It ranges from 0 to 15, the default value is 8. //-->
