@@ -161,6 +161,18 @@ public class MongoConfig implements ConfigProvider {
         }
     }
 
+    public String getConnectionUrl() {
+        FeatureManager fm = m_configManager.getFeatureManager();
+        List<Location> dbs = fm.getLocationsForEnabledFeature(MongoManager.FEATURE_ID);
+        Location primary = m_configManager.getLocationManager().getPrimaryLocation();
+        Integer regionId = primary.getRegionId();
+        int shardId = (regionId != null ? regionId : 0);
+        int clusterId = primary.getId();
+        MongoSettings settings = m_mongoManager.getSettings();
+        String connUrl = getConnectionUrl(dbs, clusterId, shardId, settings.getPort());
+        return connUrl;
+    }
+
     public void writeGlobalModel() throws IOException {
         FeatureManager fm = m_configManager.getFeatureManager();
         List<Location> dbs = fm.getLocationsForEnabledFeature(MongoManager.FEATURE_ID);
