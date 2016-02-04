@@ -3,8 +3,15 @@ package org.sipxcom.verify.user;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.sipxcom.verify.AbstractTest;
-import org.sipxcom.verify.util.LoginUtil;
+import org.sipxcom.verify.util.DatabaseConnector;
+import org.sipxcom.verify.util.PropertyLoader;
+import org.sipxcom.verify.util.PropertyLoader;
 
+import java.sql.SQLException;
+import java.util.List;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
 
@@ -12,33 +19,36 @@ public class AbstractUser extends AbstractTest {
 
     public void createUser() {
         //Go to Users tab
-        clickOnItem(LoginUtil.getProperty("usersMenuHeader"));
+        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
         //Go to Users section
-        clickOnItem(LoginUtil.getProperty("usersMenuSection"));
+        clickOnItem(PropertyLoader.getProperty("usersMenuSection"));
         //Click the Add New User link
-        clickOnItem(LoginUtil.getProperty("addNewUserLink"));
+        clickOnItem(PropertyLoader.getProperty("addNewUserLink"));
         //Clear out the UserID field
-        clearField(LoginUtil.getProperty("userId"));
+        clearField(PropertyLoader.getProperty("userId"));
         //Type the UserID
-        sendKeysToField(LoginUtil.getProperty("user1.name"),LoginUtil.getProperty("userId"));
+        sendKeysToField(PropertyLoader.getProperty("user1.name"),PropertyLoader.getProperty("userId"));
         //Clear the IM ID field
-        clearField(LoginUtil.getProperty("imId"));
+        clearField(PropertyLoader.getProperty("imId"));
         //Type the IM ID
-        sendKeysToField(LoginUtil.getProperty("user1name"),LoginUtil.getProperty("imId"));
+        sendKeysToField(PropertyLoader.getProperty("user1name"),PropertyLoader.getProperty("imId"));
         //Click Ok
-        clickOnItem(LoginUtil.getProperty("okButton"));
+        clickOnItem(PropertyLoader.getProperty("okButton"));
         //Check that user error does not show up
-        assertUserErrorNotPresent(LoginUtil.getProperty("userError"));
+        assertUserErrorNotPresent(PropertyLoader.getProperty("userError"));
     }
 
 
-    public void userCreated(){
+    public void userCreated() throws SQLException {
         //Go to Users tab
-        clickOnItem(LoginUtil.getProperty("usersMenuHeader"));
+        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
         //Go to Users section
-        clickOnItem(LoginUtil.getProperty("usersMenuSection"));
+        clickOnItem(PropertyLoader.getProperty("usersMenuSection"));
         //Verify user was created - compose the xpath
-        assertUserCreated(".//*[@id='user_"+LoginUtil.getProperty("user1.name")+"_link']");
+        assertUserCreated(".//*[@id='user_"+PropertyLoader.getProperty("user1.name")+"_link']");
+        //Verify in Database
+        List<String> valueInDb = DatabaseConnector.getQuery("select user_name from users where user_name='"+PropertyLoader.getProperty("user1.name")+"'");
+        assertEquals(valueInDb,PropertyLoader.getProperty("user1.name"));
     }
 
     protected void assertUserErrorNotPresent(String xpath){
