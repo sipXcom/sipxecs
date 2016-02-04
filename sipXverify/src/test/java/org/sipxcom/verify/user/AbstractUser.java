@@ -32,7 +32,7 @@ public class AbstractUser extends AbstractTest {
     }
 
 
-    public void validateUserCreated(){
+    public void userCreated(){
         //Go to Users tab
         clickOnItem(LoginUtil.getProperty("usersMenuHeader"));
         //Go to Users section

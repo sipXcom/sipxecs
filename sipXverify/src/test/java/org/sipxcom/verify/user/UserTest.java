@@ -13,12 +13,11 @@ public class UserTest extends AbstractUser {
     @Test
     public void canCreateUser(){
         createUser();
-
     }
 
     @Test
     public void validateUserCreated(){
-        validateUserCreated();
+        userCreated();
     }
 
 }
