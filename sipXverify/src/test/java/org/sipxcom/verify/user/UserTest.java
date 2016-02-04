@@ -8,6 +8,8 @@ package org.sipxcom.verify.user;
 import org.sipxcom.verify.AbstractTest;
 import org.testng.annotations.Test;
 
+import java.sql.SQLException;
+
 public class UserTest extends AbstractUser {
 
     @Test
@@ -16,7 +18,7 @@ public class UserTest extends AbstractUser {
     }
 
     @Test
-    public void validateUserCreated(){
+    public void validateUserCreated() throws SQLException {
         userCreated();
     }
 

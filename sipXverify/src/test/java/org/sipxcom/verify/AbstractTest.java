@@ -9,6 +9,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.sipxcom.verify.util.DatabaseConnector;
 import org.sipxcom.verify.util.LoginUtil;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
@@ -25,6 +26,7 @@ public abstract class AbstractTest {
     //initialize WebDriver
     public void init() {
         driver = LoginUtil.getRemoteWebDriver(LoginUtil.SUPERADMIN);
+        DatabaseConnector.setDBConnection();
     }
 
     @AfterSuite
