@@ -161,7 +161,7 @@ public class MongoConfig implements ConfigProvider {
         }
     }
 
-    public String getConnectionUrl() {
+    public String getConnectionUrl(String dbName) {
         FeatureManager fm = m_configManager.getFeatureManager();
         List<Location> dbs = fm.getLocationsForEnabledFeature(MongoManager.FEATURE_ID);
         Location primary = m_configManager.getLocationManager().getPrimaryLocation();
@@ -169,7 +169,7 @@ public class MongoConfig implements ConfigProvider {
         int shardId = (regionId != null ? regionId : 0);
         int clusterId = primary.getId();
         MongoSettings settings = m_mongoManager.getSettings();
-        String connUrl = getConnectionUrl(dbs, clusterId, shardId, settings.getPort());
+        String connUrl = getConnectionUrl(dbs, clusterId, shardId, settings.getPort(), dbName);
         return connUrl;
     }
 
@@ -329,15 +329,22 @@ public class MongoConfig implements ConfigProvider {
     // java driver/projects use URL format
     // XX-11378: always use "read tags"
     String getConnectionUrl(List<Location> servers, int clusterId, int shardId, int port) {
+        return getConnectionUrl(servers, clusterId, shardId, port, null);
+    }
+
+    String getConnectionUrl(List<Location> servers, int clusterId, int shardId, int port, String dbName) {
         StringBuilder r = new StringBuilder("mongodb://");
         for (int i = 0; i < servers.size(); i++) {
             Location server = servers.get(i);
             if (i > 0) {
                 r.append(',');
             }
-            r.append(server.getFqdn() + ':' + port);
+            r.append(server.getFqdn() + ':' + port + '/');
         }
-        r.append("/?readPreference=nearest");
+        if (dbName != null) {
+            r.append(dbName);
+        }
+        r.append("?readPreference=nearest");
         // Format from
         //   http://api.mongodb.org/java/current/com/mongodb/MongoURI.html
         // doc is unclear if ';' usage here is deprecated in favor of '&' for this param
