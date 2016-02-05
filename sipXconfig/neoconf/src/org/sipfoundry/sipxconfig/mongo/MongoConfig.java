@@ -339,8 +339,9 @@ public class MongoConfig implements ConfigProvider {
             if (i > 0) {
                 r.append(',');
             }
-            r.append(server.getFqdn() + ':' + port + '/');
+            r.append(server.getFqdn() + ':' + port);
         }
+        r.append("/");
         if (dbName != null) {
             r.append(dbName);
         }
