@@ -59,6 +59,8 @@ class Backup < ArchiveBase
       raise "Could not create elasticsearch snapshot repository"
     cmd "curl -XPUT 'http://localhost:9200/_snapshot/sipXcom_backup/elasticsearch_backup?wait_for_completion=true' -d '{ \"indices\": \"audit\" }'" or
       raise "Could not create elasticsearch snapshot"
+    cmd "cp -R /tmp/elasticsearch_backup/ /root/elasticsearch_backup/" or
+      raise "Could not copy elasticsearch snapshot to backup directory"
     cmd "echo @PACKAGE_VERSION@ > version" or
       raise "Could not generate version file"
     if params.has_key?(:no_device_files)
@@ -78,9 +80,9 @@ class Backup < ArchiveBase
 
     # by stripping @localstatedir@ we can backup/restore from/to source/production machines
     localstatedir = '@localstatedir@'[1..-1]
-    cmd "tar --transform='s,^#{localstatedir}/,var/,' -cvzf #{params[:file]} db.tar version dump/ /tmp/elasticsearch_backup/ #{attachments.join('/ ')}" or
+    cmd "tar --transform='s,^#{localstatedir}/,var/,' -cvzf #{params[:file]} db.tar version dump/ /elasticsearch_backup/ #{attachments.join('/ ')}" or
       raise "Could not archive databases"
-    FileUtils.rm_rf(['db.tar', 'version', 'dump', '/tmp/elasticsearch_backup/'])
+    FileUtils.rm_rf(['db.tar', 'version', 'dump', '/root/elasticsearch_backup/'])
   end
 end
 
