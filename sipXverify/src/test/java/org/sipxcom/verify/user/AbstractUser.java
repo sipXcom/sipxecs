@@ -31,7 +31,7 @@ public class AbstractUser extends AbstractTest {
         //Clear the IM ID field
         clearField(PropertyLoader.getProperty("imId"));
         //Type the IM ID
-        sendKeysToField(PropertyLoader.getProperty("user1name"),PropertyLoader.getProperty("imId"));
+        sendKeysToField(PropertyLoader.getProperty("user1.name"),PropertyLoader.getProperty("imId"));
         //Click Ok
         clickOnItem(PropertyLoader.getProperty("okButton"));
         //Check that user error does not show up
@@ -46,9 +46,22 @@ public class AbstractUser extends AbstractTest {
         clickOnItem(PropertyLoader.getProperty("usersMenuSection"));
         //Verify user was created - compose the xpath
         assertUserCreated(".//*[@id='user_"+PropertyLoader.getProperty("user1.name")+"_link']");
-        //Verify in Database
+        //Verify the user is in Database
         List<String> valueInDb = DatabaseConnector.getQuery("select user_name from users where user_name='"+PropertyLoader.getProperty("user1.name")+"'");
-        assertEquals(valueInDb,PropertyLoader.getProperty("user1.name"));
+        assertEquals(valueInDb.get(0),PropertyLoader.getProperty("user1.name"));
+    }
+
+    public void deleteUser(){
+        //Go to Users tab
+        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
+        //Go to Users section
+        clickOnItem(PropertyLoader.getProperty("usersMenuSection"));
+        //Click on the first user checkbox
+        clickOnItem(PropertyLoader.getProperty("firstUserCheckbox"));
+        //Click on delete button
+        clickOnItem(PropertyLoader.getProperty("deleteButton"));
+        assertUserErrorNotPresent(".//*[@id='user_"+PropertyLoader.getProperty("user1.name")+"_link']");
+
     }
 
     protected void assertUserErrorNotPresent(String xpath){

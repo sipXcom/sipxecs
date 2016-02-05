@@ -23,13 +23,14 @@ public abstract class AbstractTest {
     protected WebDriver driver;
 
     @BeforeSuite
-    //initialize WebDriver
+    //Initialize WebDriver and connect to Database
     public void init() {
         driver = LoginUtil.getRemoteWebDriver(LoginUtil.SUPERADMIN);
         DatabaseConnector.setDBConnection();
     }
 
     @AfterSuite
+    //Close WebDriver
     public void cleanup() {
         driver.close();
     }
