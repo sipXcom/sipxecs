@@ -166,43 +166,45 @@ account.${L}.backup_outbound_port = 0
 #end
 #end
 
+#set ($eolk = $phone.MaxDSSKeyCount + $maxLineCount)
+
 # overwrite empty linekeys at beginning
 #set ($lastLineID = $lastLineID - 1)
 #foreach($L in [1..${lastLineID}])
 linekey.${L}.line = ${L}
 linekey.${L}.type = 15
-linekey.${L}.value = 
-linekey.${L}.label = 
-linekey.${L}.pickup_value = 
+linekey.${L}.value = %NULL%
+linekey.${L}.label = %NULL%
+linekey.${L}.pickup_value = %NULL%
 #end
 # add speeddials
 #set ($x = ${lastLineID} - 0)
 #foreach ($button in $cfg.SpeedDial)
 #set ($x = $x + 1)
 #if (!$button.Blf)
-#if (${x} < $phone.MaxDSSKeyCount)
+#if (${x} < $eolk)
 linekey.${x}.type = 13
 linekey.${x}.value = $button.Number
 linekey.${x}.label = $button.Label
 linekey.${x}.line = 1
-linekey.${x}.pickup_value = 
+linekey.${x}.pickup_value = %NULL%
 #end
 #else
 linekey.${x}.type = 39
 linekey.${x}.line = 1
-linekey.${x}.value = 
-linekey.${x}.label = 
-linekey.${x}.pickup_value = 
+linekey.${x}.value = %NULL%
+linekey.${x}.label = %NULL%
+linekey.${x}.pickup_value = %NULL%
 #end
 #end
 # Overwrite empty linekeys at end
 #set ($x = $x + 1)
-#foreach($L in [$x..$phone.MaxDSSKeyCount])
+#foreach($L in [$x..$eolk])
 linekey.${L}.line = 1
 linekey.${L}.type = 39
-linekey.${L}.value = 
-linekey.${L}.label = 
-linekey.${L}.pickup_value = 
+linekey.${L}.value = %NULL%
+linekey.${L}.label = %NULL%
+linekey.${L}.pickup_value = %NULL%
 #end
 
 #Phone settings
