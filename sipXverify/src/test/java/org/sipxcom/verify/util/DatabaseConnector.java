@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by HP on 2/4/2016.
+ * JDBC connector
  */
 public class DatabaseConnector {
     private static Connection con = null;
@@ -29,6 +29,14 @@ public class DatabaseConnector {
             values.add(rs.getString(1));
         }
         return values;
+    }
+
+    public static void closeConnection() throws SQLException {
+        try {
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

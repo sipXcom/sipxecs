@@ -5,15 +5,14 @@
  */
 package org.sipxcom.verify;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.sipxcom.verify.util.DatabaseConnector;
 import org.sipxcom.verify.util.LoginUtil;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
+
+import java.sql.SQLException;
 
 import static org.testng.Assert.fail;
 import static org.testng.AssertJUnit.assertTrue;
@@ -23,16 +22,21 @@ public abstract class AbstractTest {
     protected WebDriver driver;
 
     @BeforeSuite
-    //Initialize WebDriver and connect to Database
     public void init() {
+        System.out.println("Initializing WebDriver and connecting to Database");
         driver = LoginUtil.getRemoteWebDriver(LoginUtil.SUPERADMIN);
         DatabaseConnector.setDBConnection();
     }
 
     @AfterSuite
-    //Close WebDriver
-    public void cleanup() {
+    public void cleanup() throws SQLException {
+        System.out.println("Closing WebDriver and Db connection");
         driver.close();
+        try {
+            DatabaseConnector.closeConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     protected void clickOnItem(String xpath) {
@@ -48,5 +52,15 @@ public abstract class AbstractTest {
     protected void sendKeysToField(String something, String xpath){
         WebElement element = driver.findElement(By.xpath(xpath));
         element.sendKeys(something);
+    }
+
+    protected void alertAccept(){
+        Alert alert = driver.switchTo().alert();
+        alert.accept();
+    }
+
+    protected void alertCancel(){
+        Alert alert = driver.switchTo().alert();
+        alert.dismiss();
     }
 }
