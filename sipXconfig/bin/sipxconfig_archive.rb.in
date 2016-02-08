@@ -80,7 +80,7 @@ class Backup < ArchiveBase
 
     # by stripping @localstatedir@ we can backup/restore from/to source/production machines
     localstatedir = '@localstatedir@'[1..-1]
-    cmd "tar --transform='s,^#{localstatedir}/,var/,' -cvzf #{params[:file]} db.tar version dump/ /elasticsearch_backup/ #{attachments.join('/ ')}" or
+    cmd "tar --transform='s,^#{localstatedir}/,var/,' -cvzf #{params[:file]} db.tar version dump/ elasticsearch_backup/ #{attachments.join('/ ')}" or
       raise "Could not archive databases"
     FileUtils.rm_rf(['db.tar', 'version', 'dump', '/root/elasticsearch_backup/'])
   end
