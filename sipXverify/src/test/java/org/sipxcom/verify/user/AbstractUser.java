@@ -18,53 +18,59 @@ import static org.testng.Assert.fail;
 public class AbstractUser extends AbstractTest {
 
     public void createUser() {
-        //Go to Users tab
+        System.out.println("Going to Users tab");
         clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
-        //Go to Users section
+        System.out.println("Going to Users section");
         clickOnItem(PropertyLoader.getProperty("usersMenuSection"));
-        //Click the Add New User link
+        System.out.println("Clicking the Add New User link");
         clickOnItem(PropertyLoader.getProperty("addNewUserLink"));
-        //Clear out the UserID field
+        System.out.println("Clearing out the UserID field");
         clearField(PropertyLoader.getProperty("userId"));
-        //Type the UserID
+        System.out.println("Typing the UserID");
         sendKeysToField(PropertyLoader.getProperty("user1.name"),PropertyLoader.getProperty("userId"));
-        //Clear the IM ID field
+        System.out.println("Clearing out the imId field");
         clearField(PropertyLoader.getProperty("imId"));
-        //Type the IM ID
+        System.out.println("Typing the IM ID");
         sendKeysToField(PropertyLoader.getProperty("user1.name"),PropertyLoader.getProperty("imId"));
-        //Click Ok
+        System.out.println("Clicking Ok");
         clickOnItem(PropertyLoader.getProperty("okButton"));
-        //Check that user error does not show up
+        System.out.println("Checking the user error does not show up");
         assertUserErrorNotPresent(PropertyLoader.getProperty("userError"));
     }
 
 
     public void userCreated() throws SQLException {
-        //Go to Users tab
+        System.out.println("Going to Users tab");
         clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
-        //Go to Users section
+        System.out.println("Going to Users section");
         clickOnItem(PropertyLoader.getProperty("usersMenuSection"));
-        //Verify user was created - compose the xpath
+        System.out.println("Verifying user was created - composing xpath...");
         assertUserCreated(".//*[@id='user_"+PropertyLoader.getProperty("user1.name")+"_link']");
-        //Verify the user is in Database
+        System.out.println("Verifying user is in Database");
         List<String> valueInDb = DatabaseConnector.getQuery("select user_name from users where user_name='"+PropertyLoader.getProperty("user1.name")+"'");
         assertEquals(valueInDb.get(0),PropertyLoader.getProperty("user1.name"));
     }
 
-    public void deleteUser(){
-        //Go to Users tab
+    public void deleteUser() throws SQLException {
+        System.out.println("Going to Users tab");
         clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
-        //Go to Users section
+        System.out.println("Going to Users section");
         clickOnItem(PropertyLoader.getProperty("usersMenuSection"));
-        //Click on the first user checkbox
+        System.out.println("Clicking on the first user check box");
         clickOnItem(PropertyLoader.getProperty("firstUserCheckbox"));
-        //Click on delete button
+        System.out.println("Clicking on delete button");
         clickOnItem(PropertyLoader.getProperty("deleteButton"));
+        System.out.println("Clicking Yes on the confirmation popup");
+        alertAccept();
+        System.out.println("Verifying user is not visible anymore in UI");
         assertUserErrorNotPresent(".//*[@id='user_"+PropertyLoader.getProperty("user1.name")+"_link']");
+        System.out.println("Verifying user is not present in Db anymore");
+        List<String> valueInDb = DatabaseConnector.getQuery("select user_name from users where user_name='"+PropertyLoader.getProperty("user1.name")+"'");
+        valueInDb.isEmpty();
 
     }
 
-    protected void assertUserErrorNotPresent(String xpath){
+    public void assertUserErrorNotPresent(String xpath){
         try {
             driver.findElement(By.xpath(xpath));
             fail("User error present");
@@ -73,7 +79,7 @@ public class AbstractUser extends AbstractTest {
         }
     }
 
-    protected void assertUserCreated(String xpath){
+    public void assertUserCreated(String xpath){
         driver.findElement(By.xpath(xpath));
     }
 

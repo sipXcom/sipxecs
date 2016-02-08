@@ -22,4 +22,9 @@ public class UserTest extends AbstractUser {
         userCreated();
     }
 
+    @Test
+    public void zcanDeleteUser() throws SQLException {
+        deleteUser();
+    }
+
 }
