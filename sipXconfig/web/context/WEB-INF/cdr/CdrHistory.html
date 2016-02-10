@@ -1,10 +1,13 @@
 <div>
   <span jwcid="@cdr/CdrDates"
     startTime="ognl:startTime"
-    endTime="ognl:endTime" />
+    endTime="ognl:endTime"
+    timezoneSelectionModel="ognl:timezoneSelectionModel"
+    selectedTimezone="ognl:selectedTimezone"/>
   <span jwcid="@cdr/CdrStatsPanel"
     startTime="ognl:startTime"
     endTime="ognl:endTime"
+    selectedTimezone="ognl:selectedTimezone"
     cdrSearch="ognl:cdrSearch"
     user="ognl:user"/>
 </div>

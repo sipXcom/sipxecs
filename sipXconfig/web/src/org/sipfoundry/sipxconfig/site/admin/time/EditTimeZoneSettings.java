@@ -41,13 +41,7 @@ public abstract class EditTimeZoneSettings extends BaseComponent implements Page
     public abstract SipxValidationDelegate getValidator();
 
     public void pageBeginRender(PageEvent event_) {
-        // Init. the timezone dropdown menu.
-        List<String> timezoneList = getTimeManager().getAvailableTimezones();
-
-        // Sort list alphanumerically.
-        Collections.sort(timezoneList, new AlphanumComparator());
-        StringPropertySelectionModel model = new StringPropertySelectionModel(timezoneList
-                .toArray(new String[timezoneList.size()]));
+        IPropertySelectionModel model = getTimezoneSelectionModel(getTimeManager());
         setTimezoneTypeModel(model);
 
         // Set the dropdown list to display the current time zone.
@@ -62,8 +56,15 @@ public abstract class EditTimeZoneSettings extends BaseComponent implements Page
 
     }
 
-    public void setSysTimezone() {
-        getTimeManager().setSystemTimezone(getTimezoneType());
+    public static IPropertySelectionModel getTimezoneSelectionModel(NtpManager timeManager) {
+        // Init. the timezone dropdown menu.
+        List<String> timezoneList = timeManager.getAvailableTimezones();
+
+        // Sort list alphanumerically.
+        Collections.sort(timezoneList, new AlphanumComparator());
+        StringPropertySelectionModel model = new StringPropertySelectionModel(timezoneList
+                .toArray(new String[timezoneList.size()]));
+        return model;
     }
 
 }
