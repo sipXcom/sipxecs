@@ -7,6 +7,8 @@
   <!-- P A R A M E T E R S -->
   <parameter name="startTime" />
   <parameter name="endTime" />
+  <parameter name="selectedTimezone" />
+  <parameter name="timezoneSelectionModel" />
 
   <!-- P R O P E R T I E S -->
 
@@ -22,6 +24,16 @@
   <component id="endTime" type="common/DateTimeEditor">
     <binding name="datetime" value="endTime" />
     <binding name="label" value="message:endTime" />
+  </component>
+
+  <component id="timezones" type="common/FieldPanel">
+    <binding name="field" value="component:timezonesSelection" />
+    <binding name="label" value="message:timezone" />
+  </component>
+
+  <component id="timezonesSelection" type="PropertySelection">
+    <binding name="value" value="selectedTimezone" />
+    <binding name="model" value="timezoneSelectionModel" />
   </component>
 
   <component id="apply" type="Submit">

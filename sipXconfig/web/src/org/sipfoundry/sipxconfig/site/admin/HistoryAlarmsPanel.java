@@ -29,13 +29,13 @@ import org.apache.tapestry.form.IPropertySelectionModel;
 import org.apache.tapestry.form.StringPropertySelectionModel;
 import org.apache.tapestry.services.ExpressionEvaluator;
 import org.apache.tapestry.valid.ValidatorException;
+import org.sipfoundry.commons.util.TimeZoneUtils;
 import org.sipfoundry.sipxconfig.alarm.AlarmEvent;
 import org.sipfoundry.sipxconfig.alarm.AlarmHistoryManager;
 import org.sipfoundry.sipxconfig.common.UserException;
 import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.commserver.LocationsManager;
 import org.sipfoundry.sipxconfig.components.SipxValidationDelegate;
-import org.sipfoundry.sipxconfig.site.cdr.CdrHistory;
 
 public abstract class HistoryAlarmsPanel extends BaseComponent implements PageBeginRenderListener {
     private static final String CLIENT = "client";
@@ -106,11 +106,11 @@ public abstract class HistoryAlarmsPanel extends BaseComponent implements PageBe
         }
 
         if (getEndDate() == null) {
-            setEndDate(CdrHistory.getDefaultEndTime());
+            setEndDate(TimeZoneUtils.getDefaultEndTime(null));
         }
 
         if (getStartDate() == null) {
-            Date startTime = CdrHistory.getDefaultStartTime(getEndDate());
+            Date startTime = TimeZoneUtils.getDefaultStartTime(getEndDate(), null);
             setStartDate(startTime);
         }
     }
