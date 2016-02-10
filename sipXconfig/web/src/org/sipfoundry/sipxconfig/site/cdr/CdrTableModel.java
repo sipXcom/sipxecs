@@ -12,6 +12,7 @@ package org.sipfoundry.sipxconfig.site.cdr;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.apache.tapestry.contrib.table.model.IBasicTableModel;
 import org.apache.tapestry.contrib.table.model.ITableColumn;
@@ -26,6 +27,7 @@ public class CdrTableModel implements IBasicTableModel {
     private User m_activeUser;
     private Date m_from;
     private Date m_to;
+    private TimeZone m_timeZone;
 
     public CdrTableModel(CdrManager cdrManager) {
         m_cdrManager = cdrManager;
@@ -53,13 +55,19 @@ public class CdrTableModel implements IBasicTableModel {
         m_to = to;
     }
 
+    public void setSelectedTimezone(String selectedTimezone) {
+        if (selectedTimezone != null) {
+            m_timeZone = TimeZone.getTimeZone(selectedTimezone);
+        }
+    }
+
     public Iterator getCurrentPageRows(int nFirst, int nPageSize, ITableColumn objSortColumn,
             boolean ascending) {
         if (objSortColumn != null) {
             m_cdrSearch.setOrder(objSortColumn.getColumnName(), ascending);
         }
         List<Cdr> cdrs = m_cdrManager.getCdrs(m_from, m_to, m_cdrSearch,
-                m_activeUser, nPageSize, nFirst);
+                m_activeUser, m_timeZone, nPageSize, nFirst);
         return cdrs.iterator();
     }
 
