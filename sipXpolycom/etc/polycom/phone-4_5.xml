@@ -5511,7 +5511,7 @@
       </setting>
       <setting name="login.persistent">
 		<type><boolean /></type>
-		<value>0</value>
+		<value>1</value>
       </setting>
       <setting name="login.required">
 		<type><boolean /></type>
