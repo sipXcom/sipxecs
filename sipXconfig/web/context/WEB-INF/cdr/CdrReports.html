@@ -2,7 +2,9 @@
   <span jwcid="@common/QuickHelp" value="message:cdrReports.quick.help"/>
   <span jwcid="@cdr/CdrDates"
     startTime="ognl:startTime"
-    endTime="ognl:endTime" />
+    endTime="ognl:endTime"
+    timezoneSelectionModel="ognl:timezoneSelectionModel"
+    selectedTimezone="ognl:selectedTimezone"/>
   <form jwcid="reports@Form" listener="listener:formSubmit">
     <fieldset>
       <table>

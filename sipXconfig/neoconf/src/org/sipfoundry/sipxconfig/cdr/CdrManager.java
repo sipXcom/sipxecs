@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.sipfoundry.sipxconfig.address.AddressType;
 import org.sipfoundry.sipxconfig.common.User;
@@ -38,6 +39,7 @@ public interface CdrManager {
      */
     List<Cdr> getCdrs(Date from, Date to, CdrSearch search, User user);
     List<Cdr> getCdrs(Date from, Date to, CdrSearch search, User user, int limit, int offset);
+    List<Cdr> getCdrs(Date from, Date to, CdrSearch search, User user, TimeZone timezone, int limit, int offset);
 
 
     /**
