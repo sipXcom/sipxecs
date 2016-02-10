@@ -9,20 +9,24 @@
  */
 package org.sipfoundry.sipxconfig.site.cdr;
 
-import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.commons.lang.time.DateUtils;
 import org.apache.tapestry.BaseComponent;
 import org.apache.tapestry.annotations.InitialValue;
+import org.apache.tapestry.annotations.InjectObject;
 import org.apache.tapestry.annotations.Parameter;
 import org.apache.tapestry.annotations.Persist;
 import org.apache.tapestry.event.PageBeginRenderListener;
 import org.apache.tapestry.event.PageEvent;
+import org.apache.tapestry.form.IPropertySelectionModel;
 import org.apache.tapestry.valid.ValidatorException;
+import org.sipfoundry.commons.util.TimeZoneUtils;
 import org.sipfoundry.sipxconfig.cdr.CdrSearch;
 import org.sipfoundry.sipxconfig.common.User;
+import org.sipfoundry.sipxconfig.components.ObjectSelectionModel;
 import org.sipfoundry.sipxconfig.components.TapestryUtils;
+import org.sipfoundry.sipxconfig.site.admin.time.EditTimeZoneSettings;
+import org.sipfoundry.sipxconfig.time.NtpManager;
 
 public abstract class CdrHistory extends BaseComponent implements PageBeginRenderListener {
     @Persist
@@ -44,17 +48,40 @@ public abstract class CdrHistory extends BaseComponent implements PageBeginRende
     public abstract void setCdrSearch(CdrSearch cdrSearch);
 
     @Persist
+    public abstract ObjectSelectionModel getTimezones();
+
+    public abstract void setTimezones(ObjectSelectionModel timezones);
+
+    @Persist
+    public abstract String getSelectedTimezone();
+
+    public abstract void setSelectedTimezone(String selectedTimezone);
+
+    @InjectObject(value = "spring:ntpManager")
+    public abstract NtpManager getTimeManager();
+
+    public IPropertySelectionModel getTimezoneSelectionModel() {
+        return EditTimeZoneSettings.getTimezoneSelectionModel(getTimeManager());
+    }
+
+    @Persist
     @InitialValue(value = "literal:active")
     public abstract String getTab();
 
     public void pageBeginRender(PageEvent event_) {
         if (getEndTime() == null) {
-            setEndTime(getDefaultEndTime());
+            setEndTime(TimeZoneUtils.getDefaultEndTime(getSelectedTimezone()));
         }
 
         if (getStartTime() == null) {
-            Date startTime = getDefaultStartTime(getEndTime());
+            Date startTime = TimeZoneUtils.getDefaultStartTime(getEndTime(), getSelectedTimezone());
             setStartTime(startTime);
+        }
+
+        if (getSelectedTimezone() == null) {
+            if (getUser() != null) {
+                setSelectedTimezone(getUser().getTimezone().getID());
+            }
         }
 
         if (getCdrSearch() == null) {
@@ -68,23 +95,4 @@ public abstract class CdrHistory extends BaseComponent implements PageBeginRende
         }
     }
 
-    /**
-     * By default set start at next midnight
-     */
-    public static Date getDefaultEndTime() {
-        Calendar now = Calendar.getInstance();
-        now.add(Calendar.DAY_OF_MONTH, 1);
-        Calendar end = DateUtils.truncate(now, Calendar.DAY_OF_MONTH);
-        return end.getTime();
-    }
-
-    /**
-     *  start a day before end time
-     */
-    public static Date getDefaultStartTime(Date endTime) {
-        Calendar then = Calendar.getInstance();
-        then.setTime(endTime);
-        then.add(Calendar.DAY_OF_MONTH, -1);
-        return then.getTime();
-    }
 }
