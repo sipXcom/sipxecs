@@ -39,6 +39,7 @@ import org.apache.tapestry.event.PageEvent;
 import org.apache.tapestry.form.IPropertySelectionModel;
 import org.apache.tapestry.form.StringPropertySelectionModel;
 import org.apache.tapestry.web.WebResponse;
+import org.sipfoundry.commons.util.TimeZoneUtils;
 import org.sipfoundry.sipxconfig.common.CoreContext;
 import org.sipfoundry.sipxconfig.common.User;
 import org.sipfoundry.sipxconfig.common.UserException;
@@ -48,7 +49,6 @@ import org.sipfoundry.sipxconfig.components.SipxValidationDelegate;
 import org.sipfoundry.sipxconfig.components.TapestryUtils;
 import org.sipfoundry.sipxconfig.setting.Group;
 import org.sipfoundry.sipxconfig.setting.SettingDao;
-import org.sipfoundry.sipxconfig.site.cdr.CdrHistory;
 import org.sipfoundry.sipxconfig.site.user.EditUser;
 import org.sipfoundry.sipxconfig.systemaudit.ConfigChangeAction;
 import org.sipfoundry.sipxconfig.systemaudit.ConfigChangeContext;
@@ -192,11 +192,11 @@ public abstract class SystemAuditHistory extends BaseComponent implements PageBe
         }
 
         if (getEndDate() == null) {
-            setEndDate(CdrHistory.getDefaultEndTime());
+            setEndDate(TimeZoneUtils.getDefaultEndTime(null));
         }
 
         if (getStartDate() == null) {
-            Date startTime = CdrHistory.getDefaultStartTime(getEndDate());
+            Date startTime = TimeZoneUtils.getDefaultStartTime(getEndDate(), null);
             setStartDate(startTime);
         }
 
