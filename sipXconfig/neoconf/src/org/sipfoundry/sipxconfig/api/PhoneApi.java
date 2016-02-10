@@ -29,6 +29,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.cxf.jaxrs.model.wadl.Description;
+import org.sipfoundry.sipxconfig.api.model.IdsList;
 import org.sipfoundry.sipxconfig.api.model.PhoneBean;
 
 @Path("/phones/")
@@ -60,6 +61,30 @@ public interface PhoneApi {
     @Path("{phoneId}")
     @DELETE
     public Response deletePhone(@Description("Phone internal id or MAC address") @PathParam("phoneId") String phoneId);
+
+    @Path("{phoneId}/sendProfile")
+    @PUT
+    public Response sendPhoneProfile(@Description("Phone internal id or MAC address")
+        @PathParam("phoneId") String phoneId);
+
+    @Path("{phoneId}/sendProfile/restart")
+    @PUT
+    public Response sendPhoneProfileRestart(@Description("Phone internal id or MAC address")
+        @PathParam("phoneId") String phoneId);
+
+    @Path("sendProfile")
+    @PUT
+    @Consumes({
+        MediaType.APPLICATION_JSON, MediaType.TEXT_XML, MediaType.APPLICATION_XML
+    })
+    public Response sendPhonesProfile(IdsList idsList);
+
+    @Path("sendProfile/restart")
+    @PUT
+    @Consumes({
+        MediaType.APPLICATION_JSON, MediaType.TEXT_XML, MediaType.APPLICATION_XML
+    })
+    public Response sendPhonesProfileRestart(IdsList idsList);
 
     @Path("{phoneId}")
     @PUT
