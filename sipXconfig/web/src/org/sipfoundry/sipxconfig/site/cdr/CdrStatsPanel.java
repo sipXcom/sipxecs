@@ -42,6 +42,9 @@ public abstract class CdrStatsPanel extends BaseComponent {
     public abstract Date getEndTime();
 
     @Parameter
+    public abstract String getSelectedTimezone();
+
+    @Parameter
     public abstract User getUser();
 
     @Parameter
@@ -53,6 +56,7 @@ public abstract class CdrStatsPanel extends BaseComponent {
         tableModel.setTo(getEndTime());
         tableModel.setCdrSearch(getCdrSearch());
         tableModel.setUser(getUser());
+        tableModel.setSelectedTimezone(getSelectedTimezone());
         return tableModel;
     }
 
