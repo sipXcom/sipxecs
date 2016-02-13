@@ -62,12 +62,14 @@ public class AbstractUser extends AbstractTest {
         clickOnItem(PropertyLoader.getProperty("deleteButton"));
         System.out.println("Clicking Yes on the confirmation popup");
         alertAccept();
+    }
+
+    public void userDeleted() throws SQLException {
         System.out.println("Verifying user is not visible anymore in UI");
         assertUserErrorNotPresent(".//*[@id='user_"+PropertyLoader.getProperty("user1.name")+"_link']");
         System.out.println("Verifying user is not present in Db anymore");
         List<String> valueInDb = DatabaseConnector.getQuery("select user_name from users where user_name='"+PropertyLoader.getProperty("user1.name")+"'");
         valueInDb.isEmpty();
-
     }
 
     public void assertUserErrorNotPresent(String xpath){
