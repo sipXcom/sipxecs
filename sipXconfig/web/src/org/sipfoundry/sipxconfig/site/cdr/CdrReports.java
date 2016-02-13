@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 import org.apache.commons.collections.Bag;
 import org.apache.commons.collections.bag.HashBag;
@@ -56,10 +57,12 @@ import org.sipfoundry.sipxconfig.components.TapestryContext;
 import org.sipfoundry.sipxconfig.components.selection.AdaptedSelectionModel;
 import org.sipfoundry.sipxconfig.dialplan.CallTag;
 import org.sipfoundry.sipxconfig.jasperreports.JasperReportContext;
+import org.sipfoundry.sipxconfig.site.admin.time.EditTimeZoneSettings;
 import org.sipfoundry.sipxconfig.site.cdr.decorators.CdrCallDirectionDecorator;
 import org.sipfoundry.sipxconfig.site.cdr.decorators.CdrCallLongDistanceDecorator;
 import org.sipfoundry.sipxconfig.site.cdr.decorators.CdrCallerDecorator;
 import org.sipfoundry.sipxconfig.site.cdr.decorators.CdrDecorator;
+import org.sipfoundry.sipxconfig.time.NtpManager;
 
 public abstract class CdrReports extends BaseComponent implements PageBeginRenderListener {
     public static final String PAGE = "cdr/CdrReports";
@@ -168,6 +171,18 @@ public abstract class CdrReports extends BaseComponent implements PageBeginRende
 
     public abstract void setShowXlsLink(boolean show);
 
+    @Persist
+    public abstract String getSelectedTimezone();
+
+    public abstract void setSelectedTimezone(String selectedTimezone);
+
+    @InjectObject(value = "spring:ntpManager")
+    public abstract NtpManager getTimeManager();
+
+    public IPropertySelectionModel getTimezoneSelectionModel() {
+        return EditTimeZoneSettings.getTimezoneSelectionModel(getTimeManager());
+    }
+
     public IPropertySelectionModel decorateModel(IPropertySelectionModel model) {
         return getTapestry().addExtraOption(model, getMessages(), "label.select");
     }
@@ -227,8 +242,12 @@ public abstract class CdrReports extends BaseComponent implements PageBeginRende
     }
 
     private void computeReportData(String reportName) {
+        TimeZone timezone = null;
+        if (getSelectedTimezone() != null) {
+            timezone = TimeZone.getTimeZone(getSelectedTimezone());
+        }
         List<Cdr> cdrs = getCdrManager().getCdrs(getStartTime(), getEndTime(), getCdrSearch(),
-                getUser(), MAX_CDR_RECORDS, 0);
+                getUser(), timezone, MAX_CDR_RECORDS, 0);
         Locale locale = getPage().getLocale();
         Date startdate = getStartTime();
         Date enddate = getEndTime();

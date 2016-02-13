@@ -26,6 +26,7 @@ import org.apache.commons.lang.StringUtils;
 import org.sipfoundry.sipxconfig.api.PhoneApi;
 import org.sipfoundry.sipxconfig.api.model.GroupBean;
 import org.sipfoundry.sipxconfig.api.model.GroupList;
+import org.sipfoundry.sipxconfig.api.model.IdsList;
 import org.sipfoundry.sipxconfig.api.model.ModelBean;
 import org.sipfoundry.sipxconfig.api.model.ModelBean.ModelList;
 import org.sipfoundry.sipxconfig.api.model.PhoneBean;
@@ -33,17 +34,20 @@ import org.sipfoundry.sipxconfig.api.model.PhoneList;
 import org.sipfoundry.sipxconfig.api.model.SettingsList;
 import org.sipfoundry.sipxconfig.device.DeviceVersion;
 import org.sipfoundry.sipxconfig.device.ModelSource;
+import org.sipfoundry.sipxconfig.device.ProfileManager;
 import org.sipfoundry.sipxconfig.phone.Phone;
 import org.sipfoundry.sipxconfig.phone.PhoneContext;
 import org.sipfoundry.sipxconfig.phone.PhoneModel;
 import org.sipfoundry.sipxconfig.setting.Group;
 import org.sipfoundry.sipxconfig.setting.Setting;
 import org.sipfoundry.sipxconfig.setting.SettingDao;
+import org.springframework.beans.factory.annotation.Required;
 
 public class PhoneApiImpl implements PhoneApi {
     private PhoneContext m_phoneContext;
     private ModelSource<PhoneModel> m_modelSource;
     private SettingDao m_settingDao;
+    private ProfileManager m_profileManager;
 
     @Override
     public Response getPhones(Integer startId, Integer pageSize) {
@@ -223,6 +227,34 @@ public class PhoneApiImpl implements PhoneApi {
         return Response.status(Status.NOT_FOUND).build();
     }
 
+    @Override
+    public Response sendPhoneProfile(String phoneId) {
+        return sendPhoneProfile(phoneId, false);
+    }
+
+    @Override
+    public Response sendPhoneProfileRestart(String phoneId) {
+        return sendPhoneProfile(phoneId, true);
+    }
+
+    @Override
+    public Response sendPhonesProfile(IdsList ids) {
+        m_profileManager.generateProfiles(ids.getIds(), false, null);
+        return Response.ok().build();
+    }
+
+    @Override
+    public Response sendPhonesProfileRestart(IdsList ids) {
+        m_profileManager.generateProfiles(ids.getIds(), true, null);
+        return Response.ok().build();
+    }
+
+    private Response sendPhoneProfile(String phoneId, boolean restart) {
+        Phone phone = getPhoneByIdOrMac(phoneId);
+        m_profileManager.generateProfile(phone.getId(), restart, null);
+        return Response.ok().build();
+    }
+
     private Phone getPhoneByIdOrMac(String id) {
         Phone phone = null;
         try {
@@ -247,4 +279,8 @@ public class PhoneApiImpl implements PhoneApi {
         m_settingDao = settingDao;
     }
 
+    @Required
+    public void setProfileManager(ProfileManager profileManager) {
+        m_profileManager = profileManager;
+    }
 }
