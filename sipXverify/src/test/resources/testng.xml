@@ -3,7 +3,7 @@
 <suite name="Sanity Tests">
   <test name="User Tests">
     <classes>
-      <class name="org.sipxcom.verify.user.UserTest"/>
+      <class name="org.sipxcom.verify.user.UserCreateDelete"/>
     </classes>
   </test> <!-- Test -->
 </suite> <!-- Suite -->

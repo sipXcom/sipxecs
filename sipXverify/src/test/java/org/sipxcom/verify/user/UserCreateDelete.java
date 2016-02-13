@@ -10,21 +10,26 @@ import org.testng.annotations.Test;
 
 import java.sql.SQLException;
 
-public class UserTest extends AbstractUser {
+public class UserCreateDelete extends AbstractUser {
 
     @Test
     public void canCreateUser(){
         createUser();
     }
 
-    @Test
+    @Test(dependsOnMethods = {"canCreateUser"})
     public void validateUserCreated() throws SQLException {
         userCreated();
     }
 
-    @Test
-    public void zcanDeleteUser() throws SQLException {
+    @Test(dependsOnMethods = {"canCreateUser","validateUserCreated"})
+    public void canDeleteUser() throws SQLException {
         deleteUser();
+    }
+
+    @Test(dependsOnMethods = {"canCreateUser","validateUserCreated","canDeleteUser"})
+    public void validateUserDeleted() throws SQLException {
+        userDeleted();
     }
 
 }
