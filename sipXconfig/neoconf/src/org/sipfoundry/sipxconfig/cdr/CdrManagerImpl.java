@@ -39,6 +39,7 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.sipfoundry.commons.util.TimeZoneUtils;
 import org.sipfoundry.sipxconfig.address.Address;
 import org.sipfoundry.sipxconfig.address.AddressManager;
 import org.sipfoundry.sipxconfig.address.AddressProvider;
@@ -134,9 +135,21 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
 
     @Override
     public List<Cdr> getCdrs(Date from, Date to, CdrSearch search, User user, int limit, int offset) {
-        CdrsStatementCreator psc = new SelectAll(from, to, search, user, (user != null) ? (user.getTimezone())
-                : m_tz, limit, offset);
-        CdrsResultReader resultReader = new CdrsResultReader((user != null) ? (user.getTimezone()) : (getTimeZone()),
+        return getCdrs(from, to, search, user, null, 0, 0);
+    }
+
+    @Override
+    public List<Cdr> getCdrs(Date from, Date to, CdrSearch search, User user, TimeZone timeZone, int limit, int offset) {
+        if (timeZone != null) {
+            from = TimeZoneUtils.getSameDateWithNewTimezone(from, timeZone);
+            to = TimeZoneUtils.getSameDateWithNewTimezone(to, timeZone);
+        }
+        CdrsStatementCreator psc = new SelectAll(from, to, search, user, (user != null) ? (user.getTimezone()) : m_tz, limit, offset);
+        TimeZone resultsTimeZone = timeZone;
+        if (resultsTimeZone == null) {
+            resultsTimeZone = (user != null) ? (user.getTimezone()) : (getTimeZone());
+        }
+        CdrsResultReader resultReader = new CdrsResultReader(resultsTimeZone,
                 getSettings().getPrivacyStatus(), getSettings().getPrivacyMinLength(),
                 getSettings().getPrivacyExcludeList());
 

@@ -59,6 +59,7 @@
         <property name="phoneContext" ref="phoneContext"/>
         <property name="settingDao" ref="settingDao" />
         <property name="phoneModelSource" ref="phoneModelSource" />
+        <property name="profileManager" ref="phoneProfileManager" />        
     </bean>
     <bean class="org.sipfoundry.sipxconfig.api.impl.PhoneGroupApiImpl" id="phoneGroupRestApi">
         <property name="phoneContext" ref="phoneContext"/>
