@@ -71,7 +71,7 @@
     description="message:description.emailAddress">
     <input jwcid="emailAddress@TextField" id="user:emailAddress"
       value="ognl:preferences.emailAddress"
-      validators="validators:email"
+      validators="spring-validators:validEmail"
       autocomplete="off" />
   </tr>
   <tr jwcid="@common/FieldPanel" for="user:voicemailProperties"
@@ -110,7 +110,7 @@
     description="message:description.alternateEmailAddress">
     <input jwcid="alternateEmailAddress@TextField" id="user:alternateEmailAddress"
       value="ognl:preferences.alternateEmailAddress"
-      validators="validators:email"
+      validators="spring-validators:validEmail"
       autocomplete="off"/>
   </tr>
   <tr jwcid="@common/FieldPanel" for="user:voicemailToAlternateEmailNotification"
