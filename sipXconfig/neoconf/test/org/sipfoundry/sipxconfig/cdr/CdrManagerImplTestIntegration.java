@@ -52,12 +52,12 @@ public class CdrManagerImplTestIntegration extends IntegrationTestCase {
 
     public void testDumpCdrs() throws Exception {
         OutputStreamWriter writer = new OutputStreamWriter(System.err);
-        m_cdrManagerImpl.dumpCdrs(writer, null, null, new CdrSearch(), null);
+        m_cdrManagerImpl.dumpCdrs(writer, null, null, null, new CdrSearch(), null);
     }
 
     public void testGetCsv() throws Exception {
         Writer writer = new OutputStreamWriter(System.err);
-        m_cdrManagerImpl.dumpCdrs(writer, null, null, new CdrSearch(), null);
+        m_cdrManagerImpl.dumpCdrs(writer, null, null, null, new CdrSearch(), null);
         writer.flush();
     }
 

@@ -56,9 +56,10 @@ public interface CdrManager {
      * @param writer CSV stream destination
      * @param from date of first CDR retrieved, pass null for oldest
      * @param to date of the last CDR retrieved, pass null for latest
+     * @param timezone
      * @param search specification - enumeration representing columns and string to search for
      */
-    void dumpCdrs(Writer writer, Date from, Date to, CdrSearch search, User user) throws IOException;
+    void dumpCdrs(Writer writer, Date from, Date to, TimeZone timezone, CdrSearch search, User user) throws IOException;
 
     /**
      * Dump CDRs in a JSON format used by Exhibit platform.
