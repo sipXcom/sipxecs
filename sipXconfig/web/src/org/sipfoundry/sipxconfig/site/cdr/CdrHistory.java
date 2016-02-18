@@ -10,6 +10,7 @@
 package org.sipfoundry.sipxconfig.site.cdr;
 
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.apache.tapestry.BaseComponent;
 import org.apache.tapestry.annotations.InitialValue;
@@ -81,6 +82,8 @@ public abstract class CdrHistory extends BaseComponent implements PageBeginRende
         if (getSelectedTimezone() == null) {
             if (getUser() != null) {
                 setSelectedTimezone(getUser().getTimezone().getID());
+            } else {
+                setSelectedTimezone(TimeZone.getDefault().getID());
             }
         }
 

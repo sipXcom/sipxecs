@@ -1,1 +1,8 @@
-<table jwcid="@cdr/CdrTable" source="ognl:source" />
+<fieldset>
+	<table style="border-spacing: 2px">
+		<tr jwcid="timezones">
+			<input jwcid="timezonesSelection" />
+		</tr>
+	</table>
+</fieldset>
+<table jwcid="@cdr/CdrTable" source="ognl:source" timeZone="ognl:selectedTimeZone"/>
