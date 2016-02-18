@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.apache.tapestry.annotations.Bean;
 import org.apache.tapestry.annotations.InitialValue;
@@ -60,6 +61,11 @@ public abstract class CdrPage extends UserBasePage {
 
     public abstract void setTotalActiveCalls(int total);
 
+    @Persist
+    public abstract String getSelectedTimeZone();
+
+    public abstract void setSelectedTimeZone(String selectedTimeZone);
+
     public Collection<String> getTabNames() {
         if (isCallResolverInstalled()) {
             return Arrays.asList(ACTIVE_TAB, HISTORIC_TAB, REPORTS_TAB);
@@ -73,6 +79,10 @@ public abstract class CdrPage extends UserBasePage {
                 && getFeatureManager().isFeatureEnabled(ProxyManager.FEATURE));
         if (!isCallResolverInstalled() && getTab().equals(ACTIVE_TAB)) {
             setTab(HISTORIC_TAB);
+        }
+
+        if (getSelectedTimeZone() == null) {
+            setSelectedTimeZone(TimeZone.getDefault().getID());
         }
 
         List<Cdr> activeCalls = new ArrayList<Cdr>();
