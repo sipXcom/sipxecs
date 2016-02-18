@@ -19,11 +19,14 @@ import org.apache.tapestry.annotations.Bean;
 import org.apache.tapestry.annotations.ComponentClass;
 import org.apache.tapestry.annotations.InjectObject;
 import org.apache.tapestry.annotations.Message;
+import org.apache.tapestry.form.IPropertySelectionModel;
 import org.apache.tapestry.valid.ValidationConstraint;
 import org.sipfoundry.sipxconfig.cdr.Cdr;
 import org.sipfoundry.sipxconfig.cdr.CdrManager;
 import org.sipfoundry.sipxconfig.common.UserException;
 import org.sipfoundry.sipxconfig.components.SipxValidationDelegate;
+import org.sipfoundry.sipxconfig.site.admin.time.EditTimeZoneSettings;
+import org.sipfoundry.sipxconfig.time.NtpManager;
 
 @ComponentClass(allowBody = false, allowInformalParameters = false)
 public abstract class ActiveCallsPanel extends BaseComponent {
@@ -38,6 +41,17 @@ public abstract class ActiveCallsPanel extends BaseComponent {
     public abstract List<Cdr> getActiveCalls();
 
     public abstract void setActiveCalls(List<Cdr> cdrs);
+
+    @InjectObject(value = "spring:ntpManager")
+    public abstract NtpManager getTimeManager();
+
+    public IPropertySelectionModel getTimezoneSelectionModel() {
+        return EditTimeZoneSettings.getTimezoneSelectionModel(getTimeManager());
+    }
+
+    public abstract String getSelectedTimeZone();
+
+    public abstract void setSelectedTimeZone(String selectedTimeZone);
 
     @Message
     public abstract String getError();
