@@ -5504,13 +5504,14 @@
 	   </group>
     </group>
     <group name="prov"  if="4.0.X||4.1.X||4.1.0||4.1.2||4.1.3||4.1.4||4.1.5||4.1.6||4.1.7||4.1.8||5.0.0||5.0.1||5.0.2||5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0">
-      <setting name="login.enabled">
+      <group name="prov_login">
+	  <setting name="login.enabled">
 		<type><boolean /></type>
 		<value>0</value>
       </setting>
       <setting name="login.persistent">
 		<type><boolean /></type>
-		<value>0</value>
+		<value>1</value>
       </setting>
       <setting name="login.required">
 		<type><boolean /></type>
@@ -5524,6 +5525,8 @@
 		<type><integer min="0" max="46000"/></type>
 		<value>0</value>
       </setting>
+      </group>
+	  <group name="prov_device">
       <setting name="serverType.set">
 		<type><boolean /></type>
 		<value>0</value>
@@ -5555,6 +5558,7 @@
                 </type>
 		<value>HTTP</value>
       </setting>
+	  </group>
     </group>      
 	<group name="mwi" if="5.0.0||5.0.1||5.0.2||5.1.1||5.1.2||5.1.3">
       <setting name="backLight.disable">

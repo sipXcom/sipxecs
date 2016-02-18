@@ -161,6 +161,18 @@ public class MongoConfig implements ConfigProvider {
         }
     }
 
+    public String getConnectionUrl(String dbName) {
+        FeatureManager fm = m_configManager.getFeatureManager();
+        List<Location> dbs = fm.getLocationsForEnabledFeature(MongoManager.FEATURE_ID);
+        Location primary = m_configManager.getLocationManager().getPrimaryLocation();
+        Integer regionId = primary.getRegionId();
+        int shardId = (regionId != null ? regionId : 0);
+        int clusterId = primary.getId();
+        MongoSettings settings = m_mongoManager.getSettings();
+        String connUrl = getConnectionUrl(dbs, clusterId, shardId, settings.getPort(), dbName);
+        return connUrl;
+    }
+
     public void writeGlobalModel() throws IOException {
         FeatureManager fm = m_configManager.getFeatureManager();
         List<Location> dbs = fm.getLocationsForEnabledFeature(MongoManager.FEATURE_ID);
@@ -317,6 +329,10 @@ public class MongoConfig implements ConfigProvider {
     // java driver/projects use URL format
     // XX-11378: always use "read tags"
     String getConnectionUrl(List<Location> servers, int clusterId, int shardId, int port) {
+        return getConnectionUrl(servers, clusterId, shardId, port, null);
+    }
+
+    String getConnectionUrl(List<Location> servers, int clusterId, int shardId, int port, String dbName) {
         StringBuilder r = new StringBuilder("mongodb://");
         for (int i = 0; i < servers.size(); i++) {
             Location server = servers.get(i);
@@ -325,7 +341,11 @@ public class MongoConfig implements ConfigProvider {
             }
             r.append(server.getFqdn() + ':' + port);
         }
-        r.append("/?readPreference=nearest");
+        r.append("/");
+        if (dbName != null) {
+            r.append(dbName);
+        }
+        r.append("?readPreference=nearest");
         // Format from
         //   http://api.mongodb.org/java/current/com/mongodb/MongoURI.html
         // doc is unclear if ';' usage here is deprecated in favor of '&' for this param

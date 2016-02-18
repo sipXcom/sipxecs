@@ -15,7 +15,7 @@
 	<form jwcid="@common/AutoRefreshForm">
 	  <b><span jwcid="header@Insert" value="message:label.activeCalls"/>:&nbsp;</b>
       <span jwcid="activeCalls@Insert" value="ognl:totalActiveCalls"/>
-      <span jwcid="@cdr/ActiveCallsPanel" />
+      <span jwcid="@cdr/ActiveCallsPanel" selectedTimeZone="ognl:selectedTimeZone"/>
 	</form>
   </span>
   <span jwcid="historicTab@Block">

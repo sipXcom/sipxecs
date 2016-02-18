@@ -18,6 +18,7 @@ import static org.sipfoundry.commons.mongo.MongoConstants.LOCATION_ASSOCIATIONS_
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -118,7 +119,7 @@ public class Branch extends BeanWithId implements NamedObject, SystemAuditable, 
 
     @Override
     public Set<DataSet> getDataSets() {
-        return null;
+        return Collections.emptySet();
     }
 
     @Override
