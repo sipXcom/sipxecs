@@ -69,4 +69,18 @@ public class TimeZoneUtils {
         return cal.getTime();
     }
 
+    /**
+     * Return a date with converted to the new timezone
+     */
+    public static Calendar convertDateToNewTimezone(Date initialDate, TimeZone timezone) {
+        Calendar cal = null;
+        if (timezone != null) {
+            cal = Calendar.getInstance(timezone);
+        } else {
+            cal = Calendar.getInstance();
+        }
+        cal.setTime(initialDate);
+        return cal;
+    }
+
 }
