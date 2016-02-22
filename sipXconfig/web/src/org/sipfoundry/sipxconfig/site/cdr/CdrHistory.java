@@ -80,11 +80,7 @@ public abstract class CdrHistory extends BaseComponent implements PageBeginRende
         }
 
         if (getSelectedTimezone() == null) {
-            if (getUser() != null) {
-                setSelectedTimezone(getUser().getTimezone().getID());
-            } else {
-                setSelectedTimezone(TimeZone.getDefault().getID());
-            }
+            setSelectedTimezone(CdrPage.getDefaultTimeZoneId(getUser(), getTimeManager()));
         }
 
         if (getCdrSearch() == null) {
