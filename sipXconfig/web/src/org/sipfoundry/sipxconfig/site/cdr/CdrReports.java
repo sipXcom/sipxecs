@@ -224,11 +224,7 @@ public abstract class CdrReports extends BaseComponent implements PageBeginRende
             setCdrSearch(new CdrSearch());
         }
         if (getSelectedTimezone() == null) {
-            if (getUser() != null) {
-                setSelectedTimezone(getUser().getTimezone().getID());
-            } else {
-                setSelectedTimezone(TimeZone.getDefault().getID());
-            }
+            setSelectedTimezone(CdrPage.getDefaultTimeZoneId(getUser(), getTimeManager()));
         }
         setReportData(null);
     }

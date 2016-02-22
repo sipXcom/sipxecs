@@ -56,6 +56,10 @@ public abstract class EditTimeZoneSettings extends BaseComponent implements Page
 
     }
 
+    public void setSysTimezone() {
+        getTimeManager().setSystemTimezone(getTimezoneType());
+    }
+
     public static IPropertySelectionModel getTimezoneSelectionModel(NtpManager timeManager) {
         // Init. the timezone dropdown menu.
         List<String> timezoneList = timeManager.getAvailableTimezones();
