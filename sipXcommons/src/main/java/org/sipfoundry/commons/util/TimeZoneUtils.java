@@ -72,15 +72,9 @@ public class TimeZoneUtils {
     /**
      * Return a date with converted to the new timezone
      */
-    public static Calendar convertDateToNewTimezone(Date initialDate, TimeZone timezone) {
-        Calendar cal = null;
-        if (timezone != null) {
-            cal = Calendar.getInstance(timezone);
-        } else {
-            cal = Calendar.getInstance();
-        }
-        cal.setTime(initialDate);
-        return cal;
+    public static Date convertDateToNewTimezone(Date initialDate, TimeZone timezone) {
+        return new DateTime(initialDate).withZone(DateTimeZone.forTimeZone(timezone))
+                .toLocalDateTime().toDate();
     }
 
 }
