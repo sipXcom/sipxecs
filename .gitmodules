@@ -91,3 +91,6 @@
 [submodule "sipXAocBilling"]
 	path = sipXAocBilling
 	url = https://github.com/sipXcom/sipXAocBilling.git
+[submodule "sipXdashboard"]
+	path = sipXdashboard
+	url = https://github.com/sipXcom/sipXdashboard.git
