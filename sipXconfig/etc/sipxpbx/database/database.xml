@@ -498,6 +498,7 @@
   	<antcall target="modify-setting-value-table" />
   	<antcall target="remove-voicemail-imap-settings" />
   	<antcall target="add-release-on-ring-failure" />
+  	<antcall target="remove-firewall-rules" />
   </target>
 
   <target name="plugin-patches">
@@ -1543,6 +1544,9 @@
   <target name="add-release-on-ring-failure" unless="add-release-on-ring-failure">
     <db-patch patch="add-release-on-ring-failure"/>
   </target>
+  <target name="remove-firewall-rules" unless="remove-firewall-rules">
+	<db-patch patch="remove-firewall-rules"/>
+  </target>	
 
 	<!--
     - SUPPORT UTILITIES
