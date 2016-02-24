@@ -90,16 +90,12 @@ public class CdrSearch {
     private void appendCallerSql(StringBuilder sql) {
         sql.append(OPEN_PARANTHESIS);
         appendSearchTermSql(sql, CdrManagerImpl.CALLER_AOR);
-        sql.append(AND);
-        sql.append(CdrManagerImpl.CALLER_INTERNAL);
-        sql.append("=true)");
+        sql.append(CLOSED_PARANTHESIS);
     }
 
     private void appendCalleeSql(StringBuilder sql) {
         sql.append(OPEN_PARANTHESIS);
         appendSearchTermSql(sql, CdrManagerImpl.CALLEE_AOR);
-        sql.append(AND);
-        appendCalleeInternalRouteSql(sql);
         sql.append(CLOSED_PARANTHESIS);
     }
 
