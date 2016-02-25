@@ -268,7 +268,7 @@ public class RestRedirectorResource extends UserResource {
                         MediaType m = MimeType.getMediaTypeByMime(header.getValue());
                         if (m != null) {
                             Variant variant = new Variant(m);
-                            getVariants().clear();                 
+                            getVariants().clear();
                             getVariants().add(variant);
                         }
                     }
