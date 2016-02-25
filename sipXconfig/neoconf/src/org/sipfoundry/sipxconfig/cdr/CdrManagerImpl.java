@@ -139,12 +139,16 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
     }
 
     @Override
-    public List<Cdr> getCdrs(Date from, Date to, CdrSearch search, User user, TimeZone timeZone, int limit, int offset) {
+    public List<Cdr> getCdrs(Date fromDate, Date toDate, CdrSearch search, User user,
+        TimeZone timeZone, int limit, int offset) {
+        Date from = fromDate;
+        Date to = toDate;
         if (timeZone != null) {
-            from = TimeZoneUtils.getSameDateWithNewTimezone(from, timeZone);
-            to = TimeZoneUtils.getSameDateWithNewTimezone(to, timeZone);
+            from = TimeZoneUtils.getSameDateWithNewTimezone(fromDate, timeZone);
+            to = TimeZoneUtils.getSameDateWithNewTimezone(toDate, timeZone);
         }
-        CdrsStatementCreator psc = new SelectAll(from, to, search, user, (user != null) ? (user.getTimezone()) : m_tz, limit, offset);
+        CdrsStatementCreator psc = new SelectAll(from, to, search, user, (user != null)
+            ? (user.getTimezone()) : m_tz, limit, offset);
         TimeZone resultsTimeZone = timeZone;
         if (resultsTimeZone == null) {
             resultsTimeZone = (user != null) ? (user.getTimezone()) : (getTimeZone());
@@ -163,7 +167,8 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
     }
 
     @Override
-    public void dumpCdrs(Writer writer, Date from, Date to, TimeZone displayTimeZone, CdrSearch search, User user) throws IOException {
+    public void dumpCdrs(Writer writer, Date from, Date to, TimeZone displayTimeZone,
+        CdrSearch search, User user) throws IOException {
         ColumnInfoFactory columnInforFactory = new DefaultColumnInfoFactory(m_tz, displayTimeZone);
         CdrsWriter resultReader = new CdrsCsvWriter(writer, columnInforFactory);
         dump(resultReader, from, to, displayTimeZone, search, user, m_csvLimit);
@@ -190,11 +195,14 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
      * If we had direct access to that connection we could try calling "setChunkedStreamingMode"
      * on it.
      */
-    private void dump(CdrsWriter resultReader, Date from, Date to, TimeZone timezone, CdrSearch search, User user, int limit)
+    private void dump(CdrsWriter resultReader, Date fromDate, Date toDate, TimeZone timezone,
+        CdrSearch search, User user, int limit)
         throws IOException {
+        Date from = fromDate;
+        Date to = toDate;
         if (timezone != null) {
-            from = TimeZoneUtils.getSameDateWithNewTimezone(from, timezone);
-            to = TimeZoneUtils.getSameDateWithNewTimezone(to, timezone);
+            from = TimeZoneUtils.getSameDateWithNewTimezone(fromDate, timezone);
+            to = TimeZoneUtils.getSameDateWithNewTimezone(toDate, timezone);
         }
         PreparedStatementCreator psc = new SelectAll(from, to, search, user, m_tz, limit, 0);
         try {
@@ -484,7 +492,8 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
         private final Calendar m_calendar;
         private final TimeZone m_displayTimeZone;
 
-        public ColumnInfo(ResultSet rs, int i, Calendar calendar, TimeZone displayTimeZone, Format dateFormat, Format aorFormat)
+        public ColumnInfo(ResultSet rs, int i, Calendar calendar, TimeZone displayTimeZone,
+            Format dateFormat, Format aorFormat)
             throws SQLException {
             m_fieldIndex = i;
             m_calendar = calendar;

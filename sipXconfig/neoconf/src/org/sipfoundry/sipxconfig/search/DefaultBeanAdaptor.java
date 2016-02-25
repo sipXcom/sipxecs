@@ -60,7 +60,7 @@ public class DefaultBeanAdaptor implements BeanAdaptor {
      * List of fields that will be part of index name
      */
     private static final String[] NAME_FIELDS = {
-        "lastName", "firstName", "name", "extension", "userName", "serialNumber", "host", "code", 
+        "lastName", "firstName", "name", "extension", "userName", "serialNumber", "host", "code",
         User.FAX_EXTENSION_SETTING, User.DID_SETTING
     };
 

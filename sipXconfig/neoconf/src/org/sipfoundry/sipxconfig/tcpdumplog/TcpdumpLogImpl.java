@@ -92,7 +92,7 @@ public class TcpdumpLogImpl implements FeatureProvider, ProcessProvider, Tcpdump
     public void featureChangePostcommit(FeatureManager manager, FeatureChangeRequest request) {
         Map<Location, Set<LocationFeature>> disabledServices = request.getNewlyDisabledByLocation();
 
-        List<String> serversToUnmount = new ArrayList<>();
+        List<String> serversToUnmount = new ArrayList<String>();
         for (Location location : disabledServices.keySet()) {
             if (!location.isPrimary()) {
                 Set<LocationFeature> features = disabledServices.get(location);
