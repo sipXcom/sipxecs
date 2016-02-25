@@ -142,7 +142,7 @@ public class RestRedirectorResource extends UserResource {
                 mType = v.getMediaType();
             }
         }
-        return new InputRepresentation(new ByteArrayInputStream(result), mType);
+        return new InputRepresentation(new ByteArrayInputStream(result), mType, result.length);
     }
 
     private byte[] invokeIvrFallback(String methodType, String relativeUri) throws ResourceException {
@@ -268,7 +268,7 @@ public class RestRedirectorResource extends UserResource {
                         MediaType m = MimeType.getMediaTypeByMime(header.getValue());
                         if (m != null) {
                             Variant variant = new Variant(m);
-                            getVariants().clear();
+                            getVariants().clear();                 
                             getVariants().add(variant);
                         }
                     }
