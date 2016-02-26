@@ -204,7 +204,7 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
             from = TimeZoneUtils.getSameDateWithNewTimezone(fromDate, timezone);
             to = TimeZoneUtils.getSameDateWithNewTimezone(toDate, timezone);
         }
-        PreparedStatementCreator psc = new SelectAll(from, to, search, user, m_tz, limit, 0);
+        PreparedStatementCreator psc = new SelectAll(from, to, search, user, (user != null) ? (user.getTimezone()) : m_tz, limit, 0);
         try {
             resultReader.writeHeader();
             getJdbcTemplate().query(psc, resultReader);
@@ -532,7 +532,7 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
             }
             if (m_timestamp) {
                 Timestamp timestamp = (Timestamp) v;
-                Calendar cal = TimeZoneUtils.convertDateToNewTimezone(new Date(
+                Date cal = TimeZoneUtils.convertDateToNewTimezone(new Date(
                         timestamp.getTime()), m_displayTimeZone);
                 return m_format.format(cal);
             }
