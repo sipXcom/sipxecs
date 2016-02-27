@@ -176,6 +176,11 @@ public abstract class CdrReports extends BaseComponent implements PageBeginRende
 
     public abstract void setSelectedTimezone(String selectedTimezone);
 
+    @Persist
+    public abstract String getDefaultTimezone();
+
+    public abstract void setDefaultTimezone(String defaultTimezone);
+
     @InjectObject(value = "spring:ntpManager")
     public abstract NtpManager getTimeManager();
 
@@ -223,8 +228,10 @@ public abstract class CdrReports extends BaseComponent implements PageBeginRende
         if (getCdrSearch() == null) {
             setCdrSearch(new CdrSearch());
         }
-        if (getSelectedTimezone() == null) {
-            setSelectedTimezone(CdrPage.getDefaultTimeZoneId(getUser(), getTimeManager()));
+        if (getSelectedTimezone() == null || getSelectedTimezone().equals(getDefaultTimezone())) {
+            String defaultTimezone = CdrPage.getDefaultTimeZoneId(getUser(), getTimeManager());
+            setSelectedTimezone(defaultTimezone);
+            setDefaultTimezone(defaultTimezone);
         }
         setReportData(null);
     }

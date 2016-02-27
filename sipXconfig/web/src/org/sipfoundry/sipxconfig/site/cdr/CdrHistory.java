@@ -10,7 +10,6 @@
 package org.sipfoundry.sipxconfig.site.cdr;
 
 import java.util.Date;
-import java.util.TimeZone;
 
 import org.apache.tapestry.BaseComponent;
 import org.apache.tapestry.annotations.InitialValue;
@@ -58,6 +57,11 @@ public abstract class CdrHistory extends BaseComponent implements PageBeginRende
 
     public abstract void setSelectedTimezone(String selectedTimezone);
 
+    @Persist
+    public abstract String getDefaultTimezone();
+
+    public abstract void setDefaultTimezone(String defaultTimezone);
+
     @InjectObject(value = "spring:ntpManager")
     public abstract NtpManager getTimeManager();
 
@@ -79,8 +83,10 @@ public abstract class CdrHistory extends BaseComponent implements PageBeginRende
             setStartTime(startTime);
         }
 
-        if (getSelectedTimezone() == null) {
-            setSelectedTimezone(CdrPage.getDefaultTimeZoneId(getUser(), getTimeManager()));
+        if (getSelectedTimezone() == null || getSelectedTimezone().equals(getDefaultTimezone())) {
+            String defaultTimezone = CdrPage.getDefaultTimeZoneId(getUser(), getTimeManager());
+            setSelectedTimezone(defaultTimezone);
+            setDefaultTimezone(defaultTimezone);
         }
 
         if (getCdrSearch() == null) {
