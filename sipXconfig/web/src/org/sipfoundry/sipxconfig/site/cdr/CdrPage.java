@@ -68,6 +68,11 @@ public abstract class CdrPage extends UserBasePage {
 
     public abstract void setSelectedTimeZone(String selectedTimeZone);
 
+    @Persist
+    public abstract String getDefaultTimezone();
+
+    public abstract void setDefaultTimezone(String defaultTimezone);
+
     @InjectObject(value = "spring:ntpManager")
     public abstract NtpManager getTimeManager();
 
@@ -86,8 +91,10 @@ public abstract class CdrPage extends UserBasePage {
             setTab(HISTORIC_TAB);
         }
 
-        if (getSelectedTimeZone() == null) {
-            setSelectedTimeZone(getDefaultTimeZoneId(null, getTimeManager()));
+        if (getSelectedTimeZone() == null || getSelectedTimeZone().equals(getDefaultTimezone())) {
+            String defaultTimezone = CdrPage.getDefaultTimeZoneId(null, getTimeManager());
+            setSelectedTimeZone(defaultTimezone);
+            setDefaultTimezone(defaultTimezone);
         }
 
         List<Cdr> activeCalls = new ArrayList<Cdr>();
