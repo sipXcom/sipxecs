@@ -58,6 +58,8 @@ bundle edit_line sipx_limits_contents {
   insert_lines:
 "sipx soft nofile 4096 
 sipx hard nofile 10240
+sipx soft nproc 8192
+sipx hard nproc 10240
 ";
 }
 
