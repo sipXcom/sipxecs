@@ -9,9 +9,9 @@
  */
 package org.sipfoundry.sipxconfig.speeddial;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 import org.sipfoundry.sipxconfig.cfgmgt.DeployConfigOnEdit;
 import org.sipfoundry.sipxconfig.common.User;
@@ -37,12 +37,7 @@ public class SpeedDialGroup  extends SpeedDialButtons implements DeployConfigOnE
     public SpeedDial getSpeedDial(User user) {
         SpeedDial userSpeedDial = new SpeedDial();
         userSpeedDial.setUser(user);
-        List<Button> buttons = userSpeedDial.getButtons();
-        for (Button button : getButtons()) {
-            if (!user.getUserName().equals(button.getNumber())) {
-                buttons.add(button);
-            }
-        }
+        userSpeedDial.setButtons(new ArrayList<Button>(getButtons()));
         return userSpeedDial;
     }
 
