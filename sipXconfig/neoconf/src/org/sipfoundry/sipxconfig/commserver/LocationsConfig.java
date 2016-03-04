@@ -22,6 +22,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
@@ -56,6 +58,27 @@ public class LocationsConfig implements ConfigProvider {
                 writeHosts(host, location, primary);
             } finally {
                 IOUtils.closeQuietly(host);
+            }
+        }
+
+        Map<Integer, String> hostsEntries = new HashMap<Integer, String>();
+        for (Location location : locations) {
+            hostsEntries.put(location.getId(), format("%s %s %s # sipXcom cluster\n", location.getAddress(),
+                    location.getFqdn(), location.getHostname()));
+        }
+
+        for (Location location : locations) {
+            File dir = manager.getLocationDataDirectory(location);
+            Writer hostsPart = new FileWriter(new File(dir, "hosts.part"));
+            try {
+                for (Map.Entry<Integer, String> entry : hostsEntries.entrySet()) {
+                    Integer locationId = entry.getKey();
+                    if (locationId != location.getId()) {
+                        hostsPart.write(entry.getValue());
+                    }
+                }
+            } finally {
+                IOUtils.closeQuietly(hostsPart);
             }
         }
     }
