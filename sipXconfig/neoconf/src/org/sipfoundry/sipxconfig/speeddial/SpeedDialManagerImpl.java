@@ -98,7 +98,18 @@ public class SpeedDialManagerImpl extends SipxHibernateDaoSupport<SpeedDial> imp
              */
             for (int i = speeddialGroups.size() - 1; i >= 0; i--) {
                 if (0 < speeddialGroups.get(i).getButtons().size()) {
-                    return speeddialGroups.get(i).getSpeedDial(user);
+                    SpeedDial speedDial = speeddialGroups.get(i).getSpeedDial(user);
+                    if (!isAllowSubscriptionToSelf()) {
+                        List<Button> buttons = speedDial.getButtons();
+                        List<Button> selfButtons = new ArrayList<>();
+                        for (Button button : buttons) {
+                            if (user.getUserName().equals(button.getNumber())) {
+                                selfButtons.add(button);
+                            }
+                        }
+                        buttons.removeAll(selfButtons);
+                    }
+                    return speedDial;
                 }
             }
         }
@@ -178,7 +189,7 @@ public class SpeedDialManagerImpl extends SipxHibernateDaoSupport<SpeedDial> imp
      */
     private boolean verifySubscriptionsToSelf(SpeedDialButtons speedDial, String number) {
         boolean hasErrors = false;
-        if (speedDial instanceof SpeedDial) {
+        if (speedDial instanceof SpeedDial && !isAllowSubscriptionToSelf()) {
             User user = ((SpeedDial) speedDial).getUser();
             hasErrors = number.equals(user.getUserName());
         }
@@ -277,6 +288,11 @@ public class SpeedDialManagerImpl extends SipxHibernateDaoSupport<SpeedDial> imp
     @Required
     public void setFeatureId(String feature) {
         m_featureId = feature;
+    }
+
+    @Override
+    public boolean isAllowSubscriptionToSelf() {
+        return false;
     }
 
     @Override
