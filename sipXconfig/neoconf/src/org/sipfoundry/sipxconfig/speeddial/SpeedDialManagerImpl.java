@@ -101,7 +101,7 @@ public class SpeedDialManagerImpl extends SipxHibernateDaoSupport<SpeedDial> imp
                     SpeedDial speedDial = speeddialGroups.get(i).getSpeedDial(user);
                     if (!isAllowSubscriptionToSelf()) {
                         List<Button> buttons = speedDial.getButtons();
-                        List<Button> selfButtons = new ArrayList<>();
+                        List<Button> selfButtons = new ArrayList();
                         for (Button button : buttons) {
                             if (user.getUserName().equals(button.getNumber())) {
                                 selfButtons.add(button);
