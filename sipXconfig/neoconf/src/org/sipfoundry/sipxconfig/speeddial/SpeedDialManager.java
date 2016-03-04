@@ -39,4 +39,6 @@ public interface SpeedDialManager extends DialingRuleProvider {
     List<SpeedDial> findSpeedDialForUserId(Integer userId);
 
     SpeedDial getGroupSpeedDialForUser(User user, boolean create);
+
+    boolean isAllowSubscriptionToSelf();
 }
