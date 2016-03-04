@@ -204,7 +204,8 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
             from = TimeZoneUtils.getSameDateWithNewTimezone(fromDate, timezone);
             to = TimeZoneUtils.getSameDateWithNewTimezone(toDate, timezone);
         }
-        PreparedStatementCreator psc = new SelectAll(from, to, search, user, (user != null) ? (user.getTimezone()) : m_tz, limit, 0);
+        PreparedStatementCreator psc = new SelectAll(from, to, search, user, (user != null)
+                ? (user.getTimezone()) : m_tz, limit, 0);
         try {
             resultReader.writeHeader();
             getJdbcTemplate().query(psc, resultReader);

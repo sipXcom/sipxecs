@@ -121,8 +121,8 @@ public class Cdr implements Serializable {
         return m_callee;
     }
 
-    public String getRecipient() {        
-        return m_recipient;        
+    public String getRecipient() {
+        return m_recipient;
     }
 
     public void setCalleeAor(String calleeAor) {
