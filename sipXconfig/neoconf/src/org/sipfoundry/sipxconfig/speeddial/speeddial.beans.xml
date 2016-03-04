@@ -22,6 +22,7 @@
     <property name="aliasManager" ref="aliasManagerImpl" />
     <property name="sipxReplicationContext" ref="sipxReplicationContext" />
     <property name="imdbTemplate" ref="imdb"/>
+    <property name="adminContext" ref="adminContext"/>
   </bean>
 
   <bean id="speedDialOnEdit" class="org.sipfoundry.sipxconfig.speeddial.SpeadDialOnEdit">
