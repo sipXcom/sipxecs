@@ -73,8 +73,8 @@ public class SpeedDials extends AbstractDataSetGenerator {
                 List<Button> buttons = speedDial.getButtons();
                 for (Button button : buttons) {
                     //do not allow presence subscriptions to self
-                    if (!m_speedDialManager.isAllowSubscriptionToSelf() && 
-                            (!button.isBlf() || user.equals(button.getNumber()))) {
+                    if (!m_speedDialManager.isAllowSubscriptionToSelf()
+                            && (!button.isBlf() || user.equals(button.getNumber()))) {
                         continue;
                     }
                     DBObject buttonDBO = new BasicDBObject();
