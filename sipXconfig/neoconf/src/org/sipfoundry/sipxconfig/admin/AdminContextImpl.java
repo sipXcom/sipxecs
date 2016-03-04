@@ -241,4 +241,9 @@ public class AdminContextImpl extends HibernateDaoSupport implements AdminContex
     public boolean isSyncExtAvatar() {
         return (Boolean) getSettings().getSettingTypedValue(AdminSettings.EXT_AVATAR_SYNC);
     }
+
+    @Override
+    public boolean isAllowSubscriptionsToSelf() {
+        return (Boolean) getSettings().isAllowSubscriptionsToSelf();
+    }
 }
