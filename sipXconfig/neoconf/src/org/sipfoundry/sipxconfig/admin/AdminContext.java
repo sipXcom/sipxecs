@@ -60,4 +60,6 @@ public interface AdminContext {
 
     boolean isSyncExtAvatar();
 
+    boolean isAllowSubscriptionsToSelf();
+
 }
