@@ -359,6 +359,7 @@ public class DialogContext {
                 SubscriptionStateHeader subscriptionState = (SubscriptionStateHeader) request
                         .getHeader(SubscriptionStateHeader.NAME);
                 boolean ringing = false;
+                boolean sessionProgress = false;
                 if (request.getContentLength().getContentLength() != 0) {
                     String statusLine = new String(request.getRawContent());
                     logger.debug("dialog = " + dialog);
@@ -366,6 +367,7 @@ public class DialogContext {
 
                     if (!StringUtils.isEmpty(statusLine)) {
                         ringing = containsIgnoreCase(statusLine, SipHelper.RINGING_MESSAGE);
+                        sessionProgress = containsIgnoreCase(statusLine, SipHelper.SESSION_PROGRESS);
                         this.setStatus(SipHelper.getCallId(request), request.getMethod(),
                                 statusLine);
                         logger.debug("Ringing received " + ringing);
@@ -373,7 +375,7 @@ public class DialogContext {
                 }
                 boolean terminated = subscriptionState.getState().equalsIgnoreCase(SubscriptionStateHeader.TERMINATED);
                 logger.debug("Is subscription state terminated: " + terminated);
-                if (ringing || terminated) {
+                if (ringing || terminated || sessionProgress) {
                     String content = new String(request.getRawContent());
                     ReasonHeader busyHeader = null;
                     if (containsIgnoreCase(content, SipHelper.BUSY_MESSAGE)) {
@@ -385,7 +387,7 @@ public class DialogContext {
                         byeUri = context.getRequest(dialog).getRequestURI();
                         logger.debug("BYE URI is: " + byeUri);
                     }
-                    logger.debug("Send BYE - Ringing " + ringing + " Subscription state terminated " + terminated);
+                    logger.debug("Send BYE - Ringing " + ringing + " Subscription state terminated " + terminated + " Session in progress " + sessionProgress);
                     SipListenerImpl.getInstance().getHelper().tearDownDialog(dialog, busyHeader, byeUri);
                 }
             } else {
