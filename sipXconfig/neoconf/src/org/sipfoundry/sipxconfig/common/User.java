@@ -40,11 +40,12 @@ import org.sipfoundry.sipxconfig.forwarding.CallSequence;
 import org.sipfoundry.sipxconfig.im.ImAccount;
 import org.sipfoundry.sipxconfig.ivr.Ivr;
 import org.sipfoundry.sipxconfig.permission.PermissionName;
+import org.sipfoundry.sipxconfig.search.IndexedBean;
 
 /**
  * Can be user that logs in, can be superadmin, can be user for phone line
  */
-public class User extends AbstractUser implements Replicable {
+public class User extends AbstractUser implements Replicable, IndexedBean {
     private static final Log LOG = LogFactory.getLog(User.class);
     private static final String VM_ENABLED_SETTING_PATH = "voicemail/vacation/vmEnabled";
     private static final String ALIAS_RELATION = "alias";
@@ -322,5 +323,10 @@ public class User extends AbstractUser implements Replicable {
 
     public void setDepositVoicemail(boolean value) {
         setSettingTypedValue(VM_ENABLED_SETTING_PATH, value);
+    }
+
+    @Override
+    public String getIndexValue() {
+        return getName();
     }
 }
