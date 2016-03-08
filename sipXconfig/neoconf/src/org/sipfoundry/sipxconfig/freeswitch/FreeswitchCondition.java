@@ -24,8 +24,9 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.sipfoundry.sipxconfig.common.BeanWithId;
 import org.sipfoundry.sipxconfig.common.NamedObject;
+import org.sipfoundry.sipxconfig.search.IndexedBean;
 
-public class FreeswitchCondition extends BeanWithId implements NamedObject {
+public class FreeswitchCondition extends BeanWithId implements NamedObject, IndexedBean {
 
     private String m_field;
     private String m_expression;
@@ -111,5 +112,10 @@ public class FreeswitchCondition extends BeanWithId implements NamedObject {
 
     @Override
     public void setName(String name) {
+    }
+
+    @Override
+    public String getIndexValue() {
+        return getExtension();
     }
 }
