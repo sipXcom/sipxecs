@@ -11,8 +11,12 @@ package org.sipfoundry.sipxconfig.site.search;
 
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -52,6 +56,9 @@ import org.sipfoundry.sipxconfig.site.setting.EditGroup;
 import org.sipfoundry.sipxconfig.site.upload.EditUpload;
 import org.sipfoundry.sipxconfig.site.user.EditUser;
 import org.sipfoundry.sipxconfig.upload.Upload;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.ListableBeanFactory;
 
 /**
  * This is a class in charge of determining which "edit" page should be used for an entity object
@@ -59,7 +66,7 @@ import org.sipfoundry.sipxconfig.upload.Upload;
  * and id and we need to find an edit page for it.
  *
  */
-public class EnumEditPageProvider implements EditPageProvider {
+public class EnumEditPageProvider implements EditPageProvider, BeanFactoryAware {
     public static final Log LOG = LogFactory.getLog(EnumEditPageProvider.class);
 
     public static final String RULE_ID = "ruleId";
@@ -108,14 +115,31 @@ public class EnumEditPageProvider implements EditPageProvider {
         }
     };
 
-    private final Map m_classToPageInfo;
+    private ListableBeanFactory m_beanFactory;
+    private Map m_classToPageInfo = null;
 
-    public EnumEditPageProvider() {
-        m_classToPageInfo = new HashMap(PAGES.length / 2);
-        for (int i = 0; i < PAGES.length; i = i + 2) {
-            Class klass = (Class) PAGES[i];
-            m_classToPageInfo.put(klass, PAGES[i + 1]);
+    private Map getClassToPageInfo() {
+        if (m_classToPageInfo == null) {
+            List<Object> classesList = new ArrayList<Object>(Arrays.asList(PAGES));
+            Map<String, EnumEditPageProviderPlugin> enumEditPageProviderPlugin = m_beanFactory.getBeansOfType(EnumEditPageProviderPlugin.class);
+            if (enumEditPageProviderPlugin != null) {
+                Collection<EnumEditPageProviderPlugin> enumEditPageProviderPluginClasses = enumEditPageProviderPlugin.values();
+                if (!enumEditPageProviderPluginClasses.isEmpty()) {
+                    for (EnumEditPageProviderPlugin beanAdaptorPlugin : enumEditPageProviderPluginClasses) {
+                        Object[] indexedClasses = beanAdaptorPlugin.getPages();
+                        classesList.addAll(Arrays.asList(indexedClasses));
+                    }
+                }
+            }
+
+            int size = classesList.size();
+            m_classToPageInfo = new HashMap(size / 2);
+            for (int i = 0; i < size; i = i + 2) {
+                Class klass = (Class) classesList.get(i);
+                m_classToPageInfo.put(klass, classesList.get(i + 1));
+            }
         }
+        return m_classToPageInfo;
     }
 
     /**
@@ -123,7 +147,7 @@ public class EnumEditPageProvider implements EditPageProvider {
      * are actually available and that they have settebale "id" field.
      */
     public void validatePages(IRequestCycle cycle) {
-        for (Iterator i = m_classToPageInfo.values().iterator(); i.hasNext();) {
+        for (Iterator i = getClassToPageInfo().values().iterator(); i.hasNext();) {
             String[] pageInfo = (String[]) i.next();
             getEditPage(cycle, null, pageInfo, false);
         }
@@ -131,7 +155,7 @@ public class EnumEditPageProvider implements EditPageProvider {
 
     public IPage getPage(IRequestCycle cycle, Class klass, Object id) {
         for (Class k = klass; k != Object.class; k = k.getSuperclass()) {
-            String[] pageInfo = (String[]) m_classToPageInfo.get(k);
+            String[] pageInfo = (String[]) getClassToPageInfo().get(k);
             if (pageInfo != null) {
                 return getEditPage(cycle, id, pageInfo, true);
             }
@@ -158,5 +182,10 @@ public class EnumEditPageProvider implements EditPageProvider {
         // if silent we only log it
         LOG.error(exception);
         return null;
+    }
+
+    @Override
+    public void setBeanFactory(BeanFactory beanFactory) {
+        m_beanFactory = (ListableBeanFactory) beanFactory;
     }
 }
