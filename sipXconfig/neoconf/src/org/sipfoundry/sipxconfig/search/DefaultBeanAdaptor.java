@@ -105,6 +105,7 @@ public class DefaultBeanAdaptor implements BeanAdaptor, BeanFactoryAware {
     }
 
     private ListableBeanFactory m_beanFactory;
+    private Class[] m_indexedClasses;
 
     @Override
     public Class[] getIndexedClasses() {
@@ -121,8 +122,6 @@ public class DefaultBeanAdaptor implements BeanAdaptor, BeanFactoryAware {
         }
         return (Class[]) classesList.toArray(new Class[classesList.size()]);
     }
-
-    private Class[] m_indexedClasses = null;
 
     public void setIndexedClasses(Class[] indexedClasses) {
         m_indexedClasses = indexedClasses;
