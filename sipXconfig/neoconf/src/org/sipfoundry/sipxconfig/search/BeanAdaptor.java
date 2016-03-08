@@ -31,6 +31,11 @@ public interface BeanAdaptor {
 
     void setIndexedClasses(Class[] indexedClasses);
 
+    /**
+     * Return those classes can be used to search by class
+     */
+    Class[] getIndexedClasses();
+
     public static class Identity<T> {
         private Class<T> m_klass;
         private Serializable m_id;
@@ -66,4 +71,5 @@ public interface BeanAdaptor {
             m_name = name;
         }
     }
+
 }

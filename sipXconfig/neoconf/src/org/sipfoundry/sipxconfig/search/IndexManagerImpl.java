@@ -22,7 +22,7 @@ public class IndexManagerImpl extends HibernateDaoSupport implements IndexManage
 
     private BeanAdaptor m_beanAdaptor;
 
-    private Class[] m_indexedClasses = DefaultBeanAdaptor.CLASSES;
+    private Class[] m_indexedClasses = null;
 
     /**
      * Loads all entities to be indexed.
@@ -53,6 +53,7 @@ public class IndexManagerImpl extends HibernateDaoSupport implements IndexManage
      */
     public void setBeanAdaptor(BeanAdaptor beanAdaptor) {
         m_beanAdaptor = beanAdaptor;
+        m_indexedClasses = m_beanAdaptor.getIndexedClasses();
     }
 
     /**
