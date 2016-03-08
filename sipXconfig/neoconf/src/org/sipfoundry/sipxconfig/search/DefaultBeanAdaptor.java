@@ -180,10 +180,22 @@ public class DefaultBeanAdaptor implements BeanAdaptor, BeanFactoryAware {
                 }
             }
             return true;
-        } else if (state instanceof User) {
-            User user = (User) state;
-            document.add(new Field(NAME, user.getName(), Field.Store.YES, Field.Index.ANALYZED));
-            document.add(new Field(Indexer.DEFAULT_FIELD, user.getName(), Field.Store.NO, Field.Index.ANALYZED));
+        } else if (state instanceof IndexedBean) {
+            IndexedBean indexedBean = (IndexedBean) state;
+            document.add(new Field(NAME, indexedBean.getIndexValue(), Field.Store.YES, Field.Index.ANALYZED));
+            document.add(new Field(Indexer.DEFAULT_FIELD,
+                    indexedBean.getIndexValue(), Field.Store.NO,
+                    Field.Index.ANALYZED));
+            return true;
+        } else if (fieldName.equals("conditions")) {
+            Set conditions = (Set) state;
+            for (Iterator a = conditions.iterator(); a.hasNext();) {
+                IndexedBean condition = (IndexedBean) a.next();
+                document.add(new Field(NAME, condition.getIndexValue(), Field.Store.NO, Field.Index.ANALYZED));
+                document.add(new Field(Indexer.DEFAULT_FIELD,
+                        condition.getIndexValue(), Field.Store.NO,
+                        Field.Index.ANALYZED));
+            }
             return true;
         }
         return false;
