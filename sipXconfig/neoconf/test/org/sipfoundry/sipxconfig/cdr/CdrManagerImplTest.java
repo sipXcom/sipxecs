@@ -99,6 +99,9 @@ public class CdrManagerImplTest extends TestCase {
 
         rs.getBoolean("caller_internal");
         expectLastCall().andReturn(true);
+        
+        rs.getString("called_number");
+        expectLastCall().andReturn("callee");
     
         rs.getString("caller_contact");
         expectLastCall().andReturn("caller_contact");
@@ -108,6 +111,9 @@ public class CdrManagerImplTest extends TestCase {
         rs.getString("callee_route");
         expectLastCall().andReturn("AL,LD");
 
+        rs.getInt("gateway");
+        expectLastCall().andReturn(1);
+        
         replay(rs);
 
         CdrsResultReader reader = new CdrManagerImpl.CdrsResultReader(tz);
