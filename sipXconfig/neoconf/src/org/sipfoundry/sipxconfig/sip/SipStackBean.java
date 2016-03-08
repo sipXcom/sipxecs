@@ -79,7 +79,7 @@ public class SipStackBean {
     public static final String BUSY_MESSAGE = "Busy Here";
 
     public static final String RINGING_MESSAGE = "180 Ringing";
-    
+
     public static final String SESSION_PROGRESS = "183 Session Progress";
 
     private static final Log LOG = LogFactory.getLog(SipStackBean.class);

@@ -73,7 +73,8 @@ class SipListenerImpl implements SipListener {
                 String content = new String(request.getRawContent());
                 boolean ringing = containsIgnoreCase(content, SipStackBean.RINGING_MESSAGE);
                 boolean sessionProgress = containsIgnoreCase(content, SipStackBean.SESSION_PROGRESS);
-                LOG.debug("Send BYE - Ringing " + ringing + " Subscription state terminated " + terminated + " Session in progress " + sessionProgress);
+                LOG.debug("Send BYE - Ringing " + ringing
+                    + " Subscription state terminated " + terminated + " Session in progress " + sessionProgress);
                 if (ringing || terminated || sessionProgress) {
                     Dialog dialog = requestEvent.getDialog();
                     ReasonHeader busyHeader = null;

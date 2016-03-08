@@ -17,15 +17,13 @@
 	},
 	"items" : [
 		{
-			"callee_aor" : "Brian Ferry - 1111",
-			"caller_aor" : "callee",
 			"start_time" : "2008-05-02T06:29:08-04:00",
 			"connect_time" : "2008-05-02T06:29:08-04:00",
 			"end_time" : "2008-05-02T06:29:08-04:00",
 			"failure_status" : "404",
 			"termination" : "I",
 			"id" : "0000-0000",
-			"label" : "callee",
+			"label" : "",
 			"type" : "CDR"
 		}
 	]
