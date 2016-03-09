@@ -197,15 +197,28 @@ public class Attendant extends SipxIvrApp {
 
             // proceed with user verification only if dial allowed
             if (isDialAllowed) {
+                String uri = null;
+
+                // check first if valid users
                 User user = m_validUsers.getUser(digits);
                 if (user != null) {
-                    String uri = user.getUri();
+                    uri = user.getUri();
+                } else {
+                    // if not a valid user, check if a known identity defined in system
+                    String domain = controller.getSipxchangeDomainName();
+                    if (m_validUsers.isValidIdentity(digits + "@" + domain)) {
+                        uri = digits + "@" + domain;
+                    }
+                }
+                
+                if (uri != null) {
                     LOG.info(String.format("Attendant::attendant Transfer to extension %s (%s) uuid=%s", digits, uri,
                             controller.getUuid()));
                     // It's valid, transfer the call there.
                     controller.transfer(uri, config.isPlayPrompt());
                     break;
                 }
+
             }
 
             LOG.info("Attendant::attendant Extension " + digits + " is not valid");
