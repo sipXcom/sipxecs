@@ -1055,6 +1055,15 @@ public class ValidUsers {
         }
     }
 
+    public boolean isValidIdentity(String uri) {
+        if (uri == null) {
+            return false;
+        }
+        DBObject queryIdent = QueryBuilder.start(IDENTITY).is(uri).get();
+        long result = getEntityCollection().count(queryIdent);
+        return result > 0;
+    }
+
     public DB getImdb() {
         return m_imdb;
     }
