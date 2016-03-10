@@ -103,8 +103,8 @@ public class PhoneContextImpl extends SipxHibernateDaoSupport implements BeanFac
         + "WHERE value_storage_id=%d AND path = 'group.version/firmware.version'";
     private static final String SQL_PHONE_GROUP_MIN_WEIGHT = "SELECT gs.group_id FROM phone_group ph "
         + "JOIN group_storage gs ON ph.group_id = gs.group_id WHERE ph.phone_id=%d "
-        + "ORDER BY gs.weight LIMIT 1";
-    private static final String SQL_PHONE_GROUP_WEIGHT = "SELECT MIN(gs.weight) FROM phone_group ph "
+        + "ORDER BY gs.weight DESC LIMIT 1";
+    private static final String SQL_PHONE_GROUP_WEIGHT = "SELECT MAX(gs.weight) FROM phone_group ph "
         + "JOIN group_storage gs ON ph.group_id = gs.group_id WHERE ph.phone_id=%d";
     private static final String SQL_GROUP_WEIGHT = "SELECT gs.weight FROM group_storage gs WHERE gs.group_id = %d";
 
