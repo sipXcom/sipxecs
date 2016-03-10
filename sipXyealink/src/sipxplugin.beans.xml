@@ -363,7 +363,7 @@
 </bean>
 <bean id="yealinkPhoneVP49G" parent="yealinkModel">
 	<property name="label" value="Yealink SIP-T49G" />
-	<property name="name" value="VP49" />
+	<property name="name" value="T49" />
 	<property name="maxLineCount" value="16" />
 	<property name="maxDSSKeyCount" value="13" />
 	<property name="supportedFeatures">
