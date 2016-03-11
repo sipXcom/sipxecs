@@ -33,11 +33,11 @@ import org.sipfoundry.sipxconfig.alarm.AlarmDefinition;
 import org.sipfoundry.sipxconfig.alarm.AlarmProvider;
 import org.sipfoundry.sipxconfig.alarm.AlarmServerManager;
 import org.sipfoundry.sipxconfig.apache.ApacheManager;
+import org.sipfoundry.sipxconfig.cfgmgt.CfengineModuleConfiguration;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigException;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigProvider;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigRequest;
-import org.sipfoundry.sipxconfig.cfgmgt.ConfigUtils;
 import org.sipfoundry.sipxconfig.cfgmgt.LoggerKeyValueConfiguration;
 import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.dialplan.AutoAttendantManager;
@@ -83,7 +83,6 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
             File dir = manager.getLocationDataDirectory(location);
             boolean enabled = featureManager.isFeatureEnabled(Ivr.FEATURE, location);
 
-            ConfigUtils.enableCfengineClass(dir, "sipxivr.cfdat", enabled, "sipxivr");
             if (!enabled) {
                 continue;
             }
@@ -99,11 +98,16 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
 
             File f = new File(dir, "sipxivr.properties.part");
             Writer wtr = new FileWriter(f);
+            Writer w = new FileWriter(new File(dir, "sipxivr.cfdat"));
             try {
+                CfengineModuleConfiguration config = new CfengineModuleConfiguration(w);
+                config.writeClass("sipxivr", enabled);
+                config.write("CLEANUP_VOICEMAIL_HOUR", settings.getCleanupVoicemailHour());
                 write(wtr, settings, domain, location, getMwiLocations(mwiLocations, location), mwiPort, restApi,
                         adminApi, apacheApi, imApi, fsEvent, aaSettings, m_adminContext.isHazelcastEnabled());
             } finally {
                 IOUtils.closeQuietly(wtr);
+                IOUtils.closeQuietly(w);
             }
         }
     }
