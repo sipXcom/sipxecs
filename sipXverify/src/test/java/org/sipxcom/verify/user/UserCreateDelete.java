@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 
 import java.sql.SQLException;
 
-public class UserCreateDelete extends AbstractUser {
+public class UserCreateDelete extends AbstractTest {
 
     @Test
     public void canCreateUser(){
