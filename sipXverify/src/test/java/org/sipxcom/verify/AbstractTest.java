@@ -11,7 +11,9 @@ import org.sipxcom.verify.util.LoginUtil;
 import org.sipxcom.verify.util.PropertyLoader;
 import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.BeforeTest;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -24,14 +26,14 @@ public abstract class AbstractTest {
 
     protected WebDriver driver;
 
-    @BeforeSuite
+    @BeforeTest
     public void init() {
         System.out.println("Initializing WebDriver and connecting to Database");
         driver = LoginUtil.getRemoteWebDriver(LoginUtil.SUPERADMIN);
         DatabaseConnector.setDBConnection();
     }
 
-    @AfterSuite
+    @AfterTest
     public void cleanup() throws SQLException {
         System.out.println("Closing WebDriver and Db connection");
         driver.close();
@@ -47,6 +49,12 @@ public abstract class AbstractTest {
     protected void clickOnItem(String xpath) {
         WebElement element = driver.findElement(By.xpath(xpath));
         element.click();
+    }
+
+    protected String findItemAndGetText(String xpath) {
+        WebElement element = driver.findElement(By.xpath(xpath));
+        String text = element.getText();
+        return text;
     }
 
     protected void clickOnItemWithLinkText(String text) {
@@ -148,7 +156,7 @@ public abstract class AbstractTest {
 
     //Phone related methods
 
-    public void configureLineOnAutoProvisionedPhone() {
+    public void configureLineOnAutoProvisionedPhone() throws InterruptedException {
         //Polycom phone already added to System but without a line configured
         System.out.println("Going to Devices tab");
         clickOnItem(PropertyLoader.getProperty("devicesMenuHeader"));
@@ -175,7 +183,25 @@ public abstract class AbstractTest {
         clickOnItem(PropertyLoader.getProperty("identificationSection"));
         System.out.println("Clicking Send Profiles");
         clickOnItem(PropertyLoader.getProperty("sendProfiles"));
+        System.out.println("Clicking Ok to Send Profiles");
+        clickOnItem(PropertyLoader.getProperty("okToSendProfiles"));
+        System.out.println("Waiting for profiles to be sent");
+        Thread.sleep(6000);
         System.out.println("Line configured on phone");
+    }
+
+    public void lineRegistered(String lineName) {
+        System.out.println("Going to Diagnostics tab");
+        clickOnItem(PropertyLoader.getProperty("diagnosticsMenuHeader"));
+        System.out.println("Going to Registrations page");
+        clickOnItemWithLinkText(PropertyLoader.getProperty("registrationsMenuSection"));
+        System.out.println("Getting registrations...");
+        String allRegistrations = findItemAndGetText(PropertyLoader.getProperty("registrationsTable"));
+        System.out.println("Finding registration...");
+        String registrationToFind = "sip:"+PropertyLoader.getProperty(lineName);
+        boolean b = allRegistrations.contains(registrationToFind);
+        assertTrue(b);
+        System.out.println("Line registered");
     }
 
 }

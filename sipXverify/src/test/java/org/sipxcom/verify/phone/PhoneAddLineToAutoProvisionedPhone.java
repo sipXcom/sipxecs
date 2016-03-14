@@ -6,9 +6,14 @@ import org.testng.annotations.Test;
 public class PhoneAddLineToAutoProvisionedPhone extends AbstractTest {
 
     @Test
-    public void canConfigureLineOnPhone(){
+    public void canConfigureLineOnPhone() throws InterruptedException {
         createUser();
         configureLineOnAutoProvisionedPhone();
+    }
+
+    @Test
+    public void validateLineRegistration(){
+        lineRegistered("user1.name");
     }
 
 
