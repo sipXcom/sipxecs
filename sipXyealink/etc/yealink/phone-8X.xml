@@ -233,6 +233,10 @@
 	    <!--// Configure AES key (16 characters) for decrypting the MAC-Oriented CFG file. //-->
 	    <setting name="auto_provision.aes_key_16.mac"><type><string/></type></setting>
 
+	    <!--// Protect personal config of phone //-->
+	    <setting name="auto_provision.custom.protect"><type><boolean/></type><value>0</value></setting>
+	    <!--// Sync personal config of phone to Server <mac>-local.cfg (needs special config for tftp) //-->
+	    <setting name="auto_provision.custom.sync"><type><boolean/></type><value>0</value></setting>
 	    <!--//
 	    #######################################################################################
 	    ##                         Zero Touch                                                ##
@@ -1017,6 +1021,7 @@
 		<setting name="bw.feature_key_sync"><type><boolean/></type><value>0</value></setting>
 		<setting name="bw.enable"><type><boolean/></type><value>0</value></setting>
 		<setting name="sip.notify_reboot_enable"><type refid="CheckSyncReboot_type"/><value>0</value></setting>
+		<setting name="phone_setting.backgrounds"><type><string/></type><value>Default:Default.png</value></setting>
 	</group>
     <group name="security">
 	<group name="PASSWORD">
