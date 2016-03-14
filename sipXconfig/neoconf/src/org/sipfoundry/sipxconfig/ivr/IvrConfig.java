@@ -38,8 +38,10 @@ import org.sipfoundry.sipxconfig.cfgmgt.ConfigException;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigProvider;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigRequest;
+import org.sipfoundry.sipxconfig.cfgmgt.ConfigUtils;
 import org.sipfoundry.sipxconfig.cfgmgt.LoggerKeyValueConfiguration;
 import org.sipfoundry.sipxconfig.commserver.Location;
+import org.sipfoundry.sipxconfig.commserver.LocationsManager;
 import org.sipfoundry.sipxconfig.dialplan.AutoAttendantManager;
 import org.sipfoundry.sipxconfig.dialplan.DialPlanContext;
 import org.sipfoundry.sipxconfig.dialplan.attendant.AutoAttendantSettings;
@@ -59,6 +61,7 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
     private Mwi m_mwi;
     private AutoAttendantManager m_aaManager;
     private AdminContext m_adminContext;
+    private LocationsManager m_locationsManager;
 
     @Override
     public void replicate(ConfigManager manager, ConfigRequest request) throws IOException {
@@ -83,6 +86,7 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
             File dir = manager.getLocationDataDirectory(location);
             boolean enabled = featureManager.isFeatureEnabled(Ivr.FEATURE, location);
 
+            ConfigUtils.enableCfengineClass(dir, "sipxivr.cfdat", enabled, "sipxivr");
             if (!enabled) {
                 continue;
             }
@@ -98,17 +102,23 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
 
             File f = new File(dir, "sipxivr.properties.part");
             Writer wtr = new FileWriter(f);
-            Writer w = new FileWriter(new File(dir, "sipxivr.cfdat"));
             try {
-                CfengineModuleConfiguration config = new CfengineModuleConfiguration(w);
-                config.writeClass("sipxivr", enabled);
-                config.write("CLEANUP_VOICEMAIL_HOUR", settings.getCleanupVoicemailHour());
                 write(wtr, settings, domain, location, getMwiLocations(mwiLocations, location), mwiPort, restApi,
                         adminApi, apacheApi, imApi, fsEvent, aaSettings, m_adminContext.isHazelcastEnabled());
             } finally {
                 IOUtils.closeQuietly(wtr);
-                IOUtils.closeQuietly(w);
             }
+        }
+
+        // add CLEANUP_VOICEMAIL_HOUR parameter ONLY ON PRIMARY
+        Location primaryLocation = m_locationsManager.getPrimaryLocation();
+        File dir = manager.getLocationDataDirectory(primaryLocation);
+        Writer w = new FileWriter(new File(dir, "sipxivr.cfdat"));
+        try {
+            CfengineModuleConfiguration config = new CfengineModuleConfiguration(w);
+            config.write("CLEANUP_VOICEMAIL_HOUR", settings.getCleanupVoicemailHour());
+        } finally {
+            IOUtils.closeQuietly(w);
         }
     }
 
@@ -206,6 +216,11 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
     @Required
     public void setAutoAttendantManager(AutoAttendantManager aaManager) {
         m_aaManager = aaManager;
+    }
+
+    @Required
+    public void setLocationsManager(LocationsManager locationsManager) {
+        m_locationsManager = locationsManager;
     }
 
     public void setAdminContext(AdminContext adminContext) {
