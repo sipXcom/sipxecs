@@ -153,6 +153,10 @@ public class AdminContextImpl extends HibernateDaoSupport implements AdminContex
         }
     }
 
+    protected StringBuilder getBackup() {
+        return m_backup;
+    }
+
     protected void setBackup(StringBuilder backup) {
         m_backup = backup;
     }
