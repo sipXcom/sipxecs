@@ -6,4 +6,9 @@
       <class name="org.sipxcom.verify.user.UserCreateDelete"/>
     </classes>
   </test> <!-- Test -->
+  <test name="Phone Tests">
+    <classes>
+      <class name="org.sipxcom.verify.phone.PhoneAddLineToAutoProvisionedPhone"/>
+    </classes>
+  </test>
 </suite> <!-- Suite -->
