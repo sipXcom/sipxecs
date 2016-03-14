@@ -952,6 +952,7 @@
 		<setting name="bw.feature_key_sync"><type><boolean/></type><value>0</value></setting>
 		<setting name="bw.enable"><type><boolean/></type><value>0</value></setting>
 		<setting name="sip.notify_reboot_enable"><type refid="CheckSyncReboot_type"/><value>0</value></setting>
+		<setting name="phone_setting.backgrounds"><type><string/></type><value>Default:Default.png</value></setting>
 	</group>
     <group name="security">
 	<group name="PASSWORD">
