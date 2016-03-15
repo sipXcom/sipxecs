@@ -609,6 +609,8 @@
 	    <!--// Configure the phone to receive the action URI request from the specified IP address(es) or any IP address;
 	    #Enter multiple IP addresses (separated by comma) or "any"(stands for any IP address);  //-->
 	    <setting name="features.action_uri_limit_ip"><type><string/></type></setting>
+	    <setting name="features.action_uri.enable"><type><boolean/></type><value>0</value></setting>
+	    <setting name="sip.trust_ctrl"><type><boolean/></type><value>0</value></setting>
 	</group>
 	<group name="ACD" if="yealinkPhone((SIPT[1-4])|(W5)).*">
 	    <!--// 
