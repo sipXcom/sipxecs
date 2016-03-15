@@ -1511,7 +1511,7 @@
   </target>
   <target name="migrate-yealinkphoneVP49G-to-yealinkphoneSIPT49G" unless="migrate-yealinkphoneVP49G-to-yealinkphoneSIPT49G">
     <sipx-sql>
-      UPDATE "public"."phone" SET "model_id"='yealinkPhoneSIPT49G' WHERE ("bean_id"='yealinkPhoneVP49G');
+      UPDATE "public"."phone" SET "model_id"='yealinkPhoneSIPT49G' WHERE ("model_id"='yealinkPhoneVP49G');
     </sipx-sql>
   </target>
   <target name="add_location_location" unless="add_location_location">
