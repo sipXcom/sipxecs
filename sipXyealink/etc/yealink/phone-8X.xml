@@ -539,18 +539,16 @@
 	    <setting name="voice.handfree_send" if="yealinkPhone((SIPT[1-4])|(W5)).*"><type><integer min="-50" max="50"/></type><value>0</value></setting>
 	    <setting name="voice.handset_send" if="yealinkPhone((SIPT[1-4])|(W5)).*"><type><integer min="-50" max="50"/></type><value>0</value></setting>
 	    <setting name="voice.headset_send" if="yealinkPhone((SIPT[1-4])|(W5)).*"><type><integer min="-50" max="50"/></type><value>0</value></setting>
-	    <!--// Configure the receiving volume of Speaker, //-->
-            <setting name="voice.side_tone" advanced="yes"><type><integer min="-100" max="0"/></type><value>-25</value></setting>
-            <!--// Configure the receiving volume of Speaker, Handset and Headset. It ranges from 0 to 15, the default value is 8. //-->
-	    <!--<setting name="voice.handfree.spk_vol" advanced="yes"><type><integer min="0" max="15"/></type><value>8</value></setting>
-	    <setting name="voice.handset.spk_vol" advanced="yes"><type><integer min="0" max="15"/></type><value>8</value></setting>
-	    <setting name="voice.headset.spk_vol" advanced="yes"><type><integer min="0" max="15"/></type><value>8</value></setting>//-->
+	    <!--// Configure the receiving volume of Speaker, Handset and Headset. It ranges from 0 to 15, the default value is 8. //-->
+	    <setting name="voice.handfree.spk_vol"><type><integer min="0" max="15"/></type><value>8</value></setting>
+	    <setting name="voice.handset.spk_vol"><type><integer min="0" max="15"/></type><value>8</value></setting>
+	    <setting name="voice.headset.spk_vol"><type><integer min="0" max="15"/></type><value>8</value></setting>
 	    <!--// Configure the dial tone volume of Speaker, Handset and Headset. It ranges from 0 to 15, the default value is 8. //-->
-	<!--    <setting name="voice.handfree.tone_vol" advanced="yes" if="yealinkPhone((SIPT[1-4])|(W5)).*"><type><integer min="0" max="15"/></type><value>8</value></setting>
-	    <setting name="voice.handset.tone_vol" advanced="yes" if="yealinkPhone((SIPT[1-4])|(W5)).*"><type><integer min="0" max="15"/></type><value>8</value></setting>
-	    <setting name="voice.headset.tone_vol" advanced="yes" if="yealinkPhone((SIPT[1-4])|(W5)).*"><type><integer min="0" max="15"/></type><value>8</value></setting> -->
+	    <setting name="voice.handfree.tone_vol" if="yealinkPhone((SIPT[1-4])|(W5)).*"><type><integer min="0" max="15"/></type><value>8</value></setting>
+	    <setting name="voice.handset.tone_vol" if="yealinkPhone((SIPT[1-4])|(W5)).*"><type><integer min="0" max="15"/></type><value>8</value></setting>
+	    <setting name="voice.headset.tone_vol" if="yealinkPhone((SIPT[1-4])|(W5)).*"><type><integer min="0" max="15"/></type><value>8</value></setting>
 	    <!--// Configure the ring volume. It ranges from 0 to 15, the default value is 8. //-->
-	    <!--//<setting name="voice.ring_vol" advanced="yes"><type><integer min="0" max="15"/></type><value>8</value></setting>//-->
+	    <setting name="voice.ring_vol"><type><integer min="0" max="15"/></type><value>8</value></setting>
 	    <!--// Specify the ring device when the phone is in the Headset mode; 0-use Speaker (default), 1-use Headset; //-->
 	    <setting name="features.ringer_device.is_use_headset"><type refid="RingerDevice_type"/><value>0</value></setting>
 	    <!--// #Enable or disable the dual headset feature; 0-Disabled (default), 1-Enabled; //-->
@@ -768,7 +766,7 @@
 	    <setting name="voice.jib.normal"><type><integer/></type><value>120</value></setting>
 	</group>
 	<group name="ADVANCED" advanced="yes">
-	    <!--// Configure the volume of the side tone. It ranges from -48 to 0, the default value is -3. //-->
+	    <!--// Configure the volume of the side tone. It ranges from -100 to 0, the default value is -3. //-->
 	    <!--// Value of -32768 disables this annoying side tone //-->
 	    <setting name="voice.side_tone"><type><integer min="-32768" max="0"/></type><value>-32768</value></setting>
 	</group>
