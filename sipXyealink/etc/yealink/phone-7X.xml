@@ -313,8 +313,12 @@
 	<setting name="phone_setting.inter_digit_time"><type><integer min="1" max="14"/></type><value>4</value></setting>
 	<!--// Configure the backlight time (in seconds). The valid values are: 1-Always on, 60 (default), 120, 300, 600, 1800.  //-->
 	<setting name="phone_setting.backlight_time"><type refid="yealink_backlight_time_type"/><value>60</value></setting>
-	<!--// Configure the keypad lock type; 0-Disabled (default), 1-Menu Key, 2-Function Key, 3-All Keys, 4-Lock&amp;Answer;  //-->
-	<setting name="phone_setting.lock" if="yealinkPhone((SIPT[1-4])|(W5)).*"><type refid="yealink_key_lock_type"/><value>0</value></setting>
+	<!--// Configure the keypad lock type; 0-Disabled (default), 1-Menu Key, 2-Function Key, 3-All Keys  //-->
+	<setting name="phone_setting.lock" if="yealinkPhone(SIPT[2]).*"><type refid="yealink_key_lock_type"/><value>0</value></setting>
+	<!--// Configure the keypad lock type; 2-Menu Key, 1-Function Key, 0-All Keys  (default) //-->
+	<setting name="phone_setting.phone_lock.lock_key_type" if="yealinkPhone(SIPT4[621]).*"><type refid="yealink_key_lock_type2"/><value>0</value></setting>
+	<!--// Enables Phone Lock on T4x Series //-->
+	<setting name="phone_setting.phone_lock.enable" if="yealinkPhone(SIPT4).*"><type><boolean/></type><value>0</value></setting>
 	<!--// Set the unlock password and expiry time (in seconds) of phone lock. It ranges from 0 to 3600, the default value of expiry time is 10. //-->
 	<setting name="phone_setting.phone_lock.unlock_pin" if="yealinkPhone((SIPT[1-4])|(W5)).*"><type><string/></type></setting>
 	<setting name="phone_setting.phone_lock.lock_time_out" if="yealinkPhone((SIPT[1-4])|(W5)).*"><type><integer min="0" max="3600"/></type><value>10</value></setting>
