@@ -661,7 +661,13 @@
 	<option><value>1</value></option>
 	<option><value>2</value></option>
 	<option><value>3</value></option>
-	<option><value>4</value></option>
+    </enum>
+</type>
+<type id="yealink_key_lock_type2">
+    <enum>
+	<option><value>0</value></option>
+	<option><value>1</value></option>
+	<option><value>2</value></option>
     </enum>
 </type>
 <type id="SideTone_type">
