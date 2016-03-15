@@ -364,7 +364,7 @@
 	<!--// Configure the contrast of the LCD screen. The valid values are: Integer from 1 to 10  //-->
 	<setting name="phone_setting.contrast"><integer min="1" max="10"/><value>6</value></setting>
 	<!--// Configure the keypad lock type; 0-Disabled (default), 1-Menu Key, 2-Function Key, 3-All Keys, 4-Lock&amp;Answer;  //-->
-	<setting name="phone_setting.lock" if="yealinkPhone((SIPT[1-4])|(W5)).*"><type refid="yealink_key_lock_type"/><value>0</value></setting>
+	<setting name="phone_setting.lock" if="yealinkPhone(SIPT[2]).*"><type refid="yealink_key_lock_type"/><value>0</value></setting>
 	<!--// Set the unlock password and expiry time (in seconds) of phone lock. It ranges from 0 to 3600, the default value of expiry time is 10. //-->
 	<setting name="phone_setting.phone_lock.unlock_pin" if="yealinkPhone((SIPT[1-4])|(W5)).*"><type><string/></type></setting>
 	<setting name="phone_setting.phone_lock.lock_time_out" if="yealinkPhone((SIPT[1-4])|(W5)).*"><type><integer min="0" max="3600"/></type><value>10</value></setting>
