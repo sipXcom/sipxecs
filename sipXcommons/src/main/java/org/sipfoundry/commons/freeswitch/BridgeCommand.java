@@ -24,7 +24,8 @@ public class BridgeCommand extends CallCommand {
         super(fses);
         // Send a REFER
         m_uuid = uuid;
-        m_command = "bridge\nexecute-app-arg: {hangup_after_bridge=true}sofia/";
+        m_command = "bridge\nexecute-app-arg: {sip_from_uri=${sip_from_uri},origination_caller_id_number=" +
+                fses.getVariable("Channel-Caller-ID-Number") + ",hangup_after_bridge=true}sofia/";
         m_command += sipContext;
         m_command += "/";
         // sipURI MUST have sip: in there (Can be display URI)
