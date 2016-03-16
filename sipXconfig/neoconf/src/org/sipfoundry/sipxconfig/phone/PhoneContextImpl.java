@@ -25,7 +25,6 @@ import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.cxf.common.util.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
@@ -54,7 +53,6 @@ import org.sipfoundry.sipxconfig.phonebook.PhonebookEntry;
 import org.sipfoundry.sipxconfig.phonebook.PhonebookManager;
 import org.sipfoundry.sipxconfig.setting.Group;
 import org.sipfoundry.sipxconfig.setting.SettingDao;
-import org.sipfoundry.sipxconfig.setting.ValueStorage;
 import org.sipfoundry.sipxconfig.speeddial.SpeedDial;
 import org.sipfoundry.sipxconfig.speeddial.SpeedDialManager;
 import org.springframework.beans.factory.BeanFactory;
@@ -90,23 +88,11 @@ public class PhoneContextImpl extends SipxHibernateDaoSupport implements BeanFac
     private static final String SQL_SELECT_GROUP_RESTRICT_BY_BEAN_ID = "select p.phone_id,p.model_id,p.serial_number, "
             + "p.value_storage_id from phone p join phone_group pg on pg.phone_id = p.phone_id "
             + "where p.bean_id = '%s' and p.model_id = '%s' and pg.group_id=%d and p.device_version_id != '%s'";
-    private static final String QUERY_MODEL_FIRMWARE_VERSION = "SELECT sv.value FROM setting_value sv, phone p "
-        + "JOIN phone_group pg ON p.phone_id = pg.phone_id "
-        + "JOIN group_storage gs ON pg.group_id = gs.group_id "
-        + "WHERE sv.path = 'group.version/firmware.version' "
-        + "AND p.value_storage_id = sv.value_storage_id "
-        + "AND p.model_id='%s' "
-        + "AND pg.group_id='%d' "
-        + "LIMIT 1";
     private static final String SQL_UPDATE = "update phone set device_version_id='%s' where phone_id=%d";
-    private static final String SQL_GROUP_FIRMWARE_UPDATE = "update setting_value set value='%s' "
-        + "WHERE value_storage_id=%d AND path = 'group.version/firmware.version'";
-    private static final String SQL_PHONE_GROUP_MIN_WEIGHT = "SELECT gs.group_id FROM phone_group ph "
-        + "JOIN group_storage gs ON ph.group_id = gs.group_id WHERE ph.phone_id=%d "
-        + "ORDER BY gs.weight DESC LIMIT 1";
     private static final String SQL_PHONE_GROUP_WEIGHT = "SELECT MAX(gs.weight) FROM phone_group ph "
         + "JOIN group_storage gs ON ph.group_id = gs.group_id WHERE ph.phone_id=%d";
     private static final String SQL_GROUP_WEIGHT = "SELECT gs.weight FROM group_storage gs WHERE gs.group_id = %d";
+    private static final String SLASH = "/";
 
     private CoreContext m_coreContext;
 
@@ -187,6 +173,7 @@ public class PhoneContextImpl extends SipxHibernateDaoSupport implements BeanFac
         } else {
             hibernate.merge(phone);
         }
+        flush();
         getDaoEventPublisher().publishSave(phone);
     }
 
@@ -400,12 +387,6 @@ public class PhoneContextImpl extends SipxHibernateDaoSupport implements BeanFac
     public void onSave(Object entity) {
         if (entity instanceof Phone) {
             Phone phone = (Phone) entity;
-            //set phone group firmware version
-            //this is a proposed phone firmware version given what groups a phone belongs to
-            //and we save it as a setting value.
-            //given complexity of phone model and what groups a phone belongs to, a proposed
-            //firmware value will show in group firmware UI page
-            applyGroupFirmwareVersion(phone);
             LOG.error(String.format(ALARM_PHONE_CHANGED, phone.getId(), phone.getSerialNumber()));
         } else if (entity instanceof Group) {
             Group g = (Group) entity;
@@ -419,22 +400,10 @@ public class PhoneContextImpl extends SipxHibernateDaoSupport implements BeanFac
     public void applyGroupFirmwareVersion(Group group, DeviceVersion v, String modelId) {
         LOG.debug(String.format("Attempting to apply firmware version %s to group %s... ", v.getVersionId(),
                 group.getName()));
-        Collection<Phone> phones = getPhonesByGroupId(group.getId());
-        boolean flushNeeded = false;
-        for (Phone phone : phones) {
-            //initialize group firmware version if there are phones with no group firmware version
-            //this is a proposed phone firmware version given what groups a phone belongs to
-            //and we save it as a setting value.
-            //given complexity of phone model and what groups a phone belongs to, a proposed
-            //firmware value will show in group firmware UI page
-            if (StringUtils.isEmpty(phone.getSettingValue(Phone.GROUP_VERSION_FIRMWARE_VERSION))) {
-                applyGroupFirmwareVersion(phone);
-                flushNeeded = true;
-            }
-        }
-        if (flushNeeded) {
-            getHibernateTemplate().flush();
-        }
+
+        group.setSettingValue(Phone.GROUP_VERSION_FIRMWARE_VERSION + SLASH + modelId, v.toString());
+        storeGroup(group);
+
         String versionId = v.toString();
         final List<Integer> ids = new LinkedList<Integer>();
         final List<String> models = new LinkedList<String>();
@@ -462,7 +431,6 @@ public class PhoneContextImpl extends SipxHibernateDaoSupport implements BeanFac
                 LOG.info("Updating " + serial + " to " + versionId);
                 if (valueStorageId != null && getPhoneGroupWeight(id) == getGroupWeight(group.getId())) {
                     updates.add(String.format(SQL_UPDATE, versionId, id));
-                    updates.add(String.format(SQL_GROUP_FIRMWARE_UPDATE, versionId, valueStorageId));
                 }
             } else {
                 LOG.debug("Skipping " + serial + " as it doesn't support " + versionId);
@@ -471,18 +439,6 @@ public class PhoneContextImpl extends SipxHibernateDaoSupport implements BeanFac
         if (updates.size() > 0) {
             m_jdbcTemplate.batchUpdate(updates.toArray(new String[] {}));
         }
-    }
-
-    private void applyGroupFirmwareVersion(Phone phone) {
-        ValueStorage vs = (ValueStorage) phone.getValueStorage() == null ? new ValueStorage()
-            : (ValueStorage) phone.getValueStorage();
-        int groupId = getPhoneGroupIdMinWeight(phone.getId());
-        String groupFirmwareVersion = getGroupFirmwareVersion(phone, groupId);
-        LOG.debug("Apply proposed group firmware setting value: "
-             + groupFirmwareVersion + " for phone: " + phone.getSerialNumber());
-        vs.setSettingValue(Phone.GROUP_VERSION_FIRMWARE_VERSION, groupFirmwareVersion);
-        phone.setValueStorage(vs);
-        getHibernateTemplate().merge(phone);
     }
 
     @Override
@@ -644,28 +600,18 @@ public class PhoneContextImpl extends SipxHibernateDaoSupport implements BeanFac
     }
 
     @Override
-    public String getGroupFirmwareVersion(Phone phone, int groupId) {
+    public String getGroupFirmwareVersion(Phone phone, Group group) {
         //if null, device version is not applicable for phone
-        if (phone.getDeviceVersion() == null) {
-            return null;
+        if (group == null) {
+            return phone.getDeviceVersion().toString();
+        } else {
+            return group.getSettingValue(Phone.GROUP_VERSION_FIRMWARE_VERSION + SLASH + phone.getModelId());
         }
-        Query q = getHibernateTemplate().getSessionFactory().getCurrentSession()
-                .createSQLQuery(String.format(QUERY_MODEL_FIRMWARE_VERSION, phone.getModelId(), groupId));
-
-        return q.list().size() > 0 ? (String) q.uniqueResult() : phone.getBeanId()
-            + phone.getDeviceVersion().getVersionId();
     }
 
     private int getPhoneGroupWeight(int phoneId) {
         Query q = getHibernateTemplate().getSessionFactory().getCurrentSession()
             .createSQLQuery(String.format(SQL_PHONE_GROUP_WEIGHT, phoneId));
-        return q.list().size() > 0 ? (Integer) q.uniqueResult() : 0;
-
-    }
-
-    private int getPhoneGroupIdMinWeight(int phoneId) {
-        Query q = getHibernateTemplate().getSessionFactory().getCurrentSession()
-            .createSQLQuery(String.format(SQL_PHONE_GROUP_MIN_WEIGHT, phoneId));
         return q.list().size() > 0 ? (Integer) q.uniqueResult() : 0;
 
     }
