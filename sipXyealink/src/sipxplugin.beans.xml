@@ -361,7 +361,7 @@
             <ref local="org.sipfoundry.sipxconfig.phone.yealink.YealinkModel.VER_8X"/>
         </property>
 </bean>
-<bean id="yealinkPhoneVP49G" parent="yealinkModel">
+<bean id="yealinkPhoneSIPT49G" parent="yealinkModel">
 	<property name="label" value="Yealink SIP-T49G" />
 	<property name="name" value="T49" />
 	<property name="maxLineCount" value="16" />
