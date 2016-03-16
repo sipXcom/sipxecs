@@ -323,7 +323,8 @@
 #set($start = 1)
 #set($end = $lines)
 #foreach($i in [$start..$end])
-    divert.fwd.${i}.enabled="0"
+#set ($setting = $line.getSetting('call').getSetting('fwd.enabled'))
+    divert.fwd.${i}.enabled="$!{setting.Value}"
 #end
   />
   
