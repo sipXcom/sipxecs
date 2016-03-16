@@ -40,7 +40,7 @@
   </component>
   <component id="autoAttendantAliases" type="TextField">
     <binding name="value" value="rule.attendantAliases" />
-    <binding name="validators" value="spring-validators:validUsernamePatternSequence" />
+    <binding name="validators" value="spring-validators:validUsernamePatternSequence,maxLength=255" />
     <binding name="displayName" value="message:label.autoAttendantAliases" />
   </component>
   <component id="afterHoursAttendantPanel" type="common/FieldPanel">
