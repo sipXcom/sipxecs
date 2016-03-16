@@ -21,11 +21,12 @@ public class LoginUtil {
 
     private static final Log LOG = LogFactory.getLog(AbstractTest.class);
     public static final String SUPERADMIN = "superadmin";
+    public static final String USER1 = "user1";
 
 
 
     private static void login(WebDriver driver, String userName) {
-        driver.findElement(By.id("j_username")).sendKeys(userName);
+        driver.findElement(By.id("j_username")).sendKeys(PropertyLoader.getUserName(userName));
         driver.findElement(By.id("j_password")).sendKeys(PropertyLoader.getUserPassword(userName));
         driver.findElement(By.id("login:submit")).click();
     }
