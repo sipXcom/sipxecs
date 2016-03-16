@@ -149,5 +149,5 @@ public interface PhoneContext extends DataObjectSource {
 
     void applyGroupFirmwareVersion(Group group, DeviceVersion v, String modelId);
 
-    String getGroupFirmwareVersion(Phone phone, int groupId);
+    String getGroupFirmwareVersion(Phone phone, Group group);
 }
