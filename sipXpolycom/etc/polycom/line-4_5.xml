@@ -299,6 +299,12 @@
     </group>
   </group>
   <group name="call">
+    <setting name="fwd.enabled">
+      <type>
+        <boolean />
+      </type>
+      <value>0</value>
+    </setting>
     <group name="autoOffHook">
       <setting name="enabled">
         <type>
