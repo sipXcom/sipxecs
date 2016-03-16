@@ -179,7 +179,7 @@ public abstract class EditPhoneDefaults extends PhoneBasePage implements PageBeg
         Line line = phone.createLine();
         phone.addLine(line);
         setPhone(phone);
-        String groupVersion = getPhoneContext().getGroupFirmwareVersion(getPhone(), group.getId());
+        String groupVersion = getPhoneContext().getGroupFirmwareVersion(getPhone(), group);
         if (groupVersion != null) {
             phone.setSettingValue(Phone.GROUP_VERSION_FIRMWARE_VERSION, groupVersion);
             DeviceVersion deviceVersion = getDeviceVersion();
