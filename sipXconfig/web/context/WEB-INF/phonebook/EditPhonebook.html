@@ -91,6 +91,17 @@
           validator="bean:validator"
           format="ognl:csvFormat">
         </div>
+        <ul class="form-actions">
+          <li>
+            <input id="phonebook:empty"
+              jwcid="empty@Submit"
+              value="message:button.empty"
+              listener="listener:emptyPhonebook" />
+            <span jwcid="@common/Confirm"
+              component="component:empty"
+              prompt="message:confirm.empty" />
+        </li>
+      </ul>
     </div>
     <span jwcid="formActions@common/FormActions" listener="listener:savePhonebook" callback="ognl:callback" />
   </form>

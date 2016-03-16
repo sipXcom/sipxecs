@@ -9,6 +9,8 @@
  */
 package org.sipfoundry.sipxconfig.site.phonebook;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +35,7 @@ import org.sipfoundry.sipxconfig.setting.Group;
 import org.sipfoundry.sipxconfig.setting.SettingDao;
 
 import static org.apache.commons.lang.StringUtils.isBlank;
+import org.sipfoundry.sipxconfig.phonebook.PhonebookEntry;
 
 public abstract class EditPhonebook extends PageWithCallback implements PageBeginRenderListener {
     public static final String PAGE = "phonebook/EditPhonebook";
@@ -151,5 +154,27 @@ public abstract class EditPhonebook extends PageWithCallback implements PageBegi
             String consumersString = BeanWithGroups.getGroupsAsString(consumers);
             setConsumerGroupsString(consumersString);
         }
+    }
+    public void emptyPhonebook() {
+        if (!TapestryUtils.isValid(this)) {
+            return;
+        }
+
+        Phonebook phonebook = getPhonebook();
+        Collection<PhonebookEntry> entries = new ArrayList<PhonebookEntry>();
+        phonebook.setEntries(entries);
+        String members = getMemberGroupsString();
+        if (members != null) {
+            List<Group> groups = getSettingDao().getGroupsByString(User.GROUP_RESOURCE_ID, members, true);
+            phonebook.replaceMembers(new HashSet<Group>(groups));
+        }
+        String consumers = getConsumerGroupsString();
+        if (consumers != null) {
+            List<Group> groups = getSettingDao().getGroupsByString(User.GROUP_RESOURCE_ID, consumers, true);
+            phonebook.replaceConsumers(new HashSet<Group>(groups));
+        }
+
+        getPhonebookManager().savePhonebook(phonebook);
+        setPhonebookId(phonebook.getId());
     }
 }
