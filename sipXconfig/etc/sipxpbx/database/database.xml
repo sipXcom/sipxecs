@@ -500,6 +500,7 @@
   	<antcall target="remove-voicemail-imap-settings" />
   	<antcall target="add-release-on-ring-failure" />
   	<antcall target="remove-firewall-rules" />
+    <antcall target="openacd-client-update" />
   </target>
 
   <target name="plugin-patches">
@@ -1552,7 +1553,10 @@
   </target>
   <target name="remove-firewall-rules" unless="remove-firewall-rules">
 	<db-patch patch="remove-firewall-rules"/>
-  </target>	
+  </target>
+  <target name="openacd-client-update" unless="openacd-client-update">
+    <db-patch patch="openacd-client-update"/>
+  </target> 
 
 	<!--
     - SUPPORT UTILITIES
