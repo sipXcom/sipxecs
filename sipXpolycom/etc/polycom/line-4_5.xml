@@ -322,7 +322,7 @@
       <setting name="enabled">
         <type>
           <boolean />
-		  </type>
+        </type>
         <value>0</value>
       </setting>
     </group>
