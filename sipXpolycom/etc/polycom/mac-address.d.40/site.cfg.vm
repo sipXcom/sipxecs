@@ -320,11 +320,12 @@
 #end
 
   <divert
-#set($start = 1)
-#set($end = $lines)
-#foreach($i in [$start..$end])
-#set ($setting = $line.getSetting('call').getSetting('fwd.enabled'))
-    divert.fwd.${i}.enabled="$!{setting.Value}"
+#foreach ($line in $lines)
+#set ($i = $velocityCount)
+#set ($group = $line.getSetting('call').getSetting('fwd'))
+#foreach ($setting in $cfg.getSettings($group))
+      divert.fwd.${i}.${setting.ProfileName}="$!{setting.Value}"
+#end
 #end
   />
   
