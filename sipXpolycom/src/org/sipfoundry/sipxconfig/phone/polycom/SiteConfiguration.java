@@ -34,6 +34,7 @@ import org.sipfoundry.sipxconfig.common.SpecialUser.SpecialUserType;
  * Responsible for generating ipmid.cfg
  */
 public class SiteConfiguration extends ProfileContext<PolycomPhone> {
+    private static final String PROVISION_AOR = "%s~%s";
     private final CertificateManager m_certificateManager;
 
     public SiteConfiguration(PolycomPhone device, CertificateManager certificateManager) {
