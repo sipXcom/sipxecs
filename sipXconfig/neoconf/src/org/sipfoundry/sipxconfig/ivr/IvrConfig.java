@@ -38,7 +38,6 @@ import org.sipfoundry.sipxconfig.cfgmgt.ConfigException;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigProvider;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigRequest;
-import org.sipfoundry.sipxconfig.cfgmgt.ConfigUtils;
 import org.sipfoundry.sipxconfig.cfgmgt.LoggerKeyValueConfiguration;
 import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.commserver.LocationsManager;
@@ -112,9 +111,11 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
 
             File f = new File(dir, "sipxivr.properties.part");
             Writer wtr = new FileWriter(f);
+
             try {
                 write(wtr, settings, domain, location, getMwiLocations(mwiLocations, location), mwiPort, restApi,
-                        adminApi, apacheApi, imApi, fsEvent, aaSettings, m_adminContext.isHazelcastEnabled());
+                        adminApi, apacheApi, imApi, fsEvent, aaSettings, m_adminContext.isHazelcastEnabled(),
+                        getPortalType());
             } finally {
                 IOUtils.closeQuietly(wtr);
             }
@@ -145,9 +146,21 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
         return address.toString();
     }
 
+    private int getPortalType() {
+        Boolean oldPortal = (Boolean) m_adminContext.getSettings().getSettingTypedValue("user-portal/old-portal");
+        Boolean imPortal = (Boolean) m_adminContext.getSettings().getSettingTypedValue("user-portal/im-portal");
+        if (oldPortal) {
+            return 0;
+        } else if (imPortal) {
+            return 2;
+        } else {
+            return 1;
+        }
+    }
+
     void write(Writer wtr, IvrSettings settings, Domain domain, Location location, String mwiAddresses, int mwiPort,
             Address restApi, Address adminApi, Address apacheApi, Address imApi, Address fsEvent,
-            AutoAttendantSettings aaSettings, boolean hzEnabled)
+            AutoAttendantSettings aaSettings, boolean hzEnabled, int userPortal)
         throws IOException {
         LoggerKeyValueConfiguration config = LoggerKeyValueConfiguration.equalsSeparated(wtr);
         config.writeSettings(settings.getSettings());
@@ -188,6 +201,7 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
         config.write("aa.dtmf.interDigitTimeout", aaSettings.getInterDigit());
         config.write("aa.dtmf.extraDigitTimeout", aaSettings.getExtraDigit());
         config.write("ivr.hzEnabled", hzEnabled);
+        config.write("userPortal", userPortal);
     }
 
     @Override

@@ -15,6 +15,7 @@ import java.util.Locale;
 import org.apache.commons.lang.StringUtils;
 import org.sipfoundry.commons.userdb.User;
 import org.sipfoundry.commons.userdb.ValidUsers;
+import org.sipfoundry.sipxivr.SipxIvrConfiguration;
 import org.sipfoundry.voicemail.mailbox.VmMessage;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -25,6 +26,7 @@ public class EmailFormatter implements ApplicationContextAware {
     private Object[] m_args;
     private User m_user;
     private ApplicationContext m_context;
+    private SipxIvrConfiguration m_ivrConfig;
     
     /**
      * A formatter for e-mail messages.
@@ -39,7 +41,7 @@ public class EmailFormatter implements ApplicationContextAware {
     public void init(User user, VmMessage vmessage) {
         m_user = user;
         String fromDisplay = null;
-        Object[] args = new Object[15];
+        Object[] args = new Object[17];
         String fromUri = "";
         String fromUser = "";
         
@@ -70,19 +72,38 @@ public class EmailFormatter implements ApplicationContextAware {
         args[ 7] = fmt("SenderName", args);                     //  7 Sender Name
         args[ 8] = fmt("SenderMailto", args);                   //  8 Sender mailto
         args[ 9] = fmt("HtmlTitle", args);                      //  9 html title
-
-        args[10] = String.format("%s/sipxconfig/mailbox/%s/inbox/", 
-                args[ 4], m_user.getUserName());                      // 10 Portal URL (if needs to be re-written)
+        
+        args[10] = String.format(getInboxUrl(), args[ 4]);      // 10 Portal URL (if needs to be re-written)
         args[11] = fmt("Sender", args);                         // 11 Sender (as url'ish)
         args[12] = fmt("SubjectFull", args);                    // 12 Subject (for Full)
         args[13] = fmt("SubjectMedium", args);                  // 13 Subject (for Medium)
         args[14] = fmt("SubjectBrief", args);                   // 14 Subject (for Brief)
+        args[15] = String.format(getDeleteUrl(), args[4], m_user.getUserName(), args[5]);
+        args[16] = String.format(getPlayUrl(), args[4], m_user.getUserName(), args[5]);
         m_args = args;
     }
 
 
     public String fmt(String text) {
         return fmt(text, m_args);
+    }
+    
+    private String getInboxUrl() {
+        if (m_ivrConfig.getUserPortalType() == 0) {
+            return "%s/sipxconfig/vm/ManageVoicemail.html";
+        } else if (m_ivrConfig.getUserPortalType() == 1) {
+            return "%s/unitelite/#/voicemail";
+        } else {
+            return "%s/unite/#/voicemail";
+        }
+    }
+    
+    private String getDeleteUrl() {
+        return "%s/sipxconfig/rest/my/redirect/mailbox/%s/message/%s/delete";
+    }
+    
+    private String getPlayUrl() {
+        return "%s/sipxconfig/rest/my/redirect/media/%s/inbox/%s";
     }
 
     private String fmt(String text, Object[] args) {
@@ -134,4 +155,9 @@ public class EmailFormatter implements ApplicationContextAware {
     public void setApplicationContext(ApplicationContext context) {
         m_context = context;
     }
+
+
+    public void setIvrConfig(SipxIvrConfiguration ivrConfig) {
+        m_ivrConfig = ivrConfig;
+    }        
 }

@@ -148,7 +148,7 @@ public class MailboxServlet extends HttpServlet {
                         }
 
                         if (action.equals("delete")) {
-                            if (method.equals(METHOD_PUT)) {
+                            if (method.equals(METHOD_PUT) || method.equals(METHOD_GET)) {
                                 try {
                                     mailboxManager.deleteMessage(user, messageId);
                                 } catch (MessageNotFoundException ex) {

@@ -51,6 +51,7 @@ public class SipxIvrConfiguration {
     private String m_binDirectory;
     private String m_logDirectory;
     private String m_backupPath;
+    private int userPortalType;
 
     public String getLogLevel() {
         return SipFoundryLayout.getSipFoundryLogLevel(this.getClass()).toString();
@@ -240,4 +241,11 @@ public class SipxIvrConfiguration {
         m_sipxSupervisorXmlRpcPort = port;
     }
 
+    public int getUserPortalType() {
+        return userPortalType;
+    }
+
+    public void setUserPortalType(int userPortalType) {
+        this.userPortalType = userPortalType;
+    }
 }
