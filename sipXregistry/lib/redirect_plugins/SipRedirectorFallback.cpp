@@ -139,6 +139,36 @@ SipRedirectorFallback::lookUp(
          callerLocation,
          urlMappingRegistrations,
          callTag );
+	if (urlMappingRegistrations.getSize() == 0) {
+		// try referror locations
+		Url url;
+		message.getToUrl(url);
+		UtlString referror;
+		url.getUrlParameter("X-sipX-referror", referror);
+		Os::Logger::instance().log(FAC_SIP, PRI_DEBUG, "SipRedirectorFallback:: Extracting referror %s", referror.data());
+         
+		if (!referror.isNull()) {
+			EntityRecord entity;
+			EntityDB* entityDb = SipRegistrar::getInstance(NULL)->getEntityDB();
+			if (entityDb->findByIdentity(referror.str(), entity))
+			{
+				callerLocation = entity.location().c_str();
+  				for (std::set<std::string>::const_iterator iter = entity.allowedLocations().begin(); iter != entity.allowedLocations().end(); iter++)
+  				{
+    					UtlString location = iter->c_str();
+					mMap.getContactList(
+         					requestUri,
+         					location,
+         					urlMappingRegistrations,
+         					callTag );
+					if (urlMappingRegistrations.getSize() > 0) {
+						Os::Logger::instance().log(FAC_SIP, PRI_DEBUG, "Found mapping for referror location: %s", location.data());
+						break;
+					}
+  				}
+			}
+		}
+	}
 #else
       ResultSet dummyMappingPermissions;
       mMap.getContactList(
