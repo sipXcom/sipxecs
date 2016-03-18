@@ -83,6 +83,7 @@
     <property name="binDirectory" value="${ivr.binDirectory}" />
     <property name="logDirectory" value="${ivr.logDirectory}" />
     <property name="backupPath" value="${ivr.backupPath}" />
+    <property name="userPortalType" value="${userPortal}" />
   </bean>
 
   <bean id="fsEventSocket" class="org.sipfoundry.commons.freeswitch.FreeSwitchEventSocket" scope="eslRequest">
