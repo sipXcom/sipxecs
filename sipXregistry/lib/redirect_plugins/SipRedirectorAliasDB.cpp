@@ -228,10 +228,6 @@ SipRedirectorAliasDB::lookUp(
         //
         authIdentity.setIdentity(userIdentity);
       }
-      else
-      {
-        authIdentity.setIdentity(requestIdentity);
-      }
 
       for (EntityDB::Aliases::iterator iter = aliases.begin(); iter != aliases.end(); iter++)
       {
