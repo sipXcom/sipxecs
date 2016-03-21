@@ -269,9 +269,10 @@ EnforceAuthRules::authorizeAndModify(const UtlString& id,    /**< The authentica
             }
             else
             {
+              result = DENY;
+
               if (!unmatchedPermissions.isNull())
               {
-                result = DENY;
                 Os::Logger::instance().log(FAC_AUTH, PRI_WARNING,
                               "EnforceAuthRules[%s]::authorizeAndModify "
                               " call '%s' requires '%s'",
@@ -284,9 +285,8 @@ EnforceAuthRules::authorizeAndModify(const UtlString& id,    /**< The authentica
               }
               else
               {
-                result = ALLOW;
                 Os::Logger::instance().log(FAC_AUTH, PRI_DEBUG, "EnforceAuthRules[%s]::authorizeAndModify "
-                             " id '%s' authorized by 'no permission required'",
+                             " id '%s' is not authorized, unmatchedPermissions is empty",
                              mInstanceName.data(), id.data());
               }
             }
