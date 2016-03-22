@@ -95,7 +95,7 @@
     roaming_privacy.${setting.ProfileName}="$!{setting.Value}"
 #end
   />
-#if ($phone.Model.ModelId == "polycomVVX500" || $phone.Model.ModelId == "polycomVVX410" || $phone.Model.ModelId == "polycomVVX400")
+#if ($phone.Model.ModelId == "polycomVVX500" || $phone.Model.ModelId == "polycomRealPresenceTrio" || $phone.Model.ModelId == "polycomVVX410" || $phone.Model.ModelId == "polycomVVX400")
 #set ($group = $cfg.EndpointSettings.getSetting('background').getSetting('polycomVVX500bg'))
 #if($group.getSetting('enabled').Value == 1)
   <bg>
