@@ -3014,20 +3014,20 @@
         <value></value>
       </setting>
     </group>
-    <group name="bg" hidden="yes" if="polycomVVX500||polycom550||polycom560||polycom650||polycom670||polycom450||polycomVVX1500">
-      <setting name="bg.color.selection" if="polycomVVX500">
+    <group name="bg" hidden="yes" if="polycomVVX500||polycomRealPresenceTrio||polycom550||polycom560||polycom650||polycom670||polycom450||polycomVVX1500">
+      <setting name="bg.color.selection" if="polycomVVX500||polycomRealPresenceTrio">
         <type>
 		  <string />
 		</type>
         <value>2,1</value>        
       </setting>
-      <setting name="bg.color.bm.1.em.name" if="polycomVVX500">
+      <setting name="bg.color.bm.1.em.name" if="polycomVVX500||polycomRealPresenceTrio">
         <type>
 		  <string />
 		</type>
         <value>ezLogo320x240.jpg</value>        
       </setting>
-      <setting name="bg.color.bm.1.name" if="polycomVVX500">
+      <setting name="bg.color.bm.1.name" if="polycomVVX500||polycomRealPresenceTrio">
         <type>
 		  <string />
 		</type>
