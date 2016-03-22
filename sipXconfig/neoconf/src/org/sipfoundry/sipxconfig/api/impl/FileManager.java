@@ -31,7 +31,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.sipfoundry.sipxconfig.api.model.FileList;
 
-public class FileManager {
+public class FileManager extends CurrentUser {
     private String m_path;
     private String[] m_extensions;
 
