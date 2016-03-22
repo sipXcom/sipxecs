@@ -150,7 +150,7 @@ public class PolycomPhoneDefaults {
     public String getNumDisplayColumns() {
         if (m_model.equals("polycomVVX600")) {
             return "4";
-        } else if (m_model.equals("polycomVVX500")) {
+        } else if (m_model.equals("polycomVVX500") || m_model.equals("polycomRealPresenceTrio")) {
             return "3";
         }
         return null;
