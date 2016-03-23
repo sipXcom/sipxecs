@@ -9,6 +9,8 @@
  */
 package org.sipfoundry.sipxconfig.site.phonebook;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,6 +28,7 @@ import org.sipfoundry.sipxconfig.components.PageWithCallback;
 import org.sipfoundry.sipxconfig.components.SipxValidationDelegate;
 import org.sipfoundry.sipxconfig.components.TapestryUtils;
 import org.sipfoundry.sipxconfig.phonebook.Phonebook;
+import org.sipfoundry.sipxconfig.phonebook.PhonebookEntry;
 import org.sipfoundry.sipxconfig.phonebook.PhonebookManager;
 import org.sipfoundry.sipxconfig.phonebook.PhonebookManager.PhonebookFormat;
 import org.sipfoundry.sipxconfig.setting.BeanWithGroups;
@@ -103,6 +106,29 @@ public abstract class EditPhonebook extends PageWithCallback implements PageBegi
         } else {
             getValidator().record(new ValidatorException(getMessages().getMessage("msg.emptyImportFile")));
         }
+    }
+
+    public void emptyPhonebook() {
+        if (!TapestryUtils.isValid(this)) {
+            return;
+        }
+
+        Phonebook phonebook = getPhonebook();
+        Collection<PhonebookEntry> entries = new ArrayList<PhonebookEntry>();
+        phonebook.setEntries(entries);
+        String members = getMemberGroupsString();
+        if (members != null) {
+            List<Group> groups = getSettingDao().getGroupsByString(User.GROUP_RESOURCE_ID, members, true);
+            phonebook.replaceMembers(new HashSet<Group>(groups));
+        }
+        String consumers = getConsumerGroupsString();
+        if (consumers != null) {
+            List<Group> groups = getSettingDao().getGroupsByString(User.GROUP_RESOURCE_ID, consumers, true);
+            phonebook.replaceConsumers(new HashSet<Group>(groups));
+        }
+
+        getPhonebookManager().savePhonebook(phonebook);
+        setPhonebookId(phonebook.getId());
     }
 
     private void recordSuccessImport(int contacts) {

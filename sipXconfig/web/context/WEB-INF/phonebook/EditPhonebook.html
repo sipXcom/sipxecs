@@ -77,6 +77,12 @@
         <li>
           <input jwcid="importGoogleButton@Submit" value="message:import.contacts" listener="listener:importGoogleAddressBook" />
         </li>
+        <li>
+          <input id="phonebook:empty" jwcid="empty@Submit" value="message:button.empty"
+            listener="listener:emptyPhonebook" />
+            <span jwcid="@common/Confirm"
+              component="component:empty" prompt="message:confirm.empty" />
+        </li>
       </ul>
         <h3><label jwcid="@Insert" value="message:label.Download"/></h3>
         <div jwcid="phonebook@phonebook/ExportPhonebookComponent"
