@@ -24,6 +24,7 @@ import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.sipfoundry.sipxconfig.api.MyMohApi;
 import org.sipfoundry.sipxconfig.common.User;
 import org.sipfoundry.sipxconfig.moh.MusicOnHoldManager;
+import org.sipfoundry.sipxconfig.permission.PermissionName;
 
 public class MyMohApiImpl extends PromptsApiImpl implements MyMohApi {
 
@@ -98,5 +99,16 @@ public class MyMohApiImpl extends PromptsApiImpl implements MyMohApi {
         if (!f.exists()) {
             f.mkdir();
         }
+    }
+
+    @Override
+    public Response getUserMohPermission(HttpServletRequest request) {
+        User user = getCurrentUser();
+        Boolean hasPermission = user.hasPermission(PermissionName.MUSIC_ON_HOLD);
+        if (hasPermission && user.getGroupsAsList().size() > 0) {
+            hasPermission = user.hasPermission(PermissionName.GROUP_MUSIC_ON_HOLD);
+        }
+
+        return Response.ok().entity(hasPermission).build();
     }
 }

@@ -49,6 +49,10 @@ public interface MyMohApi extends PromptsApi {
     @DELETE
     public Response deleteMohAudioSourceSetting();
 
+    @Path("permission")
+    @GET
+    public Response getUserMohPermission(@Context HttpServletRequest request);
+
     @Path("path")
     @PUT
     public Response createCurrentUserPath();
