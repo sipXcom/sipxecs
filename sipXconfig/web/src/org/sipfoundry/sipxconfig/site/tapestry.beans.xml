@@ -50,6 +50,15 @@
       <value>Please enter digits or sip address only, for example: 123 or john@example.com</value>
     </property>
   </bean>
+  <!--only digits, at least one, no zero -->
+  <bean name="allDigitsNoZero" class="org.apache.tapestry.form.validator.Pattern">
+    <property name="pattern">
+      <value>[1-9]+</value>
+    </property>
+    <property name="message">
+      <value>Please enter digits only, no 0 allowed, for example: 123</value>
+    </property>
+  </bean>
   <bean name="validHostOrIp" class="org.apache.tapestry.form.validator.Pattern">
     <property name="pattern">
       <value>&DNS_DOMAIN_NAME;|&IP_ADDR;</value>
