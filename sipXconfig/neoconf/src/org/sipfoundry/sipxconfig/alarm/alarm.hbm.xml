@@ -46,7 +46,6 @@
     </id>
     <property name="hostAddress" column="address" not-null="true" type="string"/>
     <property name="port" column="port" not-null="true" type="int"/>
-    <property name="communityString" column="community_string" type="string"/>
   </class>
 
   <query name="countAlarmGroupWithSameName">

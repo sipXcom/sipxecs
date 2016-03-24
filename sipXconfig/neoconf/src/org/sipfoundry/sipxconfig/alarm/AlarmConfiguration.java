@@ -37,6 +37,7 @@ import org.springframework.context.MessageSource;
 
 public class AlarmConfiguration implements ConfigProvider {
     private AlarmServerManager m_alarmServerManager;
+    private SnmpManager m_snmpManager;
     private MessageSource m_messageSource;
 
     @Override
@@ -90,6 +91,9 @@ public class AlarmConfiguration implements ConfigProvider {
     void writeCfdat(Writer w, boolean enabled, List<AlarmTrapReceiver> fwd) throws IOException {
         CfengineModuleConfiguration cfdat = new CfengineModuleConfiguration(w);
         cfdat.writeClass("snmptrap", enabled);
+        for (AlarmTrapReceiver receiver : fwd) {
+            receiver.setCommunityString(m_snmpManager.getSettings().getCommunityString());
+        }
         cfdat.writeList("snmptrapdForward", fwd);
     }
 
@@ -162,5 +166,9 @@ public class AlarmConfiguration implements ConfigProvider {
 
     public void setMessageSource(MessageSource messageSource) {
         m_messageSource = messageSource;
+    }
+
+    public void setSnmpManager(SnmpManager snmpManager) {
+        m_snmpManager = snmpManager;
     }
 }
