@@ -6,6 +6,7 @@
 
   <bean id="alarmConfiguration" class="org.sipfoundry.sipxconfig.alarm.AlarmConfiguration">
     <property name="alarmServerManager" ref="alarmServerManager" />
+    <property name="snmpManager" ref="snmpManager" />
     <property name="messageSource" ref="globalMessageSource" />
   </bean>
 
