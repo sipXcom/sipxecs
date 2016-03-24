@@ -501,6 +501,7 @@
   	<antcall target="add-release-on-ring-failure" />
   	<antcall target="remove-firewall-rules" />
     <antcall target="openacd-client-update" />
+  	<antcall target="remove-community" />
   </target>
 
   <target name="plugin-patches">
@@ -1556,7 +1557,10 @@
   </target>
   <target name="openacd-client-update" unless="openacd-client-update">
     <db-patch patch="openacd-client-update"/>
-  </target> 
+  </target>
+  <target name="remove-community" unless="remove-community">
+  	<db-patch patch="remove-community"/>
+  </target>
 
 	<!--
     - SUPPORT UTILITIES
