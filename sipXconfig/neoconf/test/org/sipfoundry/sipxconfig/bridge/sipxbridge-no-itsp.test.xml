@@ -8,6 +8,7 @@
     <local-address>192.168.1.1</local-address>
     <local-port>5090</local-port>
     <enable-bridge-proxy-relay>false</enable-bridge-proxy-relay>
+    <sipx-proxy-transport>udp</sipx-proxy-transport>
     <sipx-proxy-domain>sipfoundry.org</sipx-proxy-domain>
     <sipx-supervisor-host>sipx.example.org</sipx-supervisor-host>
     <sipx-supervisor-xml-rpc-port>8092</sipx-supervisor-xml-rpc-port>
