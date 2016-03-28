@@ -12,6 +12,12 @@
       </false>
     </boolean>
   </type>
+  <type id="proxy-transport">
+    <enum>
+      <option><value>udp</value></option>
+      <option><value>tcp</value></option>
+    </enum>
+  </type>
   <group name="bridge-configuration">
     <setting name="global-address" hidden="yes">
       <label>Public address</label>
@@ -72,6 +78,10 @@
         </boolean>
       </type>
       <value>false</value>
+    </setting>
+    <setting name="sipx-proxy-transport">
+      <type refid="proxy-transport" />
+      <value>udp</value>
     </setting>
     <setting name="sipx-proxy-domain" hidden="yes">
       <description>The sipXecs proxy domain.</description>
