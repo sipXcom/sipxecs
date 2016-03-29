@@ -7921,7 +7921,8 @@ select.default {
   width: 100%;
 }
 #webchat-main .right-side-view .my-profile .entry .entry-name,
-#webchat-main .right-side-view .my-profile .entry .entry-loc {
+#webchat-main .right-side-view .my-profile .entry .entry-loc,
+#webchat-main .right-side-view .my-profile .entry .entry-choose-file {
   display: block;
 }
 #webchat-main .right-side-view .my-profile .entry .entry-name {
@@ -7932,6 +7933,11 @@ select.default {
 #webchat-main .right-side-view .my-profile .entry .entry-loc {
   padding-top: 10px;
   padding-left: 10px;
+}
+#webchat-main .right-side-view .my-profile .entry .entry-choose-file {
+  padding-top: 10px;
+  padding-left: 10px;
+  background: #FDFDFD;
 }
 #webchat-main .right-side-view .my-profile .col-head {
   background: #ebebeb;
