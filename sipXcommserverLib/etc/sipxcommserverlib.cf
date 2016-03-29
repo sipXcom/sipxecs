@@ -37,28 +37,28 @@ bundle agent sipxcommserverlib_config {
       "$(sipx.SIPX_CONFDIR)/ssl/$(ssl)"
         comment => "install SSL SIP info $(this.promiser)",
         create => "true",
-        copy_from => copy_from_cfdata("$(ssl)"),
+        copy_from => copy_from_cfdata("$(sipx.location_id)/$(ssl)"),
         perms => mog("600","$(sipx.SIPXPBXUSER)","$(sipx.SIPXPBXGROUP)"),
         classes => if_repaired("ssl_repaired");
 
       "$(sipx.SIPX_CONFDIR)/ssl/ssl.keystore"
         comment => "install Java SSL info $(this.promiser)",
         create => "true",
-        copy_from => copy_from_cfdata("ssl.keystore"),
+        copy_from => copy_from_cfdata("$(sipx.location_id)/ssl.keystore"),
         perms => mog("600","$(sipx.SIPXPBXUSER)","$(sipx.SIPXPBXGROUP)"),
         classes => if_repaired("java_ssl_repaired");
 
       "$(sipx.SIPX_CONFDIR)/ssl/ssl-web.keystore"
         comment => "install Java SSL info $(this.promiser)",
         create => "true",
-        copy_from => copy_from_cfdata("ssl-web.keystore"),
+        copy_from => copy_from_cfdata("$(sipx.location_id)/ssl-web.keystore"),
         perms => mog("600","$(sipx.SIPXPBXUSER)","$(sipx.SIPXPBXGROUP)"),
         classes => if_repaired("java_ssl_web_repaired");
 
       "$(sipx.SIPX_CONFDIR)/ssl/authorities.jks"
         comment => "install Java WEB SSL  $(this.promiser)",
         create => "true",
-        copy_from => copy_from_cfdata("authorities.jks"),
+        copy_from => copy_from_cfdata("$(sipx.location_id)/authorities.jks"),
         perms => mog("600","$(sipx.SIPXPBXUSER)","$(sipx.SIPXPBXGROUP)"),
         classes => if_repaired("java_authorities_repaired");
 
@@ -70,7 +70,7 @@ bundle agent sipxcommserverlib_config {
       "$(sipx.SIPX_CONFDIR)/ssl/authorities"
         comment => "install SSL info $(this.promiser)",
         create => "true",
-        copy_from => copy_from_sync_cfdata("authorities"),
+        copy_from => copy_from_sync_cfdata("$(sipx.location_id)/authorities"),
         depth_search => recurse("1"),
         file_select => authority_files,
         perms => mog("644","$(sipx.SIPXPBXUSER)","$(sipx.SIPXPBXGROUP)"),
