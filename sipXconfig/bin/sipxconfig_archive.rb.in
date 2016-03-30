@@ -155,8 +155,7 @@ class Restore < ArchiveBase
     cmd "SIPXCONFIG_ANT_OPTS=\"#{ant}\" #{@initd}/sipxconfig db upgrade" or
       raise "Failed to migrate database."
 
-    if !pre_mongo
-      FileUtils.rm_rf("#{@tmpdir}/dump")
+    if !pre_mongo      
       cmd "tar -zxvf #{params[:file]} -C #{@tmpdir} dump" or
         raise "Failed to extract user profiles database from archive"
       cmd "mongo profiles --eval \"db.userProfile.remove({})\""
@@ -171,7 +170,7 @@ class Restore < ArchiveBase
       cmd "mongorestore --db profiles --collection fs.chunks #{@tmpdir}/dump/profiles/fs.chunks.bson" or
         cmd "echo Failed to restore avatar database"
 
-	  restore_additional_databases()
+	  restore_additional_databases()	  
     else
       sql_exec(@restoredb, "insert into setup(setup_id) values ('migrate_profiles');") or
           raise "Failed to trigger user profile migration."
@@ -264,6 +263,7 @@ class Restore < ArchiveBase
       puts "Reconfig replica set: mongo --eval \"var oldHost=\\\"#{current_fqdn}\\\", newHost=\\\"#{new_fqdn}\\\"\" #{@bindir}/master-reconfig.js"
       cmd "mongo --eval \"var oldHost=\\\"#{current_fqdn}\\\", newHost=\\\"#{new_fqdn}\\\"\" #{@bindir}/master-reconfig.js" if params[:restart]
     end
+    FileUtils.rm_rf(["#{@tmpdir}/db.tar", "#{@tmpdir}/version", "#{@tmpdir}/dump", "#{@tmpdir}/elasticsearch_backup"])
   end
 end
 
