@@ -51,9 +51,6 @@ fi
 if [ $VERSION == "1.4.4" ]; then
     VERSION="1.0.7"
 fi
-if [ $VERSION == "1.6.6" ]; then
-    VERSION="1.0.7"
-fi
 VER_REV=`git describe --abbrev=5 --match="v${VERSION}" HEAD`
 if [ "$?" != "0" ]; then
     echo "Could not find tag v$VERSION" 1>&2
