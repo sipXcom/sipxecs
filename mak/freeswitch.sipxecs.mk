@@ -1,5 +1,5 @@
-freeswitch_VER = 1.4.20
-freeswitch_TAG = 1.4.4
+freeswitch_VER = 1.6.6
+freeswitch_TAG = 1.6.6
 freeswitch_PACKAGE_REVISION = $(shell cd $(SRC)/$(PROJ); ../config/revision-gen $(freeswitch_TAG))
 freeswitch_SRPM = freeswitch-$(freeswitch_VER)-$(freeswitch_PACKAGE_REVISION).src.rpm
 freeswitch_SPEC = $(SRC)/$(PROJ)/freeswitch.spec
