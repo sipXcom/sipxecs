@@ -120,6 +120,17 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
                 IOUtils.closeQuietly(wtr);
             }
         }
+
+        // add CLEANUP_VOICEMAIL_HOUR parameter ONLY ON PRIMARY
+        Location primaryLocation = m_locationsManager.getPrimaryLocation();
+        File dir = manager.getLocationDataDirectory(primaryLocation);
+        Writer w = new FileWriter(new File(dir, "sipxivr.cfdat"));
+        try {
+            CfengineModuleConfiguration config = new CfengineModuleConfiguration(w);
+            config.write("CLEANUP_VOICEMAIL_HOUR", settings.getCleanupVoicemailHour());
+        } finally {
+            IOUtils.closeQuietly(w);
+        }
     }
 
     public String getMwiLocations(List<Location> mwiLocations, Location currentLocation) {
