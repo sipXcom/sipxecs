@@ -21,7 +21,7 @@
 
   <!-- Upload Size=1GB for uploading backups -->
   <implementation service-id="tapestry.multipart.ServletMultipartDecoder">
-    <create-instance class="org.apache.tapestry.multipart.MultipartDecoderImpl,maxSize=1073741824" model="threaded" />
+    <create-instance class="org.apache.tapestry.multipart.MultipartDecoderImpl,maxSize=10737418240" model="threaded" />
   </implementation>
 
   <!-- Spring/Tapestry integration -->
