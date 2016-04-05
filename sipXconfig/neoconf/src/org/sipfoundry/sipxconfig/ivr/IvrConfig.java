@@ -86,7 +86,17 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
             File dir = manager.getLocationDataDirectory(location);
             boolean enabled = featureManager.isFeatureEnabled(Ivr.FEATURE, location);
 
-            ConfigUtils.enableCfengineClass(dir, "sipxivr.cfdat", enabled, "sipxivr");
+            Writer w = new FileWriter(new File(dir, "sipxivr.cfdat"));
+            try {
+                CfengineModuleConfiguration config = new CfengineModuleConfiguration(w);
+                config.writeClass("sipxivr", enabled);
+                if (location.isPrimary()) {
+                    config.write("CLEANUP_VOICEMAIL_HOUR", settings.getCleanupVoicemailHour());
+                }
+            } finally {
+                IOUtils.closeQuietly(w);
+            }
+
             if (!enabled) {
                 continue;
             }
@@ -108,17 +118,6 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
             } finally {
                 IOUtils.closeQuietly(wtr);
             }
-        }
-
-        // add CLEANUP_VOICEMAIL_HOUR parameter ONLY ON PRIMARY
-        Location primaryLocation = m_locationsManager.getPrimaryLocation();
-        File dir = manager.getLocationDataDirectory(primaryLocation);
-        Writer w = new FileWriter(new File(dir, "sipxivr.cfdat"));
-        try {
-            CfengineModuleConfiguration config = new CfengineModuleConfiguration(w);
-            config.write("CLEANUP_VOICEMAIL_HOUR", settings.getCleanupVoicemailHour());
-        } finally {
-            IOUtils.closeQuietly(w);
         }
     }
 
