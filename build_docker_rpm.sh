@@ -15,6 +15,10 @@ case $i in
     PROJECT="${i#*=}"
     shift
     ;;
+    -u=*|--repo=*)
+    UPSTREAM_REPO="${i#*=}"
+    shift
+    ;;
     *)
         echo "Usage: -s|--source-dir: absolute path to source directory, e.g. /home/sipx/sipxecs
        -v|--version: version of sipxcom RPM to build, e.g. 15.10
@@ -28,4 +32,8 @@ Sample:
     ;;
 esac
 done
-sudo docker run -e "SIPXCOM_VERSION=${VERSION}" --rm -t --privileged -v ${SOURCE_DIR}:/home/sipx/sipxcom dizzy/docker-dev-rpm:15.10 ${PROJECT}
+if [ -z "${UPSTREAM_REPO}" ]
+then
+UPSTREAM_REPO="http://download.sipxcom.org/pub/${VERSION}-unstable/"
+fi
+sudo docker run -e "SIPXCOM_VERSION=${VERSION}" --rm -t --privileged -v ${SOURCE_DIR}:/home/sipx/sipxcom dizzy/docker-dev-rpm:15.10 ${PROJECT} ${UPSTREAM_REPO}
