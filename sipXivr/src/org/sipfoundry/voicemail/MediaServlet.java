@@ -103,11 +103,15 @@ public class MediaServlet extends HttpServlet {
                     response.sendError(404); // name doesn't match
                     return;
                 }
+                String contentLength = message.getDescriptor().getContentLength();
                 response.setHeader("Expires", "0");
                 response.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
                 response.setHeader("Pragma", "public");
                 response.setHeader("Content-Disposition", "attachment; filename=\"" + audioFile.getName() + "\"");
-                response.setHeader("Content-Length", message.getDescriptor().getContentLength());
+                response.setHeader("Content-Length", contentLength);
+                response.setHeader("Content-Range", "bytes 0-" + contentLength + "/" + contentLength);
+                response.setHeader("Accept-Ranges", "bytes");
+                
                 String mimeType = MimeType.getMimeByFormat(message.getDescriptor().getAudioFormat());
                 if (dir.equals("download")){
                     response.setHeader("Content-type", "application/force-download");
