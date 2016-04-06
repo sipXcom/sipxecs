@@ -35,7 +35,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.restlet.Context;
+import org.restlet.data.Form;
 import org.restlet.data.MediaType;
+import org.restlet.data.Parameter;
+import org.restlet.data.Range;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
@@ -50,6 +53,8 @@ import org.sipfoundry.sipxconfig.ivr.Ivr;
 import org.sipfoundry.sipxconfig.restserver.RestServer;
 import org.sipfoundry.sipxconfig.vm.MailboxManager;
 import org.springframework.beans.factory.annotation.Required;
+
+import com.noelios.restlet.http.HttpConstants;
 
 public class RestRedirectorResource extends UserResource {
     public static final String CALLCONTROLLER = "/callcontroller";
@@ -142,7 +147,12 @@ public class RestRedirectorResource extends UserResource {
                 mType = v.getMediaType();
             }
         }
-        return new InputRepresentation(new ByteArrayInputStream(result), mType, result.length);
+
+        InputRepresentation inputRepr = new InputRepresentation(new ByteArrayInputStream(result), mType, result.length);
+        Range myRange = new Range(0, result.length);
+        inputRepr.setRange(myRange);
+        
+        return inputRepr;
     }
 
     private byte[] invokeIvrFallback(String methodType, String relativeUri) throws ResourceException {
@@ -267,6 +277,8 @@ public class RestRedirectorResource extends UserResource {
                     if (StringUtils.equalsIgnoreCase(header.getName(), "Content-Type")) {
                         MediaType m = MimeType.getMediaTypeByMime(header.getValue());
                         if (m != null) {
+                            m.getParameters().clear();
+                            m.getParameters().add(HttpConstants.HEADER_ACCEPT_RANGES, "bytes");
                             Variant variant = new Variant(m);
                             getVariants().clear();
                             getVariants().add(variant);
