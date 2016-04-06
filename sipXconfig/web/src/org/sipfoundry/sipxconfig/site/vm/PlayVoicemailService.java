@@ -78,6 +78,8 @@ public class PlayVoicemailService extends AssetService {
         if (Long.valueOf(contentLength) > 0) {
             m_response.setHeader("Content-Length", contentLength);
         }
+        m_response.setHeader("Content-Range", "bytes 0-" + contentLength + "/" + contentLength);
+        m_response.setHeader("Accept-Ranges", "bytes");
         OutputStream responseOutputStream = m_response.getOutputStream(new ContentType(contentType));
         if (addressCache != null) {
             urlCache = m_mailboxManager.getMediaFileURL(
