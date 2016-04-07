@@ -83,9 +83,6 @@
    <span jwcid="@If" condition="ognl:isOn('event')">
      <span jwcid="@common/AdminNavigationMenu" pagePath="websocket/EditWebsocket" label="ognl:messages.getMessage('menu.websocket.featureMenu')" />
    </span>
-   <span jwcid="@If" condition="ognl:isOn('tcpdump')">
-     <span jwcid="@common/AdminNavigationMenu" pagePath="tcpdumplog/EditTcpdumpLogService" label="ognl:messages.getMessage('menu.tcpdumplog.featureMenu')" />
-   </span>
 </span>
 <span jwcid="InternalPluginsDiagnosticsTop@Block">
 	<span jwcid="@If" condition="ognl:isOn('registrar')">
@@ -102,5 +99,8 @@
     </span>
     <span jwcid="@If" condition="ognl:isOn('snmp')">
       <span jwcid="@common/AdminNavigationMenu" pagePath="snmp/Snmp" label="ognl:messages.getMessage('menu.snmp')" />
-    </span>         
+    </span>
+    <span jwcid="@If" condition="ognl:isOn('tcpdump')">
+     <span jwcid="@common/AdminNavigationMenu" pagePath="tcpdumplog/EditTcpdumpLogService" label="ognl:messages.getMessage('menu.tcpdumplog.featureMenu')" />
+   </span>
 </span>
