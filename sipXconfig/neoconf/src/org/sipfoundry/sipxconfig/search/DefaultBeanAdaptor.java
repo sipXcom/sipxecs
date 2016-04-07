@@ -182,21 +182,25 @@ public class DefaultBeanAdaptor implements BeanAdaptor, BeanFactoryAware {
             return true;
         } else if (state instanceof IndexedBean) {
             IndexedBean indexedBean = (IndexedBean) state;
-            document.add(new Field(NAME, indexedBean.getIndexValue(), Field.Store.YES, Field.Index.ANALYZED));
-            document.add(new Field(Indexer.DEFAULT_FIELD,
-                    indexedBean.getIndexValue(), Field.Store.NO,
-                    Field.Index.ANALYZED));
-            return true;
-        } else if (fieldName.equals("conditions")) {
-            Set conditions = (Set) state;
-            for (Iterator a = conditions.iterator(); a.hasNext();) {
-                IndexedBean condition = (IndexedBean) a.next();
-                document.add(new Field(NAME, condition.getIndexValue(), Field.Store.NO, Field.Index.ANALYZED));
-                document.add(new Field(Indexer.DEFAULT_FIELD,
-                        condition.getIndexValue(), Field.Store.NO,
-                        Field.Index.ANALYZED));
+            for (String value : indexedBean.getIndexValues()) {
+                document.add(new Field(NAME, value, Field.Store.YES, Field.Index.ANALYZED));
+                document.add(new Field(Indexer.DEFAULT_FIELD, value, Field.Store.NO, Field.Index.ANALYZED));
             }
             return true;
+        } else if (state instanceof Collection<?>) {
+            Collection<?> collection = (Collection<?>) state;
+            for (Iterator a = collection.iterator(); a.hasNext();) {
+                Object object = a.next();
+                if (!(object instanceof IndexedBean)) {
+                    break;
+                }
+                IndexedBean condition = (IndexedBean) object;
+                for (String value : condition.getIndexValues()) {
+                    document.add(new Field(NAME, value, Field.Store.NO, Field.Index.ANALYZED));
+                    document.add(new Field(Indexer.DEFAULT_FIELD, value, Field.Store.NO, Field.Index.ANALYZED));
+                }
+                return true;
+            }
         }
         return false;
     }

@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -326,7 +327,10 @@ public class User extends AbstractUser implements Replicable, IndexedBean {
     }
 
     @Override
-    public String getIndexValue() {
-        return getName();
+    public Set<String> getIndexValues() {
+        Set<String> values = new LinkedHashSet<String>();
+        values.add(getName());
+        values.addAll(getAliases());
+        return values;
     }
 }
