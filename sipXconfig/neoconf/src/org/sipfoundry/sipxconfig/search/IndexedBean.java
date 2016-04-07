@@ -5,11 +5,16 @@
  */
 package org.sipfoundry.sipxconfig.search;
 
+import java.util.Set;
+
 /**
  * Marker interface to identify objects which are indexed for search manager
  */
 public interface IndexedBean {
 
-    public String getIndexValue();
+    /**
+     * Returns a set of all the values that need indexing for this bean.
+     */
+    public Set<String> getIndexValues();
 
 }
