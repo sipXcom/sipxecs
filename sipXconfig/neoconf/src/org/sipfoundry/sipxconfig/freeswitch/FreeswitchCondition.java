@@ -16,6 +16,7 @@
  */
 package org.sipfoundry.sipxconfig.freeswitch;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -115,7 +116,9 @@ public class FreeswitchCondition extends BeanWithId implements NamedObject, Inde
     }
 
     @Override
-    public String getIndexValue() {
-        return getExtension();
+    public Set<String> getIndexValues() {
+        Set<String> values = new HashSet<String>();
+        values.add(getExtension());
+        return values;
     }
 }
