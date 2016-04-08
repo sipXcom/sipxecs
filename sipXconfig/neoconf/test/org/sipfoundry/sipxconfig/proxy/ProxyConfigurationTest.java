@@ -52,6 +52,7 @@ public class ProxyConfigurationTest {
         m_settings = new ProxySettings();
         m_settings.setModelFilesContext(TestHelper.getModelFilesContext());
         m_settings.setSettingTypedValue("proxy-configuration/SIPX_CONSULTATIVE_TRANSFER_GATEWAY_INITIAL_INVITE", false);
+        m_settings.setSettingTypedValue("proxy-configuration/SIPX_PASS_P_ASSERTED_IDENTITY", false);
         m_location = TestHelper.createDefaultLocation();
         m_domain = new Domain("example.org");
         m_domain.setSipRealm("realm.example.org");
