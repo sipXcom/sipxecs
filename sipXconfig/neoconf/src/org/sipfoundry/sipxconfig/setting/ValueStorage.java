@@ -78,4 +78,13 @@ public class ValueStorage extends BeanWithId implements Storage {
     public void revertSettingToDefault(Setting setting) {
         getDatabaseValues().remove(setting.getPath());
     }
+
+    public ValueStorage duplicateDeep() {
+        ValueStorage clone = (ValueStorage) this.duplicate();
+        // clone database values
+        Map clonedMap = new HashMap<>(clone.getDatabaseValues());
+        clone.setDatabaseValues(clonedMap);
+        return clone;
+    }
+
 }
