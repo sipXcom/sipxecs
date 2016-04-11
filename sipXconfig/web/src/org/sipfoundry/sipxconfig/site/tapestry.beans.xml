@@ -53,10 +53,10 @@
   <!--only digits, at least one, no zero -->
   <bean name="allDigitsNoZero" class="org.apache.tapestry.form.validator.Pattern">
     <property name="pattern">
-      <value>[1-9]+</value>
+      <value>^[1-9][0-9]*$</value>
     </property>
     <property name="message">
-      <value>Please enter digits only, no 0 allowed, for example: 123</value>
+      <value>Please enter digits only, for example: 10. Value cannot be 0.</value>
     </property>
   </bean>
   <bean name="validHostOrIp" class="org.apache.tapestry.form.validator.Pattern">
