@@ -2451,6 +2451,14 @@
         <value />
       </setting>
     </group>
+    <group name="cid">
+      <setting name="sourcePreference">
+        <type>
+          <string/>
+        </type>
+        <value>P-Asserted-Identity, Remote-Party-ID, From</value>
+      </setting>
+    </group>
     <group name="alertInfo">
       <!--If an INVITE contains at least one Alert-Info field and the value in none of them is equal to 
           <the-values-here>.* the phone will not ring audibly.
