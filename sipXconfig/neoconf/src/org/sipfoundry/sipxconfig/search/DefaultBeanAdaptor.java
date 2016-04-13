@@ -35,6 +35,7 @@ import org.sipfoundry.sipxconfig.conference.Bridge;
 import org.sipfoundry.sipxconfig.conference.Conference;
 import org.sipfoundry.sipxconfig.dialplan.AutoAttendant;
 import org.sipfoundry.sipxconfig.dialplan.DialingRule;
+import org.sipfoundry.sipxconfig.freeswitch.FreeswitchExtension;
 import org.sipfoundry.sipxconfig.gateway.Gateway;
 import org.sipfoundry.sipxconfig.parkorbit.ParkOrbit;
 import org.sipfoundry.sipxconfig.phone.Phone;
@@ -50,7 +51,7 @@ public class DefaultBeanAdaptor implements BeanAdaptor, BeanFactoryAware {
     private static final Class[] CLASSES = {
         // TODO: inject externally
         User.class, Phone.class, Group.class, Gateway.class, CallGroup.class, DialingRule.class, Bridge.class,
-        Conference.class, ParkOrbit.class, AutoAttendant.class, Upload.class, Branch.class, AuthCode.class
+        Conference.class, ParkOrbit.class, AutoAttendant.class, Upload.class, Branch.class, AuthCode.class, FreeswitchExtension.class
     };
 
     private static final Log LOG = LogFactory.getLog(DefaultBeanAdaptor.class);
