@@ -96,6 +96,7 @@ sipx_lang = \
   sipXlang-es_MX \
   sipXlang-nl \
   sipXlang-pl \
+  sipXlang-pt \
   sipXlang-pt_BR \
   sipXlang-zh
 
