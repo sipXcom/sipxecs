@@ -65,6 +65,12 @@
         voIpProt.SIP.outboundProxy.${setting.ProfileName}="$!{setting.Value}"
 #end
       />
+      <voIpProt.SIP.CID
+#set ($group = $cfg.EndpointSettings.getSetting('voIpProt.SIP').getSetting('cid'))
+#foreach ($setting in $cfg.getSettings($group))
+        voIpProt.SIP.CID.${setting.ProfileName}="$!{setting.Value}"
+#end
+      />
       <alertInfo
 #set ($group = $cfg.EndpointSettings.getSetting('voIpProt.SIP').getSetting('alertInfo'))
 #foreach ($subgroup in $group.Values)
