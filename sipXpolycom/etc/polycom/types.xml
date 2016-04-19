@@ -622,6 +622,8 @@
     <option><value>5.3.0</value></option>
     <option><value>5.3.1</value></option>
     <option><value>5.4.0</value></option>
+    <option><value>5.4.1</value></option>
+    <option><value>5.4.3</value></option>
   </enum>
 </type>
 <type id="ringtones">
