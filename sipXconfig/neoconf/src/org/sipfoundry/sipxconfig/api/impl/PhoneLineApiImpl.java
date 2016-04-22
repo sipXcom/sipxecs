@@ -14,8 +14,7 @@
  */
 package org.sipfoundry.sipxconfig.api.impl;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
@@ -58,14 +57,14 @@ public class PhoneLineApiImpl implements PhoneLineApi {
         if (phone == null) {
             return Response.status(Status.NOT_FOUND).entity(PHONE_NOT_FOUND).build();
         }
-        Line line = phone.createLine();
         if (lineBean.getUser() != null) {
             User user = m_coreContext.loadUserByUserNameOrAlias(lineBean.getUser());
             if (user == null) {
                 return Response.status(Status.NOT_FOUND).entity("User not found").build();
             }
-            line.setUser(user);
+            m_phoneContext.addUsersToPhone(phone.getId(), Collections.singleton(user.getId()));
         } else {
+            Line line = phone.createLine();
             LineInfo lineInfo = new LineInfo();
             lineInfo.setUserId(lineBean.getUserId());
             lineInfo.setDisplayName(lineBean.getDisplayName());
@@ -75,9 +74,9 @@ public class PhoneLineApiImpl implements PhoneLineApi {
             lineInfo.setRegistrationServerPort(lineBean.getRegistrationServerPort());
             lineInfo.setVoiceMail(lineBean.getVoicemail());
             line.setLineInfo(lineInfo);
+            phone.addLine(line);
+            m_phoneContext.storePhone(phone);
         }
-        phone.addLine(line);
-        m_phoneContext.storePhone(phone);
         return Response.ok().build();
     }
 
@@ -105,8 +104,7 @@ public class PhoneLineApiImpl implements PhoneLineApi {
         Phone phone = getPhoneByIdOrMac(phoneId);
         if (phone != null) {
             if (line != null) {
-                Collection<Line> lines = DataCollectionUtil.removeByPrimaryKey(phone.getLines(), lineId);
-                phone.setLines((List<Line>) lines);
+                DataCollectionUtil.removeByPrimaryKey(phone.getLines(), line.getId());
                 m_phoneContext.storePhone(phone);
                 return Response.ok().build();
             }
