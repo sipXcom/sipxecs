@@ -152,18 +152,22 @@ public class PhoneServiceImpl implements PhoneService {
 
                 if (managePhone.getRemoveLineByUserId() != null) {
                     String username = managePhone.getRemoveLineByUserId();
-                    org.sipfoundry.sipxconfig.phone.Line l = myPhones[i].findByUsername(username);                    
+                    org.sipfoundry.sipxconfig.phone.Line l = myPhones[i].findByUsername(username);
 
-                    DataCollectionUtil.removeByPrimaryKey(myPhones[i].getLines(), l.getId());
-                    m_context.storePhone(myPhones[i]);
+                    if (l != null) {
+                        DataCollectionUtil.removeByPrimaryKey(myPhones[i].getLines(), l.getId());
+                        m_context.storePhone(myPhones[i]);
+                    }
                 }
 
                 if (managePhone.getRemoveLineByUri() != null) {
                     String uri = managePhone.getRemoveLineByUri();
                     org.sipfoundry.sipxconfig.phone.Line l = myPhones[i].findByUri(uri);
 
-                    DataCollectionUtil.removeByPrimaryKey(myPhones[i].getLines(), l.getId());
-                    m_context.storePhone(myPhones[i]);
+                    if (l != null) {
+                        DataCollectionUtil.removeByPrimaryKey(myPhones[i].getLines(), l.getId());
+                        m_context.storePhone(myPhones[i]);
+                    }
                 }
 
                 if (managePhone.getAddLine() != null) {
