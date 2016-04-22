@@ -152,27 +152,25 @@ public class PhoneServiceImpl implements PhoneService {
 
                 if (managePhone.getRemoveLineByUserId() != null) {
                     String username = managePhone.getRemoveLineByUserId();
-                    org.sipfoundry.sipxconfig.phone.Line l = myPhones[i].findByUsername(username);
-                    if (l != null) {
-                        m_context.deleteLine(l);
-                    }
+                    org.sipfoundry.sipxconfig.phone.Line l = myPhones[i].findByUsername(username);                    
+
+                    DataCollectionUtil.removeByPrimaryKey(myPhones[i].getLines(), l.getId());
+                    m_context.storePhone(myPhones[i]);
                 }
 
                 if (managePhone.getRemoveLineByUri() != null) {
                     String uri = managePhone.getRemoveLineByUri();
                     org.sipfoundry.sipxconfig.phone.Line l = myPhones[i].findByUri(uri);
-                    if (l != null) {
-                        m_context.deleteLine(l);
-                    }
+
+                    DataCollectionUtil.removeByPrimaryKey(myPhones[i].getLines(), l.getId());
+                    m_context.storePhone(myPhones[i]);
                 }
 
                 if (managePhone.getAddLine() != null) {
                     String userName = managePhone.getAddLine().getUserId();
                     org.sipfoundry.sipxconfig.common.User u = m_coreContext.loadUserByUserName(userName);
-                    org.sipfoundry.sipxconfig.phone.Line l = myPhones[i].createLine();
-                    l.setUser(u);
-                    myPhones[i].addLine(l);
-                    m_context.storePhone(myPhones[i]);
+
+                    m_context.addUsersToPhone(myPhones[i].getId(), Collections.singleton(u.getId()));
                 }
 
                 if (managePhone.getAddExternalLine() != null) {
