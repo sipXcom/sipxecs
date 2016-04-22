@@ -44,7 +44,6 @@
     <binding name="size" value="50" />
     <binding name="listSource" value="groupCandidates" />
     <binding name="translator" value="translator:string,empty=" />
-    <binding name="validators" value="validators:required" />
     <binding name="listener" value="listener:buildGroupCandidates" />
     <binding name="displayName" value="message:label.groups" />
   </component>
