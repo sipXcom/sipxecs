@@ -1424,11 +1424,15 @@ SipRouter::ProxyAction SipRouter::proxyMessage(SipMessage& sipRequest, SipMessag
               }
               route.setUrlParameter("lr",NULL);
 
+              // Route added in code above during forwarding rules calculations, and we suppose it has sign of destination transport
+              UtlString targetRoute;
+              sipRequest.getRouteUri(0, &targetRoute);
+
               if( sipRequest.getSendProtocol() == OsSocket::SSL_SOCKET )
               {
                 route.setUrlParameter("transport=tls",NULL);
               }
-              else if (mEnsureTcpLifetime && sipRequest.getSendProtocol() == OsSocket::TCP)
+              else if (mEnsureTcpLifetime && targetRoute.contains("transport=tcp"))
               {
                 //
                 // Endpoints behind NAT need to maintain a reusable transport
