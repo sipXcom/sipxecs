@@ -60,6 +60,9 @@ public class ParkOrbitContextImpl extends SipxHibernateDaoSupport implements Par
         String name = parkOrbit.getName();
         String extension = parkOrbit.getExtension();
         final String parkOrbitTypeName = "&label.callPark";
+        if (name.equals(extension)) {
+            throw new NameInUseException(parkOrbitTypeName, name);
+        }
         if (!m_aliasManager.canObjectUseAlias(parkOrbit, name)) {
             throw new NameInUseException(parkOrbitTypeName, name);
         }
