@@ -44,7 +44,7 @@ public class RegAdvancedConfiguration extends ProfileContext<PolycomPhone> {
         // Phones with no configured lines will register under the sipXprovision special user.
         if (lines.isEmpty()) {
             Line line = phone.createSpecialPhoneProvisionUserLine();
-            line.setSettingValue("reg/label", line.getUser().getDisplayName());
+            line.setSettingValue(PolycomPhone.REGISTRATION_LABEL, line.getUser().getDisplayName());
             line.setSettingValue(
                     "reg/address",
                     String.format(PROVISION_AOR, SpecialUserType.PHONE_PROVISION.getUserName(),
@@ -57,6 +57,10 @@ public class RegAdvancedConfiguration extends ProfileContext<PolycomPhone> {
         ArrayList<Setting> linesSettings = new ArrayList<Setting>(lineCount);
 
         for (Line line : lines) {
+            String lineLabel = line.getSettingValue(PolycomPhone.REGISTRATION_LABEL);
+            if (lineLabel == null || lineLabel.isEmpty()) {
+                line.setSettingValue(PolycomPhone.REGISTRATION_LABEL, line.getUser().getUserName());
+            }
             linesSettings.add(line.getSettings());
         }
 

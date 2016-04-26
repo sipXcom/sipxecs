@@ -13,7 +13,7 @@
   <reg
     reg.1.displayName="dddd"
     reg.1.address="jon"
-    reg.1.label=""
+    reg.1.label="jon"
     reg.1.type="private"
     reg.1.lcs=""
     reg.1.bargeInEnabled="0"
