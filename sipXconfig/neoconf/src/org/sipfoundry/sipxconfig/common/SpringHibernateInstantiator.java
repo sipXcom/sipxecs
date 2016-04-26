@@ -28,6 +28,7 @@ import org.hibernate.EntityMode;
 import org.hibernate.SessionFactory;
 import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.type.Type;
+import org.sipfoundry.sipxconfig.admin.AdminContext;
 import org.sipfoundry.sipxconfig.common.event.HibernateEntityChangeProvider;
 import org.sipfoundry.sipxconfig.systemaudit.ConfigChangeAction;
 import org.springframework.beans.factory.BeanFactory;
@@ -43,9 +44,13 @@ import org.springframework.beans.factory.ListableBeanFactory;
  */
 public class SpringHibernateInstantiator extends EmptyInterceptor implements BeanFactoryAware {
     private static final Log LOG = LogFactory.getLog(SpringHibernateInstantiator.class);
+    private static final String AUDIT_ENABLED = "AUDIT ENABLED ";
     private ListableBeanFactory m_beanFactory;
     private SessionFactory m_sessionFactory;
     private Map m_beanNamesCache;
+    private AdminContext m_adminContext;
+    private Boolean m_auditEnabled;
+
     private Map<String, EntityDecorator> m_decorators;
     private Collection<HibernateEntityChangeProvider> m_hbEntityProviders;
 
@@ -109,7 +114,13 @@ public class SpringHibernateInstantiator extends EmptyInterceptor implements Bea
         if (decorator != null) {
             decorator.onSave(entity, id);
         }
-        m_inserts.add(new HbEntity(entity, id, null, null, propertyNames, types, state));
+        boolean auditEnabled = isSystemAuditEnabled();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(AUDIT_ENABLED + auditEnabled);
+        }
+        if (auditEnabled) {
+            m_inserts.add(new HbEntity(entity, id, null, null, propertyNames, types, state));
+        }
         return super.onSave(entity, id, state, propertyNames, types);
     }
 
@@ -119,7 +130,13 @@ public class SpringHibernateInstantiator extends EmptyInterceptor implements Bea
         if (decorator != null) {
             decorator.onDelete(entity, id);
         }
-        m_deletes.add(new HbEntity(entity, id, null, null, propertyNames, types, state));
+        boolean auditEnabled = isSystemAuditEnabled();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(AUDIT_ENABLED + auditEnabled);
+        }
+        if (auditEnabled) {
+            m_deletes.add(new HbEntity(entity, id, null, null, propertyNames, types, state));
+        }
         super.onDelete(entity, id, state, propertyNames, types);
     }
 
@@ -163,43 +180,61 @@ public class SpringHibernateInstantiator extends EmptyInterceptor implements Bea
     @Override
     public boolean onFlushDirty(Object obj, Serializable id, Object[] newValues, Object[] oldValues,
             String[] properties, Type[] types) throws CallbackException {
-        m_updates.add(new HbEntity(obj, id, newValues, oldValues, properties, types, null));
+        boolean auditEnabled = isSystemAuditEnabled();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(AUDIT_ENABLED + auditEnabled);
+        }
+        if (auditEnabled) {
+            m_updates.add(new HbEntity(obj, id, newValues, oldValues, properties, types, null));
+        }
         return super.onFlushDirty(obj, id, oldValues, newValues, properties, types);
     }
 
     @Override
     public void onCollectionUpdate(Object collection, Serializable key) throws CallbackException {
-        for (HibernateEntityChangeProvider provider : getHbEntityChangeProviders()) {
-            provider.onConfigChangeCollectionUpdate(collection, key);
+        boolean auditEnabled = isSystemAuditEnabled();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(AUDIT_ENABLED + auditEnabled);
+        }
+        if (auditEnabled) {
+            for (HibernateEntityChangeProvider provider : getHbEntityChangeProviders()) {
+                provider.onConfigChangeCollectionUpdate(collection, key);
+            }
         }
         super.onCollectionUpdate(collection, key);
     }
 
     public void postFlush(Iterator iterator) {
-        HbEntity hbEntity = null;
-        for (Iterator<HbEntity> it = m_inserts.iterator(); it.hasNext();) {
-            hbEntity = it.next();
-            for (HibernateEntityChangeProvider provider : getHbEntityChangeProviders()) {
-                provider.onConfigChangeAction(hbEntity.getEntity(), ConfigChangeAction.ADDED,
-                    hbEntity.getProperties(), null, null);
-            }
-            m_inserts.remove(hbEntity);
+        boolean auditEnabled = isSystemAuditEnabled();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(AUDIT_ENABLED + auditEnabled);
         }
-        for (Iterator<HbEntity> it = m_updates.iterator(); it.hasNext();) {
-            hbEntity = it.next();
-            for (HibernateEntityChangeProvider provider : getHbEntityChangeProviders()) {
-                provider.onConfigChangeAction(hbEntity.getEntity(), ConfigChangeAction.MODIFIED,
-                    hbEntity.getProperties(), hbEntity.getOldValues(), hbEntity.getNewValues());
+        if (auditEnabled) {
+            HbEntity hbEntity = null;
+            for (Iterator<HbEntity> it = m_inserts.iterator(); it.hasNext();) {
+                hbEntity = it.next();
+                for (HibernateEntityChangeProvider provider : getHbEntityChangeProviders()) {
+                    provider.onConfigChangeAction(hbEntity.getEntity(), ConfigChangeAction.ADDED,
+                        hbEntity.getProperties(), null, null);
+                }
+                m_inserts.remove(hbEntity);
             }
-            m_updates.remove(hbEntity);
-        }
-        for (Iterator<HbEntity> it = m_deletes.iterator(); it.hasNext();) {
-            hbEntity = it.next();
-            for (HibernateEntityChangeProvider provider : getHbEntityChangeProviders()) {
-                provider.onConfigChangeAction(hbEntity.getEntity(), ConfigChangeAction.DELETED,
-                    hbEntity.getProperties(), null, null);
+            for (Iterator<HbEntity> it = m_updates.iterator(); it.hasNext();) {
+                hbEntity = it.next();
+                for (HibernateEntityChangeProvider provider : getHbEntityChangeProviders()) {
+                    provider.onConfigChangeAction(hbEntity.getEntity(), ConfigChangeAction.MODIFIED,
+                        hbEntity.getProperties(), hbEntity.getOldValues(), hbEntity.getNewValues());
+                }
+                m_updates.remove(hbEntity);
             }
-            m_deletes.remove(hbEntity);
+            for (Iterator<HbEntity> it = m_deletes.iterator(); it.hasNext();) {
+                hbEntity = it.next();
+                for (HibernateEntityChangeProvider provider : getHbEntityChangeProviders()) {
+                    provider.onConfigChangeAction(hbEntity.getEntity(), ConfigChangeAction.DELETED,
+                        hbEntity.getProperties(), null, null);
+                }
+                m_deletes.remove(hbEntity);
+            }
         }
     }
 
@@ -216,5 +251,15 @@ public class SpringHibernateInstantiator extends EmptyInterceptor implements Bea
             }
         }
         return m_hbEntityProviders;
+    }
+
+    private boolean isSystemAuditEnabled() {
+        if (m_adminContext == null) {
+            m_adminContext = (AdminContext) m_beanFactory.getBean("adminContext");
+            if (m_adminContext != null) {
+                m_auditEnabled = m_adminContext.isSystemAuditEnabled();
+            }
+        }
+        return m_auditEnabled == null ? false : m_auditEnabled;
     }
 }
