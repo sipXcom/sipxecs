@@ -22,9 +22,14 @@ import org.sipfoundry.sipxconfig.search.BeanAdaptor.Identity;
 public class DefaultBeanAdaptorTest extends TestCase {
     private DefaultBeanAdaptor m_adaptor;
 
+    Class[] INDEXED_TEST_CLASSES = {
+            User.class, Phone.class
+        };
+
     @Override
     protected void setUp() throws Exception {
         m_adaptor = new DefaultBeanAdaptor();
+        m_adaptor.setIndexedClasses(INDEXED_TEST_CLASSES);
     }
 
     public void testGetBeanIndentity() throws Exception {
