@@ -78,6 +78,11 @@ public class JasperReportContextImpl extends HibernateDaoSupport implements Jasp
     }
 
     public void generateCsvReport(JasperPrint jasperPrint, String csvFile) {
+        jasperPrint.setProperty("net.sf.jasperreports.export.csv.exclude.origin.keep.first.band.1", "pageHeader");
+        jasperPrint.setProperty("net.sf.jasperreports.export.csv.exclude.origin.band.1", "pageFooter");
+        jasperPrint.setProperty("net.sf.jasperreports.export.csv.exclude.origin.keep.first.band.2", "columnHeader");
+        jasperPrint.setProperty("net.sf.jasperreports.export.csv.exclude.origin.band.2", "columnFooter");
+        jasperPrint.setProperty("net.sf.jasperreports.export.csv.exclude.origin.band.title", "title");
         render(new JRCsvExporter(), jasperPrint, csvFile);
     }
 
