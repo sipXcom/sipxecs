@@ -51,7 +51,8 @@ public class DefaultBeanAdaptor implements BeanAdaptor, BeanFactoryAware {
     private static final Class[] CLASSES = {
         // TODO: inject externally
         User.class, Phone.class, Group.class, Gateway.class, CallGroup.class, DialingRule.class, Bridge.class,
-        Conference.class, ParkOrbit.class, AutoAttendant.class, Upload.class, Branch.class, AuthCode.class, FreeswitchExtension.class
+        Conference.class, ParkOrbit.class, AutoAttendant.class, Upload.class, Branch.class, AuthCode.class,
+        FreeswitchExtension.class
     };
 
     private static final Log LOG = LogFactory.getLog(DefaultBeanAdaptor.class);
