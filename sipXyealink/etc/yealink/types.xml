@@ -38,6 +38,21 @@
 	<option><label>Splash</label><value>10</value></option>
     </enum>
 </type>
+<type id="yealink_account_ring_type">
+    <enum>
+	<option><label>Ring1.wav</label><value>Ring1.wav</value></option>
+	<option><label>Ring2.wav</label><value>Ring2.wav</value></option>
+	<option><label>Ring3.wav</label><value>Ring3.wav</value></option>
+	<option><label>Ring4.wav</label><value>Ring4.wav</value></option>
+	<option><label>Ring5.wav</label><value>Ring5.wav</value></option>
+	<option><label>Ring6.wav</label><value>Ring6.wav</value></option>
+	<option><label>Ring7.wav</label><value>Ring7.wav</value></option>
+	<option><label>Ring8.wav</label><value>Ring8.wav</value></option>
+	<option><label>Silent.wav</label><value>Silent.wav</value></option>
+	<option><label>Splash.wav</label><value>Splash.wav</value></option>
+	<option><label>Common</label><value>Common</value></option>
+    </enum>
+</type>
 <type id="pc_port_mode_type">
     <enum>
 	<option><value>0</value></option>
