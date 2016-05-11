@@ -152,6 +152,8 @@ public class RestRedirectorResource extends UserResource {
         Range myRange = new Range(0, result.length);
         inputRepr.setRange(myRange);
         
+        getResponse().getServerInfo().setAcceptRanges(true);
+        
         return inputRepr;
     }
 
@@ -277,14 +279,13 @@ public class RestRedirectorResource extends UserResource {
                     if (StringUtils.equalsIgnoreCase(header.getName(), "Content-Type")) {
                         MediaType m = MimeType.getMediaTypeByMime(header.getValue());
                         if (m != null) {
-                            m.getParameters().clear();
-                            m.getParameters().add(HttpConstants.HEADER_ACCEPT_RANGES, "bytes");
                             Variant variant = new Variant(m);
                             getVariants().clear();
                             getVariants().add(variant);
                         }
                     }
                 }
+                                
                 outputStream = new ByteArrayOutputStream();
                 int n;
                 byte[] buffer = new byte[1024];
