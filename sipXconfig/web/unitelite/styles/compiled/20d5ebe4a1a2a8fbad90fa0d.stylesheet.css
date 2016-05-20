@@ -8082,6 +8082,136 @@ select.default {
   text-align: right;
 }
 /**
+ * Call History
+ */
+#webchat-main .right-side-view .callhistory-content {
+  background: #fff;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-top: 10px;
+}
+#webchat-main .right-side-view .pagination {
+  display: inline-block;
+  padding-left: 0;
+  margin: 20px 0;
+  border-radius: 4px;
+}
+#webchat-main .right-side-view .pagination > li {
+  display: inline;
+}
+#webchat-main .right-side-view .pagination > li > a,
+#webchat-main .right-side-view .pagination > li > span {
+  position: relative;
+  float: left;
+  padding: 6px 12px;
+  margin-left: -1px;
+  line-height: 1.42857143;
+  color: #4cae4c;
+  text-decoration: none;
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+#webchat-main .right-side-view .pagination > li:first-child > a,
+#webchat-main .right-side-view .pagination > li:first-child > span {
+  margin-left: 0;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+#webchat-main .right-side-view .pagination > li:last-child > a,
+#webchat-main .right-side-view .pagination > li:last-child > span {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+#webchat-main .right-side-view .pagination > li > a:hover,
+#webchat-main .right-side-view .pagination > li > span:hover,
+#webchat-main .right-side-view .pagination > li > a:focus,
+#webchat-main .right-side-view .pagination > li > span:focus {
+  z-index: 2;
+  color: #23527c;
+  background-color: #eee;
+  border-color: #ddd;
+}
+#webchat-main .right-side-view .pagination > .active > a,
+#webchat-main .right-side-view .pagination > .active > span,
+#webchat-main .right-side-view .pagination > .active > a:hover,
+#webchat-main .right-side-view .pagination > .active > span:hover,
+#webchat-main .right-side-view .pagination > .active > a:focus,
+#webchat-main .right-side-view .pagination > .active > span:focus {
+  z-index: 3;
+  color: #fff;
+  cursor: default;
+  background-color: #4cae4c;
+  border-color: #4cae4c;
+}
+#webchat-main .right-side-view .pagination > .disabled > span,
+#webchat-main .right-side-view .pagination > .disabled > span:hover,
+#webchat-main .right-side-view .pagination > .disabled > span:focus,
+#webchat-main .right-side-view .pagination > .disabled > a,
+#webchat-main .right-side-view .pagination > .disabled > a:hover,
+#webchat-main .right-side-view .pagination > .disabled > a:focus {
+  color: #777;
+  cursor: not-allowed;
+  background-color: #fff;
+  border-color: #ddd;
+}
+#webchat-main .right-side-view .pagination-lg > li > a,
+#webchat-main .right-side-view .pagination-lg > li > span {
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.3333333;
+}
+#webchat-main .right-side-view .pagination-lg > li:first-child > a,
+#webchat-main .right-side-view .pagination-lg > li:first-child > span {
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+#webchat-main .right-side-view .pagination-lg > li:last-child > a,
+#webchat-main .right-side-view .pagination-lg > li:last-child > span {
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+#webchat-main .right-side-view .pagination-sm > li > a,
+#webchat-main .right-side-view .pagination-sm > li > span {
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+#webchat-main .right-side-view .pagination-sm > li:first-child > a,
+#webchat-main .right-side-view .pagination-sm > li:first-child > span {
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+#webchat-main .right-side-view .pagination-sm > li:last-child > a,
+#webchat-main .right-side-view .pagination-sm > li:last-child > span {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+#webchat-main .right-side-view .call-options-bar {
+  padding: 7px 15px;
+}
+#webchat-main .right-side-view .call-options-bar p {
+  margin-top: 20px;
+  width: 40px;
+}
+#webchat-main .right-side-view .call-options-bar p {
+  display: inline-block;
+  margin-left: 10px;
+}
+#webchat-main .right-side-view .call-options-bar input {
+  margin-left: 10px;
+  width: 180px;
+  line-height: 1em;
+}
+#webchat-main .right-side-view .callhistory-btn {
+  margin-left: 10px;
+  margin-bottom: 25px;
+  margin-top: 10px;
+}
+#webchat-main .right-side-view .callhistory-select {
+  margin-left: 10px;
+  margin-bottom: 15px;
+}
+/**
  * Conference
  */
 #webchat-main .right-side-view .conf .cdr-wrapper {
