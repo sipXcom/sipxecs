@@ -151,7 +151,7 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
         Boolean imPortal = (Boolean) m_adminContext.getSettings().getSettingTypedValue("user-portal/im-portal");
         if (oldPortal) {
             return 0;
-        } else if (imPortal) {
+        } else if (imPortal != null && imPortal) {
             return 2;
         } else {
             return 1;
