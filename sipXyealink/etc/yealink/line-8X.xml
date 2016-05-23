@@ -62,7 +62,7 @@
 	<setting name="auto_answer"><type><boolean/></type><value>0</value></setting>
 	<!-- Assign a ringtone for account 1. The system ring tones are: common.wav (default), Ring1.wav, Ring2.wav-->
 	<!-- You can configure the custom ring tone (Family.wav) for the account 1, the value format is: account.1.ringtone.ring_type = Family.wav-->
-	<setting name="ringtone.ring_type"><type refid="yealink_ring_type"/><value>common</value></setting>
+	<setting name="ringtone.ring_type"><type refid="yealink_account_ring_type"/><value>Common</value></setting>
 	<!-- Enables or disables the ACD feature for account X. -->
 	<setting name="acd.enable"><type><boolean/></type><value>0</value></setting>
 	<!-- Enables or disables the IP phone to display the available or unavailable soft key after the phone logs into the ACD system. -->
