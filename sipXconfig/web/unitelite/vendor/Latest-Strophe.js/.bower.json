@@ -1,0 +1,15 @@
+{
+  "name": "Latest-Strophe.js",
+  "main": "./strophe.js",
+  "dependencies": {},
+  "homepage": "https://github.com/kmlx/bower-strophejs-latest",
+  "_release": "dde571dfe8",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "dde571dfe839ddea881ed51256b3eebf21518277"
+  },
+  "_source": "git://github.com/kmlx/bower-strophejs-latest.git",
+  "_target": "*",
+  "_originalSource": "Latest-Strophe.js"
+}
