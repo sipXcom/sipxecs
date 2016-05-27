@@ -1,0 +1,91 @@
+<div class="sticky-wrapper">
+
+  <div class="row profile-bar-chat">
+    <div class="col-xs-10">
+      <span>CALL HISTORY</span>
+    </div>
+    <div class="col-xs-2">
+      <button class="btn btn-link pull-right"
+        data-ng-click="chat.showDefault()"
+        data-click-view="false">
+        <i class="icon-close"></i>
+      </button>
+    </div>
+  </div><!-- /profile-bar-chat -->
+
+  <div data-resize class="row callhistory-content">
+    <div class="col-md-12 call-options-bar">
+      <p>
+        Start:
+      </p>
+      <input type="datetime-local" name="input" ng-model="callhistory.startTime" placeholder="yyyy-MM-ddTHH:mm" required />
+    </div>
+    <div class="col-md-12 call-options-bar">
+      <p>
+        End:
+      </p>
+      <input type="datetime-local" name="input" ng-model="callhistory.endTime" placeholder="yyyy-MM-ddTHH:mm" required />
+    </div>
+    <div class="col-md-12 callhistory-btn">
+      <button type="button" class="btn btn-success"
+        data-ng-click="callhistory.apply();">
+      Apply
+      </button>
+    </div>
+    <div class="col-md-12 callhistory-select">
+      <select name="mySelect"
+        ng-options="option.name for option in callhistory.availableOptions track by option.id"
+        ng-model="callhistory.selectedOption">
+      </select>
+      <input data-ng-if="callhistory.selectedOption.id != 1" ng-model="callhistory.number">
+    </div>
+    <div class="col-md-12 table-responsive">
+      <table class="table table-hover table-bordered">
+        <thead style="background-color: silver;">
+          <tr>
+            <th>From</th>
+            <th>To</th>
+           <!-- <th>Recipient</th>-->
+            <th>Start</th>
+            <!--<th>Duration</th>
+            <th>Status</th>-->
+          </tr>
+        </thead>
+        <tbody>
+          <tr dir-paginate="call in callhistory.calls|itemsPerPage:10">
+            <td>
+              {{ call.from }}
+            </td>
+            <td ng-click="callhistory.clickToCall(call.to);" style="cursor: pointer;">
+              {{ call.to }}
+            </td>
+            <!--<td>
+              {{ call.recipient }}
+            </td>-->
+            <td>
+              {{ call.start }}
+            </td>
+            <!--<td>
+              {{ call.duration }}
+            </td>
+            <td>
+              {{ call.status }}
+            </td>-->
+          </tr>
+        </tbody>
+      </table>
+      <dir-pagination-controls
+        max-size="8"
+        direction-links="true"
+        boundary-links="true">
+      </dir-pagination-controls>
+    </div>
+  </div>
+</div>
+
+<div class="sticky">
+  <div class="row bottom-bar">
+    <div class="input-group pull-left">
+    </div><!-- /input-group -->
+  </div>
+</div>
