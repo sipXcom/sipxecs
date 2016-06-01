@@ -110,6 +110,12 @@ public:
   bool isConnected();
 
   //
+  // Starts the sqa watcher
+  // NOTE: it must be first function called after object creation
+  //
+  bool start();
+
+  //
   // Terminate the event loop
   //
   void terminate();
@@ -476,6 +482,11 @@ inline const char* SQAWatcher::getLocalAddress()
 inline bool SQAWatcher::isConnected()
 {
   return reinterpret_cast<StateQueueClient*>(_connection)->isConnected();
+}
+
+inline bool SQAWatcher::start()
+{
+  reinterpret_cast<StateQueueClient*>(_connection)->start();
 }
 
 inline void SQAWatcher::terminate()

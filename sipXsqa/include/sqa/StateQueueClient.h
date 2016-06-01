@@ -45,6 +45,8 @@
 
 // Defines the interval, in seconds, to wait between keep alive loop calls
 #define SQA_KEEP_ALIVE_LOOP_INTERVAL_SECS 1
+#define SQA_CLIENT_CONFIG_FILENAME "sipxsqa-client.ini"
+
 
 class StateQueueClient : public boost::enable_shared_from_this<StateQueueClient>, private boost::noncopyable
 {
@@ -348,46 +350,6 @@ public:
       return _isConnected;
     }
 
-    
-    bool connect()
-    {
-      //
-      // Initialize State Queue Agent Publisher if an address is provided
-      //
-      //if (_serviceAddress.empty() || _servicePort.empty())
-         std::string sqaControlAddress;
-        std::string sqaControlPort;
-        std::ostringstream sqaconfig;
-        sqaconfig << SIPX_CONFDIR << "/" << "sipxsqa-client.ini";
-        OsServiceOptions configOptions(sqaconfig.str());
-        std::string controlAddress;
-        std::string controlPort;
-    {
-         if (configOptions.parseOptions())
-        {
-          bool enabled = false;
-          if (configOptions.getOption("enabled", enabled, enabled) && enabled)
-          {
-            configOptions.getOption("sqa-control-address", _serviceAddress);
-            configOptions.getOption("sqa-control-port", _servicePort);
-          }
-          else
-          {
-            OS_LOG_ERROR(FAC_NET, "BlockingTcpClient::connect() this:" << this << " Unable to read connection information from " << sqaconfig.str());
-            return false;
-          }
-        }
-      }
-
-      if(_serviceAddress.empty() || _servicePort.empty())
-      {
-        OS_LOG_ERROR(FAC_NET, "BlockingTcpClient::connect() this:" << this << " remote address is not set");
-        return false;
-      }
-      
-      return connect(_serviceAddress, _servicePort);
-    }
-
     bool send(const StateQueueMessage& request)
     {
       assert(_pSocket);
@@ -680,6 +642,8 @@ protected:
   int _keepAliveTicks;
   int _currentKeepAliveTicks;
   int _isAlive;
+  int _readTimeout;
+  int _writeTimeout;
 
 public:
   const std::string& className()
@@ -723,51 +687,22 @@ public:
     _currentSigninTick(-1),
     _keepAliveTicks(keepAliveTicks),
     _currentKeepAliveTicks(keepAliveTicks),
-    _isAlive(true)
+    _isAlive(true),
+    _readTimeout(readTimeout),
+    _writeTimeout(writeTimeout)
   {
-
-      if (_type != Publisher)
-      {
-        createZmqSocket();
-      }
-
-      _pIoServiceThread = new boost::thread(boost::bind(&boost::asio::io_service::run, &_ioService));
-
-      for (std::size_t i = 0; i < _poolSize; i++)
-      {
-        BlockingTcpClient* pClient = new BlockingTcpClient(_ioService, readTimeout, writeTimeout, i == 0 ? SQA_KEY_ALPHA : SQA_KEY_DEFAULT );
-        pClient->connect(_serviceAddress, _servicePort);
-
-        if (_localAddress.empty())
-          _localAddress = pClient->getLocalAddress();
-
-        BlockingTcpClient::Ptr client(pClient);
-        _clientPointers.push_back(client);
-        _clientPool.enqueue(client);
-      }
-
-      _pKeepAliveThread.reset(
-          new boost::thread(
-              boost::bind(&StateQueueClient::keepAliveThreadRun, this)));
-
       if (_type == Watcher)
+      {
         _zmqEventId = "sqw.";
+      }
       else
+      {
         _zmqEventId = "sqa.";
+      }
 
       _zmqEventId += zmqEventId;
 
-      OS_LOG_INFO(FAC_NET, "StateQueueClient-" << applicationId <<  " for event " <<  _zmqEventId << " CREATED");
-
-      if (_type != Publisher)
-      {
-        _pEventThread = new boost::thread(boost::bind(&StateQueueClient::eventLoop, this));
-      }
-      else
-      {
-        std::string publisherAddress;
-        signin(publisherAddress);
-      }
+      OS_LOG_INFO(FAC_NET, CLASS_INFO() << applicationId <<  " for event " <<  _zmqEventId << " CREATED");
   }
 
   StateQueueClient(
@@ -800,52 +735,22 @@ public:
     _currentSigninTick(-1),
     _keepAliveTicks(keepAliveTicks),
     _currentKeepAliveTicks(keepAliveTicks),
-    _isAlive(true)
+    _isAlive(true),
+    _readTimeout(readTimeout),
+    _writeTimeout(writeTimeout)
   {
-      if (_type != Publisher)
-      {
-        createZmqSocket();
-      }
-
-      _pIoServiceThread = new boost::thread(boost::bind(&boost::asio::io_service::run, &_ioService));
-
-      for (std::size_t i = 0; i < _poolSize; i++)
-      {
-        BlockingTcpClient* pClient = new BlockingTcpClient(_ioService, readTimeout, writeTimeout, i == 0 ? SQA_KEY_ALPHA : SQA_KEY_DEFAULT);
-        pClient->connect();
-
-        if (_localAddress.empty())
-          _localAddress = pClient->getLocalAddress();
-
-        BlockingTcpClient::Ptr client(pClient);
-        _clientPointers.push_back(client);
-        _clientPool.enqueue(client);
-      }
-
-      setServiceAddressAndPort();
-
-      _pKeepAliveThread.reset(
-          new boost::thread(
-              boost::bind(&StateQueueClient::keepAliveThreadRun, this)));
-
       if (_type == Watcher)
+      {
         _zmqEventId = "sqw.";
+      }
       else
+      {
         _zmqEventId = "sqa.";
+      }
 
       _zmqEventId += zmqEventId;
 
-      OS_LOG_INFO(FAC_NET, "StateQueueClient-" << applicationId <<  " for event " <<  _zmqEventId << " CREATED");
-
-      if (_type != Publisher)
-      {
-        _pEventThread = new boost::thread(boost::bind(&StateQueueClient::eventLoop, this));
-      }
-      else
-      {
-        std::string publisherAddress;
-        signin(publisherAddress);
-      }
+      OS_LOG_INFO(FAC_NET, CLASS_INFO() << applicationId <<  " for event " <<  _zmqEventId << " CREATED");
   }
 
   ~StateQueueClient()
@@ -894,6 +799,98 @@ public:
   const std::string& getLocalAddress()
   {
     return _localAddress;
+  }
+
+  bool parseServiceAddressAndPort()
+  // extracts the sqa-constrol-{address,port} from the sqa-client configuration
+  {
+    bool ret = true;
+    std::string sqaconfig = SIPX_CONFDIR "/" SQA_CLIENT_CONFIG_FILENAME;
+    OsServiceOptions configOptions(sqaconfig);
+    std::stringstream parseError;
+
+    if (configOptions.parseOptions(OsServiceOptions::DefaultOptionsFlag, parseError))
+    {
+      bool enabled = false;
+      if (configOptions.getOption("enabled", enabled, enabled) && enabled)
+      {
+        configOptions.getOption("sqa-control-address", _serviceAddress);
+        configOptions.getOption("sqa-control-port", _servicePort);
+
+        if (_serviceAddress.empty() || _servicePort.empty())
+        {
+          OS_LOG_ERROR(FAC_NET, CLASS_INFO()
+              " remote address is not set in " << sqaconfig);
+          ret = false;
+        }
+      }
+      else
+      {
+        OS_LOG_ERROR(FAC_NET, CLASS_INFO()
+            " Unable to read connection information from " << sqaconfig);
+        ret = false;
+      }
+    }
+    else
+    {
+      OS_LOG_ERROR(FAC_NET, CLASS_INFO()
+          << " Failed to parse configuration options from " << sqaconfig
+          << ". " << parseError);
+      ret = false;
+    }
+
+    return ret;
+  }
+
+  bool start()
+  {
+    OS_LOG_INFO(FAC_SIP, CLASS_INFO());
+
+    // parse the service address and port
+    if (_serviceAddress.empty() && _servicePort.empty())
+    {
+      if (!parseServiceAddressAndPort())
+      {
+        return false;
+      }
+    }
+
+    if (_type != Publisher)
+    {
+      createZmqSocket();
+    }
+
+    for (std::size_t i = 0; i < _poolSize; i++)
+    {
+      BlockingTcpClient* pClient = new BlockingTcpClient(_ioService, _readTimeout, _writeTimeout, i == 0 ? SQA_KEY_ALPHA : SQA_KEY_DEFAULT);
+
+      if (!pClient->connect(_serviceAddress, _servicePort))
+      {
+        return false;
+      }
+
+      if (_localAddress.empty())
+        _localAddress = pClient->getLocalAddress();
+
+      BlockingTcpClient::Ptr client(pClient);
+      _clientPointers.push_back(client);
+      _clientPool.enqueue(client);
+    }
+
+    _pKeepAliveThread.reset(new boost::thread( boost::bind(&StateQueueClient::keepAliveThreadRun, this)));
+    _pIoServiceThread = new boost::thread(boost::bind(&boost::asio::io_service::run, &_ioService));
+
+    if (_type != Publisher)
+    {
+      _pEventThread = new boost::thread(boost::bind(&StateQueueClient::eventLoop, this));
+    }
+    else
+    {
+      std::string publisherAddress;
+      signin(publisherAddress);
+    }
+
+    return true;
   }
 
   void terminate()
@@ -1499,7 +1496,7 @@ private:
       return false;
     }
 
-    if (!conn->isConnected() && !conn->connect())
+    if (!conn->isConnected() && !conn->connect(_serviceAddress, _servicePort))
     {
       //
       // Put it back to the queue.  The server is down.
