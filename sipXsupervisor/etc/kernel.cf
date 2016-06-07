@@ -18,6 +18,13 @@ bundle agent kernel {
         edit_line => disable_ipv6(),
         classes => if_repaired("apply_kernel_updates");
 
+    mongod::
+      "/etc/sysctl.conf"
+        comment => "Set TCP keepalive value for mongo process",
+        perms => mog("0644","root","root"),
+        edit_line => mongo_keepalive(),
+        classes => if_repaired("apply_kernel_updates");
+
   commands:
     apply_kernel_updates::
       "/sbin/sysctl"
@@ -32,4 +39,10 @@ bundle edit_line disable_ipv6 {
     "net.ipv6.conf.default.disable_ipv6 = 1";
     "net.ipv6.conf.lo.disable_ipv6 = 1";
     "net.ipv6.conf.eth0.disable_ipv6 = 1";
+}
+
+bundle edit_line mongo_keepalive {
+  insert_lines:
+    "# sipxecs generated - mongo keepalive";
+    "net.ipv4.tcp_keepalive_time=300";
 }
