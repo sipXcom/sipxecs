@@ -66,7 +66,7 @@ bundle agent apache_config {
         comment => "add apache ssl conf $(this.promiser)",
         create => "true",
         edit_defaults => empty,
-        edit_line => expand_template("$(sipx.SIPX_CFDATA)/ssl.conf"),
+        edit_line => expand_template("$(sipx.SIPX_CFDATA)/$(sipx.location_id)/ssl.conf"),
         classes => if_repaired("restart_apache");
 
       "$(sipx.APACHE2_CONFDIR)/unitelite.conf"
@@ -83,7 +83,7 @@ bundle agent apache_config {
       "$(sipx.APACHE2_CONFDIR)/ssl/$(ssl_web)"
         comment => "install ssl info $(this.promiser)",
         create => "true",
-        copy_from => copy_from_cfdata("$(ssl_web)"),
+        copy_from => copy_from_cfdata("$(sipx.location_id)/$(ssl_web)"),
         perms => mog("600","root","root"),
         classes => if_repaired("restart_apache");
 
