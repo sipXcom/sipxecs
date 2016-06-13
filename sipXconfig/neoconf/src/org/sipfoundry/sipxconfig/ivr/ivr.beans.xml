@@ -48,6 +48,7 @@
     <property name="autoAttendantManager" ref="autoAttendantManager" />
     <property name="adminContext" ref="adminContext" />
     <property name="locationsManager" ref="locationsManager" />
+    <property name="fsRecordingContext" ref="fsRecordingContext" />
   </bean>
 
   <bean id="sipXivrMessages" class="org.springframework.context.support.ResourceBundleMessageSource">

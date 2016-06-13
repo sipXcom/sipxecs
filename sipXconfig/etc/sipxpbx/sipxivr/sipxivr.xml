@@ -41,16 +41,6 @@
       </option>
     </enum>
   </type>
-  <type id="recordrate">
-    <enum>
-      <option>
-        <value>8000</value>
-      </option>
-      <option>
-        <value>16000</value>
-      </option>
-    </enum>
-  </type>
   <type id="faxformat">
     <enum>
       <option>
@@ -69,10 +59,6 @@
     <setting name="audio.format">
       <type refid="audioformat" />
       <value>wav</value>
-    </setting>
-    <setting name="record.rate">
-      <type refid="recordrate" />
-      <value>8000</value>
     </setting>
     <setting name="record.time">
       <type><integer /></type>

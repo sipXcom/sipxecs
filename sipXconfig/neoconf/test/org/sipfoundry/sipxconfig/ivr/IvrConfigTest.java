@@ -28,6 +28,7 @@ import org.sipfoundry.sipxconfig.dialplan.attendant.AutoAttendantSettings;
 import org.sipfoundry.sipxconfig.domain.Domain;
 import org.sipfoundry.sipxconfig.feature.FeatureManager;
 import org.sipfoundry.sipxconfig.freeswitch.FreeswitchFeature;
+import org.sipfoundry.sipxconfig.freeswitch.FreeswitchRecordingSettings;
 import org.sipfoundry.sipxconfig.im.ImManager;
 import org.sipfoundry.sipxconfig.restserver.RestServer;
 import org.sipfoundry.sipxconfig.test.TestHelper;
@@ -45,6 +46,7 @@ public class IvrConfigTest {
     private Address m_imbotApi;
     private Address m_fsEvent;
     private FeatureManager m_featureManager;
+    private FreeswitchRecordingSettings m_fsSettings;
 
     @Before
     public void setUp() {
@@ -73,14 +75,16 @@ public class IvrConfigTest {
         m_aaSettings.setSettingTypedValue("liveAttendant/dtmf/firstDigitTimeout", 10);
         m_aaSettings.setSettingTypedValue("liveAttendant/dtmf/interDigitTimeout", 1);
         m_aaSettings.setSettingTypedValue("liveAttendant/dtmf/extraDigitTimeout", 1);
-
+        m_fsSettings = new FreeswitchRecordingSettings();
+        m_fsSettings.setModelFilesContext(TestHelper.getModelFilesContext());
+        m_fsSettings.setSettingValue("fs-recording/resample", "16000");
     }
 
     @Test
     public void testWriteWithOpenfireService() throws Exception {
         StringWriter actual = new StringWriter();
         m_config.write(actual, m_settings, m_domain, m_location, "192.168.0.1,192.168.0.2", 8100, m_restApi,
-                m_adminApi, m_apacheApi, m_imApi, m_fsEvent, m_aaSettings, true, 0);
+                m_adminApi, m_apacheApi, m_imApi, m_fsEvent, m_aaSettings, true, 0, m_fsSettings);
         String expected = IOUtils.toString(getClass().getResourceAsStream(
                 "expected-sipxivr-with-openfire.properties"));
         assertEquals(expected, actual.toString());
@@ -90,7 +94,7 @@ public class IvrConfigTest {
     public void testWriteWithoutOpenfireService() throws Exception {
         StringWriter actual = new StringWriter();
         m_config.write(actual, m_settings, m_domain, m_location, "192.168.0.1,192.168.0.2", 8100, m_restApi,
-                m_adminApi, m_apacheApi, null, m_fsEvent, m_aaSettings, false, 0);
+                m_adminApi, m_apacheApi, null, m_fsEvent, m_aaSettings, false, 0, m_fsSettings);
         String expected = IOUtils.toString(getClass().getResourceAsStream(
                 "expected-sipxivr-without-openfire.properties"));
         assertEquals(expected, actual.toString());
