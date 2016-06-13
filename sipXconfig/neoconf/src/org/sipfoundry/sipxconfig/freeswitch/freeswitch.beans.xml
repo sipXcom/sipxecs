@@ -28,4 +28,21 @@
   <bean id="freeswitchSettings" class="org.sipfoundry.sipxconfig.freeswitch.FreeswitchSettings" parent="settingsWithLocation">
   </bean>
 
+  <bean id="fsRecordingContext" class="org.sipfoundry.sipxconfig.freeswitch.FreeswitchRecordingContextImpl">
+    <property name="settingsDao">
+      <bean parent="beanWithSettingsDao">
+        <property name="target">
+          <bean parent="beanWithSettingsDaoImpl">
+            <constructor-arg value="org.sipfoundry.sipxconfig.freeswitch.FreeswitchRecordingSettings"/>
+          </bean>
+        </property>
+      </bean>
+    </property>
+    <property name="configManager" ref="configManager" />
+  </bean>
+
+  <bean id="fsRecordingSettings" class="org.sipfoundry.sipxconfig.freeswitch.FreeswitchRecordingSettings" parent="settingsBean">
+    <property name="modelFilesContext" ref="modelFilesContext"/>
+  </bean>
+
 </beans>

@@ -39,4 +39,7 @@
   <bean id="freeswitchIvrConfig" class="org.sipfoundry.sipxconfig.freeswitch.config.IvrConfiguration" parent="freeswitchConfigFile">
     <property name="mediaServer" value="${sysdir.vxml}" />
   </bean>
+  <bean id="freeswitchModShoutConfig" class="org.sipfoundry.sipxconfig.freeswitch.config.ModShoutConfiguration" parent="freeswitchConfigFile">
+    <property name="fsRecordingContext" ref="fsRecordingContext" />
+  </bean>
 </beans>

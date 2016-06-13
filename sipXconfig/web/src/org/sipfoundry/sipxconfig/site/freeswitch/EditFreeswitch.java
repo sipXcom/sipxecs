@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.tapestry.IPage;
+import org.apache.tapestry.IRequestCycle;
 import org.apache.tapestry.annotations.Bean;
 import org.apache.tapestry.annotations.InitialValue;
 import org.apache.tapestry.annotations.InjectObject;
@@ -33,6 +34,8 @@ import org.sipfoundry.sipxconfig.components.SipxBasePage;
 import org.sipfoundry.sipxconfig.components.SipxValidationDelegate;
 import org.sipfoundry.sipxconfig.feature.FeatureManager;
 import org.sipfoundry.sipxconfig.freeswitch.FreeswitchFeature;
+import org.sipfoundry.sipxconfig.freeswitch.FreeswitchRecordingContext;
+import org.sipfoundry.sipxconfig.freeswitch.FreeswitchRecordingSettings;
 import org.sipfoundry.sipxconfig.site.common.BreadCrumb;
 
 public abstract class EditFreeswitch extends SipxBasePage implements PageBeginRenderListener {
@@ -40,6 +43,9 @@ public abstract class EditFreeswitch extends SipxBasePage implements PageBeginRe
 
     @InjectObject("spring:featureManager")
     public abstract FeatureManager getFeatureManager();
+
+    @InjectObject(value = "spring:fsRecordingContext")
+    public abstract FreeswitchRecordingContext getFsRecordingContext();
 
     @InjectPage(EditFreeswitchLocation.PAGE)
     public abstract EditFreeswitchLocation getEditFreeswitchLocation();
@@ -54,14 +60,25 @@ public abstract class EditFreeswitch extends SipxBasePage implements PageBeginRe
 
     public abstract Location getCurrentRow();
 
+    public abstract FreeswitchRecordingSettings getSettings();
+
+    public abstract void setSettings(FreeswitchRecordingSettings settings);
+
     @Bean
     public abstract SipxValidationDelegate getValidator();
 
     @Override
     public void pageBeginRender(PageEvent arg0) {
+        if (getSettings() == null) {
+            setSettings(getFsRecordingContext().getSettings());
+        }
         if (getLocations() == null) {
             setLocations(getFeatureManager().getLocationsForEnabledFeature(FreeswitchFeature.FEATURE));
         }
+    }
+
+    public void apply(IRequestCycle cycle) {
+        getFsRecordingContext().saveSettings(getSettings());
     }
 
     public IPage editFreeswitch(int locationId) {
