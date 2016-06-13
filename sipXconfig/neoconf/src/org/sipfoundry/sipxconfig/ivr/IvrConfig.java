@@ -47,6 +47,8 @@ import org.sipfoundry.sipxconfig.dialplan.attendant.AutoAttendantSettings;
 import org.sipfoundry.sipxconfig.domain.Domain;
 import org.sipfoundry.sipxconfig.feature.FeatureManager;
 import org.sipfoundry.sipxconfig.freeswitch.FreeswitchFeature;
+import org.sipfoundry.sipxconfig.freeswitch.FreeswitchRecordingContext;
+import org.sipfoundry.sipxconfig.freeswitch.FreeswitchRecordingSettings;
 import org.sipfoundry.sipxconfig.im.ImManager;
 import org.sipfoundry.sipxconfig.imbot.ImBot;
 import org.sipfoundry.sipxconfig.mwi.Mwi;
@@ -61,6 +63,7 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
     private AutoAttendantManager m_aaManager;
     private AdminContext m_adminContext;
     private LocationsManager m_locationsManager;
+    private FreeswitchRecordingContext m_fsRecording;
 
     @Override
     public void replicate(ConfigManager manager, ConfigRequest request) throws IOException {
@@ -81,6 +84,7 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
         int mwiPort = m_mwi.getSettings().getHttpApiPort();
         Setting ivrSettings = settings.getSettings().getSetting("ivr");
         AutoAttendantSettings aaSettings = m_aaManager.getSettings();
+        FreeswitchRecordingSettings recordingSettings = m_fsRecording.getSettings();
         for (Location location : locations) {
             File dir = manager.getLocationDataDirectory(location);
             boolean enabled = featureManager.isFeatureEnabled(Ivr.FEATURE, location);
@@ -115,7 +119,7 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
             try {
                 write(wtr, settings, domain, location, getMwiLocations(mwiLocations, location), mwiPort, restApi,
                         adminApi, apacheApi, imApi, fsEvent, aaSettings, m_adminContext.isHazelcastEnabled(),
-                        getPortalType());
+                        getPortalType(), recordingSettings);
             } finally {
                 IOUtils.closeQuietly(wtr);
             }
@@ -160,10 +164,11 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
 
     void write(Writer wtr, IvrSettings settings, Domain domain, Location location, String mwiAddresses, int mwiPort,
             Address restApi, Address adminApi, Address apacheApi, Address imApi, Address fsEvent,
-            AutoAttendantSettings aaSettings, boolean hzEnabled, int userPortal)
+            AutoAttendantSettings aaSettings, boolean hzEnabled, int userPortal, FreeswitchRecordingSettings recordingSettings)
         throws IOException {
         LoggerKeyValueConfiguration config = LoggerKeyValueConfiguration.equalsSeparated(wtr);
         config.writeSettings(settings.getSettings());
+        config.write("record.rate", recordingSettings.getResample());
         config.write("freeswitch.eventSocketPort", fsEvent.getPort());
 
         // potential bug: name "operator" could be changed by admin. this should be configurable
@@ -234,6 +239,11 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
     @Required
     public void setLocationsManager(LocationsManager locationsManager) {
         m_locationsManager = locationsManager;
+    }
+
+    @Required
+    public void setFsRecordingContext(FreeswitchRecordingContext recordingContext) {
+        m_fsRecording = recordingContext;
     }
 
     public void setAdminContext(AdminContext adminContext) {
