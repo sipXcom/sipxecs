@@ -219,6 +219,10 @@ public class SnmpManagerImpl implements BeanFactoryAware, SnmpManager, FeaturePr
         m_configManager = configManager;
     }
 
+    public ConfigManager getConfigManager() {
+        return m_configManager;
+    }
+
     public void setLocationsManager(LocationsManager locationsManager) {
         m_locationsManager = locationsManager;
     }

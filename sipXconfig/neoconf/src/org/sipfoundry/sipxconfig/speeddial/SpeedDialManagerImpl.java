@@ -194,7 +194,7 @@ public class SpeedDialManagerImpl extends SipxHibernateDaoSupport<SpeedDial> imp
     }
 
     /**
-     * Scans for all SubscribeToPresenceValidator implementations 
+     * Scans for all SubscribeToPresenceValidator implementations
      * and validates the speed dial subscriptions to presence
      */
     private boolean validateSubscriptions(SpeedDialButtons speedDial, String number) {

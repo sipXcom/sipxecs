@@ -164,7 +164,8 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
 
     void write(Writer wtr, IvrSettings settings, Domain domain, Location location, String mwiAddresses, int mwiPort,
             Address restApi, Address adminApi, Address apacheApi, Address imApi, Address fsEvent,
-            AutoAttendantSettings aaSettings, boolean hzEnabled, int userPortal, FreeswitchRecordingSettings recordingSettings)
+            AutoAttendantSettings aaSettings, boolean hzEnabled, int userPortal,
+            FreeswitchRecordingSettings recordingSettings)
         throws IOException {
         LoggerKeyValueConfiguration config = LoggerKeyValueConfiguration.equalsSeparated(wtr);
         config.writeSettings(settings.getSettings());

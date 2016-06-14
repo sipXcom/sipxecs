@@ -36,10 +36,24 @@ import org.springframework.util.CollectionUtils;
 public final class ConfigRequest {
     private Set<Feature> m_affectedFeatures;
     private boolean m_always;
+    private boolean m_sendProfiles;
     private Set<Location> m_locations;
     private Map<Object, Object> m_data = new HashMap<Object, Object>();
 
     private ConfigRequest() {
+        this(false);
+    }
+
+    private ConfigRequest(boolean sendProfiles) {
+        m_sendProfiles = sendProfiles;
+    }
+
+    public void setSendProfiles(boolean sendProfiles) {
+        m_sendProfiles = sendProfiles;
+    }
+
+    public boolean isSendProfiles() {
+        return m_sendProfiles;
     }
 
     /**
