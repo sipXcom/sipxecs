@@ -21,14 +21,8 @@ import org.springframework.context.ApplicationEvent;
 public class ConfigManagerEvent extends ApplicationEvent {
 
     private static final long serialVersionUID = 1L;
-    private String m_type;
 
-    public ConfigManagerEvent(Object source, String type) {
+    public ConfigManagerEvent(Object source) {
         super(source);
-        m_type = type;
-    }
-
-    public String getType() {
-        return m_type;
     }
 }
