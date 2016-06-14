@@ -40,6 +40,7 @@ import org.sipfoundry.sipxconfig.address.AddressType;
 import org.sipfoundry.sipxconfig.alarm.AlarmDefinition;
 import org.sipfoundry.sipxconfig.alarm.AlarmProvider;
 import org.sipfoundry.sipxconfig.alarm.AlarmServerManager;
+import org.sipfoundry.sipxconfig.common.ConfigManagerEvent;
 import org.sipfoundry.sipxconfig.common.LazyDaemon;
 import org.sipfoundry.sipxconfig.common.MongoGenerationFinishedEvent;
 import org.sipfoundry.sipxconfig.common.UserException;
@@ -55,14 +56,18 @@ import org.sipfoundry.sipxconfig.setup.SetupListener;
 import org.sipfoundry.sipxconfig.setup.SetupManager;
 import org.sipfoundry.sipxconfig.systemaudit.ConfigChangeAction;
 import org.sipfoundry.sipxconfig.systemaudit.SystemAuditManager;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationListener;
 
 public class ConfigManagerImpl implements AddressProvider, ConfigManager, BeanFactoryAware, AlarmProvider,
-    ConfigCommands, SetupListener, ApplicationListener<MongoGenerationFinishedEvent>, DaoEventListener {
+    ConfigCommands, SetupListener, ApplicationListener<MongoGenerationFinishedEvent>, DaoEventListener,
+    ApplicationContextAware {
     private static final Log LOG = LogFactory.getLog(ConfigManagerImpl.class);
     private File m_cfDataDir;
     private DomainManager m_domainManager;
@@ -90,6 +95,7 @@ public class ConfigManagerImpl implements AddressProvider, ConfigManager, BeanFa
     private String m_remoteHostsFile = "%s/.ssh/known_hosts";
     private boolean m_flag;
     private SystemAuditManager m_systemAuditManager;
+    private ApplicationContext m_applicationContext;
 
     @Override
     public synchronized void configureEverywhere(Feature... features) {
@@ -142,7 +148,7 @@ public class ConfigManagerImpl implements AddressProvider, ConfigManager, BeanFa
     public void sendProfiles(Collection<Location> locations) {
         regenerateMongo(locations);
         configureAllFeatures(locations);
-
+        m_outstandingRequest[0].setSendProfiles(true);
         for (Location location : locations) {
             m_systemAuditManager.onConfigChangeAction(location, ConfigChangeAction.SEND_PROFILE, null, null, null);
         }
@@ -180,6 +186,7 @@ public class ConfigManagerImpl implements AddressProvider, ConfigManager, BeanFa
             runProviders(request, jobLabel);
             runCfengine(request, jobLabel);
             runPostProviders(request, jobLabel);
+            m_applicationContext.publishEvent(new ConfigManagerEvent(request, ACTION_SEND_PROFILES));
         }
     }
 
@@ -554,5 +561,10 @@ public class ConfigManagerImpl implements AddressProvider, ConfigManager, BeanFa
     @Required
     public void setSystemAuditManager(SystemAuditManager systemAuditManager) {
         m_systemAuditManager = systemAuditManager;
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        m_applicationContext = applicationContext;
     }
 }
