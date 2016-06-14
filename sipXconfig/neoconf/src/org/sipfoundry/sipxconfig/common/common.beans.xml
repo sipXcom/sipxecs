@@ -74,7 +74,7 @@
   <bean id="checkDST" class="org.sipfoundry.sipxconfig.common.CheckDST"/>
 
   <task:scheduled-tasks>
-      <task:scheduled ref="checkDST" method="checkDst" fixed-delay="86400000" />
+      <task:scheduled ref="checkDST" method="checkDst" initial-delay="10000" fixed-rate="86400000" />
   </task:scheduled-tasks>
     
   <bean id="releaseInfoImpl" class="org.sipfoundry.sipxconfig.common.ReleaseInfo">
