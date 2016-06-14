@@ -51,8 +51,15 @@ public class CheckDST implements ApplicationContextAware {
         TimeZone tzLocal = TimeZone.getDefault();
         Date dstChangeTime = findDstChangeTime(tzLocal, new Date());
         if (dstChangeTime != null) {
-            LOG.info("DST change detected at " + dstChangeTime.toString());
-            setupNotifyTask(dstChangeTime);
+            //remove minutes from the DST approximate date/time found - this will ensure an error of maximum 59 seconds
+            //in the night when DST is applied. DST is always applied at fixed hour so is safe to remove minutes
+            //above fixed hour
+            Calendar c = Calendar.getInstance(tzLocal);
+            c.setTime(dstChangeTime);
+            c.add(Calendar.MINUTE, (-1) * c.get(Calendar.MINUTE));
+            Date time = c.getTime();
+            LOG.info("DST change detected at " + time);
+            setupNotifyTask(time);
         }
     }
 
