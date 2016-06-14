@@ -186,7 +186,7 @@ public class ConfigManagerImpl implements AddressProvider, ConfigManager, BeanFa
             runProviders(request, jobLabel);
             runCfengine(request, jobLabel);
             runPostProviders(request, jobLabel);
-            m_applicationContext.publishEvent(new ConfigManagerEvent(request, ACTION_SEND_PROFILES));
+            m_applicationContext.publishEvent(new ConfigManagerEvent(request));
         }
     }
 
