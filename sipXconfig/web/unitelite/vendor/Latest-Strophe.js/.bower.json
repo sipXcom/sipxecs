@@ -9,7 +9,7 @@
     "branch": "master",
     "commit": "dde571dfe839ddea881ed51256b3eebf21518277"
   },
-  "_source": "git://github.com/kmlx/bower-strophejs-latest.git",
+  "_source": "https://github.com/kmlx/bower-strophejs-latest.git",
   "_target": "*",
   "_originalSource": "Latest-Strophe.js"
 }
