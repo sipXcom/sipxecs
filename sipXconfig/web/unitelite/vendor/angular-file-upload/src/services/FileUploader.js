@@ -16,7 +16,7 @@ let {
     } = angular;
 
 
-export default (fileUploaderOptions, $rootScope, $http, $window, FileLikeObject, FileItem) => {
+export default function __identity(fileUploaderOptions, $rootScope, $http, $window, $timeout, FileLikeObject, FileItem) {
     
     
     let {
@@ -115,8 +115,13 @@ export default (fileUploaderOptions, $rootScope, $http, $window, FileLikeObject,
             item._prepareToUploading();
             if(this.isUploading) return;
 
+            this._onBeforeUploadItem(item);
+            if (item.isCancel) return;
+
+            item.isUploading = true;
             this.isUploading = true;
             this[transport](item);
+            this._render();
         }
         /**
          * Cancels uploading of item from the queue
@@ -126,7 +131,19 @@ export default (fileUploaderOptions, $rootScope, $http, $window, FileLikeObject,
             var index = this.getIndexOfItem(value);
             var item = this.queue[index];
             var prop = this.isHTML5 ? '_xhr' : '_form';
-            if(item && item.isUploading) item[prop].abort();
+            if (!item) return;
+            item.isCancel = true;
+            if(item.isUploading) {
+                // It will call this._onCancelItem() & this._onCompleteItem() asynchronously
+                item[prop].abort();
+            } else {
+                let dummy = [undefined, 0, {}];
+                let onNextTick = () => {
+                    this._onCancelItem(item, ...dummy);
+                    this._onCompleteItem(item, ...dummy);
+                };
+                $timeout(onNextTick); // Trigger callbacks asynchronously (setImmediate emulation)
+            }
         }
         /**
          * Uploads all not uploaded items of queue
@@ -424,21 +441,25 @@ export default (fileUploaderOptions, $rootScope, $http, $window, FileLikeObject,
          */
         _xhrTransport(item) {
             var xhr = item._xhr = new XMLHttpRequest();
-            var form = new FormData();
+            var sendable;
 
-            this._onBeforeUploadItem(item);
-
-            forEach(item.formData, (obj) => {
-                forEach(obj, (value, key) => {
-                    form.append(key, value);
+            if (!item.disableMultipart) {
+                sendable = new FormData();
+                forEach(item.formData, (obj) => {
+                    forEach(obj, (value, key) => {
+                        sendable.append(key, value);
+                    });
                 });
-            });
+
+                sendable.append(item.alias, item._file, item.file.name);
+            }
+            else {
+                sendable = item._file;
+            }
 
             if(typeof(item._file.size) != 'number') {
                 throw new TypeError('The file specified is no longer valid');
             }
-
-            form.append(item.alias, item._file, item.file.name);
 
             xhr.upload.onprogress = (event) => {
                 var progress = Math.round(event.lengthComputable ? event.loaded * 100 / event.total : 0);
@@ -476,8 +497,7 @@ export default (fileUploaderOptions, $rootScope, $http, $window, FileLikeObject,
                 xhr.setRequestHeader(name, value);
             });
 
-            xhr.send(form);
-            this._render();
+            xhr.send(sendable);
         }
         /**
          * The IFrame transport
@@ -491,8 +511,6 @@ export default (fileUploaderOptions, $rootScope, $http, $window, FileLikeObject,
 
             if(item._form) item._form.replaceWith(input); // remove old form
             item._form = form; // save link to new form
-
-            this._onBeforeUploadItem(item);
 
             input.prop('name', item.alias);
 
@@ -560,7 +578,6 @@ export default (fileUploaderOptions, $rootScope, $http, $window, FileLikeObject,
             form.append(input).append(iframe);
 
             form[0].submit();
-            this._render();
         }
         /**
          * Inner callback
@@ -733,11 +750,12 @@ export default (fileUploaderOptions, $rootScope, $http, $window, FileLikeObject,
 }
 
 
-module.exports.$inject = [
+__identity.$inject = [
     'fileUploaderOptions', 
     '$rootScope', 
     '$http', 
     '$window',
+    '$timeout',
     'FileLikeObject',
     'FileItem'
 ];

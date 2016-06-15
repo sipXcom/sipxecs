@@ -1,11 +1,12 @@
 {
   "name": "angular-strap",
   "description": "AngularStrap - AngularJS directives for Bootstrap",
-  "version": "2.0.5",
+  "version": "2.3.9",
   "keywords": [
     "angular",
     "bootstrap"
   ],
+  "main": "dist/angular-strap.js",
   "homepage": "http://mgcrea.github.io/angular-strap",
   "bugs": "https://github.com/mgcrea/angular-strap/issues",
   "author": {
@@ -13,53 +14,52 @@
     "email": "olivier@mg-crea.com",
     "url": "https://github.com/mgcrea"
   },
+  "contributors": [
+    {
+      "name": "Vitor Fernandes",
+      "url": "https://github.com/vmlf01"
+    },
+    {
+      "name": "Dale Alexander Webb",
+      "email": "dale.a.webb@gmail.com",
+      "url": "https://github.com/DaleWebb"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/mgcrea/angular-strap.git"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/mgcrea/angular-strap/blob/master/LICENSE.md"
-    }
-  ],
+  "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "chalk": "^0.5.1",
-    "codeclimate-test-reporter": "0.0.3",
-    "gulp": "^3.8.6",
-    "gulp-autoprefixer": "0.0.8",
-    "gulp-changed": "^0.4.0",
-    "gulp-clean": "^0.3.1",
-    "gulp-cleancss": "^0.2.2",
-    "gulp-concat-util": "^0.2.3",
-    "gulp-connect": "^2.0.6",
-    "gulp-coveralls": "^0.1.2",
-    "gulp-htmlmin": "^0.1.3",
-    "gulp-jshint": "^1.7.1",
-    "gulp-less": "^1.3.2",
-    "gulp-nginclude": "^0.4.5",
-    "gulp-ngmin": "^0.3.0",
-    "gulp-ngtemplate": "^0.2.3",
-    "gulp-open": "^0.2.8",
-    "gulp-rename": "^1.2.0",
-    "gulp-sourcemaps": "^1.1.0",
-    "gulp-uglify": "^0.3.1",
-    "gulp-usemin": "^0.3.7",
-    "gulp-util": "^3.0.0",
-    "gulp-watch": "^0.6.8",
-    "jshint-stylish": "^0.4.0",
-    "karma": "^0.12.17",
-    "karma-coverage": "^0.2.4",
-    "karma-jasmine": "^0.1.5",
-    "karma-phantomjs-launcher": "^0.1.4",
-    "merge-stream": "^0.1.5",
-    "run-sequence": "^0.3.6"
-  },
-  "engines": {
-    "node": ">= 0.8.0"
+    "codeclimate-test-reporter": "^0.3.2",
+    "del": "^2.2.0",
+    "eslint": "^2.12.0",
+    "eslint-config-mgcrea": "^8.0.0",
+    "eslint-plugin-import": "^1.8.1",
+    "factory-angular-channels": "^0.10.0",
+    "gulp-ng-annotate": "^2.0.0",
+    "gulp-pre": "^4.0.0-alpha.4",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.5.3",
+    "gulp-util": "^3.0.7",
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.22",
+    "karma-chrome-launcher": "^1.0.1",
+    "karma-coverage": "^1.0.0",
+    "karma-jasmine": "^1.0.2",
+    "karma-phantomjs-launcher": "^1.0.0",
+    "karma-sauce-launcher": "^1.0.0",
+    "ng-factory": "^1.1.0",
+    "phantomjs-prebuilt": "^2.1.7",
+    "through2": "^2.0.1",
+    "undertaker-lib-tasks": "^0.5.3"
   },
   "scripts": {
-    "test": "gulp jshint karma:unit"
+    "start": "gulp serve",
+    "compile": "gulp build",
+    "test": "gulp karma:unit",
+    "test:watch": "npm run test -- -w",
+    "lint": "eslint src/*/*.js"
   }
 }

@@ -1,60 +1,52 @@
 /**
  * angular-strap
- * @version v2.0.5 - 2014-08-07
+ * @version v2.3.9 - 2016-06-10
  * @link http://mgcrea.github.io/angular-strap
- * @author Olivier Louvignes (olivier@mg-crea.com)
+ * @author Olivier Louvignes <olivier@mg-crea.com> (https://github.com/mgcrea)
  * @license MIT License, http://www.opensource.org/licenses/MIT
  */
 'use strict';
-angular.module('mgcrea.ngStrap.helpers.debounce', []).constant('debounce', function (func, wait, immediate) {
-  var timeout, args, context, timestamp, result;
-  return function () {
-    context = this;
-    args = arguments;
-    timestamp = new Date();
-    var later = function () {
-      var last = new Date() - timestamp;
-      if (last < wait) {
-        timeout = setTimeout(later, wait - last);
-      } else {
+
+angular.module('mgcrea.ngStrap.helpers.debounce', []).factory('debounce', [ '$timeout', function($timeout) {
+  return function(func, wait, immediate) {
+    var timeout = null;
+    return function() {
+      var context = this;
+      var args = arguments;
+      var callNow = immediate && !timeout;
+      if (timeout) {
+        $timeout.cancel(timeout);
+      }
+      timeout = $timeout(function later() {
         timeout = null;
-        if (!immediate)
-          result = func.apply(context, args);
+        if (!immediate) {
+          func.apply(context, args);
+        }
+      }, wait, false);
+      if (callNow) {
+        func.apply(context, args);
+      }
+      return timeout;
+    };
+  };
+} ]).factory('throttle', [ '$timeout', function($timeout) {
+  return function(func, wait, options) {
+    var timeout = null;
+    if (!options) options = {};
+    return function() {
+      var context = this;
+      var args = arguments;
+      if (!timeout) {
+        if (options.leading !== false) {
+          func.apply(context, args);
+        }
+        timeout = $timeout(function later() {
+          timeout = null;
+          if (options.trailing !== false) {
+            func.apply(context, args);
+          }
+        }, wait, false);
       }
     };
-    var callNow = immediate && !timeout;
-    if (!timeout) {
-      timeout = setTimeout(later, wait);
-    }
-    if (callNow)
-      result = func.apply(context, args);
-    return result;
   };
-}).constant('throttle', function (func, wait, options) {
-  var context, args, result;
-  var timeout = null;
-  var previous = 0;
-  options || (options = {});
-  var later = function () {
-    previous = options.leading === false ? 0 : new Date();
-    timeout = null;
-    result = func.apply(context, args);
-  };
-  return function () {
-    var now = new Date();
-    if (!previous && options.leading === false)
-      previous = now;
-    var remaining = wait - (now - previous);
-    context = this;
-    args = arguments;
-    if (remaining <= 0) {
-      clearTimeout(timeout);
-      timeout = null;
-      previous = now;
-      result = func.apply(context, args);
-    } else if (!timeout && options.trailing !== false) {
-      timeout = setTimeout(later, remaining);
-    }
-    return result;
-  };
-});
+} ]);

@@ -14,64 +14,82 @@
   </div><!-- /profile-bar-chat -->
 
   <div data-resize class="row callhistory-content">
-    <div class="col-md-12 call-options-bar">
-      <p>
-        Start:
-      </p>
-      <input type="datetime-local" name="input" ng-model="callhistory.startTime" placeholder="yyyy-MM-ddTHH:mm" required />
+
+    <div class="col-md-12 start">
+      <p>Start:</p>
     </div>
-    <div class="col-md-12 call-options-bar">
-      <p>
-        End:
-      </p>
-      <input type="datetime-local" name="input" ng-model="callhistory.endTime" placeholder="yyyy-MM-ddTHH:mm" required />
+
+    <div class="col-md-9 input-group">
+      <input type="text" class="form-control" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="callhistory.startTime" is-open="callhistory.isOpenStartDate" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="callhistory.openStartDate()"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
     </div>
+    <div class="time-picker">
+      <uib-timepicker ng-model="callhistory.startTime" hour-step="1" minute-step="5" show-meridian="false"></uib-timepicker>
+    </div>
+
+
+    <div class="col-md-12 end">
+      <p>End:</p>
+    </div>
+    <div class="col-md-9 input-group">
+      <input type="text" class="form-control" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="callhistory.endTime" is-open="callhistory.isOpenEndDate" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="callhistory.openEndDate()"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+    </div>
+    <div class="time-picker">
+      <uib-timepicker ng-model="callhistory.endTime" hour-step="1" minute-step="5" show-meridian="false"></uib-timepicker>
+    </div>
+
+
     <div class="col-md-12 callhistory-btn">
       <button type="button" class="btn btn-success"
-        data-ng-click="callhistory.apply();">
-      Apply
+              data-ng-click="callhistory.apply();">
+        Apply
       </button>
     </div>
     <div class="col-md-12 callhistory-select">
       <select name="mySelect"
-        ng-options="option.name for option in callhistory.availableOptions track by option.id"
-        ng-model="callhistory.selectedOption">
+              ng-options="option.name for option in callhistory.availableOptions track by option.id"
+              ng-model="callhistory.selectedOption">
       </select>
       <input data-ng-if="callhistory.selectedOption.id != 1" ng-model="callhistory.number">
     </div>
     <div class="col-md-12 table-responsive">
       <table class="table table-hover table-bordered">
         <thead style="background-color: silver;">
-          <tr>
-            <th>From</th>
-            <th>To</th>
-           <!-- <th>Recipient</th>-->
-            <th>Start</th>
-            <!--<th>Duration</th>
-            <th>Status</th>-->
-          </tr>
+        <tr>
+          <th>From</th>
+          <th>To</th>
+          <!-- <th>Recipient</th>-->
+          <th>Start</th>
+          <!--<th>Duration</th>
+          <th>Status</th>-->
+        </tr>
         </thead>
         <tbody>
-          <tr dir-paginate="call in callhistory.calls|itemsPerPage:10">
-            <td>
-              {{ call.from }}
-            </td>
-            <td ng-click="callhistory.clickToCall(call.to);" style="cursor: pointer;">
-              {{ call.to }}
-            </td>
-            <!--<td>
-              {{ call.recipient }}
-            </td>-->
-            <td>
-              {{ call.start }}
-            </td>
-            <!--<td>
-              {{ call.duration }}
-            </td>
-            <td>
-              {{ call.status }}
-            </td>-->
-          </tr>
+        <tr dir-paginate="call in callhistory.calls|itemsPerPage:10">
+          <td>
+            {{ call.from }}
+          </td>
+          <td ng-click="callhistory.clickToCall(call.to);" style="cursor: pointer;">
+            {{ call.to }}
+          </td>
+          <!--<td>
+            {{ call.recipient }}
+          </td>-->
+          <td>
+            {{ call.start }}
+          </td>
+          <!--<td>
+            {{ call.duration }}
+          </td>
+          <td>
+            {{ call.status }}
+          </td>-->
+        </tr>
         </tbody>
       </table>
       <dir-pagination-controls
@@ -83,9 +101,3 @@
   </div>
 </div>
 
-<div class="sticky">
-  <div class="row bottom-bar">
-    <div class="input-group pull-left">
-    </div><!-- /input-group -->
-  </div>
-</div>

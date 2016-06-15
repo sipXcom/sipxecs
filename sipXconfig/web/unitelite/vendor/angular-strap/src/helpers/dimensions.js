@@ -2,9 +2,8 @@
 
 angular.module('mgcrea.ngStrap.helpers.dimensions', [])
 
-  .factory('dimensions', function($document, $window) {
+  .factory('dimensions', function () {
 
-    var jqLite = angular.element;
     var fn = {};
 
     /**
@@ -12,7 +11,7 @@ angular.module('mgcrea.ngStrap.helpers.dimensions', [])
      * @param element
      * @param name
      */
-    var nodeName = fn.nodeName = function(element, name) {
+    var nodeName = fn.nodeName = function (element, name) {
       return element.nodeName && element.nodeName.toLowerCase() === name.toLowerCase();
     };
 
@@ -22,9 +21,9 @@ angular.module('mgcrea.ngStrap.helpers.dimensions', [])
      * @param prop
      * @param extra
      */
-    fn.css = function(element, prop, extra) {
+    fn.css = function (element, prop, extra) {
       var value;
-      if (element.currentStyle) { //IE
+      if (element.currentStyle) { // IE
         value = element.currentStyle[prop];
       } else if (window.getComputedStyle) {
         value = window.getComputedStyle(element)[prop];
@@ -40,7 +39,7 @@ angular.module('mgcrea.ngStrap.helpers.dimensions', [])
      * @url http://api.jquery.com/offset/
      * @param element
      */
-    fn.offset = function(element) {
+    fn.offset = function (element) {
       var boxRect = element.getBoundingClientRect();
       var docElement = element.ownerDocument;
       return {
@@ -52,16 +51,79 @@ angular.module('mgcrea.ngStrap.helpers.dimensions', [])
     };
 
     /**
+     * Provides set equivalent of jQuery's offset function:
+     * @required-by bootstrap-tooltip
+     * @url http://api.jquery.com/offset/
+     * @param element
+     * @param options
+     * @param i
+     */
+    fn.setOffset = function (element, options, i) {
+      var curPosition;
+      var curLeft;
+      var curCSSTop;
+      var curTop;
+      var curOffset;
+      var curCSSLeft;
+      var calculatePosition;
+      var position = fn.css(element, 'position');
+      var curElem = angular.element(element);
+      var props = {};
+
+      // Set position first, in-case top/left are set even on static elem
+      if (position === 'static') {
+        element.style.position = 'relative';
+      }
+
+      curOffset = fn.offset(element);
+      curCSSTop = fn.css(element, 'top');
+      curCSSLeft = fn.css(element, 'left');
+      calculatePosition = (position === 'absolute' || position === 'fixed') &&
+                          (curCSSTop + curCSSLeft).indexOf('auto') > -1;
+
+      // Need to be able to calculate position if either
+      // top or left is auto and position is either absolute or fixed
+      if (calculatePosition) {
+        curPosition = fn.position(element);
+        curTop = curPosition.top;
+        curLeft = curPosition.left;
+      } else {
+        curTop = parseFloat(curCSSTop) || 0;
+        curLeft = parseFloat(curCSSLeft) || 0;
+      }
+
+      if (angular.isFunction(options)) {
+        options = options.call(element, i, curOffset);
+      }
+
+      if (options.top !== null) {
+        props.top = (options.top - curOffset.top) + curTop;
+      }
+      if (options.left !== null) {
+        props.left = (options.left - curOffset.left) + curLeft;
+      }
+
+      if ('using' in options) {
+        options.using.call(curElem, props);
+      } else {
+        curElem.css({
+          top: props.top + 'px',
+          left: props.left + 'px'
+        });
+      }
+    };
+
+    /**
      * Provides read-only equivalent of jQuery's position function
      * @required-by bootstrap-tooltip, bootstrap-affix
      * @url http://api.jquery.com/offset/
      * @param element
      */
-    fn.position = function(element) {
+    fn.position = function (element) {
 
-      var offsetParentRect = {top: 0, left: 0},
-          offsetParentElement,
-          offset;
+      var offsetParentRect = {top: 0, left: 0};
+      var offsetParentEl;
+      var offset;
 
       // Fixed elements are offset from window (parentOffset = {top:0, left: 0}, because it is it's only offset parent
       if (fn.css(element, 'position') === 'fixed') {
@@ -71,19 +133,18 @@ angular.module('mgcrea.ngStrap.helpers.dimensions', [])
 
       } else {
 
-        // Get *real* offsetParentElement
-        offsetParentElement = offsetParent(element);
-        offset = fn.offset(element);
+        // Get *real* offsetParentEl
+        offsetParentEl = offsetParentElement(element);
 
         // Get correct offsets
         offset = fn.offset(element);
-        if (!nodeName(offsetParentElement, 'html')) {
-          offsetParentRect = fn.offset(offsetParentElement);
+        if (!nodeName(offsetParentEl, 'html')) {
+          offsetParentRect = fn.offset(offsetParentEl);
         }
 
         // Add offsetParent borders
-        offsetParentRect.top += fn.css(offsetParentElement, 'borderTopWidth', true);
-        offsetParentRect.left += fn.css(offsetParentElement, 'borderLeftWidth', true);
+        offsetParentRect.top += fn.css(offsetParentEl, 'borderTopWidth', true);
+        offsetParentRect.left += fn.css(offsetParentEl, 'borderLeftWidth', true);
       }
 
       // Subtract parent offsets and element margins
@@ -101,15 +162,15 @@ angular.module('mgcrea.ngStrap.helpers.dimensions', [])
      * @required-by fn.position
      * @param element
      */
-    var offsetParent = function offsetParentElement(element) {
+    function offsetParentElement (element) {
       var docElement = element.ownerDocument;
       var offsetParent = element.offsetParent || docElement;
-      if(nodeName(offsetParent, '#document')) return docElement.documentElement;
-      while(offsetParent && !nodeName(offsetParent, 'html') && fn.css(offsetParent, 'position') === 'static') {
+      if (nodeName(offsetParent, '#document')) return docElement.documentElement;
+      while (offsetParent && !nodeName(offsetParent, 'html') && fn.css(offsetParent, 'position') === 'static') {
         offsetParent = offsetParent.offsetParent;
       }
       return offsetParent || docElement.documentElement;
-    };
+    }
 
     /**
      * Provides equivalent of jQuery's height function
@@ -118,9 +179,9 @@ angular.module('mgcrea.ngStrap.helpers.dimensions', [])
      * @param element
      * @param outer
      */
-    fn.height = function(element, outer) {
+    fn.height = function (element, outer) {
       var value = element.offsetHeight;
-      if(outer) {
+      if (outer) {
         value += fn.css(element, 'marginTop', true) + fn.css(element, 'marginBottom', true);
       } else {
         value -= fn.css(element, 'paddingTop', true) + fn.css(element, 'paddingBottom', true) + fn.css(element, 'borderTopWidth', true) + fn.css(element, 'borderBottomWidth', true);
@@ -135,9 +196,9 @@ angular.module('mgcrea.ngStrap.helpers.dimensions', [])
      * @param element
      * @param outer
      */
-    fn.width = function(element, outer) {
+    fn.width = function (element, outer) {
       var value = element.offsetWidth;
-      if(outer) {
+      if (outer) {
         value += fn.css(element, 'marginLeft', true) + fn.css(element, 'marginRight', true);
       } else {
         value -= fn.css(element, 'paddingLeft', true) + fn.css(element, 'paddingRight', true) + fn.css(element, 'borderLeftWidth', true) + fn.css(element, 'borderRightWidth', true);
