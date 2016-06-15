@@ -1,117 +1,99 @@
 /**
  * angular-strap
- * @version v2.0.5 - 2014-08-07
+ * @version v2.3.9 - 2016-06-10
  * @link http://mgcrea.github.io/angular-strap
- * @author Olivier Louvignes (olivier@mg-crea.com)
+ * @author Olivier Louvignes <olivier@mg-crea.com> (https://github.com/mgcrea)
  * @license MIT License, http://www.opensource.org/licenses/MIT
  */
 'use strict';
-// @BUG: following snippet won't compile correctly
-// @TODO: submit issue to core
-// '<span ng-if="title"><strong ng-bind="title"></strong>&nbsp;</span><span ng-bind-html="content"></span>' +
-angular.module('mgcrea.ngStrap.alert', ['mgcrea.ngStrap.modal']).provider('$alert', function () {
+
+angular.module('mgcrea.ngStrap.alert', [ 'mgcrea.ngStrap.modal' ]).provider('$alert', function() {
   var defaults = this.defaults = {
-      animation: 'am-fade',
-      prefixClass: 'alert',
-      placement: null,
-      template: 'alert/alert.tpl.html',
-      container: false,
-      element: null,
-      backdrop: false,
-      keyboard: true,
-      show: true,
-      duration: false,
-      type: false,
-      dismissable: true
-    };
-  this.$get = [
-    '$modal',
-    '$timeout',
-    function ($modal, $timeout) {
-      function AlertFactory(config) {
-        var $alert = {};
-        // Common vars
-        var options = angular.extend({}, defaults, config);
-        $alert = $modal(options);
-        // Support scope as string options [/*title, content, */ type, dismissable]
-        $alert.$scope.dismissable = !!options.dismissable;
-        if (options.type) {
-          $alert.$scope.type = options.type;
-        }
-        // Support auto-close duration
-        var show = $alert.show;
-        if (options.duration) {
-          $alert.show = function () {
-            show();
-            $timeout(function () {
-              $alert.hide();
-            }, options.duration * 1000);
-          };
-        }
-        return $alert;
+    animation: 'am-fade',
+    prefixClass: 'alert',
+    prefixEvent: 'alert',
+    placement: null,
+    templateUrl: 'alert/alert.tpl.html',
+    container: false,
+    element: null,
+    backdrop: false,
+    keyboard: true,
+    show: true,
+    duration: false,
+    type: false,
+    dismissable: true
+  };
+  this.$get = [ '$modal', '$timeout', function($modal, $timeout) {
+    function AlertFactory(config) {
+      var $alert = {};
+      var options = angular.extend({}, defaults, config);
+      $alert = $modal(options);
+      $alert.$scope.dismissable = !!options.dismissable;
+      if (options.type) {
+        $alert.$scope.type = options.type;
       }
-      return AlertFactory;
+      var show = $alert.show;
+      if (options.duration) {
+        $alert.show = function() {
+          show();
+          $timeout(function() {
+            $alert.hide();
+          }, options.duration * 1e3);
+        };
+      }
+      return $alert;
     }
-  ];
-}).directive('bsAlert', [
-  '$window',
-  '$location',
-  '$sce',
-  '$alert',
-  function ($window, $location, $sce, $alert) {
-    var requestAnimationFrame = $window.requestAnimationFrame || $window.setTimeout;
-    return {
-      restrict: 'EAC',
-      scope: true,
-      link: function postLink(scope, element, attr, transclusion) {
-        // Directive options
-        var options = {
-            scope: scope,
-            element: element,
-            show: false
-          };
-        angular.forEach([
-          'template',
-          'placement',
-          'keyboard',
-          'html',
-          'container',
-          'animation',
-          'duration',
-          'dismissable'
-        ], function (key) {
-          if (angular.isDefined(attr[key]))
-            options[key] = attr[key];
-        });
-        // Support scope as data-attrs
-        angular.forEach([
-          'title',
-          'content',
-          'type'
-        ], function (key) {
-          attr[key] && attr.$observe(key, function (newValue, oldValue) {
+    return AlertFactory;
+  } ];
+}).directive('bsAlert', [ '$window', '$sce', '$alert', function($window, $sce, $alert) {
+  return {
+    restrict: 'EAC',
+    scope: true,
+    link: function postLink(scope, element, attr, transclusion) {
+      var options = {
+        scope: scope,
+        element: element,
+        show: false
+      };
+      angular.forEach([ 'template', 'templateUrl', 'controller', 'controllerAs', 'placement', 'keyboard', 'html', 'container', 'animation', 'duration', 'dismissable' ], function(key) {
+        if (angular.isDefined(attr[key])) options[key] = attr[key];
+      });
+      var falseValueRegExp = /^(false|0|)$/i;
+      angular.forEach([ 'keyboard', 'html', 'container', 'dismissable' ], function(key) {
+        if (angular.isDefined(attr[key]) && falseValueRegExp.test(attr[key])) options[key] = false;
+      });
+      angular.forEach([ 'onBeforeShow', 'onShow', 'onBeforeHide', 'onHide' ], function(key) {
+        var bsKey = 'bs' + key.charAt(0).toUpperCase() + key.slice(1);
+        if (angular.isDefined(attr[bsKey])) {
+          options[key] = scope.$eval(attr[bsKey]);
+        }
+      });
+      if (!scope.hasOwnProperty('title')) {
+        scope.title = '';
+      }
+      angular.forEach([ 'title', 'content', 'type' ], function(key) {
+        if (attr[key]) {
+          attr.$observe(key, function(newValue, oldValue) {
             scope[key] = $sce.trustAsHtml(newValue);
           });
-        });
-        // Support scope as an object
-        attr.bsAlert && scope.$watch(attr.bsAlert, function (newValue, oldValue) {
+        }
+      });
+      if (attr.bsAlert) {
+        scope.$watch(attr.bsAlert, function(newValue, oldValue) {
           if (angular.isObject(newValue)) {
             angular.extend(scope, newValue);
           } else {
             scope.content = newValue;
           }
         }, true);
-        // Initialize alert
-        var alert = $alert(options);
-        // Trigger
-        element.on(attr.trigger || 'click', alert.toggle);
-        // Garbage collection
-        scope.$on('$destroy', function () {
-          alert.destroy();
-          options = null;
-          alert = null;
-        });
       }
-    };
-  }
-]);
+      var alert = $alert(options);
+      element.on(attr.trigger || 'click', alert.toggle);
+      scope.$on('$destroy', function() {
+        if (alert) alert.destroy();
+        options = null;
+        alert = null;
+      });
+    }
+  };
+} ]);

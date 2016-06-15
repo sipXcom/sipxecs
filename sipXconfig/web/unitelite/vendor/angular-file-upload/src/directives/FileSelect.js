@@ -4,7 +4,7 @@
 import CONFIG from './../config.json';
 
 
-export default  ($parse, FileUploader, FileSelect) => {
+export default function __identity($parse, FileUploader, FileSelect) {
 
 
     return {
@@ -17,7 +17,8 @@ export default  ($parse, FileUploader, FileSelect) => {
 
             var object = new FileSelect({
                 uploader: uploader,
-                element: element
+                element: element,
+                scope: scope
             });
 
             object.getOptions = $parse(attributes.options).bind(object, scope);
@@ -29,7 +30,7 @@ export default  ($parse, FileUploader, FileSelect) => {
 }
 
 
-module.exports.$inject = [
+__identity.$inject = [
     '$parse',
     'FileUploader',
     'FileSelect'

@@ -1,6 +1,119 @@
+4.5.9
+  - [Fix] parseInt and parseFloat should both accept null/undefined (#402)
+  - [Tests] up to `node` `v6.2`
+  - [Dev Deps] update `eslint`, `@ljharb/eslint-config`, `jscs`, `concurrently`
+
+4.5.8
+  - [Fix] Check if property descriptor is configurable before re-defining it (#394, #373)
+  - [Dev Deps] update `eslint`, `jscs`, `@ljharb/eslint-config`
+  - [Tests] up to `node` `v5.10`, `v4.4`
+  - [Tests] Use `concurrently` instead of `parallelshell`
+  - [Tests] use `pretest` to run the linter
+
+4.5.7
+  - [Fix] `bind` in IE 8: Update `is-callable` implementation to v1.1.3 (#390)
+
+4.5.6
+  - [Fix] `new Date(new Date())` should work in IE 8 (#389)
+  - [Tests] on `node` `v5.7`
+  - [Dev Deps] update `uglify-js`
+
+4.5.5
+  - [Fix] Adobe Photoshop’s JS engine bizarrely can have `+date !== date.getTime()` (#365)
+  - [Dev Deps] update `eslint`
+  - [Refactor] Update `is-callable` implementation to match latest
+  - [Dev Deps] update `eslint`, `@ljharb/eslint-config`, `jscs`
+
+4.5.4
+  - [Fix] careless error from 5cf99aca49e59bae03b5d542381424bb1b13ec42
+
+4.5.3
+  - [Fix] Saturday is a day in the week (#386)
+  - [Robustness] improve Function#bind (#381)
+  - [Tests] on `node` `v5.6`, `v4.3`
+  - [Tests] use json3 (#382)
+  - [Dev Deps] update `eslint`, `@ljharb/eslint-config`
+  - [Docs] add note about script order (#379)
+
+4.5.2
+  - [shim: fix] use `Array#slice`, not `String#slice`, on `String#split` output (#380)
+
+4.5.1
+  - [Fix] Make sure preexisting + broken `Array#` methods that throw don’t break the runtime (#377)
+  - [Dev Deps] update `jscs`
+
+4.5.0
+  - [New] `parseFloat('-0')` should return -0 in Opera 12 (#371)
+  - [New] Provide and replace Date UTC methods (#360)
+  - [Robustness] cache `Date` getUTC* methods so that `Date#toISOString` doesn’t observably look them up on the receiver
+  - [Robustness] use a cached and shimmed `String#trim`
+  - [Tests] up to `node` `v5.5`
+  - [Tests] add `parallelshell` and use it in a few tasks
+  - [Refactor] rename cached methods to avoid linter warnings
+  - [Dev Deps] update `eslint`, `jscs`, '@ljharb/eslint-config'
+  - [Docs] Update license year to 2016 (#374)
+
+4.4.2
+  - [shim: fix] use `Array#slice`, not `String#slice`, on `String#split` output (#380)
+
+4.4.1
+  - [Fix] ensure that IE 11 in compatibility mode doesn't throw (#370)
+  - [Docs] add missing shimmed things
+
+4.4.0
+  - [New] Detect and patch `RegExp#toString` in IE 8, which returns flags in the wrong order (#364)
+  - [Fix] Patch `Array#sort` on {Chrome, Safari, IE < 9, FF 4} that throws improperly, per ES5 (#354)
+  - [Fix] In IE 6, `window.external` makes `Object.keys` throw
+  - [Fix] `Array#slice`: boxed string access on IE <= 8 (#349)
+  - [Fix] `Array#join`: fix IE 6-8 join called on string literal (#352)
+  - [Fix] Ensure that `Error#message` and `Error#name` are non-enumerable (#358)
+  - [Fix: sham] `Object.getOwnPropertyDescriptor`: In Opera 11.6, `propertyIsEnumerable` is a nonshadowable global, like `toString`
+  - [Robustness] Use a bound form of `Array#slice.call`
+  - [Tests] Properly check for descriptor support in IE <= 8
+  - [Tests] on `node` `v5.1`
+  - [Tests] Add `Array#slice` tests (#346)
+  - [Dev Deps] update `uglify-js`, `eslint`, `jscs`, `uglify-js`, `semver`
+  - [Docs] Fix broken UMD links (#344)
+
+4.3.2
+  - [shim: fix] use `Array#slice`, not `String#slice`, on `String#split` output (#380)
+
+4.3.1
+  - [Fix] `String#split`: revert part of dcce96ae21185a69d2d40e67416e7496b73e8e47 which broke in older browsers (#342)
+  - [Dev Deps] update `eslint`, `@ljharb/eslint-config`, `jscs`
+  - [Tests] Firefox allows `Number#toPrecision` values of [1,100], which the spec permits
+
+4.3.0
+  - [New] `Array#push`: in IE <= 7, `Array#push` was not generic (#336)
+  - [New] `Array#push` in Opera `10.6` has a super weird bug when pushing `undefined`
+  - [New] `Array#join`: In IE <= 7, passing `undefined` didn't use the default separator (#333)
+  - [New] `Error#toString`: prints out the proper message in IE 7 and below (#334)
+  - [New] `Number#toPrecision`: IE 7 and below incorrectly throw when an explicit `undefined` precision is passed (#340)
+  - [Fix] `String#lastIndexOf`: ensure the correct length in IE 8
+  - [Fix] ensure `parseInt` accepts negative and plus-prefixed hex values (#332)
+  - [Robustness] Use a bound `Array#push` instead of relying on `Function#call`
+  - [Dev Deps] update `eslint`, `@ljharb/eslint-config`, `jscs`
+  - [Tests] Add some conditionals to avoid impossible-to-fix test failures in IE 6-8, due to it being unable to distinguish between `undefined` and an absent index (#114)
+  - [Tests] Fix false negatives in IE 6-8 with jasmine comparing arrays to arraylikes (#114)
+  - [Tests] add additional `Array#shift` tests (#337)
+  - [Tests] Add additional `Array#splice` tests (#339)
+  - [Tests] Add `Array#pop` tests, just in case (#338)
+  - [Tests] include `global` tests in HTML test files
+  - [Tests] Make sure the HTML tests run with the right charset
+  - [Tests] ensure `node` `v0.8` tests stay passing.
+  - [Tests] Prevent nondeterminism in the tests - this sometime produced values that are one ms off
+  - [Tests] on `node` `v5.0`
+  - [Tests] fix npm upgrades for older nodes
+
+4.2.1
+  - [shim: fix] use `Array#slice`, not `String#slice`, on `String#split` output (#380)
+
 4.2.0
   - [shim: new] Overwrite `String#lastIndexOf` in IE 9, 10, 11, and Edge, so it has proper unicode support.
   - [Dev Deps] update `eslint`, `jscs`
+
+4.1.16
+  - [shim: fix] use `Array#slice`, not `String#slice`, on `String#split` output (#380)
 
 4.1.15
   - [shim: fix] new Date + Date.parse: Fix a Safari 8 & 9 bug where the `ms` arg is treated as a signed instead of unsigned int (#329)

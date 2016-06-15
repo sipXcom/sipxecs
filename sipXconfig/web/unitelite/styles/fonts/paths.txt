@@ -1,2 +1,0 @@
-<link rel="stylesheet" href="demo-files/demo.css">
-<link rel="stylesheet" href="../../../styles/icomoon.css"></head>

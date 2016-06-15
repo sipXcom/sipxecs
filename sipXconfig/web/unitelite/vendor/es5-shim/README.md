@@ -9,6 +9,8 @@
 `es5-shim.js` and `es5-shim.min.js` monkey-patch a JavaScript context to
 contain all EcmaScript 5 methods that can be faithfully emulated with a
 legacy JavaScript engine.
+**Note:** As `es5-shim.js` is designed to patch the native Javascript
+engine, it should be the library that is loaded first.
 
 `es5-sham.js` and `es5-sham.min.js` monkey-patch other ES5 methods as
 closely as possible.  For these methods, as closely as possible to ES5
@@ -35,9 +37,13 @@ simply `npm install` and `npm test`.
 * Array.prototype.indexOf
 * Array.prototype.lastIndexOf
 * Array.prototype.map
+* Array.prototype.slice
 * Array.prototype.some
+* Array.prototype.sort
 * Array.prototype.reduce
 * Array.prototype.reduceRight
+* Array.prototype.push
+* Array.prototype.join
 * Array.isArray
 * Date.now
 * Date.prototype.toJSON
@@ -48,14 +54,21 @@ simply `npm install` and `npm test`.
     * :warning: Caveat: bound functions don't have checks in ``call`` and
       ``apply`` to avoid executing as a constructor.
 * Number.prototype.toFixed
+* Number.prototype.toPrecision
 * Object.keys
 * String.prototype.split
 * String.prototype.trim
+* String.prototype.lastIndexOf
 * String.prototype.replace
     * Firefox (through v29) natively handles capturing groups incorrectly.
 * Date.parse (for ISO parsing)
 * Date.prototype.toISOString
 * parseInt
+* parseFloat
+* Error.prototype.toString
+* Error.prototype.name
+* Error.prototype.message
+* RegExp.prototype.toString
 
 ## Shams
 
@@ -155,6 +168,17 @@ simply `npm install` and `npm test`.
     provisions of this method, which you cannot possibly
     obtain in legacy engines.
 
+### Example of applying ES compatability shims in a browser project
+
+```html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-shim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.34.2/es6-shim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.34.2/es6-sham.min.js"></script>
+<script src="https://wzrd.in/standalone/es7-shim@latest"></script>
+<script src="other-libs.js"></script>
+```
 [npm-url]: https://npmjs.org/package/es5-shim
 [npm-version-svg]: http://versionbadg.es/es-shims/es5-shim.svg
 [travis-svg]: https://travis-ci.org/es-shims/es5-shim.svg
@@ -164,4 +188,3 @@ simply `npm install` and `npm test`.
 [dev-deps-svg]: https://david-dm.org/es-shims/es5-shim/dev-status.svg
 [dev-deps-url]: https://david-dm.org/es-shims/es5-shim#info=devDependencies
 [npm-badge-png]: https://nodei.co/npm/es5-shim.png?downloads=true&stars=true
-
