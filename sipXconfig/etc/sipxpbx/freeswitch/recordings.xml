@@ -54,7 +54,7 @@
   <group name="fs-recording">
     <setting name="resample">
       <type refid="resampleType" />
-      <value>16000</value>
+      <value>44100</value>
     </setting>
     <setting name="brate">
       <type refid="brateType" />
