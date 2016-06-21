@@ -1,0 +1,72 @@
+From bfb47e9dab9c7d8c477f47f26a48aa27a061c7d4 Mon Sep 17 00:00:00 2001
+From: dizzy <george@ezuce.com>
+Date: Wed, 1 Jun 2016 16:29:58 +0300
+Subject: [PATCH] UC-4104: refresh nodes
+
+---
+ src/mongo/client/dbclient_rs.cpp | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/src/mongo/client/dbclient_rs.cpp b/src/mongo/client/dbclient_rs.cpp
+index 9311bf3..47e88f1 100644
+--- a/src/mongo/client/dbclient_rs.cpp
++++ b/src/mongo/client/dbclient_rs.cpp
+@@ -514,6 +514,10 @@ namespace {
+                                         _lastSlaveOkConn->getServerAddress() : "[not cached]" )
+                                 << ")" << endl;
+ 
++            if (_lastSlaveOkConn.get() == NULL) {
++              checkMaster();
++            }
++
+             string lastNodeErrMsg;
+             for (size_t retry = 0; retry < MAX_RETRY; retry++) {
+                 try {
+@@ -573,6 +577,10 @@ namespace {
+                                         _lastSlaveOkConn->getServerAddress() : "[not cached]" )
+                                 << ")" << endl;
+ 
++            if (_lastSlaveOkConn.get() == NULL) {
++              checkMaster();
++            }
++
+             string lastNodeErrMsg;
+ 
+             for (size_t retry = 0; retry < MAX_RETRY; retry++) {
+@@ -619,7 +627,7 @@ namespace {
+         verify(0);
+     }
+ 
+-    void DBClientReplicaSet::isntMaster() { 
++    void DBClientReplicaSet::isntMaster() {
+         log() << "got not master for: " << _masterHost << endl;
+         // Can't use _getMonitor because that will create a new monitor from the cached seed if
+         // the monitor doesn't exist.
+@@ -627,7 +635,7 @@ namespace {
+         if ( monitor ) {
+             monitor->failedHost( _masterHost );
+         }
+-        _master.reset(); 
++        _master.reset();
+     }
+ 
+     auto_ptr<DBClientCursor> DBClientReplicaSet::checkSlaveQueryResult( auto_ptr<DBClientCursor> result ){
+@@ -948,13 +956,13 @@ namespace {
+                 return false;
+             }
+         }
+-        
++
+         LOG( 3 ) << "dbclient_rs call to primary node in " << _getMonitor()->getName() << endl;
+ 
+         DBClientConnection* m = checkMaster();
+         if ( actualServer )
+             *actualServer = m->getServerAddress();
+-        
++
+         if ( ! m->call( toSend , response , assertOk ) )
+             return false;
+ 
+-- 
+2.4.3
+
