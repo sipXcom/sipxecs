@@ -3,7 +3,7 @@
 
 Name:           mongo-cxx-driver
 Version:        2.6.7
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        The mongoDb C++ client driver library and its include files
 Group:          Development/Libraries
 License:        AGPLv3 and zlib and ASL 2.0
@@ -15,6 +15,8 @@ Patch1:		    mongo-cxx-driver-2.6.7-logger.patch
 
 ## Patch 2 - http://track.sipfoundry.org/browse/XX-11590 
 Patch2:		    mongo-cxx-driver-2.6.7-maxTimeMS.patch
+
+Patch3:		    mongo-cxx-driver-2.6.7-UC-4104.patch
 
 BuildRequires:  scons
 BuildRequires:  openssl-devel
@@ -44,6 +46,7 @@ This package provides the header files for MongoDB legacy C++ driver.
 %setup -q -n %{name}-legacy-0.0-26compat-%{version}
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 # CRLF -> LF
 sed -i 's/\r//' README.md
@@ -87,7 +90,9 @@ rm -f %{buildroot}%{_libdir}/../lib/libmongoclient.a
 
 %changelog
 * Wed Feb 18 2015 Ionut Oancea <ioancea@ezuce.com> - 2.6.7-3
-- Added patch for maxTimeMS: http://track.sipfoundry.org/browse/XX-11590
+- Added 
+
+ for maxTimeMS: http://track.sipfoundry.org/browse/XX-11590
 
 * Tue Feb 03 2015 Ionut Oancea <ioancea@ezuce.com> - 2.6.7-2
 - Added patch for logging: http://track.sipfoundry.org/browse/XX-11578
