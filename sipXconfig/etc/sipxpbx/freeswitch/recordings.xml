@@ -14,24 +14,12 @@
       <option>
         <value>64000</value>
       </option>
-      <option>
-        <value>128000</value>
-      </option>
-      <option>
-        <value>192000</value>
-      </option>
-      <option>
-        <value>256000</value>
-      </option>
     </enum>
   </type>
   <type id="resampleType">
     <enum>
       <option>
         <value>16000</value>
-      </option>
-      <option>
-        <value>20000</value>
       </option>
       <option>
         <value>44100</value>
