@@ -9,4 +9,14 @@
       <setting name="Password"/>
     </group>
   </group>
+  <group name="CALLER_ID">
+    <!-- generate CallerDisplayInfo=display,cid entry in .ini file -->
+    <setting name="Display"/>
+    <setting name="CIDRestricted">
+      <type>
+        <boolean />
+      </type>
+      <value>0</value>
+    </setting>
+  </group>
 </model>

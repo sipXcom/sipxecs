@@ -114,6 +114,19 @@ FORMAT Authentication_Index = Authentication_UserId, Authentication_UserPassword
 Authentication $line_id = $username, ${password};
 #end
 [\Authentication]
+
+[CallerDisplayInfo]
+FORMAT CallerDisplayInfo_Index = CallerDisplayInfo_DisplayString, CallerDisplayInfo_IsCidRestricted;
+#foreach ($line in $phone.lines)
+#set($line_id = $velocityCount - 1)
+#set($display = $line.getSettingValue('CALLER_ID/Display'))
+#set($cidRestricted = $line.getSettingValue('CALLER_ID/CIDRestricted'))
+#if(!($display) || $!display == "")
+#set($display = $line.getSettingValue('SIP/Authentication/Username'))
+#end
+CallerDisplayInfo $line_id = ${display}, $cidRestricted;
+#end
+[\CallerDisplayInfo]
 #end
 
 #if(${gateway.ModelDefinitions.contains("digital")})
