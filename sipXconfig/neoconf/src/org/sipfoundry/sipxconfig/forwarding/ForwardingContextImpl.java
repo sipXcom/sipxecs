@@ -19,6 +19,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
+import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
 import org.sipfoundry.sipxconfig.common.CoreContext;
 import org.sipfoundry.sipxconfig.common.DSTChangeEvent;
 import org.sipfoundry.sipxconfig.common.SipxHibernateDaoSupport;
@@ -28,8 +29,10 @@ import org.sipfoundry.sipxconfig.common.event.DaoEventListener;
 import org.sipfoundry.sipxconfig.commserver.SipxReplicationContext;
 import org.sipfoundry.sipxconfig.commserver.imdb.DataSet;
 import org.sipfoundry.sipxconfig.dialplan.AttendantRule;
+import org.sipfoundry.sipxconfig.dialplan.DialPlanContext;
 import org.sipfoundry.sipxconfig.dialplan.DialingRule;
 import org.sipfoundry.sipxconfig.setting.Group;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.dao.support.DataAccessUtils;
@@ -51,6 +54,7 @@ public class ForwardingContextImpl extends SipxHibernateDaoSupport implements Fo
     private CoreContext m_coreContext;
     private JdbcTemplate m_jdbcTemplate;
     private SipxReplicationContext m_sipxReplicationContext;
+    private ConfigManager m_configManager;
 
     /**
      * Looks for a call sequence associated with a given user.
@@ -286,6 +290,7 @@ public class ForwardingContextImpl extends SipxHibernateDaoSupport implements Fo
         if (event instanceof DSTChangeEvent) {
             LOG.info("DST change event caught. Triggering alias generation.");
             m_sipxReplicationContext.generateAll(DataSet.ALIAS);
+            m_configManager.configureEverywhere(DialPlanContext.FEATURE);
         }
     }
 
@@ -319,6 +324,11 @@ public class ForwardingContextImpl extends SipxHibernateDaoSupport implements Fo
 
     public void setSipxReplicationContext(SipxReplicationContext sipxReplicationContext) {
         m_sipxReplicationContext = sipxReplicationContext;
+    }
+
+    @Required
+    public void setConfigManager(ConfigManager configManager) {
+        m_configManager = configManager;
     }
 
     @Override
