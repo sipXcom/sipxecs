@@ -150,7 +150,10 @@ public class MailboxServlet extends HttpServlet {
                         if (action.equals("delete")) {
                             if (method.equals(METHOD_PUT) || method.equals(METHOD_GET)) {
                                 try {
-                                    mailboxManager.deleteMessage(user, messageId);
+                                    mailboxManager.markMessageHeard(user, messageId);
+                                    mailboxManager.moveMessageToFolder(user, messageId, Folder.DELETED.toString());
+                                    response.setContentType("text/xml");
+                                    pw.format("<html>Message id: %s for user: %s was moved to deleted folder</html>", messageId, user.getUserName());
                                 } catch (MessageNotFoundException ex) {
                                     response.sendError(404, "messageId not found");
                                 }
