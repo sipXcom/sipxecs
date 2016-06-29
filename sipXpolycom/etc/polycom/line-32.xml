@@ -267,7 +267,7 @@
         <value />
       </setting>
     </group>
-    <group name="serverMissedCall">
+    <group name="serverMissedCall" advanced="yes">
       <setting name="enabled">
         <type>
           <boolean />
