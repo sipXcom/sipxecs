@@ -2369,7 +2369,7 @@
         </type>
         <value>1</value>
     </setting>
-    <group name="serverFeatureControl">
+    <group name="serverFeatureControl" advanced="yes">
       <setting name="cf">
         <type>
           <boolean />
