@@ -99,7 +99,7 @@ public class EmailFormatter implements ApplicationContextAware {
     }
     
     private String getDeleteUrl() {
-        return "%s/sipxconfig/rest/my/redirect/mailbox/%s/message/%s/delete";
+        return "%s/sipxconfig/rest/my/redirect/mailbox/%s/message/%s/movetodeleted";
     }
     
     private String getPlayUrl() {
