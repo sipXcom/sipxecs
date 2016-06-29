@@ -6,13 +6,13 @@
   <type id="brateType">
     <enum>
       <option>
-        <value>16000</value>
+        <value>16</value>
       </option>
       <option>
-        <value>32000</value>
+        <value>32</value>
       </option>
       <option>
-        <value>64000</value>
+        <value>64</value>
       </option>
     </enum>
   </type>
@@ -46,7 +46,7 @@
     </setting>
     <setting name="brate">
       <type refid="brateType" />
-      <value>32000</value>
+      <value>32</value>
     </setting>
     <setting name="quality">
       <type refid="qualityType" />
