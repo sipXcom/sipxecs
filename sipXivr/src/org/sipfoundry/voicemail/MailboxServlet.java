@@ -148,7 +148,7 @@ public class MailboxServlet extends HttpServlet {
                         }
 
                         if (action.equals("delete")) {
-                            if (method.equals(METHOD_PUT) || method.equals(METHOD_GET)) {
+                            if (method.equals(METHOD_PUT)) {
                                 try {
                                     mailboxManager.deleteMessage(user, messageId);
                                 } catch (MessageNotFoundException ex) {
@@ -156,6 +156,20 @@ public class MailboxServlet extends HttpServlet {
                                 }
                             }
                         }
+                        
+                        //applicable when called from within email body
+                        if (action.equals("movetodeleted")) {
+                            if (method.equals(METHOD_GET)) {
+                                try {
+                                    mailboxManager.markMessageHeard(user, messageId);
+                                    mailboxManager.moveMessageToFolder(user, messageId, Folder.DELETED.toString());
+                                    response.setContentType("text/xml");
+                                    pw.format("<html>Message id: %s for user: %s was moved to deleted folder</html>", messageId, user.getUserName());
+                                } catch (MessageNotFoundException ex) {
+                                    response.sendError(404, "messageId not found");
+                                }
+                            }
+                        }                        
 
                         if (action.equals("subject")) {
                             if (method.equals(METHOD_PUT)) {
