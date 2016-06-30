@@ -5676,8 +5676,8 @@ uw.directive('maxHeight', [
        */
       return function (searchArr, keyword) {
         return _.filter(searchArr, function (el) {
-          return el.name.toLowerCase().indexOf(keyword) > -1 ||
-            (el.number && el.number.toString().indexOf(keyword) > -1);
+          return el.name.toString().toLowerCase().indexOf(keyword.toString().toLowerCase()) > -1 ||
+                      (el.number && el.number.toString().indexOf(keyword) > -1);
         })
 
       }
