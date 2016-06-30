@@ -22,12 +22,14 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.elasticsearch.common.lang3.StringUtils;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
 import org.sipfoundry.sipxconfig.address.AddressManager;
+import org.sipfoundry.sipxconfig.admin.AdminContext;
 import org.sipfoundry.sipxconfig.apache.ApacheManager;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
 import org.sipfoundry.sipxconfig.commserver.Location;
@@ -51,6 +53,7 @@ public class LoginDetailsResourceWithPin extends LoginDetailsResource {
     private ConfigManager m_configManager;
     private AddressManager m_addressManager;
     private GatewayContext m_gatewayContext;
+    private AdminContext m_adminContext;
 
     @Override
     public Representation represent(Variant variant) throws ResourceException {
@@ -95,8 +98,11 @@ public class LoginDetailsResourceWithPin extends LoginDetailsResource {
         getResponse().setStatus(Status.REDIRECTION_FOUND);
         HttpServerCall serverCall = ((HttpResponse) getResponse()).getHttpCall();
         serverCall.getResponseHeaders().add("Connection", "close");
-        serverCall.getResponseHeaders().add("Location",
-            m_addressManager.getSingleAddress(ApacheManager.HTTPS_ADDRESS).toString());
+        String serverAddress = m_adminContext.getSettings().getSettingValue("configserver-config/logoutUrl");
+        if (StringUtils.isEmpty(serverAddress)) {
+            serverAddress = m_addressManager.getSingleAddress(ApacheManager.HTTPS_ADDRESS).toString();
+        }
+        serverCall.getResponseHeaders().add("Location", serverAddress);
     }
 
     @Override
@@ -197,6 +203,11 @@ public class LoginDetailsResourceWithPin extends LoginDetailsResource {
     @Required
     public void setGatewayContext(GatewayContext gatewayContext) {
         m_gatewayContext = gatewayContext;
+    }
+    
+    @Required
+    public void setAdminContext(AdminContext adminContext) {
+        m_adminContext = adminContext;
     }
 
     protected static class LoginDetailsWithPin extends LoginDetails {

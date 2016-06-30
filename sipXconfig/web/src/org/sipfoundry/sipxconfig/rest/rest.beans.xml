@@ -381,6 +381,7 @@
     <property name="configManager" ref="configManager"/>
     <property name="addressManager" ref="addressManager"/>
     <property name="gatewayContext" ref="gatewayContext" />
+    <property name="adminContext" ref="adminContext" />
   </bean>
   <alias name="loginDetailsResourceWithPin" alias="/my/logindetailsunite" />
 
@@ -390,6 +391,7 @@
     <property name="configManager" ref="configManager"/>
     <property name="addressManager" ref="addressManager"/>
     <property name="gatewayContext" ref="gatewayContext" />
+    <property name="adminContext" ref="adminContext" />
   </bean>
   <alias name="logoutResourceWithPin" alias="/my/logoutunite" /> 
 
