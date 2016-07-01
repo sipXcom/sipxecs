@@ -30,7 +30,6 @@ import org.sipfoundry.sipxconfig.common.SpecialUser;
 import org.sipfoundry.sipxconfig.common.SpecialUser.SpecialUserType;
 import org.sipfoundry.sipxconfig.common.User;
 import org.sipfoundry.sipxconfig.common.UserException;
-import org.sipfoundry.sipxconfig.common.UserValidationUtils;
 import org.sipfoundry.sipxconfig.common.event.DaoEventListenerAdvanced;
 import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.commserver.SipxReplicationContext;
@@ -182,10 +181,9 @@ public class SpeedDialManagerImpl extends SipxHibernateDaoSupport<SpeedDial> imp
         for (Button button : speedDial.getButtons()) {
             if (button.isBlf()) {
                 String number = button.getNumber();
-                if (verifySubscriptionsToSelf(speedDial, number)
+                if (!SipUri.matches(number) && (verifySubscriptionsToSelf(speedDial, number)
                         || !validateSubscriptions(speedDial, number)
-                        || !UserValidationUtils.isValidEmail(number)
-                        && !m_aliasManager.isAliasInUse(number)) {
+                        || !m_aliasManager.isAliasInUse(number))) {
                     button.setBlf(false);
                     throw new UserException("&error.notValidBlf", number);
                 }
