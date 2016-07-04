@@ -12,8 +12,13 @@ import java.sql.SQLException;
 
 public class UserCreateDelete extends AbstractTest {
 
+    // This test will create an user (based on conf.properties user1.name field), verify it was created,then delete it
+    // and verify it was deleted
+
     @Test
     public void canCreateUser(){
+        System.out.println("\n");
+        System.out.println("#### Running test " + this.getClass().getSimpleName()+" ####\n");
         createUser();
     }
 
