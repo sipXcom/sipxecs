@@ -14,7 +14,7 @@ public class DatabaseConnector {
             Class.forName(PropertyLoader.getProperty("db.driver"));
                     con = DriverManager.getConnection(PropertyLoader.getProperty("db.connection.url"), PropertyLoader.getProperty("db.user"), PropertyLoader.getProperty("db.password"));
             if(!con.isClosed()){
-                System.out.println("Successfully connected to database");
+                System.out.println("Successfully connected to database\n");
             }
         } catch (Exception e) {
             System.err.println("Exception " + e.getMessage());
