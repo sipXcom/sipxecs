@@ -9,10 +9,7 @@ import org.openqa.selenium.*;
 import org.sipxcom.verify.util.DatabaseConnector;
 import org.sipxcom.verify.util.LoginUtil;
 import org.sipxcom.verify.util.PropertyLoader;
-import org.testng.Assert;
-import org.testng.annotations.AfterSuite;
 import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
 
 import java.sql.SQLException;
@@ -28,14 +25,17 @@ public abstract class AbstractTest {
 
     @BeforeTest
     public void init() {
-        System.out.println("Initializing WebDriver and connecting to Database");
+        System.out.println("\n");
+        System.out.println("Starting test suite run\n");
+        System.out.println("Initializing WebDriver and connecting to Database\n");
         driver = LoginUtil.getRemoteWebDriver(LoginUtil.SUPERADMIN);
         DatabaseConnector.setDBConnection();
     }
 
     @AfterTest
     public void cleanup() throws SQLException {
-        System.out.println("Closing WebDriver and Db connection");
+        System.out.println("Test suite execution finished");
+        System.out.println("Closing WebDriver and Db connection\n");
         driver.close();
         try {
             DatabaseConnector.closeConnection();
@@ -49,6 +49,11 @@ public abstract class AbstractTest {
     protected void clickOnItem(String xpath) {
         WebElement element = driver.findElement(By.xpath(xpath));
         element.click();
+    }
+
+    protected WebElement findItem(String xpath){
+        WebElement element = driver.findElement(By.xpath(xpath));
+        return element;
     }
 
     protected String findItemAndGetText(String xpath) {
@@ -103,6 +108,7 @@ public abstract class AbstractTest {
         sendKeysToField(PropertyLoader.getProperty("user1.name"),PropertyLoader.getProperty("imId"));
         System.out.println("Clicking Ok");
         clickOnItem(PropertyLoader.getProperty("okButton"));
+        System.out.println("User created\n");
 
     }
 
@@ -118,9 +124,11 @@ public abstract class AbstractTest {
         System.out.println("Verifying user is in Database");
         List<String> valueInDb = DatabaseConnector.getQuery("select user_name from users where user_name='"+PropertyLoader.getProperty("user1.name")+"'");
         assertEquals(valueInDb.get(0),PropertyLoader.getProperty("user1.name"));
+        System.out.println("User was indeed created\n");
     }
 
     public void deleteUser() throws SQLException {
+        System.out.println("Deleting user");
         System.out.println("Going to Users tab");
         clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
         System.out.println("Going to Users section");
@@ -131,20 +139,23 @@ public abstract class AbstractTest {
         clickOnItem(PropertyLoader.getProperty("deleteButton"));
         System.out.println("Clicking Yes on the confirmation popup");
         alertAccept();
+        System.out.println("User deleted\n");
     }
 
     public void userDeleted() throws SQLException {
+        System.out.println("Verifying user was indeed deleted");
         System.out.println("Verifying user is not visible anymore in UI");
         assertUserErrorNotPresent(".//*[@id='user_"+PropertyLoader.getProperty("user1.name")+"_link']");
         System.out.println("Verifying user is not present in Db anymore");
         List<String> valueInDb = DatabaseConnector.getQuery("select user_name from users where user_name='"+PropertyLoader.getProperty("user1.name")+"'");
         valueInDb.isEmpty();
+        System.out.println("User was indeed deleted\n");
     }
 
     public void assertUserErrorNotPresent(String xpath){
         try {
             driver.findElement(By.xpath(xpath));
-            fail("User error present");
+            fail("User error present\n");
         }catch (NoSuchElementException ex){
             /* do nothing, error is not present, assert is passed */
         }
@@ -187,7 +198,7 @@ public abstract class AbstractTest {
         clickOnItem(PropertyLoader.getProperty("okToSendProfiles"));
         System.out.println("Waiting for profiles to be sent");
         Thread.sleep(6000);
-        System.out.println("Line configured on phone");
+        System.out.println("Line configured on phone\n");
     }
 
     public void lineRegistered(String lineName) {
@@ -201,7 +212,29 @@ public abstract class AbstractTest {
         String registrationToFind = "sip:"+PropertyLoader.getProperty(lineName);
         boolean b = allRegistrations.contains(registrationToFind);
         assertTrue(b);
-        System.out.println("Line registered");
+        System.out.println("Line registered\n");
+    }
+
+    // Features related methods
+
+    // Backup methods
+
+    public void backupConfigLocally(){
+        System.out.println("Going to System tab");
+        clickOnItem(PropertyLoader.getProperty("systemMenuHeader"));
+        System.out.println("Going to Backup section");
+        clickOnItemWithLinkText(PropertyLoader.getProperty("Backup"));
+        clickOnItemWithLinkText(PropertyLoader.getProperty("LocalBackups"));
+        System.out.println("finidg checkbox");
+        WebElement filesCheckboxes = driver.findElement(By.xpath("//*[@id='archives']/li[1]/input"));
+
+        boolean chkd = false;
+        chkd = filesCheckboxes.isSelected();
+        if(chkd = true){
+            filesCheckboxes.click();
+        }
+        clickOnItem(PropertyLoader.getProperty("Apply"));
+        System.out.println(filesCheckboxes.isSelected());
     }
 
 }
