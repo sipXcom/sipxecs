@@ -105,7 +105,7 @@ class BackupPage {
         var checked = archiveIds.contains(defId) ? "checked" : "";
         archives.appendHtml('''
 <li>
-  <input type="checkbox" name="definitionIds" value="${defId}" ${checked}/>
+  <input id="${label}" type="checkbox" name="definitionIds" value="${defId}" ${checked}/>
   ${label}
 </li>
 ''');              
