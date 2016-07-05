@@ -101,11 +101,13 @@ class BackupPage {
     archives.children.clear();
     Map<String, String> defs = data['definitions'];
     if (defs != null) {
+      var i=0;
       defs.forEach((defId, label) {
+        i++;
         var checked = archiveIds.contains(defId) ? "checked" : "";
         archives.appendHtml('''
 <li>
-  <input id="${label}" type="checkbox" name="definitionIds" value="${defId}" ${checked}/>
+  <input id="backupFiles${i}" type="checkbox" name="definitionIds" value="${defId}" ${checked}/>
   ${label}
 </li>
 ''');              
