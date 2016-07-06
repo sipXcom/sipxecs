@@ -4297,6 +4297,7 @@ uw.service('restService', [
             }
             $rootScope.leftSideView = 'hide-me';
           } else {
+            groupChat.modal           = false;
             if (ui.root.oldTemplate.name !== view.name) {
               ui.root.oldTemplate = angular.copy(ui.root.template);
             }
