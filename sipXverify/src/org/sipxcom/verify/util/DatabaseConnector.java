@@ -31,6 +31,12 @@ public class DatabaseConnector {
         return values;
     }
 
+    public static void executeUpdate(String query) throws SQLException {
+        Statement statement = con.createStatement();
+        statement.executeUpdate(query);
+
+    }
+
     public static void closeConnection() throws SQLException {
         try {
             con.close();
