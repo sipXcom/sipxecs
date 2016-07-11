@@ -59,5 +59,10 @@
           <artifactId>postgresql</artifactId>
           <version>9.4.1207.jre6</version>
       </dependency>
+      <dependency>
+          <groupId>com.jcraft</groupId>
+          <artifactId>jsch</artifactId>
+          <version>0.1.53</version>
+      </dependency>
   </dependencies>
 </project>

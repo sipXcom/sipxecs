@@ -9,6 +9,7 @@ import org.openqa.selenium.*;
 import org.sipxcom.verify.util.DatabaseConnector;
 import org.sipxcom.verify.util.LoginUtil;
 import org.sipxcom.verify.util.PropertyLoader;
+import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 
@@ -51,8 +52,13 @@ public abstract class AbstractTest {
         element.click();
     }
 
-    protected WebElement findItem(String xpath){
+    protected WebElement findItemByXpath(String xpath){
         WebElement element = driver.findElement(By.xpath(xpath));
+        return element;
+    }
+
+    protected WebElement findItemById(String id){
+        WebElement element = driver.findElement(By.id(id));
         return element;
     }
 
@@ -219,22 +225,34 @@ public abstract class AbstractTest {
 
     // Backup methods
 
-    public void backupConfigLocally(){
+    public void backupConfigLocally() throws SQLException, InterruptedException {
+        System.out.println("Taking a local Configuration backup..");
+        System.out.println("Making sure only the Configuration checkbox is selected..");
+        DatabaseConnector.executeUpdate("update backup_plan SET def='configuration.tar.gz';");
+        System.out.println("Checkboxes set through DB");
         System.out.println("Going to System tab");
         clickOnItem(PropertyLoader.getProperty("systemMenuHeader"));
         System.out.println("Going to Backup section");
         clickOnItemWithLinkText(PropertyLoader.getProperty("Backup"));
         clickOnItemWithLinkText(PropertyLoader.getProperty("LocalBackups"));
-        System.out.println("finidg checkbox");
-        WebElement filesCheckboxes = driver.findElement(By.xpath("//*[@id='archives']/li[1]/input"));
+        List<WebElement> numberOfConfigArchivesBeforeTest = driver.findElements(By.linkText("configuration.tar.gz"));
+        System.out.println("Waiting for Backups list to get populated..");
+        Thread.sleep(3000);
+        System.out.println("Number of Configuration archives present in the system before test is: " + numberOfConfigArchivesBeforeTest.size());
+        System.out.println("Clicking Backup Now button");
+        clickOnItem(PropertyLoader.getProperty("backupNow"));
+        System.out.println("Switching to FTP Backups page to refresh Backups..");
+        clickOnItemWithLinkText(PropertyLoader.getProperty("FTPBackups"));
+        System.out.println("Switching back to Local Backups page..");
+        clickOnItemWithLinkText(PropertyLoader.getProperty("LocalBackups"));
+        System.out.println("Waiting for Backups list to get populated..");
+        Thread.sleep(6000);
+        List<WebElement> numberOfConfigArchivesAfterTest = driver.findElements(By.linkText("configuration.tar.gz"));
+        System.out.println("Number of Configuration archives present in the system after test is: " + numberOfConfigArchivesAfterTest.size());
+        System.out.println("Verifying.. ");
+        Assert.assertTrue(numberOfConfigArchivesAfterTest.size() > numberOfConfigArchivesBeforeTest.size(),"Number of backups after test is the same as before. Backup failed?");
+        System.out.println("Configuration backup successfully executed.\n");
 
-        boolean chkd = false;
-        chkd = filesCheckboxes.isSelected();
-        if(chkd = true){
-            filesCheckboxes.click();
-        }
-        clickOnItem(PropertyLoader.getProperty("Apply"));
-        System.out.println(filesCheckboxes.isSelected());
     }
 
 }
