@@ -2953,36 +2953,36 @@ uw.service('restService', [
                 if(date.getTime() < secondary.callhistory.endTime.getTime() && date.getTime() > secondary.callhistory.startTime.getTime()){
                   //filter by select box
                   if(secondary.callhistory.selectedOption.name === '- all -') {
-                    data[i].from = data[i].from.replace(/\<.*/,'');
-                    data[i].from = data[i].from.replace(/"/g,'');
-                    data[i].to = data[i].to.replace(/\<.*/,'');
-                    data[i].to = data[i].to.replace(/"/g,'');
+                    data[i].from = data[i].from.match("sip:(.*)@");
+                    data[i].from = data[i].from[1];
+                    data[i].to = data[i].to.match("sip:(.*)@");
+                    data[i].to = data[i].to[1];
                     secondary.callhistory.calls.push(data[i]);
                   }
                   else if(secondary.callhistory.selectedOption.name === 'From'){
                     if(data[i].from.indexOf(secondary.callhistory.number.toString()) > -1){
-                      data[i].from = data[i].from.replace(/\<.*/,'');
-                      data[i].from = data[i].from.replace(/"/g,'');
-                      data[i].to = data[i].to.replace(/\<.*/,'');
-                      data[i].to = data[i].to.replace(/"/g,'');
+                      data[i].from = data[i].from.match("sip:(.*)@");
+                      data[i].from = data[i].from[1];
+                      data[i].to = data[i].to.match("sip:(.*)@");
+                      data[i].to = data[i].to[1];
                       secondary.callhistory.calls.push(data[i]);
                     }
                   }
                   else if(secondary.callhistory.selectedOption.name === 'To'){
                     if(data[i].to.indexOf(secondary.callhistory.number.toString()) > -1){
-                      data[i].from = data[i].from.replace(/\<.*/,'');
-                      data[i].from = data[i].from.replace(/"/g,'');
-                      data[i].to = data[i].to.replace(/\<.*/,'');
-                      data[i].to = data[i].to.replace(/"/g,'');
+                      data[i].from = data[i].from.match("sip:(.*)@");
+                      data[i].from = data[i].from[1];
+                      data[i].to = data[i].to.match("sip:(.*)@");
+                      data[i].to = data[i].to[1];
                       secondary.callhistory.calls.push(data[i]);
                     }
                   }
                   else{
                     if(data[i].from.indexOf(secondary.callhistory.number.toString()) > -1 || data[i].to.indexOf(secondary.callhistory.number.toString()) > -1) {
-                      data[i].from = data[i].from.replace(/\<.*/,'');
-                      data[i].from = data[i].from.replace(/"/g,'');
-                      data[i].to = data[i].to.replace(/\<.*/,'');
-                      data[i].to = data[i].to.replace(/"/g,'');
+                      data[i].from = data[i].from.match("sip:(.*)@");
+                      data[i].from = data[i].from[1];
+                      data[i].to = data[i].to.match("sip:(.*)@");
+                      data[i].to = data[i].to[1];
                       secondary.callhistory.calls.push(data[i]);
                     }
                   }
