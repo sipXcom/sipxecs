@@ -3265,7 +3265,7 @@ uw.service('restService', [
                             };
 
                             exists = _.find(secondary.conference.participants, function (part) {
-                              if ((part.number && part.number.toString() === member.name.toString()) || (part.name && part.name.toString() === member.name.toString())){
+                              if ((part.number && part.number.toString() === member.name.toString()) || (part.name && part.name.toString() === member.name.toString()) || (part.name && part.name.toString() === member.imId.toString())){
                                 part.conf = conf;
                                 return true;
                               } else {
