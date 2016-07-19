@@ -250,4 +250,9 @@ public class AdminContextImpl extends HibernateDaoSupport implements AdminContex
     public boolean isAllowSubscriptionsToSelf() {
         return (Boolean) getSettings().isAllowSubscriptionsToSelf();
     }
+
+    @Override
+    public int getStripUserName() {
+        return getSettings().getStripUsername();
+    }
 }
