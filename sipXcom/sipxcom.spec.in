@@ -87,6 +87,7 @@ Requires: freeswitch-format-portaudio-stream
 Requires: freeswitch-format-shell-stream
 Requires: freeswitch-format-ssml
 Requires: freeswitch-format-tone-stream
+Requires: freeswitch-lua
 Requires: freeswitch-timer-posix
 Requires: freeswitch-xml-cdr
 Requires: freeswitch-xml-curl
