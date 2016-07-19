@@ -56,6 +56,8 @@ public class LdapRowInserterTest extends TestCase {
         m_adminContext = createMock(AdminContext.class);
         m_adminContext.getNewLdapUserGroupNamePrefix();
         expectLastCall().andReturn("grPrefix_").anyTimes();
+        m_adminContext.getStripUserName();
+        expectLastCall().andReturn(0).anyTimes();
         replay(m_adminContext);
         Group newGroup = new Group();
         newGroup.setName("grPrefix_example.com");
