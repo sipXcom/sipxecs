@@ -51,7 +51,7 @@ public class UserBean {
     private String m_voicemailPin;
     private String m_branchName;
     private UserProfileBean m_userProfile;
-    private boolean m_notified;
+    private Boolean m_notified;
     private List<GroupBean> m_groups;
 
     public int getId() {
@@ -136,11 +136,11 @@ public class UserBean {
         m_userProfile = userProfile;
     }
 
-    public boolean isNotified() {
+    public Boolean isNotified() {
         return m_notified;
     }
 
-    public void setNotified(boolean notified) {
+    public void setNotified(Boolean notified) {
         m_notified = notified;
     }
 
