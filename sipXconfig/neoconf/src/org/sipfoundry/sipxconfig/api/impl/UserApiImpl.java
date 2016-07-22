@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.activation.DataHandler;
 import javax.servlet.http.HttpServletRequest;
@@ -141,22 +142,52 @@ public class UserApiImpl implements UserApi {
     }
 
     private void convertToUser(UserBean userBean, User user) {
-        user.setUserName(userBean.getUserName());
-        user.setFirstName(userBean.getFirstName());
-        user.setLastName(userBean.getLastName());
-        user.setAliases(userBean.getAliases());
+        String beanUserName = userBean.getUserName();
+        if (beanUserName != null) {
+            user.setUserName(userBean.getUserName());
+        }
+
+        String beanFirstName = userBean.getFirstName();
+        if (beanFirstName != null) {
+            user.setFirstName(userBean.getFirstName());
+        }
+
+        String beanLastName = userBean.getLastName();
+        if (beanLastName != null) {
+            user.setLastName(userBean.getLastName());
+        }
+
+        Set<String> aliases = userBean.getAliases();
+        if (aliases != null) {
+            user.setAliases(userBean.getAliases());
+        }
+
+        Boolean beanNotified = userBean.isNotified();
+        if (beanNotified != null) {
+            user.setNotified(userBean.isNotified());
+        }
+
         String branchName = userBean.getBranchName();
         if (branchName != null) {
             m_branchManager.getBranch(branchName);
             Branch branch = m_branchManager.getBranch(branchName);
             user.setBranch(branch);
         }
-        user.setVoicemailPin(userBean.getVoicemailPin());
-        user.setPintoken(userBean.getPintoken());
-        user.setSipPassword(userBean.getSipPassword());
+        String beanVoicemailPin = userBean.getVoicemailPin();
+        if (beanVoicemailPin != null) {
+            user.setVoicemailPin(userBean.getVoicemailPin());
+        }
+        String beanPintoken = userBean.getPintoken();
+        if (beanPintoken != null) {
+            user.setPintoken(userBean.getPintoken());
+        }
+        String beanSipPassword = userBean.getSipPassword();
+        if (beanSipPassword != null) {
+            user.setSipPassword(userBean.getSipPassword());
+        }
         UserProfileBean userProfileBean = userBean.getUserProfile();
         if (userProfileBean != null) {
-            UserProfile userProfile = new UserProfile();
+            UserProfile userProfile = user.getUserProfile();
             UserProfileBean.convertToUserProfile(userBean.getUserProfile(), userProfile);
             user.setUserProfile(userProfile);
         }

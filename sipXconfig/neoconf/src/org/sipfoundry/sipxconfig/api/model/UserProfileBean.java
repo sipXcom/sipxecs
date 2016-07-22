@@ -69,7 +69,7 @@ public class UserProfileBean extends UserProfile {
 
     public static void convertToUserProfile(UserProfileBean userProfileBean, UserProfile userProfile) {
         try {
-            BeanUtils.copyProperties(userProfile, userProfileBean);
+            BeanUtil.copyNotNullProperties(userProfile, userProfileBean);
         } catch (Exception e) {
             LOG.error("Cannot marshal properties");
         }
