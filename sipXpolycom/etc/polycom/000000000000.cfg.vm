@@ -39,28 +39,10 @@
       #ModelSpecificAttributes31( "")
    #elseif($fw == "3.2.X")
       #ModelSpecificAttributes32( "")
-   #elseif($fw == "4.0.X")
-      #ModelSpecificAttributes4( "", "4.0.X")
-   #elseif($fw == "4.1.X")
-      #ModelSpecificAttributes4( "", "4.1.X")
-   #elseif($fw == "4.1.2")
-      #ModelSpecificAttributes4( "", "4.1.2")
-   #elseif($fw == "4.1.3")
-      #ModelSpecificAttributes4( "", "4.1.3")
-   #elseif($fw == "4.1.4")
-      #ModelSpecificAttributes4( "", "4.1.4")
-   #elseif($fw == "4.1.5")
-      #ModelSpecificAttributes4( "", "4.1.5")
-   #elseif($fw == "4.1.6")
-      #ModelSpecificAttributes4( "", "4.1.6")
-   #elseif($fw == "5.0.0")
-      #ModelSpecificAttributes4( "", "5.0.0")
-   #elseif($fw == "5.0.1")
-      #ModelSpecificAttributes4( "", "5.0.1")
-   #elseif($fw == "5.0.2")
-      #ModelSpecificAttributes4( "", "5.0.2")
    #elseif ($fw == "2.0")
       #ModelSpecificAttributes20("")
+   #else
+      #ModelSpecificAttributes4( "", $fw)
    #end
 #end
 
@@ -94,12 +76,10 @@
    <APPLICATION${actual_model}
    #if($fw == "3.1.X")
       #ModelSpecificAttributes31( $actual_model)
-   #elseif($fw == "4.0.X")
-      #ModelSpecificAttributes4( $actual_model, "4.0.X")
-   #elseif($fw == "4.1.X")
-      #ModelSpecificAttributes4( $actual_model, "4.1.X")
    #elseif ($fw == "2.0")
       #ModelSpecificAttributes20( $actual_model)
+   #else
+      #ModelSpecificAttributes4( $actual_model, $fw)
    #end
    />
 #end
@@ -119,10 +99,5 @@
 #ModelSpecificNode( "SSIP4000", "3.1.X" )
 #ModelSpecificNode( "SSIP300", "2.0" )
 #ModelSpecificNode( "SSIP500", "2.0" )
-#ModelSpecificNode( "VVX600", "4.1.X" )
-#ModelSpecificNode( "VVX300", "4.1.X" )
-#ModelSpecificNode( "VVX310", "4.1.X" )
-#ModelSpecificNode( "VVX400", "4.1.X" )
-#ModelSpecificNode( "VVX410", "4.1.X" )
 
 </APPLICATION>
