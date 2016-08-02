@@ -41,6 +41,8 @@ public class TempMessage {
     private boolean m_stored = false;
     private String m_currentUser;
     private String m_savedMessageId;
+    private String m_callerIdName;
+    private String m_callerIdNumber;    
 
     public TempMessage(String username, String tempPath, String fromUri, Priority priority, List<User> otherRecipients) {
         m_tempPath = tempPath;
@@ -135,6 +137,22 @@ public class TempMessage {
 
     protected void setSavedMessageId(String messageId) {
         m_savedMessageId = messageId;
+    }
+
+    public String getCallerIdName() {
+        return m_callerIdName;
+    }
+
+    public void setCallerIdName(String callerIdName) {
+        m_callerIdName = callerIdName;
+    }
+
+    public String getCallerIdNumber() {
+        return m_callerIdNumber;
+    }
+
+    public void setCallerIdNumber(String callerIdNumber) {
+        m_callerIdNumber = callerIdNumber;
     }
 
 }
