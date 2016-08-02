@@ -231,6 +231,8 @@ public abstract class AbstractMailboxManager implements MailboxManager {
         descriptor.setTimestamp(message.getTimestamp());
         descriptor.setSubject(subject + messageId);
         descriptor.setPriority(message.getPriority());
+        descriptor.setCallerIdName(message.getCallerIdName());
+        descriptor.setCallerIdNumber(message.getCallerIdNumber());
         if (message.getOtherRecipients() != null) {
             for (User recipient : message.getOtherRecipients()) {
                 if (!recipient.getUserName().equals(destUser)) {
