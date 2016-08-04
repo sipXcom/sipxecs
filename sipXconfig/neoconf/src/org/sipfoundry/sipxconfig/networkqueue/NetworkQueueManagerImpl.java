@@ -72,7 +72,7 @@ public class NetworkQueueManagerImpl extends SipxHibernateDaoSupport implements 
             Address queue = manager.getAddressManager().getSingleAddress(CONTROL_ADDRESS, location);
             Writer client = new FileWriter(new File(dir, "sipxsqa-client.ini"));
             try {
-                writeClientConfig(client, queue);
+                writeClientConfig(client, queue, settings);
             } finally {
                 IOUtils.closeQuietly(client);
             }
@@ -96,13 +96,14 @@ public class NetworkQueueManagerImpl extends SipxHibernateDaoSupport implements 
         config.writeSettings(settings.getSettings().getSetting("sqa-config"));
     }
 
-    void writeClientConfig(Writer w, Address queue) throws IOException {
+    void writeClientConfig(Writer w, Address queue, NetworkQueueSettings settings) throws IOException {
         KeyValueConfiguration config = KeyValueConfiguration.equalsSeparated(w);
         config.write("enabled", queue != null);
         if (queue != null) {
             config.write("sqa-control-port", queue.getCanonicalPort());
             config.write("sqa-control-address", queue.getAddress());
         }
+        config.writeSettings(settings.getSettings().getSetting("sqa-config/tcp-timeout"));
     }
 
     @Override
