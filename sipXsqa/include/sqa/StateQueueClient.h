@@ -14,7 +14,7 @@
  */
 
 #ifndef StateQueueClient_H
-#define	StateQueueClient_H
+#define StateQueueClient_H
 
 #include <cassert>
 #include <zmq.hpp>
@@ -30,17 +30,10 @@
 
 #include "StateQueueMessage.h"
 #include "BlockingQueue.h"
+#include "BlockingTcpClient.h"
 
 #define SQA_LINGER_TIME_MILLIS 5000
 #define SQA_TERMINATE_STRING "__TERMINATE__"
-#define SQA_CONN_MAX_READ_BUFF_SIZE 65536
-#define SQA_CONN_CONNECTION_TIMEOUT_MSEC 5000
-#define SQA_CONN_READ_TIMEOUT 1000
-#define SQA_CONN_WRITE_TIMEOUT 1000
-#define SQA_KEY_MIN 22172
-#define SQA_KEY_ALPHA 22180
-#define SQA_KEY_DEFAULT SQA_KEY_MIN
-#define SQA_KEY_MAX 22200
 #define SQA_KEEP_ALIVE_TICKS 30
 
 // Defines the interval, in seconds, to wait between keep alive loop calls
@@ -55,598 +48,6 @@ public:
     Publisher,
     Worker,
     Watcher
-  };
-
-  class BlockingTcpClient
-  {
-  public:
-    typedef boost::shared_ptr<BlockingTcpClient> Ptr;
-
-    class ConnectTimer
-    {
-    public:
-      ConnectTimer(BlockingTcpClient* pOwner) :
-        _pOwner(pOwner)
-      {
-        _pOwner->startConnectTimer();
-      }
-
-      ~ConnectTimer()
-      {
-        _pOwner->cancelConnectTimer();
-      }
-      BlockingTcpClient* _pOwner;
-    };
-
-    class ReadTimer
-    {
-    public:
-      ReadTimer(BlockingTcpClient* pOwner) :
-        _pOwner(pOwner)
-      {
-        _pOwner->startReadTimer();
-      }
-
-      ~ReadTimer()
-      {
-        _pOwner->cancelReadTimer();
-      }
-      BlockingTcpClient* _pOwner;
-    };
-
-    class WriteTimer
-    {
-    public:
-      WriteTimer(BlockingTcpClient* pOwner) :
-        _pOwner(pOwner)
-      {
-        _pOwner->startWriteTimer();
-      }
-
-      ~WriteTimer()
-      {
-        _pOwner->cancelWriteTimer();
-      }
-      BlockingTcpClient* _pOwner;
-    };
-
-    const std::string& className()
-    {
-      static const std::string className("StateQueueClient::BlockingTcpClient");
-
-      return className;
-    }
-
-    BlockingTcpClient(
-      boost::asio::io_service& ioService,
-      int readTimeout = SQA_CONN_READ_TIMEOUT,
-      int writeTimeout = SQA_CONN_WRITE_TIMEOUT,
-      short key = SQA_KEY_DEFAULT) :
-      _ioService(ioService),
-      _resolver(_ioService),
-      _pSocket(0),
-      _isConnected(false),
-      _readTimeout(readTimeout),
-      _writeTimeout(writeTimeout),
-      _key(key),
-      _readTimer(_ioService),
-      _writeTimer(_ioService),
-      _connectTimer(_ioService)
-    {
-    }
-
-    ~BlockingTcpClient()
-    {
-        if (_pSocket)
-        {
-            delete _pSocket;
-            _pSocket = 0;
-        }
-    }
-
-    void setReadTimeout(boost::asio::ip::tcp::socket& socket, int milliseconds)
-    {
-      struct timeval tv;
-      tv.tv_sec  = 0;
-      tv.tv_usec = milliseconds * 1000;
-      setsockopt(socket.native(), SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
-    }
-
-    void setWriteTimeout(boost::asio::ip::tcp::socket& socket, int milliseconds)
-    {
-      struct timeval tv;
-      tv.tv_sec  = 0;
-      tv.tv_usec = milliseconds * 1000;
-      setsockopt(socket.native(), SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv));
-    }
-
-    void startReadTimer()
-    {
-      boost::system::error_code ec;
-      _readTimer.expires_from_now(boost::posix_time::milliseconds(_readTimeout), ec);
-      _readTimer.async_wait(boost::bind(&BlockingTcpClient::onReadTimeout, this, boost::asio::placeholders::error));
-    }
-
-    void startWriteTimer()
-    {
-      boost::system::error_code ec;
-      _writeTimer.expires_from_now(boost::posix_time::milliseconds(_writeTimeout), ec);
-      _writeTimer.async_wait(boost::bind(&BlockingTcpClient::onWriteTimeout, this, boost::asio::placeholders::error));
-    }
-
-    void startConnectTimer()
-    {
-      boost::system::error_code ec;
-      _connectTimer.expires_from_now(boost::posix_time::milliseconds(SQA_CONN_CONNECTION_TIMEOUT_MSEC), ec);
-      _connectTimer.async_wait(boost::bind(&BlockingTcpClient::onConnectTimeout, this, boost::asio::placeholders::error));
-    }
-
-    void cancelReadTimer()
-    {
-      boost::system::error_code ec;
-      _readTimer.cancel(ec);
-    }
-
-    void cancelWriteTimer()
-    {
-      boost::system::error_code ec;
-      _writeTimer.cancel(ec);
-    }
-
-    void cancelConnectTimer()
-    {
-      boost::system::error_code ec;
-      _connectTimer.cancel(ec);
-    }
-
-    void onReadTimeout(const boost::system::error_code& e)
-    {
-      if (e)
-        return;
-      close();
-      OS_LOG_ERROR(FAC_NET, CLASS_INFO() "- " << _readTimeout << " milliseconds.");
-    }
-
-
-    void onWriteTimeout(const boost::system::error_code& e)
-    {
-      if (e)
-        return;
-      close();
-      OS_LOG_ERROR(FAC_NET, CLASS_INFO() "- " << _writeTimeout << " milliseconds.");
-    }
-
-    void onConnectTimeout(const boost::system::error_code& e)
-    {
-      if (e)
-        return;
-      close();
-      OS_LOG_ERROR(FAC_NET, CLASS_INFO() "- " << SQA_CONN_CONNECTION_TIMEOUT_MSEC << " milliseconds.");
-    }
-
-    void close()
-    {
-      if (_pSocket)
-      {
-        boost::system::error_code ignored_ec;
-       _pSocket->shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored_ec);
-       _pSocket->close(ignored_ec);
-       _isConnected = false;
-       OS_LOG_INFO(FAC_NET, CLASS_INFO() "- socket deleted.");
-      }
-    }
-
-    bool timedWaitUntilDataAvailable(boost::function<void(const boost::system::error_code&)> onTimeoutCb,
-                                      int timeoutMs,
-                                      short int requestedEvents)
-    {
-      int error = 0;
-      bool ret = false;
-      int nativeSocket = _pSocket->native();
-
-      struct pollfd fds[1] = {{nativeSocket, requestedEvents, 0}};
-
-
-      int pollResult = poll(fds, sizeof(fds) / sizeof(fds[0]), timeoutMs);
-      if (1 == pollResult)
-      {
-        if (fds[0].revents & POLLERR)
-        {
-          error = errno;
-        }
-        else if (fds[0].revents & requestedEvents)
-        {
-          ret = true;
-        }
-        else
-        {
-          OS_LOG_ERROR(FAC_NET, CLASS_INFO()
-                        << "unexpected return from poll(): pollResult = " << pollResult
-                        << ", fds[0].revents =" << fds[0].revents);
-        }
-      }
-      else if(0 == pollResult)
-      { // timeout
-        const boost::system::error_code e;
-
-        onTimeoutCb(e);
-        error = ETIMEDOUT;
-      }
-      else
-      {
-        error = errno;
-      }
-
-      if (0 != error)
-      {
-        OS_LOG_ERROR(FAC_NET, CLASS_INFO()
-                      << "(" << nativeSocket << ", " << timeoutMs << " ms) error: " <<
-                      error << "=" <<  strerror(error));
-      }
-
-      return ret;
-    }
-
-    bool timedWaitUntilReadDataAvailable()
-    {
-      // check for normal or out-of-band
-      return timedWaitUntilDataAvailable(boost::bind(&BlockingTcpClient::onReadTimeout, this, _1),
-                                          _readTimeout,
-                                          POLLIN | POLLPRI);
-    }
-
-    bool timedWaitUntilWriteDataAvailable()
-    {
-      return timedWaitUntilDataAvailable(boost::bind(&BlockingTcpClient::onWriteTimeout, this, _1),
-                                        _writeTimeout,
-                                        POLLOUT);
-    }
-
-    bool connect(const std::string& serviceAddress, const std::string& servicePort)
-    {
-      //
-      // Close the previous socket;
-      //
-      close();
-
-      if (_pSocket)
-      {
-        delete _pSocket;
-        _pSocket = 0;
-      }
-
-      _pSocket = new boost::asio::ip::tcp::socket(_ioService);
-
-      OS_LOG_INFO(FAC_NET, CLASS_INFO() "creating new connection to " << serviceAddress << ":" << servicePort);
-
-      _serviceAddress = serviceAddress;
-      _servicePort = servicePort;
-
-      try
-      {
-        boost::asio::ip::tcp::resolver::query query(boost::asio::ip::tcp::v4(), serviceAddress.c_str(), servicePort.c_str());
-        boost::asio::ip::tcp::resolver::iterator hosts = _resolver.resolve(query);
-
-        ConnectTimer timer(this);
-
-        // this flag may be reset by ConnectTimer's timer during connect() call
-        _isConnected = true;
-
-        //////////////////////////////////////////////////////////////////////////
-        // Only works in 1.47 version of asio.  1.46 doesnt have this utility func
-        // boost::asio::connect(*_pSocket, hosts);
-        _pSocket->connect(hosts->endpoint()); // so we use the connect member
-        //////////////////////////////////////////////////////////////////////////
-        OS_LOG_INFO(FAC_NET, CLASS_INFO() "creating new connection to " << serviceAddress << ":" << servicePort << " SUCESSFUL.");
-      }
-      catch(std::exception &e)
-      {
-        OS_LOG_ERROR(FAC_NET, CLASS_INFO() "failed with error " << e.what());
-        _isConnected = false;
-      }
-
-      return _isConnected;
-    }
-
-    
-    bool connect()
-    {
-      //
-      // Initialize State Queue Agent Publisher if an address is provided
-      //
-      //if (_serviceAddress.empty() || _servicePort.empty())
-         std::string sqaControlAddress;
-        std::string sqaControlPort;
-        std::ostringstream sqaconfig;
-        sqaconfig << SIPX_CONFDIR << "/" << "sipxsqa-client.ini";
-        OsServiceOptions configOptions(sqaconfig.str());
-        std::string controlAddress;
-        std::string controlPort;
-    {
-         if (configOptions.parseOptions())
-        {
-          bool enabled = false;
-          if (configOptions.getOption("enabled", enabled, enabled) && enabled)
-          {
-            configOptions.getOption("sqa-control-address", _serviceAddress);
-            configOptions.getOption("sqa-control-port", _servicePort);
-          }
-          else
-          {
-            OS_LOG_ERROR(FAC_NET, "BlockingTcpClient::connect() this:" << this << " Unable to read connection information from " << sqaconfig.str());
-            return false;
-          }
-        }
-      }
-
-      if(_serviceAddress.empty() || _servicePort.empty())
-      {
-        OS_LOG_ERROR(FAC_NET, "BlockingTcpClient::connect() this:" << this << " remote address is not set");
-        return false;
-      }
-      
-      return connect(_serviceAddress, _servicePort);
-    }
-
-    bool send(const StateQueueMessage& request)
-    {
-      assert(_pSocket);
-      std::string data = request.data();
-
-      if (data.size() > SQA_CONN_MAX_READ_BUFF_SIZE - 1) /// Account for the terminating char "_"
-      {
-        OS_LOG_ERROR(FAC_NET, CLASS_INFO() "data size: " << data.size() << " maximum buffer length of " << SQA_CONN_MAX_READ_BUFF_SIZE - 1);
-        return false;
-      }
-
-      short version = 1;
-      unsigned long len = (unsigned long)data.size() + 1; /// Account for the terminating char "_"
-      std::stringstream strm;
-      strm.write((char*)(&version), sizeof(version));
-      strm.write((char*)(&_key), sizeof(_key));
-      strm.write((char*)(&len), sizeof(len));
-      strm << data << "_";
-      std::string packet = strm.str();
-      boost::system::error_code ec;
-      bool ok = false;
-      
-      {
-        if (false == timedWaitUntilWriteDataAvailable())
-        {
-          OS_LOG_ERROR(FAC_NET, CLASS_INFO()
-                      << "timedWaitUntilWriteDataAvailable failed: "
-                      << "Unable to send request");
-
-          _isConnected = false;
-          return false;
-        }
-
-        //ok = boost::asio::write(*_pSocket, boost::asio::buffer(packet.c_str(), packet.size()),  boost::asio::transfer_all(), ec) > 0;
-        ok = _pSocket->write_some(boost::asio::buffer(packet.c_str(), packet.size()), ec) > 0;
-      }
-
-      if (!ok || ec)
-      {
-        OS_LOG_ERROR(FAC_NET, CLASS_INFO() "write_some error: " << ec.message());
-        _isConnected = false;
-        return false;
-      }
-      return true;
-    }
-
-    bool receive(StateQueueMessage& response)
-    {
-      assert(_pSocket);
-      unsigned long len = getNextReadSize();
-      if (!len)
-      {
-        OS_LOG_INFO(FAC_NET, CLASS_INFO() "next read size is empty.");
-        return false;
-      }
-
-      char responseBuff[len];
-      boost::system::error_code ec;
-      {
-        if (false == timedWaitUntilReadDataAvailable())
-        {
-          OS_LOG_ERROR(FAC_NET, CLASS_INFO()
-                      << "timedWaitUntilReadDataAvailable failed: "
-                      << "Unable to receive response");
-
-          _isConnected = false;
-          return false;
-        }
-
-        _pSocket->read_some(boost::asio::buffer((char*)responseBuff, len), ec);
-      }
-
-      if (ec)
-      {
-        if (boost::asio::error::eof == ec)
-        {
-          OS_LOG_INFO(FAC_NET, CLASS_INFO() "remote closed the connection, read_some error: " << ec.message());
-        }
-        else
-        {
-          OS_LOG_ERROR(FAC_NET, CLASS_INFO() "read_some error: " << ec.message());
-        }
-
-        _isConnected = false;
-        return false;
-      }
-      std::string responseData(responseBuff, len);
-      return response.parseData(responseData);
-    }
-
-    bool sendAndReceive(const StateQueueMessage& request, StateQueueMessage& response)
-    {
-      if (send(request))
-        return receive(response);
-      return false;
-    }
-
-    unsigned long getNextReadSize()
-    {
-      short version = 1;
-      bool hasVersion = false;
-      bool hasKey = false;
-      unsigned long remoteLen = 0;
-      while (!hasVersion || !hasKey)
-      {
-        short remoteVersion;
-        short remoteKey;
-
-        //TODO: Refactor the code below to do one read for the three fields
-        //
-        // Read the version (must be 1)
-        //
-        while (true)
-        {
-
-          boost::system::error_code ec;
-          if (false == timedWaitUntilReadDataAvailable())
-          {
-            OS_LOG_ERROR(FAC_NET, CLASS_INFO()
-                        << "timedWaitUntilReadDataAvailable failed: "
-                        << "Unable to read version");
-
-            _isConnected = false;
-            return 0;
-          }
-
-          _pSocket->read_some(boost::asio::buffer((char*)&remoteVersion, sizeof(remoteVersion)), ec);
-          if (ec)
-          {
-            if (boost::asio::error::eof == ec)
-            {
-              OS_LOG_ERROR(FAC_NET, CLASS_INFO() "remote closed the connection, read_some error: " << ec.message());
-            }
-            else
-            {
-              OS_LOG_INFO(FAC_NET, CLASS_INFO()
-                  << "Unable to read version "
-                  << "ERROR: " << ec.message());
-        	  }
-
-            _isConnected = false;
-            return 0;
-          }
-          else
-          {
-            if (remoteVersion == version)
-            {
-              hasVersion = true;
-              break;
-            }
-          }
-        }
-
-        while (true)
-        {
-
-          boost::system::error_code ec;
-          if (false == timedWaitUntilReadDataAvailable())
-          {
-            OS_LOG_ERROR(FAC_NET, CLASS_INFO()
-                        << "timedWaitUntilReadDataAvailable failed: "
-                        << "Unable to read secret key");
-
-            _isConnected = false;
-            return 0;
-          }
-
-          _pSocket->read_some(boost::asio::buffer((char*)&remoteKey, sizeof(remoteKey)), ec);
-          if (ec)
-          {
-            if (boost::asio::error::eof == ec)
-            {
-              OS_LOG_ERROR(FAC_NET, CLASS_INFO() "remote closed the connection, read_some error: " << ec.message());
-            }
-            else
-            {
-              OS_LOG_INFO(FAC_NET, CLASS_INFO()
-                  << "Unable to read secret key "
-                  << "ERROR: " << ec.message());
-            }
-
-            _isConnected = false;
-            return 0;
-          }
-          else
-          {
-            if (remoteKey >= SQA_KEY_MIN && remoteKey <= SQA_KEY_MAX)
-            {
-              hasKey = true;
-              break;
-            }
-          }
-        }
-      }
-
-      boost::system::error_code ec;
-      if (false == timedWaitUntilReadDataAvailable())
-      {
-        OS_LOG_ERROR(FAC_NET, CLASS_INFO()
-                    << "timedWaitUntilReadDataAvailable failed: "
-                    << "Unable to read secret packet length");
-
-        _isConnected = false;
-        return 0;
-      }
-
-      _pSocket->read_some(boost::asio::buffer((char*)&remoteLen, sizeof(remoteLen)), ec);
-      if (ec)
-      {
-        if (boost::asio::error::eof == ec)
-        {
-          OS_LOG_ERROR(FAC_NET, CLASS_INFO() "remote closed the connection, read_some error: " << ec.message());
-        }
-        else
-        {
-          OS_LOG_INFO(FAC_NET, CLASS_INFO()
-              << "Unable to read secret packet length "
-              << "ERROR: " << ec.message());
-        }
-
-        _isConnected = false;
-        return 0;
-      }
-
-      return remoteLen;
-    }
-
-    bool isConnected() const
-    {
-      return _isConnected;
-    }
-
-    std::string getLocalAddress()
-    {
-      try
-      {
-        if (!_pSocket)
-          return "";
-        return _pSocket->local_endpoint().address().to_string();
-      }
-      catch(...)
-      {
-        return "";
-      }
-    }
-  private:
-    boost::asio::io_service& _ioService;
-    boost::asio::ip::tcp::resolver _resolver;
-    boost::asio::ip::tcp::socket *_pSocket;
-    std::string _serviceAddress;
-    std::string _servicePort;
-    bool _isConnected;
-    int _readTimeout;
-    int _writeTimeout;
-    short _key;
-    boost::asio::deadline_timer _readTimer;
-    boost::asio::deadline_timer _writeTimer;
-    boost::asio::deadline_timer _connectTimer;
-    friend class StateQueueClient;
   };
 
 protected:
@@ -685,7 +86,6 @@ public:
   const std::string& className()
   {
     static const std::string className("StateQueueClient");
-
     return className;
   }
 
@@ -725,7 +125,6 @@ public:
     _currentKeepAliveTicks(keepAliveTicks),
     _isAlive(true)
   {
-
       if (_type != Publisher)
       {
         createZmqSocket();
@@ -739,21 +138,25 @@ public:
         pClient->connect(_serviceAddress, _servicePort);
 
         if (_localAddress.empty())
+        {
           _localAddress = pClient->getLocalAddress();
+        }
 
         BlockingTcpClient::Ptr client(pClient);
         _clientPointers.push_back(client);
         _clientPool.enqueue(client);
       }
 
-      _pKeepAliveThread.reset(
-          new boost::thread(
-              boost::bind(&StateQueueClient::keepAliveThreadRun, this)));
+      _pKeepAliveThread.reset(new boost::thread( boost::bind(&StateQueueClient::keepAliveThreadRun, this)));
 
       if (_type == Watcher)
+      {
         _zmqEventId = "sqw.";
+      }
       else
+      {
         _zmqEventId = "sqa.";
+      }
 
       _zmqEventId += zmqEventId;
 
@@ -824,9 +227,7 @@ public:
 
       setServiceAddressAndPort();
 
-      _pKeepAliveThread.reset(
-          new boost::thread(
-              boost::bind(&StateQueueClient::keepAliveThreadRun, this)));
+      _pKeepAliveThread.reset(new boost::thread(boost::bind(&StateQueueClient::keepAliveThreadRun, this)));
 
       if (_type == Watcher)
         _zmqEventId = "sqw.";
@@ -861,8 +262,8 @@ public:
     }
 
     BlockingTcpClient::Ptr pClient = *_clientPointers.begin();
-    _serviceAddress = pClient->_serviceAddress;
-    _servicePort = pClient->_servicePort;
+    _serviceAddress = pClient->getServiceAddress();
+    _servicePort = pClient->getServicePort();
   }
 
   void createZmqSocket()
@@ -1032,20 +433,17 @@ public:
   void keepAliveThreadRun()
   // Runs the keep alive loop at 1 secs interval
   {
-    OS_LOG_INFO(FAC_SIP, CLASS_INFO()
-        << "starting");
+    OS_LOG_INFO(FAC_SIP, CLASS_INFO() << "starting");
 
     while (!_terminate)
     {
       // sleep the current thread
       boost::this_thread::sleep(boost::posix_time::seconds(SQA_KEEP_ALIVE_LOOP_INTERVAL_SECS));
-
       keepAliveLoop();
 
     }
 
-    OS_LOG_INFO(FAC_SIP, CLASS_INFO()
-        << "exiting");
+    OS_LOG_INFO(FAC_SIP, CLASS_INFO() << "exiting");
   }
 
 private:
@@ -1054,16 +452,19 @@ private:
     assert(_type != Publisher);
 
     OS_LOG_INFO(FAC_NET, CLASS_INFO() "eventId=" << eventId << " address=" << sqaAddress);
+
     try
     {
       _zmqSocket->connect(sqaAddress.c_str());
       _zmqSocket->setsockopt(ZMQ_SUBSCRIBE, eventId.c_str(), eventId.size());
 
-    }catch(std::exception e)
+    }
+    catch(std::exception e)
     {
       OS_LOG_INFO(FAC_NET, CLASS_INFO() "eventId=" << eventId << " address=" << sqaAddress << " FAILED!  Error: " << e.what());
       return false;
     }
+
     return true;
   }
 
@@ -1105,8 +506,11 @@ private:
 
 
     StateQueueMessage response;
+
     if (!sendAndReceive(request, response))
+    {
       return false;
+    }
 
     bool ok = response.get("message-data", publisherAddress);
 
@@ -1152,7 +556,7 @@ private:
       request.set("service-type", "watcher");
       clientType = "watcher";
     }
-    
+
     StateQueueMessage response;
     return sendAndReceive(request, response);
   }
@@ -1202,14 +606,14 @@ private:
     while (!_terminate)
     {
       bool lastReadFailed = false;
-      // Although ZeroMQ assures that a sub socket will reconnect to publisher automatically, 
+      // Although ZeroMQ assures that a sub socket will reconnect to publisher automatically,
       // this seems to be not a 100% certainty.  There are cases when publisher disappears,
       // it takes 8 minutes for the client to receive events again.
       //
       // There is also the case of socket reads where a cann to recv is assured to only return when
       // it receives the complete packet.  We will not treat this at 100% certainty and treat
       // a read failure as a trigger for resubscribe.
- 
+
       if (false == _isAlive || lastReadFailed)
       {
         OS_LOG_ERROR(FAC_NET, "StateQueueClient::eventLoop connection is not alive, closing socket, resubscribe");
@@ -1221,17 +625,20 @@ private:
         //
         // This will block until it succeeds or _terminated flag is set
         // So there is no danger of a runaway loop here
-        //   
+        //
         subscribeForEvents();
       }
 
       std::string id;
       std::string data;
       int count = 0;
+
       if (readEvent(id, data, count))
       {
         if (_terminate)
+        {
           break;
+        }
 
         OS_LOG_INFO(FAC_NET, CLASS_INFO() "received event: " << id);
         OS_LOG_DEBUG(FAC_NET, CLASS_INFO() "received data: " << std::endl << data);
@@ -1240,7 +647,8 @@ private:
         {
           OS_LOG_DEBUG(FAC_NET, CLASS_INFO() "popping data: " << id);
           do_pop(firstHit, count, id, data);
-        }else if (_type == Watcher)
+        }
+        else if (_type == Watcher)
         {
           OS_LOG_DEBUG(FAC_NET, CLASS_INFO() "watching data: " << id);
           do_watch(firstHit, count, id, data);
@@ -1249,11 +657,13 @@ private:
       else
       {
         lastReadFailed = true;
+
         if (_terminate)
         {
           break;
         }
       }
+
       firstHit = false;
     }
 
@@ -1301,6 +711,7 @@ private:
       _backoffCount++; //  this will ensure that we participate next time
       boost::this_thread::yield();
     }
+
     //
     // Check if we are in the exlude list
     //
@@ -1313,6 +724,7 @@ private:
       OS_LOG_DEBUG(FAC_NET, CLASS_INFO() "do_pop is not allowed to pop " << id);
       return;
     }
+
     //
     // Pop it
     //
@@ -1326,6 +738,7 @@ private:
               << " Popping event " << id);
 
     StateQueueMessage popResponse;
+
     if (!sendAndReceive(pop, popResponse))
     {
       OS_LOG_ERROR(FAC_NET, CLASS_INFO() "do_pop unable to send pop command for event " << id);
@@ -1338,6 +751,7 @@ private:
     //
     std::string messageResponse;
     popResponse.get("message-response", messageResponse);
+
     if (messageResponse != "ok")
     {
       std::string messageResponseError;
@@ -1359,7 +773,7 @@ private:
       _backoffCount = 0;
     }
   }
-  
+
   void do_watch(bool firstHit, int count, const std::string& id, const std::string& data)
   {
     OS_LOG_DEBUG(FAC_NET, CLASS_INFO() "Received watcher data " << id);
@@ -1421,6 +835,7 @@ private:
   {
       free (data);
   }
+
   //  Convert string to 0MQ string and send to socket
   static bool zmq_send (zmq::socket_t & socket, const std::string & data)
   {
@@ -1445,8 +860,12 @@ private:
   {
       zmq::message_t message;
       socket->recv(&message);
+
       if (!message.size())
+      {
         return false;
+      }
+
       value = std::string(static_cast<char*>(message.data()), message.size());
       return true;
   }
@@ -1493,6 +912,7 @@ private:
     }
 
     BlockingTcpClient::Ptr conn;
+
     if (!_clientPool.dequeue(conn))
     {
       OS_LOG_ERROR(FAC_NET, CLASS_INFO() "Unable to retrieve a TCP connection for pool.");
@@ -1530,10 +950,16 @@ private:
     // Enqueue it
     //
     StateQueueMessage enqueueRequest;
+
     if (!publish)
+    {
       enqueueRequest.setType(StateQueueMessage::Enqueue);
+    }
     else
+    {
       enqueueRequest.setType(StateQueueMessage::EnqueueAndPublish);
+    }
+
     enqueueRequest.set("message-id", id.c_str());
     enqueueRequest.set("message-app-id", _applicationId.c_str());
     enqueueRequest.set("message-expires", _expires);
@@ -1551,6 +977,7 @@ private:
     //
     std::string messageResponse;
     enqueueResponse.get("message-response", messageResponse);
+
     if (messageResponse != "ok")
     {
       std::string messageResponseError;
@@ -1586,14 +1013,18 @@ private:
     else
     {
       StateQueueMessage enqueueResponse;
+
       if (!sendAndReceive(enqueueRequest, enqueueResponse))
+      {
         return false;
+      }
 
       //
       // Check if Queue is successful
       //
       std::string messageResponse;
       enqueueResponse.get("message-response", messageResponse);
+
       if (messageResponse != "ok")
       {
         std::string messageResponseError;
@@ -1622,8 +1053,11 @@ private:
     OS_LOG_INFO(FAC_NET, CLASS_INFO() "publishing data ID=" << id);
 
     StateQueueMessage enqueueResponse;
+
     if (!sendAndReceive(enqueueRequest, enqueueResponse))
+    {
       return false;
+    }
 
     //
     // Check if Queue is successful
@@ -1645,12 +1079,16 @@ private:
 
 
 public:
-  
+
   bool pop(std::string& id, std::string& data)
   {
     StateQueueMessage message;
+
     if (!pop(message))
+    {
       return false;
+    }
+
     return message.get("message-id", id) && message.get("message-data", data);
   }
 
@@ -1658,21 +1096,28 @@ public:
   {
     OS_LOG_INFO(FAC_NET, CLASS_INFO() "(" << id << ") INVOKED" );
     StateQueueMessage message;
+
     if (!pop(message))
+    {
       return false;
+    }
+
     return message.get("message-id", id) && message.get("message-data", data);
   }
 
   bool enqueue(const std::string& data, int expires = 30, bool publish = false)
   {
     if (_type != Publisher)
+    {
       return false;
+    }
 
     std::ostringstream ss;
     ss << _zmqEventId << "."
        << std::hex << std::uppercase
        << std::setw(4) << std::setfill('0') << (int) ((float) (0x10000) * random () / (RAND_MAX + 1.0)) << "-"
        << std::setw(4) << std::setfill('0') << (int) ((float) (0x10000) * random () / (RAND_MAX + 1.0));
+
     return enqueue(ss.str(), data, expires, publish);
   }
 
@@ -1680,13 +1125,16 @@ public:
   bool publish(const std::string& eventId, const std::string& data, bool noresponse)
   {
     if (_type != Publisher)
+    {
       return false;
+    }
 
     std::ostringstream ss;
     ss << "sqw." << eventId << "."
        << std::hex << std::uppercase
        << std::setw(4) << std::setfill('0') << (int) ((float) (0x10000) * random () / (RAND_MAX + 1.0)) << "-"
        << std::setw(4) << std::setfill('0') << (int) ((float) (0x10000) * random () / (RAND_MAX + 1.0));
+
     return internal_publish(ss.str(), data, noresponse);
   }
 
@@ -1699,11 +1147,13 @@ public:
   bool publishAndPersist(int workspace, const std::string& eventId, const std::string& data, int expires)
   {
     if (_type != Publisher)
+    {
       return false;
+    }
 
     std::ostringstream ss;
     ss << "sqw." << eventId;
-    
+
     return internal_publish_and_persist(workspace, ss.str(), data, expires);
   }
 
@@ -1716,11 +1166,15 @@ public:
     request.set("message-app-id", _applicationId.c_str());
 
     StateQueueMessage response;
+
     if (!sendAndReceive(request, response))
+    {
       return false;
+    }
 
     std::string messageResponse;
     response.get("message-response", messageResponse);
+
     if (messageResponse != "ok")
     {
       std::string messageResponseError;
@@ -1730,6 +1184,7 @@ public:
                   << " Error: " << messageResponseError);
       return false;
     }
+
     OS_LOG_ERROR(FAC_NET, CLASS_INFO()
                   << "Successfully erased " << id);
     return true;
@@ -1754,11 +1209,15 @@ public:
     request.set("message-data-id", dataId.c_str());
 
     StateQueueMessage response;
+
     if (!sendAndReceive(request, response))
+    {
       return false;
+    }
 
     std::string messageResponse;
     response.get("message-response", messageResponse);
+
     if (messageResponse != "ok")
     {
       std::string messageResponseError;
@@ -1790,11 +1249,15 @@ public:
     request.set("message-data", data);
 
     StateQueueMessage response;
+
     if (!sendAndReceive(request, response))
+    {
       return false;
+    }
 
     std::string messageResponse;
     response.get("message-response", messageResponse);
+
     if (messageResponse != "ok")
     {
       std::string messageResponseError;
@@ -1827,11 +1290,15 @@ public:
     request.set("message-data", data);
 
     StateQueueMessage response;
+
     if (!sendAndReceive(request, response))
+    {
       return false;
+    }
 
     std::string messageResponse;
     response.get("message-response", messageResponse);
+
     if (messageResponse != "ok")
     {
       std::string messageResponseError;
@@ -1863,11 +1330,15 @@ public:
     request.set("message-data-id", dataId.c_str());
 
     StateQueueMessage response;
+
     if (!sendAndReceive(request, response))
+    {
       return false;
+    }
 
     std::string messageResponse;
     response.get("message-response", messageResponse);
+
     if (messageResponse != "ok")
     {
       std::string messageResponseError;
@@ -1900,11 +1371,15 @@ public:
     request.set("message-data-id", dataId.c_str());
 
     StateQueueMessage response;
+
     if (!sendAndReceive(request, response))
+    {
       return false;
+    }
 
     std::string messageResponse;
     response.get("message-response", messageResponse);
+
     if (messageResponse != "ok")
     {
       std::string messageResponseError;
@@ -1936,11 +1411,15 @@ public:
     request.set("message-map-id", mapId.c_str());
 
     StateQueueMessage response;
+
     if (!sendAndReceive(request, response))
+    {
       return false;
+    }
 
     std::string messageResponse;
     response.get("message-response", messageResponse);
+
     if (messageResponse != "ok")
     {
       std::string messageResponseError;
@@ -1955,8 +1434,11 @@ public:
     response.get("message-data", data);
 
     StateQueueMessage message;
+
     if (!message.parseData(data))
+    {
       return false;
+    }
 
     return message.getMap(smap);
   }
@@ -1980,8 +1462,11 @@ public:
     request.set("message-data-id", dataId.c_str());
 
     StateQueueMessage response;
+
     if (!sendAndReceive(request, response))
+    {
       return false;
+    }
 
     std::string messageResponse;
     response.get("message-response", messageResponse);
@@ -2016,11 +1501,15 @@ public:
     request.set("workspace", workspace);
 
     StateQueueMessage response;
+
     if (!sendAndReceive(request, response))
+    {
       return false;
+    }
 
     std::string messageResponse;
     response.get("message-response", messageResponse);
+
     if (messageResponse != "ok")
     {
       std::string messageResponseError;
@@ -2035,6 +1524,5 @@ public:
   }
 };
 
-
-#endif	/* StateQueueClient_H */
+#endif /* StateQueueClient_H */
 
