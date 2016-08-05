@@ -30,7 +30,6 @@
 
 #include "StateQueueMessage.h"
 #include "BlockingQueue.h"
-#include "BlockingTcpClient.h"
 
 #define SQA_LINGER_TIME_MILLIS 5000
 #define SQA_TERMINATE_STRING "__TERMINATE__"
