@@ -30,8 +30,6 @@
 
 #define SQA_CONN_MAX_READ_BUFF_SIZE 65536
 #define SQA_CONN_CONNECTION_TIMEOUT_MSEC 5000
-#define SQA_CONN_READ_TIMEOUT 1000
-#define SQA_CONN_WRITE_TIMEOUT 1000
 #define SQA_KEY_MIN 22172
 #define SQA_KEY_ALPHA 22180
 #define SQA_KEY_DEFAULT SQA_KEY_MIN
@@ -81,53 +79,11 @@ BlockingTcpClient::~BlockingTcpClient()
     }
 }
 
-void BlockingTcpClient::setReadTimeout(boost::asio::ip::tcp::socket& socket, int milliseconds)
-{
-  struct timeval tv;
-  tv.tv_sec  = 0;
-  tv.tv_usec = milliseconds * 1000;
-  setsockopt(socket.native(), SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
-}
-
-void BlockingTcpClient::setWriteTimeout(boost::asio::ip::tcp::socket& socket, int milliseconds)
-{
-  struct timeval tv;
-  tv.tv_sec  = 0;
-  tv.tv_usec = milliseconds * 1000;
-  setsockopt(socket.native(), SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv));
-}
-
-void BlockingTcpClient::startReadTimer()
-{
-  boost::system::error_code ec;
-  _readTimer.expires_from_now(boost::posix_time::milliseconds(_readTimeout), ec);
-  _readTimer.async_wait(boost::bind(&BlockingTcpClient::onReadTimeout, this, boost::asio::placeholders::error));
-}
-
-void BlockingTcpClient::startWriteTimer()
-{
-  boost::system::error_code ec;
-  _writeTimer.expires_from_now(boost::posix_time::milliseconds(_writeTimeout), ec);
-  _writeTimer.async_wait(boost::bind(&BlockingTcpClient::onWriteTimeout, this, boost::asio::placeholders::error));
-}
-
 void BlockingTcpClient::startConnectTimer()
 {
   boost::system::error_code ec;
   _connectTimer.expires_from_now(boost::posix_time::milliseconds(SQA_CONN_CONNECTION_TIMEOUT_MSEC), ec);
   _connectTimer.async_wait(boost::bind(&BlockingTcpClient::onConnectTimeout, this, boost::asio::placeholders::error));
-}
-
-void BlockingTcpClient::cancelReadTimer()
-{
-  boost::system::error_code ec;
-  _readTimer.cancel(ec);
-}
-
-void BlockingTcpClient::cancelWriteTimer()
-{
-  boost::system::error_code ec;
-  _writeTimer.cancel(ec);
 }
 
 void BlockingTcpClient::cancelConnectTimer()
@@ -295,30 +251,30 @@ bool BlockingTcpClient::connect(const std::string& serviceAddress, const std::st
 bool BlockingTcpClient::connect()
 {
   // Initialize State Queue Agent Publisher if an address is provided
-  //
-  //if (_serviceAddress.empty() || _servicePort.empty())
-     std::string sqaControlAddress;
-    std::string sqaControlPort;
-    std::ostringstream sqaconfig;
-    sqaconfig << SIPX_CONFDIR << "/" << "sipxsqa-client.ini";
-    OsServiceOptions configOptions(sqaconfig.str());
-    std::string controlAddress;
-    std::string controlPort;
+  std::string sqaControlAddress;
+  std::string sqaControlPort;
+  std::ostringstream sqaconfig;
+  sqaconfig << SIPX_CONFDIR << "/" << "sipxsqa-client.ini";
+  OsServiceOptions configOptions(sqaconfig.str());
 
+  if (configOptions.parseOptions())
   {
-     if (configOptions.parseOptions())
+    bool enabled = false;
+    if (configOptions.getOption("enabled", enabled, enabled) && enabled)
     {
-      bool enabled = false;
-      if (configOptions.getOption("enabled", enabled, enabled) && enabled)
+      configOptions.getOption("sqa-control-address", _serviceAddress);
+      configOptions.getOption("sqa-control-port", _servicePort);
+
+      if (configOptions.hasOption("tcp-timeout"))
       {
-        configOptions.getOption("sqa-control-address", _serviceAddress);
-        configOptions.getOption("sqa-control-port", _servicePort);
+        configOptions.getOption("tcp-timeout", _readTimeout);
+	configOptions.getOption("tcp-timeout", _writeTimeout);
       }
-      else
-      {
-        OS_LOG_ERROR(FAC_NET, "BlockingTcpClient::connect() this:" << this << " Unable to read connection information from " << sqaconfig.str());
-        return false;
-      }
+    }
+    else
+    {
+      OS_LOG_ERROR(FAC_NET, "BlockingTcpClient::connect() this:" << this << " Unable to read connection information from " << sqaconfig.str());
+      return false;
     }
   }
 
