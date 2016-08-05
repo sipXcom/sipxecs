@@ -18,7 +18,6 @@
 #include "sqa/ServiceOptions.h"
 #include "sqa/StateQueueAgent.h"
 #include "sqa/StateQueueDriverTest.h"
-//#include "sqa/StateQueueConnection.h"
 #include "sipXecsService/SipXApplication.h"
 
 #define SIPXSQA_APP_NAME              "StateQueueAgent"
@@ -50,6 +49,7 @@ int main(int argc, char** argv)
   osServiceOptions.addOptionString("sqa-control-address", ": Address where to send control commands.", OsServiceOptions::ConfigOption);
   osServiceOptions.addOptionInt("id", ": Address where to send control commands.", OsServiceOptions::ConfigOption);
   osServiceOptions.addOptionFlag("test-driver", ": Set this flag if you want to run the driver unit tests to ensure proper operations.", OsServiceOptions::ConfigOption);
+  osServiceOptions.addOptionInt("tcp-timeout", ": TCP read/write timout.", OsServiceOptions::ConfigOption);
 
   // NOTE: this might exit application in case of failure
   sipXApplication.init(argc, argv, sqaData);
