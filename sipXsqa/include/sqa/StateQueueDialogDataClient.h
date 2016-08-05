@@ -48,7 +48,9 @@ inline StateQueueDialogDataClient::StateQueueDialogDataClient(
         serviceAddress,
         servicePort,
         "dialog-state",
-        poolSize),
+        poolSize,
+	SQA_CONN_READ_TIMEOUT,
+	SQA_CONN_WRITE_TIMEOUT),
   _workspace(3)
 {
 }
