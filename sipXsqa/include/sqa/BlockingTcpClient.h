@@ -53,12 +53,7 @@ public:
 
     typedef boost::shared_ptr<BlockingTcpClient> Ptr;
 
-    BlockingTcpClient(
-      boost::asio::io_service& ioService,
-      int readTimeout = SQA_CONN_READ_TIMEOUT,
-      int writeTimeout = SQA_CONN_WRITE_TIMEOUT,
-      short key = SQA_KEY_DEFAULT);
-
+    explicit BlockingTcpClient(boost::asio::io_service& ioService, int readTimeout, int writeTimeout, short key);
     ~BlockingTcpClient();
 
     bool connect();
@@ -72,13 +67,7 @@ public:
     const std::string &getServiceAddress() const;
 
 private:
-    void setReadTimeout(boost::asio::ip::tcp::socket& socket, int milliseconds);
-    void setWriteTimeout(boost::asio::ip::tcp::socket& socket, int milliseconds);
-    void startReadTimer();
-    void startWriteTimer();
     void startConnectTimer();
-    void cancelReadTimer();
-    void cancelWriteTimer();
     void cancelConnectTimer();
     void onReadTimeout(const boost::system::error_code& e);
     void onWriteTimeout(const boost::system::error_code& e);
@@ -90,13 +79,10 @@ private:
 
     unsigned long getNextReadSize();
 
-
 private:
-    class ConnectTimer
+    struct ConnectTimer
     {
-    public:
-      ConnectTimer(BlockingTcpClient* pOwner) :
-        _pOwner(pOwner)
+      ConnectTimer(BlockingTcpClient* pOwner) : _pOwner(pOwner)
       {
         _pOwner->startConnectTimer();
       }
@@ -105,38 +91,7 @@ private:
       {
         _pOwner->cancelConnectTimer();
       }
-      BlockingTcpClient* _pOwner;
-    };
 
-    class ReadTimer
-    {
-    public:
-      ReadTimer(BlockingTcpClient* pOwner) :
-        _pOwner(pOwner)
-      {
-        _pOwner->startReadTimer();
-      }
-
-      ~ReadTimer()
-      {
-        _pOwner->cancelReadTimer();
-      }
-      BlockingTcpClient* _pOwner;
-    };
-
-    class WriteTimer
-    {
-    public:
-      WriteTimer(BlockingTcpClient* pOwner) :
-        _pOwner(pOwner)
-      {
-        _pOwner->startWriteTimer();
-      }
-
-      ~WriteTimer()
-      {
-        _pOwner->cancelWriteTimer();
-      }
       BlockingTcpClient* _pOwner;
     };
 
