@@ -62,6 +62,7 @@ private:
   SQAPublisher* _pPublisher;
   std::string _sqaControlAddress;
   std::string _sqaControlPort;
+  int _tcpTimeout;
 };
 
 
@@ -72,7 +73,8 @@ private:
 inline StateQueueNotification::StateQueueNotification(OsServiceOptions& options) :
   _queueThread(0),
   _isRunning(false),
-  _pPublisher(0)
+  _pPublisher(0),
+  _tcpTimeout(SQA_DEFAULT_TCP_TIMEOUT)
 {
   #define within(num) (int) ((float) (num) * random () / (RAND_MAX + 1.0))
   std::ostringstream ss;
@@ -82,6 +84,7 @@ inline StateQueueNotification::StateQueueNotification(OsServiceOptions& options)
 
   options.getOption("sqa-control-address", _sqaControlAddress);
   options.getOption("sqa-control-port", _sqaControlPort);
+  options.getOption("tcp-timeout", _tcpTimeout);
 }
 
 inline StateQueueNotification::StateQueueNotification(const std::string& sqaControlAddress,
@@ -90,7 +93,8 @@ inline StateQueueNotification::StateQueueNotification(const std::string& sqaCont
   _isRunning(false),
   _pPublisher(0),
   _sqaControlAddress(sqaControlAddress),
-  _sqaControlPort(sqaControlPort)
+  _sqaControlPort(sqaControlPort),
+  _tcpTimeout(SQA_DEFAULT_TCP_TIMEOUT)
 {
   #define within(num) (int) ((float) (num) * random () / (RAND_MAX + 1.0))
   std::ostringstream ss;
@@ -133,7 +137,7 @@ inline void StateQueueNotification::internal_run()
   ss << "ssw-" << std::hex << std::uppercase
      << std::setw(4) << std::setfill('0') << (int) ((float) (0x10000) * random () / (RAND_MAX + 1.0));
 
-  _pPublisher = new SQAPublisher(ss.str().c_str(), _sqaControlAddress.c_str(), _sqaControlPort.c_str(), 1, 100, 100);
+  _pPublisher = new SQAPublisher(ss.str().c_str(), _sqaControlAddress.c_str(), _sqaControlPort.c_str(), 1, _tcpTimeout, _tcpTimeout);
 
 
   std::string key;

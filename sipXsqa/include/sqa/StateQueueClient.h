@@ -26,7 +26,6 @@
 #include <boost/lexical_cast.hpp>
 
 #include <os/OsLogger.h>
-#include <os/OsServiceOptions.h>
 
 #include "StateQueueMessage.h"
 #include "BlockingQueue.h"
@@ -96,8 +95,8 @@ public:
         const std::string& servicePort,
         const std::string& zmqEventId,
         std::size_t poolSize,
-        int readTimeout = SQA_CONN_READ_TIMEOUT,
-        int writeTimeout = SQA_CONN_WRITE_TIMEOUT,
+        int readTimeout,
+        int writeTimeout,
         int keepAliveTicks = SQA_KEEP_ALIVE_TICKS
         ) :
     _type(type),
@@ -178,8 +177,8 @@ public:
         const std::string& applicationId,
         const std::string& zmqEventId,
         std::size_t poolSize,
-        int readTimeout = SQA_CONN_READ_TIMEOUT,
-        int writeTimeout = SQA_CONN_WRITE_TIMEOUT,
+        int readTimeout,
+        int writeTimeout,
         int keepAliveTicks = SQA_KEEP_ALIVE_TICKS
         ) :
     _type(type),

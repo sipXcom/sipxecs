@@ -46,6 +46,8 @@ namespace std
 
 #endif
 
+#define SQA_DEFAULT_TCP_TIMEOUT 100
+
 class SQALogger
 {
 public:
