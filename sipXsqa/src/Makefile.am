@@ -58,7 +58,6 @@ libsipXsqa_la_LDFLAGS = \
     -version-info ${version_Current}:${version_Revision}:${version_Age}
 
 libsipXsqa_la_SOURCES =  \
-	BlockingTcpClient.cpp \
 	StateQueueAgent.cpp \
 	StateQueueConnection.cpp \
 	StateQueueDriverTest.cpp \
