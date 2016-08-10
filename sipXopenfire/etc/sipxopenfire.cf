@@ -67,14 +67,14 @@ bundle agent sipxopenfire_config {
         comment => "openfire authorities",
         create => "false",
         perms => mog(600, "$(sipx.OPENFIRE_USER)", "$(sipx.OPENFIRE_GROUP)"),
-        copy_from => copy_from_cfdata("authorities.jks"),
+        copy_from => copy_from_cfdata("$(sipx.location_id)/authorities.jks"),
         classes => if_repaired("restart_openfire");
 
       "$(sipx.OPENFIRE_HOME)/resources/security/keystore"
         comment => "openfire certificates",
         create => "false",
         perms => mog(600, "$(sipx.OPENFIRE_USER)", "$(sipx.OPENFIRE_GROUP)"),
-        copy_from => copy_from_cfdata("ssl-openfire.keystore"),
+        copy_from => copy_from_cfdata("$(sipx.location_id)/ssl-openfire.keystore"),
         classes => if_repaired("restart_openfire");
 
       "/etc/sysconfig/openfire"
