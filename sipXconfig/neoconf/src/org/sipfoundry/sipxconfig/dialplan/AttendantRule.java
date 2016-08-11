@@ -184,6 +184,9 @@ public class AttendantRule extends DialingRule implements Replicable {
 
     public void setLiveAttendant(boolean liveAttendant) {
         m_liveAttendant = liveAttendant;
+        if (liveAttendant) {
+            m_liveAttendantEnabled = true;
+        }
     }
 
     public String getLiveAttendantExtension() {
