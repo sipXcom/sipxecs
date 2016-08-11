@@ -184,7 +184,6 @@ public class AttendantRule extends DialingRule implements Replicable {
 
     public void setLiveAttendant(boolean liveAttendant) {
         m_liveAttendant = liveAttendant;
-        m_liveAttendantEnabled = liveAttendant;
     }
 
     public String getLiveAttendantExtension() {
@@ -225,7 +224,6 @@ public class AttendantRule extends DialingRule implements Replicable {
 
     public void setLiveAttendantEnabled(boolean enable) {
         m_liveAttendantEnabled = enable;
-        m_liveAttendant = enable;
     }
 
     public Date getLiveAttendantExpire() {
@@ -324,7 +322,7 @@ public class AttendantRule extends DialingRule implements Replicable {
         AliasMapping attendantAlias = new AliasMapping(getExtension(), String.format(ATTENDANT_CONTACT,
             getAttendantIdentity(), domainName), ALIAS_RELATION);
 
-        if (isLiveAttendant()) {
+        if (m_liveAttendantEnabled) {
             mappings.add(liveAttendantAlias);
         }
         mappings.add(attendantAlias);
