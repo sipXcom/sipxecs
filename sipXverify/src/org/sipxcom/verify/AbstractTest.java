@@ -225,34 +225,71 @@ public abstract class AbstractTest {
 
     // Backup methods
 
-    public void backupConfigLocally() throws SQLException, InterruptedException {
-        System.out.println("Taking a local Configuration backup..");
-        System.out.println("Making sure only the Configuration checkbox is selected..");
-        DatabaseConnector.executeUpdate("update backup_plan SET def='configuration.tar.gz';");
+    // backups.localBackups
+
+    public void backupSingleLocally(String whatToBackup) throws SQLException, InterruptedException {
+        System.out.println("Executing a " + whatToBackup + " backup..");
+        System.out.println("Making sure only the correct checkbox is selected..");
+        DatabaseConnector.executeUpdate("update backup_plan SET def='" + whatToBackup +"';");
         System.out.println("Checkboxes set through DB");
         System.out.println("Going to System tab");
         clickOnItem(PropertyLoader.getProperty("systemMenuHeader"));
         System.out.println("Going to Backup section");
         clickOnItemWithLinkText(PropertyLoader.getProperty("Backup"));
         clickOnItemWithLinkText(PropertyLoader.getProperty("LocalBackups"));
-        List<WebElement> numberOfConfigArchivesBeforeTest = driver.findElements(By.linkText("configuration.tar.gz"));
+        List<WebElement> numberOfArchivesBeforeTest = driver.findElements(By.linkText(whatToBackup));
         System.out.println("Waiting for Backups list to get populated..");
         Thread.sleep(3000);
-        System.out.println("Number of Configuration archives present in the system before test is: " + numberOfConfigArchivesBeforeTest.size());
+        System.out.println("Number of " + whatToBackup + " archives present in the system before test is: " + numberOfArchivesBeforeTest.size());
         System.out.println("Clicking Backup Now button");
         clickOnItem(PropertyLoader.getProperty("backupNow"));
-        System.out.println("Switching to FTP Backups page to refresh Backups..");
-        clickOnItemWithLinkText(PropertyLoader.getProperty("FTPBackups"));
-        System.out.println("Switching back to Local Backups page..");
+        Thread.sleep(3000);
+        System.out.println("Switching to another page to refresh Backups..");
+        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
+        clickOnItem(PropertyLoader.getProperty("usersMenuSection"));
+        System.out.println("Switching back to Backups page..");
+        clickOnItem(PropertyLoader.getProperty("systemMenuHeader"));
+        clickOnItemWithLinkText(PropertyLoader.getProperty("Backup"));
         clickOnItemWithLinkText(PropertyLoader.getProperty("LocalBackups"));
         System.out.println("Waiting for Backups list to get populated..");
-        Thread.sleep(6000);
-        List<WebElement> numberOfConfigArchivesAfterTest = driver.findElements(By.linkText("configuration.tar.gz"));
-        System.out.println("Number of Configuration archives present in the system after test is: " + numberOfConfigArchivesAfterTest.size());
-        System.out.println("Verifying.. ");
-        Assert.assertTrue(numberOfConfigArchivesAfterTest.size() > numberOfConfigArchivesBeforeTest.size(),"Number of backups after test is the same as before. Backup failed?");
-        System.out.println("Configuration backup successfully executed.\n");
-
+        Thread.sleep(10000);
+        List<WebElement> numberOfArchivesAfterTest = driver.findElements(By.linkText(whatToBackup));
+        System.out.println("Number of " + whatToBackup + " archives present in the system after test is: " + numberOfArchivesAfterTest.size());
+        Assert.assertTrue(numberOfArchivesAfterTest.size() > numberOfArchivesBeforeTest.size(),"Number of " + whatToBackup + " backups after test is the same as before. Backup failed?");
+        System.out.println(whatToBackup + " backup successfully executed.\n");
     }
 
+    public void backupCombinedLocally(String whatToBackup) throws SQLException, InterruptedException {
+        System.out.println("Executing a combined local backup..");
+        System.out.println("Making sure only the correct checkboxes are selected..");
+        DatabaseConnector.executeUpdate("update backup_plan SET def='" + whatToBackup +"';");
+        System.out.println("Checkboxes set through DB");
+        System.out.println("Going to System tab");
+        clickOnItem(PropertyLoader.getProperty("systemMenuHeader"));
+        System.out.println("Going to Backup section");
+        clickOnItemWithLinkText(PropertyLoader.getProperty("Backup"));
+        clickOnItemWithLinkText(PropertyLoader.getProperty("LocalBackups"));
+        List<WebElement> numberOfArchivesBeforeTest = driver.findElements(By.partialLinkText("tar.gz"));
+        System.out.println("Waiting for Backups list to get populated..");
+        Thread.sleep(3000);
+        System.out.println("Number of Archives present in the system before test is: " + numberOfArchivesBeforeTest.size());
+        System.out.println("Clicking Backup Now button");
+        clickOnItem(PropertyLoader.getProperty("backupNow"));
+        Thread.sleep(3000);
+        System.out.println("Switching to another page to refresh Backups..");
+        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
+        clickOnItem(PropertyLoader.getProperty("usersMenuSection"));
+        System.out.println("Switching back to Backups page..");
+        clickOnItem(PropertyLoader.getProperty("systemMenuHeader"));
+        clickOnItemWithLinkText(PropertyLoader.getProperty("Backup"));
+        clickOnItemWithLinkText(PropertyLoader.getProperty("LocalBackups"));
+        System.out.println("Waiting for Backups list to get populated..");
+        Thread.sleep(10000);
+        List<WebElement> numberOfArchivesAfterTest = driver.findElements(By.partialLinkText("tar.gz"));
+        System.out.println("Number of Archives present in the system after test is: " + numberOfArchivesAfterTest.size());
+        Assert.assertTrue(numberOfArchivesAfterTest.size() > numberOfArchivesBeforeTest.size(),"Number of backups after test is the same as before. Backup failed?");
+        System.out.println("Combined backup successfully executed.");
+        System.out.println("Combined backup test needs one minute before continuing tests. Waiting..\n");
+        Thread.sleep(61000);
+    }
 }
