@@ -31,6 +31,7 @@
 #include <boost/bind.hpp>
 #include "TimedMap.h"
 
+#define TEST_TCP_TIMEOUT 1000
 
 class StateQueueDriverTest : boost::noncopyable
 {
@@ -56,7 +57,7 @@ public:
         const std::string& servicePort,
         const std::string& zmqEventId,
         std::size_t poolSize = 1) :
-                StateQueueClient(StateQueueClient::Worker, applicationId, serviceAddress, servicePort, zmqEventId, poolSize),
+                StateQueueClient(StateQueueClient::Worker, applicationId, serviceAddress, servicePort, zmqEventId, poolSize, TEST_TCP_TIMEOUT, TEST_TCP_TIMEOUT),
                 _pThread(0),
                 total(0)
   {

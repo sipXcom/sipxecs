@@ -188,7 +188,13 @@
     	<string/>
       </type>
       <value>New_LDAP</value>
-    </setting>    
+    </setting>
+    <setting name="stripUserName">
+      <type>
+    	<integer/>
+      </type>
+      <value>0</value>
+    </setting>        
   </group>
   <group name="user-portal">
     <setting name="old-portal">

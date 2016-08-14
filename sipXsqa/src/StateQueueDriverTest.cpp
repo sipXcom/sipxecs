@@ -130,7 +130,7 @@ DEFINE_TEST(TestDriver, TestWatcher)
   _pAgent->options().getOption("sqa-control-address", address);
   _pAgent->options().getOption("sqa-control-port", port);
   StateQueueClient* pPublisher = GET_RESOURCE(TestDriver, StateQueueClient*, "simple_publisher");
-  StateQueueClient watcher(StateQueueClient::Watcher, "StateQueueDriverTest", address, port, "watcher-data",  1);
+  StateQueueClient watcher(StateQueueClient::Watcher, "StateQueueDriverTest", address, port, "watcher-data",  1, TEST_TCP_TIMEOUT, TEST_TCP_TIMEOUT);
   boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
   ASSERT_COND(pPublisher->publish("watcher-data-sample", "Hello SQA!", false));
   std::string watcherData;
@@ -147,8 +147,8 @@ DEFINE_TEST(TestDriver, TestPublishAndPersist)
   _pAgent->options().getOption("sqa-control-address", address);
   _pAgent->options().getOption("sqa-control-port", port);
 
-  SQAPublisher publisher("TestPublishAndPersist", address.c_str(), port.c_str(), 1, 100, 100);
-  SQAWatcher watcher("TestPublishAndPersist", address.c_str(), port.c_str(), "pub&persist", 1, 100, 100);
+  SQAPublisher publisher("TestPublishAndPersist", address.c_str(), port.c_str(), 1, TEST_TCP_TIMEOUT, TEST_TCP_TIMEOUT);
+  SQAWatcher watcher("TestPublishAndPersist", address.c_str(), port.c_str(), "pub&persist", 1, TEST_TCP_TIMEOUT, TEST_TCP_TIMEOUT);
   boost::this_thread::sleep(boost::posix_time::milliseconds(100));
   ASSERT_COND(publisher.publishAndPersist(5, "pub&persist", "test-data", 10));
   SQAEvent* pEvent = watcher.watch();
@@ -178,9 +178,9 @@ DEFINE_TEST(TestDriver, TestDealAndPublish)
   int poolSize // Number of active connections to SQA
 )
    */
-  SQADealer dealer("TestDealAndPublish", address.c_str(), port.c_str(), "not", 1, 100, 100);
-  SQAWatcher watcher("TestDealAndPublish", address.c_str(), port.c_str(), "not", 1, 100, 100);
-  SQAWorker worker("TestDealAndPublish", address.c_str(), port.c_str(), "not", 1, 100, 100);
+  SQADealer dealer("TestDealAndPublish", address.c_str(), port.c_str(), "not", 1, SQA_DEFAULT_TCP_TIMEOUT, SQA_DEFAULT_TCP_TIMEOUT);
+  SQAWatcher watcher("TestDealAndPublish", address.c_str(), port.c_str(), "not", 1, SQA_DEFAULT_TCP_TIMEOUT, SQA_DEFAULT_TCP_TIMEOUT);
+  SQAWorker worker("TestDealAndPublish", address.c_str(), port.c_str(), "not", 1, SQA_DEFAULT_TCP_TIMEOUT, SQA_DEFAULT_TCP_TIMEOUT);
   boost::this_thread::sleep(boost::posix_time::milliseconds(100));
   ASSERT_COND(dealer.dealAndPublish("test-data", 20));
   SQAEvent* pEvent = worker.fetchTask();
@@ -243,7 +243,7 @@ DEFINE_TEST(TestDriver, TestMapGetSetPlugin)
   std::string port;
   _pAgent->options().getOption("sqa-control-address", address);
   _pAgent->options().getOption("sqa-control-port", port);
-  SQAWatcher watcher("TestMapGetSetPlugin", address.c_str(), port.c_str(), "dummy", 1, 100, 100);
+  SQAWatcher watcher("TestMapGetSetPlugin", address.c_str(), port.c_str(), "dummy", 1, SQA_DEFAULT_TCP_TIMEOUT, SQA_DEFAULT_TCP_TIMEOUT);
   watcher.mset(10, "TestMapGetSetPlugin", "cseq", "0", 10);
   char* cseq = watcher.mget(10, "TestMapGetSetPlugin", "cseq");
   ASSERT_STR_EQ(cseq, "0");
@@ -275,8 +275,8 @@ bool StateQueueDriverTest::runTests()
   // Define common resource accessible by all unit tests
   //
   DEFINE_RESOURCE(TestDriver, "state_agent", &_agent);
-  DEFINE_RESOURCE(TestDriver, "simple_pop_client", new StateQueueClient(StateQueueClient::Worker, "StateQueueDriverTest", address, port, "reg",  2));
-  DEFINE_RESOURCE(TestDriver, "simple_publisher", new StateQueueClient(StateQueueClient::Publisher, "StateQueueDriverTest", address, port, "reg",  2));
+  DEFINE_RESOURCE(TestDriver, "simple_pop_client", new StateQueueClient(StateQueueClient::Worker, "StateQueueDriverTest", address, port, "reg",  2, TEST_TCP_TIMEOUT, TEST_TCP_TIMEOUT));
+  DEFINE_RESOURCE(TestDriver, "simple_publisher", new StateQueueClient(StateQueueClient::Publisher, "StateQueueDriverTest", address, port, "reg",  2, TEST_TCP_TIMEOUT, TEST_TCP_TIMEOUT));
 
   boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
   

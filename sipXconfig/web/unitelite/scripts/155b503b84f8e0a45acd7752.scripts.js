@@ -3795,7 +3795,7 @@ uw.service('restService', [
               var obj = {
                 number: '',
                 label: '',
-                pattern: /(^\d+|(^(\w+)@([a-zA-Z0-9_.]+)))$/,
+                pattern: /(^\d+|^([+][0-9]+)|(^(\w+)@([a-zA-Z0-9_.]+)))$/,
                 blf: false
               }
               secondary.settings.speed.data.buttons.push(obj);
