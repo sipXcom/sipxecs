@@ -27,7 +27,7 @@ public class LocalBackups extends AbstractTest {
         backupSingleLocally("cdr.tar.gz");
     }
 
-    @Test
+    @Test(dependsOnMethods = {"canBackupSingleLocally"})
     public void canBackupCombinedLocally() throws SQLException, InterruptedException {
         //Executes local backups in different combinations. The passed string is used for the SQL query.
         backupCombinedLocally("configuration.tar.gz,voicemail.tar.gz,cdr.tar.gz");
