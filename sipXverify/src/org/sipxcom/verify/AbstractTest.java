@@ -93,6 +93,10 @@ public abstract class AbstractTest {
         alert.dismiss();
     }
 
+    protected void refreshPage(){
+        driver.navigate().refresh();
+    }
+
 
     // User related methods
 
@@ -243,16 +247,9 @@ public abstract class AbstractTest {
         System.out.println("Number of " + whatToBackup + " archives present in the system before test is: " + numberOfArchivesBeforeTest.size());
         System.out.println("Clicking Backup Now button");
         clickOnItem(PropertyLoader.getProperty("backupNow"));
-        Thread.sleep(3000);
-        System.out.println("Switching to another page to refresh Backups..");
-        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
-        clickOnItem(PropertyLoader.getProperty("usersMenuSection"));
-        System.out.println("Switching back to Backups page..");
-        clickOnItem(PropertyLoader.getProperty("systemMenuHeader"));
-        clickOnItemWithLinkText(PropertyLoader.getProperty("Backup"));
-        clickOnItemWithLinkText(PropertyLoader.getProperty("LocalBackups"));
-        System.out.println("Waiting for Backups list to get populated..");
         Thread.sleep(10000);
+        refreshPage();
+        Thread.sleep(3000);
         List<WebElement> numberOfArchivesAfterTest = driver.findElements(By.linkText(whatToBackup));
         System.out.println("Number of " + whatToBackup + " archives present in the system after test is: " + numberOfArchivesAfterTest.size());
         Assert.assertTrue(numberOfArchivesAfterTest.size() > numberOfArchivesBeforeTest.size(),"Number of " + whatToBackup + " backups after test is the same as before. Backup failed?");
@@ -275,16 +272,9 @@ public abstract class AbstractTest {
         System.out.println("Number of Archives present in the system before test is: " + numberOfArchivesBeforeTest.size());
         System.out.println("Clicking Backup Now button");
         clickOnItem(PropertyLoader.getProperty("backupNow"));
-        Thread.sleep(3000);
-        System.out.println("Switching to another page to refresh Backups..");
-        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
-        clickOnItem(PropertyLoader.getProperty("usersMenuSection"));
-        System.out.println("Switching back to Backups page..");
-        clickOnItem(PropertyLoader.getProperty("systemMenuHeader"));
-        clickOnItemWithLinkText(PropertyLoader.getProperty("Backup"));
-        clickOnItemWithLinkText(PropertyLoader.getProperty("LocalBackups"));
-        System.out.println("Waiting for Backups list to get populated..");
         Thread.sleep(10000);
+        refreshPage();
+        Thread.sleep(3000);
         List<WebElement> numberOfArchivesAfterTest = driver.findElements(By.partialLinkText("tar.gz"));
         System.out.println("Number of Archives present in the system after test is: " + numberOfArchivesAfterTest.size());
         Assert.assertTrue(numberOfArchivesAfterTest.size() > numberOfArchivesBeforeTest.size(),"Number of backups after test is the same as before. Backup failed?");

@@ -3,7 +3,7 @@
 <suite name="Sanity Tests">
   <test name="User Tests">
     <classes>
-      <class name="org.sipxcom.verify.user.UserCreateDelete"/>
+      <class name="org.sipxcom.verify.features.backup.LocalBackups"/>
     </classes>
   </test> <!-- Test -->
   <test name="Features">
