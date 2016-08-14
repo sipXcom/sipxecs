@@ -47,5 +47,11 @@
       <type refid="port" />
       <value>5242</value>
     </setting>
+    <setting name="tcp-timeout">
+      <type>
+        <integer required="yes" />
+      </type>
+      <value>100</value>
+    </setting>
   </group>
 </model>

@@ -281,7 +281,7 @@
                             <td>
                               <input type="text" class="form-control"
                                 data-ng-model="ring.number"
-                                data-ng-pattern="/^\d+$/"
+                                data-ng-pattern="/(^\d+|^([+][0-9]+))$/"
                                 data-ng-required="true">
                             </td>
                             <td>
@@ -435,7 +435,7 @@
                           </tbody>
                         </table>
                       </div>
-                    </form>
+
                       <div class="fwd-sched-btns">
                         <button class="btn btn-default"
                           data-ng-click="userSettings.fwd.sched.cancel(); formSched.$setPristine();"
@@ -454,8 +454,9 @@
                         <span data-ng-if="userSettings.success" class="label label-success animated fadeOut">Success</span>
                         <span data-ng-if="userSettings.warning" class="label label-warning animated fadeOut">Warning</span>
                       </div>
-                    </div>
+                    </form>
                   </div>
+
 
                   <div class="animated fade"
                     data-ng-if="userSettings.fwd.sched.showNew">
@@ -469,6 +470,7 @@
                       </span>
                     </div>
 
+                    <form name="formSchedNew">
                     <div class="table-responsive">
                       <table class="table">
                         <thead>
@@ -525,21 +527,24 @@
                         </tbody>
                       </table>
                     </div>
+                      <button type="button" class="btn btn-default "
+                        data-ng-disabled="!formSchedNew.$dirty || formSchedNew.$invalid|| userSettings.fwd.sched.selected.periods.length === 0"
+                        data-ng-click="userSettings.fwd.sched.addNew();"
+                        >
+                        Add and save
+                      </button>
+                    </form>
                   </div>
 
                   <p class="animated">
-                    <button type="button" class="btn btn-default"
+                    <button type="button" class="btn btn-default "
+                      data-ng-disabled="userSettings.fwd.sched.showNew || userSettings.fwd.sched.selected.periods.length === 0"
                       data-ng-click="userSettings.fwd.sched.addNew();"
-                      data-ng-disabled="userSettings.fwd.sched.selected.periods.length === 0">
-                      <span data-ng-if="userSettings.fwd.sched.showNew">
-                        Add and save
-                      </span>
-                      <span data-ng-if="!userSettings.fwd.sched.showNew">
-                        Add new schedule
-                      </span>
+                      >
+                      Add new schedule
                     </button>
                   </p>
-
+                </div>
 
 
               </div>

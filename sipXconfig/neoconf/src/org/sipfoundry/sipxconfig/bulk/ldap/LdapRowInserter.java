@@ -98,6 +98,7 @@ public class LdapRowInserter extends RowInserter<SearchResult> {
         String userNameWithDefault = null;
         try {
             String userName = m_userMapper.getUserName(attrs);
+            userName = StringUtils.substring(userName, m_adminContext.getStripUserName());
             userNameWithDefault = StringUtils.defaultIfEmpty(userName, EMPTY);
             user = m_coreContext.loadUserByUserName(userName);
             newUser = (user == null);

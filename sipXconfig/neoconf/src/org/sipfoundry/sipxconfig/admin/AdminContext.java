@@ -56,6 +56,8 @@ public interface AdminContext {
 
     String getNewLdapUserGroupNamePrefix();
 
+    int getStripUserName();
+
     boolean isHazelcastEnabled();
 
     boolean isSyncExtAvatar();

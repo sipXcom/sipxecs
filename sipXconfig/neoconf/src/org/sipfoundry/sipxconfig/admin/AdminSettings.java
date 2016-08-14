@@ -45,6 +45,7 @@ public class AdminSettings extends PersistableSettings implements DeployConfigOn
     private static final String AUTHENTICATION_EMAIL_ADDRESS = "configserver-config/email-address";
     private static final String CORS_DOMAIN_SETTING = "configserver-config/corsDomains";
     private static final String NEW_LDAP_USERS_GROUP_PREFIX = "ldap-management/newUserGroupPrefix";
+    private static final String STRIP_USERNAME = "ldap-management/stripUserName";
     private static final String PASSWORD_POLICY = "configserver-config/password-policy";
     private static final String DEFAULT_PASSWORD = "configserver-config/password-default";
     private static final String DEFAULT_PASSWORD_CONFIRM = "configserver-config/password-default-confirm";
@@ -124,6 +125,10 @@ public class AdminSettings extends PersistableSettings implements DeployConfigOn
 
     public String getNewLdapUserGroupNamePrefix() {
         return (String) getSettingTypedValue(NEW_LDAP_USERS_GROUP_PREFIX);
+    }
+
+    public int getStripUsername() {
+        return (Integer) getSettingTypedValue(STRIP_USERNAME);
     }
 
     public void setDisable(boolean disable) {
