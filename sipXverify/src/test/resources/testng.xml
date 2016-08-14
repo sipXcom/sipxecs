@@ -8,7 +8,7 @@
   </test> <!-- Test -->
   <test name="Features">
     <classes>
-      <class name="org.sipxcom.verify.features.BackupLocalConfiguration"/>
+
     </classes>
   </test>
 </suite> <!-- Suite -->
