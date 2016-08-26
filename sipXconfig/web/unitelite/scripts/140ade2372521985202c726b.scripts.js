@@ -3777,13 +3777,14 @@ uw.service('restService', [
 
             data: null,
             init: function () {
+              secondary.settings.errors.speedDials = null;
               restService.getSpeeddial().then(function (data) {
-                for( var i = 0; i < data.buttons.length; i++)
-                  data.buttons[i].pattern = /.*/;
-                secondary.settings.speed.data = data;
-              }).catch(function () {
-                secondary.settings.errors.notAvailable = true;
-              })
+                  for( var i = 0; i < data.buttons.length; i++)
+                    data.buttons[i].pattern = /(^\d+|^([*][0-9]+)|^([+][0-9]+)|(^(\w+)@([a-zA-Z0-9_.]+)))$/;
+                  secondary.settings.speed.data = data;
+                }).catch(function () {
+                  secondary.settings.errors.notAvailable = true;
+                })
             },
 
             removeEntry: function (index) {
@@ -3795,7 +3796,7 @@ uw.service('restService', [
               var obj = {
                 number: '',
                 label: '',
-                pattern: /(^\d+|^([+][0-9]+)|(^(\w+)@([a-zA-Z0-9_.]+)))$/,
+                pattern: /(^\d+|^([*][0-9]+)|^([+][0-9]+)|(^(\w+)@([a-zA-Z0-9_.]+)))$/,
                 blf: false
               }
               secondary.settings.speed.data.buttons.push(obj);
@@ -3825,6 +3826,7 @@ uw.service('restService', [
                 formSpeed.$setPristine();
                 restService.getSpeeddial().then(function (data) {
                   secondary.settings.loading = null;
+                  secondary.settings.errors.speedDials = null;
                   for( var i = 0; i < data.buttons.length; i++)
                     data.buttons[i].pattern = /.*/;
                   secondary.settings.speed.data = data;
@@ -3836,6 +3838,7 @@ uw.service('restService', [
                 secondary.settings.warning = true;
                 secondary.settings.loading = null;
                 console.log(err);
+                secondary.settings.errors.speedDials = true;
               })
             },
 
@@ -4138,7 +4141,8 @@ uw.service('restService', [
             notAvailable: false,
             voicemail:    false,
             confBridge:   false,
-            myBuddy:      false
+            myBuddy:      false,
+            speedDials:   false
           }
         },
 
