@@ -642,6 +642,12 @@
                         </tr>
                       </tbody>
                     </table>
+                    <div class="settings-details-wrapper animated fade" data-ng-if="userSettings.errors.speedDials">
+                      <div class="alert alert-warning">
+                      <p><strong>Wrong Speed Dial typed</strong></p>
+                      You can not subcribed to presence with invalid speed dial.
+                      </div>
+                    </div>
                   </div>
                 </form>
               </div>
