@@ -3828,7 +3828,7 @@ uw.service('restService', [
                   secondary.settings.loading = null;
                   secondary.settings.errors.speedDials = null;
                   for( var i = 0; i < data.buttons.length; i++)
-                    data.buttons[i].pattern = /.*/;
+                    data.buttons[i].pattern = /(^\d+|^([*][0-9]+)|^([+][0-9]+)|(^(\w+)@([a-zA-Z0-9_.]+)))$/;
                   secondary.settings.speed.data = data;
                 }, function (err) {
                   secondary.settings.loading = null;
