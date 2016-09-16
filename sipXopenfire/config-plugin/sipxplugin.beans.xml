@@ -149,6 +149,12 @@
 				<value>org.sipfoundry.openfire.provider.MongoUserPropertiesProvider
 				</value>
 			</entry>
+			<entry>
+				<key>
+					<value>provider.vcard.className</value>
+				</key>
+				<value>org.sipfoundry.openfire.provider.MongoVCardProvider</value>
+			</entry>
 		</map>
 	</property>
 	<property name="nonLdapProperties">
