@@ -71,12 +71,6 @@
 			</entry>
 			<entry>
 				<key>
-					<value>provider.muc.className</value>
-				</key>
-				<value>org.sipfoundry.openfire.provider.MongoMucProvider</value>
-			</entry>
-			<entry>
-				<key>
 					<value>provider.offline.className</value>
 				</key>
 				<value>org.sipfoundry.openfire.provider.MongoOfflineMessageProvider
