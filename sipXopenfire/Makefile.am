@@ -13,6 +13,7 @@ SUBDIRS = \
 	ws-plugin \
 	mongo-lib \
 	mongo-sync-plugin \
+	openfire-plugins \
 	etc \
 	bin
 
