@@ -118,6 +118,7 @@ public class BackupConfig implements ConfigProvider, FeatureListener {
                             backupHost == null ? host.getAddress() : backupHost);
                     }
                 }
+                cfg.write("mem", settings.getMem());
             }
         } finally {
             IOUtils.closeQuietly(cfdat);
