@@ -14,6 +14,8 @@ Url: http://www.sipxcom.org
 BuildRequires: automake
 BuildRequires: libxml2
 BuildRequires: sipxconfig >= %version
+
+Requires: libcgroup 
 Requires: freeswitch >= 1.0.7
 Requires: freeswitch-application-abstraction
 Requires: freeswitch-application-avmd
