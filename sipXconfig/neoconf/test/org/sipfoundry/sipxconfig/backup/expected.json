@@ -62,7 +62,22 @@
             },
             "label" : "Temporary files",
             "description" : "Please make sure that this directory has all the required permissions (if you are unsure of what these permissions are, you can check out the default directory permissions).Please wait for \"Configuration deployment\" to finish in Diagnostics/Job Status in order for the changes to take effect. Note that this temporary directory will also be used in Restore operations."
-          }
+          },
+          "mem" : {
+            "value" : "250",
+            "default" : "250",
+            "type" : {
+              "maxLen" : 255,
+              "minLen" : 0,
+              "multiLine" : false,
+              "name" : "string",
+              "password" : false,
+              "pattern" : null,
+              "required" : false
+            },
+            "label" : "Memory (MB)",
+            "description" : "CGROUP option configuration for maximum memory allocation for the backup process "
+          }          
         }
       },
       "ftp" : {

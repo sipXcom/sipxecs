@@ -37,6 +37,15 @@ bundle agent archive {
       "archive" usebundle => backup_schedules("$(plan)");
     !archive::
       "any" usebundle => disallow_ssh_command("sipx-archive");
+  commands:
+      archive.restart_cgconfig::
+      "/sbin/service"
+        comment => "restart cgconfig",
+        args => "cgconfig restart";
+      archive.restart_cgrules::
+      "/sbin/service"
+        comment => "restart cgred",
+        args => "cgred restart";
 }
 
 bundle agent archive_config(plan) {
@@ -48,6 +57,38 @@ bundle agent archive_config(plan) {
         perms => mog("644", "$(sipx.SIPXPBXUSER)", "$(sipx.SIPXPBXGROUP)"),
         edit_defaults => empty,
         edit_line => expand_template("$(sipx.SIPX_CFDATA)/$(sipx.location_id)/archive-$(plan).yaml");
+      
+      "/etc/cgconfig.d/backup.conf"
+        comment => "cgroup config service settings, $(this.promiser)",
+        create => "true",
+        perms => mog("644", "root", "root"),
+        edit_defaults => empty,
+        edit_line => cgconfig_conf,
+        classes => if_repaired("restart_cgconfig");
+        
+      "/etc/cgrules.conf"
+        comment => "cgroup rules service settings, $(this.promiser)",
+        create => "true",
+        perms => mog("644", "root", "root"),        
+        edit_line => cgrules_conf,
+        classes => if_repaired("restart_cgrules");  
+}
+
+bundle edit_line cgconfig_conf {
+  insert_lines:
+    "group limitmem {
+        memory {
+                memory.limit_in_bytes = $(sipx.mem)m;
+        }
+    }
+    ";
+}
+
+bundle edit_line cgrules_conf {
+  insert_lines:
+    "*:$(sipx.SIPX_BINDIR)/sipx-archive  memory  limitmem/
+*:mongodump memory limitmem/";
+    
 }
 
 # Variables for following backup plans

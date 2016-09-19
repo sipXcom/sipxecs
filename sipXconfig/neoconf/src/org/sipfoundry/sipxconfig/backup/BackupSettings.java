@@ -35,6 +35,7 @@ import org.springframework.beans.factory.annotation.Required;
 public class BackupSettings extends PersistableSettings implements DeployConfigOnEdit {
 
     private static final String TMP_DIR = "general/tmpDir";
+    private static final String MEM = "general/mem";
 
     private static final Log LOG = LogFactory.getLog(BackupSettings.class);
     private String m_localBackupPath;
@@ -99,6 +100,10 @@ public class BackupSettings extends PersistableSettings implements DeployConfigO
     @JsonIgnore
     public String getTmpDir() {
         return (String) getSettingTypedValue(TMP_DIR);
+    }
+
+    public String getMem() {
+        return (String) getSettingTypedValue(MEM);
     }
 
     public Setting getDbSettings() {

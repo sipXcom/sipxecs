@@ -15,6 +15,10 @@
       <type><string/></type>
       <value>/var/sipxdata/tmp</value>
     </setting>
+    <setting name="mem">
+      <type><string/></type>
+      <value>250</value>
+    </setting>
   </group>
   <group name="ftp">  
     <setting name="url">
