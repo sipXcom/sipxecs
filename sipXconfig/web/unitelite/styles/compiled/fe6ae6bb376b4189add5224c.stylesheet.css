@@ -15223,6 +15223,9 @@ select.default {
 #webchat-main .right-side-view .conf .conf-move .part.active:hover .conf-control {
   display: block;
 }
+#webchat-main .right-side-view .conf .conf-move .part.active {
+  cursor: pointer;
+}
 #webchat-main .right-side-view .conf .conf-move .part .icon-volume_speaker_1_mute {
   font-size: 0.9em;
 }

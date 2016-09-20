@@ -2721,7 +2721,7 @@ uw.service('restService', [
             util.changeView(ui.root.templates[10]);
             secondary.conference.participants   = [];
             secondary.voicemail.messages        = [];
-            secondary.voicemail.folder          = {};
+            delete secondary.voicemail.folder;
             secondary.conference.active         = false;
             secondary.conference.timers.cancelAll(true);
             $rootScope.leftSideView = '';
@@ -4801,7 +4801,7 @@ uw.controller('profile', [
     $scope.searchResultClick = function (item) {
       $scope.clicked    = true;
       $scope.displayNo = item.name;
-      $scope.callNo = angular.copy(item.profile.vCard['X-INTERN']);
+      $scope.callNo = item.number;
     }
 
     $scope.$watchCollection('search', function (val) {
