@@ -55,7 +55,7 @@
               </span>
             </span>
             <span class="name">
-              {{ audio.author }}
+              {{ audio.callerIdNumber === "null" ? audio.author : audio.callerIdNumber + '(' + audio.callerIdName + ')' }}
               <span class="label label-primary"
                 data-ng-if="audio.heard === false">New</span>
             </span>-
