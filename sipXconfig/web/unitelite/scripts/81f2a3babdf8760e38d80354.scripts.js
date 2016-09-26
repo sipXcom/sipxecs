@@ -3387,8 +3387,11 @@ uw.service('restService', [
                 secondary.settings.personalAttendant.main = data;
                 secondary.settings.success = false;
                 secondary.settings.warning = false;
+                var language = data.language;
+
                 restService.getPersonalAttendantLang().then(function (data) {
                   secondary.settings.personalAttendant.lang = secondary.settings.personalAttendant.lang.concat(data);
+                  secondary.settings.personalAttendant.main.language = language;
                 })
               })
               .catch(function () {
@@ -3417,9 +3420,9 @@ uw.service('restService', [
               var main = angular.copy(secondary.settings.personalAttendant.main);
               var arr = angular.copy(secondary.settings.personalAttendant.emptyArr);
 
-              if (main.language === 'Default') {
-                main.language = null;
-              }
+              //if (main.language === 'Default') {
+              //  main.language = null;
+              //}
 
               secondary.settings.personalAttendant.showNew = false;
 
