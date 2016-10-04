@@ -4833,7 +4833,7 @@ uw.controller('profile', [
         $scope.startNo = true;
         arr = _.filter(uiService.rosterList.main, function (item) {
           if (item.name && item.number) {
-            return (item.name.indexOf(val) !== -1) || (item.number.indexOf(val) !== -1)
+            return (item.name.toLowerCase().indexOf(val) !== -1) || (item.number.toLowerCase().indexOf(val) !== -1)
           } else {
             return false;
           }
@@ -5685,7 +5685,7 @@ uw.directive('maxHeight', [
       return function (searchArr, keyword) {
         return _.filter(searchArr, function (el) {
           return el.name.toString().toLowerCase().indexOf(keyword.toString().toLowerCase()) > -1 ||
-                      (el.number && el.number.toString().indexOf(keyword) > -1);
+                      (el.number && el.number.toString().toLowerCase().indexOf(keyword.toString().toLowerCase()) > -1);
         })
 
       }
