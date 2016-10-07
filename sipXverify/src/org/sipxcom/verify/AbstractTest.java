@@ -137,6 +137,7 @@ public abstract class AbstractTest {
         System.out.println("User was indeed created\n");
     }
 
+
     public void deleteUser() throws SQLException {
         System.out.println("Deleting user");
         System.out.println("Going to Users tab");
@@ -173,6 +174,64 @@ public abstract class AbstractTest {
 
     public void assertUserCreated(String xpath){
         driver.findElement(By.xpath(xpath));
+    }
+
+    //UserGroup related methods
+
+    public void createUserGroup() {
+        System.out.println("Adding a new user group");
+        System.out.println("Going to Users tab");
+        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
+        System.out.println("Going to Users Group section");
+        clickOnItemWithLinkText(PropertyLoader.getProperty("userGroupSection"));
+        System.out.println("Clicking Add Group Link");
+        clickOnItem(PropertyLoader.getProperty("addNewUserGroupLink"));
+        System.out.println("Clicking Name Field");
+        clickOnItem(PropertyLoader.getProperty("nameField"));
+        System.out.println("Typing User Group Name");
+        sendKeysToField(PropertyLoader.getProperty("userGroup1"),PropertyLoader.getProperty("nameField"));
+        System.out.println("Clicking OK");
+        clickOnItem(PropertyLoader.getProperty("okButton"));
+    }
+
+    public void userGroupCreated() throws SQLException {
+        System.out.println("Verifying User Group was indeed created");
+        System.out.println("Going to Users tab");
+        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
+        System.out.println("Going to Users Group section");
+        clickOnItemWithLinkText(PropertyLoader.getProperty("userGroupSection"));
+        System.out.println("Verifying User Group was created - composing xpath...");
+        assertUserCreated(".//*[@id='group_"+PropertyLoader.getProperty("userGroup1")+"_link']");
+        System.out.println("Verifying User Group is in Database");
+        List<String> valueInDb = DatabaseConnector.getQuery("select name from group_storage where name='"+PropertyLoader.getProperty("userGroup1")+"'");
+        assertEquals(valueInDb.get(0),PropertyLoader.getProperty("userGroup1"));
+        System.out.println("User Group was indeed created\n");
+    }
+
+    public void deleteUserGroup() throws SQLException {
+        System.out.println("Deleting user group");
+        System.out.println("Going to Users tab");
+        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
+        System.out.println("Going to Users Group section");
+        clickOnItemWithLinkText(PropertyLoader.getProperty("userGroupSection"));
+        System.out.println("Clicking on the user group's check box");
+        // Checkbox can be identified only if User Group position is 3rd in Group list
+        // 1st row administrators, 2nd row OpenUC-reach-agents
+        clickOnItem(PropertyLoader.getProperty("3rdUserGroupCheckbox"));
+        System.out.println("Clicking on delete button");
+        clickOnItem(PropertyLoader.getProperty("deleteGroupButton"));
+        System.out.println("Clicking Yes on the confirmation popup");
+        alertAccept();
+        System.out.println("User Group deleted\n");
+    }
+    public void userGroupDeleted() throws SQLException {
+        System.out.println("Verifying user group was indeed deleted");
+        System.out.println("Verifying user group is not visible anymore in UI");
+        assertUserErrorNotPresent(".//*[@id='group_"+PropertyLoader.getProperty("userGroup1")+"_link']");
+        System.out.println("Verifying user group is not present in Db anymore");
+        List<String> valueInDb = DatabaseConnector.getQuery("select name from group_storage where name='"+PropertyLoader.getProperty("userGroup1")+"'");
+        valueInDb.isEmpty();
+        System.out.println("User group was indeed deleted\n");
     }
 
     //Phone related methods
