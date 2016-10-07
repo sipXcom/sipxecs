@@ -289,7 +289,7 @@ public abstract class AbstractEslRequestController implements EslRequestControll
     }
 
     public String getFreeswitchIpAndPort() {
-        return getVariable("FreeSWITCH-IPv4") + ":15060";
+        return getVariable("variable_sip_local_network_addr") + ":15060";
     }
 
     public void setBridgedTransfer(boolean bridge) {
