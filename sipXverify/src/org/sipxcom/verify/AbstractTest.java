@@ -241,6 +241,64 @@ public abstract class AbstractTest {
         System.out.println("User group was indeed deleted\n");
     }
 
+    //Admin roles methods
+
+    public void createAdminRole(){
+        System.out.println("Adding a new Admin role");
+        System.out.println("Going to Users tab");
+        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
+        System.out.println("Going to Admin Roles section");
+        clickOnItemWithLinkText(PropertyLoader.getProperty("adminRolesSection"));
+        System.out.println("Clicking the Add New Role link");
+        clickOnItem(PropertyLoader.getProperty("addNewRoleLink"));
+        System.out.println("Going to Settings sub-section");
+        clickOnItem(PropertyLoader.getProperty("adminRolesSettings"));
+        System.out.println("Setting Admin Role name");
+        sendKeysToField(PropertyLoader.getProperty("adminRole1"), PropertyLoader.getProperty("nameField"));
+        System.out.println("Clicking Ok");
+        clickOnItem(PropertyLoader.getProperty("okButton"));
+        System.out.println("Admin Role created\n");
+    }
+
+    public void adminRoleCreated() throws SQLException {
+        System.out.println("Verifying Admin Roles was indeed created");
+        System.out.println("Going to Users tab");
+        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
+        System.out.println("Going to Admin Roles section");
+        clickOnItemWithLinkText(PropertyLoader.getProperty("adminRolesSection"));
+        System.out.println("Verifying Admin Role was created ...");
+        findItemByXpath(PropertyLoader.getProperty("firstAdminRoleCheckbox"));
+        System.out.println("Verifying Admin Role is in Database");
+        List<String> valueInDb = DatabaseConnector.getQuery("select name from admin_role where name='"+PropertyLoader.getProperty("adminRole1")+"'");
+        assertEquals(valueInDb.get(0),PropertyLoader.getProperty("adminRole1"));
+        System.out.println("Admin Role was indeed created\n");
+    }
+
+    public void deleteAdminRole() throws SQLException {
+        System.out.println("Deleting Admin Role");
+        System.out.println("Going to Users tab");
+        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
+        System.out.println("Going to Admin Roles section");
+        clickOnItemWithLinkText(PropertyLoader.getProperty("adminRolesSection"));
+        System.out.println("Clicking on the Admin Roles's check box");
+        // We are looking for the 1st occurrence of Admin role
+        clickOnItem(PropertyLoader.getProperty("firstAdminRoleCheckbox"));
+        System.out.println("Clicking on delete button");
+        clickOnItem(PropertyLoader.getProperty("deleteAdminRoleCheckbox"));
+        System.out.println("Clicking Yes on the confirmation popup");
+        alertAccept();
+        System.out.println("Admin Role deleted\n");
+    }
+    public void adminRoleDeleted() throws SQLException {
+        System.out.println("Verifying Admin Role was indeed deleted");
+        System.out.println("Verifying Admin Role is not visible anymore in UI");
+        assertUserErrorNotPresent(PropertyLoader.getProperty("firstAdminRoleLink"));
+        System.out.println("Verifying Admin Role is not present in Db anymore");
+        List<String> valueInDb = DatabaseConnector.getQuery("select name from admin_role where name='"+PropertyLoader.getProperty("adminRole1")+"'");
+        valueInDb.isEmpty();
+        System.out.println("Admin Role was indeed deleted\n");
+    }
+
     //Phone related methods
 
     public void configureLineOnAutoProvisionedPhone() throws InterruptedException {
