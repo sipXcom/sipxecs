@@ -13,6 +13,7 @@ public class UserGroupCreateDelete extends AbstractTest{
     @Test
     public void canCreateUserGroup(){
         System.out.println("\n");
+        System.out.println("#### Running test " + this.getClass().getSimpleName()+" ####\n");
         createUserGroup();
     }
 
