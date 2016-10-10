@@ -100,6 +100,13 @@ public abstract class AbstractTest {
 
     // User related methods
 
+    public void logout(){
+        System.out.println("Logging user out of portal");
+        clickOnItem(PropertyLoader.getProperty("logoutButton"));
+        findItemByXpath(PropertyLoader.getProperty("loginForm"));
+        System.out.println("User is now logged out of portal");
+    }
+
     public void createUser() {
         System.out.println("Adding a new user");
         System.out.println("Going to Users tab");
