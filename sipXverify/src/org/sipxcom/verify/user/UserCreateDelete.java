@@ -19,12 +19,12 @@ public class UserCreateDelete extends AbstractTest {
     public void canCreateUser(){
         System.out.println("\n");
         System.out.println("#### Running test " + this.getClass().getSimpleName()+" ####\n");
-        createUser();
+        createUser("user1.name");
     }
 
     @Test(dependsOnMethods = {"canCreateUser"})
     public void validateUserCreated() throws SQLException {
-        userCreated();
+        userCreated("user1.name");
     }
 
     @Test(dependsOnMethods = {"canCreateUser","validateUserCreated"})
@@ -34,7 +34,7 @@ public class UserCreateDelete extends AbstractTest {
 
     @Test(dependsOnMethods = {"canCreateUser","validateUserCreated","canDeleteUser"})
     public void validateUserDeleted() throws SQLException {
-        userDeleted();
+        userDeleted("user1.name");
     }
 
 }

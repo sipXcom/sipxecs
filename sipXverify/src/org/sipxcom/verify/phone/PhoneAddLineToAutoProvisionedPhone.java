@@ -7,7 +7,7 @@ public class PhoneAddLineToAutoProvisionedPhone extends AbstractTest {
 
     @Test
     public void canConfigureLineOnPhone() throws InterruptedException {
-        createUser();
+        createUser("user1.name");
         configureLineOnAutoProvisionedPhone();
     }
 
