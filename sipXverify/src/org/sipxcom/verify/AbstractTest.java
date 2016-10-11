@@ -107,7 +107,7 @@ public abstract class AbstractTest {
         System.out.println("User is now logged out of portal");
     }
 
-    public void createUser() {
+    public void createUser(String username) {
         System.out.println("Adding a new user");
         System.out.println("Going to Users tab");
         clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
@@ -118,11 +118,11 @@ public abstract class AbstractTest {
         System.out.println("Clearing out the UserID field");
         clearField(PropertyLoader.getProperty("userId"));
         System.out.println("Typing the UserID");
-        sendKeysToField(PropertyLoader.getProperty("user1.name"),PropertyLoader.getProperty("userId"));
-        System.out.println("Clearing out the imId field");
+        sendKeysToField(PropertyLoader.getProperty(username),PropertyLoader.getProperty("userId"));
+        System.out.println("Clearing out the IM ID field");
         clearField(PropertyLoader.getProperty("imId"));
         System.out.println("Typing the IM ID");
-        sendKeysToField(PropertyLoader.getProperty("user1.name"),PropertyLoader.getProperty("imId"));
+        sendKeysToField(PropertyLoader.getProperty(username),PropertyLoader.getProperty("imId"));
         System.out.println("Clicking Ok");
         clickOnItem(PropertyLoader.getProperty("okButton"));
         System.out.println("User created\n");
@@ -130,17 +130,17 @@ public abstract class AbstractTest {
     }
 
 
-    public void userCreated() throws SQLException {
+    public void userCreated(String username) throws SQLException {
         System.out.println("Verifying user was indeed created");
         System.out.println("Going to Users tab");
         clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
         System.out.println("Going to Users section");
         clickOnItem(PropertyLoader.getProperty("usersMenuSection"));
         System.out.println("Verifying user was created - composing xpath...");
-        assertUserCreated(".//*[@id='user_"+PropertyLoader.getProperty("user1.name")+"_link']");
+        assertUserCreated(".//*[@id='user_"+PropertyLoader.getProperty(username)+"_link']");
         System.out.println("Verifying user is in Database");
         List<String> valueInDb = DatabaseConnector.getQuery("select user_name from users where user_name='"+PropertyLoader.getProperty("user1.name")+"'");
-        assertEquals(valueInDb.get(0),PropertyLoader.getProperty("user1.name"));
+        assertEquals(valueInDb.get(0),PropertyLoader.getProperty(username));
         System.out.println("User was indeed created\n");
     }
 
@@ -160,11 +160,11 @@ public abstract class AbstractTest {
         System.out.println("User deleted\n");
     }
 
-    public void userDeleted() throws SQLException {
+    public void userDeleted(String username) throws SQLException {
         System.out.println("Verifying user was indeed deleted");
         System.out.println("Verifying user is not visible anymore in UI");
-        assertUserErrorNotPresent(".//*[@id='user_"+PropertyLoader.getProperty("user1.name")+"_link']");
-        System.out.println("Verifying user is not present in Db anymore");
+        assertUserErrorNotPresent(".//*[@id='user_"+PropertyLoader.getProperty(username)+"_link']");
+        System.out.println("Verifying user is not present in DB anymore");
         List<String> valueInDb = DatabaseConnector.getQuery("select user_name from users where user_name='"+PropertyLoader.getProperty("user1.name")+"'");
         valueInDb.isEmpty();
         System.out.println("User was indeed deleted\n");
@@ -194,9 +194,10 @@ public abstract class AbstractTest {
         clickOnItem(PropertyLoader.getProperty("selectButton"));
     }
 
+
     //UserGroup related methods
 
-    public void createUserGroup() {
+    public void createUserGroup(String usergroupname) {
         System.out.println("Adding a new user group");
         System.out.println("Going to Users tab");
         clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
@@ -207,20 +208,20 @@ public abstract class AbstractTest {
         System.out.println("Clicking Name Field");
         clickOnItem(PropertyLoader.getProperty("nameField"));
         System.out.println("Typing User Group Name");
-        sendKeysToField(PropertyLoader.getProperty("userGroup1"),PropertyLoader.getProperty("nameField"));
+        sendKeysToField(PropertyLoader.getProperty(usergroupname),PropertyLoader.getProperty("nameField"));
         System.out.println("Clicking OK");
         clickOnItem(PropertyLoader.getProperty("okButton"));
         System.out.println("User Group created\n");
     }
 
-    public void userGroupCreated() throws SQLException {
+    public void userGroupCreated(String usergroupname) throws SQLException {
         System.out.println("Verifying User Group was indeed created");
         System.out.println("Going to Users tab");
         clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
         System.out.println("Going to Users Group section");
         clickOnItemWithLinkText(PropertyLoader.getProperty("userGroupSection"));
         System.out.println("Verifying User Group was created - composing xpath...");
-        assertUserCreated(".//*[@id='group_"+PropertyLoader.getProperty("userGroup1")+"_link']");
+        assertUserCreated(".//*[@id='group_"+PropertyLoader.getProperty(usergroupname)+"_link']");
         System.out.println("Verifying User Group is in Database");
         List<String> valueInDb = DatabaseConnector.getQuery("select name from group_storage where name='"+PropertyLoader.getProperty("userGroup1")+"'");
         assertEquals(valueInDb.get(0),PropertyLoader.getProperty("userGroup1"));
@@ -243,15 +244,71 @@ public abstract class AbstractTest {
         alertAccept();
         System.out.println("User Group deleted\n");
     }
-    public void userGroupDeleted() throws SQLException {
+
+    public void userGroupDeleted(String usergroupname) throws SQLException {
         System.out.println("Verifying user group was indeed deleted");
         System.out.println("Verifying user group is not visible anymore in UI");
-        assertUserErrorNotPresent(".//*[@id='group_"+PropertyLoader.getProperty("userGroup1")+"_link']");
+        assertUserErrorNotPresent(".//*[@id='group_"+PropertyLoader.getProperty(usergroupname)+"_link']");
         System.out.println("Verifying user group is not present in Db anymore");
         List<String> valueInDb = DatabaseConnector.getQuery("select name from group_storage where name='"+PropertyLoader.getProperty("userGroup1")+"'");
         valueInDb.isEmpty();
         System.out.println("User group was indeed deleted\n");
     }
+
+    public void addUserToUserGroup(String username, String usergroupname){
+
+        createUser(username);
+        createUserGroup(usergroupname);
+        System.out.println("Going to Users tab");
+        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
+        System.out.println("Going to Users section");
+        clickOnItem(PropertyLoader.getProperty("usersMenuSection"));
+        System.out.println("Going to User identification page");
+        clickOnItem(".//*[@id='user_"+PropertyLoader.getProperty(username)+"_link']");
+        System.out.println("Assigning User to User Group");
+        sendKeysToField(PropertyLoader.getProperty(usergroupname),PropertyLoader.getProperty("groupsField"));
+        clickOnItem(PropertyLoader.getProperty("okButton"));
+        System.out.println("User added to user group\n");
+
+    }
+
+    public void userAddedToUserGroup(String username){
+        System.out.println("Verifying User was added to User Group");
+        System.out.println("Going to Users tab");
+        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
+        System.out.println("Going to Users Group section");
+        clickOnItemWithLinkText(PropertyLoader.getProperty("userGroupSection"));
+        System.out.println("Clicking Member group link for the 3rd User Group");
+        clickOnItem(PropertyLoader.getProperty("3rdUserGroupMemberLink"));
+        System.out.println("Verifying user is one of the user group members..");
+        assertUserCreated(".//*[@id='user_"+PropertyLoader.getProperty(username)+"_link']");
+        System.out.println("User is indeed part of the user group\n");
+    }
+
+    public void removeUserFromUserGroup(String username){
+        System.out.println("Removing user from user group");
+        System.out.println("Going to Users tab");
+        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
+        System.out.println("Going to Users section");
+        clickOnItem(PropertyLoader.getProperty("usersMenuSection"));
+        System.out.println("Going to User identification page");
+        clickOnItem(".//*[@id='user_"+PropertyLoader.getProperty(username)+"_link']");
+        System.out.println("Removing User from User Group");
+        clearField(PropertyLoader.getProperty("groupsField"));
+        clickOnItem(PropertyLoader.getProperty("okButton"));
+        System.out.println("User removed from group.\n");
+    }
+
+//    public void userRemovedFromUserGroup(){
+//        System.out.println("Verifying user was indeed removed from user group..");
+//        System.out.println("Going to Users tab");
+//        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
+//        System.out.println("Going to Users Group section");
+//        clickOnItemWithLinkText(PropertyLoader.getProperty("userGroupSection"));
+//        System.out.println("Verifying Member link for 3rd Group is not visible anymore in UI");
+//        assertUserErrorNotPresent(PropertyLoader.getProperty("3rdUserGroupMemberLink"));
+//        System.out.println("User was indeed removed from user group\n");
+//    }
 
     //Admin roles methods
 
@@ -301,6 +358,7 @@ public abstract class AbstractTest {
         alertAccept();
         System.out.println("Admin Role deleted\n");
     }
+
     public void adminRoleDeleted() throws SQLException {
         System.out.println("Verifying Admin Role was indeed deleted");
         System.out.println("Verifying Admin Role is not visible anymore in UI");
@@ -458,4 +516,6 @@ public abstract class AbstractTest {
         System.out.println("Combined backup test needs one minute before continuing tests. Waiting..\n");
         Thread.sleep(61000);
     }
+
+
 }
