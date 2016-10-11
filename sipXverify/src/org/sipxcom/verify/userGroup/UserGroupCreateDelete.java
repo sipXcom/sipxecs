@@ -14,12 +14,12 @@ public class UserGroupCreateDelete extends AbstractTest{
     public void canCreateUserGroup(){
         System.out.println("\n");
         System.out.println("#### Running test " + this.getClass().getSimpleName()+" ####\n");
-        createUserGroup();
+        createUserGroup("userGroup1");
     }
 
     @Test(dependsOnMethods = {"canCreateUserGroup"})
     public void validateUserGroupCreated() throws SQLException {
-        userGroupCreated();
+        userGroupCreated("userGroup1");
     }
 
     @Test(dependsOnMethods = {"canCreateUserGroup","validateUserGroupCreated"})
@@ -29,7 +29,7 @@ public class UserGroupCreateDelete extends AbstractTest{
 
     @Test(dependsOnMethods = {"canCreateUserGroup","validateUserGroupCreated","canDeleteUserGroup"})
     public void validateUserGroupDeleted() throws SQLException {
-        userGroupDeleted();
+        userGroupDeleted("userGroup1");
     }
 
 }
