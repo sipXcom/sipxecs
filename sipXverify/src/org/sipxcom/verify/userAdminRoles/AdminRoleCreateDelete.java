@@ -5,9 +5,6 @@ import org.testng.annotations.Test;
 
 import java.sql.SQLException;
 
-/**
- * Created by cmoisa on 10/10/2016.
- */
 public class AdminRoleCreateDelete extends AbstractTest {
     @Test
     public void canCreateAdminRole(){
