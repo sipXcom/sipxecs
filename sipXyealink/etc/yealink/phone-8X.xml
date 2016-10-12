@@ -1024,6 +1024,7 @@
 	<group name="iant" hidden="no">
 		<setting name="bw.feature_key_sync"><type><boolean/></type><value>0</value></setting>
 		<setting name="bw.enable"><type><boolean/></type><value>0</value></setting>
+		<setting name="features.dnd.feature_key_sync.enable"><type><boolean/></type><value>0</value></setting>
 		<setting name="sip.notify_reboot_enable"><type refid="CheckSyncReboot_type"/><value>0</value></setting>
 		<setting name="phone_setting.backgrounds"><type><string/></type><value>Default:Default.png</value></setting>
 	</group>
