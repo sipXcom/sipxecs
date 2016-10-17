@@ -183,6 +183,17 @@ public abstract class AbstractTest {
         driver.findElement(By.xpath(xpath));
     }
 
+    public void searchAndSelectUser(String user){
+        System.out.println("Typing the UserID in the User Search field");
+        sendKeysToField(PropertyLoader.getProperty(user),PropertyLoader.getProperty("userSearchField"));
+        System.out.println("Clicking Search button");
+        clickOnItem(PropertyLoader.getProperty("searchButton"));
+        System.out.println("Selecting first result check box");
+        clickOnItem(PropertyLoader.getProperty("firstSearchResultCheckbox"));
+        System.out.println("Clicking Select button");
+        clickOnItem(PropertyLoader.getProperty("selectButton"));
+    }
+
 
     //UserGroup related methods
 
@@ -200,6 +211,7 @@ public abstract class AbstractTest {
         sendKeysToField(PropertyLoader.getProperty(usergroupname),PropertyLoader.getProperty("nameField"));
         System.out.println("Clicking OK");
         clickOnItem(PropertyLoader.getProperty("okButton"));
+        System.out.println("User Group created\n");
     }
 
     public void userGroupCreated(String usergroupname) throws SQLException {
@@ -357,6 +369,53 @@ public abstract class AbstractTest {
         System.out.println("Admin Role was indeed deleted\n");
     }
 
+    public void assignAdminRole(){
+        System.out.println("Assigning Admin Role.. ");
+        System.out.println("Configuring Admin Role with Permissions..");
+        System.out.println("Going to Users tab");
+        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
+        System.out.println("Going to Admin Roles section");
+        clickOnItemWithLinkText(PropertyLoader.getProperty("adminRolesSection"));
+        System.out.println("Going to first Admin Role in the list ");
+        clickOnItem(PropertyLoader.getProperty("firstAdminRoleLink"));
+        System.out.println("Going to Permissions sub-section");
+        clickOnItem(PropertyLoader.getProperty("adminRolesPermissions"));
+        System.out.println("Selecting first permission in the Available list, should be: General: Search");
+        clickOnItem(PropertyLoader.getProperty("firstPermissionInAvailableTable"));
+        System.out.println("Moving permission in the Selected table.. Clicking Select arrow");
+        clickOnItem(PropertyLoader.getProperty("selectArrow"));
+        findItemByXpath(PropertyLoader.getProperty("firstPermissionInSelectedTable"));
+        System.out.println("Permission selected");
+        System.out.println("Clicking Ok, to save changes.");
+        clickOnItem(PropertyLoader.getProperty("okButton"));
+        System.out.println("Assigning Admin Role to new Administrator..");
+        System.out.println("Going to first Admin Role in the list ");
+        clickOnItem(PropertyLoader.getProperty("firstAdminRoleLink"));
+        System.out.println("Going to Settings sub-section");
+        clickOnItem(PropertyLoader.getProperty("adminRolesSettings"));
+        System.out.println("Clicking Add Administrators in Role link");
+        clickOnItem(PropertyLoader.getProperty("addAdministratorsInRoleLink"));
+        System.out.println("Searching and Selecting an user/administrator");
+        searchAndSelectUser("user1.name");
+        System.out.println("Checking Admin Role is now assigned to administrator..");
+        findItemByXpath(PropertyLoader.getProperty("firstAdministratorInRoleCheckbox"));
+        System.out.println("Admin Role assigned");
+        System.out.println("Clicking Ok to save changes.");
+        clickOnItem(PropertyLoader.getProperty("okButton"));
+    }
+
+    public void adminRoleAssigned(){
+        System.out.println("Verifying the Admin Role was set and that the administrator has the defined permissions..");
+        logout();
+        System.out.println("Logging in new Administrator");
+        sendKeysToField(PropertyLoader.getProperty("user1.name"), PropertyLoader.getProperty("usernameField"));
+        sendKeysToField(PropertyLoader.getProperty("user1.password"), PropertyLoader.getProperty("passwordField"));
+        clickOnItem(PropertyLoader.getProperty("loginButton"));
+        System.out.println("Verifying Admin has the search function available");
+        sendKeysToField(PropertyLoader.getProperty("user1.name"),PropertyLoader.getProperty("searchField"));
+        System.out.println("Feature is present.\n");
+    }
+
     //Phone related methods
 
     public void configureLineOnAutoProvisionedPhone() throws InterruptedException {
@@ -372,14 +431,7 @@ public abstract class AbstractTest {
         clickOnItem(PropertyLoader.getProperty("linesSection"));
         System.out.println("Clicking Add Line link");
         clickOnItem(PropertyLoader.getProperty("addLineLink"));
-        System.out.println("Typing the UserID in the User Search field");
-        sendKeysToField(PropertyLoader.getProperty("user1.name"),PropertyLoader.getProperty("userSearchField"));
-        System.out.println("Clicking Search button");
-        clickOnItem(PropertyLoader.getProperty("searchButton"));
-        System.out.println("Selecting first result check box");
-        clickOnItem(PropertyLoader.getProperty("firstSearchResultCheckbox"));
-        System.out.println("Clicking Select button");
-        clickOnItem(PropertyLoader.getProperty("selectButton"));
+        searchAndSelectUser("user1.name");
         System.out.println("Verifying newly added line is visible under Lines section");
         driver.findElement(By.xpath(PropertyLoader.getProperty("firstLine")));
         System.out.println("Going to Identification section");
