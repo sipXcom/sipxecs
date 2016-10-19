@@ -107,12 +107,16 @@ public abstract class AbstractTest {
         System.out.println("User is now logged out of portal");
     }
 
-    public void createUser(String username) {
-        System.out.println("Adding a new user");
+    public void goToUsersSection() {
         System.out.println("Going to Users tab");
         clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
         System.out.println("Going to Users section");
         clickOnItem(PropertyLoader.getProperty("usersMenuSection"));
+    }
+
+    public void createUser(String username) {
+        System.out.println("Adding a new user");
+        goToUsersSection();
         System.out.println("Clicking the Add New User link");
         clickOnItem(PropertyLoader.getProperty("addNewUserLink"));
         System.out.println("Clearing out the UserID field");
@@ -132,10 +136,7 @@ public abstract class AbstractTest {
 
     public void userCreated(String username) throws SQLException {
         System.out.println("Verifying user was indeed created");
-        System.out.println("Going to Users tab");
-        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
-        System.out.println("Going to Users section");
-        clickOnItem(PropertyLoader.getProperty("usersMenuSection"));
+        goToUsersSection();
         System.out.println("Verifying user was created - composing xpath...");
         assertUserCreated(".//*[@id='user_"+PropertyLoader.getProperty(username)+"_link']");
         System.out.println("Verifying user is in Database");
@@ -147,10 +148,7 @@ public abstract class AbstractTest {
 
     public void deleteUser() throws SQLException {
         System.out.println("Deleting user");
-        System.out.println("Going to Users tab");
-        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
-        System.out.println("Going to Users section");
-        clickOnItem(PropertyLoader.getProperty("usersMenuSection"));
+        goToUsersSection();
         System.out.println("Clicking on the first user check box");
         clickOnItem(PropertyLoader.getProperty("firstUserCheckbox"));
         System.out.println("Clicking on delete button");
@@ -197,12 +195,16 @@ public abstract class AbstractTest {
 
     //UserGroup related methods
 
-    public void createUserGroup(String usergroupname) {
-        System.out.println("Adding a new user group");
+    public void goToUserGroupsSection() {
         System.out.println("Going to Users tab");
         clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
         System.out.println("Going to Users Group section");
         clickOnItemWithLinkText(PropertyLoader.getProperty("userGroupSection"));
+    }
+
+    public void createUserGroup(String usergroupname) {
+        System.out.println("Adding a new user group");
+        goToUserGroupsSection();
         System.out.println("Clicking Add Group Link");
         clickOnItem(PropertyLoader.getProperty("addNewUserGroupLink"));
         System.out.println("Clicking Name Field");
@@ -216,10 +218,7 @@ public abstract class AbstractTest {
 
     public void userGroupCreated(String usergroupname) throws SQLException {
         System.out.println("Verifying User Group was indeed created");
-        System.out.println("Going to Users tab");
-        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
-        System.out.println("Going to Users Group section");
-        clickOnItemWithLinkText(PropertyLoader.getProperty("userGroupSection"));
+        goToUserGroupsSection();
         System.out.println("Verifying User Group was created - composing xpath...");
         assertUserCreated(".//*[@id='group_"+PropertyLoader.getProperty(usergroupname)+"_link']");
         System.out.println("Verifying User Group is in Database");
@@ -230,10 +229,7 @@ public abstract class AbstractTest {
 
     public void deleteUserGroup() throws SQLException {
         System.out.println("Deleting user group");
-        System.out.println("Going to Users tab");
-        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
-        System.out.println("Going to Users Group section");
-        clickOnItemWithLinkText(PropertyLoader.getProperty("userGroupSection"));
+        goToUserGroupsSection();
         System.out.println("Clicking on the user group's check box");
         // Checkbox can be identified only if User Group position is 3rd in Group list
         // 1st row administrators, 2nd row OpenUC-reach-agents
@@ -256,28 +252,33 @@ public abstract class AbstractTest {
     }
 
     public void addUserToUserGroup(String username, String usergroupname){
-
+        //This will assign a new user to a new user group
         createUser(username);
         createUserGroup(usergroupname);
-        System.out.println("Going to Users tab");
-        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
-        System.out.println("Going to Users section");
-        clickOnItem(PropertyLoader.getProperty("usersMenuSection"));
+        goToUsersSection();
         System.out.println("Going to User identification page");
         clickOnItem(".//*[@id='user_"+PropertyLoader.getProperty(username)+"_link']");
         System.out.println("Assigning User to User Group");
         sendKeysToField(PropertyLoader.getProperty(usergroupname),PropertyLoader.getProperty("groupsField"));
         clickOnItem(PropertyLoader.getProperty("okButton"));
         System.out.println("User added to user group\n");
+    }
 
+    public void addUserToAdministratorsUserGroup(String username){
+        //This is going to assign a new user to the already existing Administrators group
+        createUser(username);
+        goToUsersSection();
+        System.out.println("Going to User identification page");
+        clickOnItem(".//*[@id='user_"+PropertyLoader.getProperty(username)+"_link']");
+        System.out.println("Assigning User to User Group");
+        sendKeysToField(PropertyLoader.getProperty("administratorsGroup"),PropertyLoader.getProperty("groupsField"));
+        clickOnItem(PropertyLoader.getProperty("okButton"));
+        System.out.println("User added to user group\n");
     }
 
     public void userAddedToUserGroup(String username){
         System.out.println("Verifying User was added to User Group");
-        System.out.println("Going to Users tab");
-        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
-        System.out.println("Going to Users Group section");
-        clickOnItemWithLinkText(PropertyLoader.getProperty("userGroupSection"));
+        goToUserGroupsSection();
         System.out.println("Clicking Member group link for the 3rd User Group");
         clickOnItem(PropertyLoader.getProperty("3rdUserGroupMemberLink"));
         System.out.println("Verifying user is one of the user group members..");
@@ -287,10 +288,7 @@ public abstract class AbstractTest {
 
     public void removeUserFromUserGroup(String username){
         System.out.println("Removing user from user group");
-        System.out.println("Going to Users tab");
-        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
-        System.out.println("Going to Users section");
-        clickOnItem(PropertyLoader.getProperty("usersMenuSection"));
+        goToUsersSection();
         System.out.println("Going to User identification page");
         clickOnItem(".//*[@id='user_"+PropertyLoader.getProperty(username)+"_link']");
         System.out.println("Removing User from User Group");
@@ -312,12 +310,16 @@ public abstract class AbstractTest {
 
     //Admin roles methods
 
-    public void createAdminRole(){
-        System.out.println("Adding a new Admin role");
+    public void goToAdminRolesSection() {
         System.out.println("Going to Users tab");
         clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
         System.out.println("Going to Admin Roles section");
         clickOnItemWithLinkText(PropertyLoader.getProperty("adminRolesSection"));
+    }
+
+    public void createAdminRole(){
+        System.out.println("Adding a new Admin role");
+        goToAdminRolesSection();
         System.out.println("Clicking the Add New Role link");
         clickOnItem(PropertyLoader.getProperty("addNewRoleLink"));
         System.out.println("Going to Settings sub-section");
@@ -331,10 +333,7 @@ public abstract class AbstractTest {
 
     public void adminRoleCreated() throws SQLException {
         System.out.println("Verifying Admin Roles was indeed created");
-        System.out.println("Going to Users tab");
-        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
-        System.out.println("Going to Admin Roles section");
-        clickOnItemWithLinkText(PropertyLoader.getProperty("adminRolesSection"));
+        goToAdminRolesSection();
         System.out.println("Verifying Admin Role was created ...");
         findItemByXpath(PropertyLoader.getProperty("firstAdminRoleCheckbox"));
         System.out.println("Verifying Admin Role is in Database");
@@ -343,12 +342,9 @@ public abstract class AbstractTest {
         System.out.println("Admin Role was indeed created\n");
     }
 
-    public void deleteAdminRole() throws SQLException {
+    public void deleteAdminRole() {
         System.out.println("Deleting Admin Role");
-        System.out.println("Going to Users tab");
-        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
-        System.out.println("Going to Admin Roles section");
-        clickOnItemWithLinkText(PropertyLoader.getProperty("adminRolesSection"));
+        goToAdminRolesSection();
         System.out.println("Clicking on the Admin Roles's check box");
         // We are looking for the 1st occurrence of Admin role
         clickOnItem(PropertyLoader.getProperty("firstAdminRoleCheckbox"));
@@ -372,10 +368,7 @@ public abstract class AbstractTest {
     public void assignAdminRole(){
         System.out.println("Assigning Admin Role.. ");
         System.out.println("Configuring Admin Role with Permissions..");
-        System.out.println("Going to Users tab");
-        clickOnItem(PropertyLoader.getProperty("usersMenuHeader"));
-        System.out.println("Going to Admin Roles section");
-        clickOnItemWithLinkText(PropertyLoader.getProperty("adminRolesSection"));
+        goToAdminRolesSection();
         System.out.println("Going to first Admin Role in the list ");
         clickOnItem(PropertyLoader.getProperty("firstAdminRoleLink"));
         System.out.println("Going to Permissions sub-section");
@@ -414,16 +407,57 @@ public abstract class AbstractTest {
         System.out.println("Verifying Admin has the search function available");
         sendKeysToField(PropertyLoader.getProperty("user1.name"),PropertyLoader.getProperty("searchField"));
         System.out.println("Feature is present.\n");
+        System.out.println("Logging out..");
+        logout();
+        System.out.println("Logging in superadmin");
+        sendKeysToField(PropertyLoader.getProperty("superadmin.name"), PropertyLoader.getProperty("usernameField"));
+        sendKeysToField(PropertyLoader.getProperty("superadmin.password"), PropertyLoader.getProperty("passwordField"));
+        clickOnItem(PropertyLoader.getProperty("loginButton"));
+    }
+
+    public void unassignAdminRole(){
+        System.out.println("Unassigning Admin Role.. ");
+        System.out.println("Removing user from Admin Role..");
+        goToAdminRolesSection();
+        System.out.println("Going to first Admin Role in the list ");
+        clickOnItem(PropertyLoader.getProperty("firstAdminRoleLink"));
+        System.out.println("Selecting the first administrator in the list checkobx");
+        clickOnItem(PropertyLoader.getProperty("firstAdministratorInRoleCheckbox"));
+        System.out.println("Clicking Delete, to remove the user from role");
+        clickOnItem(PropertyLoader.getProperty("removeAdministratorFromRole"));
+        System.out.println("Clicking Ok to save changes.");
+        clickOnItem(PropertyLoader.getProperty("okButton"));
+        System.out.println("Admin removed from role\n");
+    }
+
+    public void adminRoleUnassigned() throws InterruptedException {
+        System.out.println("Verifying the Admin Role was unnasigned and that the admin can no longer login ");
+        logout();
+        System.out.println("Trying to log in new Administrator..");
+        sendKeysToField(PropertyLoader.getProperty("user1.name"), PropertyLoader.getProperty("usernameField"));
+        sendKeysToField(PropertyLoader.getProperty("user1.password"), PropertyLoader.getProperty("passwordField"));
+        clickOnItem(PropertyLoader.getProperty("loginButton"));
+        System.out.println("Checking if the user is logged in the Admin Portal");
+        Thread.sleep(3500);
+        assert driver.findElements(By.xpath(PropertyLoader.getProperty("logoutButton"))).size() < 1;
+        System.out.println("User is logged in user portal");
+        System.out.println("Accepting user portal logout alert message");
+        alertAccept();
+        System.out.println("Admin role unassigned\n");
     }
 
     //Phone related methods
 
-    public void configureLineOnAutoProvisionedPhone() throws InterruptedException {
-        //Polycom phone already added to System but without a line configured
+    public void goToPhonesSection() {
         System.out.println("Going to Devices tab");
         clickOnItem(PropertyLoader.getProperty("devicesMenuHeader"));
         System.out.println("Going to Phones section");
         clickOnItemWithLinkText(PropertyLoader.getProperty("phonesMenuSection"));
+    }
+
+    public void configureLineOnAutoProvisionedPhone() throws InterruptedException {
+        //Polycom phone already added to System but without a line configured
+        goToPhonesSection();
         System.out.println("Clicking User1's phone link - composing xpath..");
         clickOnItem(PropertyLoader.getProperty("phoneXpathStart")+PropertyLoader.getProperty("user1.phoneMacAddress")+PropertyLoader.getProperty("phoneXpathEnd"));
         System.out.println("Adding User1 as a Line on this phone");
@@ -445,11 +479,15 @@ public abstract class AbstractTest {
         System.out.println("Line configured on phone\n");
     }
 
-    public void lineRegistered(String lineName) {
+    public void goToRegistrationsSection() {
         System.out.println("Going to Diagnostics tab");
         clickOnItem(PropertyLoader.getProperty("diagnosticsMenuHeader"));
         System.out.println("Going to Registrations page");
         clickOnItemWithLinkText(PropertyLoader.getProperty("registrationsMenuSection"));
+    }
+
+    public void lineRegistered(String lineName) {
+        goToRegistrationsSection();
         System.out.println("Getting registrations...");
         String allRegistrations = findItemAndGetText(PropertyLoader.getProperty("registrationsTable"));
         System.out.println("Finding registration...");
@@ -465,14 +503,18 @@ public abstract class AbstractTest {
 
     // backups.localBackups
 
+    public void goToBackupsSection() {
+        System.out.println("Going to System tab");
+        clickOnItem(PropertyLoader.getProperty("systemMenuHeader"));
+        System.out.println("Going to Backup section");
+    }
+
     public void backupSingleLocally(String whatToBackup) throws SQLException, InterruptedException {
         System.out.println("Executing a " + whatToBackup + " backup..");
         System.out.println("Making sure only the correct checkbox is selected..");
         DatabaseConnector.executeUpdate("update backup_plan SET def='" + whatToBackup +"';");
         System.out.println("Checkboxes set through DB");
-        System.out.println("Going to System tab");
-        clickOnItem(PropertyLoader.getProperty("systemMenuHeader"));
-        System.out.println("Going to Backup section");
+        goToBackupsSection();
         clickOnItemWithLinkText(PropertyLoader.getProperty("Backup"));
         clickOnItemWithLinkText(PropertyLoader.getProperty("LocalBackups"));
         List<WebElement> numberOfArchivesBeforeTest = driver.findElements(By.linkText(whatToBackup));
@@ -495,9 +537,7 @@ public abstract class AbstractTest {
         System.out.println("Making sure only the correct checkboxes are selected..");
         DatabaseConnector.executeUpdate("update backup_plan SET def='" + whatToBackup +"';");
         System.out.println("Checkboxes set through DB");
-        System.out.println("Going to System tab");
-        clickOnItem(PropertyLoader.getProperty("systemMenuHeader"));
-        System.out.println("Going to Backup section");
+        goToBackupsSection();
         clickOnItemWithLinkText(PropertyLoader.getProperty("Backup"));
         clickOnItemWithLinkText(PropertyLoader.getProperty("LocalBackups"));
         List<WebElement> numberOfArchivesBeforeTest = driver.findElements(By.partialLinkText("tar.gz"));
