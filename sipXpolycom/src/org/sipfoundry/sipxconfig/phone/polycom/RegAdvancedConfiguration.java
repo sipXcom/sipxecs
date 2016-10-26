@@ -59,7 +59,7 @@ public class RegAdvancedConfiguration extends ProfileContext<PolycomPhone> {
         for (Line line : lines) {
             String lineLabel = line.getSettingValue(PolycomPhone.REGISTRATION_LABEL);
             if (lineLabel == null || lineLabel.isEmpty()) {
-                line.setSettingValue(PolycomPhone.REGISTRATION_LABEL, line.getUser().getUserName());
+                line.setSettingValue(PolycomPhone.REGISTRATION_LABEL, line.getUserName());
             }
             linesSettings.add(line.getSettings());
         }
