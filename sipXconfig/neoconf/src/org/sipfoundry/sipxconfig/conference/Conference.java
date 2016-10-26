@@ -77,6 +77,8 @@ public class Conference extends BeanWithSettings implements Replicable, DeployCo
     public static final String TERMINATE_ON_MODERATOR_EXIT = "fs-conf-conference/terminate-on-moderator-exit";
     public static final String QUICKSTART = "fs-conf-conference/quickstart";
     public static final String VIDEO = "fs-conf-conference/video";
+    public static final String PLAY_ENTRY_TONE = "fs-conf-conference/play-entry-tone";
+    public static final String PLAY_EXIT_TONE = "fs-conf-conference/play-exit-tone";
     public static final String VIDEO_TOGGLE_FLOOR = "fs-conf-conference/video-toogle-floor";
 
     private static final String ALIAS_RELATION = "conference";
@@ -241,6 +243,14 @@ public class Conference extends BeanWithSettings implements Replicable, DeployCo
 
     public boolean isMohFilesSrcEnabled() {
         return getSettingValue(MOH).equals(MOH_FILES_SOURCE);
+    }
+
+    public boolean isPlayEntryToneEnabled() {
+        return (Boolean) getSettingTypedValue(PLAY_ENTRY_TONE);
+    }
+
+    public boolean isPlayExitToneEnabled() {
+        return (Boolean) getSettingTypedValue(PLAY_EXIT_TONE);
     }
 
     public String getUri() {
