@@ -6,6 +6,9 @@
 package org.sipxcom.verify;
 
 import org.openqa.selenium.*;
+import org.sikuli.script.FindFailed;
+import org.sikuli.script.KeyModifier;
+import org.sikuli.script.Screen;
 import org.sipxcom.verify.util.DatabaseConnector;
 import org.sipxcom.verify.util.LoginUtil;
 import org.sipxcom.verify.util.PropertyLoader;
@@ -23,6 +26,7 @@ import static org.testng.AssertJUnit.assertTrue;
 public abstract class AbstractTest {
 
     protected WebDriver driver;
+    protected Screen screen;
 
     @BeforeTest
     public void init() {
@@ -31,6 +35,8 @@ public abstract class AbstractTest {
         System.out.println("Initializing WebDriver and connecting to Database\n");
         driver = LoginUtil.getRemoteWebDriver(LoginUtil.SUPERADMIN);
         DatabaseConnector.setDBConnection();
+        screen = LoginUtil.getScreen();
+
     }
 
     @AfterTest
