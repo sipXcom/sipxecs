@@ -141,6 +141,8 @@ public class ConferenceConfigurationTest extends TestCase {
         conf.setUniqueId();
         conf.setAutorecorded(true);
         conf.setSettingTypedValue(Conference.QUICKSTART, false);
+        conf.setSettingTypedValue(Conference.PLAY_ENTRY_TONE, false);
+        conf.setSettingTypedValue(Conference.PLAY_EXIT_TONE, false);
         conf.setSettingValue(Conference.MODERATOR_CODE, "3456");
         conf.setSettingValue(Conference.MOH, "NONE");
         bridge.addConference(conf);
