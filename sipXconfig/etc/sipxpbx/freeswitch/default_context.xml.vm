@@ -16,7 +16,7 @@
       <action application="playback" data="tone_stream://%(1000,0,500)"/>
       <action application="record" data="${dollar}{namefile} 1"/>
       <action application="playback" data="ivr/ivr-call_being_transferred.wav"/>
-      <action application="set" data="res=${dollar}{sched_api +1 none conference TestConf play file_string://${dollar}{namefile}!conference/conf-has_joined.wav}"/>
+      <action application="set" data="res=${dollar}{sched_api +1 none conference ${conference.name} play file_string://${dollar}{namefile}!conference/conf-has_joined.wav}"/>
 #end
       <action application="conference" data="${conference.dialString}"/>
     </condition>
