@@ -80,6 +80,7 @@ public class Conference extends BeanWithSettings implements Replicable, DeployCo
     public static final String PLAY_ENTRY_TONE = "fs-conf-conference/play-entry-tone";
     public static final String PLAY_EXIT_TONE = "fs-conf-conference/play-exit-tone";
     public static final String RECORD_AND_PLAY_NAME_ON_ENTRY = "fs-conf-conference/prompt-name-on-entry";
+    public static final String RECORD_AND_PLAY_NAME_ON_EXIT = "fs-conf-conference/prompt-name-on-exit";
     public static final String VIDEO_TOGGLE_FLOOR = "fs-conf-conference/video-toogle-floor";
 
     private static final String ALIAS_RELATION = "conference";
@@ -256,6 +257,10 @@ public class Conference extends BeanWithSettings implements Replicable, DeployCo
 
     public boolean isRecordAndPlayNameOnEntryEnabled() {
         return (Boolean) getSettingTypedValue(RECORD_AND_PLAY_NAME_ON_ENTRY);
+    }
+
+    public boolean isRecordAndPlayNameOnExitEnabled() {
+        return (Boolean) getSettingTypedValue(RECORD_AND_PLAY_NAME_ON_EXIT);
     }
 
     public String getUri() {
