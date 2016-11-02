@@ -38,6 +38,7 @@ public class DefaultContextConfiguration extends AbstractFreeswitchConfiguration
     private FreeswitchExtensionCollector m_freeswitchExtensionCollector;
     private FeatureManager m_featureManager;
     private ParkOrbitContext m_parkOrbitContext;
+    private String m_fsEtcDir;
 
     @Override
     public void write(Writer writer, Location location, FreeswitchSettings settings) throws IOException {
@@ -82,6 +83,7 @@ public class DefaultContextConfiguration extends AbstractFreeswitchConfiguration
         context.put("location", location);
         addAdditionalLocations(context, location);
         context.put("dollar", "$");
+        context.put("conferenceExitScript", m_fsEtcDir + "conferenceExit.lua");
         getFreeswitchExtensions(context, location, extensions);
         write(writer, context);
     }
@@ -138,5 +140,9 @@ public class DefaultContextConfiguration extends AbstractFreeswitchConfiguration
     @Required
     public void setParkOrbitContext(ParkOrbitContext context) {
         m_parkOrbitContext = context;
+    }
+
+    public void setFreeswitchEtcDir(String directory) {
+        m_fsEtcDir = directory;
     }
 }

@@ -7,6 +7,19 @@
       <action application="set" data="max_forwards=$maxForwards"/>
 #end
       <action application="set" data="supplied_pin=${dollar}{sip_h_X-ConfPin}"/>
+#if(${conference.recordAndPlayNameOnEntryEnabled})
+      <action application="set" data="api_hangup_hook=lua $conferenceExitScript /tmp/${uuid}-name.wav ${conference.name} ${conference.recordAndPlayNameOnExitEnabled}"/>
+#end
+#if(${conference.recordAndPlayNameOnEntryEnabled})
+      <action application="answer"/>
+      <action application="set" data="namefile=/tmp/${dollar}{uuid}-name.wav" inline="true"/>
+      <action application="sleep" data="1000"/>
+      <action application="playback" data="voicemail/vm-record_name1.wav"/>
+      <action application="playback" data="tone_stream://%(1000,0,500)"/>
+      <action application="record" data="${dollar}{namefile} 1"/>
+      <action application="playback" data="ivr/ivr-call_being_transferred.wav"/>
+      <action application="set" data="res=${dollar}{sched_api +1 none conference ${conference.name} play file_string://${dollar}{namefile}!conference/conf-has_joined.wav}"/>
+#end
       <action application="conference" data="${conference.dialString}"/>
     </condition>
   </extension>
