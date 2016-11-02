@@ -56,6 +56,14 @@
       <type refid="yes-no" />
       <value>yes</value>
     </setting>
+    <setting name="prompt-name-on-entry">
+      <type refid="yes-no" />
+      <value>no</value>
+    </setting>
+    <setting name="prompt-name-on-exit">
+      <type refid="yes-no" />
+      <value>no</value>
+    </setting>
     <setting name="video">
       <type refid="yes-no" />
       <value>no</value>
