@@ -9,6 +9,9 @@ import org.sipxcom.verify.util.PropertyLoader;
 
 import java.sql.SQLException;
 
+import static org.sikuli.script.Commands.click;
+import static org.sikuli.script.Commands.exists;
+
 /**
  * Created by cmoisa on 26/10/2016.
  */
@@ -42,7 +45,11 @@ public abstract class AbstractTestViewMe {
     public void loginAsRegisteredUser(String username, String password) throws FindFailed {
         System.out.println("Logging in as registered user..");
         System.out.println("Clicking registered tab");
-        screen.click(PropertyLoader.getProperty("loginScreen.RegisteredUserSection"));
+        if(null != screen.exists(PropertyLoader.getProperty("loginScreen.RegisteredUserSectionLightGrey"))){
+            screen.click(PropertyLoader.getProperty("loginScreen.RegisteredUserSectionLightGrey"));
+        }else{
+            screen.click(PropertyLoader.getProperty("loginScreen.RegisteredUserSectionDarkGrey"));
+        }
         System.out.println("Inserting Name..");
         // Name and Password fields are too similar so we need to identify them using regions and target offset
         Region region = screen.find(PropertyLoader.getProperty("loginScreen.NameField")).below(8);
