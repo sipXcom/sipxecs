@@ -65,10 +65,20 @@ public abstract class AbstractTestViewMe {
         screen.type(PropertyLoader.getProperty(password));
         System.out.println("Clicking Login button");
         screen.click(PropertyLoader.getProperty("loginScreen.LoginButton"));
-        System.out.println("Waiting for login..");
+        System.out.println("Waiting for eZuce Vibe icon to show up in the upper left..");
         screen.wait(PropertyLoader.getProperty("inApp.TopLeftFavIcon"),30);
         screen.wait(3.0);
         System.out.println("You are now logged in.");
+    }
+
+    public void loginAsGuestUser(String email, String name, String meetingId) throws FindFailed {
+        System.out.println("Logging in as guest user..");
+        System.out.println("Clicking guest user tab");
+        if(null != screen.exists(PropertyLoader.getProperty("loginScreen.RegisteredUserSectionLightGrey"))){
+            screen.click(PropertyLoader.getProperty("loginScreen.RegisteredUserSectionLightGrey"));
+        }else{
+            screen.click(PropertyLoader.getProperty("loginScreen.RegisteredUserSectionDarkGrey"));
+        }
     }
 
     public void logout() throws FindFailed {
