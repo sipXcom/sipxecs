@@ -45,6 +45,7 @@ public abstract class AbstractTestViewMe {
     public void loginAsRegisteredUser(String username, String password) throws FindFailed {
         System.out.println("Logging in as registered user..");
         System.out.println("Clicking registered tab");
+        screen.wait(2.0);
         if(null != screen.exists(PropertyLoader.getProperty("loginScreen.RegisteredUserSectionLightGrey"))){
             screen.click(PropertyLoader.getProperty("loginScreen.RegisteredUserSectionLightGrey"));
         }else{
@@ -74,19 +75,58 @@ public abstract class AbstractTestViewMe {
     public void loginAsGuestUser(String email, String name, String meetingId) throws FindFailed {
         System.out.println("Logging in as guest user..");
         System.out.println("Clicking guest user tab");
-        if(null != screen.exists(PropertyLoader.getProperty("loginScreen.RegisteredUserSectionLightGrey"))){
-            screen.click(PropertyLoader.getProperty("loginScreen.RegisteredUserSectionLightGrey"));
+        screen.wait(2.0);
+        if(null != screen.exists(PropertyLoader.getProperty("loginScreen.GuestUserSectionDarkGrey"))){
+            screen.click(PropertyLoader.getProperty("loginScreen.GuestUserSectionDarkGrey"));
         }else{
-            screen.click(PropertyLoader.getProperty("loginScreen.RegisteredUserSectionDarkGrey"));
+            screen.click(PropertyLoader.getProperty("loginScreen.GuestUserSectionLightGrey"));
         }
+        System.out.println("Inserting Email Address..");
+        // Email, Name and Password fields are too similar so we need to identify them using regions and target offset
+        Region region = screen.find(PropertyLoader.getProperty("loginScreen.EmailAddressField")).below(8);
+        screen.click(region);
+        screen.type("a", KeyModifier.CTRL);
+        screen.type(Key.BACKSPACE);
+        screen.type(PropertyLoader.getProperty(email));
+        System.out.println("Inserting Name..");
+        region = screen.find(PropertyLoader.getProperty("loginScreen.NameField")).below(8);
+        screen.click(region);
+        screen.type("a", KeyModifier.CTRL);
+        screen.type(Key.BACKSPACE);
+        screen.type(PropertyLoader.getProperty(name));
+        System.out.println("Inserting Meeting ID..");
+        region = screen.find(PropertyLoader.getProperty("loginScreen.MeetingIdField")).below(8);
+        screen.click(region);
+        screen.type("a", KeyModifier.CTRL);
+        screen.type(Key.BACKSPACE);
+        screen.type(PropertyLoader.getProperty(meetingId));
+        System.out.println("Clicking Join Meeting button");
+        screen.click(PropertyLoader.getProperty("loginScreen.JoinMeetingButton"));
+        System.out.println("Waiting for eZuce Vibe icon to show up in the upper left..");
+        screen.wait(PropertyLoader.getProperty("inApp.TopLeftFavIcon"),30);
+        screen.wait(3.0);
+        System.out.println("You are now logged in.");
+
     }
 
-    public void logout() throws FindFailed {
-        System.out.println("Logging out of Vibe app..");
+    public void logoutFromMenu() throws FindFailed {
+        System.out.println("Logging out of Vibe app through the Menu..");
         System.out.println("Going to Menu");
         screen.click(PropertyLoader.getProperty("menu.MenButton"),30);
         System.out.println("Clicking Exit option");
         screen.wait(PropertyLoader.getProperty("menu.ExitOption"),30).click();
+        System.out.println("Clicking Yes");
+        screen.wait(PropertyLoader.getProperty("exit.ConfirmationWindow"),30);
+        screen.wait(PropertyLoader.getProperty("exit.QuitVibe"),30);
+        screen.click(PropertyLoader.getProperty("exit.YesButton"));
+        screen.wait(PropertyLoader.getProperty("desktopShortcut"),30);
+        System.out.println("Vibe app closed.");
+    }
+
+    public void logoutFromExitButton() throws FindFailed {
+        System.out.println("Logging out of Vibe app through the Exit icon..");
+        System.out.println("Clicking Exit icon");
+        screen.wait(PropertyLoader.getProperty("exitVibeIcon"),30).click();
         System.out.println("Clicking Yes");
         screen.wait(PropertyLoader.getProperty("exit.ConfirmationWindow"),30);
         screen.wait(PropertyLoader.getProperty("exit.QuitVibe"),30);
