@@ -64,5 +64,16 @@
           <artifactId>jsch</artifactId>
           <version>0.1.53</version>
       </dependency>
+      <dependency>
+          <groupId>com.sikulix</groupId>
+          <artifactId>sikulixapi</artifactId>
+          <version>1.1.0</version>
+      </dependency>
+      <dependency>
+          <groupId>com.sikulix</groupId>
+          <artifactId>sikulixapi</artifactId>
+          <version>1.1.0</version>
+      </dependency>
+
   </dependencies>
 </project>
