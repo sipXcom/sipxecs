@@ -15,6 +15,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.sikuli.script.Screen;
 import org.sipxcom.verify.AbstractTest;
 
 public class LoginUtil {
@@ -46,6 +47,11 @@ public class LoginUtil {
         driver.get(PropertyLoader.getSiteURL());
         login(driver, userName);
         return driver;
+    }
+
+    public static Screen getScreen(){
+        Screen screen = new Screen();
+        return screen;
     }
 
 }
