@@ -13,5 +13,6 @@ public class UserLogout extends AbstractTest {
         System.out.println("\n");
         System.out.println("#### Running test " + this.getClass().getSimpleName()+" ####\n");
         logout();
+
     }
 }
