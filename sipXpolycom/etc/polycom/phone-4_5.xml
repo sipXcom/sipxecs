@@ -2242,7 +2242,7 @@
             </option>
           </enum>
         </type>
-        <value>2</value>
+        <value>1</value>
       </setting>
       <setting name="facility.set" hidden="yes">
         <type>
