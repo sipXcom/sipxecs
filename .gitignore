@@ -3,7 +3,9 @@
 # For a project mostly in C, the following would be a good set of
 # exclude patterns (uncomment them if you want to use them):
 # *.[oa]
+
 *~
+build/
 Makefile.in
 aclocal.m4
 config.h.in
@@ -20,20 +22,13 @@ sipXconfig/top.build.dir
 spy.log
 velocity.log
 bin.eclipse
+
 # exclude files created when building 3rd party deps
 lib/*/build
 lib/cache-file
 lib/dist
 sipXtackLib/src/test/net/SipXauthIdentityTest.cpp
 custom
-sipXconfig/packages/analyzer
-sipXconfig/packages/args
-sipXconfig/packages/browser
-sipXconfig/packages/collection
-sipXconfig/packages/intl
-sipXconfig/packages/logging
-sipXconfig/packages/path
-sipXconfig/packages/unmodifiable_collection
 pubspec.lock
 /sipXyealink/nbproject/private/
 /sipXyealink/build/

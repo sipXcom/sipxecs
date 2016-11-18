@@ -4,9 +4,6 @@
 [submodule "sipXcustomCallerId"]
 	path = sipXcustomCallerId
 	url = git://github.com/ezuce/sipXcustomCallerId.git
-[submodule "homer"]
-	path = homer
-	url = http://code.google.com/p/homer/
 [submodule "sipXhomer"]
 	path = sipXhomer
 	url = git://github.com/sipXcom/sipXhomer.git
