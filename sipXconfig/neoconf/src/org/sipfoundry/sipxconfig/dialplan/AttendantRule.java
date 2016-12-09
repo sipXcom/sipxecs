@@ -306,12 +306,16 @@ public class AttendantRule extends DialingRule implements Replicable {
     @Override
     public Collection<AliasMapping> getAliasMappings(String domainName) {
         String liveContact;
+        int ringFor = 0;
+        if (isLiveAttendant()) {
+            ringFor = m_liveAttendantRingFor;
+        }
         if (m_followUserCallForward) {
             liveContact = String.format(LIVE_ATTENDANT_CONTACT, getLiveAttendantExtension(), domainName,
-                m_liveAttendantRingFor);
+                ringFor);
         } else {
             liveContact = String.format(LIVE_ATTENDANT_CONTACT_FWD, getLiveAttendantExtension(), domainName,
-                m_liveAttendantRingFor);
+                ringFor);
         }
 
         if (getSchedule() != null) {
@@ -375,6 +379,6 @@ public class AttendantRule extends DialingRule implements Replicable {
      */
     @Override
     public boolean isReplicationEnabled() {
-        return isEnabled() && isLiveAttendant();
+        return isEnabled();
     }
 }
