@@ -24,6 +24,7 @@ import org.sipfoundry.sipxconfig.components.NamedValuesSelectionModel;
 import org.sipfoundry.sipxconfig.components.ObjectSelectionModel;
 import org.sipfoundry.sipxconfig.components.SipxBasePage;
 import org.sipfoundry.sipxconfig.device.ModelSource;
+import org.sipfoundry.sipxconfig.dialplan.AttendantRule;
 import org.sipfoundry.sipxconfig.dialplan.AutoAttendantManager;
 import org.sipfoundry.sipxconfig.dialplan.DialPlanContext;
 import org.sipfoundry.sipxconfig.dialplan.DialingRule;
@@ -119,6 +120,11 @@ public abstract class EditDialRule extends SipxBasePage implements PageBeginRend
         DialingRule rule = getRule();
         if (null != rule) {
             // FIXME: in custom rules: rule is persitent but rule type not...
+            DialPlanContext manager = getDialPlanContext();
+            if (rule instanceof AttendantRule && !rule.isNew()) {
+                AttendantRule origRule = (AttendantRule) manager.getRule(rule.getId());
+                ((AttendantRule) rule).setLocationsList(origRule.getLocationsList());
+            }
             setRuleType(rule.getType());
             rule.setPermissionManager(getPermissionManager());
             return;
