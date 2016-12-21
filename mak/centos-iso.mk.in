@@ -476,6 +476,7 @@ ISO_ADD_OS = \
   libao-0.8.* \
   libblkid-* \
   libcap-2.* \
+  libcgroup-0.* \
   libcap-ng-0.* \
   libcom_err-* \
   libconfig-* \
