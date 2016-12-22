@@ -1,0 +1,5 @@
+.pub/
+bin/packages
+
+packages/*
+!packages/sipxconfig
