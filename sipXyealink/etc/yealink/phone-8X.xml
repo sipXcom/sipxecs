@@ -425,6 +425,8 @@
 	    <!--// #Configure the DND on code and off code. //-->
 	    <setting name="features.dnd.on_code"><type><string/></type></setting>
 	    <setting name="features.dnd.off_code"><type><string/></type></setting>
+	    <setting name="features.dnd.emergency_enable"><type><boolean/></type><value>0</value></setting>
+	    <setting name="features.dnd.emergency_authorized_number"><type><string/></type></setting>
 	</group>
 	<group name="GENERAL">
 	    <!--// Enable or disable the call waiting feature; 0-Disabled, 1-Enabled (default); //-->
