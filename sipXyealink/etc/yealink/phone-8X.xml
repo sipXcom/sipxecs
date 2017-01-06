@@ -509,6 +509,7 @@
 
 	    <!--// Enable or disable the phone to dial the IP address directly; 0-Disabled, 1-Enabled (default); Require reboot;  //-->
 	    <setting name="features.direct_ip_call_enable"><type><boolean/></type><value>0</value></setting>
+	    <setting name="features.call_num_filter"><type><string/></type><value>,-</value></setting>
 
 	    <!--//
 	    #######################################################################################
