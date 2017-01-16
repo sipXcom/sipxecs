@@ -137,7 +137,9 @@ CallerAlertInfo::authorizeAndModify(const UtlString& id,    /**< The authenticat
          // Check if the SIP message comes from the local domain
          Url _fromAddress;
          request.getFromUrl(_fromAddress);
-         if (!mpSipRouter->isLocalDomain(_fromAddress)) {
+         UtlString valueExternalTag;
+         _fromAddress.getUrlParameter(SIPX_ALERT_INFO_URI_PARAM, valueExternalTag);
+         if (!mpSipRouter->isLocalDomain(_fromAddress) || valueExternalTag.compareTo(SIPX_ALERT_INFO_URI_VALUE_EXTERNAL) == 0) {
             //if not then add Alert-Info External
             Os::Logger::instance().log(FAC_SIP, PRI_DEBUG, "CallerAlertInfo[%s]::authorizeAndModify() found external call",
                           mInstanceName.data()
