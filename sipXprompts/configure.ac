@@ -1,5 +1,5 @@
 AC_PREREQ(2.57)
-AC_INIT(sipxprompts, 16.12, sipx-dev@list.sipfoundry.org)
+AC_INIT(sipxprompts, 17.04, sipx-dev@list.sipfoundry.org)
 AC_CONFIG_AUX_DIR(config)
 AM_INIT_AUTOMAKE(foreign tar-ustar)
 m4_include([config/general.m4])
