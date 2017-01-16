@@ -18,6 +18,10 @@
 #include <sipxproxy/AuthPlugin.h>
 
 // DEFINES
+
+#define SIPX_ALERT_INFO_URI_PARAM           "x-sipx-alert-info"
+#define SIPX_ALERT_INFO_URI_VALUE_EXTERNAL  "external"
+
 // MACROS
 // EXTERNAL FUNCTIONS
 // EXTERNAL VARIABLES
