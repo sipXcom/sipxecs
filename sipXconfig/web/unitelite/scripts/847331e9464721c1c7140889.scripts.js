@@ -2949,8 +2949,22 @@ uw.service('restService', [
                 var a=data[i].start.split(" ");
                 var d=a[0].split("-");
                 var t=a[1].split(":");
-                var date = new Date(d[0],(d[1]-1),d[2],t[0],t[1],t[2]);
-                if(date.getTime() < secondary.callhistory.endTime.getTime() && date.getTime() > secondary.callhistory.startTime.getTime()){
+                var date = new Date(d[0],d[1]-1,d[2],t[0],t[1],t[2]);
+                var actDate = new Date();
+                //convert to local timezone
+                var localDate = new Date(date.getTime() - (60000*actDate.getTimezoneOffset()));
+                data[i].start = localDate.getFullYear()+"-"+(localDate.getMonth()+1)+"-"+(localDate.getDay()+1)+" "+localDate.getHours()+":"+localDate.getMinutes()+":"+localDate.getSeconds();
+
+                // duration
+                var dur=data[i].duration.split(" ");
+                var hours = (Number(dur[6]) + (Number(dur[4])*24) + (Number(dur[2])*24*7) + (Number(dur[0])*24*365));
+                data[i].duration = hours+":"+dur[8]+":"+dur[10].split('.')[0];
+
+                //calculate stop time
+                var stopDate = new Date(localDate.getTime() + ((dur[6]*3600000) + (dur[8]*60000)+ (dur[10].split('.')[0]*1000)));
+                data[i].stop = stopDate.getFullYear()+"-"+(stopDate.getMonth()+1)+"-"+(stopDate.getDay()+1)+" "+stopDate.getHours()+":"+stopDate.getMinutes()+":"+stopDate.getSeconds();
+
+                if(date.getTime() < (secondary.callhistory.endTime.getTime()  + (60000*actDate.getTimezoneOffset())) && date.getTime() > (secondary.callhistory.startTime.getTime() + (60000*actDate.getTimezoneOffset()))){
                   //filter by select box
                   if(secondary.callhistory.selectedOption.name === '- all -') {
                     data[i].from = data[i].from.match("sip:(.*)@");
@@ -2993,6 +3007,23 @@ uw.service('restService', [
             });
           }
         },
+
+        permission: {
+         enableDialPadIcon: true,
+         enableSearchIcon: true,
+         enableContactClickCall: true,
+         //enableContactClickToChat: true,
+         enableConfBridgeClickToCall: true,
+
+         init: function () {
+                    /*secondary.permission.enableDialPadIcon = false;
+                    secondary.permission.enableSearchIcon = false;
+                    secondary.permission.enableContactClickCall = false;
+                    secondary.permission.enableContactClickToChat = false;
+                    secondary.permission.enableConfBridgeClickToCall = false;
+                    ui.root.templates[0].show = false;*/
+          }
+         },
 
         conference: {
 
@@ -3320,7 +3351,7 @@ uw.service('restService', [
                         });
                         secondary.conference.timers.cancelAll();
                       });
-                  }, 10000);
+                  }, 1500);
 
                   timers.all.confActive.push(interval);
                   break;
@@ -4601,8 +4632,11 @@ uw.controller('profile', [
     $scope.sipEnabled     = false;
     $scope.searchResult   = [];
 
+    $scope.permission = uiService.secondary.permission;
+
     uiService.secondary.conference.init();
     uiService.secondary.callhistory.init();
+    uiService.secondary.permission.init();
 
     $scope.callhistory.clickToCall = function(clicked) {
       $scope.showDialFn(true);
