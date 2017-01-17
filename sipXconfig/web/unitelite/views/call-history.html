@@ -65,8 +65,9 @@
           <th>To</th>
           <!-- <th>Recipient</th>-->
           <th>Start</th>
-          <!--<th>Duration</th>
-          <th>Status</th>-->
+          <th>Stop</th>
+          <th>Duration</th>
+          <!--<th>Status</th>-->
         </tr>
         </thead>
         <tbody>
@@ -83,10 +84,13 @@
           <td>
             {{ call.start }}
           </td>
-          <!--<td>
-            {{ call.duration }}
+          <td>
+            {{ call.stop }}
           </td>
           <td>
+            {{ call.duration }}
+          </td>
+          <!--<td>
             {{ call.status }}
           </td>-->
         </tr>
