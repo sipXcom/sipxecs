@@ -14777,6 +14777,7 @@ select.default {
   max-height: 657px;
   overflow-x: hidden;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   padding-top: 10px;
 }
 #webchat-main .right-side-view .my-profile .entry {
