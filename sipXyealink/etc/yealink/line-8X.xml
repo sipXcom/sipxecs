@@ -194,6 +194,9 @@
 	<setting name="compact_header_enable" advanced="yes" if="yealinkPhone(SIPT[24])|(W5)|(VP530).*"><type><boolean/></type><value>0</value></setting>
 	<!-- Enable or disable the phone to display the picture when receiving the specified SIP message; 0-Disabled, 1-Enabled (default);-->
 	<setting name="picture_info_enable" advanced="yes" if="yealinkPhoneSIPT38G"><type><boolean/></type><value>1</value></setting>
+    <setting name="vq_rtcpxr.collector_name"><type><string/></type></setting>
+    <setting name="vq_rtcpxr.collector_server_host"><type><string/></type></setting>
+    <setting name="vq_rtcpxr.collector_server_port"><type><integer min="1" max="65535"/></type><value>5060</value></setting>
     </group>
     <group name="codecs">
 	<!-- Audio codecs for account 1 (Y ranges from 1 to 13).-->

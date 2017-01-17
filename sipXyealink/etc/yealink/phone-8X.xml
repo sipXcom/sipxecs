@@ -780,6 +780,19 @@
 	    <setting name="voice.side_tone"><type><integer min="-32768" max="0"/></type><value>-32768</value></setting>
 	</group>
     </group>
+    <group name="voice_monitoring" if="yealinkPhone((SIPT[1-4])|(W5)).*">
+        <setting name="phone_setting.vq_rtcpxr.session_report.enable"><type><boolean/></type><value>0</value></setting>
+        <setting name="phone_setting.vq_rtcpxr.interval_report.enable"><type><boolean/></type><value>0</value></setting>
+        <setting name="phone_setting.vq_rtcpxr_interval_period"><type><integer min="5" max="20"/></type><value>20</value></setting>
+        <setting name="phone_setting.vq_rtcpxr_moslq_threshold_warning"><type><integer min="15" max="40"/></type></setting>
+        <setting name="phone_setting.vq_rtcpxr_moslq_threshold_critical"><type><integer min="15" max="40"/></type></setting>
+        <setting name="phone_setting.vq_rtcpxr_delay_threshold_warning"><type><integer min="15" max="40"/></type></setting>
+        <setting name="phone_setting.vq_rtcpxr_delay_threshold_critical"><type><integer min="15" max="40"/></type></setting>
+        <setting name="phone_setting.vq_rtcpxr.states_show_on_web.enable"><type><boolean/></type><value>0</value></setting>
+        <setting name="phone_setting.vq_rtcpxr.states_show_on_gui.enable"><type><boolean/></type><value>0</value></setting>
+        <setting name="phone_setting.vq_rtcpxr.rtcp_xr_report.enable"><type><boolean/></type><value>0</value></setting>
+        <setting name="phone_setting.vq_rtcpxr.enable"><type><boolean/></type><value>0</value></setting>
+    </group>
     <group name="distinctive-ringer">
 		<setting name="distinctive_ring_tones.alert_info.1.text"><type><string/></type></setting>
 		<setting name="distinctive_ring_tones.alert_info.1.ringer"><type refid="ringer_type"/><value>1</value></setting>
