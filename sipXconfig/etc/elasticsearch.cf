@@ -34,6 +34,21 @@ bundle agent elasticsearch_config {
         perms => mog("644", "root", "root"),
         edit_line => elasticsearch_config_file,
         classes => if_repaired("restart_elasticsearch");
+
+      "/etc/security/limits.d/99-elasticsearch-nproc.conf"
+        comment => "setup elasticsearch limits",
+        create => "true",
+        perms => m("644"),
+        edit_line => elasticsearch_limits_contents,
+        classes => if_repaired("restart_elasticsearch");
+     
+}
+
+bundle edit_line elasticsearch_limits_contents {
+  insert_lines:
+"elasticsearch soft    nofile    65536
+elasticsearch hard    nofile    65536
+";
 }
 
 bundle edit_line elasticsearch_config_file {
