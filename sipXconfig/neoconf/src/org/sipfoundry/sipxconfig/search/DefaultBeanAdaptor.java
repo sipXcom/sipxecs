@@ -96,7 +96,7 @@ public class DefaultBeanAdaptor implements BeanAdaptor, BeanFactoryAware {
      * Sensitive fields contains the list of fields names that should nover be indexed.
      */
     private static final String[] SENSITIVE_FIELDS = {
-        "pintoken", "sipPassword"
+        "pintoken", "sipPassword", "voicemailPintoken"
     };
 
     static {
