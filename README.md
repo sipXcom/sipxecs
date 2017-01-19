@@ -62,27 +62,3 @@ that's all :) - now is code changing fun part
 
 
 
-SAU ::: Pentru share-uirea volumelor
-
-[root@uc ~]# docker volume create --name etcSipxpbx
-etcSipxpbx
-[root@uc ~]# docker volume create --name varLog
-varLog
-[root@uc ~]# docker volume create --name usrShareSipxecs
-usrShareSipxecs
-[root@uc ~]# docker volume create --name usrShareWww
-usrShareWww
-[root@uc ~]# docker volume create --name varSipxdata
-
-[root@uc ~]# docker run -it --privileged --net=host --name="FatContainer" -v varSipxdata:/var/sipxdata -v etcSipxpbx:/etc/sipxpbx -v varLog:/var/log -v usrShareSipxecs:/usr/share/sipxecs -v usrShareWww:/usr/share/www  --privileged fatty
-
-+
-
- docker run -d  --privileged --net=host --name="FSContainer" -v varSipxdata:/var/sipxdata -v etcSipxpbx:/etc/sipxpbx -v varLog:/var/log -v usrShareSipxecs:/usr/share/sipxecs -v usrShareWww:/usr/share/www costache2mihai/dockerizedfreeswitch:minimalFS
-
-+
-
-
-La nat traversal scos STUn si pus IP machina 10.3.0.200
-
-+ Daca telefoanele nu se inregistreaza verifica ca resolv.conf e adresa ip locala
