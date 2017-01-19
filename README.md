@@ -27,7 +27,7 @@ _On the host CentOS 7 machine_ :
 6. test ssh connectivity from another machine with ssh root@10.3.0.200 -p 222
    If it's not working run service firewalld stop on the host machine
 
-7. run fat container with --net hosts and --hostname uc.mihai.test options. My command:
+7. run fat container  with --net hosts and --hostname uc.mihai.test options. My command:
 
     >docker run -it  --privileged --name="FatContainer" -v /etc/sipxpbx  -v /var/log -v /usr/share/sipxecs -v /var/sipxdata --net host --hostname uc.mihai.test fatty
 
