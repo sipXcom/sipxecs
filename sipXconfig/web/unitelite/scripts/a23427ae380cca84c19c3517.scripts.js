@@ -2946,6 +2946,7 @@ uw.service('restService', [
             restService.getCallHistory().then(function (data) {
               //filter by date
               for(var i = 0; i < data.length; i++){
+                var stopDate;
                 var a=data[i].start.split(" ");
                 var d=a[0].split("-");
                 var t=a[1].split(":");
@@ -2956,13 +2957,30 @@ uw.service('restService', [
                 data[i].start = localDate.getFullYear()+"-"+(localDate.getMonth()+1)+"-"+(localDate.getDay()+1)+" "+localDate.getHours()+":"+localDate.getMinutes()+":"+localDate.getSeconds();
 
                 // duration
-                var dur=data[i].duration.split(" ");
-                var hours = (Number(dur[6]) + (Number(dur[4])*24) + (Number(dur[2])*24*7) + (Number(dur[0])*24*365));
-                data[i].duration = hours+":"+dur[8]+":"+dur[10].split('.')[0];
+                if(data[i].duration != "null"){
+                  var dur=data[i].duration.split(" ");
+                  var hours = (Number(dur[6]) + (Number(dur[4])*24) + (Number(dur[2])*24*7) + (Number(dur[0])*24*365));
+                  if (hours < 10)
+                    hours = "0" + hours;
+                  var minutes = Number(dur[8]);
+                  if (minutes < 10)
+                    minutes = "0" + minutes;
+                  var seconds = dur[10].split('.')[0];
+                  var seconds = Number(seconds);
+                  if (seconds < 10)
+                    seconds = "0" + seconds;
 
-                //calculate stop time
-                var stopDate = new Date(localDate.getTime() + ((dur[6]*3600000) + (dur[8]*60000)+ (dur[10].split('.')[0]*1000)));
-                data[i].stop = stopDate.getFullYear()+"-"+(stopDate.getMonth()+1)+"-"+(stopDate.getDay()+1)+" "+stopDate.getHours()+":"+stopDate.getMinutes()+":"+stopDate.getSeconds();
+                  data[i].duration = hours+":"+minutes+":"+seconds;
+                  //calculate stop time
+                  stopDate = new Date(localDate.getTime() + ((dur[6]*3600000) + (dur[8]*60000)+ (dur[10].split('.')[0]*1000)));
+                  data[i].stop = stopDate.getFullYear()+"-"+(stopDate.getMonth()+1)+"-"+(stopDate.getDay()+1)+" "+stopDate.getHours()+":"+stopDate.getMinutes()+":"+stopDate.getSeconds();
+                }
+                else{
+                  data[i].duration = "00:00:00";
+                  //calculate stop time
+                  stopDate = new Date(localDate.getTime());
+                  data[i].stop = stopDate.getFullYear()+"-"+(stopDate.getMonth()+1)+"-"+(stopDate.getDay()+1)+" "+stopDate.getHours()+":"+stopDate.getMinutes()+":"+stopDate.getSeconds();
+                }
 
                 if(date.getTime() < (secondary.callhistory.endTime.getTime()  + (60000*actDate.getTimezoneOffset())) && date.getTime() > (secondary.callhistory.startTime.getTime() + (60000*actDate.getTimezoneOffset()))){
                   //filter by select box
