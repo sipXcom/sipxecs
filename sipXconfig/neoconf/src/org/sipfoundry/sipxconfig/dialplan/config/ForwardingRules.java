@@ -15,9 +15,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
+import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.sipfoundry.sipxconfig.address.Address;
 import org.sipfoundry.sipxconfig.address.AddressManager;
 import org.sipfoundry.sipxconfig.bridge.BridgeSbc;
 import org.sipfoundry.sipxconfig.dialplan.IDialingRule;
@@ -46,6 +47,8 @@ public class ForwardingRules extends RulesFile implements ApplicationContextAwar
     private VelocityEngine m_velocityEngine;
     private ApplicationContext m_context;
     private FeatureManager m_featureManager;
+	
+	protected static final Logger LOG = Logger.getLogger(ForwardingRules.class);
 
     public void setSbcManager(SbcManager sbcManager) {
         m_sbcManager = sbcManager;
@@ -90,7 +93,12 @@ public class ForwardingRules extends RulesFile implements ApplicationContextAwar
         context.put("proxyAddress", m_addressManager.getSingleAddress(ProxyManager.TCP_ADDRESS, getLocation()));
         context.put("statusAddress", m_addressManager.getSingleAddress(Mwi.SIP_TCP, getLocation()));
         context.put("regEventAddress", m_addressManager.getSingleAddress(Registrar.EVENT_ADDRESS, getLocation()));
-        context.put("regAddress", m_addressManager.getSingleAddress(Registrar.TCP_ADDRESS, getLocation()));
+        // Use Local registrar, if not available use global rr SRV record
+        if(m_featureManager.isFeatureEnabled(Registrar.FEATURE, getLocation())) {
+            context.put("regAddress", m_addressManager.getSingleAddress(Registrar.TCP_ADDRESS, getLocation()));
+        } else {
+            context.put("regAddress", new Address(Registrar.TCP_ADDRESS, "rr." + getDomainName(),0));
+        }
         context.put("location", getLocation());
 
         List<BridgeSbc> bridgeSbcs = new ArrayList<BridgeSbc>();
