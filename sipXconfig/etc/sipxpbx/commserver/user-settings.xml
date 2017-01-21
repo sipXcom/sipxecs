@@ -560,4 +560,308 @@
       <value>0</value>
     </setting>
   </group>
+  <group name="user-portal">
+      <group name="dial-pad-search">
+          <setting name="dial-pad">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="search">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>          
+      </group>
+      <group name="clickToCall-chat">
+          <setting name="clickToCall">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="chat">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>          
+      </group>
+      <group name="clickToCall-conf">
+          <setting name="conf">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>   
+      </group>
+      <group name="menu">
+          <setting name="activityList">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="contacts">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="groupChats">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="confBridge">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="voicemails">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="myProfile">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="callHistory">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="settings">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="settingsPersonalAttendant">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="settingsCallForwarding">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="settingsSpeedDials">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettings">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsChangePassword">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>  
+          <setting name="userSettingsVoicemailPin">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsAnnouncement">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsEmail">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsAttachAudio">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsAlternateEmail">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsAlternateAttachAudio">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsConfBridgeRoom">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsConfBridgeEnabled">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsConfBridgeName">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsConfBridgeModeratorPin">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsConfBridgeParticipantPin">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsConfBridgeMaxMembers">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsConfBridgeQuickStart">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsConfBridgeAutoRecord">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsConfBridgeMaxMembers">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsConfBridgeModerated">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsConfBridgeParticipantPin">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsConfBridgePublic">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsConfBridgeEntryTone">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsConfBridgeExitTone">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsConfBridgeVoiceEntry">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsConfBridgeVoiceExit">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsMohAudioSource">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsMohPersonal">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsMohFiles">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsMohAudio">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsMyBuddyConfEntry">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsMyBuddyConfExit">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsMyBuddyVoicemailBegin">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="userSettingsMyBuddyVoicemailEnd">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+          <setting name="soundNotifications">
+              <type>
+                <boolean/>
+              </type>
+              <value>1</value>
+          </setting>
+      </group>      
+  </group>
 </model>
