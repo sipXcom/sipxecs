@@ -32,6 +32,7 @@ import javax.ws.rs.core.Response;
 
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.model.wadl.Description;
+import org.sipfoundry.sipxconfig.api.model.SettingsList;
 import org.sipfoundry.sipxconfig.api.model.UserBean;
 
 @Path("/users/")
@@ -49,6 +50,15 @@ public interface UserApi {
     public Response getUserSettings(
             @Description("User name or alias") @PathParam("userNameOrAlias") String userNameOrAlias,
             @Context HttpServletRequest request);
+
+    @Path("{userNameOrAlias}/settings")
+    @PUT
+    @Consumes({
+        MediaType.APPLICATION_JSON, MediaType.TEXT_XML, MediaType.APPLICATION_XML
+    })
+    public Response setUserSettings(
+            @Description("User name or alias") @PathParam("userNameOrAlias") String userNameOrAlias,
+            @Description("Settings to save") SettingsList settingsList);
 
     @Path("{userNameOrAlias}/settings/{path:.*}")
     @GET

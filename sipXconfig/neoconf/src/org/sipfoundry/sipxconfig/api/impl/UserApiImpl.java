@@ -39,6 +39,7 @@ import org.sipfoundry.commons.userdb.profile.UserProfile;
 import org.sipfoundry.sipxconfig.api.UserApi;
 import org.sipfoundry.sipxconfig.api.model.GroupBean;
 import org.sipfoundry.sipxconfig.api.model.GroupList;
+import org.sipfoundry.sipxconfig.api.model.SettingBean;
 import org.sipfoundry.sipxconfig.api.model.SettingsList;
 import org.sipfoundry.sipxconfig.api.model.UserBean;
 import org.sipfoundry.sipxconfig.api.model.UserProfileBean;
@@ -305,5 +306,19 @@ public class UserApiImpl implements UserApi {
     public Response deleteUser(String userNameOrAlias) {
         m_coreContext.deleteUsersByUserName(Collections.singleton(userNameOrAlias));
         return Response.ok().build();
+    }
+
+    @Override
+    public Response setUserSettings(String userNameOrAlias, SettingsList settingsList) {
+        User user = m_coreContext.loadUserByUserNameOrAlias(userNameOrAlias);
+        if (user != null) {
+            List<SettingBean> settingsBean =  settingsList.getSettings();
+            for (SettingBean bean : settingsBean) {
+                user.setSettingValue(bean.getPath(), bean.getValue());
+            }
+            m_coreContext.saveUser(user);
+            return Response.ok().build();
+        }
+        return Response.status(Status.NOT_FOUND).build();
     }
 }
