@@ -15,12 +15,17 @@
 package org.sipfoundry.sipxconfig.api.impl;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.sipfoundry.sipxconfig.api.UserGroupApi;
 import org.sipfoundry.sipxconfig.api.model.GroupBean;
+import org.sipfoundry.sipxconfig.api.model.SettingBean;
+import org.sipfoundry.sipxconfig.api.model.SettingsList;
 import org.sipfoundry.sipxconfig.common.CoreContext;
 import org.sipfoundry.sipxconfig.common.User;
 import org.sipfoundry.sipxconfig.setting.Group;
@@ -118,5 +123,61 @@ public class UserGroupApiImpl extends GroupApiImpl implements UserGroupApi {
     @Required
     public void setSettingDao(SettingDao settingDao) {
         m_settingDao = settingDao;
+    }
+
+    @Override
+    public Response getGroupSettings(String groupName, HttpServletRequest request) {
+        Group group = m_coreContext.getGroupByName(groupName, false);
+        if (group != null) {
+            Map<String, String> settings = group.getDatabaseValues();
+            return Response.ok().entity(SettingsList.convertDatabaseValues(settings, request.getLocale())).build();
+        }
+        return Response.status(Status.NOT_FOUND).build();
+    }
+
+    @Override
+    public Response getGroupSetting(String groupName, String path, HttpServletRequest request) {
+        Group group = m_coreContext.getGroupByName(groupName, false);
+        SettingBean bean = new SettingBean();
+        bean.setPath(path);
+        bean.setValue(group.getSettingValue(path));
+
+        return Response.ok().entity(bean).build();
+    }
+
+    @Override
+    public Response setGroupSetting(String groupName, String path, String value) {
+        Group group = m_coreContext.getGroupByName(groupName, false);
+        if (group != null) {
+            group.setSettingValue(path, value);
+            m_coreContext.storeGroup(group);
+            return Response.ok().build();
+        }
+        return Response.status(Status.NOT_FOUND).build();
+    }
+
+    @Override
+    public Response deleteGroupSetting(String name, String path) {
+        Group group = m_coreContext.getGroupByName(name, false);
+        if (group != null) {
+            group.getDatabaseValues().remove(path);
+            m_coreContext.storeGroup(group);
+            return Response.ok().build();
+        }
+        return Response.status(Status.NOT_FOUND).build();
+    }
+
+    @Override
+    public Response setGroupSettings(String groupName, SettingsList settingsList) {
+        Group group = m_coreContext.getGroupByName(groupName, false);
+        if (group != null) {
+            List<SettingBean> settingsBean =  settingsList.getSettings();
+            for (SettingBean bean : settingsBean) {
+                group.setSettingValue(bean.getPath(), bean.getValue());
+            }
+            m_coreContext.storeGroup(group);
+            return Response.ok().build();
+        }
+        return Response.status(Status.NOT_FOUND).build();
     }
 }
