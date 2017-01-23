@@ -37,7 +37,7 @@ _On the host CentOS 7 machine_ :
 
 
 
-_On Fat container_
+_On so called Fat container_
 
 1. edit /etc/resolv.conf  and make it point to himself
 
