@@ -14,8 +14,11 @@
  */
 package org.sipfoundry.sipxconfig.api.model;
 
+import static java.util.Map.Entry;
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 import java.util.List;
 import java.util.Locale;
 
@@ -46,6 +49,19 @@ public class SettingsList {
 
         addSettingToList(settingsList, settings, locale);
 
+        SettingsList list = new SettingsList();
+        list.setSettings(settingsList);
+        return list;
+    }
+
+    public static SettingsList convertDatabaseValues(Map<String, String> databaseValues, Locale locale) {
+        List<SettingBean> settingsList = new ArrayList<SettingBean>();
+        for (Entry<String, String> entry : databaseValues.entrySet()) {
+            SettingBean bean = new SettingBean();
+            bean.setPath(entry.getKey());
+            bean.setValue(entry.getValue());
+            settingsList.add(bean);
+        }
         SettingsList list = new SettingsList();
         list.setSettings(settingsList);
         return list;

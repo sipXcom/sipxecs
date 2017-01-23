@@ -14,6 +14,7 @@
  */
 package org.sipfoundry.sipxconfig.api;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -22,11 +23,13 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.cxf.jaxrs.model.wadl.Description;
 import org.sipfoundry.sipxconfig.api.model.GroupBean;
+import org.sipfoundry.sipxconfig.api.model.SettingsList;
 
 @Path("/userGroups/")
 @Produces({
@@ -71,4 +74,40 @@ public interface UserGroupApi {
     @PUT
     public Response moveUserGroupDown(
             @Description("Phone group internal id or name") @PathParam("groupId") String groupId);
+
+    @Path("{groupName}/settings")
+    @GET
+    public Response getGroupSettings(
+            @Description("Group name") @PathParam("groupName") String groupName,
+            @Context HttpServletRequest request);
+
+    @Path("{groupName}/settings")
+    @PUT
+    @Consumes({
+        MediaType.APPLICATION_JSON, MediaType.TEXT_XML, MediaType.APPLICATION_XML
+    })
+    public Response setGroupSettings(
+            @Description("Group name") @PathParam("groupName") String groupName,
+            @Description("Settings to save") SettingsList settingsList);
+
+    @Path("{groupName}/settings/{path:.*}")
+    @GET
+    public Response getGroupSetting(
+            @Description("Group name") @PathParam("groupName") String groupName,
+            @Description("Path to Group setting") @PathParam("path") String path, @Context HttpServletRequest request);
+
+    @Path("{groupName}/settings/{path:.*}")
+    @PUT
+    @Consumes({
+        MediaType.TEXT_PLAIN
+    })
+    public Response setGroupSetting(
+            @Description("User extension") @PathParam("groupName") String groupName,
+            @Description("Path to User setting") @PathParam("path") String path, String value);
+
+    @Path("{groupName}/settings/{path:.*}")
+    @DELETE
+    public Response deleteGroupSetting(
+            @Description("Group name") @PathParam("groupName") String name,
+            @Description("Path to Group setting") @PathParam("path") String path);
 }
