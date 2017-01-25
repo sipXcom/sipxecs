@@ -790,8 +790,8 @@
         <setting name="phone_setting.vq_rtcpxr_delay_threshold_critical"><type><integer min="15" max="40"/></type></setting>
         <setting name="phone_setting.vq_rtcpxr.states_show_on_web.enable"><type><boolean/></type><value>0</value></setting>
         <setting name="phone_setting.vq_rtcpxr.states_show_on_gui.enable"><type><boolean/></type><value>0</value></setting>
-        <setting name="phone_setting.vq_rtcpxr.rtcp_xr_report.enable"><type><boolean/></type><value>0</value></setting>
-        <setting name="phone_setting.vq_rtcpxr.enable"><type><boolean/></type><value>0</value></setting>
+        <setting name="phone_setting.rtcp_xr_report.enable"><type><boolean/></type><value>0</value></setting>
+        <setting name="voice.rtcp_xr.enable"><type><boolean/></type><value>0</value></setting>
     </group>
     <group name="distinctive-ringer">
 		<setting name="distinctive_ring_tones.alert_info.1.text"><type><string/></type></setting>
