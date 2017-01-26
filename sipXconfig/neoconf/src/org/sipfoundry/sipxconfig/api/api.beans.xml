@@ -31,6 +31,7 @@
 
     <util:list id="registeredApis">
         <ref bean="userRestApi"/>
+        <ref bean="myUserRestApi"/>
         <ref bean="userGroupRestApi"/>
         <ref bean="phoneRestApi"/>
         <ref bean="phoneGroupRestApi"/>
@@ -154,11 +155,17 @@
         <property name="autoAttendantManager" ref="autoAttendantManager" />
         <property name="forwardingContext" ref="forwardingContext" />
     </bean>
+    
     <bean class="org.sipfoundry.sipxconfig.api.impl.UserApiImpl" id="userRestApi">
         <property name="coreContext" ref="coreContext"/>
         <property name="settingDao" ref="settingDao" />
         <property name="branchManager" ref="branchManager" />
     </bean>
+    <bean class="org.sipfoundry.sipxconfig.api.impl.MyUserApiImpl" id="myUserRestApi">
+        <property name="coreContext" ref="coreContext"/>
+        <property name="userApiImpl" ref="userRestApi"/>
+    </bean>
+    
     <bean class="org.sipfoundry.sipxconfig.api.impl.UserGroupApiImpl" id="userGroupRestApi">
         <property name="coreContext" ref="coreContext"/>
         <property name="settingDao" ref="settingDao" />
