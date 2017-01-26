@@ -68,6 +68,10 @@ public class UserApiImpl implements UserApi {
     @Override
     public Response setUserSetting(String userNameOrAlias, String path, String value) {
         User user = m_coreContext.loadUserByUserNameOrAlias(userNameOrAlias);
+        return setUserSetting(user, path, value);
+    }
+
+    public Response setUserSetting(User user, String path, String value) {
         if (user != null) {
             user.setSettingValue(path, value);
             m_coreContext.saveUser(user);
@@ -79,6 +83,10 @@ public class UserApiImpl implements UserApi {
     @Override
     public Response deleteUserSetting(String userNameOrAlias, String path) {
         User user = m_coreContext.loadUserByUserNameOrAlias(userNameOrAlias);
+        return deleteUserSetting(user, path);
+    }
+
+    public Response deleteUserSetting(User user, String path) {
         if (user != null) {
             Setting setting = user.getSettings().getSetting(path);
             setting.setValue(setting.getDefaultValue());
@@ -142,7 +150,7 @@ public class UserApiImpl implements UserApi {
         return Response.status(Status.NOT_FOUND).build();
     }
 
-    private void convertToUser(UserBean userBean, User user) {
+    public void convertToUser(UserBean userBean, User user) {
         String beanUserName = userBean.getUserName();
         if (beanUserName != null) {
             user.setUserName(userBean.getUserName());
@@ -209,6 +217,10 @@ public class UserApiImpl implements UserApi {
     @Override
     public Response getUser(String userNameOrAlias) {
         User user = m_coreContext.loadUserByUserNameOrAlias(userNameOrAlias);
+        return getUser(user);
+    }
+
+    public Response getUser(User user) {
         if (user != null) {
             return Response.ok().entity(UserBean.convertUser(user)).build();
         }
@@ -218,6 +230,10 @@ public class UserApiImpl implements UserApi {
     @Override
     public Response updateUser(String userNameOrAlias, UserBean userBean) {
         User user = m_coreContext.loadUserByUserNameOrAlias(userNameOrAlias);
+        return updateUser(user, userBean);
+    }
+
+    public Response updateUser(User user, UserBean userBean) {
         if (user != null) {
             convertToUser(userBean, user);
             m_coreContext.saveUser(user);
@@ -289,6 +305,10 @@ public class UserApiImpl implements UserApi {
     @Override
     public Response getUserSettings(String userNameOrAlias, HttpServletRequest request) {
         User user = m_coreContext.loadUserByUserNameOrAlias(userNameOrAlias);
+        return getUserSettings(user, request);
+    }
+
+    public Response getUserSettings(User user, HttpServletRequest request) {
         if (user != null) {
             Setting settings = user.getSettings();
             return Response.ok().entity(SettingsList.convertSettingsList(settings, request.getLocale())).build();
@@ -311,6 +331,10 @@ public class UserApiImpl implements UserApi {
     @Override
     public Response setUserSettings(String userNameOrAlias, SettingsList settingsList) {
         User user = m_coreContext.loadUserByUserNameOrAlias(userNameOrAlias);
+        return setUserSettings(user, settingsList);
+    }
+
+    public Response setUserSettings(User user, SettingsList settingsList) {
         if (user != null) {
             List<SettingBean> settingsBean =  settingsList.getSettings();
             for (SettingBean bean : settingsBean) {
