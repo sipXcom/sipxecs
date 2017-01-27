@@ -351,6 +351,7 @@ uniteWeb.config([
           restService.getLogindetails().
             then(function (data) {
               restService.updateCredentials(data['login-details']['userName']);
+              uiService.secondary.permission.init();
               restService.connected = true;
             }, function (err) {
               console.log(err);
@@ -385,6 +386,7 @@ uniteWeb.config([
             restService.getLogindetails().
               then(function (data) {
                 restService.updateCredentials(data['login-details']['userName']);
+                uiService.secondary.permission.init();
                 restService.connected = true;
               }, function (err) {
                 console.log(err);
@@ -2068,6 +2070,20 @@ uw.service('restService', [
       return deferred.promise;
     }
 
+    this.getPermissions = function () {
+      var deferred = $q.defer();
+
+      sipRest.getPermissions().
+        success(function (data) {
+          deferred.resolve(data);
+        }).
+        error(function (e) {
+          deferred.reject(e);
+        })
+
+      return deferred.promise;
+    }
+
     /**
      * initializes sipRest methods
      * eZuce proprietary
@@ -2475,6 +2491,12 @@ uw.service('restService', [
           }))
         },
 
+        getPermissions: function () {
+          return request(authHeaders({
+            method: 'GET',
+            url:    baseRestNew + '/my/user/settings/user-portal'
+          }))
+        },
         // generates requests functions
         // like above, but instead passing through a list of objects
         // function genReqFn(list) {
@@ -2652,8 +2674,8 @@ uw.service('restService', [
 
         root: {
           templates:    sharedFactory.settings.mainMenu,
-          template:     sharedFactory.settings.mainMenu[1],
-          oldTemplate:  sharedFactory.settings.mainMenu[1]
+          template:     null,//sharedFactory.settings.mainMenu[1],
+          oldTemplate:  null,//sharedFactory.settings.mainMenu[1]
         },
 
         groupChat: {
@@ -3032,16 +3054,88 @@ uw.service('restService', [
          enableContactClickCall: true,
          //enableContactClickToChat: true,
          enableConfBridgeClickToCall: true,
+         enableSettingUserPaswd: true,
+         enableSettingUserVmPin: true,
+         enableSettingUserAnnouncement: true,
+         enableSettingUserEmail: true,
+         enableSettingUserAttachAudio: true,
+         enableSettingUserAltEmail: true,
+         enableSettingUserAltAttachAudio: true,
+         enableSettingUserConfBridgeRoom: true,
+         enableSettingUserConfBridgeEnabled: true,
+         enableSettingUserConfBridgeName: true,
+         enableSettingUserConfBridgeModeratorPin: true,
+         enableSettingUserConfBridgePartPin: true,
+         enableSettingUserConfBridgeMaxMembers: true,
+         enableSettingUserConfBridgeQuickStart: true,
+         enableSettingUserConfBridgeAutoRecord: true,
+         enableSettingUserConfBridgeEntryTone: true,
+         enableSettingUserConfBridgeExitTone: true,
+         enableSettingUserConfBridgeEntryVoice: true,
+         enableSettingUserConfBridgeExitVoice: true,
+         enableSettingUserMoHAudioSource: true,
+         enableSettingUserMoHPersonal: true,
+         enableSettingUserMoHFiles: true,
+         enableSettingUserMyBuddyConfEnter: true,
+         buddy: ["true", "true", "true", "true"],
+         enableSettingUserSoundNotify: true,
+
+         settings : [
+           {
+             icon: 'chat_to_call',
+             name: 'Personal Attendant',
+             enable: 'true'
+           },
+           {
+             icon: 'follow_me',
+             name: 'Call Forwarding',
+             enable: 'true'
+           },
+           {
+             icon: 'dialpad',
+             name: 'Speed Dials',
+             enable: 'true'
+           },
+           {
+             icon: 'settings_cogs',
+             name: 'User Settings',
+             enable: 'true'
+           }
+         ],
 
          init: function () {
-                    /*secondary.permission.enableDialPadIcon = false;
-                    secondary.permission.enableSearchIcon = false;
-                    secondary.permission.enableContactClickCall = false;
-                    secondary.permission.enableContactClickToChat = false;
-                    secondary.permission.enableConfBridgeClickToCall = false;
-                    ui.root.templates[0].show = false;*/
-          }
-         },
+           restService.getPermissions().then(function (data) {
+             //console.log("data received");
+             if(data.settings[0].value == '0')
+               secondary.permission.enableDialPadIcon = false;
+
+             if(data.settings[1].value == '0')
+               secondary.permission.enableSearchIcon = false;
+
+             if(data.settings[6].value == '0')
+               ui.root.templates[1].show = "false";
+
+             if (ui.root.templates[1].show == "true") {
+               util.changeView(ui.root.templates[1]);
+               ui.root.oldTemplate = ui.root.templates[1];
+               ui.root.template = ui.root.templates[1];
+             }
+               /*if( data == "false"){
+                 secondary.settings.errors.moh = true;
+               }
+               else{
+                 secondary.settings.errors.moh = false;
+               }*/
+           }).catch(function (err) {
+             console.log("permission errors");
+             //show activity list by default
+             util.changeView(ui.root.templates[0]);
+             ui.root.oldTemplate = ui.root.templates[0];
+             ui.root.template = ui.root.templates[0];
+             //secondary.settings.errors.moh = true;
+           });
+         }
+        },
 
         conference: {
 
@@ -4342,7 +4436,7 @@ uw.service('restService', [
 
         changeView : function (view) {
 
-          if (view.type) {
+          if (!!view && view.type) {
             secondary.template.main             = view;
             secondary.voicemail.messages        = [];
             secondary.conference.participants   = [];
@@ -4354,7 +4448,7 @@ uw.service('restService', [
             $rootScope.leftSideView = 'hide-me';
           } else {
             groupChat.modal           = false;
-            if (ui.root.oldTemplate.name !== view.name) {
+            if (ui.root.oldTemplate != null && ui.root.template != null && ui.root.oldTemplate.name !== view.name) {
               ui.root.oldTemplate = angular.copy(ui.root.template);
             }
             ui.root.template = view;
@@ -4654,7 +4748,7 @@ uw.controller('profile', [
 
     uiService.secondary.conference.init();
     uiService.secondary.callhistory.init();
-    uiService.secondary.permission.init();
+    //uiService.secondary.permission.init();
 
     $scope.callhistory.clickToCall = function(clicked) {
       $scope.showDialFn(true);
@@ -4861,7 +4955,8 @@ uw.controller('profile', [
 
     $scope.$watchCollection('search', function (val) {
       if (val.t === '') {
-        uiService.util.changeView(uiService.ui.root.oldTemplate);
+        if(uiService.ui.root.oldTemplate != null)
+          uiService.util.changeView(uiService.ui.root.oldTemplate);
       } else if (uiService.ui.root.template !== uiService.ui.root.templates[8]) {
         uiService.util.changeView(uiService.ui.root.templates[8]);
       };
@@ -5062,7 +5157,7 @@ uw.controller('settingsController', [
           break;
       }
     }
-    $scope.settings   = [
+    $scope.settings   = uiService.secondary.permission.settings; /*[
       {
         icon: 'chat_to_call',
         name: 'Personal Attendant'
@@ -5079,7 +5174,7 @@ uw.controller('settingsController', [
         icon: 'settings_cogs',
         name: 'User Settings'
       }
-    ];
+    ];*/
     $scope.tooltips = {
       personalAttendant: {
         add: {
@@ -5155,6 +5250,8 @@ uw.controller('settingsController', [
     };
     $scope.reloadApp      = uiService.secondary.logout.init;
     $scope.userSettings   = uiService.secondary.settings;
+
+    $scope.permission     = uiService.secondary.permission;
   }
 ]);
 })();
