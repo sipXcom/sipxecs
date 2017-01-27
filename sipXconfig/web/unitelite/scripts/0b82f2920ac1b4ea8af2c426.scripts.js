@@ -3112,6 +3112,12 @@ uw.service('restService', [
              if(data.settings[1].value == '0')
                secondary.permission.enableSearchIcon = false;
 
+             if(data.settings[2].value == '0')
+               secondary.permission.enableContactClickCall = false;
+
+             if(data.settings[4].value == '0')
+               secondary.permission.enableConfBridgeClickToCall = false;
+
              if(data.settings[6].value == '0')
                ui.root.templates[1].show = "false";
 
@@ -5026,6 +5032,8 @@ uw.controller('profile', [
       $scope.removeConversation   = uiService.ui.activityList.removeConversation;
 
       $scope.search               = uiService.search;
+
+      $scope.permission = uiService.secondary.permission;
 
       $scope.muc                  = {
         showModal:  uiService.ui.groupChat.showModal,
