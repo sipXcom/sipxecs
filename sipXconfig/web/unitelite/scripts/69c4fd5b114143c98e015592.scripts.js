@@ -3117,28 +3117,130 @@ uw.service('restService', [
 
              if(data.settings[4].value == '0')
                secondary.permission.enableConfBridgeClickToCall = false;
-
+             // contact list item
              if(data.settings[6].value == '0')
                ui.root.templates[1].show = "false";
+
+
 
              if (ui.root.templates[1].show == "true") {
                util.changeView(ui.root.templates[1]);
                ui.root.oldTemplate = ui.root.templates[1];
                ui.root.template = ui.root.templates[1];
              }
-               /*if( data == "false"){
-                 secondary.settings.errors.moh = true;
-               }
-               else{
-                 secondary.settings.errors.moh = false;
-               }*/
+
+            //conf bridge item
+            if(data.settings[8].value == '0')
+              ui.root.templates[2].show = "false";
+            //voicemail item
+            if(data.settings[9].value == '0')
+              ui.root.templates[3].show = "false";
+            //my profile item
+            if(data.settings[10].value == '0')
+              ui.root.templates[4].show = "false";
+            //call history item
+            if(data.settings[11].value == '0')
+              ui.root.templates[5].show = "false";
+            //settings item
+            if(data.settings[12].value == '0')
+              ui.root.templates[6].show = "false";
+            //settings personal attendant
+            if(data.settings[13].value == '0')
+              secondary.permission.settings[0].enable = "false";
+            //settings call forwarding
+            if(data.settings[14].value == '0')
+              secondary.permission.settings[1].enable = "false";
+            //settings speed dials
+            if(data.settings[15].value == '0')
+              secondary.permission.settings[2].enable = "false";
+            //settings user settings
+            if(data.settings[16].value == '0')
+              secondary.permission.settings[3].enable = "false";
+
+            if(data.settings[17].value == '0')
+              secondary.permission.enableSettingUserPaswd = false;
+
+            if(data.settings[18].value == '0')
+              secondary.permission.enableSettingUserVmPin =false;
+
+            if(data.settings[19].value == '0')
+              secondary.permission.enableSettingUserAnnouncement = false;
+
+            if(data.settings[20].value == '0')
+              secondary.permission.enableSettingUserEmail = false;
+
+            if(data.settings[21].value == '0')
+              secondary.permission.enableSettingUserAttachAudio = false;
+
+            if(data.settings[22].value == '0')
+              secondary.permission.enableSettingUserAltEmail = false;
+
+            if(data.settings[23].value == '0')
+              secondary.permission.enableSettingUserAltAttachAudio = false;
+
+            if(data.settings[24].value == '0')
+              secondary.permission.enableSettingUserConfBridgeRoom = false;
+
+            if(data.settings[25].value == '0')
+              secondary.permission.enableSettingUserConfBridgeEnabled = false;
+
+            if(data.settings[26].value == '0')
+              secondary.permission.enableSettingUserConfBridgeName = false;
+
+            if(data.settings[27].value == '0')
+              secondary.permission.enableSettingUserConfBridgeModeratorPin = false;
+
+            if(data.settings[28].value == '0')
+              secondary.permission.enableSettingUserConfBridgePartPin = false;
+
+            if(data.settings[29].value == '0')
+              secondary.permission.enableSettingUserConfBridgeMaxMembers = false;
+
+            if(data.settings[30].value == '0')
+              secondary.permission.enableSettingUserConfBridgeQuickStart = false;
+
+            if(data.settings[31].value == '0')
+              secondary.permission.enableSettingUserConfBridgeAutoRecord = false;
+
+            if(data.settings[34].value == '0')
+              secondary.permission.enableSettingUserConfBridgeEntryTone = true;
+
+            if(data.settings[35].value == '0')
+              secondary.permission.enableSettingUserConfBridgeExitTone = true;
+
+            if(data.settings[36].value == '0')
+              secondary.permission.enableSettingUserConfBridgeEntryVoice = false;
+
+            if(data.settings[37].value == '0')
+              secondary.permission.enableSettingUserConfBridgeExitVoice = false;
+
+            if(data.settings[38].value == '0')
+              secondary.permission.enableSettingUserMoHAudioSource = false;
+
+            if(data.settings[39].value == '0')
+              secondary.permission.enableSettingUserMoHPersonal = false;
+
+            if(data.settings[40].value == '0')
+              secondary.permission.enableSettingUserMoHFiles = false;
+
+            if(data.settings[42].value == '0')
+              secondary.permission.buddy[0] = false;
+
+            if(data.settings[43].value == '0')
+              secondary.permission.buddy[1] = false;
+
+            if(data.settings[44].value == '0')
+              secondary.permission.buddy[2] = false;
+
+            if(data.settings[45].value == '0')
+              secondary.permission.buddy[3] = false;
+
            }).catch(function (err) {
              console.log("permission errors");
              //show activity list by default
              util.changeView(ui.root.templates[0]);
              ui.root.oldTemplate = ui.root.templates[0];
              ui.root.template = ui.root.templates[0];
-             //secondary.settings.errors.moh = true;
            });
          }
         },
