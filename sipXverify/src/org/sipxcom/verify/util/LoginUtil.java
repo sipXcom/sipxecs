@@ -37,6 +37,7 @@ public class LoginUtil {
      */
     public static WebDriver getRemoteWebDriver(String userName) {
         String browser = PropertyLoader.getProperty("browser");
+        System.setProperty("webdriver.firefox.marionette", ".\\geckodriver.exe");
         WebDriver driver = null;
         if (browser.equals("chrome")) {
             return new ChromeDriver();
