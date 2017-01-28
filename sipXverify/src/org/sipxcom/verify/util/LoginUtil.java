@@ -33,7 +33,7 @@ public class LoginUtil {
     }
 
     /**
-     *  Returns selenium driver logged in with superadmin
+     *  Returns selenium driver logged in with superadmin user
      */
     public static WebDriver getRemoteWebDriver(String userName) {
         String browser = PropertyLoader.getProperty("browser");
