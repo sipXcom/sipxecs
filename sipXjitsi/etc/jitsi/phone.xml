@@ -247,6 +247,12 @@
         <value>150</value>
       </setting>      
     </group>
+    <group name="protocol">
+      <setting name="RejectIncomingCallsWhenDnD">
+        <type refid="true-false" />
+        <value>true</value>
+      </setting>
+    </group>
   </group>
   <group name="e911" hidden="yes">
     <setting name="location">
