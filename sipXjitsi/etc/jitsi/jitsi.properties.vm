@@ -72,6 +72,7 @@ net.java.sip.communicator.impl.neomedia.codec.video.h264.preferredKeyFrameReques
 org.jitsi.impl.neomedia.codec.video.h264.preset=$phone.getSettingValue('advanced/h264/preset')
 org.jitsi.impl.neomedia.codec.video.h264.defaultIntraRefresh=$phone.getSettingValue('advanced/h264/defaultIntraRefresh')
 org.jitsi.impl.neomedia.codec.video.h264.keyint=$phone.getSettingValue('advanced/h264/keyint')
+net.java.sip.communicator.impl.protocol.RejectIncomingCallsWhenDnD=$phone.getSettingValue('advanced/protocol/RejectIncomingCallsWhenDnD')
 #foreach ($line in $lines.entrySet())
 net.java.sip.communicator.impl.protocol.sip.acc$line.key=acc$line.key
 net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.ACCOUNT_UID=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/acc/ACCOUNT_UID')
