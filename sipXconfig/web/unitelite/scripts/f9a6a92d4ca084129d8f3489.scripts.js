@@ -5216,6 +5216,7 @@ uw.controller('secview', [
     $scope.conf               = uiService.secondary.conference;
     $scope.myprofile          = uiService.secondary.profile;
     $scope.callhistory        = uiService.secondary.callhistory;
+    $scope.permission         = uiService.secondary.permission;
 
     // ngOptions
     // $scope.voicemail.folder   = $scope.voicemail.folders[0];
