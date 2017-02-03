@@ -251,16 +251,32 @@ public class Conference extends BeanWithSettings implements Replicable, DeployCo
         return (Boolean) getSettingTypedValue(PLAY_ENTRY_TONE);
     }
 
+    public void setPlayEntryToneEnabled(Boolean playEntryToneEnabled) {
+        setSettingTypedValue(PLAY_ENTRY_TONE, playEntryToneEnabled);
+    }
+
     public boolean isPlayExitToneEnabled() {
         return (Boolean) getSettingTypedValue(PLAY_EXIT_TONE);
+    }
+
+    public void setPlayExitToneEnabled(Boolean playExitToneEnabled) {
+        setSettingTypedValue(PLAY_EXIT_TONE, playExitToneEnabled);
     }
 
     public boolean isRecordAndPlayNameOnEntryEnabled() {
         return (Boolean) getSettingTypedValue(RECORD_AND_PLAY_NAME_ON_ENTRY);
     }
 
+    public void setRecordAndPlayNameOnEntryEnabled(Boolean recordAndPlayNameOnEntryEnabled) {
+        setSettingTypedValue(RECORD_AND_PLAY_NAME_ON_ENTRY, recordAndPlayNameOnEntryEnabled);
+    }
+
     public boolean isRecordAndPlayNameOnExitEnabled() {
         return (Boolean) getSettingTypedValue(RECORD_AND_PLAY_NAME_ON_EXIT);
+    }
+
+    public void setRecordAndPlayNameOnEXitEnabled(Boolean recordAndPlayNameOnExitEnabled) {
+        setSettingTypedValue(RECORD_AND_PLAY_NAME_ON_EXIT, recordAndPlayNameOnExitEnabled);
     }
 
     public String getUri() {
