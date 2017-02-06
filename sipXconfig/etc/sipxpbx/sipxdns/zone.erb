@@ -24,8 +24,13 @@
 
     naptr_protocols.each { |proto| 
     protoCode = 'SIP+D2' + proto[0,1].upcase  # SIP+D2T
+    if proto[0,3].upcase == 'TCP'
+%><%= domain %>.       IN    NAPTR          1 0 "s" "<%= protoCode %>" "" _sip._<%= proto %>
+<%
+    else
 %><%= domain %>.       IN    NAPTR	    2 0 "s" "<%= protoCode %>" "" _sip._<%= proto %>
-<%  }
+<%  end
+    }
   end
 
   if resource_records
