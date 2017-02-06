@@ -16,11 +16,6 @@
 
 bundle agent hostname {
   files:
-    "/etc/hosts"
-      create => "true",
-      comment => "Edit $(this.promiser)",
-      perms => m("644"),
-      edit_line => hosts_contents;
 
     "/etc/sysconfig/network"
       create => "true",
