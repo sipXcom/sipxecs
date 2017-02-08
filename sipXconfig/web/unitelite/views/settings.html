@@ -699,6 +699,7 @@
                   <div class="col-sm-9">
                     <input type="password" class="form-control" placeholder="********"
                       data-ng-pattern="/^[a-zA-Z0-9-!$%^&*()_+|~=`{}\[\]:;'<>?,.\/@#]{8,}$/"
+                      data-ng-disabled="!permission.enableSettingUserPaswd"
                       data-ng-model="userSettings.user.pass">
                     <span class="help-block">
                       Used to log into the User Portal and XMPP. Minimum length is 8.
