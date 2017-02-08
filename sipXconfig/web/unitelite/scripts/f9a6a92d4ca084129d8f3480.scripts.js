@@ -3203,10 +3203,10 @@ uw.service('restService', [
               secondary.permission.enableSettingUserConfBridgeAutoRecord = false;
 
             if(data.settings[34].value == '0')
-              secondary.permission.enableSettingUserConfBridgeEntryTone = true;
+              secondary.permission.enableSettingUserConfBridgeEntryTone = false;
 
             if(data.settings[35].value == '0')
-              secondary.permission.enableSettingUserConfBridgeExitTone = true;
+              secondary.permission.enableSettingUserConfBridgeExitTone = false;
 
             if(data.settings[36].value == '0')
               secondary.permission.enableSettingUserConfBridgeEntryVoice = false;
