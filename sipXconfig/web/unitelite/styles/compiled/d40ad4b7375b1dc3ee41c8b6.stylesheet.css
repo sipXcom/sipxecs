@@ -14974,6 +14974,15 @@ select.default {
   padding-top: 10px;
   height: 100%;
 }
+#webchat-main .right-side-view .callhistory-content .timezone {
+  width: 100%;
+  height: 15px;
+  float: left;
+}
+#webchat-main .right-side-view .callhistory-content .timezoneselect {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 #webchat-main .right-side-view .callhistory-content .start {
   width: 100%;
   height: 15px;
@@ -14988,6 +14997,7 @@ select.default {
   width: 338px;
   height: 34px;
   margin-top: 34px;
+  margin-left: 5px;
   float: left;
 }
 #webchat-main .right-side-view .callhistory-content .input-group .form-control {
@@ -15102,14 +15112,14 @@ select.default {
 }
 #webchat-main .right-side-view .callhistory-content .callhistory-btn {
   width: 100%;
-  margin-left: 10px;
+  /*margin-left: 10px;*/
   margin-bottom: 25px;
   margin-top: 10px;
   float: left;
 }
 #webchat-main .right-side-view .callhistory-content .callhistory-select {
   width: 100%;
-  margin-left: 10px;
+  /*margin-left: 10px;*/
   margin-bottom: 15px;
   float: left;
 }
