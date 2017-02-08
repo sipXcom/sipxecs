@@ -1129,7 +1129,8 @@ uw.service('sharedFactory', [
           url: 'views/call-history.html',
           iconClass: 'icon-call_history',
           type: 'right',
-          show: 'true'
+          show: 'true',
+          fn: 'callhistory'
         },
         {
           name: 'Settings',
@@ -2940,6 +2941,8 @@ uw.service('restService', [
         },
 
         callhistory: {
+          sortKey: null,
+          reverse: null,
           startTime: new Date(),
           isOpenStartDate: false,
           openStartDate: function () {
@@ -2959,9 +2962,57 @@ uw.service('restService', [
             {id: '4', name: 'From or To'}
           ],
           selectedOption: {id: '1', name: '- all -'},
-          init: function () {
+
+          availableTimezoneOptions: [
+            {id: '0', name: 'GMT+0'},
+            {id: '1', name: 'GMT+1'},
+            {id: '2', name: 'GMT+2'},
+            {id: '3', name: 'GMT+3'},
+            {id: '3.5', name: 'GMT+3:30'},
+            {id: '4', name: 'GMT+4'},
+            {id: '4.5', name: 'GMT+4:30'},
+            {id: '5', name: 'GMT+5'},
+            {id: '5.5', name: 'GMT+5:30'},
+            {id: '6', name: 'GMT+6'},
+            {id: '6.5', name: 'GMT+6:30'},
+            {id: '7', name: 'GMT+7'},
+            {id: '8', name: 'GMT+8'},
+            {id: '9', name: 'GMT+9'},
+            {id: '9.5', name: 'GMT+9:30'},
+            {id: '10', name: 'GMT+10'},
+            {id: '10.5', name: 'GMT+10:30'},
+            {id: '11', name: 'GMT+11'},
+            {id: '11.5', name: 'GMT+11:30'},
+            {id: '12', name: 'GMT+12'},
+            {id: '-1', name: 'GMT-1'},
+            {id: '-2', name: 'GMT-2'},
+            {id: '-3', name: 'GMT-3'},
+            {id: '-3.5', name: 'GMT-3:30'},
+            {id: '-4', name: 'GMT-4'},
+            {id: '-5', name: 'GMT-5'},
+            {id: '-6', name: 'GMT-6'},
+            {id: '-7', name: 'GMT-7'},
+            {id: '-8', name: 'GMT-8'},
+            {id: '-8.5', name: 'GMT-8:30'},
+            {id: '-9', name: 'GMT-9'},
+            {id: '-9.5', name: 'GMT-9:30'},
+            {id: '-10', name: 'GMT-10'},
+            {id: '-11', name: 'GMT-11'},
+            {id: '-12', name: 'GMT-12'},
+          ],
+          selectedTimezoneOption: {id: '0'},
+
+          initialize: function () {
+            secondary.callhistory.sortKey = "start";
             secondary.callhistory.startTime.setHours(0);
             secondary.callhistory.startTime.setMinutes(0);
+            var actDate = new Date();
+            secondary.callhistory.selectedTimezoneOption.id = (-actDate.getTimezoneOffset()/60).toString();
+          },
+
+          init: function () {
+            // show history from default values set
+            secondary.callhistory.apply();
           },
           apply: function () {
             secondary.callhistory.calls = [];
@@ -2973,10 +3024,27 @@ uw.service('restService', [
                 var d=a[0].split("-");
                 var t=a[1].split(":");
                 var date = new Date(d[0],d[1]-1,d[2],t[0],t[1],t[2]);
-                var actDate = new Date();
+                //var actDate = new Date();
                 //convert to local timezone
-                var localDate = new Date(date.getTime() - (60000*actDate.getTimezoneOffset()));
-                data[i].start = localDate.getFullYear()+"-"+(localDate.getMonth()+1)+"-"+(localDate.getDay()+1)+" "+localDate.getHours()+":"+localDate.getMinutes()+":"+localDate.getSeconds();
+                //var localDate = new Date(date.getTime() - (60000*actDate.getTimezoneOffset()));
+                //data[i].start = localDate.getFullYear()+"-"+(localDate.getMonth()+1)+"-"+(localDate.getDay()+1)+" "+localDate.getHours()+":"+localDate.getMinutes()+":"+localDate.getSeconds();
+                var localDate = new Date(date.getTime() + (3600000*Number(secondary.callhistory.selectedTimezoneOption.id)));
+                var month = localDate.getMonth()+1;
+                if (month < 10)
+                  month = "0" + month;
+                var day = localDate.getDate();
+                if (day < 10)
+                  day = "0" + day;
+                var hours = localDate.getHours();
+                if (hours < 10)
+                  hours = "0" + hours;
+                var minutes = localDate.getMinutes();
+                if (minutes < 10)
+                  minutes = "0" + minutes;
+                var seconds = localDate.getSeconds();
+                if (seconds < 10)
+                  seconds = "0" + seconds;
+                data[i].start = localDate.getFullYear()+"-"+month+"-"+day+" "+hours+":"+minutes+":"+seconds;
 
                 // duration
                 if(data[i].duration != "null"){
@@ -2995,48 +3063,50 @@ uw.service('restService', [
                   data[i].duration = hours+":"+minutes+":"+seconds;
                   //calculate stop time
                   stopDate = new Date(localDate.getTime() + ((dur[6]*3600000) + (dur[8]*60000)+ (dur[10].split('.')[0]*1000)));
-                  data[i].stop = stopDate.getFullYear()+"-"+(stopDate.getMonth()+1)+"-"+(stopDate.getDay()+1)+" "+stopDate.getHours()+":"+stopDate.getMinutes()+":"+stopDate.getSeconds();
+                  var month = stopDate.getMonth()+1;
+                  if (month < 10)
+                    month = "0" + month;
+                  var day = stopDate.getDate();
+                  if (day < 10)
+                    day = "0" + day;
+                  var hours = stopDate.getHours();
+                  if (hours < 10)
+                    hours = "0" + hours;
+                  var minutes = stopDate.getMinutes();
+                  if (minutes < 10)
+                    minutes = "0" + minutes;
+                  var seconds = stopDate.getSeconds();
+                  if (seconds < 10)
+                    seconds = "0" + seconds;
+                  data[i].stop = stopDate.getFullYear()+"-"+month+"-"+day+" "+hours+":"+minutes+":"+seconds;
                 }
                 else{
                   data[i].duration = "00:00:00";
                   //calculate stop time
-                  stopDate = new Date(localDate.getTime());
-                  data[i].stop = stopDate.getFullYear()+"-"+(stopDate.getMonth()+1)+"-"+(stopDate.getDay()+1)+" "+stopDate.getHours()+":"+stopDate.getMinutes()+":"+stopDate.getSeconds();
+                  data[i].stop = data[i].start;
                 }
 
-                if(date.getTime() < (secondary.callhistory.endTime.getTime()  + (60000*actDate.getTimezoneOffset())) && date.getTime() > (secondary.callhistory.startTime.getTime() + (60000*actDate.getTimezoneOffset()))){
+                if(localDate.getTime() < (secondary.callhistory.endTime.getTime() /* + (3600000*Number(secondary.callhistory.selectedTimezoneOption.id))*/) && localDate.getTime() > (secondary.callhistory.startTime.getTime()/* + (3600000*Number(secondary.callhistory.selectedTimezoneOption.id))*/)){
                   //filter by select box
+                  data[i].from = data[i].from.match("sip:(.*)@");
+                  data[i].from = data[i].from[1];
+                  data[i].to = data[i].to.match("sip:(.*)@");
+                  data[i].to = data[i].to[1];
                   if(secondary.callhistory.selectedOption.name === '- all -') {
-                    data[i].from = data[i].from.match("sip:(.*)@");
-                    data[i].from = data[i].from[1];
-                    data[i].to = data[i].to.match("sip:(.*)@");
-                    data[i].to = data[i].to[1];
                     secondary.callhistory.calls.push(data[i]);
                   }
                   else if(secondary.callhistory.selectedOption.name === 'From'){
                     if(data[i].from.indexOf(secondary.callhistory.number.toString()) > -1){
-                      data[i].from = data[i].from.match("sip:(.*)@");
-                      data[i].from = data[i].from[1];
-                      data[i].to = data[i].to.match("sip:(.*)@");
-                      data[i].to = data[i].to[1];
                       secondary.callhistory.calls.push(data[i]);
                     }
                   }
                   else if(secondary.callhistory.selectedOption.name === 'To'){
                     if(data[i].to.indexOf(secondary.callhistory.number.toString()) > -1){
-                      data[i].from = data[i].from.match("sip:(.*)@");
-                      data[i].from = data[i].from[1];
-                      data[i].to = data[i].to.match("sip:(.*)@");
-                      data[i].to = data[i].to[1];
                       secondary.callhistory.calls.push(data[i]);
                     }
                   }
                   else{
                     if(data[i].from.indexOf(secondary.callhistory.number.toString()) > -1 || data[i].to.indexOf(secondary.callhistory.number.toString()) > -1) {
-                      data[i].from = data[i].from.match("sip:(.*)@");
-                      data[i].from = data[i].from[1];
-                      data[i].to = data[i].to.match("sip:(.*)@");
-                      data[i].to = data[i].to[1];
                       secondary.callhistory.calls.push(data[i]);
                     }
                   }
@@ -3045,6 +3115,11 @@ uw.service('restService', [
             }, function (err) {
               console.log(err);
             });
+          },
+
+          sort: function(keyname){
+            secondary.callhistory.sortKey = keyname;   //set the sortKey to the param passed
+            secondary.callhistory.reverse = !secondary.callhistory.reverse; //if true make it false and vice versa
           }
         },
 
@@ -4855,7 +4930,7 @@ uw.controller('profile', [
     $scope.permission = uiService.secondary.permission;
 
     uiService.secondary.conference.init();
-    uiService.secondary.callhistory.init();
+    uiService.secondary.callhistory.initialize();
     //uiService.secondary.permission.init();
 
     $scope.callhistory.clickToCall = function(clicked) {
