@@ -55,13 +55,6 @@
       <uib-timepicker ng-model="callhistory.endTime" hour-step="1" minute-step="5" show-meridian="false"></uib-timepicker>
     </div>
 
-    <div class="col-md-12 callhistory-btn">
-      <button type="button" class="btn btn-success"
-              data-ng-click="callhistory.apply();">
-        Apply
-      </button>
-    </div>
-
     <div class="col-md-12 callhistory-select">
       <select name="mySelect"
               ng-options="option.name for option in callhistory.availableOptions track by option.id"
@@ -70,6 +63,14 @@
       </select>
       <input data-ng-if="callhistory.selectedOption.id != 1" ng-model="callhistory.number" ng-keypress="($event.which === 13)?callhistory.apply():0">
     </div>
+
+    <div class="col-md-12 callhistory-btn">
+      <button type="button" class="btn btn-success"
+              data-ng-click="callhistory.apply();">
+        Apply
+      </button>
+    </div>
+
     <div class="col-md-12 table-responsive">
       <table class="table table-hover table-bordered">
         <thead style="background-color: silver;">
