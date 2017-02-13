@@ -24,13 +24,15 @@
             </div>
             <div class="col-xs-4 main-buttons">
               <button type="button"
+                data-ng-disabled="!permission.enableSearchIcon"
                 data-ng-click="showSearchFn()"
-                 data-ng-class="{'active': showSearch}"
+                data-ng-class="{'active': showSearch}"
                 class="btn btn-default pull-right"
                 title="Search">
               <i class="icon-ic_search_black_24px"></i>
               </button>
               <button
+                data-ng-disabled="!permission.enableDialPadIcon"
                 data-ng-click="showDialFn()"
                 data-ng-class="{'active': showDial}"
                 class="btn btn-default pull-right"

@@ -47,6 +47,7 @@
     </div>
     <div>
       <button type="button" class="btn btn-default btn-block"
+        data-ng-disabled="!permission.enableContactClickCall"
         data-ng-click="callDialpad(entry.profile.number)">
         <i class="icon-presence_on_the_phone"></i>
         {{ entry.profile.name }} ({{ entry.profile.number }})
