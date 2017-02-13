@@ -351,6 +351,7 @@ uniteWeb.config([
           restService.getLogindetails().
             then(function (data) {
               restService.updateCredentials(data['login-details']['userName']);
+              uiService.secondary.permission.init();
               restService.connected = true;
             }, function (err) {
               console.log(err);
@@ -385,6 +386,7 @@ uniteWeb.config([
             restService.getLogindetails().
               then(function (data) {
                 restService.updateCredentials(data['login-details']['userName']);
+                uiService.secondary.permission.init();
                 restService.connected = true;
               }, function (err) {
                 console.log(err);
@@ -1127,7 +1129,8 @@ uw.service('sharedFactory', [
           url: 'views/call-history.html',
           iconClass: 'icon-call_history',
           type: 'right',
-          show: 'true'
+          show: 'true',
+          fn: 'callhistory'
         },
         {
           name: 'Settings',
@@ -2068,6 +2071,20 @@ uw.service('restService', [
       return deferred.promise;
     }
 
+    this.getPermissions = function () {
+      var deferred = $q.defer();
+
+      sipRest.getPermissions().
+        success(function (data) {
+          deferred.resolve(data);
+        }).
+        error(function (e) {
+          deferred.reject(e);
+        })
+
+      return deferred.promise;
+    }
+
     /**
      * initializes sipRest methods
      * eZuce proprietary
@@ -2475,6 +2492,12 @@ uw.service('restService', [
           }))
         },
 
+        getPermissions: function () {
+          return request(authHeaders({
+            method: 'GET',
+            url:    baseRestNew + '/my/user/settings/user-portal'
+          }))
+        },
         // generates requests functions
         // like above, but instead passing through a list of objects
         // function genReqFn(list) {
@@ -2652,8 +2675,8 @@ uw.service('restService', [
 
         root: {
           templates:    sharedFactory.settings.mainMenu,
-          template:     sharedFactory.settings.mainMenu[1],
-          oldTemplate:  sharedFactory.settings.mainMenu[1]
+          template:     null,//sharedFactory.settings.mainMenu[1],
+          oldTemplate:  null,//sharedFactory.settings.mainMenu[1]
         },
 
         groupChat: {
@@ -2918,6 +2941,8 @@ uw.service('restService', [
         },
 
         callhistory: {
+          sortKey: null,
+          reverse: null,
           startTime: new Date(),
           isOpenStartDate: false,
           openStartDate: function () {
@@ -2937,52 +2962,151 @@ uw.service('restService', [
             {id: '4', name: 'From or To'}
           ],
           selectedOption: {id: '1', name: '- all -'},
-          init: function () {
+
+          availableTimezoneOptions: [
+            {id: '0', name: 'GMT+0'},
+            {id: '1', name: 'GMT+1'},
+            {id: '2', name: 'GMT+2'},
+            {id: '3', name: 'GMT+3'},
+            {id: '3.5', name: 'GMT+3:30'},
+            {id: '4', name: 'GMT+4'},
+            {id: '4.5', name: 'GMT+4:30'},
+            {id: '5', name: 'GMT+5'},
+            {id: '5.5', name: 'GMT+5:30'},
+            {id: '6', name: 'GMT+6'},
+            {id: '6.5', name: 'GMT+6:30'},
+            {id: '7', name: 'GMT+7'},
+            {id: '8', name: 'GMT+8'},
+            {id: '9', name: 'GMT+9'},
+            {id: '9.5', name: 'GMT+9:30'},
+            {id: '10', name: 'GMT+10'},
+            {id: '10.5', name: 'GMT+10:30'},
+            {id: '11', name: 'GMT+11'},
+            {id: '11.5', name: 'GMT+11:30'},
+            {id: '12', name: 'GMT+12'},
+            {id: '-1', name: 'GMT-1'},
+            {id: '-2', name: 'GMT-2'},
+            {id: '-3', name: 'GMT-3'},
+            {id: '-3.5', name: 'GMT-3:30'},
+            {id: '-4', name: 'GMT-4'},
+            {id: '-5', name: 'GMT-5'},
+            {id: '-6', name: 'GMT-6'},
+            {id: '-7', name: 'GMT-7'},
+            {id: '-8', name: 'GMT-8'},
+            {id: '-8.5', name: 'GMT-8:30'},
+            {id: '-9', name: 'GMT-9'},
+            {id: '-9.5', name: 'GMT-9:30'},
+            {id: '-10', name: 'GMT-10'},
+            {id: '-11', name: 'GMT-11'},
+            {id: '-12', name: 'GMT-12'},
+          ],
+          selectedTimezoneOption: {id: '0'},
+
+          initialize: function () {
+            secondary.callhistory.sortKey = "start";
             secondary.callhistory.startTime.setHours(0);
             secondary.callhistory.startTime.setMinutes(0);
+            var actDate = new Date();
+            secondary.callhistory.selectedTimezoneOption.id = (-actDate.getTimezoneOffset()/60).toString();
+          },
+
+          init: function () {
+            // show history from default values set
+            secondary.callhistory.apply();
           },
           apply: function () {
             secondary.callhistory.calls = [];
             restService.getCallHistory().then(function (data) {
               //filter by date
               for(var i = 0; i < data.length; i++){
+                var stopDate;
                 var a=data[i].start.split(" ");
                 var d=a[0].split("-");
                 var t=a[1].split(":");
-                var date = new Date(d[0],(d[1]-1),d[2],t[0],t[1],t[2]);
-                if(date.getTime() < secondary.callhistory.endTime.getTime() && date.getTime() > secondary.callhistory.startTime.getTime()){
+                var date = new Date(d[0],d[1]-1,d[2],t[0],t[1],t[2]);
+                //var actDate = new Date();
+                //convert to local timezone
+                //var localDate = new Date(date.getTime() - (60000*actDate.getTimezoneOffset()));
+                //data[i].start = localDate.getFullYear()+"-"+(localDate.getMonth()+1)+"-"+(localDate.getDay()+1)+" "+localDate.getHours()+":"+localDate.getMinutes()+":"+localDate.getSeconds();
+                var localDate = new Date(date.getTime() + (3600000*Number(secondary.callhistory.selectedTimezoneOption.id)));
+                var month = localDate.getMonth()+1;
+                if (month < 10)
+                  month = "0" + month;
+                var day = localDate.getDate();
+                if (day < 10)
+                  day = "0" + day;
+                var hours = localDate.getHours();
+                if (hours < 10)
+                  hours = "0" + hours;
+                var minutes = localDate.getMinutes();
+                if (minutes < 10)
+                  minutes = "0" + minutes;
+                var seconds = localDate.getSeconds();
+                if (seconds < 10)
+                  seconds = "0" + seconds;
+                data[i].start = localDate.getFullYear()+"-"+month+"-"+day+" "+hours+":"+minutes+":"+seconds;
+
+                // duration
+                if(data[i].duration != "null"){
+                  var dur=data[i].duration.split(" ");
+                  var hours = (Number(dur[6]) + (Number(dur[4])*24) + (Number(dur[2])*24*7) + (Number(dur[0])*24*365));
+                  if (hours < 10)
+                    hours = "0" + hours;
+                  var minutes = Number(dur[8]);
+                  if (minutes < 10)
+                    minutes = "0" + minutes;
+                  var seconds = dur[10].split('.')[0];
+                  var seconds = Number(seconds);
+                  if (seconds < 10)
+                    seconds = "0" + seconds;
+
+                  data[i].duration = hours+":"+minutes+":"+seconds;
+                  //calculate stop time
+                  stopDate = new Date(localDate.getTime() + ((dur[6]*3600000) + (dur[8]*60000)+ (dur[10].split('.')[0]*1000)));
+                  var month = stopDate.getMonth()+1;
+                  if (month < 10)
+                    month = "0" + month;
+                  var day = stopDate.getDate();
+                  if (day < 10)
+                    day = "0" + day;
+                  var hours = stopDate.getHours();
+                  if (hours < 10)
+                    hours = "0" + hours;
+                  var minutes = stopDate.getMinutes();
+                  if (minutes < 10)
+                    minutes = "0" + minutes;
+                  var seconds = stopDate.getSeconds();
+                  if (seconds < 10)
+                    seconds = "0" + seconds;
+                  data[i].stop = stopDate.getFullYear()+"-"+month+"-"+day+" "+hours+":"+minutes+":"+seconds;
+                }
+                else{
+                  data[i].duration = "00:00:00";
+                  //calculate stop time
+                  data[i].stop = data[i].start;
+                }
+
+                if(localDate.getTime() < (secondary.callhistory.endTime.getTime() /* + (3600000*Number(secondary.callhistory.selectedTimezoneOption.id))*/) && localDate.getTime() > (secondary.callhistory.startTime.getTime()/* + (3600000*Number(secondary.callhistory.selectedTimezoneOption.id))*/)){
                   //filter by select box
+                  data[i].from = data[i].from.match("sip:(.*)@");
+                  data[i].from = data[i].from[1];
+                  data[i].to = data[i].to.match("sip:(.*)@");
+                  data[i].to = data[i].to[1];
                   if(secondary.callhistory.selectedOption.name === '- all -') {
-                    data[i].from = data[i].from.match("sip:(.*)@");
-                    data[i].from = data[i].from[1];
-                    data[i].to = data[i].to.match("sip:(.*)@");
-                    data[i].to = data[i].to[1];
                     secondary.callhistory.calls.push(data[i]);
                   }
                   else if(secondary.callhistory.selectedOption.name === 'From'){
                     if(data[i].from.indexOf(secondary.callhistory.number.toString()) > -1){
-                      data[i].from = data[i].from.match("sip:(.*)@");
-                      data[i].from = data[i].from[1];
-                      data[i].to = data[i].to.match("sip:(.*)@");
-                      data[i].to = data[i].to[1];
                       secondary.callhistory.calls.push(data[i]);
                     }
                   }
                   else if(secondary.callhistory.selectedOption.name === 'To'){
                     if(data[i].to.indexOf(secondary.callhistory.number.toString()) > -1){
-                      data[i].from = data[i].from.match("sip:(.*)@");
-                      data[i].from = data[i].from[1];
-                      data[i].to = data[i].to.match("sip:(.*)@");
-                      data[i].to = data[i].to[1];
                       secondary.callhistory.calls.push(data[i]);
                     }
                   }
                   else{
                     if(data[i].from.indexOf(secondary.callhistory.number.toString()) > -1 || data[i].to.indexOf(secondary.callhistory.number.toString()) > -1) {
-                      data[i].from = data[i].from.match("sip:(.*)@");
-                      data[i].from = data[i].from[1];
-                      data[i].to = data[i].to.match("sip:(.*)@");
-                      data[i].to = data[i].to[1];
                       secondary.callhistory.calls.push(data[i]);
                     }
                   }
@@ -2991,7 +3115,209 @@ uw.service('restService', [
             }, function (err) {
               console.log(err);
             });
+          },
+
+          sort: function(keyname){
+            secondary.callhistory.sortKey = keyname;   //set the sortKey to the param passed
+            secondary.callhistory.reverse = !secondary.callhistory.reverse; //if true make it false and vice versa
           }
+        },
+
+        permission: {
+         enableDialPadIcon: true,
+         enableSearchIcon: true,
+         enableContactClickCall: true,
+         //enableContactClickToChat: true,
+         enableConfBridgeClickToCall: true,
+         enableSettingUserPaswd: true,
+         enableSettingUserVmPin: true,
+         enableSettingUserAnnouncement: true,
+         enableSettingUserEmail: true,
+         enableSettingUserAttachAudio: true,
+         enableSettingUserAltEmail: true,
+         enableSettingUserAltAttachAudio: true,
+         enableSettingUserConfBridgeRoom: true,
+         enableSettingUserConfBridgeEnabled: true,
+         enableSettingUserConfBridgeName: true,
+         enableSettingUserConfBridgeModeratorPin: true,
+         enableSettingUserConfBridgePartPin: true,
+         enableSettingUserConfBridgeMaxMembers: true,
+         enableSettingUserConfBridgeQuickStart: true,
+         enableSettingUserConfBridgeAutoRecord: true,
+         enableSettingUserConfBridgeEntryTone: true,
+         enableSettingUserConfBridgeExitTone: true,
+         enableSettingUserConfBridgeEntryVoice: true,
+         enableSettingUserConfBridgeExitVoice: true,
+         enableSettingUserMoHAudioSource: true,
+         enableSettingUserMoHPersonal: true,
+         enableSettingUserMoHFiles: true,
+         enableSettingUserMyBuddyConfEnter: true,
+         buddy: ["true", "true", "true", "true"],
+         enableSettingUserSoundNotify: true,
+
+         settings : [
+           {
+             icon: 'chat_to_call',
+             name: 'Personal Attendant',
+             enable: 'true'
+           },
+           {
+             icon: 'follow_me',
+             name: 'Call Forwarding',
+             enable: 'true'
+           },
+           {
+             icon: 'dialpad',
+             name: 'Speed Dials',
+             enable: 'true'
+           },
+           {
+             icon: 'settings_cogs',
+             name: 'User Settings',
+             enable: 'true'
+           }
+         ],
+
+         init: function () {
+           restService.getPermissions().then(function (data) {
+             //console.log("data received");
+             if(data.settings[0].value == '0')
+               secondary.permission.enableDialPadIcon = false;
+
+             if(data.settings[1].value == '0')
+               secondary.permission.enableSearchIcon = false;
+
+             if(data.settings[2].value == '0')
+               secondary.permission.enableContactClickCall = false;
+
+             if(data.settings[4].value == '0')
+               secondary.permission.enableConfBridgeClickToCall = false;
+             // contact list item
+             if(data.settings[6].value == '0')
+               ui.root.templates[1].show = "false";
+
+
+
+             if (ui.root.templates[1].show == "true") {
+               util.changeView(ui.root.templates[1]);
+               ui.root.oldTemplate = ui.root.templates[1];
+               ui.root.template = ui.root.templates[1];
+             }
+
+            //conf bridge item
+            if(data.settings[8].value == '0')
+              ui.root.templates[2].show = "false";
+            //voicemail item
+            if(data.settings[9].value == '0')
+              ui.root.templates[3].show = "false";
+            //my profile item
+            if(data.settings[10].value == '0')
+              ui.root.templates[4].show = "false";
+            //call history item
+            if(data.settings[11].value == '0')
+              ui.root.templates[5].show = "false";
+            //settings item
+            if(data.settings[12].value == '0')
+              ui.root.templates[6].show = "false";
+            //settings personal attendant
+            if(data.settings[13].value == '0')
+              secondary.permission.settings[0].enable = "false";
+            //settings call forwarding
+            if(data.settings[14].value == '0')
+              secondary.permission.settings[1].enable = "false";
+            //settings speed dials
+            if(data.settings[15].value == '0')
+              secondary.permission.settings[2].enable = "false";
+            //settings user settings
+            if(data.settings[16].value == '0')
+              secondary.permission.settings[3].enable = "false";
+
+            if(data.settings[17].value == '0')
+              secondary.permission.enableSettingUserPaswd = false;
+
+            if(data.settings[18].value == '0')
+              secondary.permission.enableSettingUserVmPin =false;
+
+            if(data.settings[19].value == '0')
+              secondary.permission.enableSettingUserAnnouncement = false;
+
+            if(data.settings[20].value == '0')
+              secondary.permission.enableSettingUserEmail = false;
+
+            if(data.settings[21].value == '0')
+              secondary.permission.enableSettingUserAttachAudio = false;
+
+            if(data.settings[22].value == '0')
+              secondary.permission.enableSettingUserAltEmail = false;
+
+            if(data.settings[23].value == '0')
+              secondary.permission.enableSettingUserAltAttachAudio = false;
+
+            if(data.settings[24].value == '0')
+              secondary.permission.enableSettingUserConfBridgeRoom = false;
+
+            if(data.settings[25].value == '0')
+              secondary.permission.enableSettingUserConfBridgeEnabled = false;
+
+            if(data.settings[26].value == '0')
+              secondary.permission.enableSettingUserConfBridgeName = false;
+
+            if(data.settings[27].value == '0')
+              secondary.permission.enableSettingUserConfBridgeModeratorPin = false;
+
+            if(data.settings[28].value == '0')
+              secondary.permission.enableSettingUserConfBridgePartPin = false;
+
+            if(data.settings[29].value == '0')
+              secondary.permission.enableSettingUserConfBridgeMaxMembers = false;
+
+            if(data.settings[30].value == '0')
+              secondary.permission.enableSettingUserConfBridgeQuickStart = false;
+
+            if(data.settings[31].value == '0')
+              secondary.permission.enableSettingUserConfBridgeAutoRecord = false;
+
+            if(data.settings[34].value == '0')
+              secondary.permission.enableSettingUserConfBridgeEntryTone = false;
+
+            if(data.settings[35].value == '0')
+              secondary.permission.enableSettingUserConfBridgeExitTone = false;
+
+            if(data.settings[36].value == '0')
+              secondary.permission.enableSettingUserConfBridgeEntryVoice = false;
+
+            if(data.settings[37].value == '0')
+              secondary.permission.enableSettingUserConfBridgeExitVoice = false;
+
+            if(data.settings[38].value == '0')
+              secondary.permission.enableSettingUserMoHAudioSource = false;
+
+            if(data.settings[39].value == '0')
+              secondary.permission.enableSettingUserMoHPersonal = false;
+
+            if(data.settings[40].value == '0')
+              secondary.permission.enableSettingUserMoHFiles = false;
+
+            if(data.settings[42].value == '0')
+              secondary.permission.buddy[0] = false;
+
+            if(data.settings[43].value == '0')
+              secondary.permission.buddy[1] = false;
+
+            if(data.settings[44].value == '0')
+              secondary.permission.buddy[2] = false;
+
+            if(data.settings[45].value == '0')
+              secondary.permission.buddy[3] = false;
+
+           }).catch(function (err) {
+             console.log("permission errors");
+             //show activity list by default
+             util.changeView(ui.root.templates[0]);
+             ui.root.oldTemplate = ui.root.templates[0];
+             ui.root.template = ui.root.templates[0];
+           });
+         }
         },
 
         conference: {
@@ -3320,7 +3646,7 @@ uw.service('restService', [
                         });
                         secondary.conference.timers.cancelAll();
                       });
-                  }, 10000);
+                  }, 1500);
 
                   timers.all.confActive.push(interval);
                   break;
@@ -4293,7 +4619,7 @@ uw.service('restService', [
 
         changeView : function (view) {
 
-          if (view.type) {
+          if (!!view && view.type) {
             secondary.template.main             = view;
             secondary.voicemail.messages        = [];
             secondary.conference.participants   = [];
@@ -4305,7 +4631,7 @@ uw.service('restService', [
             $rootScope.leftSideView = 'hide-me';
           } else {
             groupChat.modal           = false;
-            if (ui.root.oldTemplate.name !== view.name) {
+            if (ui.root.oldTemplate != null && ui.root.template != null && ui.root.oldTemplate.name !== view.name) {
               ui.root.oldTemplate = angular.copy(ui.root.template);
             }
             ui.root.template = view;
@@ -4601,8 +4927,11 @@ uw.controller('profile', [
     $scope.sipEnabled     = false;
     $scope.searchResult   = [];
 
+    $scope.permission = uiService.secondary.permission;
+
     uiService.secondary.conference.init();
-    uiService.secondary.callhistory.init();
+    uiService.secondary.callhistory.initialize();
+    //uiService.secondary.permission.init();
 
     $scope.callhistory.clickToCall = function(clicked) {
       $scope.showDialFn(true);
@@ -4809,7 +5138,8 @@ uw.controller('profile', [
 
     $scope.$watchCollection('search', function (val) {
       if (val.t === '') {
-        uiService.util.changeView(uiService.ui.root.oldTemplate);
+        if(uiService.ui.root.oldTemplate != null)
+          uiService.util.changeView(uiService.ui.root.oldTemplate);
       } else if (uiService.ui.root.template !== uiService.ui.root.templates[8]) {
         uiService.util.changeView(uiService.ui.root.templates[8]);
       };
@@ -4879,6 +5209,8 @@ uw.controller('profile', [
       $scope.removeConversation   = uiService.ui.activityList.removeConversation;
 
       $scope.search               = uiService.search;
+
+      $scope.permission = uiService.secondary.permission;
 
       $scope.muc                  = {
         showModal:  uiService.ui.groupChat.showModal,
@@ -4959,6 +5291,7 @@ uw.controller('secview', [
     $scope.conf               = uiService.secondary.conference;
     $scope.myprofile          = uiService.secondary.profile;
     $scope.callhistory        = uiService.secondary.callhistory;
+    $scope.permission         = uiService.secondary.permission;
 
     // ngOptions
     // $scope.voicemail.folder   = $scope.voicemail.folders[0];
@@ -5010,7 +5343,7 @@ uw.controller('settingsController', [
           break;
       }
     }
-    $scope.settings   = [
+    $scope.settings   = uiService.secondary.permission.settings; /*[
       {
         icon: 'chat_to_call',
         name: 'Personal Attendant'
@@ -5027,7 +5360,7 @@ uw.controller('settingsController', [
         icon: 'settings_cogs',
         name: 'User Settings'
       }
-    ];
+    ];*/
     $scope.tooltips = {
       personalAttendant: {
         add: {
@@ -5103,6 +5436,8 @@ uw.controller('settingsController', [
     };
     $scope.reloadApp      = uiService.secondary.logout.init;
     $scope.userSettings   = uiService.secondary.settings;
+
+    $scope.permission     = uiService.secondary.permission;
   }
 ]);
 })();
