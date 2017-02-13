@@ -18,7 +18,8 @@
           <div class="settings-item row unselectable"
             data-ng-repeat="option in settings"
             data-ng-click="selectOption()"
-            data-ng-class="{'active': option.isSelected}">
+            data-ng-class="{'active': option.isSelected}"
+            data-ng-if="(option.enable === 'false') ? false : true">
             <span class="col-xs-2"><i class="icon-{{option.icon}}"></i></span>
             <span class="col-xs-8 settings-item-name">{{option.name}}</span>
             <span class="col-xs-2 arrow"><i class="icon-arrow_collapse_right"></i></span>
@@ -582,7 +583,7 @@
                   </span>
                 </div>
               </div>
-              <div data-ng-show="!userSettings.speed.data.groupSpeedDial" class="animated fade">
+              <div class="animated fade">
                 <form name="formSpeed" novalidate>
                   <div class="table-responsive">
                     <table class="table">
@@ -698,6 +699,7 @@
                   <div class="col-sm-9">
                     <input type="password" class="form-control" placeholder="********"
                       data-ng-pattern="/^[a-zA-Z0-9-!$%^&*()_+|~=`{}\[\]:;'<>?,.\/@#]{8,}$/"
+                      data-ng-disabled="!permission.enableSettingUserPaswd"
                       data-ng-model="userSettings.user.pass">
                     <span class="help-block">
                       Used to log into the User Portal and XMPP. Minimum length is 8.
@@ -728,7 +730,7 @@
                 <div class="form-group clearfix">
                   <label class="col-sm-3 control-label">Voicemail PIN</label>
                   <div class="col-sm-9">
-                    <input type="password" class="form-control" placeholder="****" data-ng-pattern="/^[a-zA-Z0-9]{4,}$/" data-ng-model="userSettings.user.vm.pass">
+                    <input type="password" class="form-control" placeholder="****" data-ng-pattern="/^[a-zA-Z0-9]{4,}$/" data-ng-disabled="!permission.enableSettingUserVmPin" data-ng-model="userSettings.user.vm.pass">
                     <span class="help-block">
                       Used to log into voicemail. Numeric PINs are recommended, since only numbers can be dialed. Minimum length is 4.
                     </span>
@@ -739,6 +741,7 @@
                   <div class="col-sm-9">
                     <select class="form-control"
                       data-ng-model="userSettings.user.vm.selected"
+                      data-ng-disabled="!permission.enableSettingUserAnnouncement"
                       data-ng-options="c.name for c in userSettings.user.vm.select">
                     </select>
                     <span class="help-block">
@@ -749,13 +752,13 @@
                 <div class="form-group clearfix">
                   <label class="col-sm-3 control-label">Email</label>
                   <div class="col-sm-9">
-                    <input type="email" class="form-control" placeholder="Email" data-ng-model="userSettings.user.vm.main.email">
+                    <input type="email" class="form-control" placeholder="Email" data-ng-disabled="!permission.enableSettingUserEmail" data-ng-model="userSettings.user.vm.main.email">
                   </div>
                 </div>
                 <div class="form-group clearfix">
                   <label class="col-sm-3 control-label">Attach audio</label>
                   <div class="col-sm-9">
-                    <input type="checkbox" class="form-control" data-ng-model="userSettings.user.vm.main.emailIncludeAudioAttachment">
+                    <input type="checkbox" class="form-control" data-ng-disabled="!permission.enableSettingUserAttachAudio" data-ng-model="userSettings.user.vm.main.emailIncludeAudioAttachment">
                     <span class="help-block">
                       If checked, the voicemail message will be attached to the notification email. Otherwise, the email will contain a link to retrieve voicemail message.
                     </span>
@@ -764,13 +767,13 @@
                 <div class="form-group clearfix">
                   <label class="col-sm-3 control-label">Alternate email</label>
                   <div class="col-sm-9">
-                    <input type="email" class="form-control" placeholder="Email" data-ng-model="userSettings.user.vm.main.altEmail">
+                    <input type="email" class="form-control" placeholder="Email" data-ng-disabled="!permission.enableSettingUserAltEmail" data-ng-model="userSettings.user.vm.main.altEmail">
                   </div>
                 </div>
                 <div class="form-group clearfix">
                   <label class="col-sm-3 control-label">Attach audio</label>
                   <div class="col-sm-9">
-                    <input type="checkbox" class="form-control" data-ng-model="userSettings.user.vm.main.altEmailIncludeAudioAttachment">
+                    <input type="checkbox" class="form-control" data-ng-disabled="!permission.enableSettingUserAltAttachAudio" data-ng-model="userSettings.user.vm.main.altEmailIncludeAudioAttachment">
                   </div>
                 </div>
               </div>
@@ -790,6 +793,7 @@
                   <div class="col-sm-9">
                     <select class="form-control"
                       data-ng-model="userSettings.user.conf.selected"
+                      data-ng-disabled="!permission.enableSettingUserConfBridgeRoom"
                       data-ng-options="c.name for c in userSettings.user.conf.select"
                       data-ng-change="userSettings.user.conf.changeConf()">
                     </select>
@@ -798,19 +802,19 @@
                 <div class="form-group clearfix">
                   <label class="col-sm-3 control-label">Enabled</label>
                   <div class="col-sm-9">
-                    <input type="checkbox" class="form-control" data-ng-model="userSettings.user.conf.main.enabled">
+                    <input type="checkbox" class="form-control" data-ng-disabled="!permission.enableSettingUserConfBridgeEnabled" data-ng-model="userSettings.user.conf.main.enabled">
                   </div>
                 </div>
                 <div class="form-group clearfix">
                   <label class="col-sm-3 control-label">Name</label>
                   <div class="col-sm-9">
-                    <input type="text" placeholder="Name" class="form-control" data-ng-model="userSettings.user.conf.main.name" required>
+                    <input type="text" placeholder="Name" class="form-control" data-ng-disabled="!permission.enableSettingUserConfBridgeName" data-ng-model="userSettings.user.conf.main.name" required>
                   </div>
                 </div>
                 <div class="form-group clearfix">
                   <label class="col-sm-3 control-label">Moderator PIN</label>
                   <div class="col-sm-9">
-                    <input type="text" placeholder="PIN" class="form-control" data-ng-model="userSettings.user.conf.main.moderatorCode" data-ng-pattern="/^\d+$/">
+                    <input type="text" placeholder="PIN" class="form-control" data-ng-disabled="!permission.enableSettingUserConfBridgeModeratorPin" data-ng-model="userSettings.user.conf.main.moderatorCode" data-ng-pattern="/^\d+$/">
                     <span class="help-block">
                       Moderator access code for audio conference. Can be empty. If set, a participant PIN must also be set. Users logged in using this pin are automatically recognised as moderators.
                     </span>
@@ -819,7 +823,7 @@
                 <div class="form-group clearfix">
                   <label class="col-sm-3 control-label">Participant PIN</label>
                   <div class="col-sm-9">
-                    <input type="text" placeholder="PIN" class="form-control" data-ng-model="userSettings.user.conf.main.accessCode" data-ng-pattern="/^\d+$/">
+                    <input type="text" placeholder="PIN" class="form-control" data-ng-disabled="!permission.enableSettingUserConfBridgePartPin" data-ng-model="userSettings.user.conf.main.accessCode" data-ng-pattern="/^\d+$/">
                     <span class="help-block">
                       Participant access code for audio conference. Can be empty.
                     </span>
@@ -828,7 +832,7 @@
                 <div class="form-group clearfix">
                   <label class="col-sm-3 control-label">Max. members</label>
                   <div class="col-sm-9">
-                    <input type="number" class="form-control" data-ng-model="userSettings.user.conf.main.maxMembers" data-ng-pattern="/^\d+$/">
+                    <input type="number" class="form-control" data-ng-disabled="!permission.enableSettingUserConfBridgeMaxMembers" data-ng-model="userSettings.user.conf.main.maxMembers" data-ng-pattern="/^\d+$/">
                     <span class="help-block">
                       The maximum number of call legs to be allowed by this bridge. 0 means unlimited.
                     </span>
@@ -837,7 +841,7 @@
                 <div class="form-group clearfix">
                   <label class="col-sm-3 control-label">Quickstart</label>
                   <div class="col-sm-9">
-                    <input type="checkbox" class="form-control" data-ng-model="userSettings.user.conf.main.quickstart">
+                    <input type="checkbox" class="form-control" data-ng-disabled="!permission.enableSettingUserConfBridgeQuickStart" data-ng-model="userSettings.user.conf.main.quickstart">
                     <span class="help-block">
                       A non-quickstart conference begins when the chair person arrives. Enable this if you want not to wait for a moderator. Only a quickstart conference can be setup with no PIN.
                     </span>
@@ -846,9 +850,45 @@
                 <div class="form-group clearfix">
                   <label class="col-sm-3 control-label">Auto-record</label>
                   <div class="col-sm-9">
-                    <input type="checkbox" class="form-control" data-ng-model="userSettings.user.conf.main.autorecorded">
+                    <input type="checkbox" class="form-control" data-ng-disabled="!permission.enableSettingUserConfBridgeAutoRecord" data-ng-model="userSettings.user.conf.main.autorecorded">
                     <span class="help-block">
                       If checked then conference calls will be recorded to the conference owner's mailbox
+                    </span>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <label class="col-sm-3 control-label">Play Entry Tone</label>
+                  <div class="col-sm-9">
+                    <input type="checkbox" class="form-control" data-ng-disabled="!permission.enableSettingUserConfBridgeEntryTone" data-ng-model="userSettings.user.conf.main.playEntryToneEnabled">
+                    <span class="help-block">
+                      When enabled, entry tone will be played each time a participant joins this conference.
+                    </span>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <label class="col-sm-3 control-label">Play Exit Tone</label>
+                  <div class="col-sm-9">
+                    <input type="checkbox" class="form-control" data-ng-disabled="!permission.enableSettingUserConfBridgeExitTone" data-ng-model="userSettings.user.conf.main.recordAndPlayNameOnExitEnabled">
+                    <span class="help-block">
+                      When enabled, exit tone will be played each time a participant leaves this conference.
+                    </span>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <label class="col-sm-3 control-label">Play User Name on Entry</label>
+                  <div class="col-sm-9">
+                    <input type="checkbox" class="form-control" data-ng-disabled="!permission.enableSettingUserConfBridgeEntryVoice" data-ng-model="userSettings.user.conf.main.recordAndPlayNameOnEntryEnabled">
+                    <span class="help-block">
+                      When enabled, user joining this conference will be prompted to speak their name. The name is played and heard by all the participants upon user joining the meeting.
+                    </span>
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                  <label class="col-sm-3 control-label">Play User Name on Exit</label>
+                  <div class="col-sm-9">
+                    <input type="checkbox" class="form-control" data-ng-disabled="!permission.enableSettingUserConfBridgeExitVoice" data-ng-model="userSettings.user.conf.main.playUserNameExit">
+                    <span class="help-block">
+                      	When enabled, recorded name of user leaving this meeting is played and heard by all participants.
                     </span>
                   </div>
                 </div>
@@ -860,7 +900,7 @@
                   <label class="col-sm-3 control-label">Audio source</label>
                   <div class="col-sm-9">
                     <select class="form-control"
-                      data-ng-disabled="userSettings.errors.moh"
+                      data-ng-disabled="!permission.enableSettingUserMoHAudioSource"
                       data-ng-model="userSettings.user.moh.selected"
                       data-ng-options="c.name for c in userSettings.user.moh.select">
                     </select>
@@ -879,6 +919,7 @@
                   <label class="col-sm-3 control-label">Personal MoH Files</label>
                   <div class="col-sm-9">
                     <select class="form-control"
+                      data-ng-disabled="!permission.enableSettingUserMoHPersonal"
                       data-ng-model="userSettings.user.moh.selectedMoh"
                       data-ng-options="c.name for c in userSettings.user.moh.selectMoh">
                     </select>
@@ -901,7 +942,7 @@
                   <label class="col-sm-3 control-label">Audio file</label>
                   <div class="col-sm-9">
                     <div ng-controller="UploadMoHFile">
-                      <input type="file" nv-file-select uploader="uploader">
+                      <input type="file" data-ng-disabled="!permission.enableSettingUserMoHFiles" nv-file-select uploader="uploader">
 
                     </div>
                     <span class="help-block">
@@ -928,7 +969,7 @@
                   data-ng-repeat="(key, val) in userSettings.user.buddy track by $index">
                   <label class="col-sm-3 control-label">{{ key | translate }}</label>
                   <div class="col-sm-9">
-                    <input type="checkbox" class="form-control"  data-ng-model="userSettings.user.buddy[key]">
+                    <input type="checkbox" class="form-control" data-ng-disabled="!permission.buddy[$index]" data-ng-model="userSettings.user.buddy[key]">
                   </div>
                 </div>
               </div>
