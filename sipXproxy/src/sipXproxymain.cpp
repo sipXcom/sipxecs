@@ -35,8 +35,10 @@
 #include <SipXProxyCseObserver.h>
 #include <utl/Instrumentation.h>
 #include <os/OsResourceLimit.h>
+#include "StatisticsManagerLib/StatisticsManager.hpp"
 #include "config.h"
 #include "sipXecsService/SipXApplication.h"
+
 
 //
 // Exception handling
@@ -92,6 +94,10 @@ UtlBoolean gShutdownFlag = FALSE;
 UtlBoolean gClosingIMDB = FALSE;
 OsMutex* gpLockMutex = new OsMutex(OsMutex::Q_FIFO);
 
+void logFunc(const std::string &s)
+{
+    OS_LOG_NOTICE(FAC_SIP, "STATS: " << s);
+}
 
 int proxy()
 {
@@ -504,7 +510,19 @@ int proxy()
     {
       OS_LOG_NOTICE(FAC_SIP,  "Retransmit count set to default.  Value: " << sipRetran << " times");
     }
-    
+   
+    // setup statistics manager
+    // TODO get timeout and file name from configuration
+    bool statisticsManagerEnabled = true;
+
+    if (statisticsManagerEnabled)
+    {
+        statistics::StatisticsManager::Instance().registerLoggerFunc(&logFunc);
+        statistics::TimedMapFileWriter filePrinter(5, "/var/log/sipxpbx/proxy_stats.json");
+        statistics::StatisticsManager::Instance().registerProcessor("file_printer", &filePrinter);
+        statistics::StatisticsManager::Instance().start();
+    }
+
     // Start the sip stack
     SipUserAgent* pSipUserAgent = new SipUserAgent(
         proxyTcpPort,
