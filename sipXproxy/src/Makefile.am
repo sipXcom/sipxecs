@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = . test
+SUBDIRS = . test StatisticsManagerLib
 
 ## Process this file with automake to produce Makefile.in
 
@@ -22,7 +22,7 @@ sipXproxy_LDADD = \
 	libsipXproxy.la \
 	@SIPXCOMMSERVER_LIBS@ \
 	@OSSCORE_LIBS@ \
-        -lzmq \
+	    -lzmq \
         -lmongoclient \
         -lboost_system-mt
 
@@ -66,7 +66,10 @@ libsipXproxy_la_SOURCES = \
    CallStateEventWriter_XML.h \
    CallStateEventWriter_XML.cpp \
    CallStateEventWriter_DB.h \
-   CallStateEventWriter_DB.cpp
+   CallStateEventWriter_DB.cpp \
+   StatisticsManagerLib/StatisticsManager.cpp \
+   StatisticsManagerLib/StatisticsManager.hpp \
+   StatisticsManagerLib/Fifo.hpp
 
 libsipXproxy_la_CXXFLAGS = \
 	$(SIPXPROXY_COMMON_CXX_FLAGS)
