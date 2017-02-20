@@ -9,6 +9,7 @@
 
 // SYSTEM INCLUDES
 #include "sipdb/EntityDB.h"
+#include "StatisticsManagerLib/StatisticsManager.hpp"
 #include <sipxproxy/SipRouter.h>
 #include <assert.h>
 
@@ -557,7 +558,7 @@ bool SipRouter::preDispatch(SipMessage* pMsg)
       currentYieldTime++;
       if (currentYieldTime > DISPATCH_MAX_YIELD_TIME_IN_SEC)
         currentYieldTime = DISPATCH_MAX_YIELD_TIME_IN_SEC;
-           
+
       OS_LOG_CRITICAL(FAC_SIP,
         "SipRouter::preDispatch - " <<
         "Discarding SIP Request " << method.data() <<
@@ -653,7 +654,6 @@ SipRouter::handleMessage( OsMsg& eventMessage )
                  OS_LOG_INFO(FAC_SIP, "SipRouter::handleMessage - queue sizes for new transaction are " 
                    << "transport: " << queueSize << "/" <<  maxQueueSize
                    << " application: " << appQueueSize << "/" << appMaxQueueSize);
-                 
                  
                  Url fromUrl;
                          Url toUrl;
@@ -834,8 +834,12 @@ void SipRouter::handleRequest(SipMessage* pSipRequest)
   {
     action = proxyMessage(*pSipRequest, sipResponse);
   }
-  
-  if (timedDispatch)
+
+  statistics::StatisticsManager::Instance().add(statistics::Data("proxy_msq_queue_size", getMessageQueue()->numMsgs()));
+  statistics::StatisticsManager::Instance().add(statistics::Data("proxy_ua_queue_size", mpSipUserAgent->getMessageQueue()->numMsgs()));
+  statistics::StatisticsManager::Instance().add(statistics::Data("proxy_active_transaction_count", mpSipUserAgent->getSipTransactions().size()));
+
+    if (timedDispatch)
   {
     OS_LOG_NOTICE(FAC_SIP,
         "SipRouter::handleRequest metrics -" <<
