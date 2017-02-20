@@ -33,6 +33,7 @@ AC_CONFIG_FILES([
   Makefile
   src/Makefile
   src/test/Makefile
+  src/StatisticsManagerLib/Makefile
   include/Makefile
   lib/Makefile
   lib/transactionplugins/Makefile
