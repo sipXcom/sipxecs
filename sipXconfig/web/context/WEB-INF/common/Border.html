@@ -24,6 +24,8 @@
           &nbsp;&nbsp;|&nbsp;&nbsp;
           <span class="linkHome"><a jwcid="@PageLink" class="linkHome" id="link.home" page="Home"><span key="link.home">Home</span></a></span>
           &nbsp;&nbsp;|&nbsp;&nbsp;
+          <span jwcid="@If" condition="ognl:sipxcom"renderTag="false"><span class="linkHelp"><a class="linkHelp" href="http://ezuce.com/products-solutions/procare-sipxcom-support" target="_blank">Paid Support</a></span>
+          &nbsp;&nbsp;|&nbsp;&nbsp;</span>
           <span class="linkHelp"><a jwcid="helpLink@GenericLink" class="linkHelp" id="link.help" target="sipxconfig-help" href="ognl:helpLink"><span key="link.help">Online Help</span></a></span>
           &nbsp;&nbsp;|&nbsp;&nbsp;
           <span class="linkLogout"><a jwcid="logoutLink@DirectLink" class="linkLogout" id="link.logout" listener="listener:logout"><span key="link.logout">Logout</span></a></span>
@@ -72,6 +74,16 @@
             <span jwcid="@RenderBody">Page content goes here.</span>
           </div>
         </span>
+        <div jwcid="@If" condition="ognl:sipxcom">
+		  <center>
+			<a href="https://www.linkedin.com/company/sipxcom" target="_blank"><img jwcid="@Image" image="asset:linkedin" align="absmiddle" /></a>
+			<a href="http://sipxcom.github.io" target="_blank"><img jwcid="@Image" image="asset:github" align="absmiddle" /></a>
+			<a href="https://facebook.com/sipXcom" target="_blank"><img jwcid="@Image" image="asset:facebook" align="absmiddle" /></a>
+			<a href="https://plus.google.com/+sipXcom" target="_blank"><img jwcid="@Image" image="asset:googleplus" align="absmiddle" /></a>
+			<a href="https://twitter.com/sipXcom" target="_blank"><img jwcid="@Image" image="asset:twitter" align="absmiddle" /></a>
+			<a href="http://sipxcom.org/#" target="_blank"><img jwcid="@Image" image="asset:rss" align="absmiddle" /></a>
+		  </center>
+	     </div>
       </div>
     </div>
     <!-- END:contentContainer -->

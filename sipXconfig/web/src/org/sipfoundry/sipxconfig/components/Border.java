@@ -131,6 +131,24 @@ public abstract class Border extends BaseComponent implements PageValidateListen
     @Parameter(defaultValue = "true")
     public abstract boolean getFooterDisplay();
 
+    @Asset("/images/linkedin.png")
+    public abstract IAsset getLinkedin();
+
+    @Asset("/images/github.png")
+    public abstract IAsset getGithub();
+
+    @Asset("/images/facebook.png")
+    public abstract IAsset getFacebook();
+
+    @Asset("/images/googleplus.png")
+    public abstract IAsset getGoogleplus();
+
+    @Asset("/images/twitter.png")
+    public abstract IAsset getTwitter();
+
+    @Asset("/images/rss.png")
+    public abstract IAsset getRss();
+
     public void pageBeginRender(PageEvent event) {
         if (getBaseUrl() == null) {
             String baseUrl = getRequest().getContextPath();
@@ -282,5 +300,9 @@ public abstract class Border extends BaseComponent implements PageValidateListen
             return productTitle;
         }
         return String.format("%s::%s", productTitle, pageTitle);
+    }
+
+    public boolean isSipxcom() {
+        return getMessages().getMessage("product.name").equalsIgnoreCase("sipXcom");
     }
 }
