@@ -11,8 +11,10 @@ package org.sipfoundry.sipxconfig.site;
 
 import java.net.URL;
 
+import org.apache.tapestry.IAsset;
 import org.apache.tapestry.PageRedirectException;
 import org.apache.tapestry.RedirectException;
+import org.apache.tapestry.annotations.Asset;
 import org.apache.tapestry.annotations.InitialValue;
 import org.apache.tapestry.annotations.InjectObject;
 import org.apache.tapestry.annotations.InjectState;
@@ -91,6 +93,10 @@ public abstract class Home extends SipxBasePage implements PageBeginRenderListen
         } catch (Exception ex) {
             return suffix;
         }
+    }
+
+    public boolean isSipxcom() {
+        return getMessages().getMessage("product.name").equalsIgnoreCase("sipXcom");
     }
 
 }
