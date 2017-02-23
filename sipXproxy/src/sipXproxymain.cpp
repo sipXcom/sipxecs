@@ -515,11 +515,13 @@ int proxy()
     // TODO get timeout and file name from configuration
     bool statisticsManagerEnabled = true;
 
+    statistics::TimedMapFileWriter *pStatsPrinter = NULL;
+
     if (statisticsManagerEnabled)
     {
         statistics::StatisticsManager::Instance().registerLoggerFunc(&logFunc);
-        statistics::TimedMapFileWriter filePrinter(5, "/var/log/sipxpbx/proxy_stats.json");
-        statistics::StatisticsManager::Instance().registerProcessor("file_printer", &filePrinter);
+        pStatsPrinter = new statistics::TimedMapFileWriter(5, "/var/log/sipxpbx/proxy_stats.json");
+        statistics::StatisticsManager::Instance().registerProcessor("file_printer", pStatsPrinter);
         statistics::StatisticsManager::Instance().start();
     }
 
@@ -662,6 +664,11 @@ int proxy()
     pSipUserAgent->shutdown();
     // And delete it, too.
     delete pSipUserAgent ;
+
+    if (pStatsPrinter != NULL)
+    {
+        delete pStatsPrinter;
+    }
 
     // flush and close the call state event log
     if (enableCallStateLogObserver || enableCallStateDbObserver)
