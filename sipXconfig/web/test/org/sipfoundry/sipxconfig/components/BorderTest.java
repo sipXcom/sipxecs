@@ -354,6 +354,42 @@ public class BorderTest extends TestCase {
         public boolean getFooterDisplay() {
             return false;
         }
+
+        @Override
+        public IAsset getLinkedin() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public IAsset getGithub() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public IAsset getFacebook() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public IAsset getGoogleplus() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public IAsset getTwitter() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public IAsset getRss() {
+            // TODO Auto-generated method stub
+            return null;
+        }
     }
 
     private static class FullMessages extends AbstractMessages {

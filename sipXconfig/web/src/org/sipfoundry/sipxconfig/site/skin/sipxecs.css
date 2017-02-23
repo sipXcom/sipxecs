@@ -1029,6 +1029,7 @@ div.date
     padding:0px;
     margin:0px;
     display:inline;
+    font-weight: bold;
 }
 
 div.right-column,
@@ -1636,29 +1637,35 @@ div.autocomplete ul strong.highlight {
 
 .linkHome {
     background: url(/sipxconfig/skin/home.png) no-repeat left;
+    font-weight: bold;
 }
 
 .linkHelp {
     background: url(/sipxconfig/skin/help.png) no-repeat left;
+    font-weight: bold;
 }
 
 .linkLogout {
     background: url(/sipxconfig/skin/logout.png) no-repeat left;
+    font-weight: bold;
 }
 
 .linkHome:hover,
 .linkHome:active {
     background: url(/sipxconfig/skin/home-hover.png) no-repeat left;
+    font-weight: bold;
 }
 
 .linkHelp:hover,
 .linkHelp:active {
     background: url(/sipxconfig/skin/help-hover.png) no-repeat left;
+    font-weight: bold;
 }
 
 .linkLogout:hover,
 .linkLogout:hover {
     background: url(/sipxconfig/skin/logout-hover.png) no-repeat left;
+    font-weight: bold;
 }
 
 .testDescription {
