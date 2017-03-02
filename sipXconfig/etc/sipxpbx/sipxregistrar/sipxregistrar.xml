@@ -78,6 +78,10 @@
     <setting name="_SIP_REGISTRAR_PRESENCE_PORT" advanced="yes">
       <type refid="nonRootPort" />
       <value>9096</value>
+    </setting>
+    <setting name="SIP_REDIRECT.100-PICKUP.BIND_PORT">
+      <type refid="nonRootPort"/>
+      <value>5085</value>
     </setting>  
     <setting name="SIP_REGISTRAR_LOG_LEVEL">
       <type refid="loglevel" />
