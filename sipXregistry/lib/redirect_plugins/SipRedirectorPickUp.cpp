@@ -68,6 +68,10 @@
 #define CONFIG_SETTING_BIND_IP \
    "SIP_REGISTRAR_BIND_IP"
 
+// The parameter setting which port to bind on
+#define CONFIG_SETTING_BIND_PORT \
+    "BIND_PORT"
+
 // MACROS
 // EXTERNAL FUNCTIONS
 // EXTERNAL VARIABLES
@@ -284,6 +288,18 @@ void SipRedirectorPickUp::readConfig(OsConfigDb& configDb)
                        "%s::readConfig Wait time is %d.%06d",
                        mLogName.data(), mWaitSecs, mWaitUSecs);
       }
+
+      if (configDb.get(CONFIG_SETTING_BIND_PORT, mBindPort) != OS_SUCCESS)
+      {
+          Os::Logger::instance().log(FAC_SIP, PRI_INFO, "No bind port specified, system will choose port at its discretion");
+          mBindPort = PORT_DEFAULT;
+          mTlsBindPort = PORT_DEFAULT;
+      }
+      else
+      {
+          mTlsBindPort = mBindPort + 1;
+          Os::Logger::instance().log(FAC_SIP, PRI_INFO, "Bind port TCP/UDP: %d TLS: %d", mBindPort, mTlsBindPort);
+      }
    }
 }
 
@@ -320,9 +336,9 @@ SipRedirectorPickUp::initialize(OsConfigDb& configDb,
       // process them.
       mpSipUserAgent = new SipUserAgent(
          // Let the system choose the port numbers.
-         PORT_DEFAULT, // sipTcpPort
-         PORT_DEFAULT, // sipUdpPort
-         PORT_DEFAULT, // sipTlsPort
+         mBindPort, // sipTcpPort
+         mBindPort, // sipUdpPort
+         mTlsBindPort, // sipTlsPort
          NULL, // publicAddress
          NULL, // defaultUser
          bindIp, // defaultSipAddress

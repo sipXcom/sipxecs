@@ -154,6 +154,10 @@ class SipRedirectorPickUp : public RedirectPlugin
    int mWaitSecs;
    int mWaitUSecs;
 
+   // bind ports for sip user agent server
+   int mBindPort;
+   int mTlsBindPort;
+
    // Counter for CSeq for SUBSCRIBES.
    unsigned int mCSeq;
 
