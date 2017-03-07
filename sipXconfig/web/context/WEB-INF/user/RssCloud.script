@@ -6,7 +6,7 @@
   <body>
     <![CDATA[
 this.loadRSS = function(){
-	    $.get('https://sipxcom.org/feed/', function (data) {
+	    $.get('https://viewme.ezuce.com/sipxcom-feed', function (data) {
 var content = "";
     $(data).find("item").each(function () { // or "item" or whatever suits your feed
         var el = $(this);
