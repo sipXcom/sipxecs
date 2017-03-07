@@ -77,6 +77,8 @@
 
 #define EXIT_ON_TERMINATION true
 
+static const int DEFAULT_PROXY_QUEUE_SIZE = 1024;
+
 static const char* CONFIG_SETTING_CALL_STATE_DB = "SIPX_PROXY_CALL_STATE_DB";
 static const char* CONFIG_SETTING_CALL_STATE_DB_HOST = "SIPX_PROXY_CALL_STATE_DB_HOST";
 static const char* CONFIG_SETTING_CALL_STATE_DB_NAME = "SIPX_PROXY_CALL_STATE_DB_NAME";
@@ -525,6 +527,14 @@ int proxy()
         statistics::StatisticsManager::Instance().start();
     }
 
+    int proxyQueueSize;
+    if (osServiceOptions.getOption("SIPX_PROXY_QUEUE_SIZE", proxyQueueSize) != OS_SUCCESS)
+    {
+        proxyQueueSize = DEFAULT_PROXY_QUEUE_SIZE;
+    }
+
+    OS_LOG_INFO(FAC_SIP,  "ProxyQueueSize: " << proxyQueueSize);
+
     // Start the sip stack
     SipUserAgent* pSipUserAgent = new SipUserAgent(
         proxyTcpPort,
@@ -631,7 +641,8 @@ int proxy()
     // to a local server or on out to the real world
     SipRouter* pRouter = new SipRouter(*pSipUserAgent, 
                                        forwardingRules,
-                                       osServiceOptions.getOsConfigDb());
+                                       osServiceOptions.getOsConfigDb(),
+                                       proxyQueueSize);
 
     // Start the router running
     pRouter->start();

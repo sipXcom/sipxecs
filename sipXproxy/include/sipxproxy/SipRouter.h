@@ -102,7 +102,8 @@ class SipRouter : public OsServerTask
    /// Default constructor
    SipRouter(SipUserAgent& sipUserAgent, 
              ForwardRules& forwardingRules,
-             OsConfigDb&   configDb
+             OsConfigDb&   configDb,
+             int           proxyQueueSize
           );
 
    virtual ~SipRouter();
@@ -117,7 +118,7 @@ class SipRouter : public OsServerTask
       SendResponse,
       DoNothing
    } ProxyAction;
-   
+
    /// Examine a request to be proxied, and either modify it for forwarding or create a response.
    ProxyAction proxyMessage(SipMessage&  request,  /**< request to be proxied
                                                     *   iff return is SendRequest */
@@ -281,7 +282,14 @@ class SipRouter : public OsServerTask
    Int64 getLastDispatchSpeed() const;
    
    Int64 getAverageDispatchSpeed() const;
-   
+
+   /// check if queues is overloaded and response with error code instead of processing request
+   /// congestion algorithm applied to out of dialog requests only
+   bool handleCongestion(SipMessage *sipRequest, bool midDialog);
+
+   /// perform congestion handle on request
+   void applyCongestionPolicy(SipMessage *sipRequest, UtlString &policy);
+
    SipUserAgent* mpSipUserAgent;         ///< SIP stack interface
    bool          mAuthenticationEnabled; ///< based on SIPX_PROXY_AUTHENTICATE_ALGORITHM
    UtlString     mRealm;                 ///< realm for challenges - common to replicatants
@@ -342,6 +350,7 @@ class SipRouter : public OsServerTask
    TrustedRequestModifiers _trustedRequestModifiers;
    FinalResponseModifiers _finalResponseModifiers;
    UtlBoolean _suppressAlertIndicatorForTransfers;
+   UtlString _congestionPolicy;
 };
 
 /* ============================ INLINE METHODS ============================ */
