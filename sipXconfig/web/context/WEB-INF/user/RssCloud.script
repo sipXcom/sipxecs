@@ -10,7 +10,7 @@ this.loadRSS = function(){
 var content = "";
     $(data).find("item").each(function () { // or "item" or whatever suits your feed
         var el = $(this);
-		content = content + "<h4><a href='"+el.find("link").text() + "' target='_blank'>" + el.find("title").text() + "</a></h4>";
+		content = content + "<a href='"+el.find("link").text() + "' target='_blank'>" + el.find("title").text() + "</a><br/>";
     });
 	var theDiv = document.getElementById("rssDiv");
 	theDiv.innerHTML = content;
