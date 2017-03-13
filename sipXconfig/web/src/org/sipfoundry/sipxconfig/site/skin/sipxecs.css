@@ -1167,7 +1167,7 @@ ul.form-actions li
 .cloud
 {
 	padding: .5em 1em;
-	width: 49%;
+	width: 43%;
 	float: left;
 	margin-bottom: 1em;
 	margin-right: 1em;
@@ -1645,6 +1645,11 @@ div.autocomplete ul strong.highlight {
     font-weight: bold;
 }
 
+.linkLiveHelp {
+    background: url(/sipxconfig/skin/live-help.png) no-repeat left;
+    font-weight: bold;
+}
+
 .linkLogout {
     background: url(/sipxconfig/skin/logout.png) no-repeat left;
     font-weight: bold;
@@ -1659,6 +1664,12 @@ div.autocomplete ul strong.highlight {
 .linkHelp:hover,
 .linkHelp:active {
     background: url(/sipxconfig/skin/help-hover.png) no-repeat left;
+    font-weight: bold;
+}
+
+.linkLiveHelp:hover,
+.linkLiveHelp:active {
+    background: url(/sipxconfig/skin/live-help-hover.png) no-repeat left;
     font-weight: bold;
 }
 
