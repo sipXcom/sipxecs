@@ -14,6 +14,7 @@ import org.sipfoundry.sipxconfig.common.User;
 import org.sipfoundry.sipxconfig.device.DeviceDefaults;
 import org.sipfoundry.sipxconfig.moh.MusicOnHoldManager;
 import org.sipfoundry.sipxconfig.mwi.Mwi;
+import org.sipfoundry.sipxconfig.permission.PermissionName;
 import org.sipfoundry.sipxconfig.phone.Line;
 import org.sipfoundry.sipxconfig.setting.SettingEntry;
 
@@ -151,7 +152,11 @@ public class PolycomLineDefaults {
     }
 
     private boolean isMwiEnabled() {
-        return m_line.getPhone().getFeatureManager().isFeatureEnabled(Mwi.FEATURE);
+        boolean isServiceEnabled = m_line.getPhone().getFeatureManager().isFeatureEnabled(Mwi.FEATURE);
+        if (m_line.getUser() != null) {
+            return isServiceEnabled && m_line.getUser().hasPermission(PermissionName.VOICEMAIL);
+        }
+        return isServiceEnabled;
     }
 
     private boolean isMohEnabled() {
