@@ -31,6 +31,9 @@
             <label>G.722</label><value>9</value>
         </option>
         <option>
+            <label>OPUS</label><value>125</value>
+        </option>
+        <option>
             <label>None</label><value></value>
         </option>
     </enum>
@@ -96,6 +99,9 @@
             <label>GMT-8:00 (US Pacific Time, Los Angeles)</label><value>PST8PDT</value>
         </option>
         <option>
+            <label>GMT-8:00 (US Pacific Time, Los Angeles)</label><value>PST8PDT,M4.1.0,M10.5.0</value>
+        </option>
+        <option>
             <label>GMT-7:00 (US Mountain Time, Denver)</label><value>MST7MDT</value>
         </option>
         <option>
@@ -117,6 +123,9 @@
             <label>GMT-5:00 (US Eastern Time, New York)</label><value>EST5EDT</value>
         </option>
         <option>
+            <label>GMT-05:00 (Eastern Time without daylight saving)</label><value>EST5</value>
+        </option>
+        <option>
             <label>GMT-4:30 (Caracas)</label><value>TZf+4:30</value>
         </option>
         <option>
@@ -125,7 +134,7 @@
         <option>
             <label>GMT-4:00 (Atlantic Time, New Brunswick)</label><value>AST4ADT,M4.1.0/00:01:00,M10.5.0/00:01:00</value>
         </option>
-		<option>
+	<option>
             <label>GMT-3:30 (Newfoundland)</label><value>NST+3:30NDT+2:30,M4.1.0/00:01:00,M10.5.0/00:01:00</value>
         </option>
         <option>
@@ -247,6 +256,9 @@
         </option>
         <option>
             <label>GMT+13:00 (Nuku'alofa)</label><value>TZe-13</value>
+        </option>
+        <option>
+            <label>Self-Defined Time Zone</label><value>customize</value>
         </option>
     </enum>
 </type>
@@ -539,6 +551,12 @@
         <option>
             <label>Account 4</label><value>3</value>
         </option>
+        <option>
+            <label>Account 5</label><value>4</value>
+        </option>
+        <option>
+            <label>Account 6</label><value>5</value>
+        </option>
         
     </enum>
 </type>
@@ -552,6 +570,840 @@
         </option>
         <option>
             <label>via SIP INFO</label><value>2</value>
+        </option>
+    </enum>
+</type>
+<type id="dns">
+    <enum>
+        <option>
+                <value>0</value>
+                <label>A Record</label>
+        </option>
+        <option>
+                <value>1</value>
+                <label>SRV</label>
+        </option>
+        <option>
+                <value>2</value>
+                <label>NAPTR/SRV</label>
+        </option>
+        <option>
+                <value>3</value>
+                <label>Use Configured IP</label>
+        </option>
+    </enum>
+</type>
+<type id="dnssrvfailovermode">
+    <enum>
+        <option>
+                <value>0</value>
+                <label>default</label>
+        </option>
+        <option>
+                <value>1</value>
+                <label>Saved one until DNS TTL</label>
+        </option>
+        <option>
+                <value>2</value>
+                <label>Saved one until no response</label>
+        </option>
+    </enum>
+</type>
+<type id="nattraversal">
+     <enum>
+        <option>
+                <label>STUN</label>
+                <value>1</value>
+        </option>
+        <option>
+                <label>Disable</label>
+                <value>0</value>
+        </option>
+        <option>
+                <label>Disable, send keep-alive</label>
+                <value>2</value>
+        </option>
+        <option>
+                <label>UPnP</label>
+                <value>3</value>
+        </option>
+        <option>
+                <label>Auto</label>
+                <value>4</value>
+        </option>
+        <option>
+                <label>VPN</label>
+                <value>5</value>
+        </option>
+    </enum>
+</type>
+<type id="teluri">
+    <enum>
+        <option>
+                <value>0</value>
+                <label>Disabled</label>
+        </option>
+        <option>
+                <value>1</value>
+                <label>User=Phone</label>
+        </option>
+        <option>
+                <value>2</value>
+                <label>Enabled</label>
+        </option>
+    </enum>
+</type>
+<type id="siplisteningmode">
+    <enum>
+        <option>
+                <value>0</value>
+                <label>Transport Only</label>
+        </option>
+        <option>
+                <value>1</value>
+                <label>Dual</label>
+        </option>
+        <option>
+                <value>2</value>
+                <label>Dual (BLF Enforced)</label>
+        </option>
+        <option>
+                <value>3</value>
+                <label>Dual (Secured)</label>
+        </option>
+    </enum>
+</type>
+<type id="calleriddisplay">
+    <enum>
+        <option>
+                <value>0</value>
+                <label>Auto</label>
+        </option>
+        <option>
+                <value>1</value>
+                <label>Disabled</label>
+        </option>
+        <option>
+                <value>2</value>
+                <label>From Header</label>
+        </option>
+    </enum>
+</type>
+<type id="fielddefaultyesno">
+    <enum>
+        <option>
+                <value>0</value>
+                <label>Default</label>
+        </option>
+        <option>
+                <value>1</value>
+                <label>No</label>
+        </option>
+        <option>
+                <value>2</value>
+                <label>Yes</label>
+        </option>
+    </enum>
+</type>
+<type id="specialfeature100">
+    <enum>
+        <option>
+                <label>Standard</label>
+                <value>100</value>
+        </option>
+        <option>
+                <label>Nortel MCS</label>
+                <value>101</value>
+        </option>
+        <option>
+                <label>Broadsoft</label>
+                <value>102</value>
+        </option>
+        <option>
+                <label>Sonus</label>
+                <value>104</value>
+        </option>
+        <option>
+                <label>CBCOM</label>
+                <value>108</value>
+        </option>
+        <option>
+                <label>RNK</label>
+                <value>109</value>
+        </option>
+        <option>
+                <label>Sylantro</label>
+                <value>110</value>
+        </option>
+        <option>
+                <label>Huawei IMS</label>
+                <value>117</value>
+        </option>
+        <option>
+                <label>Phonepower</label>
+                <value>119</value>
+        </option>
+    </enum>
+</type>
+<type id="srtpmode">
+    <enum>
+        <option>
+                <label>Disabled</label>
+                <value>0</value>
+        </option>
+        <option>
+                <label>Enabled, not forced</label>
+                <value>1</value>
+        </option>
+        <option>
+                <label>Enabled, forced</label>
+                <value>2</value>
+        </option>
+        <option>
+                <label>Optional</label>
+                <value>3</value>
+        </option>
+    </enum>
+</type>
+<type id="ringtonetype">
+    <enum>
+        <option>
+                <label>system</label>
+                <value>0</value>
+        </option>
+        <option>
+                <label>custom 1</label>
+                <value>1</value>
+        </option>
+        <option>
+                <label>custom 2</label>
+                <value>2</value>
+        </option>
+        <option>
+                <label>custom 3</label>
+                <value>3</value>
+        </option>
+    </enum>
+</type>
+<type id="jitterbufferlength">
+   <enum>
+        <option>
+                <label>100ms</label>
+                <value>0</value>
+        </option>
+        <option>
+                <label>200ms</label>
+                <value>1</value>
+        </option>
+        <option>
+                <label>300ms</label>
+                <value>2</value>
+        </option>
+        <option>
+                <label>400ms</label>
+                <value>3</value>
+        </option>
+        <option>
+                <label>500ms</label>
+                <value>4</value>
+        </option>
+        <option>
+                <label>600ms</label>
+                <value>5</value>
+        </option>
+        <option>
+                <label>700ms</label>
+                <value>6</value>
+        </option>
+        <option>
+                <label>800ms</label>
+                <value>7</value>
+        </option>
+    </enum>			
+</type>
+<type id="ipaddressmode">
+    <enum>
+        <option>
+                <label>DHCP</label>
+                <value>0</value>
+        </option>
+        <option>
+                <label>Static IP</label>
+                <value>1</value>
+        </option>
+        <option>
+                <label>PPPoE</label>
+                <value>2</value>
+        </option>
+    </enum>
+</type>
+<type id="ieee8021xmode">
+    <enum>
+        <option>
+                <label>Disable</label>
+                <value>0</value>
+        </option>
+        <option>
+                <label>EAP-MD5</label>
+                <value>1</value>
+        </option>
+        <option>
+                <label>EAP-TLS</label>
+                <value>2</value>
+        </option>
+        <option>
+                <label>EAP-PEAPv0/MSCHAPv2</label>
+                <value>3</value>
+        </option>
+    </enum>
+</type>
+<type id="pcportmode">
+    <enum>
+        <option>
+                <label>Enable</label>
+                <value>0</value>
+        </option>
+        <option>
+                <label>Disabled</label>
+                <value>1</value>
+        </option>
+        <option>
+                <label>Mirrored</label>
+                <value>2</value>
+        </option>
+    </enum>
+</type>
+<type id="automaticupgrade">
+    <enum>
+        <option>
+                <label>No</label>
+                <value>0</value>
+        </option>
+        <option>
+                <label>Yes, check for upgrade based on minute(s) setting</label>
+                <value>1</value>
+        </option>
+        <option>
+                <label>Yes, check for upgrade based on Hour of Day setting</label>
+                <value>2</value>
+        </option>
+        <option>
+                <label>Yes, check for upgrade based on Day of Week setting</label>
+                <value>3</value>
+        </option>
+    </enum>
+</type>
+<type id="sysloglevel">
+    <enum>
+        <option>
+                <label>NONE</label>
+                <value>0</value>
+        </option>
+        <option>
+                <label>DEBUG</label>
+                <value>1</value>
+        </option>
+        <option>
+                <label>INFO</label>
+                <value>2</value>
+        </option>
+        <option>
+                <label>WARNING</label>
+                <value>3</value>
+        </option>
+        <option>
+                <label>ERROR</label>
+                <value>4</value>
+        </option>
+    </enum>
+</type>
+<type id="inputselection">
+    <enum>
+        <option>
+                <label>Multi-Tap</label>
+                <value>0</value>
+        </option>
+        <option>
+                <label>Shiftable</label>
+                <value>1</value>
+        </option>
+    </enum>
+</type>
+<type id="conviakeypadmenu">
+    <enum>
+        <option>
+                <label>Unrestricted</label>
+                <value>0</value>
+        </option>
+        <option>
+                <label>Basic settings only</label>
+                <value>1</value>
+        </option>
+        <option>
+                <label>Constraint mode</label>
+                <value>2</value>
+        </option>
+    </enum>
+</type>
+<type id="mutekfwhileidle">
+    <enum>
+        <option>
+                <label>DND</label>
+                <value>0</value>
+        </option>
+        <option>
+                <label>Idle Mute</label>
+                <value>1</value>
+        </option>
+        <option>
+                <label>Disabled</label>
+                <value>2</value>
+        </option>
+    </enum>
+</type>
+<type id="calllogtype">
+    <enum>
+        <option>
+                <label>Default</label>
+                <value>0</value>
+        </option>
+        <option>
+                <label>Broadsoft Call Log</label>
+                <value>1</value>
+        </option>
+        <option>
+                <label>Local Call Log</label>
+                <value>2</value>
+        </option>
+    </enum>
+</type>
+<type id="callwaitingtonegain">
+    <enum>
+        <option>
+                <label>Low</label>
+                <value>0</value>
+        </option>
+        <option>
+                <label>Medium</label>
+                <value>1</value>
+        </option>
+        <option>
+                <label>High</label>
+                <value>2</value>
+        </option>
+    </enum>
+</type>
+<type id="headsetkeymode">
+    <enum>
+        <option>
+                <label>Default Mode</label>
+                <value>0</value>
+        </option>
+        <option>
+                <label>Toggle Headset/Speaker</label>
+                <value>1</value>
+        </option>
+    </enum>
+</type>
+<type id="headsettype">
+    <enum>
+        <option>
+                <label>Normal</label>
+                <value>0</value>
+        </option>
+        <option>
+                <label>Plantronics EHS</label>
+                <value>1</value>
+        </option>
+    </enum>
+</type>
+<type id="headsetgain">
+    <enum>
+        <option>
+                <label>0</label>
+                <value>0</value>
+        </option>
+        <option>
+                <label>-6</label>
+                <value>1</value>
+        </option>
+        <option>
+                <label>+6</label>
+                <value>2</value>
+        </option>
+    </enum>
+</type>
+<type id="pbxmldownload">
+    <enum>
+        <option>
+            <label>No</label><value>0</value>
+        </option>
+        <option>
+            <label>Yes, HTTP</label><value>1</value>
+        </option>
+        <option>
+            <label>Yes, TFTP</label><value>2</value>
+        </option>
+        <option>
+            <label>Yes, HTTPS</label><value>3</value>
+        </option>
+    </enum>
+</type>
+<type id="sortpb">
+    <enum>
+        <option>
+            <label>Last Name</label><value>0</value>
+        </option>
+        <option>
+            <label>First Name</label><value>1</value>
+        </option>
+    </enum>
+</type>
+<type id="pbsearchmode">
+    <enum>
+        <option>
+            <label>Quick match</label><value>0</value>
+        </option>
+        <option>
+            <label>Exact match</label><value>1</value>
+        </option>
+    </enum>
+</type>
+<type id="pbkeyfunction">
+    <enum>
+        <option>
+            <label>Default</label><value>0</value>
+        </option>
+        <option>
+            <label>LDAP Search</label><value>1</value>
+        </option>
+        <option>
+            <label>Local Phonebook</label><value>2</value>
+        </option>
+        <option>
+            <label>Local Group</label><value>3</value>
+        </option>
+        <option>
+            <label>Broadsoft Phonebook</label><value>4</value>
+        </option>
+    </enum>
+</type>
+<type id="wallpapersource">
+    <enum>
+        <option>
+                <label>Default</label>
+                <value>0</value>
+        </option>
+        <option>
+                <label>Download</label>
+                <value>1</value>
+        </option>
+        <option>
+                <label>USB</label>
+                <value>2</value>
+        </option>
+        <option>
+                <label>Uploaded</label>
+                <value>3</value>
+        </option>
+        <option>
+                <label>Color Background</label>
+                <value>4</value>
+        </option>
+    </enum>
+</type>
+<type id="blfledpattern">
+    <enum>
+        <option>
+                <label>Default</label>
+                <value>0</value>
+        </option>
+        <option>
+                <label>Analog</label>
+                <value>1</value>
+        </option>
+        <option>
+                <label>Directional</label>
+                <value>2</value>
+        </option>
+        <option>
+                <label>Reserved(Red)</label>
+                <value>3</value>
+        </option>
+        <option>
+                <label>Reserved(Green)</label>
+                <value>4</value>
+        </option>
+        <option>
+                <label>Inverse</label>
+                <value>5</value>
+        </option>
+    </enum>
+</type>
+<type id="screensaver">
+    <enum>
+        <option>
+                <label>Off</label>
+                <value>0</value>
+        </option>
+        <option>
+                <label>On</label>
+                <value>1</value>
+        </option>
+        <option>
+                <label>On if no VPK is active</label>
+                <value>2</value>
+        </option>
+    </enum>
+</type>
+<type id="citycode">
+    <enum>
+        <option>
+                <label>Use Self-Defined City Code</label>
+                <value>0</value>
+        </option>
+        <option>
+                <label>Automatic</label>
+                <value>1</value>
+        </option>
+    </enum>
+</type>
+<type id="degreeunit">
+    <enum>
+        <option>
+                <label>Automatic</label>
+                <value>auto</value>
+        </option>
+        <option>
+                <label>Fahrenheit</label>
+                <value>f</value>
+        </option>
+        <option>
+                <label>Celsius</label>
+                <value>c</value>
+        </option>
+    </enum>
+</type>
+<type id="screensaversource">
+    <enum>
+        <option>
+                <label>Default</label>
+                <value>0</value>
+        </option>
+        <option>
+                <label>USB</label>
+                <value>1</value>
+        </option>
+        <option>
+                <label>Download</label>
+                <value>2</value>
+        </option>
+    </enum>
+</type>
+<type id="timedisplayformat">
+    <enum>
+        <option>
+                <label>12 Hour</label>
+                <value>0</value>
+        </option>
+        <option>
+                <label>24 Hour</label>
+                <value>1</value>
+        </option>
+    </enum>
+</type>
+<type id="datedisplayformat">
+    <enum>  
+        <option>
+            <label>yyyy-mm-dd</label>
+            <value>0</value>
+        </option>
+        <option>
+            <label>mm-dd-yyyy</label>
+            <value>1</value>
+        </option>
+        <option>
+            <label>dd-mm-yyyy</label>
+            <value>2</value>
+        </option>
+        <option>
+            <label>dddd, MMMM dd</label>
+            <value>3</value>
+        </option>
+        <option>
+            <label>MMMM dd, dddd</label>
+            <value>4</value>
+        </option>
+    </enum>
+</type>
+<type id="keyassend">
+    <enum>  
+        <option>
+            <label>Disabled</label>
+            <value>0</value>
+        </option>
+        <option>
+            <label>Pound(#)</label>
+            <value>1</value>
+        </option>
+        <option>
+            <label>Star(*)</label>
+            <value>2</value>
+        </option>
+    </enum>
+</type>
+<type id="returncode">
+    <enum>  
+        <option>
+            <label>Busy</label>
+            <value>0</value>
+        </option>
+        <option>
+            <label>Temporarily Unavailable</label>
+            <value>1</value>
+        </option>
+        <option>
+            <label>Not Found(404)</label>
+            <value>2</value>
+        </option>
+        <option>
+            <label>Decline(603)</label>
+            <value>3</value>
+        </option>
+    </enum>
+</type>
+<type id="dndoverride">
+    <enum>  
+        <option>
+            <label>Off</label>
+            <value>0</value>
+        </option>
+        <option>
+            <label>Allow all</label>
+            <value>1</value>
+        </option>
+        <option>
+            <label>Allow only contact</label>
+            <value>2</value>
+        </option>
+        <option>
+            <label>Allow only favorites</label>
+            <value>3</value>
+        </option>
+    </enum>
+</type>
+<type id="calleeiddisplay">
+    <enum>  
+        <option>
+            <label>Auto</label>
+            <value>0</value>
+        </option>
+        <option>
+            <label>Disabled</label>
+            <value>1</value>
+        </option>
+        <option>
+            <label>From Header</label>
+            <value>2</value>
+        </option>
+    </enum>
+</type>
+<type id="unsolicitedrefer">
+    <enum>  
+        <option>
+            <label>Disabled</label>
+            <value>0</value>
+        </option>
+        <option>
+            <label>Enabled</label>
+            <value>1</value>
+        </option>
+        <option>
+            <label>Enabled-Force Auth</label>
+            <value>2</value>
+        </option>
+    </enum>
+</type>
+<type id="bluetoothpower">
+    <enum>  
+        <option>
+            <label>Off</label>
+            <value>0</value>
+        </option>
+        <option>
+            <label>on</label>
+            <value>1</value>
+        </option>
+        <option>
+            <label>Off and Hide Menu From LCD</label>
+            <value>2</value>
+        </option>
+    </enum>
+</type>
+<type id="vpkmode">
+    <enum>  
+        <option>
+            <label>Line Mode</label>
+            <value>0</value>
+        </option>
+        <option>
+            <label>Account Mode</label>
+            <value>1</value>
+        </option>
+    </enum>
+</type>
+<type id="extmpk">
+    <enum>
+        <option>
+            <label>Speed Dial</label><value>0</value>
+        </option>
+        <option>
+            <label>BLF</label><value>1</value>
+        </option>
+        <option>
+            <label>Presence Watcher</label><value>2</value>
+        </option>
+        <option>
+            <label>Eventlist BLF</label><value>3</value>
+        </option>
+        <option>
+            <label>Speed Dial via active account</label><value>4</value>
+        </option>
+        <option>
+            <label>Dial DTMF</label><value>5</value>
+        </option>
+         <option>
+            <label>Voice Mail</label><value>6</value>
+        </option>
+        <option>
+            <label>Call Return</label><value>7</value>
+        </option>
+        <option>
+            <label>Transfer</label><value>8</value>
+        </option>
+        <option>
+            <label>Call Park</label><value>9</value>
+        </option>
+        <option>
+            <label>Call Intercom</label><value>10</value>
+        </option>
+        <option>
+            <label>LDAP Search</label><value>11</value>
+        </option>
+        <option>
+            <label>Multicast Paging</label><value>13</value>
+        </option>
+        <option>
+            <label>Record</label><value>14</value>
+        </option>
+        <option>
+            <label>Call Log</label><value>15</value>
+        </option>
+        <option>
+            <label>Monitored Call Park</label><value>16</value>
+        </option>
+        <option>
+            <label>Menu</label><value>17</value>
         </option>
     </enum>
 </type>

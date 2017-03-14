@@ -65,6 +65,37 @@
       <type refid="zip"/>
       <description>Firmware. Example file name : Release_GXP2124_1.0.4.23.zip</description>
     </setting>
+    <setting name="gxp2130-release.zip">
+      <label>GXP 2130 Firmware (zip)</label>
+      <type refid="zip"/>
+      <description>Firmware. Example file name : Release_GXP2130_1.0.7.25.zip</description>
+    </setting>
+    <setting name="gxp2130-release.zip">
+      <label>GXP 2130 Firmware (zip)</label>
+      <type refid="zip"/>
+      <description>Firmware. Example file name : Release_GXP2130_1.0.7.25.zip</description>
+    </setting>
+    <setting name="gxp2135-release.zip">
+      <label>GXP 2135 Firmware (zip)</label>
+      <type refid="zip"/>
+      <description>Firmware. Example file name : Release_GXP2135_1.0.7.25.zip</description>
+    </setting>
+    <setting name="gxp2140-release.zip">
+      <label>GXP 2140 Firmware (zip)</label>
+      <type refid="zip"/>
+      <description>Firmware. Example file name : Release_GXP2140_1.0.7.25.zip</description>
+    </setting>
+    <setting name="gxp2160-release.zip">
+      <label>GXP 2160 Firmware (zip)</label>
+      <type refid="zip"/>
+      <description>Firmware. Example file name : Release_GXP2160_1.0.7.25.zip</description>
+    </setting>
+    <setting name="gxp2170-release.zip">
+      <label>GXP 2170 Firmware (zip)</label>
+      <type refid="zip"/>
+      <description>Firmware. Example file name : Release_GXP2170_1.0.7.25.zip</description>
+    </setting>
+    
     <setting name="gxp2200-release.zip">
       <label>GXP 2200 Firmware (zip)</label>
       <type refid="zip"/>
@@ -140,5 +171,25 @@
       <type refid="zip"/>
       <description>GXP Default Ringtones. Example file name: RingTone.zip</description>
     </setting>
+    <setting name="wallpapers">
+            <label>Wallpapers for colour LCDs</label>
+            <type>
+                <file>
+                    <contentType>application/zip</contentType>
+                    <moveTo>WallPapers/</moveTo>
+                </file>
+            </type>
+            <description>archive with JPG wallpapers</description>
+        </setting>
+        <setting name="screensavers.zip">
+            <label>Screensavers for colour LCDs</label>
+            <type>
+                <file>
+                    <contentType>application/zip</contentType>
+                    <moveTo>ScreenSavers/</moveTo>
+                </file>
+            </type>
+            <description>ZIP archive with JPG and PNG files</description>
+        </setting>
   </group>
 </model>
