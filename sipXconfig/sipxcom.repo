@@ -1,0 +1,5 @@
+[sipxcom]
+name=sipXecs software for CentOS $releasever - $basearch
+baseurl=http://download.sipxcom.org/pub/17.04-docker-unstable/CentOS_6/x86_64/
+gpgcheck=0
+
