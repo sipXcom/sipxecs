@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+## Velocity Template.
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<gs_provision version="1">
+<mac>$phone.SerialNumber</mac>
+<config version="1">
+#macro (custompara $name $value)
+#set ($custom = [])
+#set ($custom = $value.split("="))
+#if ($custom.size()>1)
+<${custom[0]}>$!{custom[1]}</${custom[0]}>
+#end
+#end
+#macro (ipaddress $name $value)
+#set ($ips = $name.split(","))
+#set ($ipvalues = $value.split("\D"))
+#set ($index = 0)
+#foreach ($ip in $ips)
+<${ip}>$ipvalues[$index]</${ip}>
+#set ($index = $index + 1)
+#end
+#end
+#macro (phoneSetting $settings)
+#foreach ($group in $settings.Values)
+#foreach ($setting in $group.Values)
+<!--$!{setting.Label} -->
+#if ($setting.ProfileName.contains(","))
+#ipaddress($setting.ProfileName, $setting.Value)
+#elseif ($setting.ProfileName.contains("CustomPValue"))
+#custompara($setting.ProfileName, $setting.Value)
+#else ##if (${setting.Value})
+<${setting.ProfileName}>$!{setting.Value}</${setting.ProfileName}>
+#end
+#end
+#end
+#end
+
+<!--Phone settings-->
+#phoneSetting($phone.Settings)
+<!-- Enable configured lines-->
+#set ($lineid = 0)
+#set ($maxline = $phone.getGsModel().getMaxLineCount() - 1 )
+
+#foreach ($line in $cfg.lines)
+##set ($lineid = $foreach.count)
+#foreach ($group in $line.Settings.Values)
+#foreach ($setting in $group.Values)
+##if (${setting.Value})
+<!--$!{setting.Label} $lineid -->
+#set ($names = $setting.ProfileName.split("-"))
+#if ($names.size() > $lineid)
+#set ($name = $names[$lineid])
+<$name>$!{setting.Value}</$name>
+#else
+<--$names error in parameter-->
+#end
+##end
+#end
+#end
+#set ($lineid = $lineid + 1)
+#end
+#set ($acountname = ["P270","P417","P517","P617","P1717","P1817"] )
+#set ($callername = ["P31","P410","P510","P610","P1710","P1810"] )
+#set ($sipid = ["P35","P404","P504","P604","P1704","P1804"] )
+#set ($authid = ["P36","P405","P505","P605","P1705","P1805"] )
+#set ($pass = ["P34","P406","P506","P606","P1706","P1806"] )
+#macro (emptyparameter $parameter)
+<$parameter> </$parameter>
+#end 
+</config>
+</gs_provision>

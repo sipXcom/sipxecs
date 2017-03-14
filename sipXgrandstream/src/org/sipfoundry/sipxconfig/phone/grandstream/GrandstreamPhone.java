@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
+import static java.lang.String.format;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,6 +26,10 @@ import org.sipfoundry.sipxconfig.device.DeviceTimeZone;
 import org.sipfoundry.sipxconfig.device.Profile;
 import org.sipfoundry.sipxconfig.device.ProfileContext;
 import org.sipfoundry.sipxconfig.device.ProfileFilter;
+import org.sipfoundry.sipxconfig.commserver.LocationsManager;
+import org.sipfoundry.sipxconfig.address.Address;
+import org.sipfoundry.sipxconfig.address.AddressManager;
+import org.sipfoundry.sipxconfig.phonelog.PhoneLog;
 import org.sipfoundry.sipxconfig.phone.Line;
 import org.sipfoundry.sipxconfig.phone.LineInfo;
 import org.sipfoundry.sipxconfig.phone.Phone;
@@ -41,35 +45,50 @@ import org.sipfoundry.sipxconfig.speeddial.SpeedDial;
  * Support for Grandstream BudgeTone / HandyTone
  */
 public class GrandstreamPhone extends Phone {
+
     private static final Log LOG = LogFactory.getLog(GrandstreamPhone.class);
+    public static final String MAC_PREFIX = "000B82";
+    private static final String GSPHONEGXP21EXPANTION = "gsPhoneGxp21(40|70)";
+    private static final String GSPHONEGXP22 = "gsPhoneGxp(2000|2100|2020|2010|2124|2200)";
     private static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
     private static final String DAYLIGHT_SETTING = "phone/P75";
     private static final String GXW_TIMEZONE_SETTING = "gateway/P246";
     private static final String USERID_PATH = "port/P35-P404-P504-P604-P1704-P1804";
     private static final String HT_USERID_PATH = "port/P35-P735";
     private static final String GXW_USERID_PATH = "port/P4060-P4061-P4062-P4063-P4064-P4065-P4066-P4067"
-        + "-P4068-P4069-P4070-P4071-P4072-P4073-P4074-P4075-P4076-P4077-P4078-P4079-P4080-P4081-P4082-P4083";
+            + "-P4068-P4069-P4070-P4071-P4072-P4073-P4074-P4075-P4076-P4077-P4078-P4079-P4080-P4081-P4082-P4083";
     private static final String AUTHID_PATH = "port/P36-P405-P505-P605-P1705-P1805";
     private static final String HT_AUTHID_PATH = "port/P36-P736";
     private static final String GXW_AUTHID_PATH = "port/P4090-P4091-P4092-P4093-P4094-P4095-P4096-P4097"
-        + "-P4098-P4099-P4100-P4101-P4102-P4103-P4104-P4105-P4106-P4107-P4108-P4109-P4110-P4111-P4112-P4113";
+            + "-P4098-P4099-P4100-P4101-P4102-P4103-P4104-P4105-P4106-P4107-P4108-P4109-P4110-P4111-P4112-P4113";
     private static final String PASSWORD_PATH = "port/P34-P406-P506-P606-P1706-P1806";
     private static final String HT_PASSWORD_PATH = "port/P34-P734";
     private static final String GXW_PASSWORD_PATH = "port/P4120-P4121-P4122-P4123-P4124-P4125-P4126-P4127"
-        + "-P4128-P4129-P4130-P4131-P4132-P4133-P4134-P4135-P4136-P4137-P4138-P4139-P4140-P4141-P4142-P4143";
+            + "-P4128-P4129-P4130-P4131-P4132-P4133-P4134-P4135-P4136-P4137-P4138-P4139-P4140-P4141-P4142-P4143";
     private static final String ACCOUNT_NAME_PATH = "port/P270-P417-P517-P617-P1717-P1817";
     private static final String DISPLAY_NAME_PATH = "port/P3-P407-P507-P607-P1707-P1807";
     private static final String HT_DISPLAY_NAME_PATH = "port/P3-P703";
     private static final String GXW_DISPLAY_NAME_PATH = "port/P4180-P4181-P4182-P4183-P4184-P4185-P4186-P4187"
-        + "-P4188-P4189-P4190-P4191-P4192-P4193-P4194-P4195-P4196-P4197-P4198-P4199-P4252-P4253-P5254-P4255";
+            + "-P4188-P4189-P4190-P4191-P4192-P4193-P4194-P4195-P4196-P4197-P4198-P4199-P4252-P4253-P5254-P4255";
     private static final String REGISTRATION_SERVER_PATH = "port/P47-P402-P502-P602-P1702-P1802";
     private static final String LINE_ACTIVE_PATH = "port/P271-P401-P501-P601-P1701-P1801";
     private static final String HT_REGISTRATION_SERVER_PATH = "port/P47-P747-P47-P747";
     private static final String GXW_REGISTRATION_SERVER_PATH = "account-proxy/P47";
     private static final String GXW_HUNTGROUP_PATH = "port/P4300-P4301-P4302-P4303-P4304-P4305-P4306-P4307-P4308"
-        + "-P4309-P4310-P4311-P4312-P4313-P4314-P4315-P4316-P4317-P4318-P4319-P4320-P4321-P4322-P4323";
+            + "-P4309-P4310-P4311-P4312-P4313-P4314-P4315-P4316-P4317-P4318-P4319-P4320-P4321-P4322-P4323";
     private static final String VOICEMAIL_PATH = "port/P33-P426-P526-P626-P1726-P1826";
-    private static final String MOH_URI_PATH = "port/P2350-P2450-P2550-P2650-P2760-P2850";
+    private static final String BLF_SERVER_URI = "advanced/P134-P444-P544-P644-P1744-P1844";
+    private static final String WALLPAPER_PATH = "lcdgxp/P2917";
+    private static final String SERVER_PATH = "upgrade/P192";
+    private static final String FIRMWARE_PATH = "upgrade/P237";
+    private static final String SCREENSAVER_PATH = "lcdgxp/Pxxxxx";//fill the correct value
+    private static final String MOH_URI_PATH = "network/P2350-P2450-P2550-P2650-P2760-P2850";
+    private static final String ALT_NTP = "network/P8333";
+    private static final String SYSLOG_SERVER = "network/P207";
+    private static final String HTTP_USER = "upgrade/P1360";
+    private static final String HTTP_PASSWORD = "upgrade/P1361";
+    private static final String PHONEBOOK_USER = "phonebook/P6713";
+    private static final String PHONEBOO_PASSWORD = "phonebook/P6714";
     private static final String DIRECTED_CALL_PICKUP_PREFIX = "port/P1347-P481-P581-P681-P1781-P1881";
     private static final String DOT = ".";
     private static final String CONFIG_FILE_PREFIX = "gs_config/";
@@ -261,8 +280,15 @@ public class GrandstreamPhone extends Phone {
 
     private String m_phonebookLocation = "gs_phonebook/{0}";
     private String m_phonebookFilename = "/phonebook.xml";
+    private String m_wallpaperLocation = "WallPapers/";
+    private String m_screensaverLocation = "ScreenSavers/";
+    private LocationsManager m_locationsManager;
+    private AddressManager m_addressManager;
 
     public GrandstreamPhone() {
+        if (null == getSerialNumber()) {
+            setSerialNumber(MAC_PREFIX);
+        }
     }
 
     @Override
@@ -274,10 +300,10 @@ public class GrandstreamPhone extends Phone {
     @Override
     public void initialize() {
         SpeedDial speedDial = getPhoneContext().getSpeedDial(this);
-        GrandstreamDefaults defaults = new GrandstreamDefaults(getPhoneContext().getPhoneDefaults(), speedDial);
+        GrandstreamDefaults defaults = new GrandstreamDefaults(getPhoneContext().getPhoneDefaults(), speedDial, this);
         addDefaultBeanSettingHandler(defaults);
         GrandstreamPhonebookDefaults phonebookDefaults = new GrandstreamPhonebookDefaults(getPhoneContext()
-                .getPhoneDefaults());
+                .getPhoneDefaults(), getLocationsManager());
         addDefaultBeanSettingHandler(phonebookDefaults);
         if (speedDial != null) {
             transformSpeedDial(speedDial.getButtons());
@@ -289,122 +315,141 @@ public class GrandstreamPhone extends Phone {
             int maxSize = buttons.size();
             switch (getGsModel().speedDialKeys()) {
 
-            // There are some models that have 0 speed dial keys that support expansion consoles
-            case 0:
-                if (getGsModel().speedDialExpansion()) {
-                    if (maxSize >= 112) {
-                        maxSize = 112;
+                // There are some models that have 0 speed dial keys that support expansion consoles
+                case 0:
+                    if (getGsModel().speedDialExpansion()) {
+                        if (maxSize >= 112) {
+                            maxSize = 112;
+                        }
+                        // Time to fill the expansion console P values
+                        for (int i = 0; i < maxSize; i++) {
+                            Button button = buttons.get(i);
+                            setButtonSettings(button, i, 0);
+                        }
                     }
-                     // Time to fill the expansion console P values
-                    for (int i = 0; i < maxSize; i++) {
-                        Button button = buttons.get(i);
-                        setButtonSettings(button, i, 0);
-                    }
-                }
-                break;
+                    break;
 
-            // Grandstream phones with 7 speed dial/BLF buttons
-            case 7:
-                for (int i = 0; i < 7 && i < buttons.size(); i++) {
-                    Button button = buttons.get(i);
-                    if (button.isBlf()) {
-                        setSettingTypedValue(GXP_7_BUTTON[i][0], THREE);
-                    } else {
-                        setSettingTypedValue(GXP_7_BUTTON[i][0], ZERO);
-                    }
-                    setSettingTypedValue(GXP_7_BUTTON[i][1], ZERO);
-                    setSettingTypedValue(GXP_7_BUTTON[i][2], button.getLabel());
-                    setSettingTypedValue(GXP_7_BUTTON[i][3], button.getNumber());
-                }
-                // Since the speed dial keys on the phone are all taken up, we must start on the
-                // expansion console.
-                if (getGsModel().speedDialExpansion() && buttons.size() >= 7) {
-                    if (maxSize >= (112 + 7)) {
-                        maxSize = 112;
-                    } else {
-                        maxSize = buttons.size();
-                    }
-                    // Start at the 7th defined button (i = 7) and work our way up until we reach
-                    // the end of the list
-                    for (int i = 7; i < maxSize; i++) {
+                // Grandstream phones with 7 speed dial/BLF buttons
+                case 7:
+                    for (int i = 0; i < 7 && i < buttons.size(); i++) {
                         Button button = buttons.get(i);
-                        setButtonSettings(button, i, 7);
+                        if (button.isBlf()) {
+                            setSettingTypedValue(GXP_7_BUTTON[i][0], THREE);
+                        } else {
+                            setSettingTypedValue(GXP_7_BUTTON[i][0], ZERO);
+                        }
+                        setSettingTypedValue(GXP_7_BUTTON[i][1], ZERO);
+                        setSettingTypedValue(GXP_7_BUTTON[i][2], button.getLabel());
+                        setSettingTypedValue(GXP_7_BUTTON[i][3], button.getNumber());
                     }
-                }
-                break;
+                    // Since the speed dial keys on the phone are all taken up, we must start on the
+                    // expansion console.
+                    if (getGsModel().speedDialExpansion() && buttons.size() >= 7) {
+                        if (maxSize >= (112 + 7)) {
+                            maxSize = 112;
+                        } else {
+                            maxSize = buttons.size();
+                        }
+                        // Start at the 7th defined button (i = 7) and work our way up until we reach
+                        // the end of the list
+                        for (int i = 7; i < maxSize; i++) {
+                            Button button = buttons.get(i);
+                            setButtonSettings(button, i, 7);
+                        }
+                    }
+                    break;
 
-            case 18:
-                for (int i = 0; i < 18 && i < buttons.size(); i++) {
-                    Button button = buttons.get(i);
-                    if (button.isBlf()) {
-                        setSettingTypedValue(GXP_18_BUTTON[i][0], THREE);
-                    } else {
-                        setSettingTypedValue(GXP_18_BUTTON[i][0], ZERO);
-                    }
-                    setSettingTypedValue(GXP_18_BUTTON[i][1], ZERO);
-                    setSettingTypedValue(GXP_18_BUTTON[i][2], button.getLabel());
-                    setSettingTypedValue(GXP_18_BUTTON[i][3], button.getNumber());
-                }
-                if (getGsModel().speedDialExpansion() && buttons.size() >= 18) {
-                    if (maxSize >= (112 + 18)) {
-                        maxSize = 112;
-                    }
-                    // Start at the 7th defined button (i = 18) and work our way up until we reach
-                    // the end of the list
-                    for (int i = 18; i < maxSize; i++) {
+                case 18:
+                    for (int i = 0; i < 18 && i < buttons.size(); i++) {
                         Button button = buttons.get(i);
-                        setButtonSettings(button, i, 18);
+                        if (button.isBlf()) {
+                            setSettingTypedValue(GXP_18_BUTTON[i][0], THREE);
+                        } else {
+                            setSettingTypedValue(GXP_18_BUTTON[i][0], ZERO);
+                        }
+                        setSettingTypedValue(GXP_18_BUTTON[i][1], ZERO);
+                        setSettingTypedValue(GXP_18_BUTTON[i][2], button.getLabel());
+                        setSettingTypedValue(GXP_18_BUTTON[i][3], button.getNumber());
                     }
-                }
-                break;
+                    if (getGsModel().speedDialExpansion() && buttons.size() >= 18) {
+                        if (maxSize >= (112 + 18)) {
+                            maxSize = 112;
+                        }
+                        // Start at the 7th defined button (i = 18) and work our way up until we reach
+                        // the end of the list
+                        for (int i = 18; i < maxSize; i++) {
+                            Button button = buttons.get(i);
+                            setButtonSettings(button, i, 18);
+                        }
+                    }
+                    break;
 
-            case 24:
-                for (int i = 0; i < 24 && i < buttons.size(); i++) {
-                    Button button = buttons.get(i);
-                    if (button.isBlf()) {
-                        setSettingTypedValue(GXP_24_BUTTON[i][0], THREE);
-                    } else {
-                        setSettingTypedValue(GXP_24_BUTTON[i][0], ZERO);
-                    }
-                    setSettingTypedValue(GXP_24_BUTTON[i][1], ZERO);
-                    setSettingTypedValue(GXP_24_BUTTON[i][2], button.getLabel());
-                    setSettingTypedValue(GXP_24_BUTTON[i][3], button.getNumber());
-                }
-                if (getGsModel().speedDialExpansion() && buttons.size() >= 24) {
-                    if (maxSize >= (112 + 24)) {
-                        maxSize = 112;
-                    }
-                    // Start at the 24th defined button (i = 24) and work our way up until we
-                    // reach the end of the list
-                    for (int i = 24; i < maxSize; i++) {
+                case 24:
+                    for (int i = 0; i < 24 && i < buttons.size(); i++) {
                         Button button = buttons.get(i);
-                        setButtonSettings(button, i, 24);
+                        if (button.isBlf()) {
+                            setSettingTypedValue(GXP_24_BUTTON[i][0], THREE);
+                        } else {
+                            setSettingTypedValue(GXP_24_BUTTON[i][0], ZERO);
+                        }
+                        setSettingTypedValue(GXP_24_BUTTON[i][1], ZERO);
+                        setSettingTypedValue(GXP_24_BUTTON[i][2], button.getLabel());
+                        setSettingTypedValue(GXP_24_BUTTON[i][3], button.getNumber());
                     }
-                }
-                break;
+                    if (getGsModel().speedDialExpansion() && buttons.size() >= 24) {
+                        if (maxSize >= (112 + 24)) {
+                            maxSize = 112;
+                        }
+                        // Start at the 24th defined button (i = 24) and work our way up until we
+                        // reach the end of the list
+                        for (int i = 24; i < maxSize; i++) {
+                            Button button = buttons.get(i);
+                            setButtonSettings(button, i, 24);
+                        }
+                    }
+                    break;
 
-            default:
-                return;
+                default:
+                    return;
             }
         }
     }
 
     private void setButtonSettings(Button button, int i, int offset) {
         String expboardkeys = "expboardkeys/P";
-        if (button.isBlf()) {
-            setSettingTypedValue(expboardkeys + Integer.toString(i + 6001 - offset), THREE);
-        } else {
-            setSettingTypedValue(expboardkeys + Integer.toString(i + 6001 - offset), ZERO);
+        LOG.debug("Entering expboard config from " + getModel().getModelId());
+        int increment = 0;
+        if (getModel().getModelId().matches(GSPHONEGXP22)) {
+            expboardkeys = "expboardkeys" + (i / 28) + "/P";
+            if (button.isBlf()) {
+                setSettingTypedValue(expboardkeys + Integer.toString(i + 6001 - offset), THREE);
+            } else {
+                setSettingTypedValue(expboardkeys + Integer.toString(i + 6001 - offset), ZERO);
+            }
+            setSettingTypedValue(expboardkeys + Integer.toString(i + 6201 - offset), ZERO);
+            setSettingTypedValue(expboardkeys + Integer.toString(i + 6401 - offset), button.getLabel());
+            setSettingTypedValue(expboardkeys + Integer.toString(i + 6601 - offset), button.getNumber());
         }
-        setSettingTypedValue(expboardkeys + Integer.toString(i + 6201 - offset), ZERO);
-        setSettingTypedValue(expboardkeys + Integer.toString(i + 6401 - offset), button.getLabel());
-        setSettingTypedValue(expboardkeys + Integer.toString(i + 6601 - offset), button.getNumber());
+        if (getModel().getModelId().matches(GSPHONEGXP21EXPANTION)) {
+
+            expboardkeys = "expboardkeysgxp" + (i / 40) + "-21/P";
+            increment = 5 * i;
+            if (button.isBlf()) {
+                setSettingTypedValue(expboardkeys + Integer.toString(increment + 23000 - offset), THREE);
+            } else {
+                setSettingTypedValue(expboardkeys + Integer.toString(increment + 23000 - offset), ZERO);
+            }
+            setSettingTypedValue(expboardkeys + Integer.toString(increment + 23001 - offset), ZERO);
+            setSettingTypedValue(expboardkeys + Integer.toString(increment + 23002 - offset), button.getLabel());
+            setSettingTypedValue(expboardkeys + Integer.toString(increment + 23003 - offset), button.getNumber());
+        }
     }
 
     @Override
     public void initializeLine(Line line) {
+        SpeedDial speedDial = getPhoneContext().getSpeedDial(this);
         GrandstreamLineDefaults defaults = new GrandstreamLineDefaults(this, line, getPhoneContext()
-                .getPhoneDefaults());
+                .getPhoneDefaults(), speedDial);
         line.addDefaultBeanSettingHandler(defaults);
     }
 
@@ -469,8 +514,9 @@ public class GrandstreamPhone extends Phone {
     }
 
     /**
-     * Generate files in text format. Won't be usable by phone, but you can use grandstreams
-     * config tool to convert manually. This is mostly for debugging
+     * Generate files in text format. Won't be usable by phone, but you can use
+     * grandstreams config tool to convert manually. This is mostly for
+     * debugging
      *
      * @param isTextFormatEnabled true to save as text, default is false
      */
@@ -487,6 +533,27 @@ public class GrandstreamPhone extends Phone {
     public String getProfileFilename() {
         String phoneFilename = getSerialNumber();
         return "cfg" + phoneFilename.toLowerCase();
+        //return getDeviceFilename();
+    }
+
+    public String getDeviceFilename() {
+        return format("%s.xml", getProfileFilename());
+    }
+
+    public LocationsManager getLocationsManager() {
+        return m_locationsManager;
+    }
+
+    public void setLocationsManager(LocationsManager locationsManager) {
+        m_locationsManager = locationsManager;
+    }
+
+    public AddressManager getAddressManager() {
+        return m_addressManager;
+    }
+
+    public void setAddressManager(AddressManager addressManager) {
+        m_addressManager = addressManager;
     }
 
     /*
@@ -505,10 +572,13 @@ public class GrandstreamPhone extends Phone {
      * Set phonebook defaults
      */
     public class GrandstreamPhonebookDefaults {
-        private final DeviceDefaults m_defaults;
 
-        GrandstreamPhonebookDefaults(DeviceDefaults defaults) {
+        private final DeviceDefaults m_defaults;
+        private LocationsManager m_locationsManager;
+
+        GrandstreamPhonebookDefaults(DeviceDefaults defaults, LocationsManager locationManager) {
             m_defaults = defaults;
+            m_locationsManager = locationManager;
         }
 
         /*
@@ -516,7 +586,7 @@ public class GrandstreamPhone extends Phone {
          */
         @SettingEntry(path = "phonebook/P330")
         public String phonebookDownloadMethod() {
-            return "2";
+            return "1";
         }
 
         /*
@@ -524,7 +594,8 @@ public class GrandstreamPhone extends Phone {
          */
         @SettingEntry(path = "phonebook/P331")
         public String getPhonebookName() {
-            return m_defaults.getTftpServer().getAddress() + SEPARATOR + getPhonebookLocation();
+            //return m_defaults.getTftpServer().getAddress() + SEPARATOR + getPhonebookLocation();
+            return m_locationsManager.getPrimaryLocation().getFqdn() + SEPARATOR + getPhonebookLocation();
         }
     }
 
@@ -537,6 +608,7 @@ public class GrandstreamPhone extends Phone {
     }
 
     static class PhonebookProfile extends Profile {
+
         public PhonebookProfile(String name) {
             super(name, "text/csv");
         }
@@ -562,15 +634,18 @@ public class GrandstreamPhone extends Phone {
          * If phonebooks are enabled, generate phonebook profile
          */
         if (phonebookManager.getPhonebookManagementEnabled()) {
-            profileTypes = new Profile[] {
-                new Profile(getProfileFilename(), APPLICATION_OCTET_STREAM),
-                new Profile(CONFIG_FILE_PREFIX + getProfileFilename(), APPLICATION_OCTET_STREAM),
+            profileTypes = new Profile[]{
+                //new Profile(getProfileFilename(), APPLICATION_OCTET_STREAM),
+                //new Profile(CONFIG_FILE_PREFIX + getProfileFilename(), APPLICATION_OCTET_STREAM),
+                // new Profile(this),
+                new Profile(CONFIG_FILE_PREFIX + getDeviceFilename()),
                 new PhonebookProfile(phonebookLocation)
             };
         } else {
-            profileTypes = new Profile[] {
-                new Profile(getProfileFilename(), APPLICATION_OCTET_STREAM),
-                new Profile(CONFIG_FILE_PREFIX + getProfileFilename(), APPLICATION_OCTET_STREAM)
+            profileTypes = new Profile[]{
+                //new Profile(getProfileFilename(), APPLICATION_OCTET_STREAM),
+                // new Profile(CONFIG_FILE_PREFIX + getProfileFilename(), APPLICATION_OCTET_STREAM)
+                new Profile(this)
             };
         }
         return profileTypes;
@@ -583,12 +658,15 @@ public class GrandstreamPhone extends Phone {
     }
 
     public static class GrandstreamDefaults {
+
         private final DeviceDefaults m_defaults;
         private final SpeedDial m_speedDial;
+        private final GrandstreamPhone m_phone;
 
-        GrandstreamDefaults(DeviceDefaults defaults, SpeedDial speedDial) {
+        GrandstreamDefaults(DeviceDefaults defaults, SpeedDial speedDial, GrandstreamPhone phone) {
             m_defaults = defaults;
             m_speedDial = speedDial;
+            m_phone = phone;
         }
 
         /*
@@ -661,24 +739,86 @@ public class GrandstreamPhone extends Phone {
             return m_defaults.getNtpServer();
         }
 
-        @SettingEntry(paths = { GXW_REGISTRATION_SERVER_PATH })
+        @SettingEntry(path = ALT_NTP)
+        public String getAltNtpServer() {
+            return m_defaults.getAlternateNtpServer();
+        }
+
+        @SettingEntry(path = SYSLOG_SERVER)
+        public String getSyslogServer() {
+            Address syslog = m_defaults.getAddressManager().getSingleAddress(PhoneLog.PHONELOG);
+            return syslog != null ? syslog.getAddress() : "";
+        }
+
+        @SettingEntry(paths = {GXW_REGISTRATION_SERVER_PATH})
         public String getRegistationServer() {
             return m_defaults.getDomainName();
+        }
+
+        @SettingEntry(path = WALLPAPER_PATH)
+        public String getWallpaperUrl() {
+            return "http://" + m_phone.getLocationsManager().getPrimaryLocation().getFqdn() + SEPARATOR + m_phone.m_wallpaperLocation;
+
+        }
+
+        @SettingEntry(path = FIRMWARE_PATH)
+        public String getFirmwareUrl() {
+            return m_phone.getLocationsManager().getPrimaryLocation().getFqdn();
+
+        }
+
+        @SettingEntry(path = SERVER_PATH)
+        public String getProvServerUrl() {
+            return m_phone.getLocationsManager().getPrimaryLocation().getFqdn();
+
+        }
+
+        @SettingEntry(path = SCREENSAVER_PATH)
+        public String getScreensaverUrl() {
+            return "http://" + m_phone.getLocationsManager().getPrimaryLocation().getFqdn() + SEPARATOR + m_phone.m_screensaverLocation;
+
+        }
+
+        @SettingEntry(path = HTTP_USER)
+        public String getHttpUser() {
+            return "PlcmSpIp";
+
+        }
+
+        @SettingEntry(path = HTTP_PASSWORD)
+        public String getHttpPassword() {
+            return "PlcmSpIp";
+
+        }
+
+        @SettingEntry(path = PHONEBOOK_USER)
+        public String getPhonebookUser() {
+            return "PlcmSpIp";
+
+        }
+
+        @SettingEntry(path = PHONEBOO_PASSWORD)
+        public String getPhonebookPassword() {
+            return "PlcmSpIp";
+
         }
     }
 
     public static class GrandstreamLineDefaults {
+
         private final GrandstreamPhone m_phone;
         private final Line m_line;
         private final DeviceDefaults m_defaults;
+        private SpeedDial m_speedDial;
 
-        GrandstreamLineDefaults(GrandstreamPhone phone, Line line, DeviceDefaults defaults) {
+        GrandstreamLineDefaults(GrandstreamPhone phone, Line line, DeviceDefaults defaults, SpeedDial speedDial) {
             m_phone = phone;
             m_line = line;
             m_defaults = defaults;
+            m_speedDial = speedDial;
         }
 
-        @SettingEntry(paths = { USERID_PATH, HT_USERID_PATH, GXW_USERID_PATH, ACCOUNT_NAME_PATH })
+        @SettingEntry(paths = {USERID_PATH, HT_USERID_PATH, GXW_USERID_PATH, ACCOUNT_NAME_PATH})
         public String getUserId() {
             String userId = null;
             User u = m_line.getUser();
@@ -707,7 +847,7 @@ public class GrandstreamPhone extends Phone {
             return SipUri.stripSipPrefix(mohUri);
         }
 
-        @SettingEntry(paths = { AUTHID_PATH, HT_AUTHID_PATH, GXW_AUTHID_PATH })
+        @SettingEntry(paths = {AUTHID_PATH, HT_AUTHID_PATH, GXW_AUTHID_PATH})
         public String getAuthId() {
             String userId = null;
             User u = m_line.getUser();
@@ -718,7 +858,7 @@ public class GrandstreamPhone extends Phone {
             return userId;
         }
 
-        @SettingEntry(paths = { PASSWORD_PATH, HT_PASSWORD_PATH, GXW_PASSWORD_PATH })
+        @SettingEntry(paths = {PASSWORD_PATH, HT_PASSWORD_PATH, GXW_PASSWORD_PATH})
         public String getPassword() {
             String password = null;
             User u = m_line.getUser();
@@ -729,7 +869,7 @@ public class GrandstreamPhone extends Phone {
             return password;
         }
 
-        @SettingEntry(paths = { DISPLAY_NAME_PATH, HT_DISPLAY_NAME_PATH, GXW_DISPLAY_NAME_PATH })
+        @SettingEntry(paths = {DISPLAY_NAME_PATH, HT_DISPLAY_NAME_PATH, GXW_DISPLAY_NAME_PATH})
         public String getDisplayName() {
             String displayName = null;
             User u = m_line.getUser();
@@ -740,7 +880,7 @@ public class GrandstreamPhone extends Phone {
             return displayName;
         }
 
-        @SettingEntry(paths = { REGISTRATION_SERVER_PATH, HT_REGISTRATION_SERVER_PATH })
+        @SettingEntry(paths = {REGISTRATION_SERVER_PATH, HT_REGISTRATION_SERVER_PATH})
         public String getRegistationServer() {
             return m_phone.getPhoneContext().getPhoneDefaults().getDomainName();
         }
@@ -762,6 +902,24 @@ public class GrandstreamPhone extends Phone {
             boolean active = !StringUtils.isBlank(getUserId());
             return active;
         }
+        /*  @SettingEntry(path = BLF_SERVER_URI)
+        public String getRlsServerUri() {
+            String rlsUri;
+            User u = m_line.getUser();
+            if (u != null) {
+               // rlsUri = SipUri.format("~~rl~C~"+u.getUserName(), m_defaults.getDomainName(), false);
+
+            } else {
+                rlsUri = "";
+            }
+            return rlsUri;
+             if (m_speedDial != null && m_speedDial.isBlf()) {
+                return m_speedDial.getResourceListId(true);
+            } else {
+                return "";
+            }
+
+        }*/
     }
 
     public Collection getProfileLines() {
@@ -786,7 +944,10 @@ public class GrandstreamPhone extends Phone {
 
     @Override
     protected ProfileContext createContext() {
-        return new GrandstreamProfileContext(this, m_isTextFormatEnabled);
+        //return new GrandstreamProfileContext(this, m_isTextFormatEnabled);
+        LOG.debug("Entering context " + getModel().getModelId());
+        LOG.debug("sending profile template " + getGsModel().getProfileTemplate());
+        return new GrandstreamProfileContext(this);
     }
 
     @Override
@@ -795,6 +956,7 @@ public class GrandstreamPhone extends Phone {
     }
 
     static class GrandstreamSettingExpressionEvaluator implements SettingExpressionEvaluator {
+
         private final String m_model;
 
         public GrandstreamSettingExpressionEvaluator(String model) {

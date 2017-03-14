@@ -48,4 +48,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/java/sipXecs/sipXconfig/plugins/sipXgrandstream.jar
 
 
-
+%post
+rm -f %{_localstatedir}/sipxdata/configserver/phone/profile/tftproot/cfg000b828*
+rm -f %{_localstatedir}/sipxdata/configserver/phone/profile/tftproot/gs_config/cfg000b828*

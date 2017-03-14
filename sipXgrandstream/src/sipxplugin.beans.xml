@@ -1,256 +1,322 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
-  <bean id="gsModel" abstract="true" parent="abstractPhoneModel"
-    class="org.sipfoundry.sipxconfig.phone.grandstream.GrandstreamModel">
-    <property name="beanId" value="grandstream" />
-    <property name="profileTemplate" value="grandstream/grandstream.vm" />
-	<property name="vendor" value="Grandstream"/>
-	<property name="restartSupported" value="true" />
-  </bean>
-  <bean id="gsPhoneBt100" parent="gsModel">
-    <property name="label" value="Grandstream BudgeTone 10x" />
-    <property name="maxLineCount" value="1" />
-    <property name="speedDial" value="false" />
-  </bean>
-  <bean id="gsPhoneBt200" parent="gsModel">
-    <property name="label" value="Grandstream BudgeTone 200" />
-    <property name="maxLineCount" value="1" />
-    <property name="speedDial" value="false" />
-  </bean>
-  <bean id="gsPhoneGxp2200" parent="gsModel">
-    <property name="label" value="Grandstream GXP2200" />
-    <property name="maxLineCount" value="6" />
-    <property name="speedDial" value="true" />
-    <property name="speedDialKeys" value="0" />
-    <property name="speedDialExpansion" value="true" />
-    <property name="supportedFeatures">
-      <set>
-        <value>intercom</value>
-      </set>
-    </property>
-  </bean>
-  <bean id="gsPhoneGxp2124" parent="gsModel">
-    <property name="label" value="Grandstream GXP2124" />
-    <property name="maxLineCount" value="4" />
-    <property name="speedDial" value="true" />
-    <property name="speedDialKeys" value="24" />
-    <property name="speedDialExpansion" value="false" />
-    <property name="supportedFeatures">
-      <set>
-        <value>intercom</value>
-      </set>
-    </property>
-  </bean>
-  <bean id="gsPhoneGxp2100" parent="gsModel">
-    <property name="label" value="Grandstream GXP2100" />
-    <property name="maxLineCount" value="4" />
-    <property name="speedDial" value="true" />
-    <property name="speedDialKeys" value="7" />
-    <property name="speedDialExpansion" value="true" />
-    <property name="supportedFeatures">
-      <set>
-        <value>intercom</value>
-      </set>
-    </property>
-  </bean>
-  <bean id="gsPhoneGxp2020" parent="gsModel">
-    <property name="label" value="Grandstream GXP2020/2120" />
-    <property name="maxLineCount" value="6" />
-    <property name="speedDial" value="true" />
-    <property name="speedDialKeys" value="7" />
-    <property name="speedDialExpansion" value="true" />
-    <property name="supportedFeatures">
-      <set>
-        <value>intercom</value>
-      </set>
-    </property>
-  </bean>
-  <bean id="gsPhoneGxp2010" parent="gsModel">
-    <property name="label" value="Grandstream GXP2010/2110" />
-    <property name="maxLineCount" value="4" />
-    <property name="speedDial" value="true" />
-    <property name="speedDialKeys" value="18" />
-    <property name="speedDialExpansion" value="true" />
-    <property name="supportedFeatures">
-      <set>
-        <value>intercom</value>
-      </set>
-    </property>
-  </bean>
-  <bean id="gsPhoneGxp2000" parent="gsModel">
-    <property name="label" value="Grandstream GXP2000" />
-    <property name="maxLineCount" value="4" />
-    <property name="speedDial" value="true" />
-    <property name="speedDialKeys" value="7" />
-    <property name="speedDialExpansion" value="true" />
-  </bean>
-  <bean id="gsPhoneGxp1450" parent="gsModel">
-    <property name="label" value="Grandstream GXP1450" />
-    <property name="speedDial" value="false" />
-    <property name="maxLineCount" value="2" />
-    <property name="supportedFeatures">
-      <set>
-        <value>intercom</value>
-      </set>
-    </property>
-  </bean>
-  <bean id="gsPhoneGxp1400" parent="gsModel">
-    <property name="label" value="Grandstream GXP1400/1405" />
-    <property name="speedDial" value="false" />
-    <property name="maxLineCount" value="2" />
-    <property name="supportedFeatures">
-      <set>
-        <value>intercom</value>
-      </set>
-    </property>
-  </bean>
-  <bean id="gsPhoneGxp1200" parent="gsModel">
-    <property name="label" value="Grandstream GXP1200" />
-    <property name="speedDial" value="false" />
-    <property name="maxLineCount" value="2" />
-    <property name="supportedFeatures">
-      <set>
-        <value>intercom</value>
-      </set>
-    </property>
-  </bean>
-  <bean id="gsPhoneGxp1160" parent="gsModel">
-    <property name="label" value="Grandstream GXP1160/1165" />
-    <property name="speedDial" value="false" />
-    <property name="maxLineCount" value="1" />
-    <property name="supportedFeatures">
-      <set>
-        <value>intercom</value>
-      </set>
-    </property>
-  </bean>
-  <bean id="gsPhoneGxp1100" parent="gsModel">
-    <property name="label" value="Grandstream GXP1100/1105" />
-    <property name="speedDial" value="false" />
-    <property name="maxLineCount" value="1" />
-    <property name="supportedFeatures">
-      <set>
-        <value>intercom</value>
-      </set>
-    </property>
-  </bean>
-  <bean id="gsPhoneGxp280" parent="gsModel">
-    <property name="label" value="Grandstream GXP280/285" />
-    <property name="speedDial" value="false" />
-    <property name="maxLineCount" value="1" />
-    <property name="supportedFeatures">
-      <set>
-        <value>intercom</value>
-      </set>
-    </property>
-  </bean>
-  <bean id="gsPhoneGxv3000" parent="gsModel">
-    <property name="label" value="Grandstream GXV3000/3005/3006" />
-    <property name="speedDial" value="false" />
-    <property name="maxLineCount" value="3" />
-  </bean>
-  <bean id="gsPhoneGxv3140" parent="gsModel">
-    <property name="label" value="Grandstream GXV3140" />
-    <property name="speedDial" value="false" />
-    <property name="maxLineCount" value="3" />
-  </bean>
-  <bean id="gsPhoneGxv3175" parent="gsModel">
-    <property name="label" value="Grandstream GXV3175" />
-    <property name="speedDial" value="false" />
-    <property name="maxLineCount" value="3" />
-  </bean>
-  <bean id="gsFxsGxw4004" parent="gsModel">
-    <property name="label" value="Grandstream GXW4004" />
-    <property name="maxLineCount" value="4" />
-    <property name="speedDial" value="false" />
-    <property name="isFxsGxw" value="true" />
-    <property name="restartSupported" value="false" />
-    <property name="externalLinesSupported" value="false" />
-  </bean>
-  <bean id="gsFxsGxw4008" parent="gsModel">
-    <property name="label" value="Grandstream GXW4008" />
-    <property name="maxLineCount" value="8" />
-    <property name="isFxsGxw" value="true" />
-    <property name="speedDial" value="false" />
-    <property name="restartSupported" value="false" />
-    <property name="externalLinesSupported" value="false" />
-  </bean>
-  <bean id="gsFxsGxw4024" parent="gsModel">
-    <property name="label" value="Grandstream GXW4024" />
-    <property name="maxLineCount" value="24" />
-    <property name="isFxsGxw" value="true" />
-    <property name="speedDial" value="false" />
-    <property name="restartSupported" value="false" />
-    <property name="externalLinesSupported" value="false" />
-  </bean>
-  <bean id="gsHt286" parent="gsModel">
-    <property name="label" value="Grandstream HandyTone 286" />
-    <property name="maxLineCount" value="1" />
-    <property name="isHandyTone" value="true" />
-    <property name="speedDial" value="false" />
-  </bean>
-  <bean id="gsHt386" parent="gsModel">
-    <property name="label" value="Grandstream HandyTone 386" />
-    <property name="maxLineCount" value="2" />
-    <property name="isHandyTone" value="true" />
-	<property name="speedDial" value="false" />
-  </bean>
-  <bean id="gsHt486" parent="gsModel">
-    <property name="label" value="Grandstream HandyTone 486" />
-    <property name="maxLineCount" value="1" />
-    <property name="isHandyTone" value="true" />
-    <property name="speedDial" value="false" />
-  </bean>
-  <bean id="gsHt488" parent="gsModel">
-    <property name="label" value="Grandstream HandyTone 488" />
-    <property name="maxLineCount" value="2" />
-    <property name="isHandyTone" value="true" />
-    <property name="speedDial" value="false" />
-  </bean>
-  <bean id="gsHt496" parent="gsModel">
-    <property name="label" value="Grandstream HandyTone 496" />
-    <property name="maxLineCount" value="2" />
-    <property name="isHandyTone" value="true" />
-    <property name="speedDial" value="false" />
-  </bean>
-  <bean id="gsHt502" parent="gsModel">
-    <property name="label" value="Grandstream HandyTone 502" />
-    <property name="maxLineCount" value="2" />
-    <property name="isHandyTone" value="true" />
-    <property name="speedDial" value="false" />
-  </bean>
-  <bean id="gsHt701" parent="gsModel">
-    <property name="label" value="Grandstream HandyTone 701" />
-    <property name="maxLineCount" value="1" />
-    <property name="isHandyTone" value="true" />
-    <property name="speedDial" value="false" />
-  </bean>
-  <bean id="gsHt702" parent="gsModel">
-    <property name="label" value="Grandstream HandyTone 702" />
-    <property name="maxLineCount" value="2" />
-    <property name="isHandyTone" value="true" />
-    <property name="speedDial" value="false" />
-  </bean>
-  <bean id="gsHt704" parent="gsModel">
-    <property name="label" value="Grandstream HandyTone 704" />
-    <property name="maxLineCount" value="4" />
-    <property name="isHandyTone" value="true" />
-    <property name="isHandyTone704" value="true" />
-    <property name="speedDial" value="false" />
-  </bean>
-  <bean id="grandstreamProfileGenerator"
-    class="org.sipfoundry.sipxconfig.phone.grandstream.GrandstreamProfileGenerator">
-    <property name="templateRoot" value="${sysdir.etc}" />
-    <property name="velocityEngine" ref="velocityEngine" />
-  </bean>
-  <bean id="grandstream" class="org.sipfoundry.sipxconfig.phone.grandstream.GrandstreamPhone" scope="prototype"
-    parent="abstractPhone">
-    <property name="profileGenerator" ref="grandstreamProfileGenerator" />
-  </bean>
-  <bean id="gsPhoneFirmware" class="org.sipfoundry.sipxconfig.upload.UploadSpecification">
-    <property name="beanId" value="upload" />
-    <property name="modelFilePath" value="grandstream/upload.xml" />
-    <property name="label" value="Grandstream" />
-  </bean>
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+    <bean id="gsModel" abstract="true" parent="abstractPhoneModel"
+          class="org.sipfoundry.sipxconfig.phone.grandstream.GrandstreamModel">
+        <property name="beanId" value="grandstream" />
+        <property name="profileTemplate" value="grandstream/grandstream.xml.vm" />
+        <property name="vendor" value="Grandstream"/>
+        <property name="restartSupported" value="true" />
+    </bean>
+    <bean id="gsPhoneBt100" parent="gsModel">
+        <property name="label" value="Grandstream BudgeTone 10x" />
+        <property name="maxLineCount" value="1" />
+        <property name="speedDial" value="false" />
+        <property name="supported" value="false" />
+    </bean>
+    <bean id="gsPhoneBt200" parent="gsModel">
+        <property name="label" value="Grandstream BudgeTone 200" />
+        <property name="maxLineCount" value="1" />
+        <property name="speedDial" value="false" />
+        <property name="supported" value="false" />
+    </bean>
+    <bean id="gsPhoneGxp2200" parent="gsModel">
+        <property name="label" value="Grandstream GXP2200" />
+        <property name="maxLineCount" value="6" />
+        <property name="speedDial" value="true" />
+        <property name="speedDialKeys" value="0" />
+        <property name="speedDialExpansion" value="true" />
+        <property name="supportedFeatures">
+            <set>
+                <value>intercom</value>
+            </set>
+        </property>
+    </bean>
+    <bean id="gsPhoneGxp2124" parent="gsModel">
+        <property name="label" value="Grandstream GXP2124" />
+        <property name="maxLineCount" value="4" />
+        <property name="speedDial" value="true" />
+        <property name="speedDialKeys" value="24" />
+        <property name="speedDialExpansion" value="false" />
+        <property name="supportedFeatures">
+            <set>
+                <value>intercom</value>
+            </set>
+        </property>
+    </bean>
+    <bean id="gsPhoneGxp2100" parent="gsModel">
+        <property name="label" value="Grandstream GXP2100" />
+        <property name="maxLineCount" value="4" />
+        <property name="speedDial" value="true" />
+        <property name="speedDialKeys" value="7" />
+        <property name="speedDialExpansion" value="false" />
+        <property name="supportedFeatures">
+            <set>
+                <value>intercom</value>
+            </set>
+        </property>
+    </bean>
+    <bean id="gsPhoneGxp2130" parent="gsModel">
+        <property name="label" value="Grandstream GXP2130" />
+        <property name="maxLineCount" value="3" />
+        <property name="speedDial" value="true" />
+        <property name="speedDialKeys" value="7" />
+        <property name="speedDialExpansion" value="true" />
+        <property name="supportedFeatures">
+            <set>
+                <value>intercom</value>
+            </set>
+        </property>
+    </bean>
+    <bean id="gsPhoneGxp2135" parent="gsModel">
+        <property name="label" value="Grandstream GXP2135" />
+        <property name="maxLineCount" value="4" />
+        <property name="speedDial" value="false" />
+        <property name="speedDialKeys" value="0" />
+        <property name="speedDialExpansion" value="false" />
+        <property name="supportedFeatures">
+            <set>
+                <value>intercom</value>
+            </set>
+        </property>
+    </bean>
+    <bean id="gsPhoneGxp2140" parent="gsModel">
+        <property name="label" value="Grandstream GXP2140" />
+        <property name="maxLineCount" value="4" />
+        <property name="speedDial" value="true" />
+        <property name="speedDialKeys" value="0" />
+        <property name="speedDialExpansion" value="true" />
+        <property name="supportedFeatures">
+            <set>
+                <value>intercom</value>
+            </set>
+        </property>
+    </bean>
+    <bean id="gsPhoneGxp2160" parent="gsModel">
+        <property name="label" value="Grandstream GXP2160" />
+        <property name="maxLineCount" value="6" />
+        <property name="speedDial" value="true" />
+        <property name="speedDialKeys" value="24" />
+        <property name="speedDialExpansion" value="false" />
+        <property name="supportedFeatures">
+            <set>
+                <value>intercom</value>
+            </set>
+        </property>
+    </bean>
+    <bean id="gsPhoneGxp2170" parent="gsModel">
+        <property name="label" value="Grandstream GXP2170" />
+        <property name="maxLineCount" value="6" />
+        <property name="speedDial" value="true" />
+        <property name="speedDialKeys" value="0" />
+        <property name="speedDialExpansion" value="true" />
+        <property name="supportedFeatures">
+            <set>
+                <value>intercom</value>
+            </set>
+        </property>
+    </bean>
+    <bean id="gsPhoneGxp2020" parent="gsModel">
+        <property name="label" value="Grandstream GXP2020/2120" />
+        <property name="maxLineCount" value="6" />
+        <property name="speedDial" value="true" />
+        <property name="speedDialKeys" value="7" />
+        <property name="speedDialExpansion" value="true" />
+        <property name="supportedFeatures">
+            <set>
+                <value>intercom</value>
+            </set>
+        </property>
+    </bean>
+    <bean id="gsPhoneGxp2010" parent="gsModel">
+        <property name="label" value="Grandstream GXP2010/2110" />
+        <property name="maxLineCount" value="4" />
+        <property name="speedDial" value="true" />
+        <property name="speedDialKeys" value="18" />
+        <property name="speedDialExpansion" value="true" />
+        <property name="supportedFeatures">
+            <set>
+                <value>intercom</value>
+            </set>
+        </property>
+    </bean>
+    <bean id="gsPhoneGxp2000" parent="gsModel">
+        <property name="label" value="Grandstream GXP2000" />
+        <property name="maxLineCount" value="4" />
+        <property name="speedDial" value="true" />
+        <property name="speedDialKeys" value="7" />
+        <property name="speedDialExpansion" value="true" />
+        <property name="supported" value="false" />
+    </bean>
+    <bean id="gsPhoneGxp1450" parent="gsModel">
+        <property name="label" value="Grandstream GXP1450" />
+        <property name="speedDial" value="false" />
+        <property name="maxLineCount" value="2" />
+        <property name="supportedFeatures">
+            <set>
+                <value>intercom</value>
+            </set>
+        </property>
+    </bean>
+    <bean id="gsPhoneGxp1400" parent="gsModel">
+        <property name="label" value="Grandstream GXP1400/1405" />
+        <property name="speedDial" value="false" />
+        <property name="maxLineCount" value="2" />
+        <property name="supportedFeatures">
+            <set>
+                <value>intercom</value>
+            </set>
+        </property>
+    </bean>
+    <bean id="gsPhoneGxp1200" parent="gsModel">
+        <property name="label" value="Grandstream GXP1200" />
+        <property name="speedDial" value="false" />
+        <property name="maxLineCount" value="2" />
+        <property name="supportedFeatures">
+            <set>
+                <value>intercom</value>
+            </set>
+        </property>
+    </bean>
+    <bean id="gsPhoneGxp1160" parent="gsModel">
+        <property name="label" value="Grandstream GXP1160/1165" />
+        <property name="speedDial" value="false" />
+        <property name="maxLineCount" value="1" />
+        <property name="supportedFeatures">
+            <set>
+                <value>intercom</value>
+            </set>
+        </property>
+    </bean>
+    <bean id="gsPhoneGxp1100" parent="gsModel">
+        <property name="label" value="Grandstream GXP1100/1105" />
+        <property name="speedDial" value="false" />
+        <property name="maxLineCount" value="1" />
+        <property name="supportedFeatures">
+            <set>
+                <value>intercom</value>
+            </set>
+        </property>
+    </bean>
+    <bean id="gsPhoneGxp280" parent="gsModel">
+        <property name="label" value="Grandstream GXP280/285" />
+        <property name="speedDial" value="false" />
+        <property name="maxLineCount" value="1" />
+        <property name="supported" value="false" />
+        <property name="supportedFeatures">
+            <set>
+                <value>intercom</value>
+            </set>
+        </property>
+    </bean>
+    <bean id="gsPhoneGxv3000" parent="gsModel">
+        <property name="label" value="Grandstream GXV3000/3005/3006" />
+        <property name="speedDial" value="false" />
+        <property name="maxLineCount" value="3" />
+        <property name="supported" value="false" />
+    </bean>
+    <bean id="gsPhoneGxv3140" parent="gsModel">
+        <property name="label" value="Grandstream GXV3140" />
+        <property name="speedDial" value="false" />
+        <property name="maxLineCount" value="3" />
+    </bean>
+    <bean id="gsPhoneGxv3175" parent="gsModel">
+        <property name="label" value="Grandstream GXV3175" />
+        <property name="speedDial" value="false" />
+        <property name="maxLineCount" value="3" />
+    </bean>
+    <bean id="gsFxsGxw4004" parent="gsModel">
+        <property name="label" value="Grandstream GXW4004" />
+        <property name="maxLineCount" value="4" />
+        <property name="speedDial" value="false" />
+        <property name="isFxsGxw" value="true" />
+        <property name="restartSupported" value="false" />
+        <property name="externalLinesSupported" value="false" />
+    </bean>
+    <bean id="gsFxsGxw4008" parent="gsModel">
+        <property name="label" value="Grandstream GXW4008" />
+        <property name="maxLineCount" value="8" />
+        <property name="isFxsGxw" value="true" />
+        <property name="speedDial" value="false" />
+        <property name="restartSupported" value="false" />
+        <property name="externalLinesSupported" value="false" />
+    </bean>
+    <bean id="gsFxsGxw4024" parent="gsModel">
+        <property name="label" value="Grandstream GXW4024" />
+        <property name="maxLineCount" value="24" />
+        <property name="isFxsGxw" value="true" />
+        <property name="speedDial" value="false" />
+        <property name="restartSupported" value="false" />
+        <property name="externalLinesSupported" value="false" />
+    </bean>
+    <bean id="gsHt286" parent="gsModel">
+        <property name="label" value="Grandstream HandyTone 286" />
+        <property name="maxLineCount" value="1" />
+        <property name="isHandyTone" value="true" />
+        <property name="speedDial" value="false" />
+        <property name="supported" value="false" />
+    </bean>
+    <bean id="gsHt386" parent="gsModel">
+        <property name="label" value="Grandstream HandyTone 386" />
+        <property name="maxLineCount" value="2" />
+        <property name="supported" value="false" />
+        <property name="isHandyTone" value="true" />
+        <property name="speedDial" value="false" />
+    </bean>
+    <bean id="gsHt486" parent="gsModel">
+        <property name="label" value="Grandstream HandyTone 486" />
+        <property name="maxLineCount" value="1" />
+        <property name="isHandyTone" value="true" />
+        <property name="speedDial" value="false" />
+        <property name="supported" value="false" />
+    </bean>
+    <bean id="gsHt488" parent="gsModel">
+        <property name="label" value="Grandstream HandyTone 488" />
+        <property name="maxLineCount" value="2" />
+        <property name="isHandyTone" value="true" />
+        <property name="speedDial" value="false" />
+        <property name="supported" value="false" />
+    </bean>
+    <bean id="gsHt496" parent="gsModel">
+        <property name="label" value="Grandstream HandyTone 496" />
+        <property name="maxLineCount" value="2" />
+        <property name="isHandyTone" value="true" />
+        <property name="speedDial" value="false" />
+        <property name="supported" value="false" />
+    </bean>
+    <bean id="gsHt502" parent="gsModel">
+        <property name="label" value="Grandstream HandyTone 502" />
+        <property name="maxLineCount" value="2" />
+        <property name="isHandyTone" value="true" />
+        <property name="speedDial" value="false" />
+    </bean>
+    <bean id="gsHt701" parent="gsModel">
+        <property name="label" value="Grandstream HandyTone 701" />
+        <property name="maxLineCount" value="1" />
+        <property name="isHandyTone" value="true" />
+        <property name="speedDial" value="false" />
+    </bean>
+    <bean id="gsHt702" parent="gsModel">
+        <property name="label" value="Grandstream HandyTone 702" />
+        <property name="maxLineCount" value="2" />
+        <property name="isHandyTone" value="true" />
+        <property name="speedDial" value="false" />
+    </bean>
+    <bean id="gsHt704" parent="gsModel">
+        <property name="label" value="Grandstream HandyTone 704" />
+        <property name="maxLineCount" value="4" />
+        <property name="isHandyTone" value="true" />
+        <property name="isHandyTone704" value="true" />
+        <property name="speedDial" value="false" />
+    </bean>
+    <bean id="grandstream" class="org.sipfoundry.sipxconfig.phone.grandstream.GrandstreamPhone" scope="prototype"
+          parent="abstractPhone">
+        <property name="locationsManager" ref="locationsManager"/>
+        <property name="addressManager" ref="addressManager"/>
+    </bean>
+    <bean id="gsPhoneFirmware" class="org.sipfoundry.sipxconfig.upload.UploadSpecification">
+        <property name="beanId" value="upload" />
+        <property name="modelFilePath" value="grandstream/upload.xml" />
+        <property name="label" value="Grandstream" />
+    </bean>
 </beans>
