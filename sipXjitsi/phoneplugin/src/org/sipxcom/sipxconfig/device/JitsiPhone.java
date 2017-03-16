@@ -121,7 +121,10 @@ public class JitsiPhone extends Phone {
 
         @SettingEntry(path = SIP_ACC_SETTING_DISPLAY_NAME)
         public String getSipDisplayName() {
-            return m_line.getDisplayLabel();
+            if (m_user == null) {
+                return null;
+            }
+            return m_user.getDisplayName();
         }
 
         @SettingEntry(path = JABBER_ACC_SETTING_ACCOUNT_UID)
