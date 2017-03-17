@@ -23,6 +23,7 @@ public class JitsiPhone extends Phone {
     private static final String SIP_ACC_SETTING_PASSWORD = "net.java.sip.communicator.impl.protocol.sip/acc/PASSWORD";
     private static final String SIP_ACC_SETTING_SERVER_ADDRESS = "net.java.sip.communicator.impl.protocol.sip/connection/SERVER_ADDRESS";
     private static final String SIP_ACC_SETTING_USER_ID = "net.java.sip.communicator.impl.protocol.sip/acc/USER_ID";
+    private static final String SIP_ACC_SETTING_DISPLAY_NAME = "net.java.sip.communicator.impl.protocol.sip/acc/DISPLAY_NAME";
 
     private static final String JABBER_ACC_SETTING_ACCOUNT_UID = "net.java.sip.communicator.impl.protocol.jabber/acc/ACCOUNT_UID";
     private static final String JABBER_ACC_SETTING_PASSWORD = "net.java.sip.communicator.impl.protocol.jabber/acc/PASSWORD";
@@ -34,6 +35,7 @@ public class JitsiPhone extends Phone {
         line.setSettingValue(SIP_ACC_SETTING_USER_ID, info.getUserId());
         line.setSettingValue(SIP_ACC_SETTING_PASSWORD, info.getPassword());
         line.setSettingValue(SIP_ACC_SETTING_SERVER_ADDRESS, info.getRegistrationServer());
+        line.setSettingValue(SIP_ACC_SETTING_DISPLAY_NAME, info.getDisplayName());
     }
 
     @Override
@@ -42,6 +44,7 @@ public class JitsiPhone extends Phone {
         info.setUserId(line.getSettingValue(SIP_ACC_SETTING_USER_ID));
         info.setPassword(line.getSettingValue(SIP_ACC_SETTING_PASSWORD));
         info.setRegistrationServer(line.getSettingValue(SIP_ACC_SETTING_SERVER_ADDRESS));
+        info.setDisplayName(line.getSettingValue(SIP_ACC_SETTING_DISPLAY_NAME));
         return info;
     }
 
@@ -114,6 +117,14 @@ public class JitsiPhone extends Phone {
         public String getSipUserId() {
             return m_line.getUserName() +
                 "@" + m_line.getPhoneContext().getPhoneDefaults().getDomainName();
+        }
+
+        @SettingEntry(path = SIP_ACC_SETTING_DISPLAY_NAME)
+        public String getSipDisplayName() {
+            if (m_user == null) {
+                return null;
+            }
+            return m_user.getDisplayName();
         }
 
         @SettingEntry(path = JABBER_ACC_SETTING_ACCOUNT_UID)
