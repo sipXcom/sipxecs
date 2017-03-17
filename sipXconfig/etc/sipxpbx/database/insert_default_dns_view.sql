@@ -1,1 +1,0 @@
-insert into dns_view(dns_view_id, name, position) values(nextval('dns_view_seq'),'default',0);

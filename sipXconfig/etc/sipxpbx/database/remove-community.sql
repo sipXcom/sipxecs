@@ -1,1 +1,0 @@
-ALTER TABLE alarm_receiver DROP COLUMN community_string;

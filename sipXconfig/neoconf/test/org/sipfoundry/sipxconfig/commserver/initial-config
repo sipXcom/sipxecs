@@ -1,3 +1,0 @@
-#!/bin/sh
-
-echo "mock initial config" > initial-config/test_location.tar.gz

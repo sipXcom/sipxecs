@@ -1,3 +1,0 @@
-COMMAND:SET_MEMBER_META
-RS:rs.config()
-RS:swift.hubler.us:27019(tags = {"bird" : "robin", "species" : "thrush"})

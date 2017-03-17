@@ -1,3 +1,0 @@
-icmp_echo_ignore_broadcasts=1
-tcp_syncookies=1
-log_martians=1

@@ -1,7 +1,0 @@
-+goose
--gander
-=eggs=white
-@transport={"water", "land", "air"}
-=str=s
-+bool
-@multi_enum={"VALUE_0", "VALUE_2"}

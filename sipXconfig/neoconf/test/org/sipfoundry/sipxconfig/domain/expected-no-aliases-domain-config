@@ -1,2 +1,0 @@
-SIP_DOMAIN_ALIASES : 10.10.10.1 host1.example.com
-CONFIG_HOSTS : master.example.com

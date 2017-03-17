@@ -1,9 +1,0 @@
-{
-  "region" : "r1",
-  "host" : "swift",
-  "status" : [ "PRIMARY" ],
-  "available" : [ "RESTART" ],
-  "local" : false,
-  "required" : [ ],
-  "voting" : true
-}

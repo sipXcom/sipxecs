@@ -1,1 +1,0 @@
-delete from authority where name='verisignclass3ca.crt';

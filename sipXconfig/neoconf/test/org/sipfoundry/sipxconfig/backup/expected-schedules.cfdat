@@ -1,1 +1,0 @@
-@local_backup_schedule={"30 22 * * 5", "0 0 * * *"}

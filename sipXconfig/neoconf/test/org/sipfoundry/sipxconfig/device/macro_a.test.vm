@@ -1,4 +1,0 @@
-#macro(emit_char $c)
-a: $c
-#end
-#emit_char('X')

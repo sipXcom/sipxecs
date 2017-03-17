@@ -1,3 +1,0 @@
-COMMAND:REPAIR
-OS:rm -f [/etc/mongodb.conf:dbpath]/mongod.lock
-OS:/bin/su -- mongodb /usr/bin/mongod --repair
