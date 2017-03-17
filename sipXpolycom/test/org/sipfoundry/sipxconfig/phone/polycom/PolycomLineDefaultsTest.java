@@ -18,6 +18,7 @@ import org.sipfoundry.sipxconfig.device.DeviceDefaults;
 import org.sipfoundry.sipxconfig.feature.FeatureManager;
 import org.sipfoundry.sipxconfig.moh.MusicOnHoldManager;
 import org.sipfoundry.sipxconfig.mwi.Mwi;
+import org.sipfoundry.sipxconfig.permission.PermissionName;
 import org.sipfoundry.sipxconfig.phone.Line;
 import org.sipfoundry.sipxconfig.test.TestHelper;
 
@@ -42,13 +43,33 @@ public class PolycomLineDefaultsTest extends TestCase {
         DeviceDefaults defaults = new DeviceDefaults();
         defaults.setDomainManager(TestHelper.getTestDomainManager("example.org"));
         m_defaults = new PolycomLineDefaults(defaults, m_line);
-        m_user = new User();
-        m_user.setUserName("bluejay");
     }
 
     public void testGetMwi() {
+        m_user = new UserTest(true);
+        m_user.setUserName("bluejay");
         assertNull(m_defaults.getMwiSubscribe());
         m_line.setUser(m_user);
         assertEquals("bluejay", m_defaults.getMwiSubscribe());
+    }
+
+    public void testGetNoMwi() {
+        m_user = new UserTest(false);
+        m_user.setUserName("bluejay");
+        assertNull(m_defaults.getMwiSubscribe());
+        m_line.setUser(m_user);
+        assertNull(m_defaults.getMwiSubscribe());
+    }
+    
+    class UserTest extends User {
+        boolean m_voicemailPermission;
+
+        UserTest(boolean permission) {
+            m_voicemailPermission = permission;
+        }
+        @Override
+        public boolean hasPermission(PermissionName permissionName) {
+            return m_voicemailPermission;
+        }
     }
 }
