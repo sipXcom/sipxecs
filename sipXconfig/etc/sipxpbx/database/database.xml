@@ -502,6 +502,7 @@
   	<antcall target="remove-firewall-rules" />
     <antcall target="openacd-client-update" />
   	<antcall target="remove-community" />
+  	<antcall target="agent-group-outbound-update"/>
   </target>
 
   <target name="plugin-patches">
@@ -1561,6 +1562,9 @@
   <target name="remove-community" unless="remove-community">
   	<db-patch patch="remove-community"/>
   </target>
+  <target name="agent-group-outbound-update" unless="agent-group-outbound-update">
+  	<db-patch patch="agent-group-outbound-update"/>
+  </target>	
 
 	<!--
     - SUPPORT UTILITIES
