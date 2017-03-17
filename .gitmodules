@@ -97,3 +97,6 @@
 [submodule "sipXlang-pt"]
 	path = sipXlang-pt
 	url = https://github.com/sipXcom/sipXlang-pt.git
+[submodule "sipXconfig"]
+	path = sipXconfig
+	url = https://github.com/sipXcom/sipXconfig.git
