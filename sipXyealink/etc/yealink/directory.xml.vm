@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <YealinkIPPhoneDirectory>
+#set($Phonebooktype = "$cfg.PhonebookType")
+#if($Phonebooktype != "1")
 #foreach($row in $cfg.Rows)
     <DirectoryEntry>
 	<Name>$!{row.LastName} $!{row.FirstName}</Name>
 	<Telephone>${row.Contact}</Telephone>
-</DirectoryEntry>
+	<Telephone>$!{row.Mobile}</Telephone>
+	<Telephone>$!{row.Other}</Telephone>
+    </DirectoryEntry>
+#end
+#else
+#foreach($row in $cfg.Rows)
+    <DirectoryEntry>
+	<Name>$!{row.FirstName} $!{row.LastName}</Name>
+	<Telephone>${row.Contact}</Telephone>
+	<Telephone>$!{row.Mobile}</Telephone>
+	<Telephone>$!{row.Other}</Telephone>
+    </DirectoryEntry>
+#end
 #end
 </YealinkIPPhoneDirectory>

@@ -28,6 +28,17 @@
     		</type>
 		<description>Firmware binary in 18.x.x.x.rom</description>
         </setting>
+        <setting name="yealink_SIP-T19.rom">
+    		<label>SIP-T19(P)</label>
+    		<type>
+    			<file>
+    				<contentType>application/binary</contentType>
+    				<rename>T19.rom</rename>
+    				<moveTo>../</moveTo>
+    			</file>
+    		</type>
+		<description>Firmware binary in 53.x.x.x.rom</description>
+        </setting>
 	<setting name="yealink_SIP-T20.rom">
     		<label>SIP-T20(P)</label>
     		<type>
@@ -38,6 +49,17 @@
     			</file>
     		</type>
 		<description>Firmware binary in 9.x.x.x.rom</description>
+        </setting>
+        	<setting name="yealink_SIP-T21.rom">
+    		<label>SIP-T21(P)</label>
+    		<type>
+    			<file>
+    				<contentType>application/binary</contentType>
+    				<rename>T21.rom</rename>
+    				<moveTo>../</moveTo>
+    			</file>
+    		</type>
+		<description>Firmware binary in 52.x.x.x.rom</description>
         </setting>
 	<setting name="yealink_SIP-T22.rom">
     		<label>SIP-T22(P)</label>
@@ -50,6 +72,17 @@
     		</type>
 		<description>Firmware binary in 7.x.x.x.rom</description>
         </setting>
+        	<setting name="yealink_SIP-T23.rom">
+    		<label>SIP-T23(G)</label>
+    		<type>
+    			<file>
+    				<contentType>application/binary</contentType>
+    				<rename>T23.rom</rename>
+    				<moveTo>../</moveTo>
+    			</file>
+    		</type>
+		<description>Firmware binary in 44.x.x.x.rom</description>
+        </setting>
 	<setting name="yealink_SIP-T26.rom">
     		<label>SIP-T26(P)</label>
     		<type>
@@ -61,6 +94,17 @@
     		</type>
 		<description>Firmware binary in 6.x.x.x.rom</description>
         </setting>
+        <setting name="yealink_SIP-T27.rom">
+    		<label>SIP-T27(P)</label>
+    		<type>
+    			<file>
+    				<contentType>application/binary</contentType>
+    				<rename>T27.rom</rename>
+    				<moveTo>../</moveTo>
+    			</file>
+    		</type>
+		<description>Firmware binary in 45.x.x.x.rom</description>
+        </setting>
 	<setting name="yealink_SIP-T28.rom">
     		<label>SIP-T28(P)</label>
     		<type>
@@ -71,6 +115,17 @@
     			</file>
     		</type>
 		<description>Firmware binary in 2.x.x.x.rom</description>
+        </setting>
+        	<setting name="yealink_SIP-T29.rom">
+    		<label>SIP-T29(G)</label>
+    		<type>
+    			<file>
+    				<contentType>application/binary</contentType>
+    				<rename>T29.rom</rename>
+    				<moveTo>../</moveTo>
+    			</file>
+    		</type>
+		<description>Firmware binary in 46.x.x.x.rom</description>
         </setting>
 	<setting name="yealink_SIP-T32.rom">
     		<label>SIP-T32G</label>
@@ -105,6 +160,17 @@
     		</type>
 		<description>23.x.x.x.rom</description>
         </setting>
+        <setting name="yealink_CP860.rom">
+    		<label>CP860</label>
+    		<type>
+    			<file>
+    				<contentType>application/binary</contentType>
+    				<rename>CP860.rom</rename>
+    				<moveTo>../</moveTo>
+    			</file>
+    		</type>
+		<description>37.x.x.x.rom</description>
+        </setting>
 	<setting name="yealink_W52.rom">
     		<label>W52</label>
     		<type>
@@ -115,6 +181,17 @@
     			</file>
     		</type>
 		<description>Firmware binary in 25.x.x.x.rom</description>
+        </setting>
+        <setting name="yealink_SIP-T40.rom">
+    		<label>SIP-T40P</label>
+    		<type>
+    			<file>
+    				<contentType>application/binary</contentType>
+    				<rename>T40.rom</rename>
+    				<moveTo>../</moveTo>
+    			</file>
+    		</type>
+		<description>Firmware binary in 54.x.x.x.rom</description>
         </setting>
 	<setting name="yealink_SIP-T41.rom">
     		<label>SIP-T41G</label>
@@ -159,6 +236,17 @@
     			</file>
     		</type>
 		<description>Firmware binary in 35.x.x.x.rom</description>
+        </setting>
+        <setting name="yealink_SIP-T49.rom">
+    		<label>SIP-T49G</label>
+    		<type>
+    			<file>
+    				<contentType>application/binary</contentType>
+    				<rename>T49.rom</rename>
+    				<moveTo>../</moveTo>
+    			</file>
+    		</type>
+		<description>Firmware binary in 51.x.x.x.rom</description>
         </setting>
         <setting name="Logo132x64.dob">
             <label>SIP-T2X LCD Logo (screensaver)</label>
