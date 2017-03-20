@@ -2,7 +2,7 @@ Name: @PACKAGE@
 Version: @VERSION@
 Release: @PACKAGE_REVISION@
 
-Summary: VoIP PBX 
+Summary: VoIP PBX
 License: LGPL
 Group: Telcommunications
 Vendor: SIPfoundry
@@ -49,5 +49,5 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %post
-rm -f %{_localstatedir}/sipxdata/configserver/phone/profile/tftproot/cfg000b828*
-rm -f %{_localstatedir}/sipxdata/configserver/phone/profile/tftproot/gs_config/cfg000b828*
+rm -f %{_localstatedir}/sipxdata/configserver/phone/profile/tftproot/cfg000b82*
+rm -f %{_localstatedir}/sipxdata/configserver/phone/profile/tftproot/gs_config/cfg000b82*
