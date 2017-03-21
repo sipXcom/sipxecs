@@ -55,7 +55,9 @@
               </span>
             </span>
             <span class="name">
-              {{ audio.callerIdNumber === "null" ? audio.author : audio.callerIdNumber + '(' + audio.callerIdName + ')' }}
+              {{ audio.callerIdName === "null" ? audio.author : audio.callerIdName }}
+              <span class="id" ng-click="voicemail.clickToCall(audio.callerIdNumber)">
+                {{  audio.callerIdNumber === "null" ? "" : (" - " + audio.callerIdNumber) }}</span>
               <span class="label label-primary"
                 data-ng-if="audio.heard === false">New</span>
             </span>-
