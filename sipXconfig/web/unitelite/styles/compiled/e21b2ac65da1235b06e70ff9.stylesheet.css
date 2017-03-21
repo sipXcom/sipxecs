@@ -14901,6 +14901,11 @@ select.default {
   font-size: 0.9em;
   line-height: 1.9em;
 }
+#webchat-main .right-side-view .voicemail .vmsg .vmsg-name .id {
+  color: #4e686e;
+  line-height: 1.9em;
+  cursor: pointer;
+}
 #webchat-main .right-side-view .voicemail .vmsg .vmsg-name .time {
   color: #a8a69b;
   font-size: 0.9em;
