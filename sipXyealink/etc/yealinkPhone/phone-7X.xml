@@ -257,9 +257,9 @@
 	#######################################################################################
 	//-->
 	<!--// Specify the web language, the valid values are: English, Chinese_S, Turkish, Portuguese, Spanish, Italian, French, Russian, Deutsch and Czech. //-->
-	<setting name="lang.wui"><type><string/></type><value>English</value></setting>
+	<setting name="lang.wui"><type refid="WebLanguage_type"/><value>English</value></setting>
 	<!--// Specify the LCD language, the valid values are: English (default), Chinese_S, Chinese_T, German, French, Turkish, Italian, Polish, Spanish and Portuguese. lang.gui = English //-->
-	<setting name="lang.gui" advanced="yes" if="yealinkPhone(SIPT|VP).*"><type><string/></type><value>English</value></setting>
+	<setting name="lang.gui" advanced="yes" if="yealinkPhone(SIPT|VP).*"><type refid="LcdLanguage_type"/><string/></type><value>English</value></setting>
 	<!--// 
 	#######################################################################################
 	##            Configure the access  URL of language file                             ##
@@ -388,6 +388,12 @@
 	    <!--// Define the "#" or "*" key as the send key; 0-Disabled, 1-# key(default), 2-* key; //-->
 	    <setting name="features.pound_key.mode"><type refid="yealink_poud_key_type"/><value>1</value></setting>
 	    <setting name="sip.use_23_as_pound"><type><boolean/></type><value>0</value></setting>
+
+	    <!--// It enables or disables the phone to suppress the display of DTMF digits; 0-Disabled (default), 1-Enabled; //-->
+	    <!--// We use 1 as default cause we do not want to show this if customer dials voicemail  //-->
+	    <setting name="features.dtmf.hide"><type><boolean/></type><value>1</value></setting>
+	    <!--// It enables or disables the phone to display the DTMF digits for a short period before displaying as sterisks when the parameter "features.dtmf.hide" is set to 1 (Enabled); 0-Disabled, 1-Enabled (default); //-->
+	    <setting name="features.dtmf.hide_delay"><type><boolean/></type><value>1</value></setting>
 
 	    <!--// #Configure the hotline number and delay time (in seconds). It ranges from 0 to 180, the default value is 4. //-->
 	    <setting name="features.hotline_number"><type><string/></type></setting>
@@ -572,7 +578,9 @@
 	<setting name="custom_softkey_talking.url" advanced="yes"><type><string/></type></setting>
     </group>
     <group name="DSSKeys" if="yealinkPhone((SIPT[1-4])|VP530).*">
-	<group name="line-keys">
+	<!--// Enable or disable extended length of the label displayed on the idle LDC screen for the line key; 0-Disabled (default), 1-Enabled;  //-->
+	<setting name="features.config_dsskey_length" if="yealinkPhone(SIPT46G|SIPT48G)"><type><boolean/></type><value>0</value></setting>
+	<group name="line-keys" hidden="yes">
 	<!--//
 	#######################################################################################
 	##                                 Line Key                                          ##
@@ -919,6 +927,11 @@
 	    <setting name="bw.feature_key_sync"><type><boolean/></type><value>0</value></setting>
 	</group>
     </group>
+	<group name="iant" hidden="no">
+		<setting name="bw.feature_key_sync"><type><boolean/></type><value>1</value></setting>
+		<setting name="bw.enable"><type><boolean/></type><value>0</value></setting>
+		<setting name="sip.notify_reboot_enable"><type refid="CheckSyncReboot_type"/><value>0</value></setting>
+	</group>
     <group name="security">
 	<group name="PASSWORD">
 	    <!--//
@@ -1061,10 +1074,6 @@
 	</group>
     </group>
     <group name="e911" hidden="yes"> 
-      <setting name="location"> 
-        <type> 
-          <integer/> 
-        </type> 
-      </setting> 
+      <setting name="location"><type><integer/></type></setting> 
     </group>
 </model>

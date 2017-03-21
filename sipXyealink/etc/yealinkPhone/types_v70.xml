@@ -1,0 +1,72 @@
+<type id="ToneCountry_type">
+	<enum>
+		<option><value>Custom</value></option>
+		<option><value>Australia</value></option>
+		<option><value>Austria</value></option>
+		<option><value>Brazil</value></option>
+		<option><value>Belgium</value></option>
+		<option><value>China</value></option>
+		<option><value>Czech</value></option>
+		<option><value>Denmark</value></option>
+		<option><value>Finland</value></option>
+		<option><value>France</value></option>
+		<option><value>Germany</value></option>
+		<option><value>Great Britain</value></option>
+		<option><value>Greece</value></option>
+		<option><value>Hungary</value></option>
+		<option><value>Lithuania</value></option>
+		<option><value>India</value></option>
+		<option><value>Italy</value></option>
+		<option><value>Japan</value></option>
+		<option><value>Mexico</value></option>
+		<option><value>New Zealand</value></option>
+		<option><value>Netherlands</value></option>
+		<option><value>Norway</value></option>
+		<option><value>Portugal</value></option>
+		<option><value>Spain</value></option>
+		<option><value>Switzerland</value></option>
+		<option><value>Sweden</value></option>
+		<option><value>Russia</value></option>
+		<option><value>United States</value></option>
+		<option><value>Chile</value></option>
+		<option><value>Czech ETSI</value></option>
+	</enum>
+</type>
+
+<type id="WebLanguage_type">
+	<enum>
+		<option><value>English</value></option>
+		<option><value>Chinese_S</value></option>
+		<option><value>Turkish</value></option>
+		<option><value>Portuguese</value></option>
+		<option><value>Spanish</value></option>
+		<option><value>Italian</value></option>
+		<option><value>French</value></option>
+		<option><value>Russian</value></option>
+		<option><value>German</value></option>
+		<option><value>Czech</value></option>
+	</enum>
+</type>
+
+<type id="LcdLanguage_type">
+	<enum>
+		<option><value>English</value></option>
+		<option><value>Chinese_S</value></option>
+		<option><value>Chinese_T</value></option>
+		<option><value>German</value></option>
+		<option><value>French</value></option>
+		<option><value>Turkish</value></option>
+		<option><value>Italian</value></option>
+		<option><value>Polish</value></option>
+		<option><value>Spanish</value></option>
+		<option><value>Portuguese</value></option>
+	</enum>
+</type>
+
+<type id="CheckSyncReboot_type">
+	<enum>
+	<option><label>Only if reboot=true</label><value>0</value></option>
+	<option><label>Force</label><value>1</value></option>
+	<option><label>Ignore</label><value>2</value></option>
+	</enum>
+</type>

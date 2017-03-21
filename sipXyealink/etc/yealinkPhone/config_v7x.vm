@@ -120,8 +120,9 @@ ${s.ProfileName} =
 #if(${setting.ProfileName} == "voice_mail.number")
 ${setting.ProfileName}.${lastLineID} = $!{setting.Value}
 #elseif (${setting.ProfileName} == "label")
-#elseif (${setting.ProfileName} == "user_name")
+#elseif (${setting.ProfileName} == "display_name")
 account.${lastLineID}.label = $!{setting.Value}
+#elseif (${setting.ProfileName} == "user_name")
 account.${lastLineID}.user_name = $!{setting.Value}
 #else
 #if (${setting.name} == "codec")
@@ -170,9 +171,7 @@ account.${L}.backup_outbound_port = 0
 linekey.${L}.line = ${L}
 linekey.${L}.type = 15
 linekey.${L}.value = 
-#if ($L>$lastLineID)
 linekey.${L}.label = 
-#end
 linekey.${L}.pickup_value = 
 #end
 # add speeddials
