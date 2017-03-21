@@ -4820,6 +4820,7 @@ uw.controller('profile', [
     var templates                 = sharedFactory.settings.miniTemplates;
     var profile                   = restService.cred;
     $scope.callhistory            = uiService.secondary.callhistory;
+    $scope.voicemail              = uiService.secondary.voicemail;
     var timeout;
     var sipMessages               = [
       '',
@@ -4936,6 +4937,12 @@ uw.controller('profile', [
     $scope.callhistory.clickToCall = function(clicked) {
       $scope.showDialFn(true);
       $scope.displayNo = clicked;
+    }
+
+    $scope.voicemail.clickToCall = function(clicked) {
+      $scope.showDialFn(true);
+      $scope.displayNo = clicked;
+      //$scope.callNo = clicked;
     }
 
     $scope.showMainMenuFn = function () {
