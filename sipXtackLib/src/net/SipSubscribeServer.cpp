@@ -1057,9 +1057,19 @@ UtlBoolean SipSubscribeServer::handleSubscribe(const SipMessage& subscribeReques
                        if (availableMediaTypes.isNull())
                        {
                           // No MIME types are available, so the resource does not exist.
-                          subscribeResponse.setResponseFirstHeaderLine(SIP_PROTOCOL_VERSION,
-                                                                       SIP_NOT_FOUND_CODE,
-                                                                       SIP_NOT_FOUND_TEXT);
+                          // If requested Id is Resource List, answer 200 OK instead of 404 NOT FOUND to prevent UA from Spamming
+                          if (resourceId.index("sip:~~rl~") == 0)
+                          {
+                            subscribeResponse.setResponseFirstHeaderLine(SIP_PROTOCOL_VERSION,
+                                                                         SIP_OK_CODE,
+                                                                         SIP_OK_TEXT);
+                          }
+                          else
+                          {
+                            subscribeResponse.setResponseFirstHeaderLine(SIP_PROTOCOL_VERSION,
+                                                                         SIP_NOT_FOUND_CODE,
+                                                                         SIP_NOT_FOUND_TEXT);
+                          }
                        }
                        else
                        {
