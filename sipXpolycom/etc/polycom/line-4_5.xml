@@ -24,7 +24,7 @@
       </type>
       <value />
     </setting>
-    <setting name="useTelUriAsLineLabel" if="4.1.8">
+    <setting name="useTelUriAsLineLabel" if="4.1.8||5.3.1||5.4.0||5.4.1||5.4.3">
       <type>
         <boolean />
       </type>
