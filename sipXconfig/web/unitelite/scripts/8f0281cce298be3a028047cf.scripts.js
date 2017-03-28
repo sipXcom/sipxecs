@@ -2848,6 +2848,13 @@ uw.service('restService', [
             restService.getMessage(bId)
               .then(function (url) {
                 // secondary.voicemail.messages[index].href   = url;
+		secondary.voicemail.messages[bId].download   = true;
+                var isChrome = window.navigator.userAgent.indexOf('Chrome/');
+                if (isChrome > -1){
+                  var number = Number(window.navigator.userAgent.substr(isChrome+7, 2));
+                  if (number >= 57)
+                    secondary.voicemail.messages[bId].download   = false;
+                }	
                 secondary.voicemail.messages[bId].href = $sce.trustAsResourceUrl(CONFIG.baseRest +'/my/redirect/media/' + restService.cred.user + '/inbox/' + id);
                 delete secondary.voicemail.messages[bId].loading;
                 return restService.heardMessage(bId);
