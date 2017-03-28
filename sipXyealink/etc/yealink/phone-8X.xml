@@ -100,6 +100,12 @@
 	    <!--// Configure the interval (in seconds) the phone broadcasts the LLDP request. It ranges from 1 to 3600, the default value is 120. Require reboot;  //-->
 	    <setting name="network.lldp.packet_interval"><type><integer/></type><value>120</value></setting>
 	</group>
+	<group name="CDP">
+	    <!--// Enable or disable the CDP feature; 0-Disabled (default), 1-Enabled; Require reboot;  //-->
+	    <setting name="network.cdp.enable"><type><boolean/></type><value>0</value></setting>
+	    <!--// Configure the interval (in seconds) the phone broadcasts the CDP request. It ranges from 1 to 3600, the default value is 60. Require reboot;  //-->
+	    <setting name="network.cdp.packet_interval"><type><integer/></type><value>60</value></setting>
+	</group>
 	<group name="VLAN">
 	    <!--// Enable or disable the VLAN of WAN port; 0-Disabled (default), 1-Enabled;  Require reboot;  //-->
 	    <setting name="network.vlan.internet_port_enable"><type><boolean/></type><value>0</value></setting>
@@ -625,6 +631,20 @@
 	    <setting name="acd.auto_available"><type><boolean/></type><value>0</value></setting>
 	    <!--// Configure the interval (in seconds) to automatically turn the state of the ACD agent to available. It ranges from 0 to 120, the default value is 60. //-->
 	    <setting name="acd.auto_available_timer"><type><integer min="0" max="120"/></type><value>60</value></setting>
+	</group>
+	<group name="POWER_SAVING" if="yealinkPhoneSIPT([24]).*">
+	    <setting name="features.power_saving.intelligent_mode"><type><boolean/></type><value>0</value></setting>
+	    <setting name="features.power_saving.enable"><type><boolean/></type><value>1</value></setting>
+	    <setting name="features.power_saving.office_hour.idle_timeout"><type><integer min="1" max="960"/></type><value>480</value></setting>
+	    <setting name="features.power_saving.off_hour.idle_timeout"><type><integer min="1" max="10"/></type><value>10</value></setting>
+	    <setting name="features.power_saving.user_input_ext.idle_timeout"><type><integer min="1" max="30"/></type><value>10</value></setting>
+	    <setting name="features.power_saving.office_hour.monday"><type><string/></type><value>7,12</value></setting>
+	    <setting name="features.power_saving.office_hour.tuesday"><type><string/></type><value>7,12</value></setting>
+	    <setting name="features.power_saving.office_hour.wednesday"><type><string/></type><value>7,12</value></setting>
+	    <setting name="features.power_saving.office_hour.thursday"><type><string/></type><value>7,12</value></setting>
+	    <setting name="features.power_saving.office_hour.friday"><type><string/></type><value>7,12</value></setting>
+	    <setting name="features.power_saving.office_hour.saturday"><type><string/></type><value>7,0</value></setting>
+	    <setting name="features.power_saving.office_hour.sunday"><type><string/></type><value>7,0</value></setting>
 	</group>
     </group>
     <group name="soft-key-layout" if="yealinkPhone((SIPT[1-4])|(W5)).*">
