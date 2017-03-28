@@ -100,6 +100,12 @@
 	    <!--// Configure the interval (in seconds) the phone broadcasts the LLDP request. It ranges from 1 to 3600, the default value is 120. Require reboot;  //-->
 	    <setting name="network.lldp.packet_interval"><type><integer/></type><value>120</value></setting>
 	</group>
+	<group name="CDP">
+	    <!--// Enable or disable the CDP feature; 0-Disabled (default), 1-Enabled; Require reboot;  //-->
+	    <setting name="network.cdp.enable"><type><boolean/></type><value>0</value></setting>
+	    <!--// Configure the interval (in seconds) the phone broadcasts the CDP request. It ranges from 1 to 3600, the default value is 60. Require reboot;  //-->
+	    <setting name="network.cdp.packet_interval"><type><integer/></type><value>60</value></setting>
+	</group>
 	<group name="VLAN">
 	    <!--// Enable or disable the VLAN of WAN port; 0-Disabled (default), 1-Enabled;  Require reboot;  //-->
 	    <setting name="network.vlan.internet_port_enable"><type><boolean/></type><value>0</value></setting>
