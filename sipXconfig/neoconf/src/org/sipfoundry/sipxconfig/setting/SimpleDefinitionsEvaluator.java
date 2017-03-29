@@ -10,11 +10,8 @@ package org.sipfoundry.sipxconfig.setting;
 
 import java.util.Set;
 
-import static org.apache.commons.lang.StringUtils.splitByWholeSeparator;
-import static org.apache.commons.lang.StringUtils.trim;
-
 /**
- * Look for expression in the set: it supports alternative (denoted as "||" operator)
+ * Look for expression in the set: it supports alternative (denoted as "||" operator) and regular expressions
  */
 public class SimpleDefinitionsEvaluator implements SettingExpressionEvaluator {
     private final Set m_defines;
@@ -24,9 +21,11 @@ public class SimpleDefinitionsEvaluator implements SettingExpressionEvaluator {
     }
 
     public boolean isExpressionTrue(String expression, Setting setting_) {
-        for (String token : splitByWholeSeparator(expression, "||")) {
-            if (m_defines.contains(trim(token))) {
-                return true;
+        for (Object define : m_defines) {
+            if (define instanceof String) {
+                if (((String) define).matches(expression)) {
+                    return true;
+                }
             }
         }
         return false;
