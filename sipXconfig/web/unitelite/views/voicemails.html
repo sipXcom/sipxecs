@@ -90,7 +90,7 @@
             <div class="btn-wrapper">
               <div class="btn-group btn-group-xs">
                 <a target="_self"
-                  data-ng-if="audio.href && audio.download"
+                  data-ng-if="audio.href"
                   data-ng-href="{{ audio.format=='mp3' ? audio.href + '.mp3' : audio.href + '.wav' }}"
                   download="{{ audio.format=='mp3' ? audio.subject + '.mp3' : audio.subject + '.wav' }}"
                   class="btn btn-default inline-default"

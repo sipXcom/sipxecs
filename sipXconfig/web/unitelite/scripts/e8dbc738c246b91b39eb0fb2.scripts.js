@@ -2776,6 +2776,8 @@ uw.service('restService', [
             }
           },
 
+          leftClickWarning: [],
+
           folders: [
             { name: 'inbox' },
             { name: 'saved' },
@@ -2848,13 +2850,6 @@ uw.service('restService', [
             restService.getMessage(bId)
               .then(function (url) {
                 // secondary.voicemail.messages[index].href   = url;
-		secondary.voicemail.messages[bId].download   = true;
-                var isChrome = window.navigator.userAgent.indexOf('Chrome/');
-                if (isChrome > -1){
-                  var number = Number(window.navigator.userAgent.substr(isChrome+7, 2));
-                  if (number >= 57)
-                    secondary.voicemail.messages[bId].download   = false;
-                }	
                 secondary.voicemail.messages[bId].href = $sce.trustAsResourceUrl(CONFIG.baseRest +'/my/redirect/media/' + restService.cred.user + '/inbox/' + id);
                 delete secondary.voicemail.messages[bId].loading;
                 return restService.heardMessage(bId);
@@ -2943,7 +2938,19 @@ uw.service('restService', [
             }
 
             return true;
+          },
+
+          treatLeftClick: function (ev, id) {
+
+            // IE & Safari
+            if (window.navigator.userAgent.indexOf('MSIE ') !== -1 || window.navigator.userAgent.indexOf('Trident/') !== -1 || !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/)) {
+              ev.preventDefault();
+              secondary.voicemail.leftClickWarning[id] = true;
+            } else {
+              return true;
+            }
           }
+
 
         },
 
