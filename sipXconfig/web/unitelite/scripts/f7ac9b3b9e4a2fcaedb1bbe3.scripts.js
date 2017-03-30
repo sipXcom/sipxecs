@@ -2776,6 +2776,8 @@ uw.service('restService', [
             }
           },
 
+          leftClickWarning: [],
+
           folders: [
             { name: 'inbox' },
             { name: 'saved' },
@@ -2936,7 +2938,19 @@ uw.service('restService', [
             }
 
             return true;
+          },
+
+          treatLeftClick: function (ev, id) {
+
+            // IE & Safari
+            if (window.navigator.userAgent.indexOf('MSIE ') !== -1 || window.navigator.userAgent.indexOf('Trident/') !== -1 || !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/)) {
+              ev.preventDefault();
+              secondary.voicemail.leftClickWarning[id] = true;
+            } else {
+              return true;
+            }
           }
+
 
         },
 
