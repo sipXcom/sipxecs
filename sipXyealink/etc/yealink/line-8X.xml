@@ -173,7 +173,7 @@
 	<!-- Configure the type of DNS-SRV query; 0-UDP, TCP and TLS (default), 1-UDP, 2-TCP, 3-TLS;-->
 	<!-- Require reboot;-->
 	<setting name="dns_srv_type" advanced="yes" if="yealinkPhone(SIPT[24])|(W5)|(VP530).*"><type refid="SRV_type"/><value>0</value></setting>
-	<!-- Configure the presentation of the callee ID; 0-PAI-PRID, 1-DIALED DIGITS (default), 2-RFC4916; -->
+	<!-- Configure the presentation of the callee ID; 0-PAI-PRID, 1-DIALED DIGITS (default), 2-RFC4916, 3-ContactHeader; -->
 	<setting name="cp_source" advanced="yes"><type refid="cp-source_type"/><value>1</value></setting>
 	<!-- Configure the directed and group pickup codes for account 1, the settings on a per-account basis take precedence over the settings on the phone.-->
 	<setting name="group_pickup_code" advanced="yes" if="yealinkPhone(SIPT[2-4])|(W5).*"><value></value></setting>
