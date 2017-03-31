@@ -167,3 +167,11 @@
 	<option><label>Telephone-Event</label><value>3</value></option>
     </enum>
 </type>
+<type id="cp-source_type">
+    <enum>
+        <option><value>0</value></option>
+        <option><value>1</value></option>
+        <option><value>2</value></option>
+        <option><value>3</value></option>
+    </enum>
+</type>
