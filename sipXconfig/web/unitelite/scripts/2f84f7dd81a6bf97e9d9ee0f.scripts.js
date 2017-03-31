@@ -5560,8 +5560,8 @@ uw.
     uploader.filters.push({
         name: 'customFilter',
         fn: function(item /*{File|FileLikeObject}*/, options) {
-          var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
-          return '|wav|mp3|'.indexOf(type) !== -1;
+        var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+          return '|x-wav|wav|mp3|mpeg|'.indexOf(type) !== -1;
             //return this.queue.length < 10;
         }
     });
