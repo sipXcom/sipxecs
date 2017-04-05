@@ -18,6 +18,12 @@
       <type />
       <value />
     </setting>
+    <setting name="firstLastNameLabelGen">
+       <type>
+         <boolean />
+       </type>
+       <value>0</value>    
+    </setting>    
     <setting name="label">
       <type>
         <string />
