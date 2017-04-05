@@ -67,6 +67,7 @@ public class PolycomPhone extends Phone implements BeanFactoryAware {
     static final String CONTACT_MODE = "contact";
     static final String DISPLAY_NAME_PATH = "reg/displayName";
     static final String REGISTRATION_LABEL = "reg/label";
+    static final String FIRST_LAST_NAME_LABEL_GEN = "reg/firstLastNameLabelGen";
     static final String TYPE_PATH = "reg/type";
     static final String THIRD_PARTY_NAME_PATH = "reg/thirdPartyName";
     static final String PASSWORD_PATH = "reg/auth.password";
