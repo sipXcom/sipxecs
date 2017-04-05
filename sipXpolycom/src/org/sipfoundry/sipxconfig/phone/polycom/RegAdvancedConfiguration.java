@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.sipfoundry.commons.util.ShortHash;
 import org.sipfoundry.sipxconfig.common.SpecialUser.SpecialUserType;
 import org.sipfoundry.sipxconfig.device.ProfileContext;
@@ -58,7 +59,8 @@ public class RegAdvancedConfiguration extends ProfileContext<PolycomPhone> {
 
         for (Line line : lines) {
             String lineLabel = line.getSettingValue(PolycomPhone.REGISTRATION_LABEL);
-            if (lineLabel == null || lineLabel.isEmpty()) {
+            Boolean firstLastNameLabelGen = (Boolean)line.getSettingTypedValue(PolycomPhone.FIRST_LAST_NAME_LABEL_GEN);
+            if (StringUtils.isEmpty(lineLabel) && !firstLastNameLabelGen) {
                 line.setSettingValue(PolycomPhone.REGISTRATION_LABEL, line.getUserName());
             }
             linesSettings.add(line.getSettings());
