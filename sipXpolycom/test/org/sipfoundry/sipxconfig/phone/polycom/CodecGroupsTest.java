@@ -191,17 +191,17 @@ public class CodecGroupsTest extends TestCase {
         IP_7000_SET.add("Siren22.32kbps");
         IP_7000_SET.add("Siren22.48kbps");
         IP_7000_SET.add("Siren22.64kbps");
-        IP_7000_SET.add("Lin16.16ksps");
-        IP_7000_SET.add("Lin16.32ksps");
-        IP_7000_SET.add("Lin16.48ksps");
+        IP_7000_SET.add("Lin16.16kbps");
+        IP_7000_SET.add("Lin16.32kbps");
+        IP_7000_SET.add("Lin16.48kbps");
         CODECGROUP_OPTION_MAP.put(CodecGroupType.IP_7000, IP_7000_SET);
 
         HashSet<String> VVX_1500_SET = new HashSet<String>(IP_6000_SET);
-        VVX_1500_SET.add("Lin16.8ksps");
-        VVX_1500_SET.add("Lin16.16ksps");
-        VVX_1500_SET.add("Lin16.32ksps");
-        VVX_1500_SET.add("Lin16.44ksps");
-        VVX_1500_SET.add("Lin16.48ksps");
+        VVX_1500_SET.add("Lin16.8kbps");
+        VVX_1500_SET.add("Lin16.16kbps");
+        VVX_1500_SET.add("Lin16.32kbps");
+        VVX_1500_SET.add("Lin16.44kbps");
+        VVX_1500_SET.add("Lin16.48kbps");
         CODECGROUP_OPTION_MAP.put(CodecGroupType.VVX_1500, VVX_1500_SET);
 
         HashSet<String> VVX_500_SET = new HashSet<String>();
