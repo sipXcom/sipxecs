@@ -421,9 +421,9 @@
             <option><value>G7221_C.24kbps</value></option>
             <option><value>G7221_C.32kbps</value></option>
             <option><value>G7221_C.48kbps</value></option>
-            <option><value>Lin16.16ksps</value></option>
-            <option><value>Lin16.32ksps</value></option>
-            <option><value>Lin16.48ksps</value></option>
+            <option><value>Lin16.16kbps</value></option>
+            <option><value>Lin16.32kbps</value></option>
+            <option><value>Lin16.48kbps</value></option>
             <option><value>Siren14.24kbps</value></option>
             <option><value>Siren14.32kbps</value></option>
             <option><value>Siren14.48kbps</value></option>
@@ -447,11 +447,11 @@
             <option><value>G7221_C.24kbps</value></option>
             <option><value>G7221_C.32kbps</value></option>
             <option><value>G7221_C.48kbps</value></option>
-            <option><value>Lin16.8ksps</value></option>
-            <option><value>Lin16.16ksps</value></option>
-            <option><value>Lin16.32ksps</value></option>
-            <option><value>Lin16.44ksps</value></option>
-            <option><value>Lin16.48ksps</value></option>
+            <option><value>Lin16.8kbps</value></option>
+            <option><value>Lin16.16kbps</value></option>
+            <option><value>Lin16.32kbps</value></option>
+            <option><value>Lin16.44kbps</value></option>
+            <option><value>Lin16.48kbps</value></option>
             <option><value>Siren14.24kbps</value></option>
             <option><value>Siren14.32kbps</value></option>
             <option><value>Siren14.48kbps</value></option>
@@ -601,70 +601,70 @@
         </setting>
       </group>
       <group name="G7221" if="IP_6000_CodecPref||IP_7000_CodecPref||VVX_1500_CodecPref">
-        <setting name="24ksps.payloadSize">
+        <setting name="24kbps.payloadSize">
           <type>
             <!-- 10, 20, 30, ...80 -->
             <integer min="10" max="80" />
           </type>
           <value>20</value>
         </setting>
-        <setting name="32ksps.payloadSize">
+        <setting name="32kbps.payloadSize">
           <type>
             <!-- 10, 20, 30, ...80 -->
             <integer min="10" max="80" />
           </type>
           <value>20</value>
         </setting>
-        <setting name="48ksps.payloadSize">
+        <setting name="48kbps.payloadSize">
           <type>
             <!-- 10, 20, 30, ...80 -->
             <integer min="10" max="80" />
           </type>
           <value>20</value>
         </setting>
-        <setting name="24ksps.jitterBufferMin">
+        <setting name="24kbps.jitterBufferMin">
           <!-- 40, 50, 60, ... (multiple of 10) -->
           <type>
             <integer min="40" />
           </type>
           <value>40</value>
         </setting>
-        <setting name="32ksps.jitterBufferMin">
+        <setting name="32kbps.jitterBufferMin">
           <!-- 40, 50, 60, ... (multiple of 10) -->
           <type>
             <integer min="40" />
           </type>
           <value>40</value>
         </setting>
-        <setting name="48ksps.jitterBufferMin">
+        <setting name="48kbps.jitterBufferMin">
           <!-- 40, 50, 60, ... (multiple of 10) -->
           <type>
             <integer min="40" />
           </type>
           <value>40</value>
         </setting>
-        <setting name="24ksps.jitterBufferShrink">
+        <setting name="24kbps.jitterBufferShrink">
           <!--10, 20, 30, ... (multiple of 10) -->
           <type>
             <integer min="10" />
           </type>
           <value>1500</value>
         </setting>
-        <setting name="32ksps.jitterBufferShrink">
+        <setting name="32kbps.jitterBufferShrink">
           <!--10, 20, 30, ... (multiple of 10) -->
           <type>
             <integer min="10" />
           </type>
           <value>1500</value>
         </setting>
-        <setting name="48ksps.jitterBufferShrink">
+        <setting name="48kbps.jitterBufferShrink">
           <!--10, 20, 30, ... (multiple of 10) -->
           <type>
             <integer min="10" />
           </type>
           <value>1500</value>
         </setting>
-        <setting name="24ksps.jitterBufferMax">
+        <setting name="24kbps.jitterBufferMax">
           <!--  greater than jitterBufferMin, multiple of 10, less than or =500 for IP 500 and IP 600, less than or =
             160 for IP 300 -->
           <type>
@@ -672,7 +672,7 @@
           </type>
           <value>200</value>
         </setting>
-        <setting name="32ksps.jitterBufferMax">
+        <setting name="32kbps.jitterBufferMax">
           <!--  greater than jitterBufferMin, multiple of 10, less than or =500 for IP 500 and IP 600, less than or =
             160 for IP 300 -->
           <type>
@@ -680,7 +680,7 @@
           </type>
           <value>200</value>
         </setting>
-        <setting name="48ksps.jitterBufferMax">
+        <setting name="48kbps.jitterBufferMax">
           <!--  greater than jitterBufferMin, multiple of 10, less than or =500 for IP 500 and IP 600, less than or =
             160 for IP 300 -->
           <type>
@@ -690,70 +690,70 @@
         </setting>
       </group>
       <group name="G7221C" if="IP_6000_CodecPref||IP_7000_CodecPref||VVX_1500_CodecPref">
-        <setting name="24ksps.payloadSize">
+        <setting name="24kbps.payloadSize">
           <type>
             <!-- 10, 20, 30, ...80 -->
             <integer min="10" max="80" />
           </type>
           <value>20</value>
         </setting>
-        <setting name="32ksps.payloadSize">
+        <setting name="32kbps.payloadSize">
           <type>
             <!-- 10, 20, 30, ...80 -->
             <integer min="10" max="80" />
           </type>
           <value>20</value>
         </setting>
-        <setting name="48ksps.payloadSize">
+        <setting name="48kbps.payloadSize">
           <type>
             <!-- 10, 20, 30, ...80 -->
             <integer min="10" max="80" />
           </type>
           <value>20</value>
         </setting>
-        <setting name="24ksps.jitterBufferMin">
+        <setting name="24kbps.jitterBufferMin">
           <!-- 40, 50, 60, ... (multiple of 10) -->
           <type>
             <integer min="40" />
           </type>
           <value>40</value>
         </setting>
-        <setting name="32ksps.jitterBufferMin">
+        <setting name="32kbps.jitterBufferMin">
           <!-- 40, 50, 60, ... (multiple of 10) -->
           <type>
             <integer min="40" />
           </type>
           <value>40</value>
         </setting>
-        <setting name="48ksps.jitterBufferMin">
+        <setting name="48kbps.jitterBufferMin">
           <!-- 40, 50, 60, ... (multiple of 10) -->
           <type>
             <integer min="40" />
           </type>
           <value>40</value>
         </setting>
-        <setting name="24ksps.jitterBufferShrink">
+        <setting name="24kbps.jitterBufferShrink">
           <!--10, 20, 30, ... (multiple of 10) -->
           <type>
             <integer min="10" />
           </type>
           <value>1500</value>
         </setting>
-        <setting name="32ksps.jitterBufferShrink">
+        <setting name="32kbps.jitterBufferShrink">
           <!--10, 20, 30, ... (multiple of 10) -->
           <type>
             <integer min="10" />
           </type>
           <value>1500</value>
         </setting>
-        <setting name="48ksps.jitterBufferShrink">
+        <setting name="48kbps.jitterBufferShrink">
           <!--10, 20, 30, ... (multiple of 10) -->
           <type>
             <integer min="10" />
           </type>
           <value>1500</value>
         </setting>
-        <setting name="24ksps.jitterBufferMax">
+        <setting name="24kbps.jitterBufferMax">
           <!--  greater than jitterBufferMin, multiple of 10, less than or =500 for IP 500 and IP 600, less than or =
             160 for IP 300 -->
           <type>
@@ -761,7 +761,7 @@
           </type>
           <value>200</value>
         </setting>
-        <setting name="32ksps.jitterBufferMax">
+        <setting name="32kbps.jitterBufferMax">
           <!--  greater than jitterBufferMin, multiple of 10, less than or =500 for IP 500 and IP 600, less than or =
             160 for IP 300 -->
           <type>
@@ -769,7 +769,7 @@
           </type>
           <value>200</value>
         </setting>
-        <setting name="48ksps.jitterBufferMax">
+        <setting name="48kbps.jitterBufferMax">
           <!--  greater than jitterBufferMin, multiple of 10, less than or =500 for IP 500 and IP 600, less than or =
             160 for IP 300 -->
           <type>
@@ -779,112 +779,112 @@
         </setting>
       </group>
       <group name="Lin16" if="IP_7000_CodecPref||VVX_1500_CodecPref">
-        <setting name="8ksps.payloadSize">
+        <setting name="8kbps.payloadSize">
           <type>
             <!-- 10, 20, 30, ...80 -->
             <integer min="10" max="80" />
           </type>
           <value>10</value>
         </setting>
-        <setting name="16ksps.payloadSize">
+        <setting name="16kbps.payloadSize">
           <type>
             <!-- 10, 20, 30, ...80 -->
             <integer min="10" max="80" />
           </type>
           <value>10</value>
         </setting>
-        <setting name="32ksps.payloadSize">
+        <setting name="32kbps.payloadSize">
           <type>
             <!-- 10, 20, 30, ...80 -->
             <integer min="10" max="80" />
           </type>
           <value>10</value>
         </setting>
-        <setting name="44_1ksps.payloadSize">
+        <setting name="44_1kbps.payloadSize">
           <type>
             <!-- 10, 20, 30, ...80 -->
             <integer min="10" max="80" />
           </type>
           <value>10</value>
         </setting>
-        <setting name="48ksps.payloadSize">
+        <setting name="48kbps.payloadSize">
           <type>
             <!-- 10, 20, 30, ...80 -->
             <integer min="10" max="80" />
           </type>
           <value>10</value>
         </setting>
-        <setting name="8ksps.jitterBufferMin">
+        <setting name="8kbps.jitterBufferMin">
           <!-- 40, 50, 60, ... (multiple of 10) -->
           <type>
             <integer min="20" />
           </type>
           <value>20</value>
         </setting>
-        <setting name="16ksps.jitterBufferMin">
+        <setting name="16kbps.jitterBufferMin">
           <!-- 40, 50, 60, ... (multiple of 10) -->
           <type>
             <integer min="20" />
           </type>
           <value>20</value>
         </setting>
-        <setting name="32ksps.jitterBufferMin">
+        <setting name="32kbps.jitterBufferMin">
           <!-- 40, 50, 60, ... (multiple of 10) -->
           <type>
             <integer min="20" />
           </type>
           <value>20</value>
         </setting>
-        <setting name="44_1ksps.jitterBufferMin">
+        <setting name="44_1kbps.jitterBufferMin">
           <!-- 40, 50, 60, ... (multiple of 10) -->
           <type>
             <integer min="20" />
           </type>
           <value>20</value>
         </setting>
-        <setting name="48ksps.jitterBufferMin">
+        <setting name="48kbps.jitterBufferMin">
           <!-- 40, 50, 60, ... (multiple of 10) -->
           <type>
             <integer min="20" />
           </type>
           <value>20</value>
         </setting>
-        <setting name="8ksps.jitterBufferShrink">
+        <setting name="8kbps.jitterBufferShrink">
           <type>
             <!-- 10, 20, 30, ... (multiple of 10) -->
             <integer min="10" />
           </type>
           <value>500</value>
         </setting>
-        <setting name="16ksps.jitterBufferShrink">
+        <setting name="16kbps.jitterBufferShrink">
           <type>
             <!-- 10, 20, 30, ... (multiple of 10) -->
             <integer min="10" />
           </type>
           <value>500</value>
         </setting>
-        <setting name="32ksps.jitterBufferShrink">
+        <setting name="32kbps.jitterBufferShrink">
           <type>
             <!-- 10, 20, 30, ... (multiple of 10) -->
             <integer min="10" />
           </type>
           <value>500</value>
         </setting>
-        <setting name="44_1ksps.jitterBufferShrink">
+        <setting name="44_1kbps.jitterBufferShrink">
           <type>
             <!-- 10, 20, 30, ... (multiple of 10) -->
             <integer min="10" />
           </type>
           <value>500</value>
         </setting>
-        <setting name="48ksps.jitterBufferShrink">
+        <setting name="48kbps.jitterBufferShrink">
           <type>
             <!-- 10, 20, 30, ... (multiple of 10) -->
             <integer min="10" />
           </type>
           <value>500</value>
         </setting>
-        <setting name="8ksps.jitterBufferMax">
+        <setting name="8kbps.jitterBufferMax">
           <!--  greater than jitterBufferMin, multiple of 10, less than or =500 for IP 500 and IP 600, less than or =
             160 for IP 300 -->
           <type>
@@ -892,7 +892,7 @@
           </type>
           <value>100</value>
         </setting>
-        <setting name="16ksps.jitterBufferMax">
+        <setting name="16kbps.jitterBufferMax">
           <!--  greater than jitterBufferMin, multiple of 10, less than or =500 for IP 500 and IP 600, less than or =
             160 for IP 300 -->
           <type>
@@ -900,7 +900,7 @@
           </type>
           <value>100</value>
         </setting>
-        <setting name="32ksps.jitterBufferMax">
+        <setting name="32kbps.jitterBufferMax">
           <!--  greater than jitterBufferMin, multiple of 10, less than or =500 for IP 500 and IP 600, less than or =
             160 for IP 300 -->
           <type>
@@ -908,7 +908,7 @@
           </type>
           <value>100</value>
         </setting>
-        <setting name="44_1ksps.jitterBufferMax">
+        <setting name="44_1kbps.jitterBufferMax">
           <!--  greater than jitterBufferMin, multiple of 10, less than or =500 for IP 500 and IP 600, less than or =
             160 for IP 300 -->
           <type>
@@ -916,7 +916,7 @@
           </type>
           <value>100</value>
         </setting>
-        <setting name="48ksps.jitterBufferMax">
+        <setting name="48kbps.jitterBufferMax">
           <!--  greater than jitterBufferMin, multiple of 10, less than or =500 for IP 500 and IP 600, less than or =
             160 for IP 300 -->
           <type>
@@ -968,21 +968,21 @@
           </type>
           <value>20</value>
         </setting>
-        <setting name="24ksps.jitterBufferShrink">
+        <setting name="24kbps.jitterBufferShrink">
           <type>
             <!-- 10, 20, 30, ... (multiple of 10) -->
             <integer min="10" />
           </type>
           <value>500</value>
         </setting>
-        <setting name="32ksps.jitterBufferShrink">
+        <setting name="32kbps.jitterBufferShrink">
           <type>
             <!-- 10, 20, 30, ... (multiple of 10) -->
             <integer min="10" />
           </type>
           <value>500</value>
         </setting>
-        <setting name="48ksps.jitterBufferShrink">
+        <setting name="48kbps.jitterBufferShrink">
           <type>
             <!-- 10, 20, 30, ... (multiple of 10) -->
             <integer min="10" />
@@ -1057,21 +1057,21 @@
           </type>
           <value>20</value>
         </setting>
-        <setting name="24ksps.jitterBufferShrink">
+        <setting name="24kbps.jitterBufferShrink">
           <type>
             <!-- 10, 20, 30, ... (multiple of 10) -->
             <integer min="10" />
           </type>
           <value>500</value>
         </setting>
-        <setting name="32ksps.jitterBufferShrink">
+        <setting name="32kbps.jitterBufferShrink">
           <type>
             <!-- 10, 20, 30, ... (multiple of 10) -->
             <integer min="10" />
           </type>
           <value>500</value>
         </setting>
-        <setting name="48ksps.jitterBufferShrink">
+        <setting name="48kbps.jitterBufferShrink">
           <type>
             <!-- 10, 20, 30, ... (multiple of 10) -->
             <integer min="10" />
