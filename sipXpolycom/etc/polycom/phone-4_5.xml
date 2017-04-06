@@ -3395,7 +3395,7 @@
       </type>
       <value>1</value>
     </setting>
-    <setting name="enable.VVX500" if="polycomVVX500||polycomRealPresenceTrio">
+    <setting name="enable.VVX500" if="(polycomVVX50[01])|(polycomRealPresenceTrio)">
       <type>
         <boolean />
       </type>
