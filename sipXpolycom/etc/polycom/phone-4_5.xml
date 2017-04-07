@@ -112,7 +112,7 @@
         <value>0</value>
       </setting>
     </group>
-    <group name="numOfDisplayColumns" if="polycomVVX500||polycomRealPresenceTrio||polycomVVX600">
+    <group name="numOfDisplayColumns" if="(polycomRealPresenceTrio)|(polycomVVX[56]0[01])">
 	    <setting name="numOfDisplayColumns" if="(5.[0-9].[0-9])">
 	    <type>
 	      <enum>
@@ -3395,7 +3395,7 @@
       </type>
       <value>1</value>
     </setting>
-    <setting name="enable.VVX500" if="polycomVVX500||polycomRealPresenceTrio">
+    <setting name="enable.VVX500" if="(polycomVVX50[01])|(polycomRealPresenceTrio)">
       <type>
         <boolean />
       </type>

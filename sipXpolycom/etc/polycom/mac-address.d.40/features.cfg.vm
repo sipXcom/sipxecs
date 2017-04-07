@@ -95,7 +95,7 @@
     roaming_privacy.${setting.ProfileName}="$!{setting.Value}"
 #end
   />
-#if ($phone.Model.ModelId == "polycomVVX500" || $phone.Model.ModelId == "polycomRealPresenceTrio" || $phone.Model.ModelId == "polycomVVX410" || $phone.Model.ModelId == "polycomVVX400")
+#if ($phone.Model.ModelId == "polycomVVX500" || $phone.Model.ModelId == "polycomVVX501" || $phone.Model.ModelId == "polycomRealPresenceTrio" || $phone.Model.ModelId == "polycomVVX410" || $phone.Model.ModelId == "polycomVVX400" || $phone.Model.ModelId == "polycomVVX411" || $phone.Model.ModelId == "polycomVVX401")
 #set ($group = $cfg.EndpointSettings.getSetting('background').getSetting('polycomVVX500bg'))
 #if($group.getSetting('enabled').Value == 1)
   <bg>
@@ -104,7 +104,7 @@
     </bg.color>
   </bg>
 #end
-#elseif($phone.Model.ModelId == "polycomVVX300" || $phone.Model.ModelId == "polycomVVX310")
+#elseif($phone.Model.ModelId == "polycomVVX300" || $phone.Model.ModelId == "polycomVVX310" || $phone.Model.ModelId == "polycomVVX301" || $phone.Model.ModelId == "polycomVVX311")
 #set ($group = $cfg.EndpointSettings.getSetting('background').getSetting('polycomVVX300bg'))
 #if($group.getSetting('enabled').Value == 1)
   <bg>
@@ -113,7 +113,7 @@
     </bg.color>
   </bg>
 #end
-#elseif($phone.Model.ModelId == "polycomVVX600")
+#elseif($phone.Model.ModelId == "polycomVVX600" || $phone.Model.ModelId == "polycomVVX601")
 #set ($group = $cfg.EndpointSettings.getSetting('background').getSetting('polycomVVX600bg'))
 #if($group.getSetting('enabled').Value == 1)
   <bg>
