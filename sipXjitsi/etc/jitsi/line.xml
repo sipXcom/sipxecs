@@ -53,7 +53,7 @@
         <setting name="PROXY_PORT">
           <value/>
         </setting>
-        <setting name="PREFFERED_TRANSPORT">
+        <setting name="PREFERRED_TRANSPORT">
           <type refid="protocol"/>
           <value/>
         </setting>        
