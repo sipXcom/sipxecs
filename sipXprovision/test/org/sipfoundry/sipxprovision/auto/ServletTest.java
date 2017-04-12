@@ -82,7 +82,7 @@ public class ServletTest extends TestCase {
         assertNotNull(phone.model);
         assertEquals("polycom6000", phone.model.sipxconfig_id);
         assertEquals("3.2.0.0157", phone.version);
-        assertEquals("3.2.X", Servlet.extractPolycomVersion(phone));
+        assertEquals("3.2.X", Servlet.extractPhoneVersion(phone));
 
         // Success
         phone = new DetectedPhone();
@@ -104,7 +104,7 @@ public class ServletTest extends TestCase {
         assertNotNull(phone.model);
         assertEquals("polycomVVX500", phone.model.sipxconfig_id);
         assertEquals("4.0.3.0439", phone.version);
-        assertEquals("4.0.X", Servlet.extractPolycomVersion(phone));
+        assertEquals("4.0.X", Servlet.extractPhoneVersion(phone));
         
         // Success
         phone = new DetectedPhone();
@@ -112,7 +112,7 @@ public class ServletTest extends TestCase {
         assertNotNull(phone.model);
         assertEquals("polycomVVX500", phone.model.sipxconfig_id);
         assertEquals("4.1.3.0439", phone.version);
-        assertEquals("4.1.3", Servlet.extractPolycomVersion(phone));
+        assertEquals("4.1.3", Servlet.extractPhoneVersion(phone));
         // TODO - test case that includes Serial Number string in th UA header.
     }
 
@@ -179,6 +179,45 @@ public class ServletTest extends TestCase {
         assertNotNull(phone.model);
         assertEquals("avaya-1230", phone.model.sipxconfig_id);
         assertEquals("SIP12x0.01.100.05.05", phone.version);
+    }
+    
+    public void testExtractYealinkModelAndVersion() {
+
+        DetectedPhone phone = new DetectedPhone();
+
+        // Don't crash.
+        assertEquals(false, Servlet.extractYealinkModelAndVersion(null, "Yealink SIP-T48G 35.80.250.5 00:15:65:ae:df:7c"));
+        assertEquals(false, Servlet.extractYealinkModelAndVersion(phone, null));
+        assertEquals(false, Servlet.extractYealinkModelAndVersion(phone, ""));
+        assertEquals(false, Servlet.extractYealinkModelAndVersion(phone, "Yealink SIP-T48G 35.80.250.5 00:15:65:ae:df:7ca"));
+
+        // Success T48G Firmware Profile 7X
+        phone = new DetectedPhone();
+        assertEquals(true, Servlet.extractYealinkModelAndVersion(phone, "Yealink SIP-T48G 35.70.250.5 00:15:65:ae:df:7c"));
+        assertNotNull(phone.model);
+        assertEquals("yealinkPhoneSIPT48G", phone.model.sipxconfig_id);
+        assertEquals("7X", phone.version);
+
+        // Success T48G Firmware Profile 8X
+        phone = new DetectedPhone();
+        assertEquals(true, Servlet.extractYealinkModelAndVersion(phone, "Yealink SIP-T48G 35.80.250.5 00:15:65:ae:df:7c"));
+        assertNotNull(phone.model);
+        assertEquals("yealinkPhoneSIPT48G", phone.model.sipxconfig_id);
+        assertEquals("8X", phone.version);
+
+        // Success T48G Firmware Profile 81
+        phone = new DetectedPhone();
+        assertEquals(true, Servlet.extractYealinkModelAndVersion(phone, "Yealink SIP-T48G 35.81.250.5 00:15:65:ae:df:7c"));
+        assertNotNull(phone.model);
+        assertEquals("yealinkPhoneSIPT48G", phone.model.sipxconfig_id);
+        assertEquals("81", phone.version);
+
+        // Fail T48G Firmware Profile other 
+        phone = new DetectedPhone();
+        assertEquals(true, Servlet.extractYealinkModelAndVersion(phone, "Yealink SIP-T48G 35.82.250.5 00:15:65:ae:df:7c"));
+        assertNotNull(phone.model);
+        assertEquals("yealinkPhoneSIPT48G", phone.model.sipxconfig_id);
+        assertEquals("unknown", phone.version);
     }
 
 }

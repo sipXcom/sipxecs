@@ -28,6 +28,7 @@ import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Properties;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -145,6 +146,31 @@ public class Servlet extends HttpServlet {
 
     private static final Pattern GRANDSTREAM_UA_RE = Pattern.compile(String.format("^%s.+$",
             GRANDSTREAM_UA_PREFIX_STR));
+
+    /*
+     * Yealink
+     */
+    private static final String YEALINK_PATH_PREFIX = "/";
+
+    private static final Pattern YEALINK_PATH_FORMAT_RE_STR = Pattern.compile("^" + YEALINK_PATH_PREFIX
+            + MAC_RE_STR + ".cfg$");
+
+    private static final String YEALINK_UA_PREFIX_STR = "Yealink";
+
+    private static final Pattern YEALINK_UA_RE = Pattern.compile(String.format("^%s .+$",
+            YEALINK_UA_PREFIX_STR));
+    
+    private static final String YEALINK_UA_PHONE_MODEL_RE_STR = "(SIP-T[0-9]{2}G)";
+    private static final String YEALINK_UA_PHONE_FIRMWARE_RE_STR = "[0-9]+.([0-9]+).[0-9]+.[0-9]+";
+    private static final String YEALINK_UA_PHONE_MAC_RE_STR = "([0-9a-f]{2}:){5}[0-9a-f]{2}";
+    
+    // First match group is phone model, second firmware
+    private static final Pattern YEALINK_UA_MODEL_VERSION_RE = Pattern.compile(String.format("^%s %s %s %s$",
+        YEALINK_UA_PREFIX_STR,
+        YEALINK_UA_PHONE_MODEL_RE_STR,
+        YEALINK_UA_PHONE_FIRMWARE_RE_STR,
+        YEALINK_UA_PHONE_MAC_RE_STR));
+        
     /*
      * Generic stuff
      */
@@ -493,9 +519,21 @@ public class Servlet extends HttpServlet {
                 phone.version);
     }
 
+    @Deprecated
     protected static String extractPolycomVersion(DetectedPhone phone) {
         if (phone.model.sipxconfig_id != null && phone.model.sipxconfig_id.contains("polycom")) {
             return formatPolycomVersion(phone.version);
+        }
+        return "";
+    }
+    
+    protected static String extractPhoneVersion(DetectedPhone phone) {
+        if (phone.model.sipxconfig_id != null) {
+            if (phone.model.sipxconfig_id.contains("polycom")) {
+                return formatPolycomVersion(phone.version);
+            } else if (phone.model.sipxconfig_id.contains("yealink")) {
+                return formatYealinkVersion(phone.version);
+            }
         }
         return "";
     }
@@ -512,6 +550,16 @@ public class Servlet extends HttpServlet {
             return version.substring(0, 5);
         }
         return (new StringBuilder(version.substring(0, 3).concat(".X"))).toString();
+    }
+    
+    /**
+     * Format the Yealink version as defined in YealinkModel bean
+     *
+     * @param version
+     * @return
+     */
+    protected static String formatYealinkVersion(String version) {
+        return (new StringBuilder(version)).toString();
     }
 
     protected boolean doProvisionPhone(DetectedPhone phone, HttpServletResponse response) {
@@ -532,7 +580,7 @@ public class Servlet extends HttpServlet {
             dstream.writeBytes(String.format("<phone><serialNumber>%s</serialNumber>"
                     + "<model>%s</model><description>%s</description><version>%s</version></phone>",
                     phone.mac.toLowerCase(), phone.model.sipxconfig_id, getPhoneDescription(phone, new Date()),
-                    extractPolycomVersion(phone)));
+                    extractPhoneVersion(phone)));
             dstream.writeBytes("</phones>");
 
             // Do the HTTPS POST.
@@ -550,6 +598,10 @@ public class Servlet extends HttpServlet {
 
             // if this is a polycom, we want to generate its MAC.cfg now
             if (phone.model.sipxconfig_id.startsWith("polycom")) {
+                LOG.info("Writing " + phone.mac + ".cfg");
+                writeProfileConfigurationResponse("/" + phone.mac + ".cfg", phone.mac, response);
+            } else if (phone.model.sipxconfig_id.startsWith("yealink")) {
+                // if this is a yealink, we also want to generate its mac.cfg now
                 LOG.info("Writing " + phone.mac + ".cfg");
                 writeProfileConfigurationResponse("/" + phone.mac + ".cfg", phone.mac, response);
             }
@@ -612,6 +664,10 @@ public class Servlet extends HttpServlet {
     static protected boolean isGrandstreamConfigurationFilePath(String path) {
         return GRANDSTREAM_PATH_FORMAT_RE_STR.matcher(path).matches()
                 || GRANDSTREAM_ALT_PATH_FORMAT_RE_STR.matcher(path).matches();
+    }
+
+    static protected boolean isYealinkConfigurationFilePath(String path) {
+        return YEALINK_PATH_FORMAT_RE_STR.matcher(path).matches();
     }
 
     // TODO: Test case (x2 phone types) when MAC is too short (should not invoke the do___Get...)
@@ -677,6 +733,17 @@ public class Servlet extends HttpServlet {
                 writeUiForwardResponse(request, response);
                 return;
             }
+        } else if (isYealinkConfigurationFilePath(path)) {
+
+            // Yealink
+            phone = new DetectedPhone();
+
+            // MAC, Model, & Version
+            phone.mac = extractMac(path, YEALINK_PATH_PREFIX);
+            if (null == phone.mac || !extractYealinkModelAndVersion(phone, useragent)) {
+                writeUiForwardResponse(request, response);
+                return;
+            }
         } else if (path.startsWith("/debug") && m_config.isDebugOn()) {
             // Debugging.
             writeDebuggingResponse(request, response);
@@ -730,6 +797,8 @@ public class Servlet extends HttpServlet {
             } else {
                 writeProfileConfigurationResponse(path, extractMac(path, GRANDSTREAM_ALT_PATH_PREFIX), response);
             }
+        } else if (isYealinkConfigurationFilePath(path)) {
+            writeProfileConfigurationResponse(path, extractMac(path, YEALINK_PATH_PREFIX), response);
         } else {
 
             // Unknown configuration file path. (Wouldn't know how to extract a MAC from the
@@ -828,6 +897,38 @@ public class Servlet extends HttpServlet {
             phone.version = useragent.substring(i1 + POLYCOM_UA_DELIMITER.length(), i2);
         }
 
+        return true;
+    }
+
+    protected static boolean extractYealinkModelAndVersion(DetectedPhone phone, String useragent) {
+        //User Agent Looks Like "User-Agent: Yealink SIP-T48G 35.80.250.5 00:15:65:ae:df:7c"
+        if (null == useragent || null == phone ||
+            !YEALINK_UA_RE.matcher(useragent).matches()
+        ) {
+            return false;
+        }
+
+        Matcher m = YEALINK_UA_MODEL_VERSION_RE.matcher(useragent);
+        if(m.matches()) {
+            // Model
+            String model_id = m.group(1);
+            phone.model = lookupPhoneModel(model_id);
+            if (null == phone.model) {
+                return false;
+            }
+    
+            // Version (optional)
+            String version_id = m.group(2);
+            if (version_id.startsWith("6")) {
+                phone.version = "6X";
+            } else if (version_id.startsWith("7")) {
+                phone.version = "7X";
+            } else if (version_id.startsWith("80")) {
+                phone.version = "8X";
+            } else if (version_id.startsWith("81")) {
+                phone.version = "81";
+            }
+        }
         return true;
     }
 
@@ -1024,6 +1125,12 @@ public class Servlet extends HttpServlet {
         PHONE_MODEL_MAP.put("GXW4004", new PhoneModel("gsFxsGxw4004", "Grandstream GXW4004"));
         PHONE_MODEL_MAP.put("GXW4008", new PhoneModel("gsFxsGxw4008", "Grandstream GXW4008"));
         PHONE_MODEL_MAP.put("GXW4024", new PhoneModel("gsFxsGxw4024", "Grandstream GXW4024"));
+
+        // Yealink model map
+        PHONE_MODEL_MAP.put("SIP-T42G", new PhoneModel("yealinkPhoneSIPT42G", "Yealink T42G"));
+        PHONE_MODEL_MAP.put("SIP-T46G", new PhoneModel("yealinkPhoneSIPT46G", "Yealink T46G"));
+        PHONE_MODEL_MAP.put("SIP-T48G", new PhoneModel("yealinkPhoneSIPT48G", "Yealink T48G"));
+        PHONE_MODEL_MAP.put("SIP-T49G", new PhoneModel("yealinkPhoneSIPT49G", "Yealink T49G"));
     }
 
     public static void main(String[] args) throws Exception {
