@@ -98,7 +98,7 @@ public class YealinkPhone extends Phone {
     private static final String COMMON_VALUE = "common";
     private static final String MEMORY_KEYS_PATTERN = "DSSKeys/memory-keys/memorykey/.+";
     private static final String DIGIT_PATTERN = "%d";
-    private static final String DIGIT_SRTING_PATTERN = "%d (%s)";
+    private static final String DIGIT_STRING_PATTERN = "%d (%s)";
     private static final String PHONEBOOKTYPE = "contacts/RemotePhoneBook/phonebook_type";
     private static final String DEFAULT_PHONEBOOK_TYPE = "2";
     
@@ -580,6 +580,15 @@ public class YealinkPhone extends Phone {
         protected ProfileContext createContext(Device device) {
             YealinkPhone phone = (YealinkPhone) device;
             YealinkModel model = (YealinkModel) phone.getModel();
+            
+            // If we miss lines we create sipXprovision line automatically
+            List<Line> lines = phone.getLines();
+
+            // Phones with no configured lines will register under the sipXprovision special user.
+            if (lines.isEmpty()) {
+                Line line = phone.createSpecialPhoneProvisionUserLine();
+                phone.addLine(line);
+            }
             return new YealinkDeviceConfiguration(phone, model.getProfileTemplate());
         }
     }
@@ -719,7 +728,7 @@ public class YealinkPhone extends Phone {
                 }
                 setEnum(enumSetting, l, DIGIT_PATTERN,
                         ((null == line) || (null == userName)) ? String.format(DIGIT_PATTERN, l + m_base)
-                                : String.format(DIGIT_SRTING_PATTERN, l + m_base, userName));
+                                : String.format(DIGIT_STRING_PATTERN, l + m_base, userName));
             }
         }
 
@@ -738,7 +747,7 @@ public class YealinkPhone extends Phone {
                         l,
                         "enum%d",
                         ((null == line) || (null == userName)) ? String.format(DIGIT_PATTERN, l + m_base)
-                                : String.format(DIGIT_SRTING_PATTERN, l + m_base, userName));
+                                : String.format(DIGIT_STRING_PATTERN, l + m_base, userName));
             }
         }
     }
