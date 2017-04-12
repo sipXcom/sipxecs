@@ -475,7 +475,7 @@ public class YealinkPhone extends Phone {
 
     @Override
     public void restart() {
-        sendCheckSyncToFirstLine();
+        sendCheckSyncToMac();
     }
 
     public SpeedDial getSpeedDial() {
