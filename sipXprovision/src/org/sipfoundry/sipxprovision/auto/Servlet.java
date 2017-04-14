@@ -44,6 +44,7 @@ import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
+import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.mortbay.http.HttpContext;
@@ -325,28 +326,22 @@ public class Servlet extends HttpServlet {
         // HTTP requests to this servlet.
         File yealink_src_dir = new File(System.getProperty("conf.dir") + "/yealink/common-files");
         try {
-
-            //Loading of Velocity seem not to work
-            //I think this is because the polycom prov
-            //already set it.
-            // I will try to workaround this with relative paths
-            
-            /*Properties p = new Properties();
+            Properties p = new Properties();
             p.setProperty("resource.loader", "file");
             p.setProperty("class.resource.loader.class",
                     "org.apache.velocity.runtime.resource.loader.FileResourceLoader");
             p.setProperty("file.resource.loader.path", yealink_src_dir.getAbsolutePath());
             
-            //not the best solution but currently polycom provsioning
-            //has already set this and we have to reset it...
-            //I am shure there is a better solution. But this
-            //is true for the most of this whole servlet ;)
-            Velocity.clearProperty("file.resource.loader.path");
-            Velocity.init(p);*/
+            // We need our own settings but velocity is already
+            // configured for polycom so I have to use a
+            // own instance of velocity
+            // (currently the only possible solution
+            VelocityEngine engine = new VelocityEngine();
+            engine.init(p);
 
-            Template template = Velocity.getTemplate(
+            Template template = engine.getTemplate(
                 String.format("%s%s%s",
-                    "../yealink/common-files/",
+                    "/",
                     yealinkCommonFileName,
                     ".cfg.vm"));
 
