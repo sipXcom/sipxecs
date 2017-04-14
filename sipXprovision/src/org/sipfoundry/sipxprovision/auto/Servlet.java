@@ -321,37 +321,22 @@ public class Servlet extends HttpServlet {
         }
     }
 
-    private static void initializeStaticYealinkConfig(Configuration config, String yealinkCommonFileName) {
-        // Generate the Yealink y0000000000xx.cfg, which will cause un-provisioned phones to send
-        // HTTP requests to this servlet.
-        File yealink_src_dir = new File(System.getProperty("conf.dir") + "/yealink/common-files");
+    /**
+     * @author Claas Beyersdorf (IANT GmbH 2017)
+     * Initializes a single static yealink config file for one phone model type
+     * 
+     * @param config
+     * @param yealinkCommonFileName
+     */
+    private static void initializeSingleStaticYealinkConfig(Configuration config, String yealinkCommonFileName, VelocityEngine engine, VelocityContext context, File yealink_src_dir) {
         try {
-            Properties p = new Properties();
-            p.setProperty("resource.loader", "file");
-            p.setProperty("class.resource.loader.class",
-                    "org.apache.velocity.runtime.resource.loader.FileResourceLoader");
-            p.setProperty("file.resource.loader.path", yealink_src_dir.getAbsolutePath());
-            
-            // We need our own settings but velocity is already
-            // configured for polycom so I have to use a
-            // own instance of velocity
-            // (currently the only possible solution
-            VelocityEngine engine = new VelocityEngine();
-            engine.init(p);
-
             Template template = engine.getTemplate(
-                String.format("%s%s%s",
-                    "/",
-                    yealinkCommonFileName,
-                    ".cfg.vm"));
-
-            VelocityContext context = new VelocityContext();
-            context.put("cfg", new YealinkVelocityCfg(config));
+                String.format("/%s.cfg.vm",
+                    yealinkCommonFileName));
 
             Writer writer = new FileWriter(new File(config.getTftpPath(),
-                String.format("/%s",
-                    yealinkCommonFileName,
-                    ".cfg")));
+                String.format("/%s.cfg",
+                    yealinkCommonFileName)));
             
             template.merge(context, writer);
             writer.flush();
@@ -366,6 +351,55 @@ public class Servlet extends HttpServlet {
         } catch (ParseErrorException e) {
             LOG.error(String.format("Failed to generate Yealink %s.cfg: ",
                 yealinkCommonFileName), e);
+        } catch (Exception e) {
+            LOG.error("Velocity initialization error:", e);
+        }
+    }
+    
+    /**
+     * Initializes static yealink config files for all supported phone models
+     * 
+     * @param config
+     */
+    private static void initializeStaticYealinkConfig(Configuration config) {
+        // Generate the Yealink y0000000000xx.cfg files, which will cause un-provisioned phones to send
+        // HTTP requests to this servlet.
+        File yealink_src_dir = new File(System.getProperty("conf.dir") + "/yealink/common-files");
+        try {
+            Properties p = new Properties();
+            p.setProperty("resource.loader", "file");
+            p.setProperty("class.resource.loader.class",
+                    "org.apache.velocity.runtime.resource.loader.FileResourceLoader");
+            p.setProperty("file.resource.loader.path", yealink_src_dir.getAbsolutePath());
+            
+            // We need our own settings but velocity is already
+            // configured for polycom so we have to use a
+            // new instance of velocity
+            // (currently the only possible solution
+            VelocityEngine engine = new VelocityEngine();
+            engine.init(p);
+
+            VelocityContext context = new VelocityContext();
+            context.put("cfg", new YealinkVelocityCfg(config));
+            
+            // For Yealink SIP-T42G
+            initializeSingleStaticYealinkConfig(
+                config, "y000000000029", engine,
+                context, yealink_src_dir);
+            // For Yealink SIP-T46G
+            initializeSingleStaticYealinkConfig(
+                config, "y000000000028", engine,
+                context, yealink_src_dir);
+            // For Yealink SIP-T48G
+            initializeSingleStaticYealinkConfig(
+                config, "y000000000035", engine,
+                context, yealink_src_dir);
+            // For Yealink SIP-T49G
+            initializeSingleStaticYealinkConfig(
+                config, "y000000000051", engine,
+                context, yealink_src_dir);
+            
+
         } catch (Exception e) {
             LOG.error("Velocity initialization error:", e);
         }
@@ -511,14 +545,7 @@ public class Servlet extends HttpServlet {
         }
         
         // Generate Yealink Common Configs
-        // For Yealink SIP-T42G
-        initializeStaticYealinkConfig(config, "y000000000029");
-        // For Yealink SIP-T46G
-        initializeStaticYealinkConfig(config, "y000000000028");
-        // For Yealink SIP-T48G
-        initializeStaticYealinkConfig(config, "y000000000035");
-        // For Yealink SIP-T49G
-        initializeStaticYealinkConfig(config, "y000000000051");
+        initializeStaticYealinkConfig(config);
     }
 
     private static boolean createTftpDirectory(File dir) {
