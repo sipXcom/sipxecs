@@ -303,7 +303,68 @@ public class Servlet extends HttpServlet {
             return m_config.getPolycomDefaultVersion();
         }
     }
+    
+    public static class YealinkVelocityCfg {
 
+        Configuration m_config;
+
+        YealinkVelocityCfg(Configuration config) {
+            m_config = config;
+        }
+
+        public String getRootUrlPath() {
+            int port = (m_config.isUseSecure()) ? (m_config.getSecurePort()) : (m_config.getServletPort());
+            String proto = (m_config.isUseSecure()) ? ("https") : ("http");
+            LOG.info("Using " + ((m_config.isUseSecure()) ? ("secure ") : ("non secure")) + " port");
+            return String.format(proto + "://%s:%d%s/", m_config.getHostname(), port, m_config.getServletUriPath());
+        }
+    }
+
+    private static void initializeStaticYealinkConfig(Configuration config, String yealinkCommonFileName) {
+        // Generate the Yealink y0000000000xx.cfg, which will cause un-provisioned phones to send
+        // HTTP requests to this servlet.
+        File yealink_src_dir = new File(System.getProperty("conf.dir") + "/yealink");
+        try {
+
+            Properties p = new Properties();
+            p.setProperty("resource.loader", "file");
+            p.setProperty("class.resource.loader.class",
+                    "org.apache.velocity.runtime.resource.loader.FileResourceLoader");
+            p.setProperty("file.resource.loader.path", yealink_src_dir.getAbsolutePath());
+            Velocity.init(p);
+
+            Template template = Velocity.getTemplate(
+                String.format("%s%s%s",
+                    "common-files/",
+                    yealinkCommonFileName,
+                    ".cfg.vm"));
+
+            VelocityContext context = new VelocityContext();
+            context.put("cfg", new YealinkVelocityCfg(config));
+
+            Writer writer = new FileWriter(new File(config.getTftpPath(),
+                String.format("/%s",
+                    yealinkCommonFileName,
+                    ".cfg")));
+            
+            template.merge(context, writer);
+            writer.flush();
+
+            LOG.info(String.format("Generated Yealink %s.cfg from %s.",
+                yealinkCommonFileName,
+                yealink_src_dir.getAbsolutePath()));
+
+        } catch (ResourceNotFoundException e) {
+            LOG.error(String.format("Failed to generate Yealink %s.cfg: ",
+                yealinkCommonFileName), e);
+        } catch (ParseErrorException e) {
+            LOG.error(String.format("Failed to generate Yealink %s.cfg: ",
+                yealinkCommonFileName), e);
+        } catch (Exception e) {
+            LOG.error("Velocity initialization error:", e);
+        }
+    }
+    
     /**
      * This content is static only while the servlet is running. A configuration change of the
      * servlet port will change the content, but this will be done during the servlet re-start.
@@ -442,6 +503,16 @@ public class Servlet extends HttpServlet {
         } catch (Exception e) {
             LOG.error("Generated Grandstream cfg.xml: ", e);
         }
+        
+        // Generate Yealink Common Configs
+        // For Yealink SIP-T42G
+        initializeStaticYealinkConfig(config, "y000000000029");
+        // For Yealink SIP-T46G
+        initializeStaticYealinkConfig(config, "y000000000028");
+        // For Yealink SIP-T48G
+        initializeStaticYealinkConfig(config, "y000000000035");
+        // For Yealink SIP-T49G
+        initializeStaticYealinkConfig(config, "y000000000051");
     }
 
     private static boolean createTftpDirectory(File dir) {
