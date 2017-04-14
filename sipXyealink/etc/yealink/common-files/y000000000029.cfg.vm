@@ -15,6 +15,10 @@ $signatureL1
 $signatureL2
 $signatureL3
 
-## Used only by sipXprovision for Yealink SIP-T42G
-custom_mac_cfg.url = ${optional_root_url_path}{$mac_cfg_replace_string}
+# Used only by sipXprovision for Yealink SIP-T42G
+# If you want to use this file to set own specific
+# settings please feel free to create yealink/T42.cfg
+# and write your changes there!
+#
+custom_mac_cfg.url = ${optional_root_url_path}${mac_cfg_replace_string}
 
