@@ -323,10 +323,15 @@ public class Servlet extends HttpServlet {
     private static void initializeStaticYealinkConfig(Configuration config, String yealinkCommonFileName) {
         // Generate the Yealink y0000000000xx.cfg, which will cause un-provisioned phones to send
         // HTTP requests to this servlet.
-        File yealink_src_dir = new File(System.getProperty("conf.dir") + "/yealink");
+        File yealink_src_dir = new File(System.getProperty("conf.dir") + "/yealink/common-files");
         try {
 
-            Properties p = new Properties();
+            //Loading of Velocity seem not to work
+            //I think this is because the polycom prov
+            //already set it.
+            // I will try to workaround this with relative paths
+            
+            /*Properties p = new Properties();
             p.setProperty("resource.loader", "file");
             p.setProperty("class.resource.loader.class",
                     "org.apache.velocity.runtime.resource.loader.FileResourceLoader");
@@ -337,11 +342,11 @@ public class Servlet extends HttpServlet {
             //I am shure there is a better solution. But this
             //is true for the most of this whole servlet ;)
             Velocity.clearProperty("file.resource.loader.path");
-            Velocity.init(p);
+            Velocity.init(p);*/
 
             Template template = Velocity.getTemplate(
                 String.format("%s%s%s",
-                    "common-files/",
+                    "../yealink/common-files/",
                     yealinkCommonFileName,
                     ".cfg.vm"));
 
