@@ -331,6 +331,12 @@ public class Servlet extends HttpServlet {
             p.setProperty("class.resource.loader.class",
                     "org.apache.velocity.runtime.resource.loader.FileResourceLoader");
             p.setProperty("file.resource.loader.path", yealink_src_dir.getAbsolutePath());
+            
+            //not the best solution but currently polycom provsioning
+            //has already set this and we have to reset it...
+            //I am shure there is a better solution. But this
+            //is true for the most of this whole servlet ;)
+            Velocity.clearProperty("file.resource.loader.path");
             Velocity.init(p);
 
             Template template = Velocity.getTemplate(
