@@ -1,0 +1,16 @@
+#set($mac_cfg_replace_string = '$MAC.cfg')
+#set($signatureL1 = '####################################################')
+#set($signatureL2 = '##       Common CFG File for autoprovisioning     ##')
+#set($signatureL3 = '####################################################')
+#set($signatureL4 = '#!version:1.0.0.1')
+#set($signatureL5 = '#File header "#!version:1.0.0.1" cannot be edited or deleted.##')
+#set($signatureL6 = '#Please do not change this files if you want to use auto-    ##')
+#set($signatureL7 = '#provision.                                                  ##')
+$signatureL4
+$signatureL5
+$signatureL6
+$signatureL7
+
+## Used only by sipXprovision for Yealink SIP-T46G
+custom_mac_cfg.url = {$mac_cfg_replace_string}
+
