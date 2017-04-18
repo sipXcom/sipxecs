@@ -110,7 +110,27 @@ public class YealinkPhoneDefaults {
         }
         return null;
     }
-
+    
+    /**
+     * @author Claas Beyersdorf (IANT GmbH 2017)
+     *  added to be able to set common file name by default to model.cfg like
+     *  we use it for firmwares. (this is necessary to prevent phones from getting
+     *  autoprovisioned every time they load the original common file)
+     *  
+     *  I was not able to locate that feature in v6x so I have not implemented it.
+     *  Fell free to add it by yourselve.
+     *  
+     * @return T41.cfg, T42.cfg, ...
+     */
+    @SettingEntry(paths = {
+        YealinkConstants.AUTOPROVISIONING_COMMON_FILE_NAME_V7X_SETTING,
+        YealinkConstants.AUTOPROVISIONING_COMMON_FILE_NAME_V8X_SETTING
+            })
+    public String getProvisioningCommonFileName() {
+        YealinkModel model = (YealinkModel) m_phone.getModel();
+        return String.format("yealink/%s.cfg", model.getName());
+    }
+    
     // TODO: Get Second DNS server intead of dublicate first
     @SettingEntry(paths = {
             YealinkConstants.DNS_SERVER2_V6X_SETTING, 

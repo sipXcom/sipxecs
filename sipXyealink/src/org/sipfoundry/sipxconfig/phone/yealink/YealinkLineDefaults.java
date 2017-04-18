@@ -20,6 +20,7 @@ package org.sipfoundry.sipxconfig.phone.yealink;
 import org.sipfoundry.sipxconfig.address.Address;
 import org.sipfoundry.sipxconfig.common.User;
 import org.sipfoundry.sipxconfig.common.SipUri;
+import org.sipfoundry.sipxconfig.common.SpecialUser;
 import org.sipfoundry.sipxconfig.device.DeviceDefaults;
 import org.sipfoundry.sipxconfig.phone.Line;
 import org.sipfoundry.sipxconfig.setting.SettingEntry;
@@ -28,6 +29,7 @@ public class YealinkLineDefaults {
     private final DeviceDefaults m_defaults;
     private final Line m_line;
     private final String m_mac;
+    private static final String PROVISION_AOR = "%s~%s";
 
     YealinkLineDefaults(DeviceDefaults defaults, Line line, String mac) {
         m_defaults = defaults;
@@ -36,18 +38,42 @@ public class YealinkLineDefaults {
     }
 
     @SettingEntry(paths = {
+        YealinkConstants.LABEL_V6X_SETTING,
+        YealinkConstants.LABEL_V7X_SETTING,
+        YealinkConstants.LABEL_V8X_SETTING
+        })
+    public String getLineLabel() {
+        // load old default for backward compatibility
+        String userName = getUserName();
+        User user = m_line.getUser();
+        // Check if this is a special provisional line
+        // if so overwrite label with ID: xxx
+        if(user != null && userName.startsWith(
+            SpecialUser.SpecialUserType.PHONE_PROVISION.getUserName())) {
+            userName = user.getDisplayName();
+        }
+        return userName;
+    }
+    
+    @SettingEntry(paths = {
             YealinkConstants.USER_ID_V6X_SETTING,
             YealinkConstants.USER_ID_V7X_SETTING,
-            YealinkConstants.USER_ID_V8X_SETTING,
-            YealinkConstants.LABEL_V6X_SETTING,
-            YealinkConstants.LABEL_V7X_SETTING,
-            YealinkConstants.LABEL_V8X_SETTING
+            YealinkConstants.USER_ID_V8X_SETTING
             })
     public String getUserName() {
         String userName = null;
         User user = m_line.getUser();
         if (user != null) {
             userName = user.getUserName();
+            
+            if (userName.startsWith(
+                SpecialUser.SpecialUserType.PHONE_PROVISION.getUserName())) {
+                // If we have a provision user we have to add the specific short HASH
+                userName = String.format(PROVISION_AOR,
+                    SpecialUser.SpecialUserType.PHONE_PROVISION.getUserName(),
+                    user.getLastName());
+                
+            }
         }
         return userName;
     }
