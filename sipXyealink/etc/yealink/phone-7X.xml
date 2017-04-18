@@ -178,6 +178,8 @@
 	    <setting name="auto_provision.server.username"><type><string/></type></setting>
 	    <setting name="auto_provision.server.password"><type><string/></type></setting>
 
+		<!--// Added custom_mac_cfg.url = $MAC.cfg for reverting setting only needed while autoprovision //-->
+		<setting name="custom_mac_cfg.url" hidden="yes"><type><string/></type><value>$MAC.cfg</value></setting>
 	    <!--// Configure the name of the Common configuration file. //-->
 	    <setting name="auto_provision.common_file_name" advanced="yes"><type><string/></type></setting>
 	    <!--// Configure AES key (16 characters) for decrypting the common CFG file. //-->

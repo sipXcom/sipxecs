@@ -1,0 +1,24 @@
+#set($mac_cfg_replace_string = '$MAC.cfg')
+#if(${cfg.RootUrlPath})
+   #set( $optional_root_url_path = "${cfg.RootUrlPath}" )
+#else
+   #set( $optional_root_url_path = "" )
+#end
+#set($signatureL1 = '####################################################')
+#set($signatureL2 = '##       Common CFG File for autoprovisioning     ##')
+#set($signatureL3 = '####################################################')
+#set($signatureL4 = '#!version:1.0.0.1')
+#set($signatureL5 = '#File header "#!version:1.0.0.1" cannot be edited or deleted.##')
+$signatureL4
+$signatureL5
+$signatureL1
+$signatureL2
+$signatureL3
+
+# Used only by sipXprovision for Yealink SIP-T48G
+# If you want to use this file to set own specific
+# settings please feel free to create yealink/T48.cfg
+# and write your changes there!
+#
+custom_mac_cfg.url = ${optional_root_url_path}${mac_cfg_replace_string}
+
