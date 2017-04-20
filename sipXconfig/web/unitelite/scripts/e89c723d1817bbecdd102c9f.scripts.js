@@ -4953,9 +4953,12 @@ uw.controller('profile', [
       $scope.displayNo = clicked;
     }
 
-    $scope.voicemail.clickToCall = function(clicked) {
+    $scope.voicemail.clickToCall = function(callerIdNumber, authorExtension) {
       $scope.showDialFn(true);
-      $scope.displayNo = clicked;
+      if (callerIdNumber != "null")
+        $scope.displayNo = callerIdNumber;
+      else
+        $scope.displayNo = authorExtension;
       //$scope.callNo = clicked;
     }
 
