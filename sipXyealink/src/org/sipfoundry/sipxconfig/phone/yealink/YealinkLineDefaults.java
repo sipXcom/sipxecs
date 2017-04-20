@@ -22,6 +22,8 @@ import org.sipfoundry.sipxconfig.common.User;
 import org.sipfoundry.sipxconfig.common.SipUri;
 import org.sipfoundry.sipxconfig.common.SpecialUser;
 import org.sipfoundry.sipxconfig.device.DeviceDefaults;
+import org.sipfoundry.sipxconfig.mwi.Mwi;
+import org.sipfoundry.sipxconfig.permission.PermissionName;
 import org.sipfoundry.sipxconfig.phone.Line;
 import org.sipfoundry.sipxconfig.setting.SettingEntry;
 
@@ -200,7 +202,7 @@ public class YealinkLineDefaults {
 
 	@SettingEntry(paths = {
             YealinkConstants.ACD_USER_ID_V7X_SETTING,
-        YealinkConstants.ACD_USER_ID_V8X_SETTING})
+            YealinkConstants.ACD_USER_ID_V8X_SETTING})
     public String getAcdUserId() {
         String acdUserId;
         User u = m_line.getUser();
@@ -210,6 +212,19 @@ public class YealinkLineDefaults {
             acdUserId = "";
         }
         return acdUserId;
+    }
+	
+	@SettingEntry(paths = {
+            YealinkConstants.SUBSCRIBE_MWI_V6X_SETTING,
+            YealinkConstants.SUBSCRIBE_MWI_V7X_SETTING,
+            YealinkConstants.SUBSCRIBE_MWI_V8X_SETTING})
+    public boolean getSubscribeMwi() {
+        boolean isServiceEnabled = m_line.getPhone().getFeatureManager().isFeatureEnabled(Mwi.FEATURE);
+        if (isServiceEnabled && m_line.getUser() != null) {
+        	return m_line.getUser().hasPermission(PermissionName.VOICEMAIL);
+        } else {
+        	return false;
+        }
     }
 
 }
