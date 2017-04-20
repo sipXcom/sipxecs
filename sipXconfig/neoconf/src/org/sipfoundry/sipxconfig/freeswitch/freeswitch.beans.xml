@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+  <bean id="freeswitchExtensionCollector" class="org.sipfoundry.sipxconfig.freeswitch.FreeswitchExtensionCollector" />
+
+  <bean id="freeswitchMediaServer" class="org.sipfoundry.sipxconfig.freeswitch.FreeswitchMediaServer" scope="prototype">
+    <property name="label" value="Internal Voicemail Server" />
+    <property name="localizationContext" ref="localizationContextImpl" />
+    <property name="addressManager" ref="addressManager" />
+    <property name="type" value="freeswitchMediaServer" />
+  </bean>
+  
+  <bean id="freeswitchFeature" class="org.sipfoundry.sipxconfig.freeswitch.FreeswitchFeature">
+    <property name="settingsDao">
+      <bean parent="settingsWithLocationDao">
+        <property name="target">
+          <bean parent="settingsWithLocationDaoImpl">
+            <constructor-arg value="org.sipfoundry.sipxconfig.freeswitch.FreeswitchSettings"/>
+          </bean>
+        </property>
+      </bean>
+    </property>
+    <property name="sipxReplicationContext" ref="sipxReplicationContextImpl" />
+    <property name="configManager" ref="configManager" />
+  </bean>
+  
+  <bean id="freeswitchSettings" class="org.sipfoundry.sipxconfig.freeswitch.FreeswitchSettings" parent="settingsWithLocation">
+  </bean>
+
+  <bean id="fsRecordingContext" class="org.sipfoundry.sipxconfig.freeswitch.FreeswitchRecordingContextImpl">
+    <property name="settingsDao">
+      <bean parent="beanWithSettingsDao">
+        <property name="target">
+          <bean parent="beanWithSettingsDaoImpl">
+            <constructor-arg value="org.sipfoundry.sipxconfig.freeswitch.FreeswitchRecordingSettings"/>
+          </bean>
+        </property>
+      </bean>
+    </property>
+    <property name="configManager" ref="configManager" />
+  </bean>
+
+  <bean id="fsRecordingSettings" class="org.sipfoundry.sipxconfig.freeswitch.FreeswitchRecordingSettings" parent="settingsBean">
+    <property name="modelFilesContext" ref="modelFilesContext"/>
+  </bean>
+
+</beans>

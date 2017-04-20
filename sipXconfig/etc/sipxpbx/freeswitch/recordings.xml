@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE model 
+    PUBLIC "-//SIPFoundry//sipXconfig//Model specification 2.0//EN" 
+    "http://www.sipfoundry.org/sipXconfig/dtd/setting_2_0.dtd">
+<model>
+  <type id="brateType">
+    <enum>
+      <option>
+        <value>16</value>
+      </option>
+      <option>
+        <value>32</value>
+      </option>
+      <option>
+        <value>64</value>
+      </option>
+    </enum>
+  </type>
+  <type id="resampleType">
+    <enum>
+      <option>
+        <value>16000</value>
+      </option>
+      <option>
+        <value>44100</value>
+      </option>
+    </enum>
+  </type>
+  <type id="qualityType">
+    <enum>
+      <option>
+        <value>low</value>
+      </option>
+      <option>
+        <value>medium</value>
+      </option>
+      <option>
+        <value>high</value>
+      </option>
+    </enum>
+  </type>
+  <group name="fs-recording">
+    <setting name="resample">
+      <type refid="resampleType" />
+      <value>44100</value>
+    </setting>
+    <setting name="brate">
+      <type refid="brateType" />
+      <value>32</value>
+    </setting>
+    <setting name="quality">
+      <type refid="qualityType" />
+      <value>high</value>
+    </setting>
+  </group>
+</model>

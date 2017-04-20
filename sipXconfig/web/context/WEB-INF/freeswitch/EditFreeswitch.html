@@ -1,0 +1,32 @@
+<div jwcid="@common/Border" borderTitle="ognl:borderTitle">
+  <span jwcid="@common/TabNavigation" tabNames="ognl:{'locations','settings'}" selectedTab="ognl:tab"/>
+  <div id="settings-content">
+    <span jwcid="@common/ErrorMsg"/>
+    <span jwcid="@RenderBlock" block="ognl:components.get(tab + 'Tab')" />
+  </div>
+  <span jwcid="locationsTab@Block">  
+    <form jwcid="@Form">
+      <table jwcid="tableView@common/Table" id="fs:locations"
+		  columns="* name, address"
+		  source="ognl:locations"
+		  row="ognl:currentRow">
+	     <span jwcid="nameColumnValue@Block">
+	        <span jwcid="editRowLink@DirectLink"
+		    listener="listener:editFreeswitch"
+		    parameters="ognl:currentRow.id">
+		    <span jwcid="nameText@Insert" value="ognl:currentRow.fqdn"/>
+	        </span>
+	      </span>
+      </table>
+    </form>
+   </span>
+   <span jwcid="settingsTab@Block">
+      <span jwcid="@common/QuickHelp" value="message:quick.help.recordings"/>
+	  <form jwcid="form@Form" delegate="bean:validator">
+	    <fieldset jwcid="@setting/SettingsFieldset"
+	        settings="ognl:settings.settings" />
+	    <ul jwcid="formActions@common/FormActions" callback="ognl:callback"
+	        listener="listener:apply"/>
+	  </form> 
+   </span> 
+</div>
