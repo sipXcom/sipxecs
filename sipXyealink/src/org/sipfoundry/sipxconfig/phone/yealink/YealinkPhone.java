@@ -64,6 +64,7 @@ import org.sipfoundry.sipxconfig.setting.type.SettingType;
 import org.sipfoundry.sipxconfig.setting.type.StringSetting;
 import org.sipfoundry.sipxconfig.speeddial.Button;
 import org.sipfoundry.sipxconfig.speeddial.SpeedDial;
+import org.sipfoundry.sipxconfig.speeddial.SpeedDialManager;
 import org.sipfoundry.sipxconfig.upload.UploadManager;
 import org.sipfoundry.sipxconfig.upload.UploadSpecification;
 import org.sipfoundry.sipxconfig.upload.yealink.YealinkUpload;
@@ -112,6 +113,8 @@ public class YealinkPhone extends Phone {
     private UploadManager m_uploadManager;
 
     private AddressManager m_addressManager;
+    
+    private SpeedDialManager m_speedDialManager;
 
     public YealinkPhone() {
         if (null == getSerialNumber()) {
@@ -175,6 +178,10 @@ public class YealinkPhone extends Phone {
 
     public void setAddressManager(AddressManager addressManager) {
         m_addressManager = addressManager;
+    }
+    
+    public void setSpeedDialManager(SpeedDialManager speedDialManager) {
+        m_speedDialManager = speedDialManager;
     }
 
     public String getTftpServer() {
@@ -406,7 +413,7 @@ public class YealinkPhone extends Phone {
     @Override
     public void initializeLine(Line line) {
         m_speedDial = getPhoneContext().getSpeedDial(this);
-        line.addDefaultBeanSettingHandler(new YealinkLineDefaults(getPhoneContext().getPhoneDefaults(), line, getSerialNumber()));
+        line.addDefaultBeanSettingHandler(new YealinkLineDefaults(getPhoneContext().getPhoneDefaults(), line, getSerialNumber(), m_speedDialManager));
     }
 
     /**
