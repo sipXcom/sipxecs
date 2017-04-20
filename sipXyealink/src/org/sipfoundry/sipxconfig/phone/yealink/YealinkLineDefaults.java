@@ -190,7 +190,8 @@ public class YealinkLineDefaults {
     public String getRlsServerUri() {
         String rlsUri;
         User u = m_line.getUser();
-        if (u != null) {
+        boolean hasBlfs = m_line.getPhoneContext().getSpeedDial(m_line.getPhone()).isBlf();
+        if (u != null && hasBlfs) {
             rlsUri = SipUri.format("~~rl~C~"+u.getUserName(), m_defaults.getDomainName(), false);
         } else {
             rlsUri = "";
