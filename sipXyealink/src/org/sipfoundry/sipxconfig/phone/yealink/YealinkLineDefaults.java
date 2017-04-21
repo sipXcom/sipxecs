@@ -26,17 +26,21 @@ import org.sipfoundry.sipxconfig.mwi.Mwi;
 import org.sipfoundry.sipxconfig.permission.PermissionName;
 import org.sipfoundry.sipxconfig.phone.Line;
 import org.sipfoundry.sipxconfig.setting.SettingEntry;
+import org.sipfoundry.sipxconfig.speeddial.SpeedDial;
+import org.sipfoundry.sipxconfig.speeddial.SpeedDialManager;
 
 public class YealinkLineDefaults {
+	private SpeedDialManager m_speedDialManager;
     private final DeviceDefaults m_defaults;
     private final Line m_line;
     private final String m_mac;
     private static final String PROVISION_AOR = "%s~%s";
 
-    YealinkLineDefaults(DeviceDefaults defaults, Line line, String mac) {
+    YealinkLineDefaults(DeviceDefaults defaults, Line line, String mac, SpeedDialManager speedDialManager) {
         m_defaults = defaults;
         m_line = line;
         m_mac = mac;
+        m_speedDialManager = speedDialManager;
     }
 
     @SettingEntry(paths = {
@@ -190,12 +194,13 @@ public class YealinkLineDefaults {
             YealinkConstants.ADVANCED_BLF_SERVER_URI_V7X_SETTING,
             YealinkConstants.ADVANCED_BLF_SERVER_URI_V8X_SETTING})
     public String getRlsServerUri() {
-        String rlsUri;
+        String rlsUri = "";
         User u = m_line.getUser();
         if (u != null) {
-            rlsUri = SipUri.format("~~rl~C~"+u.getUserName(), m_defaults.getDomainName(), false);
-        } else {
-            rlsUri = "";
+            SpeedDial sd = m_speedDialManager.getSpeedDialForUser(m_line.getUser(), false);
+        	if(sd != null && sd.isBlf()) {
+                rlsUri = SipUri.format("~~rl~C~"+u.getUserName(), m_defaults.getDomainName(), false);
+        	}
         }
         return rlsUri;
     }
@@ -226,5 +231,4 @@ public class YealinkLineDefaults {
         	return false;
         }
     }
-
 }
