@@ -1,0 +1,44 @@
+<context name="default">
+  <extension name="400">
+    <condition field="destination_number" expression="^sales$">
+      <action application="set" data="supplied_pin=${sip_h_X-ConfPin}"/>
+      <action application="set" data="api_hangup_hook=lua /etc/sipxpbx/freeswitch/conferenceExit.lua /tmp/${uuid}-name.wav sales true"/>
+      <action application="answer"/>
+      <action application="set" data="namefile=/tmp/${uuid}-name.wav" inline="true"/>
+      <action application="sleep" data="1000"/>
+      <action application="playback" data="voicemail/vm-record_name1.wav"/>
+      <action application="playback" data="tone_stream://%(1000,0,500)"/>
+      <action application="record" data="${namefile} 1"/>
+      <action application="playback" data="ivr/ivr-call_being_transferred.wav"/>
+      <action application="set" data="res=${sched_api +1 none conference sales play file_string://${namefile}!conference/conf-has_joined.wav}"/>
+      <action application="conference" data="sales@400+400222"/>
+    </condition>
+  </extension>
+  <extension name="500">
+    <condition field="destination_number" expression="^marketing$">
+      <action application="set" data="supplied_pin=${sip_h_X-ConfPin}"/>
+      <action application="set" data="api_hangup_hook=lua /etc/sipxpbx/freeswitch/conferenceExit.lua /tmp/${uuid}-name.wav marketing false"/>
+      <action application="answer"/>
+      <action application="set" data="namefile=/tmp/${uuid}-name.wav" inline="true"/>
+      <action application="sleep" data="1000"/>
+      <action application="playback" data="voicemail/vm-record_name1.wav"/>
+      <action application="playback" data="tone_stream://%(1000,0,500)"/>
+      <action application="record" data="${namefile} 1"/>
+      <action application="playback" data="ivr/ivr-call_being_transferred.wav"/>
+      <action application="set" data="res=${sched_api +1 none conference marketing play file_string://${namefile}!conference/conf-has_joined.wav}"/>
+      <action application="conference" data="marketing@500+500222"/>
+    </condition>
+  </extension>
+  <extension name="IVR">
+    <condition field="destination_number" expression="^IVR$">
+      <action application='set' data='sip_callee_id_name=IVR'/>
+      <action application="socket" data="192.168.1.1:8084 async full"/>
+    </condition>
+  </extension>
+  <extension name="transferBridged">
+    <condition field="destination_number" expression="^transferBridged(.*)$">
+      <action application="set" data="ringback=${us-ring}"/>
+      <action application="bridge" data="{ignore_early_media=true}sofia/$${domain}/$1@$${domain}"/>
+    </condition>
+  </extension>
+</context>

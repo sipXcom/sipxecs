@@ -1,0 +1,149 @@
+<context name="default">
+#foreach($conference in $conferences)
+#if(${conference.enabled})
+  <extension name="${conference.extension}">
+    <condition field="destination_number" expression="^${conference.name}${dollar}">
+#if ($maxForwards)
+      <action application="set" data="max_forwards=$maxForwards"/>
+#end
+      <action application="set" data="supplied_pin=${dollar}{sip_h_X-ConfPin}"/>
+#if(${conference.recordAndPlayNameOnEntryEnabled})
+      <action application="set" data="api_hangup_hook=lua $conferenceExitScript /tmp/${uuid}-name.wav ${conference.name} ${conference.recordAndPlayNameOnExitEnabled}"/>
+#end
+#if(${conference.recordAndPlayNameOnEntryEnabled})
+      <action application="answer"/>
+      <action application="set" data="namefile=/tmp/${dollar}{uuid}-name.wav" inline="true"/>
+      <action application="sleep" data="1000"/>
+      <action application="playback" data="voicemail/vm-record_name1.wav"/>
+      <action application="playback" data="tone_stream://%(1000,0,500)"/>
+      <action application="record" data="${dollar}{namefile} 1"/>
+      <action application="playback" data="ivr/ivr-call_being_transferred.wav"/>
+      <action application="set" data="res=${dollar}{sched_api +1 none conference ${conference.name} play file_string://${dollar}{namefile}!conference/conf-has_joined.wav}"/>
+#end
+      <action application="conference" data="${conference.dialString}"/>
+    </condition>
+  </extension>
+#end
+#end
+#if ($callback)
+  <extension name="CBB">
+    <condition field="destination_number" expression="^CBB${dollar}">
+      <action application="socket" data="${location.address}:8284 async full"/>
+#foreach($other in $locations)
+      <action application="redirect" data="sip:CBB@${other.address}:15060;${sip_req_params}"/>
+#end
+    </condition>
+  </extension>
+#end
+  <extension name="IVR">
+    <condition field="destination_number" expression="^IVR${dollar}">
+      <action application='set' data='sip_callee_id_name=IVR'/>
+#if ($maxForwards)
+      <action application="set" data="max_forwards=$maxForwards"/>
+#end
+      <action application="socket" data="${location.address}:8084 async full"/>
+#foreach($other in $locations)
+      <action application="redirect" data="sip:IVR@${other.address}:15060;${sip_req_params}"/>
+#end
+    </condition>
+  </extension>
+#if ($acccode)
+  <extension name="ACC">
+    <condition field="destination_number" expression="^ACC${dollar}">
+#if ($maxForwards)
+      <action application="set" data="max_forwards=$maxForwards"/>
+#end
+      <action application="socket" data="${location.address}:8184 async full"/>
+    </condition>
+  </extension>
+#end
+#if ($park)
+#foreach($orbit in $orbits)
+#if(${orbit.enabled})
+  <extension name="ParkOrbit${orbit.name}">
+    <condition field="destination_number" expression="^${orbit.extension}${dollar}"#if( ${orbit.isMultipleCalls()} ) require-nested="false"#end>
+#if ($maxForwards)
+      <action application="set" data="max_forwards=$maxForwards"/>
+#end
+#if(!${orbit.isMultipleCalls()})
+      <action inline="true" application="set" data="slot_count=${dollar}{fifo(count QPark${orbit.extension})}"/>
+      <action inline="true" application="set" data="slot_count=${dollar}{slot_count:-9:2}"/>
+    </condition>
+    <condition field="${slot_count}" expression="^\:0$|no" break="always" require-nested="false">
+#end
+#set( $transfer_expression_referror = 'transf_ext=${regex(${sip_h_X-sipX-referror}|(.*)@|%1)}' )
+#set( $transfer_expression_auth = 'transf_ext=${regex(${sip_h_X-Sipx-Authidentity}|sip:(.*)@|%1)}' )
+      <action application="set" data="fifo_music=${orbit.audioDirectory}${orbit.music}"/>
+      <condition field="${sip_h_X-sipX-referror}" expression="." break="on-true">
+        <action application="log" data="INFO extracting referror from sip_h_X-sipX-referror"/>
+        <action application="set" data="${transfer_expression_referror}"/>
+      </condition>
+      <condition field="${sip_h_X-Sipx-Authidentity}" expression="." break="on-true">
+        <action application="log" data="INFO extracting referror from sip_h_X-Sipx-Authidentity"/>
+        <action application="set" data="${transfer_expression_auth}"/>
+      </condition>
+      <condition field="${sip_referred_by_user}" expression="." break="on-true">
+        <action application="log" data="INFO extracting referror from sip_referred_by_user"/>
+        <action application="set" data="transf_ext=${sip_referred_by_user}"/>
+      </condition>
+      <action application="set" data="fifo_orbit_exten=transferPark${transf_ext}:${orbit.parkTimeout}"/>
+      <action application="set" data="fifo_orbit_dialplan=XML"/>
+#if(${orbit.isTransferAllowed()})
+      <action application="set" data="fifo_caller_exit_key=${orbit.transferKey}"/>
+      <action application="set" data="fifo_caller_exit_to_orbit=true"/>
+#end
+      <action application="fifo" data="QPark${orbit.extension} in"/>
+      <action application="hangup"/>
+    </condition>
+  </extension>
+  <extension name="UnPark${orbit.name}">
+    <condition field="destination_number" expression="^(${orbit.unparkExtension}|${orbit.callPickupExtension})${dollar}">
+#if ($maxForwards)
+      <action application="set" data="max_forwards=$maxForwards"/>
+#end
+      <action application="fifo" data="QPark${orbit.extension} out nowait"/>
+    </condition>
+  </extension>
+#end
+#end
+  <extension name="transferPark">
+    <condition field="destination_number" expression="^transferPark(\d+)$">
+#if ($maxForwards)
+      <action application="set" data="max_forwards=$maxForwards"/>
+#end
+      <action application="set" data="ringback=${us-ring}"/>
+      <action application="bridge" data="#if( $simplify ){api_on_answer='uuid_simplify ${uuid}'}#end
+sofia/${domainName}/$1@${domainName}"/>
+    </condition>
+  </extension>
+#end
+#foreach($extension in $freeswitchExtensions)
+  <extension name="${extension.name}">
+#foreach($condition in $extension.conditions)
+    <condition field="${condition.field}" expression="${condition.escapedExpression}">
+#if ($maxForwards)
+      <action application="set" data="max_forwards=$maxForwards"/>
+#end
+#foreach($action in $condition.actions)
+      <action application="${action.application}"#if( $action.data ) data="${action.data}"#end/>
+#end
+    </condition>
+#end
+  </extension>
+#end
+  <extension name="transferBridged">
+    <condition field="destination_number" expression="^transferBridged(.*)$">
+      <action application="set" data="ringback=${us-ring}"/>
+      <action application="bridge" data="{ignore_early_media=true}sofia/$${domain}/$1@$${domain}"/>
+    </condition>
+  </extension>
+#if ($blindTransfer)
+  <extension name="going-in">
+    <condition>
+      <action application="set" data="ringback=${us-ring}"/>
+      <action application="bridge" data="#if( $simplify ){api_on_answer='uuid_simplify ${uuid}'}#end
+sofia/${domainName}/${destination_number}@${domainName}"/>
+    </condition>
+  </extension>
+#end
+</context>

@@ -1,0 +1,7 @@
+<configuration name="shout.conf" description="mod shout config">
+  <settings>
+    <param name="encode-brate" value="$brate"/>
+    <param name="encode-resample" value="$resample"/>
+    <param name="encode-quality" value="$quality"/>
+  </settings>
+</configuration>
