@@ -230,26 +230,25 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
     @Override
     public List<Cdr> getActiveCalls() {
         try {
-            CdrService cdrService = getCdrService();
-            ActiveCall[] activeCalls = cdrService.getActiveCalls();
-            List<Cdr> cdrs = new ArrayList<Cdr>(activeCalls.length);
-            for (ActiveCall call : activeCalls) {
-                ActiveCallCdr cdr = new ActiveCallCdr();
-                cdr.setCallerAor(call.getFrom());
-                cdr.setCalleeAor(call.getTo());
-                cdr.setCalleeContact(call.getRecipient());
-                cdr.setStartTime(call.getStart_time().getTime());
-                cdr.setDuration(call.getDuration());
-                cdrs.add(cdr);
-            }
-            return cdrs;
-        } catch (RemoteException e) {
+            // Now we use REST calls for this too
+            return getActiveCallsRESTCall(null);
+        } catch (IOException e) {
             throw new UserException(e);
         }
     }
 
     @Override
     public List<Cdr> getActiveCallsREST(User user) throws IOException {
+        // We need this for security... if user is null in this case
+        // we do not want to show any informations
+        if (null == user) {
+            return new ArrayList<Cdr>();
+        } else {
+            return getActiveCallsRESTCall(user);
+        }
+    }
+    
+    private List<Cdr> getActiveCallsRESTCall(User user) throws IOException {
         HttpClient client = new HttpClient();
         GetMethod getMethod = new GetMethod(getActiveCdrsRestUrl(user));
         int statusCode = HttpStatus.SC_OK;
@@ -292,8 +291,12 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
 
     private String getActiveCdrsRestUrl(User user) {
         Address address = getCdrAgentAddress();
-        return String.format("http://%s:%d/activecdrs?name=%s", address.getAddress(), address.getPort(),
+        if (null == user) {
+            return String.format("http://%s:%d/activecdrs?name=%s", address.getAddress(), address.getPort());
+        } else {
+            return String.format("http://%s:%d/activecdrs?name=%s", address.getAddress(), address.getPort(),
                 user.getUserName());
+        }
     }
 
     public CdrService getCdrService() {
