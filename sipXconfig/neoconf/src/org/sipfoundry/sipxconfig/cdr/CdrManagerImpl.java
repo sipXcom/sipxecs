@@ -589,7 +589,7 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
     /**
      * Maps Active call retrieved from callresolver active calls REST service
      */
-    static class ActiveCallREST {
+    private class ActiveCallREST {
         private final String m_from;
         private final String m_to;
         private final String m_recipient;
