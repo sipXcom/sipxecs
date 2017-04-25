@@ -2776,6 +2776,8 @@ uw.service('restService', [
             }
           },
 
+          leftClickWarning: [],
+
           folders: [
             { name: 'inbox' },
             { name: 'saved' },
@@ -2936,7 +2938,19 @@ uw.service('restService', [
             }
 
             return true;
+          },
+
+          treatLeftClick: function (ev, id) {
+
+            // IE & Safari
+            if (window.navigator.userAgent.indexOf('MSIE ') !== -1 || window.navigator.userAgent.indexOf('Trident/') !== -1 || !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/)) {
+              ev.preventDefault();
+              secondary.voicemail.leftClickWarning[id] = true;
+            } else {
+              return true;
+            }
           }
+
 
         },
 
@@ -4939,9 +4953,12 @@ uw.controller('profile', [
       $scope.displayNo = clicked;
     }
 
-    $scope.voicemail.clickToCall = function(clicked) {
+    $scope.voicemail.clickToCall = function(callerIdNumber, authorExtension) {
       $scope.showDialFn(true);
-      $scope.displayNo = clicked;
+      if (callerIdNumber != "null")
+        $scope.displayNo = callerIdNumber;
+      else
+        $scope.displayNo = authorExtension;
       //$scope.callNo = clicked;
     }
 
@@ -5546,8 +5563,8 @@ uw.
     uploader.filters.push({
         name: 'customFilter',
         fn: function(item /*{File|FileLikeObject}*/, options) {
-          var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
-          return '|wav|mp3|'.indexOf(type) !== -1;
+        var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+          return '|x-wav|wav|mp3|mpeg|'.indexOf(type) !== -1;
             //return this.queue.length < 10;
         }
     });

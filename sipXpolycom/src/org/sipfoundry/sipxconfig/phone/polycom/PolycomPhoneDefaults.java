@@ -148,9 +148,9 @@ public class PolycomPhoneDefaults {
 
     @SettingEntry(path = "up/numOfDisplayColumns/numOfDisplayColumns")
     public String getNumDisplayColumns() {
-        if (m_model.equals("polycomVVX600")) {
+        if (m_model.equals("polycomVVX600") || m_model.equals("polycomVVX601")) {
             return "4";
-        } else if (m_model.equals("polycomVVX500") || m_model.equals("polycomRealPresenceTrio")) {
+        } else if (m_model.equals("polycomVVX500") || m_model.equals("polycomVVX501") || m_model.equals("polycomRealPresenceTrio")) {
             return "3";
         }
         return null;

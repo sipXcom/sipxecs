@@ -55,13 +55,13 @@
         </type>
         <value>1</value>
       </setting>
-      <setting name="headsetmodeenabled" if="5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3">
+      <setting name="headsetmodeenabled" if="(5.[1-9].[1-9])">
         <type>
           <boolean />
         </type>
         <value>1</value>
       </setting>
-      <setting name="handsetmodeenabled" if="5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3">
+      <setting name="handsetmodeenabled" if="(5.[1-9].[1-9])">
         <type>
           <boolean />
         </type>
@@ -104,7 +104,7 @@
         <value>40</value>
       </setting>
     </group>
-    <group name="IdleViewPreferenceRemoteCalls" if="4.1.6||4.1.7||4.1.8||5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3">
+    <group name="IdleViewPreferenceRemoteCalls" if="(4.1.[6-8])|(5.[1-9].[1-9])">
       <setting name="IdleViewPreferenceRemoteCalls">
         <type>
           <boolean />
@@ -112,8 +112,8 @@
         <value>0</value>
       </setting>
     </group>
-    <group name="numOfDisplayColumns" if="polycomVVX500||polycomRealPresenceTrio||polycomVVX600">
-	    <setting name="numOfDisplayColumns" if="5.0.0||5.0.1||5.0.2||4.1.6||4.1.7||4.1.8||5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3">
+    <group name="numOfDisplayColumns" if="(polycomRealPresenceTrio)|(polycomVVX[56]0[01])">
+	    <setting name="numOfDisplayColumns" if="(5.[0-9].[0-9])">
 	    <type>
 	      <enum>
 	        <option>
@@ -165,7 +165,7 @@
         <value>15</value>
       </setting>
     </group>
-    <group name="em"  if="5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3">
+    <group name="em"  if="(5.[1-9].[1-9])">
       <setting name="smartpaging.enabled">
         <type>
           <boolean />
@@ -421,9 +421,9 @@
             <option><value>G7221_C.24kbps</value></option>
             <option><value>G7221_C.32kbps</value></option>
             <option><value>G7221_C.48kbps</value></option>
-            <option><value>Lin16.16ksps</value></option>
-            <option><value>Lin16.32ksps</value></option>
-            <option><value>Lin16.48ksps</value></option>
+            <option><value>Lin16.16kbps</value></option>
+            <option><value>Lin16.32kbps</value></option>
+            <option><value>Lin16.48kbps</value></option>
             <option><value>Siren14.24kbps</value></option>
             <option><value>Siren14.32kbps</value></option>
             <option><value>Siren14.48kbps</value></option>
@@ -447,11 +447,11 @@
             <option><value>G7221_C.24kbps</value></option>
             <option><value>G7221_C.32kbps</value></option>
             <option><value>G7221_C.48kbps</value></option>
-            <option><value>Lin16.8ksps</value></option>
-            <option><value>Lin16.16ksps</value></option>
-            <option><value>Lin16.32ksps</value></option>
-            <option><value>Lin16.44ksps</value></option>
-            <option><value>Lin16.48ksps</value></option>
+            <option><value>Lin16.8kbps</value></option>
+            <option><value>Lin16.16kbps</value></option>
+            <option><value>Lin16.32kbps</value></option>
+            <option><value>Lin16.44kbps</value></option>
+            <option><value>Lin16.48kbps</value></option>
             <option><value>Siren14.24kbps</value></option>
             <option><value>Siren14.32kbps</value></option>
             <option><value>Siren14.48kbps</value></option>
@@ -601,70 +601,70 @@
         </setting>
       </group>
       <group name="G7221" if="IP_6000_CodecPref||IP_7000_CodecPref||VVX_1500_CodecPref">
-        <setting name="24ksps.payloadSize">
+        <setting name="24kbps.payloadSize">
           <type>
             <!-- 10, 20, 30, ...80 -->
             <integer min="10" max="80" />
           </type>
           <value>20</value>
         </setting>
-        <setting name="32ksps.payloadSize">
+        <setting name="32kbps.payloadSize">
           <type>
             <!-- 10, 20, 30, ...80 -->
             <integer min="10" max="80" />
           </type>
           <value>20</value>
         </setting>
-        <setting name="48ksps.payloadSize">
+        <setting name="48kbps.payloadSize">
           <type>
             <!-- 10, 20, 30, ...80 -->
             <integer min="10" max="80" />
           </type>
           <value>20</value>
         </setting>
-        <setting name="24ksps.jitterBufferMin">
+        <setting name="24kbps.jitterBufferMin">
           <!-- 40, 50, 60, ... (multiple of 10) -->
           <type>
             <integer min="40" />
           </type>
           <value>40</value>
         </setting>
-        <setting name="32ksps.jitterBufferMin">
+        <setting name="32kbps.jitterBufferMin">
           <!-- 40, 50, 60, ... (multiple of 10) -->
           <type>
             <integer min="40" />
           </type>
           <value>40</value>
         </setting>
-        <setting name="48ksps.jitterBufferMin">
+        <setting name="48kbps.jitterBufferMin">
           <!-- 40, 50, 60, ... (multiple of 10) -->
           <type>
             <integer min="40" />
           </type>
           <value>40</value>
         </setting>
-        <setting name="24ksps.jitterBufferShrink">
+        <setting name="24kbps.jitterBufferShrink">
           <!--10, 20, 30, ... (multiple of 10) -->
           <type>
             <integer min="10" />
           </type>
           <value>1500</value>
         </setting>
-        <setting name="32ksps.jitterBufferShrink">
+        <setting name="32kbps.jitterBufferShrink">
           <!--10, 20, 30, ... (multiple of 10) -->
           <type>
             <integer min="10" />
           </type>
           <value>1500</value>
         </setting>
-        <setting name="48ksps.jitterBufferShrink">
+        <setting name="48kbps.jitterBufferShrink">
           <!--10, 20, 30, ... (multiple of 10) -->
           <type>
             <integer min="10" />
           </type>
           <value>1500</value>
         </setting>
-        <setting name="24ksps.jitterBufferMax">
+        <setting name="24kbps.jitterBufferMax">
           <!--  greater than jitterBufferMin, multiple of 10, less than or =500 for IP 500 and IP 600, less than or =
             160 for IP 300 -->
           <type>
@@ -672,7 +672,7 @@
           </type>
           <value>200</value>
         </setting>
-        <setting name="32ksps.jitterBufferMax">
+        <setting name="32kbps.jitterBufferMax">
           <!--  greater than jitterBufferMin, multiple of 10, less than or =500 for IP 500 and IP 600, less than or =
             160 for IP 300 -->
           <type>
@@ -680,7 +680,7 @@
           </type>
           <value>200</value>
         </setting>
-        <setting name="48ksps.jitterBufferMax">
+        <setting name="48kbps.jitterBufferMax">
           <!--  greater than jitterBufferMin, multiple of 10, less than or =500 for IP 500 and IP 600, less than or =
             160 for IP 300 -->
           <type>
@@ -690,70 +690,70 @@
         </setting>
       </group>
       <group name="G7221C" if="IP_6000_CodecPref||IP_7000_CodecPref||VVX_1500_CodecPref">
-        <setting name="24ksps.payloadSize">
+        <setting name="24kbps.payloadSize">
           <type>
             <!-- 10, 20, 30, ...80 -->
             <integer min="10" max="80" />
           </type>
           <value>20</value>
         </setting>
-        <setting name="32ksps.payloadSize">
+        <setting name="32kbps.payloadSize">
           <type>
             <!-- 10, 20, 30, ...80 -->
             <integer min="10" max="80" />
           </type>
           <value>20</value>
         </setting>
-        <setting name="48ksps.payloadSize">
+        <setting name="48kbps.payloadSize">
           <type>
             <!-- 10, 20, 30, ...80 -->
             <integer min="10" max="80" />
           </type>
           <value>20</value>
         </setting>
-        <setting name="24ksps.jitterBufferMin">
+        <setting name="24kbps.jitterBufferMin">
           <!-- 40, 50, 60, ... (multiple of 10) -->
           <type>
             <integer min="40" />
           </type>
           <value>40</value>
         </setting>
-        <setting name="32ksps.jitterBufferMin">
+        <setting name="32kbps.jitterBufferMin">
           <!-- 40, 50, 60, ... (multiple of 10) -->
           <type>
             <integer min="40" />
           </type>
           <value>40</value>
         </setting>
-        <setting name="48ksps.jitterBufferMin">
+        <setting name="48kbps.jitterBufferMin">
           <!-- 40, 50, 60, ... (multiple of 10) -->
           <type>
             <integer min="40" />
           </type>
           <value>40</value>
         </setting>
-        <setting name="24ksps.jitterBufferShrink">
+        <setting name="24kbps.jitterBufferShrink">
           <!--10, 20, 30, ... (multiple of 10) -->
           <type>
             <integer min="10" />
           </type>
           <value>1500</value>
         </setting>
-        <setting name="32ksps.jitterBufferShrink">
+        <setting name="32kbps.jitterBufferShrink">
           <!--10, 20, 30, ... (multiple of 10) -->
           <type>
             <integer min="10" />
           </type>
           <value>1500</value>
         </setting>
-        <setting name="48ksps.jitterBufferShrink">
+        <setting name="48kbps.jitterBufferShrink">
           <!--10, 20, 30, ... (multiple of 10) -->
           <type>
             <integer min="10" />
           </type>
           <value>1500</value>
         </setting>
-        <setting name="24ksps.jitterBufferMax">
+        <setting name="24kbps.jitterBufferMax">
           <!--  greater than jitterBufferMin, multiple of 10, less than or =500 for IP 500 and IP 600, less than or =
             160 for IP 300 -->
           <type>
@@ -761,7 +761,7 @@
           </type>
           <value>200</value>
         </setting>
-        <setting name="32ksps.jitterBufferMax">
+        <setting name="32kbps.jitterBufferMax">
           <!--  greater than jitterBufferMin, multiple of 10, less than or =500 for IP 500 and IP 600, less than or =
             160 for IP 300 -->
           <type>
@@ -769,7 +769,7 @@
           </type>
           <value>200</value>
         </setting>
-        <setting name="48ksps.jitterBufferMax">
+        <setting name="48kbps.jitterBufferMax">
           <!--  greater than jitterBufferMin, multiple of 10, less than or =500 for IP 500 and IP 600, less than or =
             160 for IP 300 -->
           <type>
@@ -779,112 +779,112 @@
         </setting>
       </group>
       <group name="Lin16" if="IP_7000_CodecPref||VVX_1500_CodecPref">
-        <setting name="8ksps.payloadSize">
+        <setting name="8kbps.payloadSize">
           <type>
             <!-- 10, 20, 30, ...80 -->
             <integer min="10" max="80" />
           </type>
           <value>10</value>
         </setting>
-        <setting name="16ksps.payloadSize">
+        <setting name="16kbps.payloadSize">
           <type>
             <!-- 10, 20, 30, ...80 -->
             <integer min="10" max="80" />
           </type>
           <value>10</value>
         </setting>
-        <setting name="32ksps.payloadSize">
+        <setting name="32kbps.payloadSize">
           <type>
             <!-- 10, 20, 30, ...80 -->
             <integer min="10" max="80" />
           </type>
           <value>10</value>
         </setting>
-        <setting name="44_1ksps.payloadSize">
+        <setting name="44_1kbps.payloadSize">
           <type>
             <!-- 10, 20, 30, ...80 -->
             <integer min="10" max="80" />
           </type>
           <value>10</value>
         </setting>
-        <setting name="48ksps.payloadSize">
+        <setting name="48kbps.payloadSize">
           <type>
             <!-- 10, 20, 30, ...80 -->
             <integer min="10" max="80" />
           </type>
           <value>10</value>
         </setting>
-        <setting name="8ksps.jitterBufferMin">
+        <setting name="8kbps.jitterBufferMin">
           <!-- 40, 50, 60, ... (multiple of 10) -->
           <type>
             <integer min="20" />
           </type>
           <value>20</value>
         </setting>
-        <setting name="16ksps.jitterBufferMin">
+        <setting name="16kbps.jitterBufferMin">
           <!-- 40, 50, 60, ... (multiple of 10) -->
           <type>
             <integer min="20" />
           </type>
           <value>20</value>
         </setting>
-        <setting name="32ksps.jitterBufferMin">
+        <setting name="32kbps.jitterBufferMin">
           <!-- 40, 50, 60, ... (multiple of 10) -->
           <type>
             <integer min="20" />
           </type>
           <value>20</value>
         </setting>
-        <setting name="44_1ksps.jitterBufferMin">
+        <setting name="44_1kbps.jitterBufferMin">
           <!-- 40, 50, 60, ... (multiple of 10) -->
           <type>
             <integer min="20" />
           </type>
           <value>20</value>
         </setting>
-        <setting name="48ksps.jitterBufferMin">
+        <setting name="48kbps.jitterBufferMin">
           <!-- 40, 50, 60, ... (multiple of 10) -->
           <type>
             <integer min="20" />
           </type>
           <value>20</value>
         </setting>
-        <setting name="8ksps.jitterBufferShrink">
+        <setting name="8kbps.jitterBufferShrink">
           <type>
             <!-- 10, 20, 30, ... (multiple of 10) -->
             <integer min="10" />
           </type>
           <value>500</value>
         </setting>
-        <setting name="16ksps.jitterBufferShrink">
+        <setting name="16kbps.jitterBufferShrink">
           <type>
             <!-- 10, 20, 30, ... (multiple of 10) -->
             <integer min="10" />
           </type>
           <value>500</value>
         </setting>
-        <setting name="32ksps.jitterBufferShrink">
+        <setting name="32kbps.jitterBufferShrink">
           <type>
             <!-- 10, 20, 30, ... (multiple of 10) -->
             <integer min="10" />
           </type>
           <value>500</value>
         </setting>
-        <setting name="44_1ksps.jitterBufferShrink">
+        <setting name="44_1kbps.jitterBufferShrink">
           <type>
             <!-- 10, 20, 30, ... (multiple of 10) -->
             <integer min="10" />
           </type>
           <value>500</value>
         </setting>
-        <setting name="48ksps.jitterBufferShrink">
+        <setting name="48kbps.jitterBufferShrink">
           <type>
             <!-- 10, 20, 30, ... (multiple of 10) -->
             <integer min="10" />
           </type>
           <value>500</value>
         </setting>
-        <setting name="8ksps.jitterBufferMax">
+        <setting name="8kbps.jitterBufferMax">
           <!--  greater than jitterBufferMin, multiple of 10, less than or =500 for IP 500 and IP 600, less than or =
             160 for IP 300 -->
           <type>
@@ -892,7 +892,7 @@
           </type>
           <value>100</value>
         </setting>
-        <setting name="16ksps.jitterBufferMax">
+        <setting name="16kbps.jitterBufferMax">
           <!--  greater than jitterBufferMin, multiple of 10, less than or =500 for IP 500 and IP 600, less than or =
             160 for IP 300 -->
           <type>
@@ -900,7 +900,7 @@
           </type>
           <value>100</value>
         </setting>
-        <setting name="32ksps.jitterBufferMax">
+        <setting name="32kbps.jitterBufferMax">
           <!--  greater than jitterBufferMin, multiple of 10, less than or =500 for IP 500 and IP 600, less than or =
             160 for IP 300 -->
           <type>
@@ -908,7 +908,7 @@
           </type>
           <value>100</value>
         </setting>
-        <setting name="44_1ksps.jitterBufferMax">
+        <setting name="44_1kbps.jitterBufferMax">
           <!--  greater than jitterBufferMin, multiple of 10, less than or =500 for IP 500 and IP 600, less than or =
             160 for IP 300 -->
           <type>
@@ -916,7 +916,7 @@
           </type>
           <value>100</value>
         </setting>
-        <setting name="48ksps.jitterBufferMax">
+        <setting name="48kbps.jitterBufferMax">
           <!--  greater than jitterBufferMin, multiple of 10, less than or =500 for IP 500 and IP 600, less than or =
             160 for IP 300 -->
           <type>
@@ -968,21 +968,21 @@
           </type>
           <value>20</value>
         </setting>
-        <setting name="24ksps.jitterBufferShrink">
+        <setting name="24kbps.jitterBufferShrink">
           <type>
             <!-- 10, 20, 30, ... (multiple of 10) -->
             <integer min="10" />
           </type>
           <value>500</value>
         </setting>
-        <setting name="32ksps.jitterBufferShrink">
+        <setting name="32kbps.jitterBufferShrink">
           <type>
             <!-- 10, 20, 30, ... (multiple of 10) -->
             <integer min="10" />
           </type>
           <value>500</value>
         </setting>
-        <setting name="48ksps.jitterBufferShrink">
+        <setting name="48kbps.jitterBufferShrink">
           <type>
             <!-- 10, 20, 30, ... (multiple of 10) -->
             <integer min="10" />
@@ -1057,21 +1057,21 @@
           </type>
           <value>20</value>
         </setting>
-        <setting name="24ksps.jitterBufferShrink">
+        <setting name="24kbps.jitterBufferShrink">
           <type>
             <!-- 10, 20, 30, ... (multiple of 10) -->
             <integer min="10" />
           </type>
           <value>500</value>
         </setting>
-        <setting name="32ksps.jitterBufferShrink">
+        <setting name="32kbps.jitterBufferShrink">
           <type>
             <!-- 10, 20, 30, ... (multiple of 10) -->
             <integer min="10" />
           </type>
           <value>500</value>
         </setting>
-        <setting name="48ksps.jitterBufferShrink">
+        <setting name="48kbps.jitterBufferShrink">
           <type>
             <!-- 10, 20, 30, ... (multiple of 10) -->
             <integer min="10" />
@@ -1731,7 +1731,7 @@
       </type>
       <value>86400</value>
     </setting>
-	<setting name="retryDnsPeriod" if="4.1.7||4.1.8||5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3">
+	<setting name="retryDnsPeriod" if="(4.1.[78])|(5.[1-9].[1-9])">
       <type>
         <integer min="60" />
       </type>
@@ -1853,13 +1853,13 @@
       </type>
       <value>2222</value>
     </setting>
-    <setting name="videoPortRange.enable" if="4.1.6||5.0.2||4.1.7||4.1.8||5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3">
+    <setting name="videoPortRange.enable" if="(4.1.[6-8])|(5.[0-9].[0-9])">
       <type>
         <boolean />
       </type>
       <value>0</value>
     </setting>
-    <setting name="videoPortRangeStart" if="4.1.6||5.0.2||4.1.7||4.1.8||5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3">
+    <setting name="videoPortRangeStart" if="(4.1.[6-8])|(5.[0-9].[0-9])">
       <type>
         <integer min="1024" max="65486" />
       </type>
@@ -2043,7 +2043,7 @@
         <value>0</value>
       </setting>
     </group>
-    <setting name="advancedMissedCalls.addToReceivedList" if="5.0.0||5.0.1||5.0.2">
+    <setting name="advancedMissedCalls.addToReceivedList" if="(5.[0-9].[0-9])">
       <type>
         <boolean />
       </type>
@@ -2199,8 +2199,8 @@
       <setting name="poll" copy-of="so" unless="pre_3.2.0_model"/>
       <setting name="push" copy-of="so" unless="pre_3.2.0_model"/>
       <setting name="wmgr" copy-of="so" unless="pre_3.2.0_model"/>
-      <setting name="em" copy-of="so" if="4.1.6||4.1.7||4.1.8||5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3"/>
-      <setting name="pwr" copy-of="so" if="4.1.6||4.1.7||4.1.8||5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3"/>
+      <setting name="em" copy-of="so" if="(4.1.[6-8])|(5.[0-9].[0-9])"/>
+      <setting name="pwr" copy-of="so" if="(4.1.[6-8])|(5.[0-9].[0-9])"/>
     </group>
     <group name="device.syslog" advanced="yes">
       <setting name="serverName.set" hidden="yes">
@@ -2693,13 +2693,13 @@
       </type>
       <value>0</value>
     </setting>
-    <setting name="forward.enable" if="5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3">
+    <setting name="forward.enable" if="(5.[1-9].[1-9])">
       <type>
         <boolean />
       </type>
       <value>1</value>
     </setting>
-    <setting name="doNotDisturb.enable" if="5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3">
+    <setting name="doNotDisturb.enable" if="(5.[1-9].[1-9])">
       <type>
         <boolean />
       </type>
@@ -2756,7 +2756,7 @@
         <value>1</value>
       </setting>
     </group>
-    <group name="idleRefresh" if="4.1.6||4.1.7||4.1.8||5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3">
+    <group name="idleRefresh" if="(4.1.[6-8])|(5.[1-9].[1-9])">
     <setting name="onFailure">
         <type>
           <integer min="60" max="6553500"/>
@@ -2850,13 +2850,13 @@
         </type>
         <value>1</value>
       </setting>
-      <setting name="callRecording" if="5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3">
+      <setting name="callRecording" if="(5.[1-9].[1-9])">
         <type>
           <boolean />
         </type>
         <value>0</value>
       </setting>
-      <setting name="securityClassification" if="5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3">
+      <setting name="securityClassification" if="(5.[1-9].[1-9])">
         <type>
           <boolean />
         </type>
@@ -2940,7 +2940,7 @@
       </setting>
     </group>
     <group name="alertInfo">
-        <setting name="ignoreString" if="4.1.8||5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3">
+        <setting name="ignoreString" if="(4.1.8)|(5.[1-9].[1-9])">
           <type>
             <string/>
           </type>
@@ -3125,7 +3125,7 @@
       </type>
       <value>2</value>
     </setting>
-    <setting name="impossibleMatchHandling.timeOut" if="5.0.0||5.0.1||5.0.2">
+    <setting name="impossibleMatchHandling.timeOut" if="(5.[0-9].[0-9])">
       <type>
         <integer min="0" max="100" />
       </type>
@@ -3373,7 +3373,7 @@
         </type>
         <value>1</value>
       </setting>
-      <setting name="etherModePC" if="5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3">
+      <setting name="etherModePC" if="(5.[1-9].[1-9])">
         <type>
           <enum>
             <option><value>Disabled</value></option>
@@ -3395,7 +3395,7 @@
       </type>
       <value>1</value>
     </setting>
-    <setting name="enable.VVX500" if="polycomVVX500||polycomRealPresenceTrio">
+    <setting name="enable.VVX500" if="(polycomVVX50[01])|(polycomRealPresenceTrio)">
       <type>
         <boolean />
       </type>
@@ -3926,7 +3926,7 @@
         </setting>
       </group>
     </group>
-    <group name="ptt" if="4.0.X||4.1.X||4.1.0||4.1.2||4.1.3||4.1.4||4.1.5||4.1.6||4.1.7||4.1.8||5.0.0||5.0.1||5.0.2||5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3">
+    <group name="ptt" if="([45].[0-9].[0-9X])">
       <setting name="address">
         <type>
 		  <string />
@@ -5511,7 +5511,7 @@
 	      </setting>
 	   </group>
     </group>
-    <group name="prov"  if="4.0.X||4.1.X||4.1.0||4.1.2||4.1.3||4.1.4||4.1.5||4.1.6||4.1.7||4.1.8||5.0.0||5.0.1||5.0.2||5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3">
+    <group name="prov"  if="([45].[0-9].[0-9X])">
       <group name="prov_login">
 	  <setting name="login.enabled">
 		<type><boolean /></type>
@@ -5568,13 +5568,13 @@
       </setting>
 	  </group>
     </group>      
-	<group name="mwi" if="5.0.0||5.0.1||5.0.2||5.1.1||5.1.2||5.1.3">
+	<group name="mwi" if="(5.[0-9].[0-9])">
       <setting name="backLight.disable">
 		<type><boolean /></type>
 		<value>0</value>
       </setting>
 	</group>
-	<group name="keyboard" if="5.0.0||5.0.1||5.0.2||5.1.1||5.1.2||5.1.3">
+	<group name="keyboard" if="(5.[0-9].[0-9])">
       <setting name="layout.type">
       <type>
         <enum>
@@ -5595,42 +5595,42 @@
 		<value>1</value>
       </setting>
 	</group>
-	<group name="audioVideoToggle" if="5.0.0||5.0.1||5.0.2||5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3">
+	<group name="audioVideoToggle" if="(5.[0-9].[0-9])">
       <setting name="callMode.persistent">
 		<type><boolean /></type>
 		<value>1</value>
       </setting>
 	</group>
-	<group name="Diags" if="4.1.6||5.0.2||4.1.7||4.1.8||5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3">
+	<group name="Diags" if="(4.1.[6-8])|(5.[0-9].[0-9])">
 	  <setting name="dumpcore.enabled">
 		<type><boolean /></type>
 		<value>0</value>
       </setting>
 	</group>
-    <group name="prov.autoConfigUpload" if="4.1.6||5.0.2||4.1.7||4.1.8||5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3">
+    <group name="prov.autoConfigUpload" if="(4.1.[6-8])|(5.[0-9].[0-9])">
 	  <setting name="enabled">
 		<type><boolean /></type>
 		<value>0</value>
       </setting>
 	</group>
-    <group name="lineKey" if="4.1.6||4.1.7||4.1.8||5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3">
+    <group name="lineKey" if="(4.1.[6-8])|(5.[0-9].[0-9])">
 	  <setting name="reassignment.enabled">
 		<type><boolean /></type>
 		<value>0</value>
       </setting>
 	</group>
-	<group name="homeScreen" if="5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3">
+	<group name="homeScreen" if="(5.[1-9].[1-9])">
 	  <setting name="forward.enable">
 		<type><boolean /></type>
 		<value>1</value>
       </setting>
-      <setting name="doNotDisturb.enable" if="5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3">
+      <setting name="doNotDisturb.enable" if="(5.[1-9].[1-9])">
 		<type><boolean /></type>
 		<value>1</value>
       </setting>
     </group>
-    <group name="softKey" if="5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3">
-      <group name="feature" if="5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3">
+    <group name="softKey" if="(5.[1-9].[1-9])">
+      <group name="feature" if="(5.[1-9].[1-9])">
 	  <setting name="doNotDisturb">
 		<type><boolean /></type>
 		<value>1</value>
@@ -5644,7 +5644,7 @@
 		<value>1</value>
 	  </setting>
       </group>
-      <group name="efk" if="5.1.1||5.1.2||5.1.3||5.2.0||5.2.1||5.2.2||5.2.3||5.3.0||5.3.1||5.4.0||5.4.1||5.4.3">
+      <group name="efk" if="(5.[1-9].[1-9])">
 	  <setting name="softKey.alignleft">
 		<type><boolean /></type>
 		<value>0</value>

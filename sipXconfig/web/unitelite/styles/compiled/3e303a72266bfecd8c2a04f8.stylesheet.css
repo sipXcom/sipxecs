@@ -14962,6 +14962,14 @@ select.default {
   margin-bottom: -1px;
   height: 30px;
 }
+#webchat-main .right-side-view .voicemail .vmsg .vmsg-msg audio::-webkit-media-controls-enclosure {
+  overflow: hidden;
+}
+#webchat-main .right-side-view .voicemail .vmsg .vmsg-msg audio::-webkit-media-controls-panel {
+  width: -webkit-calc(100% + 32px);
+  width: -moz-calc(100% + 32px);
+  width: calc(100% + 32px);
+}
 #webchat-main .right-side-view .voicemail .vmsg .vmsg-msg .received {
   color: #a8a69b;
   font-size: 0.9em;

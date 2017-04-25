@@ -97,13 +97,49 @@
         <value>5.2.3</value>
       </option>
       <option>
+        <value>5.2.4</value>
+      </option>
+      <option>
+        <value>5.2.5</value>
+      </option>
+      <option>
         <value>5.3.0</value>
       </option>
       <option>
         <value>5.3.1</value>
       </option>
       <option>
+        <value>5.3.2</value>
+      </option>
+      <option>
+        <value>5.3.3</value>
+      </option>
+      <option>
         <value>5.4.0</value>
+      </option>
+      <option>
+        <value>5.4.1</value>
+      </option>
+      <option>
+        <value>5.4.2</value>
+      </option>
+      <option>
+        <value>5.4.3</value>
+      </option>
+      <option>
+        <value>5.4.4</value>
+      </option>
+      <option>
+        <value>5.4.5</value>
+      </option>
+      <option>
+        <value>5.4.6</value>
+      </option>
+      <option>
+        <value>5.5.0</value>
+      </option>
+      <option>
+        <value>5.5.1</value>
       </option>
     </enum>
   </type>

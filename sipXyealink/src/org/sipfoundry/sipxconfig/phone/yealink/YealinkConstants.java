@@ -78,6 +78,9 @@ public abstract class YealinkConstants {
     public static final String VOICE_MAIL_NUMBER_V8X_SETTING = "basic/voice_mail.number";
 	public static final String ACD_USER_ID_V7X_SETTING = "basic/acd.user_id";
 	public static final String ACD_USER_ID_V8X_SETTING = "basic/acd.user_id";
+	public static final String SUBSCRIBE_MWI_V6X_SETTING = "advanced/subscribe_mwi";
+	public static final String SUBSCRIBE_MWI_V7X_SETTING = "advanced/subscribe_mwi";
+	public static final String SUBSCRIBE_MWI_V8X_SETTING = "advanced/subscribe_mwi";
 
     // Phone specific settings used in /etc/yealink/phone_XX.xml
     public static final String DNS_SERVER1_V6X_SETTING = "network-wan/DNS/PrimaryDNS";
@@ -156,6 +159,10 @@ public abstract class YealinkConstants {
     public static final String AUTOPROVISIONING_SERVER_URL_V8X_SETTING = "upgrade/autoprovision/"
             + "auto_provision.server.url";
     public static final String AUTOPROVISIONING_SERVER_ADDRESS_V6X_SETTING = "upgrade/autoprovision/server_address";
+    public static final String AUTOPROVISIONING_COMMON_FILE_NAME_V7X_SETTING = "upgrade/autoprovision/"
+        + "auto_provision.common_file_name";
+    public static final String AUTOPROVISIONING_COMMON_FILE_NAME_V8X_SETTING = "upgrade/autoprovision/"
+        + "auto_provision.common_file_name";
     public static final String ADVANCED_MUSIC_SERVER_URI_V6X_SETTING = "account/MusicServerUri";
     public static final String ADVANCED_MUSIC_SERVER_URI_V7X_SETTING = "advanced/music_server_uri";
     public static final String ADVANCED_MUSIC_SERVER_URI_V8X_SETTING = "advanced/music_server_uri";

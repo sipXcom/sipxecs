@@ -379,9 +379,9 @@
             <option><value>G7221C.24kbps</value></option>
             <option><value>G7221C.32kbps</value></option>
             <option><value>G7221C.48kbps</value></option>
-            <option><value>Lin16.16ksps</value></option>
-            <option><value>Lin16.32ksps</value></option>
-            <option><value>Lin16.48ksps</value></option>
+            <option><value>Lin16.16kbps</value></option>
+            <option><value>Lin16.32kbps</value></option>
+            <option><value>Lin16.48kbps</value></option>
             <option><value>Siren14.24kbps</value></option>
             <option><value>Siren14.32kbps</value></option>
             <option><value>Siren14.48kbps</value></option>
@@ -405,11 +405,11 @@
             <option><value>G7221C.24kbps</value></option>
             <option><value>G7221C.32kbps</value></option>
             <option><value>G7221C.48kbps</value></option>
-            <option><value>Lin16.8ksps</value></option>
-            <option><value>Lin16.16ksps</value></option>
-            <option><value>Lin16.32ksps</value></option>
-            <option><value>Lin16.44ksps</value></option>
-            <option><value>Lin16.48ksps</value></option>
+            <option><value>Lin16.8kbps</value></option>
+            <option><value>Lin16.16kbps</value></option>
+            <option><value>Lin16.32kbps</value></option>
+            <option><value>Lin16.44kbps</value></option>
+            <option><value>Lin16.48kbps</value></option>
             <option><value>Siren14.24kbps</value></option>
             <option><value>Siren14.32kbps</value></option>
             <option><value>Siren14.48kbps</value></option>

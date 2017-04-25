@@ -20,34 +20,66 @@ package org.sipfoundry.sipxconfig.phone.yealink;
 import org.sipfoundry.sipxconfig.address.Address;
 import org.sipfoundry.sipxconfig.common.User;
 import org.sipfoundry.sipxconfig.common.SipUri;
+import org.sipfoundry.sipxconfig.common.SpecialUser;
 import org.sipfoundry.sipxconfig.device.DeviceDefaults;
+import org.sipfoundry.sipxconfig.mwi.Mwi;
+import org.sipfoundry.sipxconfig.permission.PermissionName;
 import org.sipfoundry.sipxconfig.phone.Line;
 import org.sipfoundry.sipxconfig.setting.SettingEntry;
+import org.sipfoundry.sipxconfig.speeddial.SpeedDial;
+import org.sipfoundry.sipxconfig.speeddial.SpeedDialManager;
 
 public class YealinkLineDefaults {
+	private SpeedDialManager m_speedDialManager;
     private final DeviceDefaults m_defaults;
     private final Line m_line;
     private final String m_mac;
+    private static final String PROVISION_AOR = "%s~%s";
 
-    YealinkLineDefaults(DeviceDefaults defaults, Line line, String mac) {
+    YealinkLineDefaults(DeviceDefaults defaults, Line line, String mac, SpeedDialManager speedDialManager) {
         m_defaults = defaults;
         m_line = line;
         m_mac = mac;
+        m_speedDialManager = speedDialManager;
     }
 
     @SettingEntry(paths = {
+        YealinkConstants.LABEL_V6X_SETTING,
+        YealinkConstants.LABEL_V7X_SETTING,
+        YealinkConstants.LABEL_V8X_SETTING
+        })
+    public String getLineLabel() {
+        // load old default for backward compatibility
+        String userName = getUserName();
+        User user = m_line.getUser();
+        // Check if this is a special provisional line
+        // if so overwrite label with ID: xxx
+        if(user != null && userName.startsWith(
+            SpecialUser.SpecialUserType.PHONE_PROVISION.getUserName())) {
+            userName = user.getDisplayName();
+        }
+        return userName;
+    }
+    
+    @SettingEntry(paths = {
             YealinkConstants.USER_ID_V6X_SETTING,
             YealinkConstants.USER_ID_V7X_SETTING,
-            YealinkConstants.USER_ID_V8X_SETTING,
-            YealinkConstants.LABEL_V6X_SETTING,
-            YealinkConstants.LABEL_V7X_SETTING,
-            YealinkConstants.LABEL_V8X_SETTING
+            YealinkConstants.USER_ID_V8X_SETTING
             })
     public String getUserName() {
         String userName = null;
         User user = m_line.getUser();
         if (user != null) {
             userName = user.getUserName();
+            
+            if (userName.startsWith(
+                SpecialUser.SpecialUserType.PHONE_PROVISION.getUserName())) {
+                // If we have a provision user we have to add the specific short HASH
+                userName = String.format(PROVISION_AOR,
+                    SpecialUser.SpecialUserType.PHONE_PROVISION.getUserName(),
+                    user.getLastName());
+                
+            }
         }
         return userName;
     }
@@ -162,19 +194,20 @@ public class YealinkLineDefaults {
             YealinkConstants.ADVANCED_BLF_SERVER_URI_V7X_SETTING,
             YealinkConstants.ADVANCED_BLF_SERVER_URI_V8X_SETTING})
     public String getRlsServerUri() {
-        String rlsUri;
+        String rlsUri = "";
         User u = m_line.getUser();
         if (u != null) {
-            rlsUri = SipUri.format("~~rl~C~"+u.getUserName(), m_defaults.getDomainName(), false);
-        } else {
-            rlsUri = "";
+            SpeedDial sd = m_speedDialManager.getSpeedDialForUser(m_line.getUser(), false);
+        	if(sd != null && sd.isBlf()) {
+                rlsUri = SipUri.format("~~rl~C~"+u.getUserName(), m_defaults.getDomainName(), false);
+        	}
         }
         return rlsUri;
     }
 
 	@SettingEntry(paths = {
             YealinkConstants.ACD_USER_ID_V7X_SETTING,
-        YealinkConstants.ACD_USER_ID_V8X_SETTING})
+            YealinkConstants.ACD_USER_ID_V8X_SETTING})
     public String getAcdUserId() {
         String acdUserId;
         User u = m_line.getUser();
@@ -185,5 +218,17 @@ public class YealinkLineDefaults {
         }
         return acdUserId;
     }
-
+	
+	@SettingEntry(paths = {
+            YealinkConstants.SUBSCRIBE_MWI_V6X_SETTING,
+            YealinkConstants.SUBSCRIBE_MWI_V7X_SETTING,
+            YealinkConstants.SUBSCRIBE_MWI_V8X_SETTING})
+    public boolean getSubscribeMwi() {
+        boolean isServiceEnabled = m_line.getPhone().getFeatureManager().isFeatureEnabled(Mwi.FEATURE);
+        if (isServiceEnabled && m_line.getUser() != null) {
+        	return m_line.getUser().hasPermission(PermissionName.VOICEMAIL);
+        } else {
+        	return false;
+        }
+    }
 }

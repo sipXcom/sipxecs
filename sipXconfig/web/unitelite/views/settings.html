@@ -602,20 +602,22 @@
                             <input type="text" class="form-control" placeholder="Number"
                               data-ng-model="userSettings.speed.data.buttons[$index].number"
                               data-ng-pattern="userSettings.speed.data.buttons[$index].pattern"
-                              data-ng-required="true">
+                              data-ng-required="true"
+                              data-ng-disabled="userSettings.speed.data.groupSpeedDial">
                           </td>
                           <td>
                             <input type="text" class="form-control" placeholder="Name"
                               data-ng-model="userSettings.speed.data.buttons[$index].label"
-                              data-ng-required="true">
+                              data-ng-required="true"
+                              data-ng-disabled="userSettings.speed.data.groupSpeedDial">
                           </td>
                           <td>
                             <input type="checkbox" class="form-control pull-left"
                               data-ng-model="userSettings.speed.data.buttons[$index].blf"
-                              data-ng-disabled="userSettings.speed.data.canSubscribeToPresence === false">
+                              data-ng-disabled="userSettings.speed.data.canSubscribeToPresence === false || userSettings.speed.data.groupSpeedDial">
                           </td>
                           <td>
-                            <div class="move-wrapper">
+                            <div class="move-wrapper" data-ng-if="!userSettings.speed.data.groupSpeedDial">
                               <i class="icon-arrow_collapse_up"
                                 data-ng-click="userSettings.speed.move($index, $index-1); formSpeed.$setDirty();"></i>
                               <i class="icon-arrow_collapse_down"
@@ -623,7 +625,7 @@
                             </div>
                           </td>
                           <td>
-                            <div class="tooltip-wrapper">
+                            <div class="tooltip-wrapper" data-ng-if="!userSettings.speed.data.groupSpeedDial">
                               <span class="close-inline" title="Remove">
                                 <i class="icon-close"
                                   data-ng-click="userSettings.speed.removeEntry($index); formSpeed.$setDirty();"></i>
@@ -635,6 +637,7 @@
                           <td colspan="4">
                             <p class="add-btn">
                               <button type="button" class="btn btn-link" title="Add speed dial"
+                                data-ng-disabled="userSettings.speed.data.groupSpeedDial"
                                 data-ng-click="userSettings.speed.addEntry(); formSpeed.$setDirty();">
                                 <b>+</b>
                               </button>

@@ -56,8 +56,8 @@
             </span>
             <span class="name">
               {{ audio.callerIdName === "null" ? audio.author : audio.callerIdName }}
-              <span class="id" ng-click="voicemail.clickToCall(audio.callerIdNumber)">
-                {{  audio.callerIdNumber === "null" ? "" : (" - " + audio.callerIdNumber) }}</span>
+              <span class="id" ng-click="voicemail.clickToCall(audio.callerIdNumber, audio.authorExtension)">
+                {{  audio.callerIdNumber === "null" ? (" - " + audio.authorExtension) : (" - " + audio.callerIdNumber) }}</span>
               <span class="label label-primary"
                 data-ng-if="audio.heard === false">New</span>
             </span>-
@@ -92,6 +92,7 @@
             <div class="btn-wrapper">
               <div class="btn-group btn-group-xs">
                 <a target="_self"
+                  data-ng-click="voicemail.treatLeftClick($event, audio.id)"
                   data-ng-if="audio.href"
                   data-ng-href="{{ audio.format=='mp3' ? audio.href + '.mp3' : audio.href + '.wav' }}"
                   download="{{ audio.format=='mp3' ? audio.subject + '.mp3' : audio.subject + '.wav' }}"
