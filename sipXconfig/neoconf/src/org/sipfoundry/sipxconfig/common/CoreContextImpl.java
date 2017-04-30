@@ -955,6 +955,49 @@ public abstract class CoreContextImpl extends SipxHibernateDaoSupport<User> impl
         User newUser = newUser();
         newUser.setUserName(specialUser.getUserName());
         newUser.setSipPassword(specialUser.getSipPassword());
+        
+        // if this is the provisioning user we don't want to have to much permissions
+        // these are auto provisioned phones which better shouldn't have dialout
+        // permissions at all
+        if (specialUserType == SpecialUserType.PHONE_PROVISION) {
+            // We remove all system permissions for provisioning user
+            newUser.setSettingTypedValue(
+                PermissionName.EXCHANGE_VOICEMAIL.getPath(), false);
+            newUser.setSettingTypedValue(
+                PermissionName.FREESWITH_VOICEMAIL.getPath(), false);
+            newUser.setSettingTypedValue(
+                PermissionName.INTERNATIONAL_DIALING.getPath(), false);
+            newUser.setSettingTypedValue(
+                PermissionName.LOCAL_DIALING.getPath(), false);
+            newUser.setSettingTypedValue(
+                PermissionName.LONG_DISTANCE_DIALING.getPath(), false);
+            newUser.setSettingTypedValue(
+                PermissionName.MOBILE.getPath(), false);
+            newUser.setSettingTypedValue(
+                PermissionName.MUSIC_ON_HOLD.getPath(), false);
+            newUser.setSettingTypedValue(
+                PermissionName.NINEHUNDERED_DIALING.getPath(), false);
+            newUser.setSettingTypedValue(
+                PermissionName.PERSONAL_AUTO_ATTENDANT.getPath(), false);
+            newUser.setSettingTypedValue(
+                PermissionName.RECORD_SYSTEM_PROMPTS.getPath(), false);
+            newUser.setSettingTypedValue(
+                PermissionName.SUBSCRIBE_TO_PRESENCE.getPath(), false);
+            newUser.setSettingTypedValue(
+                PermissionName.SUPERADMIN.getPath(), false);
+            
+            // We could allow this theoretically but it would be better
+            // to only allow real users to dial out
+            newUser.setSettingTypedValue(
+                PermissionName.TOLL_FREE_DIALING.getPath(), false);
+            newUser.setSettingTypedValue(
+                PermissionName.TUI_CHANGE_PIN.getPath(), false);
+            newUser.setSettingTypedValue(
+                PermissionName.VOICEMAIL.getPath(), false);
+            
+            // Emergency dialing is the only allowed thing!
+            // Does not matter, cause we can't disable it at all
+        }
         return newUser;
     }
 
