@@ -343,9 +343,10 @@ uniteWeb.config([
       controller: [
         '$scope',
         '$location',
+        '$cookies',
         'restService',
         'uiService',
-        function ($scope, $location, restService, uiService) {
+        function ($scope, $location, $cookies, restService, uiService) {
           $scope.received = true;
 
           restService.getLogindetails().
@@ -353,6 +354,16 @@ uniteWeb.config([
               restService.updateCredentials(data['login-details']['userName']);
               uiService.secondary.permission.init();
               restService.connected = true;
+
+              // set closeWarning notification from local storage(default value true)
+              var closeWarnID = restService.user+"closeWarn";
+              if (localStorage.getItem(closeWarnID) == 'false') {
+                delete $cookies.logoutWarn;
+              }
+              else {
+                $cookies.logoutWarn = true;
+              }
+
             }, function (err) {
               console.log(err);
             }).
@@ -378,9 +389,10 @@ uniteWeb.config([
         controller: [
           '$scope',
           '$location',
+          '$cookies',
           'restService',
           'uiService',
-          function ($scope, $location, restService, uiService) {
+          function ($scope, $location, $cookies, restService, uiService) {
             $scope.received = true;
 
             restService.getLogindetails().
@@ -388,6 +400,16 @@ uniteWeb.config([
                 restService.updateCredentials(data['login-details']['userName']);
                 uiService.secondary.permission.init();
                 restService.connected = true;
+
+                // set closeWarning notification from local storage(default value true)
+                var closeWarnID = restService.user+"closeWarn";
+                if (localStorage.getItem(closeWarnID) == 'false') {
+                  delete $cookies.logoutWarn;
+                }
+                else {
+                  $cookies.logoutWarn = true;
+                }
+
               }, function (err) {
                 console.log(err);
               }).
@@ -460,16 +482,18 @@ uniteWeb.run([
   function ($cookies, $templateCache) {
 
     angular.element(window).on('beforeunload', function (e) {
-      //show warning in case close/reload unite lite
-      e = e || window.event;
+      if ($cookies.logoutWarn) {
+        //show warning in case close/reload unite lite
+        e = e || window.event;
 
-      // For IE and Firefox prior to version 4
-      if (e) {
-        e.returnValue = 'Are you sure that you want to leave uniteme?';
+        // For IE and Firefox prior to version 4
+        if (e) {
+          e.returnValue = 'Are you sure that you want to leave uniteme?';
+        }
+
+        // For Safari
+        return 'Are you sure that you want to leave uniteme?';
       }
-
-      // For Safari
-      return 'Are you sure that you want to leave uniteme?';
     });
   }
 ]);
@@ -2642,13 +2666,14 @@ uw.service('restService', [
 
   uw.service('uiService', [
     '$rootScope',
+    '$cookies',
     '$interval',
     '$sce',
     'sharedFactory',
     'restService',
     '_',
     'CONFIG',
-    function ($rootScope, $interval, $sce, sharedFactory, restService, _, CONFIG) {
+    function ($rootScope, $cookies, $interval, $sce, sharedFactory, restService, _, CONFIG) {
 
       var activityList = {
         main: null
@@ -4304,6 +4329,15 @@ uw.service('restService', [
             secondary.settings.errors.confBridge     = null;
             secondary.settings.errors.moh            = null;
 
+            var closeWarnID = restService.user+"closeWarn";
+            if (localStorage.getItem(closeWarnID) == 'false') {
+              secondary.settings.user.closeWarn = false;
+              delete $cookies.logoutWarn;
+            } else {
+              secondary.settings.user.closeWarn = true;
+              $cookies.logoutWarn = true;
+            }
+
             restService.getImBot().then(function (data) {
               secondary.settings.user.buddy = data;
             }).catch(function (err) {
@@ -4384,6 +4418,7 @@ uw.service('restService', [
 
           save: function (formUserSettings) {
 
+            saveCloseWarn();
             savePassword();
             saveImBot();
             saveVm();
@@ -4393,55 +4428,66 @@ uw.service('restService', [
             if(secondary.settings.errors.confBridge != true)
               saveConf();
 
-              function savePassword() {
-                var pass = angular.copy(secondary.settings.user.pass);
-                if (pass.length === 0) {
-                  return;
-                }
-                if (pass.length < 8) {
-                  secondary.settings.user.errors.pass = true;
-                  return
-                }
-                secondary.settings.user.loading = true;
-                restService.putPassword(pass).then(function (data) {
+            function saveCloseWarn() {
+              var closeWarnID = restService.user+"closeWarn";
+              if (secondary.settings.user.closeWarn) {
+                localStorage.setItem(closeWarnID, 'true');
+                $cookies.logoutWarn = true;
+              } else {
+                localStorage.setItem(closeWarnID, 'false');
+                delete $cookies.logoutWarn;
+              }
+            }
+
+            function savePassword() {
+              var pass = angular.copy(secondary.settings.user.pass);
+              if (pass.length === 0) {
+                return;
+              }
+              if (pass.length < 8) {
+                secondary.settings.user.errors.pass = true;
+                return
+              }
+              secondary.settings.user.loading = true;
+              restService.putPassword(pass).then(function (data) {
+                secondary.settings.user.loading = null;
+              }, function (err) {
+                console.log(err);
+              })
+            }
+
+            function saveImBot() {
+              var buddy = angular.copy(secondary.settings.user.buddy);
+              secondary.settings.user.loading = true;
+              restService.putImBot(buddy).then(function (data) {
+                restService.getImBot().then(function (data) {
                   secondary.settings.user.loading = null;
-                }, function (err) {
-                  console.log(err);
-                })
-              }
-
-              function saveImBot() {
-                var buddy = angular.copy(secondary.settings.user.buddy);
-                secondary.settings.user.loading = true;
-                restService.putImBot(buddy).then(function (data) {
-                  restService.getImBot().then(function (data) {
-                    secondary.settings.user.loading = null;
-                    secondary.settings.user.buddy = data;
-                  }, function (err) {
-                    secondary.settings.user.loading = null;
-                    console.log(err);
-                  })
+                  secondary.settings.user.buddy = data;
                 }, function (err) {
                   secondary.settings.user.loading = null;
                   console.log(err);
                 })
-              }
+              }, function (err) {
+                secondary.settings.user.loading = null;
+                console.log(err);
+              })
+            }
 
-              function saveVm() {
-                if (secondary.settings.user.vm.main.email) {
-                  secondary.settings.user.vm.main.emailAttachType      = 'YES';
-                  secondary.settings.user.vm.main.emailFormat          = 'FULL';
-                }
-                if (secondary.settings.user.vm.main.altEmail) {
-                  secondary.settings.user.vm.main.altEmailAttachType   = 'YES';
-                  secondary.settings.user.vm.main.altEmailFormat       = 'FULL';
-                }
-                secondary.settings.user.vm.main.greeting = secondary.settings.user.vm.selected.val;
-
-                restService.putVmPrefs(angular.copy(secondary.settings.user.vm.main)).catch(function (err) {
-                  console.log(err);
-                })
+            function saveVm() {
+              if (secondary.settings.user.vm.main.email) {
+                secondary.settings.user.vm.main.emailAttachType      = 'YES';
+                secondary.settings.user.vm.main.emailFormat          = 'FULL';
               }
+              if (secondary.settings.user.vm.main.altEmail) {
+                secondary.settings.user.vm.main.altEmailAttachType   = 'YES';
+                secondary.settings.user.vm.main.altEmailFormat       = 'FULL';
+              }
+              secondary.settings.user.vm.main.greeting = secondary.settings.user.vm.selected.val;
+
+              restService.putVmPrefs(angular.copy(secondary.settings.user.vm.main)).catch(function (err) {
+                console.log(err);
+              })
+            }
 
             function saveMoh() {
               restService.putMohSettings(angular.copy(secondary.settings.user.moh.selected.val)).catch(function (err) {

@@ -709,6 +709,15 @@
                     </span>
                   </div>
                 </div>
+                <div class="form-group clearfix">
+                  <label class="col-sm-3 control-label">Browser Exit Warning</label>
+                  <div class="col-sm-9">
+                    <input type="checkbox" class="form-control" data-ng-model="userSettings.user.closeWarn">
+                    <span class="help-block">
+                      Web browser will issue a warning if you try to close the window or logout when logged in.
+                    </span>
+                  </div>
+                </div>
                 <div class="alert alert-warning alert-dismissable animated fade"
                   data-ng-if="userSettings.user.errors.pass">
                   <button type="button" class="close" data-ng-click="userSettings.user.errors.pass = null">&times;</button>
