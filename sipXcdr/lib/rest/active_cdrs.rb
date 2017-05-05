@@ -28,6 +28,7 @@ class ActiveCdrs < WEBrick::HTTPServlet::AbstractServlet
     end
 
     resp.body="#{doc}"
+    resp["Content-Type"] = 'text/xml; charset=UTF-8'
     raise WEBrick::HTTPStatus::OK
   end
 
