@@ -1916,6 +1916,12 @@
       </type>
       <value>0</value>
     </setting>
+    <setting name="callWaiting.enable">
+      <type>
+        <boolean />
+      </type>
+      <value>1</value>
+    </setting>
     <setting name="callWaiting.ring">
       <type>
         <enum>
