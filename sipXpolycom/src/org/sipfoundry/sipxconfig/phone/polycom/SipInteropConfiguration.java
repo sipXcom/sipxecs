@@ -35,7 +35,6 @@ public class SipInteropConfiguration extends ProfileContext<PolycomPhone> {
 
     static {
         s_callSettings.addExcludes("call/donotdisturb.*$");
-        s_callSettings.addExcludes("call/callWaiting.*$");
         s_callSettings.addExcludes("call/shared.*$");
     }
 
