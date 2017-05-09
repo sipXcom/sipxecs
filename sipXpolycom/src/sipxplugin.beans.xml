@@ -720,45 +720,16 @@
     </property>
     <property name="versions">
       <list>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_4_0_X"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_4_1_X"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_4_1_0"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_4_1_2"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_4_1_3"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_4_1_4"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_4_1_5"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_4_1_6"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_4_1_7"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_4_1_8"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_0_0"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_0_1"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_0_2"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_1_1"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_1_2"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_1_3"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_2_0"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_2_1"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_2_2"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_2_3"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_2_4"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_2_5"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_3_0"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_3_1"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_3_2"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_3_3"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_4_0"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_4_1"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_4_2"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_4_3"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_4_4"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_4_5"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_4_6"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_5_0"/>
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_5_1"/>
+        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_4_0_RP"/>
+        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_4_1_RP"/>
+        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_4_2_RP"/>
+        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_4_3_RP"/>
+        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_4_4_RP"/>
+        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_4_5_RP"/>
       </list>
     </property>
     <property name="defaultVersion">
-        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_4_1_5"/>
+        <ref local="org.sipfoundry.sipxconfig.phone.polycom.PolycomModel.VER_5_4_0_RP"/>
     </property>
   </bean>
   <bean id="polycomVVX600" parent="polycomModel">
