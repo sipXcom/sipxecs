@@ -28,7 +28,7 @@ BCG729 codec plugin for mediastreamer2.
 %setup -q
 
 %build
-%configure --enable-static
+CFLAGS=-fPIC %configure --enable-static
 %__make %{?_smp_mflags}
 
 %install
