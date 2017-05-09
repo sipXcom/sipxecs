@@ -127,7 +127,8 @@ lib_all = \
   libjsonrpccpp \
   libevent2 \
   mongo-cxx-driver \
-  mongodb
+  mongodb \
+  bcg729
 
 lib_exclude_fedora_16 = \
   epel \
