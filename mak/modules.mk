@@ -59,7 +59,8 @@ sipx_extra = \
   sipXtools \
   sipXcallback \
   sipXtcpdumplog \
-  sipXdashboard
+  sipXdashboard \
+  mod_bcg729
 
 # sipxecs projects that are NOT essential for a running communication system
 # and are related to configuration system. Many are phone plugins

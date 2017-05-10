@@ -1,0 +1,48 @@
+%define _prefix /usr/lib64/freeswitch/mod
+%define prefix %{_prefix} 
+
+Name: @PACKAGE@
+Version: @VERSION@
+Release: @PACKAGE_REVISION@
+
+Summary: mod_bcg729
+License: LGPL
+Group: Telcommunications
+Vendor: ezuce
+Packager: ezuce <info@ezuce.com>
+
+Requires: bcg729
+Requires: freeswitch
+
+BuildRequires: automake
+BuildRequires: libtool
+BuildRequires: gcc-c++
+BuildRequires: freeswitch-devel
+BuildRequires: bcg729-devel
+
+Source: %name-%version.tar.gz
+
+BuildRoot: %{_tmppath}/%name-%version-root
+
+%description
+FreeSWITCH module for BCG729 codec
+
+%prep
+%setup -q
+
+%build
+gcc -fPIC -O3 -fomit-frame-pointer -fno-exceptions -Wall -std=c99 -pedantic -m64 -mtune=generic -I/usr/include -Ibcg729/include -I/usr/include/freeswitch -c src/mod_bcg729.c
+gcc -fPIC -O3 -fomit-frame-pointer -fno-exceptions -Wall -std=c99 -pedantic -m64 -mtune=generic -I/usr/include -Ibcg729/include -I/usr/include/freeswitch -shared -Xlinker -x -o mod_bcg729.so mod_bcg729.o -lm -Wl,-static -Lbcg729/src/.libs -lbcg729 -Wl,-Bdynamic
+
+%install
+rm -rf $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT/usr/lib64/freeswitch/mod/
+/usr/bin/install -c mod_bcg729.so $RPM_BUILD_ROOT/usr/lib64/freeswitch/mod/mod_bcg729.so
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,freeswitch,daemon)
+%{prefix}/mod_bcg729.so*
+
