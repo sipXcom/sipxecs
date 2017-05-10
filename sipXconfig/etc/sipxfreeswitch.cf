@@ -130,8 +130,8 @@ bundle edit_line sipxfreeswitch_modules {
     "mods_part" string => "$(sipx.SIPX_CFDATA)/$(sipx.location_id)/modules.conf.xml.part";
 
   classes:
-    "fs_g729" expression => fileexists("/usr/lib64/mod/mod_com_g729.so");
-    "bc_g729" expression => fileexists("/usr/lib64/mod/mod_bcg729.so");
+    "fs_g729" expression => fileexists("/usr/lib64/freeswitch/mod/mod_com_g729.so");
+    "bc_g729" expression => fileexists("/usr/lib64/freeswitch/mod/mod_bcg729.so");
     "has_mods_part" expression => fileexists("$(mods_part)");
 
   insert_lines:
@@ -169,7 +169,7 @@ fs_g729::
     <load module=\"mod_com_g729\"/>
 ";
 
-!fs_g729::
+!fs_g729.!bc_g729::
 "
     <load module=\"mod_g729\"/>
 ";
@@ -208,10 +208,6 @@ any::
   has_mods_part::
     "$(mods_part)"
       insert_type => "file";
-
-"
-    <load module=\"mod_g729\"/>
-";
 
 any::
 "
