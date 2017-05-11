@@ -631,7 +631,7 @@ SipRouter::applyCongestionPolicy(SipMessage *sipRequest, UtlString &policy)
 {
     if (policy == CONGESTION_POLICY_DEFAULT)
     {
-        OS_LOG_DEBUG(FAC_SIP, "SipRouter::handleCongestion - response with " << SIP_SERVICE_UNAVAILABLE_CODE);
+        OS_LOG_DEBUG(FAC_SIP, "SipRouter::applyCongestionPolicy - response with " << SIP_SERVICE_UNAVAILABLE_CODE);
         SipMessage finalResponse;
         finalResponse.setResponseData(sipRequest, SIP_SERVICE_UNAVAILABLE_CODE, "Queue Size Is Too High");
 
@@ -648,7 +648,7 @@ SipRouter::applyCongestionPolicy(SipMessage *sipRequest, UtlString &policy)
     else if (policy == CONGESTION_POLICY_IGNORE)
     {
         // do nothing but log
-        OS_LOG_DEBUG(FAC_SIP, "SipRouter::handleCongestion - ignore request");
+        OS_LOG_DEBUG(FAC_SIP, "SipRouter::applyCongestionPolicy - ignore request");
     }
 }
 
@@ -684,9 +684,14 @@ SipRouter::handleCongestion(SipMessage *sipRequest, bool midDialog)
                         << transportQueueSize << " " << transportMaxQueueSize);
             }
 
-            OS_LOG_INFO(FAC_SIP, "SipRouter::handleCongestion - queue sizes for new transaction are "
-                    << "transportQueue: " << transportQueueSize << "/" <<  transportMaxQueueSize
-                    << " proxyQueue: " << proxyQueueSize << "/" << proxyMaxQueueSize);
+            std::ostringstream qstatsMsg;
+
+            qstatsMsg << " proxyQueue: " << proxyQueueSize << "/" << proxyMaxQueueSize
+                      << ", transportQueue: " << transportQueueSize << "/" <<  transportMaxQueueSize
+                      << ", transaction count " << transactionCount << "/" << _maxTransactionCount
+                      << ", threshold of congestion policy applicaion: " << _rejectOnFilledQueuePercent << "%";
+
+            OS_LOG_DEBUG(FAC_SIP, "SipRouter::handleCongestion - queue sizes (current/max): " << qstatsMsg.str());
 
             bool transportQueueSizeViolation = transportQueueSize > ((transportMaxQueueSize * _rejectOnFilledQueuePercent) / 100);
             bool proxyQueueSizeViolation = proxyQueueSize > ((proxyMaxQueueSize * _rejectOnFilledQueuePercent) / 100);
@@ -696,12 +701,7 @@ SipRouter::handleCongestion(SipMessage *sipRequest, bool midDialog)
             {
                 if (!midDialog)
                 {
-
-                    OS_LOG_INFO(FAC_SIP, "SipRouter::handleCongestion - rejecting incoming transaction. Queue size is too big:"
-                            << " proxyQueue: " << proxyQueueSize << "/" << proxyMaxQueueSize
-                            << " transportQueue: " << transportQueueSize << "/" <<  transportMaxQueueSize
-                            << " which exceeds " << _rejectOnFilledQueuePercent << "%"
-                            << " transaction count " << transactionCount << "/" << _maxTransactionCount);
+                    OS_LOG_INFO(FAC_SIP, "SipRouter::handleCongestion - apply congestion policy for incoming transaction. Queue sizes (current/max):" << qstatsMsg.str());
 
                     applyCongestionPolicy(sipRequest, _congestionPolicy);
                     return true; // Simply return true to indicate we have handled the request
@@ -717,12 +717,7 @@ SipRouter::handleCongestion(SipMessage *sipRequest, bool midDialog)
                 if (!_lastFilledQueueAlarmLog || now >= _lastFilledQueueAlarmLog + FILLED_QUEUE_ALARM_RATE)
                 {
                     _lastFilledQueueAlarmLog = now;
-                    OS_LOG_EMERGENCY(FAC_SIP, "ALARM_PROXY_FILLED_QUEUE Queue Size or Transanction Count is too big:"
-                            << " proxyQueue: " << proxyQueueSize << "/" << proxyMaxQueueSize
-                            << " transportQueue: " << transportQueueSize << "/" <<  transportMaxQueueSize
-                            << " which exceeds " << _rejectOnFilledQueuePercent << "%"
-                            << " transactionCount: " << transactionCount
-                            << " which exceeds " << _maxTransactionCount);
+                    OS_LOG_EMERGENCY(FAC_SIP, "ALARM_PROXY_FILLED_QUEUE Queue Size or Transanction Count is too big:" << qstatsMsg.str());
                 }
             }
         }
