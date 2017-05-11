@@ -75,10 +75,12 @@ static const int DISPATCH_SPEED_SAMPLES_COUNT = 5;
 static const int DISPATCH_MAX_YIELD_TIME_IN_SEC = 32;
 static const int MAX_DISPATCH_DELAY_IN_MS = 200; // This is 5 messages per sec which is so poor!
 static const int ALARM_ON_CONSECUTIVE_YIELD = 5;
+static const int DEFAULT_RETRY_AFTER = 60;
 
 static const char* X_SIPX_CALLER_LOCATIONS = "X-Sipx-Caller-Locations";
 static const char* X_SIPX_CALLER_LOCATION_FALLBACK = "X-Sipx-Caller-Location-Fallback";
 static const char* X_SIPX_CALLER_LOCATIONS_DONE = "X-Sipx-Caller-Locations-Done";
+static const char* RETRY_AFTER_HDR = "Retry-After";
 
 static const char* CONGESTION_POLICY_DEFAULT = "SERVICE_UNAVAILABLE";
 static const char* CONGESTION_POLICY_IGNORE = "IGNORE";
@@ -138,6 +140,7 @@ SipRouter::SipRouter(SipUserAgent& sipUserAgent,
    ,_trustSbcRegisteredCalls(FALSE)
    ,_suppressAlertIndicatorForTransfers(FALSE)
    ,_congestionPolicy(CONGESTION_POLICY_DEFAULT)
+   ,_503retryAfter(DEFAULT_RETRY_AFTER)
 {
    // Get Via info to use as defaults for route & realm
    UtlString dnsName;
@@ -430,7 +433,14 @@ void SipRouter::readConfig(OsConfigDb& configDb, const Url& defaultUri)
        _congestionPolicy = CONGESTION_POLICY_DEFAULT;
    }
 
-    OS_LOG_INFO(FAC_SIP, "SipRouter::readConfig CongestionPolicy: " << _congestionPolicy);
+   OS_LOG_INFO(FAC_SIP, "SipRouter::readConfig CongestionPolicy: " << _congestionPolicy);
+
+   if (OS_SUCCESS != configDb.get("SIPX_PROXY_RETRY_AFTER", _503retryAfter))
+   {
+       _503retryAfter = DEFAULT_RETRY_AFTER;
+   }
+
+   OS_LOG_INFO(FAC_SIP, "SipRouter::readConfig retryAfter: " << _503retryAfter);
 }
 
 // Destructor
@@ -624,6 +634,15 @@ SipRouter::applyCongestionPolicy(SipMessage *sipRequest, UtlString &policy)
         OS_LOG_DEBUG(FAC_SIP, "SipRouter::handleCongestion - response with " << SIP_SERVICE_UNAVAILABLE_CODE);
         SipMessage finalResponse;
         finalResponse.setResponseData(sipRequest, SIP_SERVICE_UNAVAILABLE_CODE, "Queue Size Is Too High");
+
+        if (_503retryAfter != 0)
+        {
+            std::ostringstream os;
+            os << _503retryAfter;
+
+            finalResponse.setHeaderValue(RETRY_AFTER_HDR, os.str().c_str(), 0);
+        }
+
         mpSipUserAgent->send(finalResponse);
     }
     else if (policy == CONGESTION_POLICY_IGNORE)
