@@ -351,6 +351,7 @@ class SipRouter : public OsServerTask
    FinalResponseModifiers _finalResponseModifiers;
    UtlBoolean _suppressAlertIndicatorForTransfers;
    UtlString _congestionPolicy;
+   int _503retryAfter;
 };
 
 /* ============================ INLINE METHODS ============================ */
