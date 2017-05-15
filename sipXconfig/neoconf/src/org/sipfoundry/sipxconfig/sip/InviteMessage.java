@@ -25,8 +25,9 @@ public class InviteMessage extends JainSipMessage {
 
     // Dummy sdp body for initial INVITE
     private static final String SDP_BODY_FORMAT = "v=0\r\n" + "o=- 978416123 978416123 IN IP4 %1$s\r\n"
-            + "s=SipXconfig\r\n" + "c=IN IP4 %1$s\r\n" + "t=0 0\r\n" + "m=audio 2222 RTP/AVP 0 101\r\n"
-            + "a=sendrecv\r\n" + "a=rtpmap:0 PCMU/8000\r\n" + "a=rtpmap:101 telephone-event/8000\r\n";
+            + "s=SipXconfig\r\n" + "c=IN IP4 %1$s\r\n" + "t=0 0\r\n" + "m=audio 2222 RTP/AVP 0 8 101\r\n"
+            + "a=sendrecv\r\n" + "a=rtpmap:0 PCMU/8000\r\n" + "a=rtpmap:8 PCMA/8000\r\n"
+            + "a=rtpmap:101 telephone-event/8000\r\n";
 
     private static final List<String> METHODS = Arrays.asList(Request.INVITE, Request.ACK, Request.OPTIONS,
             Request.CANCEL, Request.BYE, Request.REFER, Request.NOTIFY);
