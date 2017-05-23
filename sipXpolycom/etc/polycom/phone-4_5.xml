@@ -5657,3 +5657,20 @@
 	  </setting>
       </group>
     </group>
+    <group name="device"  if="(5.[3-9].[0-9])">
+      <setting name="baseProfile">
+        <type>
+          <enum>
+            <option>
+              <label>Generic</label>
+              <value>Generic</value>
+            </option>
+            <option>
+              <label>Lync</label>
+              <value>Lync</value>
+            </option>
+          </enum>
+        </type>
+        <value>Generic</value>
+       </setting>
+    </group>
