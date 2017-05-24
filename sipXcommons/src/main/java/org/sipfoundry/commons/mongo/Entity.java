@@ -1,9 +1,9 @@
 /**
- * Copyright (C) 2015 sipXcom, certain elements licensed under a Contributor Agreement.
+ * Copyright (C) 2017 sipXcom, certain elements licensed under a Contributor Agreement.
  * Contributors retain copyright to elements licensed under a Contributor Agreement.
  * Licensed to the User under the LGPL license.
  */
-package org.sipxcom.sipxconfig.pojo;
+package org.sipfoundry.commons.mongo;
 
 import java.util.List;
 

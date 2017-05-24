@@ -1,0 +1,720 @@
+<type id="true-false">
+  <boolean>
+    <true>
+      <value>true</value>
+    </true>
+    <false>
+      <value>false</value>
+    </false>
+  </boolean>
+</type>
+<type id="transfer_request_style_type">
+  <enum>
+    <option>
+      <value>accept</value>
+    </option>
+    <option>
+      <value>reject</value>
+    </option>   
+  </enum>
+</type>
+<type id="dscp_type">
+  <enum>
+    <option>
+      <value>none</value>
+    </option>
+    <option>
+      <value>CS0</value>
+    </option>
+    <option>
+      <value>CS1</value>
+    </option>
+    <option>
+      <value>CS2</value>
+    </option>
+    <option>
+      <value>CS3</value>
+    </option>
+    <option>
+      <value>CS4</value>
+    </option>
+    <option>
+      <value>CS5</value>
+    </option>
+    <option>
+      <value>CS6</value>
+    </option>
+    <option>
+      <value>CS7</value>
+    </option>
+    <option>
+      <value>AF11</value>
+    </option>
+    <option>
+      <value>AF12</value>
+    </option>
+    <option>
+      <value>AF13</value>
+    </option>
+    <option>
+      <value>AF21</value>
+    </option>
+    <option>
+      <value>AF22</value>
+    </option>
+    <option>
+      <value>AF23</value>
+    </option>
+    <option>
+      <value>AF31</value>
+    </option>
+    <option>
+      <value>AF32</value>
+    </option>
+    <option>
+      <value>AF33</value>
+    </option>
+    <option>
+      <value>AF41</value>
+    </option>
+    <option>
+      <value>AF42</value>
+    </option>
+    <option>
+      <value>AF43</value>
+    </option>
+    <option>
+      <value>EF</value>
+    </option>    
+  </enum>`
+</type>
+<type id="video_capture_size_type">
+  <enum>
+    <option>
+      <value>176x144</value>
+      <label>Low(176x144)</label>
+    </option>
+    <option>
+      <value>352x288</value>
+      <label>Medium(352x288)</label>
+    </option>
+    <option>
+      <value>640x480</value>
+      <label>High(640x480)</label>
+    </option>
+    <option>
+      <value>1280x720</value>
+      <label>Very High(1280x720)</label>
+    </option>
+    <option>
+      <value>1600x1200</value>
+      <label>Ultra High(1600x1200)</label>
+    </option>    
+  </enum>
+</type>
+<type id="video_capture_fps_type">
+  <enum>
+    <option>
+      <value>5fps</value>
+      <label>Low(5 fps)</label>
+    </option>
+    <option>
+      <value>15fps</value>
+      <label>Medium(15 fps)</label>
+    </option>
+    <option>
+      <value>30fps</value>
+      <label>High(30 fps)</label>
+    </option>    
+  </enum>
+</type>
+<type id="mode_type">
+  <enum>
+    <option>
+      <value>none</value>
+    </option>
+    <option>
+      <value>answer_delay</value>
+    </option>
+    <option>
+      <value>answer_instant</value>
+    </option>
+    <option>
+      <value>forward_delay</value>
+    </option>
+    <option>
+      <value>forward_instant</value>
+    </option>
+  </enum>
+</type>
+<type id="open_url_on_event_item_type">
+  <enum>
+    <option>
+      <value>never</value>
+    </option>
+    <option>
+      <value>call</value>
+    </option>
+    <option>
+      <value>presence</value>
+    </option>
+  </enum>
+</type>
+<type id="call_state_type">
+  <enum>
+    <option>
+      <value>ringing</value>
+      <label>Ringing</label>
+    </option>
+    <option>
+      <value>answer</value>
+      <label>Answered</label>
+    </option>
+    <option>
+      <value>rejected</value>
+      <label>Rejected</label>
+    </option>
+    <option>
+      <value>hangup</value>
+      <label>Hang up</label>
+    </option>
+  </enum>
+</type>
+<type id="call_dir_type">
+  <enum>
+    <option>
+      <value>both</value>
+      <label>Both Incoming and Outgoing</label>
+    </option>
+    <option>
+      <value>in</value>
+      <label>Incoming</label>
+    </option>
+    <option>
+      <value>out</value>
+      <label>Outgoing</label>
+    </option>
+  </enum>
+</type>
+<type id="method_type">
+  <enum>
+    <option>
+      <value>url</value>
+      <label>Open URL</label>
+    </option>
+    <option>
+      <value>program</value>
+      <label>Open/Execute Application</label>
+    </option>
+    <option>
+      <value>rest_api</value>
+      <label>REST API</label>
+    </option>
+  </enum>
+</type>
+<type id="language_type">
+  <enum>
+    <option>
+      <value>english</value>
+      <label>English</label>
+    </option>
+    <option>
+      <value>french</value>
+      <label>French</label>
+    </option>
+    <option>
+      <value>deutch</value>
+      <label>Deutch</label>
+    </option>
+  </enum>
+</type>
+<type id="certificate_type">
+  <enum>
+    <option>
+      <value>none</value>
+      <label>Don't use</label>
+    </option>
+    <option>
+      <value>common</value>
+      <label>Use default</label>
+    </option>
+    <option>
+      <value>location</value>
+      <label>Use certificate</label>
+    </option>
+    <option>
+      <value>configuration</value>
+    </option>
+    <option>
+      <value>self-signed</value>
+      <label>Generate self-signed certificate</label>
+    </option>    
+  </enum>
+</type>
+<type id="subscribe_type">
+  <enum>
+    <option>
+      <value>disabled</value>
+      <label>Disabled</label>
+    </option>
+    <option>    
+      <value>before</value>
+      <label>Before registration (Asterisk)</label>
+    </option>
+    <option>
+      <value>after</value>
+      <label>After registration (Cisco)</label>
+    </option>
+    <option>
+      <value>both</value>
+      <label>Both</label>
+    </option>
+  </enum>
+</type>
+<type id="protocol_type">
+  <enum>
+    <option>
+      <value>sip</value>      
+    </option>
+    <option>
+      <value>iax2</value>      
+    </option>
+    <option>
+      <value>xmpp</value>      
+    </option>
+    <option>
+      <value>rtsp</value>      
+    </option>    
+  </enum>  
+</type>
+<type id="SIP_transportType_type">
+  <enum>
+    <option>
+      <value>udp</value>      
+    </option>
+    <option>
+      <value>tcp</value>      
+    </option>
+    <option>
+      <value>tls</value>      
+    </option>       
+  </enum>  
+</type>
+<type id="srtp_mode_type">
+  <enum>
+    <option>
+      <value>none</value>
+      <label>None</label>      
+    </option>
+    <option>
+      <value>sdes</value>
+      <label>SDES</label>      
+    </option>      
+  </enum>  
+</type>
+<type id="dtmf_style_type">
+  <enum>
+    <option>
+      <value>inband</value>
+      <label>Use DTMF Inband</label>
+    </option>
+    <option>
+      <value>outband</value>
+      <label>Use DTMF Outband</label>
+    </option>
+    <option>
+      <value>disabled</value>
+      <label>Disabled</label>
+    </option>
+    <option>
+      <value>SIP_info_numeric</value>
+      <label>Use DTMF SIP INFO Numeric</label>
+    </option>
+    <option>
+      <value>SIP_info_ascii</value>
+      <label>Use DTMF SIP INFO Ascii</label>
+    </option>
+    <option>
+      <value>rfc_2833</value>
+      <label>Use DTMF RFC-2833</label>
+    </option>
+  </enum>
+</type>
+<type id="keep_alive_mode_type">
+  <enum>
+    <option>
+      <value>disabled</value>
+      <label>Disabled</label>
+    </option>
+    <option>
+      <value>default</value>
+      <label>Default(UDP-30s;TCP-180s)</label>
+    </option>
+    <option>
+      <value>custom</value>
+      <value>Custom</value>
+    </option>    
+  </enum>
+</type>
+<type id="re_mode_type">
+  <enum>
+    <option>
+      <value>disabled</value>
+      <label>Disabled</label>
+    </option>
+    <option>
+      <value>default</value>
+      <label>Default (UDP - 30s; TCP - 600s)</label>
+    </option>
+    <option>
+      <value>custom</value>
+      <value>Custom</value>
+    </option>    
+  </enum>
+</type>
+<type id="protocol_suite_type">
+  <enum>
+    <option>
+      <value>sslv23</value>
+      <label>SSL v2/3</label>
+    </option>
+    <option>
+      <value>tlsv1</value>
+      <label>TLS v1</label>
+    </option>
+  </enum>  
+</type>
+<type id="stun_options_type">
+  <enum>
+  <option>
+    <value>disabled</value>
+    <label>Don't use STUN</label>
+  </option>
+  <option>
+    <value>default</value>
+    <label>Use default STUN</label>
+  </option>
+  <option>
+    <value>custom</value>
+    <label>Use custom STUN</label>
+  </option>
+  </enum>  
+</type>
+<type id="contact_service_type">
+ <enum>
+  <option>
+    <value>local</value>
+    <label>ZoiperH5 Contact Service</label>
+  </option>
+  <option>
+    <value>ldap</value>
+    <label> LDAP Contact Service</label>
+  </option>
+  <option>
+    <value>outlook</value>
+    <label>Outlook Contact Service</label>
+  </option>
+  <option>
+    <value>mac</value>
+    <label>Mac Contact Service</label>
+  </option>
+  <option>
+    <value>jabber</value>
+    <label>Jabber Contact Service</label>
+  </option>
+  <option>
+    <value>google</value>
+    <label>Google Contact Service</label>
+  </option>
+  <option>
+    <value>windows</value>
+    <label>Windows Contact Service</label>
+  </option>
+  <option>
+    <value>csv</value>
+    <label>CSV Contact Service</label>
+  </option>
+  <option>
+    <value>xml</value>
+    <label>XML Contact Service</label>
+  </option>
+ </enum>    
+</type>
+<type id="account_mapping_type_type">
+ <enum>
+  <option>
+    <value>none</value>
+    <label>Do not use</label>
+  </option>
+  <option>
+    <value>default</value>
+    <label>Default account</label>
+  </option>
+  <option>
+    <value>custom</value>
+    <label>Custom Account</label>
+  </option>
+ </enum>   
+</type>
+<type id="presence_account_mapping_type_type">
+ <enum>
+  <option>
+    <value>none</value>
+    <label>Do not use</label>
+  </option>
+  <option>
+    <value>default</value>
+    <label>Default account</label>
+  </option>
+ </enum>   
+</type>
+<type id="authentication_type_type">
+ <enum>
+  <option>
+    <value>none</value>
+    <label>None</label>
+  </option>
+  <option>
+    <value>basic</value>
+    <label>Basic</label>
+  </option>
+  <option>
+    <value>url</value>
+    <label>URL</label>
+  </option>
+ </enum> 
+</type>
+<type id="audio_codecs_type">
+  <multi-enum>
+     <option>
+       <value>unknown</value>
+     </option>
+     <option> 
+       <value>G.711 mu-law (PCMU)</value>
+     </option>
+	 <option>
+	   <value>GSM</value>
+	 </option>
+	 <option>
+	   <value>G.723</value>
+	 </option>
+	 <option>
+	   <value>LPC</value>
+	 </option>
+	 <option>
+	   <value>G.711 a-law (PCMA)</value>
+	 </option>
+	 <option>
+	   <value>G.722</value>
+	 </option>
+	 <option>
+	   <value>L16 2CH</value>
+	 </option>
+	 <option>
+	   <value>L16 1CH</value>
+	 </option>
+	 <option>
+	   <value>QCELP</value>
+	 </option>
+	 <option>
+	   <value>CN</value>
+	 </option>
+	 <option>
+	   <value>MPA</value>
+	 </option>
+	 <option>
+	   <value>G.728</value>
+	 </option>
+	 <option>
+	   <value>G.729</value>
+	 </option>
+	 <option>
+	   <value>Speex @ 8000 Hz (Speex Narrow)</value>
+	 </option>
+	 <option>
+	   <value>Speex @ 16000 Hz (Speex Wide)</value>
+	 </option>
+	 <option>
+	   <value>Speex @ 32000 Hz (Speex Ultra)</value>
+	 </option>
+	 <option>
+	   <value>iLBC 30</value>
+	 </option>
+	 <option>
+	   <value>iLBC 20</value>
+	 </option>
+	 <option>
+	   <value>G.726 @ 32 kbps</value>
+	 </option>
+	 <option>
+	   <value>RFC 2833/4733 DTMF (telephone-event)</value>
+	 </option>
+	 <option>
+	   <value>Opus @ 8000 Hz (Opus Narrow)</value>
+	 </option>
+	 <option>
+	   <value>Opus @ 16000 Hz (Opus Wide)</value>
+	 </option>
+	 <option>
+	   <value>Opus @ 24000 Hz (Opus Super)</value>
+	 </option>
+	 <option>
+	   <value>Opus @ 48000 Hz (Opus Full)</value>
+	 </option>
+	 <option>
+	   <value>AMR</value>
+	 </option>
+	 <option>
+	   <value>AMR-WB</value>
+	 </option>
+  </multi-enum>
+</type>
+<type id="video_codecs_type">
+  <multi-enum>
+	 <option>
+	   <value>DVI4 8K</value>
+	 </option>
+	 <option>
+	   <value>DVI4 16K</value>
+	 </option>
+	 <option>
+	   <value>DVI4 11K</value>
+	 </option>
+	 <option>
+	   <value>DVI4 22K</value>
+	 </option>	   
+	 <option>
+	   <value>H.263+ (H263-1998)</value>
+	 </option>
+	 <option>
+	   <value>H.263</value>
+	 </option>
+	 <option>
+	   <value>H.264</value>
+	 </option>
+	 <option>
+	   <value>H.264 (hardware-accelerated)</value>
+	 </option>	 	 
+	 <option>
+	   <value>VP8</value>
+	 </option>
+	 <option>
+	   <value>MJPEG</value>
+	 </option>
+	 <option>
+	   <value>CelB</value>
+	 </option>
+	 <option>
+	   <value>NV</value>
+	 </option>
+	 <option>
+	   <value>H.261</value>
+	 </option>
+	 <option>
+	   <value>MPV</value>
+	 </option>
+	 <option>
+	   <value>MP2T</value>	   
+	 </option>	 	 	 	   
+  </multi-enum>
+</type>  
+<type id="IAX2_dtmf_type">
+ <enum>
+  <option>
+    <value>inband</value>
+    <label>Use DTMF Inband</label>
+  </option>
+  <option>
+    <value>outband</value>
+    <label>Use DTMF Outband</label>
+  </option>
+  <option>
+    <value>disbaled</value>
+    <label>Disabled</label>
+  </option>
+ </enum> 
+</type>
+<type id="profile_state_type">
+   <option>
+    <value>0</value>
+    <label>Not available</label>
+   </option>
+   <option>
+    <value>1</value>
+    <label>Offline</label>
+   </option>
+   <option>
+    <value>2</value>
+    <label>Invisible</label>
+   </option>
+   <option>
+    <value>3</value>
+    <label>Online</label>
+   </option>
+   <option>
+    <value>4</value>
+    <label>Away</label>
+   </option>
+   <option>
+    <value>5</value>
+    <label>Busy</label>
+   </option>
+   <option>
+    <value>6</value>
+    <label> On the phone</label>
+   </option>
+   <option>
+    <value>7</value>
+    <label>Out to lunch</label>
+   </option>
+   <option>
+    <value>8</value>
+    <label>Be right back</label>
+   </option>
+   <option>
+    <value>10</value>
+    <label>Registering</label>
+   </option>
+</type>
+<type id="hash_algorithms_type">
+  <multi-enum>
+   <option><value>S256</value></option>
+   <option><value>S384</value></option>
+   <option><value>N256</value></option>
+   <option><value>N384</value></option>
+  </multi-enum>
+</type>
+<type id="cipher_algorithms_type">
+  <multi-enum>
+   <option><value>AES1</value></option>
+   <option><value>AES2</value></option>
+   <option><value>AES3</value></option>
+   <option><value>2FS1</value></option>
+   <option><value>2FS2</value></option>
+   <option><value>2FS3</value></option>
+  </multi-enum>
+</type>
+<type id="auth_tags_type">
+  <multi-enum>
+   <option><value>HS32</value></option>
+   <option><value>HS80</value></option>
+   <option><value>SK32</value></option>
+   <option><value>SK64</value></option>
+  </multi-enum>
+</type>
+<type id="key_agreement_methods_type">
+  <multi-enum>
+   <option><value>DH3K</value></option>
+   <option><value>DH2K</value></option>
+   <option><value>EC25</value></option>
+   <option><value>EC38</value></option>
+   <option><value>PRSH</value></option>
+   <option><value>MULT</value></option>
+  </multi-enum>
+</type>
+<type id="sas_encodings_type">
+  <multi-enum>
+   <option><value>B32 SAS</value></option>
+   <option><value>B256 SAS</value></option>
+  </multi-enum>
+</type>

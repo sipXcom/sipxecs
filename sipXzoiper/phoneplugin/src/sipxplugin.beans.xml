@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+  <!-- models -->
+  <bean id="zoiperStandard" abstract="true" parent="abstractPhoneModel">
+    <property name="beanId" value="zoiper" />
+    <property name="label" value="Zoiper" />
+    <property name="maxLineCount" value="100"/>
+    <property name="profileTemplate" value="zoiper/provisioning.xml.vm" />          
+    <property name="vendor" value="Zoiper"/>
+    <property name="serialNumberPattern" value="[a-zA-Z0-9]+"/>
+  </bean>
+
+  <bean id="zoiperPhoneModel" class="org.sipxcom.zoiper.device.ZoiperPhoneModel" parent="zoiperStandard">
+    <property name="label" value="Zoiper" />
+  </bean>
+
+  <bean id="zoiper" class="org.sipxcom.zoiper.device.ZoiperPhone" scope="prototype" parent="abstractPhone">
+  </bean> 
+</beans>

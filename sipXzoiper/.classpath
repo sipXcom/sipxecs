@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="webapp/src"/>
+	<classpathentry kind="src" path="phoneplugin/src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/sipxcommons"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/sipXconfig-neoconf"/>
+</classpath>

@@ -1,0 +1,600 @@
+#macro( codecId $name)
+  #if( $name=="unknown")
+    <codec_id>-1</codec_id>
+  #end
+  #if( $name=="G.711 mu-law (PCMU)")
+    <codec_id>0</codec_id>
+  #end
+  #if( $name=="GSM")
+    <codec_id>1</codec_id>
+  #end
+  #if( $name=="G.723")
+    <codec_id>2</codec_id>
+  #end
+  #if( $name=="DVI4 8K")
+    <codec_id>3</codec_id>
+  #end
+  #if( $name=="DVI4 16K")
+    <codec_id>4</codec_id>
+  #end
+  #if( $name=="LPC")
+    <codec_id>5</codec_id>
+  #end
+  #if( $name=="G.711 a-law (PCMA)")
+    <codec_id>6</codec_id>
+  #end
+  #if( $name==" G.722")
+    <codec_id>7</codec_id>
+  #end
+  #if( $name=="L16 2CH")
+    <codec_id>8</codec_id>
+  #end
+  #if( $name=="L16 1CH")
+    <codec_id>9</codec_id>
+  #end
+  #if( $name=="QCELP")
+    <codec_id>10</codec_id>
+  #end
+  #if( $name=="CN")
+    <codec_id>11</codec_id>
+  #end
+  #if( $name=="MPA")
+    <codec_id>12</codec_id>
+  #end
+  #if( $name=="G.728")
+    <codec_id>13</codec_id>
+  #end
+  #if( $name=="DVI4 11K")
+    <codec_id>14</codec_id>
+  #end
+  #if( $name=="DVI4 22K")
+    <codec_id>15</codec_id>
+  #end
+  #if( $name=="G.729")
+    <codec_id>16</codec_id>
+  #end
+  #if( $name=="CelB")
+    <codec_id>17</codec_id>
+  #end
+  #if( $name=="MJPEG")
+    <codec_id>18</codec_id>
+  #end
+  #if( $name=="NV")
+    <codec_id>19</codec_id>
+  #end
+  #if( $name=="H.261")
+    <codec_id>20</codec_id>
+  #end
+  #if( $name=="MPV")
+    <codec_id>21</codec_id>
+  #end
+  #if( $name=="MP2T")
+    <codec_id>22</codec_id>
+  #end
+  #if( $name=="H.263")
+    <codec_id>23</codec_id>
+  #end
+  #if( $name=="Speex @ 8000 Hz (Speex Narrow)")
+    <codec_id>24</codec_id>
+  #end
+  #if( $name=="Speex @ 16000 Hz (Speex Wide)")
+    <codec_id>25</codec_id>
+  #end
+  #if( $name=="Speex @ 32000 Hz (Speex Ultra)")
+    <codec_id>26</codec_id>
+  #end
+  #if( $name=="iLBC 30")
+    <codec_id>27</codec_id>
+  #end
+  #if( $name=="iLBC 20")
+    <codec_id>28</codec_id>
+  #end
+  #if( $name=="G.726 @ 32 kbps")
+    <codec_id>29</codec_id>
+  #end
+  #if( $name=="H.263+ (H263-1998)")
+    <codec_id>30</codec_id>
+  #end
+  #if( $name=="VP8")
+    <codec_id>31</codec_id>
+  #end
+  #if( $name=="H.264")
+    <codec_id>32</codec_id>
+  #end
+  #if( $name=="RFC 2833/4733 DTMF (telephone-event)")
+    <codec_id>33</codec_id>
+  #end
+  #if( $name=="Opus @ 8000 Hz (Opus Narrow)")
+    <codec_id>34</codec_id>
+  #end
+  #if( $name=="Opus @ 16000 Hz (Opus Wide)")
+    <codec_id>35</codec_id>
+  #end
+  #if( $name=="Opus @ 24000 Hz (Opus Super)")
+    <codec_id>36</codec_id>
+  #end
+  #if( $name=="Opus @ 48000 Hz (Opus Full)")
+    <codec_id>37</codec_id>
+  #end
+  #if( $name=="AMR")
+    <codec_id>38</codec_id>
+  #end
+  #if( $name=="AMR-WB")
+    <codec_id>39</codec_id>
+  #end
+  #if( $name=="H.264 (hardware-accelerated)")
+    <codec_id>40</codec_id>
+  #end
+#end
+#macro( hashAlgorithm $name)
+  #if( $name=="S256")
+    <codec_id>0</codec_id>
+  #end
+  #if( $name=="S384")
+    <codec_id>1</codec_id>
+  #end
+  #if( $name=="N256")
+    <codec_id>2</codec_id>
+  #end
+  #if( $name=="N384")
+    <codec_id>3</codec_id>
+  #end    
+#end
+#macro( cipherAlgorithm $name)
+  #if( $name=="AES1")
+    <codec_id>0</codec_id>
+  #end
+  #if( $name=="AES2")
+    <codec_id>1</codec_id>
+  #end
+  #if( $name=="AES3")
+    <codec_id>2</codec_id>
+  #end
+  #if( $name=="2FS1")
+    <codec_id>3</codec_id>
+  #end
+  #if( $name=="2FS2")
+    <codec_id>4</codec_id>
+  #end
+  #if( $name=="2FS3")
+    <codec_id>5</codec_id>
+  #end  
+#end
+#macro( authTag $name)
+  #if( $name=="HS32")
+    <codec_id>0</codec_id>
+  #end
+  #if( $name=="HS80")
+    <codec_id>1</codec_id>
+  #end
+  #if( $name=="SK32")
+    <codec_id>2</codec_id>
+  #end
+  #if( $name=="SK64")
+    <codec_id>3</codec_id>
+  #end  
+#end
+#macro( keyAgreement $name)
+  #if( $name=="DH3K")
+    <codec_id>0</codec_id>
+  #end
+  #if( $name=="DH2K")
+    <codec_id>1</codec_id>
+  #end
+  #if( $name=="EC25")
+    <codec_id>2</codec_id>
+  #end
+  #if( $name=="EC38")
+    <codec_id>3</codec_id>
+  #end
+  #if( $name=="PRSH")
+    <codec_id>4</codec_id>
+  #end
+  #if( $name=="MULT")
+    <codec_id>5</codec_id>
+  #end    
+#end
+#macro( sasEncoding $name)
+  #if( $name=="B32 SAS")
+    <codec_id>0</codec_id>
+  #end
+  #if( $name=="B256 SAS")
+    <codec_id>1</codec_id>
+  #end
+#end
+<options>
+    <general>
+      <record_calls>$!phone.getSettingValue('automation/call_events_options/record_calls')</record_calls>
+      <record_path>$!phone.getSettingValue('automation/call_events_options/record_path')</record_path>
+      <always_on_top>$!phone.getSettingValue('gui/look_and_feel/behavior/always_on_top')</always_on_top>
+      <account>$!phone.getSettingValue('general/account')</account>
+      <auto_away>$!phone.getSettingValue('general/auto_away')</auto_away>
+      <minimize_to_tray>$!phone.getSettingValue('gui/look_and_feel/behavior/minimize_to_tray')</minimize_to_tray>
+      <minimize_on_close>$!phone.getSettingValue('gui/look_and_feel/behavior/minimize_on_close')</minimize_on_close>
+      <record_calls>$!phone.getSettingValue('automation/call_events_options/record_calls')</record_calls>
+      <record_path>$!phone.getSettingValue('automation/call_events_options/record_path')</record_path>
+      <record_filename>$!phone.getSettingValue('automation/call_events_options/record_filename')</record_filename>
+      <record_path_bookmark>$!phone.getSettingValue('automation/call_events_options/record_path_bookmark')</record_path_bookmark>
+      
+      
+      <reject_anonymous_calls>$!phone.getSettingValue('gui/look_and_feel/behavior/reject_anonymous_calls')</reject_anonymous_calls>
+      <auto_reject_calls>$!phone.getSettingValue('automation/call_events_options/auto_reject_calls')</auto_reject_calls>
+      <reject_call_on_invisible>$!phone.getSettingValue('automation/call_events_options/reject_call_on_invisible')</reject_call_on_invisible>
+      <reject_call_on_away>$!phone.getSettingValue('automation/call_events_options/reject_call_on_away')</reject_call_on_away>
+      <reject_call_on_busy>$!phone.getSettingValue('automation/call_events_options/reject_call_on_busy')</reject_call_on_busy>
+      <reject_call_on_phone>$!phone.getSettingValue('automation/call_events_options/reject_call_on_phone')</reject_call_on_phone>
+      <reject_call_on_lunch>$!phone.getSettingValue('automation/call_events_options/reject_call_on_lunch')</reject_call_on_lunch>
+      <reject_call_on_brb>$!phone.getSettingValue('automation/call_events_options/reject_call_on_brb')</reject_call_on_brb>
+      <new_call_auto_popup>$!phone.getSettingValue('automation/call_events_options/new_call_auto_popup')</new_call_auto_popup>
+      <new_call_blink>$!phone.getSettingValue('automation/call_events_options/new_call_blink')</new_call_blink>
+      
+      <check_for_updates>$!phone.getSettingValue('general/check_for_updates')</check_for_updates>
+      <catch_protocol_requests>$!phone.getSettingValue('automation/integration_options/catch_protocol_requests')</catch_protocol_requests>
+      <integrate_into_outlook>$!phone.getSettingValue('automation/integration_options/integrate_into_outlook')</integrate_into_outlook>
+      <integrate_into_addressbook>$!phone.getSettingValue('automation/integration_options/integrate_into_addressbook')</integrate_into_addressbook>
+      <add_to_firewall>$!phone.getSettingValue('general/add_to_firewall')</add_to_firewall>
+      <start_with_os>$!phone.getSettingValue('general/start_with_os')</start_with_os>
+      <start_minimized>$!phone.getSettingValue('gui/look_and_feel/behavior/start_minimized')</start_minimized>
+      <use_custom_browser>$!phone.getSettingValue('gui/look_and_feel/behavior/use_custom_browser')</use_custom_browser>
+      <custom_browser>$!phone.getSettingValue('gui/look_and_feel/behavior/custom_browser')</custom_browser>
+      <on_transfer_request_style>$!phone.getSettingValue('automation/call_events_options/on_transfer_request_style')</on_transfer_request_style>      
+      <open_url_from_network>$!phone.getSettingValue('general/open_url_from_network')</open_url_from_network>
+      <automatic_open_url_from_network>$!phone.getSettingValue('general/automatic_open_url_from_network')</automatic_open_url_from_network>
+    </general>
+    <audio>
+      <input_device>$!phone.getSettingValue('media/audio/audio_device_selection/input_device')</input_device>
+      <output_device>$!phone.getSettingValue('media/audio/audio_device_selection/output_device')</output_device>
+      <ringing_device>$!phone.getSettingValue('media/audio/audio_device_selection/ringing_device')</ringing_device>
+      <speaker_input_device>$!phone.getSettingValue('media/audio/audio_device_selection/speaker_input_device')</speaker_input_device>
+      <speaker_device>$!phone.getSettingValue('media/audio/audio_device_selection/speaker_device')</speaker_device>
+      <use_mic_boost>$!phone.getSettingValue('media/audio/audio_device_selection/use_mic_boost')</use_mic_boost>
+      <use_echo_cancellation>$!phone.getSettingValue('media/audio/audio_device_selection/use_echo_cancellation')</use_echo_cancellation>
+      <ring_tone_file>$!phone.getSettingValue('media/audio/audio_device_selection/ring_tone_file')</ring_tone_file>
+      <pc_speaker_ring>$!phone.getSettingValue('media/audio/extra_features/pc_speaker_ring')</pc_speaker_ring>
+      <mute_on_early_media>$!phone.getSettingValue('media/audio/extra_features/mute_on_early_media')</mute_on_early_media>
+      <ring_when_talking>$!phone.getSettingValue('media/audio/extra_features/ring_when_talking')</ring_when_talking>
+      <disable_dtmf_sounds>$!phone.getSettingValue('media/audio/extra_features/disable_dtmf_sounds')</disable_dtmf_sounds>
+      
+      <input_volume>$!phone.getSettingValue('media/audio/audio_device_selection/input_volume')</input_volume>
+      <output_volume>$!phone.getSettingValue('media/audio/audio_device_selection/output_volume')</output_volume>
+      <use_alternate_timer>$!phone.getSettingValue('media/audio/audio_device_selection/use_alternate_timer')</use_alternate_timer>
+      <use_external_device_generic>$!phone.getSettingValue('media/audio/external_headset/use_external_device_generic')</use_external_device_generic>
+      <use_external_device_jabra>$!phone.getSettingValue('media/audio/external_headset/use_external_device_jabra')</use_external_device_jabra>
+      <use_external_device_plantronics>$!phone.getSettingValue('media/audio/external_headset/use_external_device_plantronics')</use_external_device_plantronics>
+      <use_auto_mic_selection>$!phone.getSettingValue('media/audio/audio_device_selection/use_auto_mic_selection')</use_auto_mic_selection>
+      <use_agc>$phone.getSettingValue('media/audio/audio_device_selection/use_agc')</use_agc>
+      <use_noise_suppression>$!phone.getSettingValue('media/audio/audio_device_selection/use_noise_suppression')</use_noise_suppression>
+      <disable_ringing_sound>$!phone.getSettingValue('media/audio/audio_device_selection/disable_ringing_sound')</disable_ringing_sound>
+    </audio>
+    <codecs>
+      #set($i=0)
+      #foreach($codec in $phone.getSettingValue('codecs/audio_codec').split("[|]"))
+        <codec>
+          <name>$!codec</name>
+          #codecId($!codec)
+          <priority>$i</priority>
+          <enabled>true</enabled>
+        </codec>
+        #set($i=$i + 1)
+      #end
+      #set($i=0)
+      #foreach($codec in $phone.getSettingValue('codecs/video_codec').split("[|]"))
+        <codec>
+          <name>$!codec</name>
+          #codecId($!codec)
+          <priority>$i</priority>
+          <enabled>true</enabled>
+        </codec>
+        #set($i=$i + 1)
+      #end      
+    </codecs>  
+    <sip_options>
+      <port>$!phone.getSettingValue('network/sip_options/port')</port>
+      <use_random_port>$!phone.getSettingValue('network/sip_options/use_random_port')</use_random_port>
+      <tls_certificate_file>$!phone.getSettingValue('network/sip_options/tls_certificate_file')</tls_certificate_file>
+      <override_domain_name>$!phone.getSettingValue('network/sip_options/override_domain_name')</override_domain_name>
+      <domain>$!phone.getSettingValue('network/sip_options/domain')</domain>
+      <use_domain_certificate>$!phone.getSettingValue('network/sip_options/use_domain_certificate')</use_domain_certificate>
+      <domain_certificate_file>$!phone.getSettingValue('network/sip_options/domain_certificate_file')</domain_certificate_file>
+      <use_only_strong_cipher>$!phone.getSettingValue('network/sip_options/use_only_strong_cipher')</use_only_strong_cipher>
+      <protocol_suite>$!phone.getSettingValue('network/sip_options/protocol_suite')</protocol_suite>
+    </sip_options>
+    <iax_options>
+      <port>$!phone.getSettingValue('network/iax_options/port')</port>
+    </iax_options>
+    <msrp_options>  
+      <port>$!phone.getSettingValue('network/msrp_options/port')</port>
+    </msrp_options>
+    <rtp_options>
+      <port>$!phone.getSettingValue('network/rtp_options/port')</port>
+      <use_random_port>$!phone.getSettingValue('network/rtp_options/use_random_port')</use_random_port>
+      <session_name>$!phone.getSettingValue('network/rtp_options/session_name')</session_name>
+      <user_name>$!phone.getSettingValue('network/rtp_options/user_name')</user_name>
+      <url>$!phone.getSettingValue('network/rtp_options/url')</url>
+      <email>$!phone.getSettingValue('network/rtp_options/email')</email>
+    </rtp_options>
+    <diagnostics>
+      <enable_debug_log>$!phone.getSettingValue('help_about/diagnostics/enable_debug_log')</enable_debug_log>
+      <enable_extra_dmp>$!phone.getSettingValue('help_about/diagnostics/enable_extra_dmp')</enable_extra_dmp>
+      <enable_audio_debug>$!phone.getSettingValue('help_about/diagnostics/enable_audio_debug')</enable_audio_debug>
+    </diagnostics>
+    <network>
+      <signal_dscp>$!phone.getSettingValue('network/sip_options/signal_dscp')</signal_dscp>
+      <media_dscp>$!phone.getSettingValue('network/sip_options/media_dscp')</media_dscp>
+    </network>
+    <chat>
+      <play_sound>$!phone.getSettingValue('media/audio/play_sounds/play_sound')</play_sound>
+      <hide_offline>$!phone.getSettingValue('gui/look_and_feel/behavior/hide_offline')</hide_offline>
+      <new_message_auto_popup>$!phone.getSettingValue('gui/look_and_feel/behavior/new_message_auto_popup')</new_message_auto_popup>
+      <new_message_blink>$!phone.getSettingValue('gui/look_and_feel/behavior/new_message_blink')</new_message_blink>
+      <new_message_sound_file>$!phone.getSettingValue('media/audio/play_sounds/new_message_sound_file')</new_message_sound_file>
+    </chat>
+    <provision>
+      <remember_username_password>$!phone.getSettingValue('provision/remember_username_password')</remember_username_password>
+      <username>$!phone.getSettingValue('provision/username')</username>
+      <password>$!phone.getSettingValue('provision/password')</password>
+      <login_automatically>$!phone.getSettingValue('provision/login_automatically')</login_automatically>
+      <provisioned>$!phone.getSettingValue('provision/provisioned')</provisioned>
+    </provision>
+    <popup>
+      <check_for_focus>$!phone.getSettingValue('gui/look_and_feel/behavior/popup/check_for_focus')</check_for_focus>
+      <peer_status>$!phone.getSettingValue('gui/look_and_feel/behavior/popup/peer_status')</peer_status>
+      <im>$!phone.getSettingValue('gui/look_and_feel/behavior/popup/im')</im>
+      <call>$!phone.getSettingValue('gui/look_and_feel/behavior/popup/call')</call>
+      <voice_mail>$!phone.getSettingValue('gui/look_and_feel/behavior/popup/voice_mail')</voice_mail>
+      <audio_device>$!phone.getSettingValue('gui/look_and_feel/behavior/popup/audio_device')</audio_device>
+      <network>$!phone.getSettingValue('gui/look_and_feel/behavior/popup/network')</network>
+      <use_native_popups>$!phone.getSettingValue('gui/look_and_feel/behavior/popup/use_native_popups')</use_native_popups>
+      <auto_close_time>$!phone.getSettingValue('gui/look_and_feel/behavior/popup/auto_close_time')</auto_close_time>
+    </popup>
+    <video>
+      <camera_device>$!phone.getSettingValue('media/video/camera_device')</camera_device>
+      <capture_size>$!phone.getSettingValue('media/video/capture_size')</capture_size>
+      <capture_fps>$!phone.getSettingValue('media/video/capture_fps')</capture_fps>
+      <bit_rate>$!phone.getSettingValue('media/video/bit_rate')</bit_rate>
+    </video>
+    <skin>
+      <selected>$!phone.getSettingValue('gui/theme/selected')</selected>
+    </skin>
+    <forwarding_and_auto_answer>
+      <mode>$!phone.getSettingValue('calls/mode')</mode>
+      <forward_seconds>$!phone.getSettingValue('calls/forward_seconds')</forward_seconds>
+      <forward_extension>$!phone.getSettingValue('calls/forward_extension')</forward_extension>
+      <autoanswer_seconds>$!phone.getSettingValue('calls/autoanswer_seconds')</autoanswer_seconds>
+      <play_sound_on_auto_answer>$!phone.getSettingValue('calls/play_sound_on_auto_answer')</play_sound_on_auto_answer>
+      <auto_answer_keep_setting>$!phone.getSettingValue('calls/auto_answer_keep_setting')</auto_answer_keep_setting>
+      <auto_answer_with_video>$!phone.getSettingValue('calls/auto_answer_with_video')</auto_answer_with_video>
+      <accept_server_auto_answer>$!phone.getSettingValue('calls/accept_server_auto_answer')</accept_server_auto_answer>
+    </forwarding_and_auto_answer>
+    <open_url_on_event>
+      <enabled>$!phone.getSettingValue('automation/open_url_on_event/enabled')</enabled>
+      <open_url_on_event_item>$!phone.getSettingValue('automation/open_url_on_event/open_url_on_event_item')</open_url_on_event_item>
+      <call_state>$!phone.getSettingValue('automation/open_url_on_event/call_state')</call_state>
+      <call_dir>$!phone.getSettingValue('automation/open_url_on_event/call_dir')</call_dir>
+      <method>$!phone.getSettingValue('automation/open_url_on_event/method')</method>
+      <filter>$!phone.getSettingValue('automation/open_url_on_event/filter')</filter>
+      <url>$!phone.getSettingValue('automation/open_url_on_event/url')</url>
+    </open_url_on_event>
+    <gui>
+      <switch_contact_on_transfer>$!phone.getSettingValue('gui/switch_contact_on_transfer')</switch_contact_on_transfer>
+      <enable_chat_support>$!phone.getSettingValue('gui/enable_chat_support')</enable_chat_support>
+      <collapse_on_hangup>$!phone.getSettingValue('gui/collapse_on_hangup')</collapse_on_hangup>
+      <language>$!phone.getSettingValue('gui/language')</language>
+      <auto_focus_window_on_incoming_chat>$!phone.getSettingValue('gui/auto_focus_window_on_incoming_chat')</auto_focus_window_on_incoming_chat>
+      <auto_focus_window_on_incoming_call>$!phone.getSettingValue('gui/auto_focus_window_on_incoming_call')</auto_focus_window_on_incoming_call>
+      <skin>$!phone.getSettingValue('gui/theme/skin')</skin>
+    </gui>
+    <profile>
+      <state>$!phone.getSettingValue('profile/state')</state>
+      <phone>$!phone.getSettingValue('profile/phone')</phone>
+      <auto_login>$!phone.getSettingValue('profile/auto_login')</auto_login>
+      <save_password>$!phone.getSettingValue('profile/save_password')</save_password>
+      <dont_signup>$!phone.getSettingValue('profile/dont_signup')</dont_signup>
+      <new_password>$!phone.getSettingValue('profile/new_password')</new_password>
+      <password>$!phone.getSettingValue('profile/password')</password>
+    </profile>
+    <activation>
+      <save_credentials>$!phone.getSettingValue('activation/save_credentials')</save_credentials>
+      <username>$!phone.getSettingValue('activation/username')</username>
+      <password>$!phone.getSettingValue('activation/password')</password>
+    </activation>
+    <google_analytics>
+      <ident>$!phone.getSettingValue('google_analytics/ident')</ident>
+      <enabled>$!phone.getSettingValue('google_analytics/enabled')</enabled>
+      <queue_message_count>$!phone.getSettingValue('google_analytics/queue_message_count')</queue_message_count>
+    </google_analytics>
+    <breakpad>
+      <enabled>$!phone.getSettingValue('help_about/breakpad/enabled')</enabled>
+      <upload_dumps>$!phone.getSettingValue('help_about/breakpad/upload_dumps')</upload_dumps>
+    </breakpad>
+    <accounts>
+      #foreach ($line in $lines.entrySet())
+        <account>
+          <ident>$!line.getValue().getSettingValue('generic/ident')</ident>
+          <name>$!line.getValue().getSettingValue('generic/name')</name>
+          <save_username>$!line.getValue().getSettingValue('generic/save_username')</save_username>
+          <username>$!line.getValue().getSettingValue('credentials/username')</username>
+          <save_password>$!line.getValue().getSettingValue('credentials/save_password')</save_password>
+          <password>$!line.getValue().getSettingValue('credentials/password')</password>
+          <register_on_startup>$!line.getValue().getSettingValue('features/register_on_startup')</register_on_startup>
+          <do_not_play_ringback_tones>$!line.getValue().getSettingValue('features/pre_configured_extensions/do_not_play_ringback_tones')</do_not_play_ringback_tones>
+          <voicemail_check_extension>$!line.getValue().getSettingValue('features/pre_configured_extensions/voicemail_check_extension')</voicemail_check_extension>
+          <voicemail_transfer_extension>$!line.getValue().getSettingValue('features/pre_configured_extensions/voicemail_transfer_extension')</voicemail_transfer_extension>
+          <force_rfc3264>$!line.getValue().getSettingValue('compatibility_modes/force_rfc3264')</force_rfc3264>
+          <use_kpml>$!line.getValue().getSettingValue('compatibility_modes/use_kpml')</use_kpml>
+          <use_overlap_dialing>$!line.getValue().getSettingValue('features/use_overlap_dialing')</use_overlap_dialing>
+          <use_custom_ringtone>$!line.getValue().getSettingValue('features/use_custom_ringtone')</use_custom_ringtone>
+          <custom_ringtone_location>$!line.getValue().getSettingValue('features/custom_ringtone_location')</custom_ringtone_location>
+          <use_custom_certificate>$!line.getValue().getSettingValue('encryption/use_custom_certificate')</use_custom_certificate>
+          <custom_certificate_location>$!line.getValue().getSettingValue('encryption/custom_certificate_location')</custom_certificate_location>
+          <custom_certificate>$!line.getValue().getSettingValue('encryption/custom_certificate')</custom_certificate>
+          <mwi_subscribe_usage>$!line.getValue().getSettingValue('features/mwi_subscribe_usage')</mwi_subscribe_usage>
+          <use_number_rewriting>$!line.getValue().getSettingValue('number_rewriting/use_number_rewriting')</use_number_rewriting>
+          <number_rewriting_country>$!line.getValue().getSettingValue('number_rewriting/number_rewriting_country')</number_rewriting_country>
+          <number_rewriting_prefix>$!line.getValue().getSettingValue('number_rewriting/number_rewriting_prefix')</number_rewriting_prefix>
+          <use_strip_dial_chars>$!line.getValue().getSettingValue('number_rewriting/use_strip_dial_chars')</use_strip_dial_chars>
+          <strip_dial_chars>$!line.getValue().getSettingValue('number_rewriting/strip_dial_chars')</strip_dial_chars>
+          <protocol>$!line.getValue().getSettingValue('generic/protocol')</protocol>
+          <SIP_domain>$!line.getValue().getSettingValue('sip_credentials/SIP_domain')</SIP_domain>
+          <SIP_use_outbound_proxy>$!line.getValue().getSettingValue('sip_credentials/SIP_use_outbound_proxy')</SIP_use_outbound_proxy>
+          <SIP_outbound_proxy>$!line.getValue().getSettingValue('sip_credentials/SIP_outbound_proxy')</SIP_outbound_proxy>
+          <SIP_transport_type>$!line.getValue().getSettingValue('sip_credentials/SIP_transport_type')</SIP_transport_type>
+          <SIP_use_auth_username>$!line.getValue().getSettingValue('sip_credentials/SIP_use_auth_username')</SIP_use_auth_username>
+          <SIP_auth_username>$!line.getValue().getSettingValue('sip_credentials/SIP_auth_username')</SIP_auth_username>
+          <SIP_callerId>$!line.getValue().getSettingValue('features/SIP_callerId')</SIP_callerId>
+          <SIP_callerNumber>$!line.getValue().getSettingValue('features/SIP_callerNumber')</SIP_callerNumber>
+          <SIP_use_rport>$!line.getValue().getSettingValue('network/SIP_use_rport')</SIP_use_rport>
+          <SIP_use_rport_media>$!line.getValue().getSettingValue('network/SIP_use_rport_media')</SIP_use_rport_media>
+          <SIP_srtp_mode>$!line.getValue().getSettingValue('encryption/SIP_srtp_mode')</SIP_srtp_mode>
+          <SIP_dtmf_style>$!line.getValue().getSettingValue('features/SIP_dtmf_style')</SIP_dtmf_style>
+          <SIP_use_blf>$!line.getValue().getSettingValue('features/SIP_use_blf')</SIP_use_blf>
+          <SIP_publish_presence>$!line.getValue().getSettingValue('features/SIP_publish_presence')</SIP_publish_presence>
+          <SIP_subscribe_presence>$!line.getValue().getSettingValue('features/SIP_subscribe_presence')</SIP_subscribe_presence>
+          <SIP_keep_alive_mode>$!line.getValue().getSettingValue('network/SIP_keep_alive_mode')</SIP_keep_alive_mode>
+          <SIP_keep_alive_timeout>$!line.getValue().getSettingValue('network/SIP_keep_alive_timeout')</SIP_keep_alive_timeout>
+          <SIP_use_cisco>$!line.getValue().getSettingValue('compatibility_modes/SIP_use_cisco')</SIP_use_cisco>
+          <SIP_cisco_device_name>$!line.getValue().getSettingValue('compatibility_modes/SIP_cisco_device_name')</SIP_cisco_device_name>          
+          <enabled_video_fmtp>$!line.getValue().getSettingValue('compatibility_modes/enabled_video_fmtp')</enabled_video_fmtp>
+          <codecs>
+            #set($i=0)
+            #foreach($codec in $!line.getValue().getSettingValue('codecs/audio_codec').split("[|]"))
+              <codec>
+                <name>$!codec</name>
+                #codecId($!codec)
+                <priority>$i</priority>
+                <enabled>true</enabled>
+              </codec>
+              #set($i=$i + 1)
+            #end  
+            #set($i=0)
+            #foreach($codec in $!line.getValue().getSettingValue('codecs/video_codec').split("[|]"))
+              <codec>
+                <name>$!codec</name>
+                #codecId($!codec)
+                <priority>$i</priority>
+                <enabled>true</enabled>
+              </codec>
+              #set($i=$i + 1)              
+            #end
+          </codecs>          
+          <enabled>$!line.getValue().getSettingValue('encryption/zrtp/enabled')</enabled>
+          <zrtp>
+            <hash_algorithms>
+              #set($i=0)
+              #foreach($hash_algorithm in $!line.getValue().getSettingValue('encryption/zrtp/hash_algorithms/hash_algorithm').split("[|]"))
+                <hash_algorithm>
+                  <name>$hash_algorithm</name>
+                  #hashAlgorithm($!hash_algorithm)
+                  <priority>$i</priority>
+                  <enabled>true</enabled>
+                </hash_algorithm>
+                #set($i=$i + 1)
+              #end
+            </hash_algorithms>
+            <cipher_algorithms>
+              #set($i=0)
+              #foreach($cipher_algorithm in $!line.getValue().getSettingValue('encryption/zrtp/cipher_algorithms/cipher_algorithm').split("[|]"))
+                <hash_algorithm>
+                  <name>$cipher_algorithm</name>
+                  #cipherAlgorithm($!cipher_algorithm)
+                  <priority>$i</priority>
+                  <enabled>true</enabled>
+                </hash_algorithm>
+                #set($i=$i + 1)
+              #end
+            </cipher_algorithms>
+            <auth_tags>
+              #set($i=0)
+              #foreach($auth_tag in $!line.getValue().getSettingValue('encryption/zrtp/auth_tags/auth_tag').split("[|]"))
+                <auth_tag>
+                  <name>$auth_tag</name>
+                  #authTag($!auth_tag)
+                  <priority>$i</priority>
+                  <enabled>true</enabled>
+                </auth_tag>
+                #set($i=$i + 1)
+              #end                            
+            </auth_tags>
+            <key_agreement_methods>
+              #set($i=0)
+              #foreach($key_agreement_method in $!line.getValue().getSettingValue('encryption/zrtp/key_agreement_methods/key_agreement_method').split("[|]"))
+                <key_agreement_method>
+                  <name>$key_agreement_method</name>
+                  #keyAgreement($!key_agreement_method)
+                  <priority>$i</priority>
+                  <enabled>true</enabled>
+                </auth_tag>
+                #set($i=$i + 1)
+              #end                                                                                    
+            </key_agreement_methods>
+            <sas_encodings>
+              #set($i=0)
+              #foreach($sas_encoding in $!line.getValue().getSettingValue('encryption/zrtp/sas_encodings/sas_encoding').split("[|]"))
+                <sas_encoding>
+                  <name>$sas_encoding</name>
+                  #sasEncoding($!sas_encoding)
+                  <priority>$i</priority>
+                  <enabled>true</enabled>
+                </sas_encoding>
+                #set($i=$i + 1)
+              #end
+            </sas_encodings>
+          </zrtp>
+          <msrp>
+            <port>$!line.getValue().getSettingValue('encryption/msrp/port')</port>
+          </msrp>
+          <IAX2_host>$!line.getValue().getSettingValue('IAX/IAX2_host')</IAX2_host>
+          <IAX2_context>$!line.getValue().getSettingValue('IAX/IAX2_context')</IAX2_context>
+          <IAX2_callerId>$!line.getValue().getSettingValue('IAX/IAX2_callerId')</IAX2_callerId>
+          <IAX2_callerNumber>$!line.getValue().getSettingValue('IAX/IAX2_callerNumber')</IAX2_callerNumber>
+          <IAX2_dtmf_style>$!line.getValue().getSettingValue('IAX/IAX2_dtmf_style')</IAX2_dtmf_style>
+          <reregistration_mode>$!line.getValue().getSettingValue('network/reregistration_mode')</reregistration_mode>          
+          <reregistration_time>$!line.getValue().getSettingValue('network/reregistration/reregistration_time')</reregistration_time>
+          <resubscription_mode>$!line.getValue().getSettingValue('network/reregistration/resubscription_mode')</resubscription_mode>
+          <resubscription_time>$!line.getValue().getSettingValue('network/reregistration/resubscription_time')</resubscription_time>                    
+          <use_stun>$!line.getValue().getSettingValue('network/stun_options/use_stun')</use_stun>
+          <host>$!line.getValue().getSettingValue('network/stun_options/host')</host>
+          <port>$!line.getValue().getSettingValue('network/stun_options/port')</port>
+          <refresh_period>$!line.getValue().getSettingValue('network/stun_options/refresh_period')</refresh_period>
+        </account>                  
+      #end
+    </accounts>
+    <contact_services>
+      #foreach ($line in $lines.entrySet())
+        <contact_service>
+          <ident>$!line.getValue().getSettingValue('contact_service/ident')</ident>
+          <name>$!line.getValue().getSettingValue('contact_service/name')</name>
+          #set ($contactServiceType = $line.getValue().getSettingValue('contact_service/type'))
+          <type>$!contactServiceType</type>
+          <enabled>$!line.getValue().getSettingValue('contact_service/enabled')</enabled>
+          <account_mapping_type>$!line.getValue().getSettingValue('contact_service/account_mapping_type')</account_mapping_type>
+          <account_id>$!line.getValue().getSettingValue('contact_service/account_id')</account_id>
+          <presence_account_mapping_type>$!line.getValue().getSettingValue('contact_service/presence_account_mapping_type')</presence_account_mapping_type>
+          <presence_account_id>$!line.getValue().getSettingValue('contact_service/presence_account_id')</presence_account_id>
+          <hide_contacts_without_name>$!line.getValue().getSettingValue('contact_service/hide_contacts_without_name')</hide_contacts_without_name>
+          #if($contactServiceType == 'ldap')
+            <host>$!line.getValue().getSettingValue('ldap_contact_service/host')</host>
+            <username>$!line.getValue().getSettingValue('ldap_contact_service/username')</username>
+            <password>$!line.getValue().getSettingValue('ldap_contact_service/password')</password>
+            <root>$!line.getValue().getSettingValue('ldap_contact_service/root')</root>
+            <limit>$!line.getValue().getSettingValue('ldap_contact_service/limit')</limit>
+          #end
+          #if($contactServiceType == 'outlook')
+            <profile>$!line.getValue().getSettingValue('outlook_contact_service/profile')</profile>
+            <password>$!line.getValue().getSettingValue('outlook_contact_service/password')</password>
+          #end
+          #if($contactServiceType == 'google')
+            <access_token>$!line.getValue().getSettingValue('google_contact_service/access_token')</access_token>
+            <refresh_token>$!line.getValue().getSettingValue('google_contact_service/refresh_token')</refresh_token>
+            <limit>$!line.getValue().getSettingValue('google_contact_service/limit')</limit>
+          #end
+          #if($contactServiceType == 'xml')
+            <uri>$!line.getValue().getSettingValue('xml_contact_service/uri')</uri>
+            <username>$!line.getValue().getSettingValue('xml_contact_service/username')</username>
+            <password>$!line.getValue().getSettingValue('xml_contact_service/password')</password>
+            <authentication_type>$!line.getValue().getSettingValue('xml_contact_service/authentication_type')</authentication_type>
+          #end
+        </contact_service>
+      #end  
+    </contact_services>
+</options> 

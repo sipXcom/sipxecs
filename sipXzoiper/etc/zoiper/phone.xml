@@ -1,0 +1,692 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!DOCTYPE model PUBLIC "-//SIPFoundry//sipXconfig//Model specification 2.0//EN" "http://www.sipfoundry.org/sipXconfig/dtd/setting_2_0.dtd"[
+<!ENTITY types SYSTEM "types.xml">
+]>
+
+<model>
+  &types;
+  <group name="gui">
+    <setting name="switch_contact_on_transfer">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>
+    <setting name="enable_chat_support">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>
+    <setting name="collapse_on_hangup">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>
+    <setting name="language">
+      <type refid="language_type"/>
+      <value>english</value>
+    </setting>
+    <setting name="auto_focus_window_on_incoming_chat">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>
+    <setting name="auto_focus_window_on_incoming_call">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>    
+    <group name="theme">
+      <setting name="selected">
+        <type>
+          <string/>
+        </type>
+        <value>default</value>
+      </setting>
+      <setting name="skin">
+        <type>
+          <string/>
+        </type>        
+      </setting>        
+    </group>    
+    <group name="look_and_feel">
+      <group name="behavior">
+        <setting name="minimize_to_tray">
+          <type refid="true-false"/>
+          <value>false</value>    
+        </setting>
+        <setting name="minimize_on_close">
+          <type refid="true-false"/>
+          <value>true</value>
+        </setting>
+        <setting name="always_on_top">
+          <type refid="true-false"/>
+            <value>false</value>
+        </setting>
+        <setting name="reject_anonymous_calls">
+          <type refid="true-false"/>
+          <value>false</value>
+        </setting>
+        <setting name="new_call_auto_popup">
+          <type refid="true-false"/>
+          <value>false</value>
+        </setting>
+        <setting name="new_call_blink">
+          <type refid="true-false"/>
+          <value>true</value>
+        </setting>
+        <setting name="start_minimized">
+          <type refid="true-false"/>
+          <value>false</value>
+        </setting>
+        <setting name="use_custom_browser">
+          <type refid="true-false"/>
+          <value>false</value>
+        </setting>
+        <setting name="custom_browser">
+          <type>
+            <string/>
+          </type>
+        </setting>
+        <setting name="hide_offline">
+          <type refid="true-false"/>
+          <value>false</value>
+        </setting>
+        <setting name="new_message_auto_popup">
+          <type refid="true-false"/>
+          <value>false</value>
+        </setting>
+        <setting name="new_message_blink">
+          <type refid="true-false"/>
+          <value>true</value>
+        </setting>          
+      </group>
+      <group name="popup">
+        <setting name="check_for_focus">
+          <type refid="true-false"/>
+          <value>true</value>
+        </setting>
+        <setting name="peer_status">
+          <type refid="true-false"/>
+          <value>true</value>
+        </setting>
+        <setting name="im">
+          <type refid="true-false"/>
+          <value>true</value>
+        </setting>
+        <setting name="call">
+          <type refid="true-false"/>
+          <value>true</value>
+        </setting>
+        <setting name="voice_mail">
+          <type refid="true-false"/>
+          <value>true</value>
+        </setting>
+        <setting name="audio_device">
+          <type refid="true-false"/>
+          <value>true</value>
+        </setting>
+        <setting name="network">
+          <type refid="true-false"/>
+          <value>true</value>
+        </setting>
+        <setting name="use_native_popups">
+          <type refid="true-false"/>
+          <value>true</value>
+        </setting>
+        <setting name="auto_close_time">
+          <type>
+            <integer/>
+          </type>
+          <value>15</value>
+        </setting>      
+      </group>                
+    </group>
+  </group>
+  <group name="general">
+    <setting name="account">
+      <type>
+        <string/>
+      </type>
+    </setting>
+    <setting name="auto_away">
+      <type>
+        <integer/>
+      </type>
+      <value>180</value>
+    </setting>        
+    <setting name="check_for_updates">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>
+    <setting name="add_to_firewall">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>
+    <setting name="start_with_os">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>
+    <setting name="open_url_from_network">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>
+    <setting name="automatic_open_url_from_network">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>                   
+  </group>
+  <group name="calls">
+    <setting name="mode">
+      <type refid="mode_type"/>
+      <value>answer_instant</value>
+    </setting>
+    <setting name="forward_seconds">
+      <type>
+        <integer/>
+      </type>
+      <value>30</value>
+    </setting>
+    <setting name="forward_extension">
+      <type>
+        <string/>
+      </type>        
+    </setting>
+    <setting name="autoanswer_seconds">
+      <type>
+        <integer/>
+      </type>
+      <value>30</value>
+    </setting>
+    <setting name="play_sound_on_auto_answer">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>
+    <setting name="auto_answer_keep_setting">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>
+    <setting name="enabled">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>
+    <setting name="auto_answer_with_video">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>
+    <setting name="accept_server_auto_answer">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>      
+  </group>
+  <group name="automation">                
+    <group name="call_events_options">
+      <setting name="record_calls">
+        <type refid="true-false"/>
+        <value>false</value>     
+      </setting>
+      <setting name="record_path">
+        <type>
+          <string/>
+        </type>
+      </setting>
+      <setting name="record_filename">
+        <type>
+          <string/>
+        </type>
+      </setting>
+      <setting name="record_path_bookmark">
+        <type>
+          <string/>
+        </type>
+       <value>false</value>
+      </setting>
+      <setting name="auto_reject_calls">
+        <type refid="true-false"/>
+        <value>false</value>     
+      </setting>
+      <setting name="reject_call_on_invisible">
+        <type refid="true-false"/>
+        <value>false</value>     
+      </setting>
+      <setting name="reject_call_on_away">
+        <type refid="true-false"/>
+        <value>false</value>     
+      </setting>
+      <setting name="reject_call_on_busy">
+        <type refid="true-false"/>
+        <value>false</value>     
+      </setting>
+      <setting name="reject_call_on_phone">
+        <type refid="true-false"/>
+        <value>false</value>     
+      </setting>
+      <setting name="reject_call_on_lunch">
+        <type refid="true-false"/>
+        <value>false</value>     
+      </setting>
+      <setting name="reject_call_on_brb">
+        <type refid="true-false"/>
+        <value>false</value>     
+      </setting>
+      <setting name="on_transfer_request_style">
+        <type refid="transfer_request_style_type"/>
+        <value>reject</value>
+      </setting>
+    </group>
+    <group name="integration_options">
+      <setting name="catch_protocol_requests">
+        <type refid="true-false"/>
+        <value>true</value>
+      </setting>
+      <setting name="integrate_into_outlook">
+        <type refid="true-false"/>
+        <value>true</value>
+      </setting>
+      <setting name="integrate_into_addressbook">
+        <type refid="true-false"/>
+        <value>true</value>
+      </setting>          
+    </group>
+    <group name="open_url_on_event">
+      <setting name="enabled">
+        <type refid="true-false"/>
+        <value>false</value>
+      </setting>
+      <setting name="open_url_on_event_item">
+        <type refid="open_url_on_event_item_type"/>
+        <value>never</value>
+      </setting>
+      <setting name="call_state">
+        <type refid="call_state_type"/>
+        <value>ringing</value>
+      </setting>
+      <setting name="call_dir">
+        <type refid="call_dir_type"/>
+        <value>both</value>
+      </setting>
+      <setting name="method">
+        <type refid="method_type"/>
+        <value>url</value>
+      </setting>
+      <setting name="filter">
+        <type>
+          <string/>
+        </type>        
+      </setting>
+      <setting name="url">
+        <type>
+          <string/>
+        </type>        
+      </setting>
+    </group>
+  </group>
+  <group name="google_analytics">
+    <setting name="ident">
+      <type>
+        <string/>
+      </type>        
+    </setting>
+    <setting name="enabled">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>
+    <setting name="queue_message_count">
+      <type>
+        <integer/>
+      </type>
+      <value>10</value>
+    </setting>
+  </group>  
+  <group name="network">
+    <group name="sip_options">
+      <setting name="port">
+        <type>
+          <integer/>
+        </type>
+        <value>5060</value>
+      </setting>
+      <setting name="use_random_port">
+        <type refid="true-false"/>
+        <value>true</value>
+      </setting>
+      <setting name="tls_certificate_file">
+        <type>
+          <string/>
+        </type>
+        <value></value>
+      </setting>
+      <setting name="override_domain_name">
+        <type refid="true-false"/>
+        <value>false</value>
+      </setting>
+      <setting name="domain">
+        <type>
+          <string/>
+        </type>
+        <value></value>
+      </setting>
+      <setting name="use_domain_certificate">
+        <type refid="true-false"/>
+        <value>false</value>
+      </setting>
+      <setting name="domain_certificate_file">
+        <type>
+          <string/>
+        </type>
+        <value></value>
+      </setting>
+      <setting name="use_only_strong_cipher">
+        <type refid="true-false"/>
+        <value>false</value>
+      </setting>
+      <setting name="protocol_suite">
+       <type refid="protocol_suite_type"/>
+        <value>sslv23</value>
+      </setting>
+      <setting name="signal_dscp">
+        <type refid="dscp_type"/>
+        <value>none</value>
+      </setting>
+      <setting name="media_dscp">
+        <type refid="dscp_type"/>
+        <value>none</value>
+      </setting>
+    </group>
+    <group name="iax_options">
+      <setting name="port">
+        <type>
+          <integer/>
+        </type>
+        <value>4569</value>
+      </setting>    
+    </group>
+    <group name="msrp_options">
+      <setting name="port">
+        <type>
+          <integer/>
+        </type>
+        <value>2855</value>
+      </setting>    
+    </group>
+    <group name="rtp_options">
+      <setting name="port">
+        <type>
+          <integer/>
+        </type>
+        <value>8000</value>
+      </setting>
+      <setting name="use_random_port">
+        <type refid="true-false"/>
+        <value>false</value>
+      </setting>
+      <setting name="session_name">
+        <type>
+          <string/>
+        </type>
+        <value>Z</value>
+      </setting>
+      <setting name="user_name">
+        <type>
+          <string/>
+        </type>
+        <value>Z</value>
+      </setting>
+      <setting name="url">
+        <type>
+          <string/>
+        </type>
+        <value>http://www.zoiper.com</value>
+      </setting>
+      <setting name="email">
+        <type>
+          <string/>
+        </type>
+        <value>sales@zoiper.com</value>
+      </setting>
+    </group>                    
+  </group> 
+  <group name="provision">
+    <setting name="remember_username_password">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>
+    <setting name="username">
+      <type>
+        <string/>
+      </type>        
+    </setting>
+    <setting name="password">
+      <type>
+        <string/>
+      </type>        
+    </setting>
+    <setting name="login_automatically">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>
+    <setting name="provisioned">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>               
+  </group>
+  <group name="codecs">
+    <setting name="audio_codec">
+      <type refid="audio_codecs_type"/>
+    </setting>
+    <setting name="video_codec">
+      <type refid="video_codecs_type"/>
+    </setting>    
+  </group>  
+  <group name="media">
+    <group name="audio">
+      <group name="audio_device_selection">
+        <setting name="input_device">
+          <type>
+            <string/>
+          </type>
+        </setting>
+        <setting name="output_device">
+          <type>
+            <string/>
+          </type>
+        </setting>
+        <setting name="ringing_device">
+          <type>
+            <string/>
+          </type>
+        </setting>
+        <setting name="speaker_input_device">
+          <type>
+            <string/>
+          </type>
+        </setting>
+        <setting name="speaker_device">
+          <type>
+            <string/>
+          </type>
+        </setting>
+        <setting name="use_mic_boost">
+          <type refid="true-false"/>
+          <value>false</value>
+        </setting>
+        <setting name="use_echo_cancellation">
+          <type refid="true-false"/>
+          <value>true</value>
+        </setting>
+        <setting name="ring_tone_file">
+          <type>
+            <string/>
+          </type>
+        </setting>
+        <setting name="input_volume">
+          <type>
+            <integer/>
+          </type>
+          <value>50</value>
+        </setting>
+        <setting name="output_volume">
+          <type>
+            <integer/>
+          </type>
+          <value>50</value>
+        </setting>
+        <setting name="use_alternate_timer">
+          <type refid="true-false"/>
+          <value>false</value>
+        </setting>
+        <setting name="use_auto_mic_selection">
+          <type refid="true-false"/>
+          <value>false</value>
+        </setting>
+        <setting name="use_agc">
+          <type refid="true-false"/>
+          <value>true</value>
+        </setting>
+        <setting name="use_noise_suppression">
+          <type refid="true-false"/>
+          <value>true</value>
+        </setting>
+        <setting name="disable_ringing_sound">
+          <type refid="true-false"/>
+          <value>false</value>
+        </setting>                            
+      </group>       
+      <group name="extra_features">
+        <setting name="pc_speaker_ring">
+          <type refid="true-false"/>
+          <value>false</value>
+        </setting>
+        <setting name="mute_on_early_media">
+          <type refid="true-false"/>
+          <value>false</value>
+        </setting>
+        <setting name="ring_when_talking">
+          <type refid="true-false"/>
+          <value>true</value>
+        </setting>
+        <setting name="disable_dtmf_sounds">
+          <type refid="true-false"/>
+          <value>false</value>
+        </setting>        
+      </group>
+      <group name="external_headset">
+        <setting name="use_external_device_generic">
+          <type refid="true-false"/>
+          <value>false</value>
+        </setting>
+        <setting name="use_external_device_jabra">
+          <type refid="true-false"/>
+          <value>true</value>
+        </setting>
+        <setting name="use_external_device_plantronics">
+          <type refid="true-false"/>
+          <value>true</value>
+        </setting>
+      </group>
+      <group name="play_sounds">
+        <setting name="play_sound">
+          <type refid="true-false"/>
+          <value>true</value>
+        </setting>          
+        <setting name="new_message_sound_file">
+          <type>
+            <string/>
+          </type>
+          <value>NewMessage.wav</value>
+        </setting>        
+      </group>
+    </group>
+    <group name="video">
+      <setting name="camera_device">
+        <type>
+          <string/>
+        </type>        
+      </setting>
+      <setting name="capture_size">
+        <type refid="video_capture_size_type"/>
+        <value>640x480</value>
+      </setting>
+      <setting name="capture_fps">
+        <type refid="video_capture_fps_type"/>
+        <value>5fps</value>
+      </setting>
+      <setting name="bit_rate">
+        <type>
+          <integer/>
+        </type>
+        <value>256000</value>
+      </setting>      
+    </group>    
+  </group>
+  <group name="help_about">
+    <group name="diagnostics">
+      <setting name="enable_debug_log">
+        <type refid="true-false"/>
+        <value>false</value>
+      </setting>
+      <setting name="enable_extra_dmp">
+        <type refid="true-false"/>
+        <value>false</value>
+      </setting>
+      <setting name="enable_audio_debug">
+        <type refid="true-false"/>
+        <value>false</value>
+      </setting>
+    </group>
+    <group name="breakpad">
+      <setting name="enabled">
+        <type refid="true-false"/>
+        <value>true</value>
+      </setting>
+      <setting name="upload_dumps">
+        <type refid="true-false"/>
+        <value>true</value>
+      </setting>          
+    </group>          
+  </group>     
+  <group name="profile">
+    <setting name="state">
+      <type refid="profile_state_type"/>
+      <value>1</value>
+    </setting>
+    <setting name="phone">
+      <type>
+        <string/>
+      </type>        
+    </setting>
+    <setting name="auto_login">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>
+    <setting name="save_password">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>
+    <setting name="dont_signup">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>
+    <setting name="new_password">
+      <type>
+        <string/>
+      </type>        
+    </setting>
+    <setting name="password">
+      <type>
+        <string/>
+      </type>        
+    </setting>      
+  </group>
+  <group name="activation">
+    <setting name="save_credentials">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>
+    <setting name="username">
+      <type>
+        <string/>
+      </type>
+    </setting>
+    <setting name="password">
+      <type>
+        <string/>
+      </type>        
+    </setting>      
+  </group>
+</model>

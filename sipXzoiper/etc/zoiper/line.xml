@@ -1,0 +1,475 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!DOCTYPE model PUBLIC "-//SIPFoundry//sipXconfig//Model specification 2.0//EN" "http://www.sipfoundry.org/sipXconfig/dtd/setting_2_0.dtd"[
+<!ENTITY types SYSTEM "types.xml">
+]>
+
+<model>
+  &types;
+  <group name="generic">
+      <setting name="ident">
+        <type>
+          <string/>
+        </type>
+      </setting>
+      <setting name="name">
+        <type>
+          <string/>
+        </type>
+      </setting>
+      <setting name="save_username">
+        <type refid="true-false"/>
+        <value>true</value>
+      </setting>
+      <setting name="protocol">
+        <type refid="protocol_type"/>
+      </setting>
+  </group>
+  <group name="contact_service">
+      <setting name="ident">
+        <type>
+         <string/>
+        </type>
+      </setting>
+      <setting name="name">
+        <type>
+         <string/>
+        </type>
+      </setting>
+      <setting name="type">
+        <type refid="contact_service_type"/>
+      </setting>
+      <setting name="enabled">
+        <type refid="true-false"/>
+        <value>true</value>
+      </setting>
+      <setting name="account_mapping_type">
+        <type refid="account_mapping_type_type"/>
+        <value>default</value>
+      </setting>
+      <setting name="account_id">
+        <type>
+         <string/>
+        </type>
+      </setting>
+      <setting name="presence_account_mapping_type">
+        <type refid="presence_account_mapping_type_type"/>
+        <value>none</value>
+      </setting>
+      <setting name="presence_account_id">
+        <type>
+         <string/>
+        </type>
+      </setting>
+      <setting name="hide_contacts_without_name">
+        <type refid="true-false"/>
+        <value>false</value>
+      </setting>      
+  </group>
+  <group name="ldap_contact_service">
+      <setting name="host">
+        <type>
+         <string/>
+        </type>
+      </setting>
+      <setting name="username">
+        <type>
+         <string/>
+        </type>
+      </setting>
+      <setting name="password">
+        <type>
+         <string/>
+        </type>
+      </setting>
+      <setting name="root">
+        <type>
+         <string/>
+        </type>
+      </setting>
+      <setting name="port">
+        <type>
+         <integer/>
+        </type>
+        <value>0</value>
+      </setting>   
+      <setting name="limit">
+        <type>
+         <integer/>
+        </type>
+        <value>0</value>
+      </setting>         
+  </group>
+  <group name="outlook_contact_service">
+      <setting name="profile">
+        <type>
+         <string/>
+        </type>
+      </setting>
+      <setting name="password">
+        <type>
+         <string/>
+        </type>
+      </setting>
+  </group>
+  <group name="google_contact_service">
+      <setting name="access_token">
+        <type>
+         <string/>
+        </type>
+      </setting>
+      <setting name="refresh_token">
+        <type>
+         <string/>
+        </type>
+      </setting>
+      <setting name="limit">
+        <type>
+         <integer/>
+        </type>
+        <value>0</value>
+      </setting>      
+  </group>
+  <group name="xml_contact_service">
+      <setting name="uri">
+        <type>
+         <string/>
+        </type>
+      </setting>
+      <setting name="username">
+        <type>
+         <string/>
+        </type>
+      </setting>
+      <setting name="password">
+        <type>
+         <string/>
+        </type>
+      </setting>
+      <setting name="authentication_type">
+        <type refid="authentication_type_type"/>
+        <value>none</value>
+      </setting>
+  </group>
+  <group name="credentials">
+    <setting name="username">
+      <type>
+        <string/>
+      </type>
+    </setting>
+    <setting name="save_password">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>
+    <setting name="password">
+      <type>
+        <string/>
+      </type>
+    </setting>  
+  </group>
+  <group name="codecs">
+    <setting name="audio_codec">
+      <type refid="audio_codecs_type"/>
+    </setting>
+    <setting name="video_codec">
+      <type refid="video_codecs_type"/>
+    </setting>
+  </group>
+  <group name="features">
+    <setting name="register_on_startup">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>
+    <setting name="do_not_play_ringback_tones">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>
+  </group>
+  <group name="pre_configured_extensions">
+    <setting name="voicemail_check_extension">
+      <type>
+        <string/>
+      </type>
+    </setting>
+    <setting name="voicemail_transfer_extension">
+      <type>
+        <string/>
+      </type>
+    </setting>  
+  </group>
+  <group name="compatibility_modes">
+    <setting name="force_rfc3264">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>
+    <setting name="use_kpml">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>
+    <setting name="SIP_use_cisco">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>
+    <setting name="SIP_cisco_device_name">
+      <type>
+        <string/>
+      </type>
+    </setting>
+    <setting name="enabled_video_fmtp">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>      
+  </group>
+  <group name="features">
+    <setting name="use_overlap_dialing">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>
+    <setting name="use_custom_ringtone">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>
+    <setting name="custom_ringtone_location">
+      <type>
+        <string/>
+      </type>
+    </setting>
+    <setting name="mwi_subscribe_usage">
+      <type refid="subscribe_type"/>
+      <value>none</value>
+    </setting>
+    <setting name="SIP_callerId">
+      <type>
+        <string/>
+      </type>
+    </setting>
+    <setting name="SIP_callerNumber">
+      <type>
+        <string/>
+      </type>
+    </setting>
+    <setting name="SIP_dtmf_style">
+      <type refid="dtmf_style_type"/>
+      <value>inband</value>
+    </setting>
+    <setting name="SIP_use_blf">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>
+    <setting name="SIP_publish_presence">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>
+    <setting name="SIP_subscribe_presence">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>                  
+  </group>
+  <group name="encryption">
+    <setting name="use_custom_certificate">
+      <type refid="certificate_type"/>
+      <value>none</value>
+    </setting>
+    <setting name="custom_certificate_location">
+      <type>
+        <string/>
+      </type>
+    </setting>
+    <setting name="custom_certificate">
+      <type>
+        <string/>
+      </type>
+    </setting>
+    <setting name="SIP_srtp_mode">
+      <type refid="srtp_mode_type"/>
+      <value>none</value>
+    </setting>
+    <group name="zrtp">
+      <setting name="enabled">
+        <type refid="true-false"/>
+        <value>false</value>
+      </setting>
+      <group name="hash_algorithms">
+        <setting name="hash_algorithm">
+          <type refid="hash_algorithms_type"/>
+        </setting>
+      </group>
+      <group name="cipher_algorithms">
+        <setting name="cipher_algorithm">
+          <type refid="cipher_algorithms_type"/>
+        </setting>          
+      </group>
+      <group name="auth_tags">
+        <setting name="auth_tag">
+          <type refid="auth_tags_type"/>
+        </setting>
+      </group>
+      <group name="key_agreement_methods">
+        <setting name="key_agreement_method">
+          <type refid="key_agreement_methods_type"/>
+        </setting>      
+      </group>
+      <group name="sas_encodings">
+        <setting name="sas_encoding">
+          <type refid="sas_encodings_type"/>
+        </setting>         
+      </group>
+    </group>
+    <group name="msrp">
+      <setting name="port">
+        <type>
+          <integer/>
+        </type>
+        <value>2855</value>
+      </setting>
+    </group>          
+  </group>
+  <group name="number_rewriting">
+    <setting name="use_number_rewriting">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>
+    <setting name="number_rewriting_country">
+      <type>
+        <string/>
+      </type>
+    </setting>
+    <setting name="number_rewriting_prefix">
+      <type>
+        <string/>
+      </type>
+    </setting>
+    <setting name="use_strip_dial_chars">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>
+    <setting name="strip_dial_chars">
+      <type>
+        <string/>
+      </type>
+    </setting>  
+  </group>
+  <group name="sip_credentials">
+    <setting name="SIP_domain">
+      <type>
+        <string/>
+      </type>
+    </setting>
+    <setting name="SIP_use_outbound_proxy">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>
+    <setting name="SIP_outbound_proxy">
+      <type>
+        <string/>
+      </type>
+    </setting>
+    <setting name="SIP_transport_type">
+      <type refid="SIP_transportType_type"/>
+      <value>udp</value>         
+    </setting>
+    <setting name="SIP_use_auth_username">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>
+    <setting name="SIP_auth_username">
+      <type>
+        <string/>
+      </type>
+    </setting>    
+  </group>
+  <group name="network">
+    <setting name="SIP_use_rport">
+      <type refid="true-false"/>
+      <value>true</value>
+    </setting>
+    <setting name="SIP_use_rport_media">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>
+    <setting name="SIP_keep_alive_mode">
+      <type refid="keep_alive_mode_type"/>
+      <value>false</value>
+    </setting>
+    <setting name="SIP_keep_alive_timeout">
+      <type>
+        <integer/>
+      </type>
+      <value>30</value>
+    </setting>
+    <setting name="reregistration_mode">
+      <type refid="re_mode_type"/>
+      <value>default</value>
+    </setting>
+    <setting name="reregistration_time">
+      <type>
+        <integer/>
+      </type>
+      <value>0</value>
+    </setting>
+    <setting name="resubscription_mode">
+      <type refid="re_mode_type"/>
+      <value>default</value>
+    </setting>
+    <setting name="resubscription_time">
+      <type>
+        <integer/>
+      </type>
+      <value>0</value>
+    </setting>
+    <group name="stun_options">
+      <setting name="use_stun">
+        <type refid="stun_options_type"/>
+        <value>default</value>
+      </setting>
+      <setting name="host">
+        <type>
+         <string/>
+        </type>
+        <value>stun.zoiper.com</value>
+      </setting>
+      <setting name="port">
+        <type>
+         <integer/>
+        </type>
+        <value>3478</value>
+      </setting>
+      <setting name="refresh_period">
+        <type>
+          <integer/>
+        </type>
+        <value>30</value>
+      </setting>    
+    </group>    
+  </group>
+  <group name="IAX">
+    <setting name="IAX2_host">
+      <type>
+       <string/>
+      </type>
+      <value></value>
+    </setting>
+    <setting name="IAX2_context">
+      <type>
+       <string/>
+      </type>
+      <value></value>
+    </setting>
+    <setting name="IAX2_callerId">
+      <type>
+       <string/>
+      </type>
+      <value></value>
+    </setting>
+    <setting name="IAX2_callerNumber">
+      <type>
+       <string/>
+      </type>
+      <value></value>
+    </setting>
+    <setting name="IAX2_dtmf_style">
+      <type refid="IAX2_dtmf_type"/>
+      <value>inband</value>
+    </setting>        
+  </group>   
+</model>

@@ -37,6 +37,7 @@ sipx_core = \
   sipXyard \
   sipXrelease \
   sipXjitsi \
+  sipXzoiper \
   sipXecs
 
 #additional configure options for sipXresiprocate package
