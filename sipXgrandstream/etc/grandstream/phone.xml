@@ -1533,7 +1533,7 @@
             <value></value>
             <description></description>
         </setting>
-        <setting name="#P9904" if="gsPhoneGxp21(30|35|40|60|70)">
+        <setting name="P9904" if="gsPhoneGxp21(30|35|40|60|70)">
             <label>OpenVPN Client Key</label>
             <type>
                 <string/>
