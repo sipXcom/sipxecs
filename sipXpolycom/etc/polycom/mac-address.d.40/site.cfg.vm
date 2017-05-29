@@ -359,6 +359,18 @@ device.sec.TLS.customCaCert1.set="1"
 device.sec.TLS.customCaCert1="$cert"
 />
 
+<powerManagement
+#set ($group = $cfg.EndpointSettings.getSetting('powerManagement').getSetting('usb.charging'))
+#foreach ($setting in $cfg.getSettings($group))
+    usb.charging.${setting.ProfileName}="$!{setting.Value}"
+#end
+
+#set ($group = $cfg.EndpointSettings.getSetting('powerManagement').getSetting('poe.pse'))
+#foreach ($setting in $cfg.getSettings($group))
+    poe.pse.${setting.ProfileName}="$!{setting.Value}"
+#end
+/>
+
 <sec
 sec.TLS.customCaCert.1="$cert"
 sec.TLS.profile.1.deviceCert="Application1"
@@ -469,4 +481,5 @@ sec.TLS.profile.1.caCert.platform2="0"
 #end
 />
 #end
+
 </polycomConfig>

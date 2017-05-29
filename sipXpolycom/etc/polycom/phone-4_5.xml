@@ -3394,6 +3394,34 @@
       </setting>
     </group>
   </group>
+  <group name="powerManagement" if="polycomRealPresenceTrio">
+    <group name="usb.charging">
+      <setting name="enabled">
+        <type>
+          <boolean />
+        </type>
+        <value>0</value>
+      </setting>
+    </group>
+    <group name="poe.pse">
+      <setting name="enabled">
+        <type>
+          <boolean />
+        </type>
+        <value>1</value>
+      </setting>
+      <setting name="class">
+        <type>
+          <enum>
+            <option><label>Class 0 (13W)</label><value>0</value></option>
+            <option><label>Class 1 (6.5W)</label><value>1</value></option>
+            <option><label>Class 2 (4W)</label><value>2</value></option>
+          </enum>
+        </type>
+        <value>0</value>
+      </setting>
+    </group>
+  </group>
   <group name="powerSaving" if="video">
     <setting name="enable">
       <type>
