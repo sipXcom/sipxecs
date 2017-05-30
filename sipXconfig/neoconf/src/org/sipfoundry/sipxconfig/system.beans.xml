@@ -62,7 +62,7 @@
       <value>org.postgresql.Driver</value>
     </property>
     <property name="jdbcUrl">
-      <value>jdbc:postgresql://localhost/SIPXCONFIG</value>
+      <value>jdbc:postgresql://postgres.ezuce/SIPXCONFIG</value>
     </property>
     <property name="user">
       <value>${sipxconfig.db.user}</value>

@@ -19,7 +19,7 @@ Usage: sipxconfig [start|stop|configtest|status|setup|db|run commands ...]
 Start Web UI administration for sipXpbx and for remotely provisioned
 SIP-based phones.
 
-Options include: 
+Options include:
 
   none                 Runs web admin ui
 
@@ -78,12 +78,6 @@ RequiredDatabaseVersion=13
 IndexDir=${TmpDir}/index
 Dependencies=`@SIPX_BINDIR@/java-dep -d ${CommonsLibDir} -d ${LibDir} sipxconfig sipxconfig-web @web_PKGS@ cdr-binding`
 export CLASSPATH=`echo @SIPX_CONFDIR@ ${Dependencies} ${PluginDir}/*.jar | sed -e 's/ /:/g'`
-
-#source @SIPX_CONFDIR@/postgres-pwd.properties
-
-value=`cat @SIPX_CONFDIR@/postgres-pwd.properties`
-prefix="password="
-password=${value#$prefix}
 
 # Incase system failed suddenly, clear previous locks
 clearIndexLocks() {
@@ -159,7 +153,7 @@ buildCommand() {
 runTask() {
   setupCheck
   databaseCommand upgrade
-  databaseVersionCheck    
+  databaseVersionCheck
   buildCommand task-$taskId
   Command="$Command org.sipfoundry.sipxconfig.common.SystemTaskRunner $*"
   runuser -m -s @BASH@ @SIPXPBXUSER@ -c "${Command}"
@@ -284,14 +278,6 @@ asyncrestart() {
   start
 }
 
-checkPrimary() {
-  if [ ! -f @SIPX_CFDATA@/defaults/primary.cfdat ]; then
-    "This process only runs on the primary machine and only after sipxecs-setup has completed" >&2
-    exit $EINCORRECTUSAGE
-  fi
-}
-checkPrimary
-
 case "$1" in
   nofork)
     NoFork=1
@@ -344,4 +330,3 @@ case "$1" in
 esac
 
 exit $Status
-

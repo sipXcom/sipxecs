@@ -77,7 +77,7 @@
   <property name="sipxconfig.db.password" value="" />
   <property name="sql.dir" location="${basedir}" />
   <property name="sipxpbx.conf.dir" location="${basedir}/.." />
-  <property name="sipxconfig.db.url" value="jdbc:postgresql://localhost/${sipxconfig.db.name}" />
+  <property name="sipxconfig.db.url" value="jdbc:postgresql://postgres.ezuce/${sipxconfig.db.name}" />
   <property name="dblink.sql" location="/usr/share/pgsql/contrib/dblink.sql" />
   <property name="log.dir" value="${basedir}" />
   <property name="migration.log" value="${log.dir}/sipxconfig-2.8-db-migration.log" />
