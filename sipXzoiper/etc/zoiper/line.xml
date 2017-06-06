@@ -161,9 +161,9 @@
       <type refid="true-false"/>
       <value>true</value>
     </setting>
-    <setting name="password">
+    <setting name="password" advanced="yes">
       <type>
-        <string/>
+        <string />
       </type>
     </setting>  
   </group>
@@ -198,6 +198,10 @@
     </setting>  
   </group>
   <group name="compatibility_modes">
+    <setting name="SIP_dtmf_style">
+      <type refid="dtmf_style_type"/>
+      <value>inband</value>
+    </setting>  
     <setting name="force_rfc3264">
       <type refid="true-false"/>
       <value>false</value>
@@ -247,10 +251,6 @@
       <type>
         <string/>
       </type>
-    </setting>
-    <setting name="SIP_dtmf_style">
-      <type refid="dtmf_style_type"/>
-      <value>inband</value>
     </setting>
     <setting name="SIP_use_blf">
       <type refid="true-false"/>

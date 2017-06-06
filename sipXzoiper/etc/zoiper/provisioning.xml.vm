@@ -446,7 +446,7 @@
           <SIP_use_rport>$!line.getValue().getSettingValue('network/SIP_use_rport')</SIP_use_rport>
           <SIP_use_rport_media>$!line.getValue().getSettingValue('network/SIP_use_rport_media')</SIP_use_rport_media>
           <SIP_srtp_mode>$!line.getValue().getSettingValue('encryption/SIP_srtp_mode')</SIP_srtp_mode>
-          <SIP_dtmf_style>$!line.getValue().getSettingValue('features/SIP_dtmf_style')</SIP_dtmf_style>
+          <SIP_dtmf_style>$!line.getValue().getSettingValue('compatibility_modes/SIP_dtmf_style')</SIP_dtmf_style>
           <SIP_use_blf>$!line.getValue().getSettingValue('features/SIP_use_blf')</SIP_use_blf>
           <SIP_publish_presence>$!line.getValue().getSettingValue('features/SIP_publish_presence')</SIP_publish_presence>
           <SIP_subscribe_presence>$!line.getValue().getSettingValue('features/SIP_subscribe_presence')</SIP_subscribe_presence>
@@ -476,9 +476,9 @@
               </codec>
               #set($i=$i + 1)              
             #end
-          </codecs>          
-          <enabled>$!line.getValue().getSettingValue('encryption/zrtp/enabled')</enabled>
+          </codecs>
           <zrtp>
+            <enabled>$!line.getValue().getSettingValue('encryption/zrtp/enabled')</enabled>
             <hash_algorithms>
               #set($i=0)
               #foreach($hash_algorithm in $!line.getValue().getSettingValue('encryption/zrtp/hash_algorithms/hash_algorithm').split("[|]"))
@@ -551,12 +551,24 @@
           <reregistration_mode>$!line.getValue().getSettingValue('network/reregistration_mode')</reregistration_mode>          
           <reregistration_time>$!line.getValue().getSettingValue('network/reregistration/reregistration_time')</reregistration_time>
           <resubscription_mode>$!line.getValue().getSettingValue('network/reregistration/resubscription_mode')</resubscription_mode>
-          <resubscription_time>$!line.getValue().getSettingValue('network/reregistration/resubscription_time')</resubscription_time>                    
-          <use_stun>$!line.getValue().getSettingValue('network/stun_options/use_stun')</use_stun>
-          <host>$!line.getValue().getSettingValue('network/stun_options/host')</host>
-          <port>$!line.getValue().getSettingValue('network/stun_options/port')</port>
-          <refresh_period>$!line.getValue().getSettingValue('network/stun_options/refresh_period')</refresh_period>
-        </account>                  
+          <resubscription_time>$!line.getValue().getSettingValue('network/reregistration/resubscription_time')</resubscription_time>
+          <stun>                    
+            <use_stun>$!line.getValue().getSettingValue('network/stun_options/use_stun')</use_stun>
+            <host>$!line.getValue().getSettingValue('network/stun_options/host')</host>
+            <port>$!line.getValue().getSettingValue('network/stun_options/port')</port>
+            <refresh_period>$!line.getValue().getSettingValue('network/stun_options/refresh_period')</refresh_period>
+          </stun>
+        </account>       
+        #if($line.getValue().getUser().isImEnabled())
+          <account>
+            <ident>Jabber\:$!line.getValue().getSettingValue('generic/ident')</ident>
+            <name>$!line.getValue().getSettingValue('generic/name')</name>          
+            <username>$!line.getValue().getSettingValue('credentials/username')</username>
+            <password>$!line.getValue().getSettingValue('credentials/password')</password>
+            <register_on_startup>$!line.getValue().getSettingValue('features/register_on_startup')</register_on_startup>
+            <protocol>xmpp</protocol>            
+          </account>
+        #end                  
       #end
     </accounts>
     <contact_services>
