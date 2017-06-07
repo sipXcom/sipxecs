@@ -131,22 +131,8 @@ account.${lastLineID}.user_name = $!{setting.Value}
 #if (${setting.name} == "codec")
 #codecSetting($setting, $lastLineID)
 #else
-#if (${setting.Value})
-#if (${setting.ProfileName} == "blf.blf_list_uri")
-#set ($phoneHasBlf = 0) 
-#foreach ($button in $cfg.SpeedDial)
-#if ($button.Blf)
-#set ($phoneHasBlf = 1) 
-#end
-#end
-#if (${phoneHasBlf} == 1)
+#if (${setting.Value} && ${setting.Value} != "")
 account.${lastLineID}.${setting.ProfileName} = $!{setting.Value}
-#else
-account.${lastLineID}.${setting.ProfileName} = %NULL%
-#end
-#else
-account.${lastLineID}.${setting.ProfileName} = $!{setting.Value}
-#end
 #else
 account.${lastLineID}.${setting.ProfileName} = %NULL%
 #end
