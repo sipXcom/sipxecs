@@ -694,11 +694,11 @@ SipRouter::handleCongestion(SipMessage *sipRequest, bool midDialog)
 
             OS_LOG_DEBUG(FAC_SIP, "SipRouter::handleCongestion -" << qstatsMsg.str());
 
-            bool transportQueueSizeViolation = transportQueueSize > ((transportMaxQueueSize * _rejectOnFilledQueuePercent) / 100);
+            bool transportQueueSizeViolation = (transportMaxQueueSize != 0) && (transportQueueSize > ((transportMaxQueueSize * _rejectOnFilledQueuePercent) / 100));
             bool proxyQueueSizeViolation = proxyQueueSize > ((proxyMaxQueueSize * _rejectOnFilledQueuePercent) / 100);
             bool transactionCountViolation = transactionCount > _maxTransactionCount;
 
-            if (transportQueueSizeViolation || proxyQueueSizeViolation)
+            if (transportQueueSizeViolation || proxyQueueSizeViolation || transactionCountViolation)
             {
                 if (!midDialog)
                 {
