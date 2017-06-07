@@ -93,6 +93,8 @@ account.${account}.codec.${i}.payload_type = $!{pt}
 #linesSetting($s,"")
 #elseif(${s.name} == "_RemotePhonebooks")
 #phonebooksSettings($s)
+#elseif(${s.name.matches("iant_custom_configs")})
+$!{s.Value}
 #else
 #if(${s.Value})
 ${s.ProfileName} = $!{s.Value}
@@ -129,8 +131,22 @@ account.${lastLineID}.user_name = $!{setting.Value}
 #if (${setting.name} == "codec")
 #codecSetting($setting, $lastLineID)
 #else
-#if (${setting.Value} && ${setting.Value} != "")
+#if (${setting.Value})
+#if (${setting.ProfileName} == "blf.blf_list_uri")
+#set ($phoneHasBlf = 0) 
+#foreach ($button in $cfg.SpeedDial)
+#if ($button.Blf)
+#set ($phoneHasBlf = 1) 
+#end
+#end
+#if (${phoneHasBlf} == 1)
 account.${lastLineID}.${setting.ProfileName} = $!{setting.Value}
+#else
+account.${lastLineID}.${setting.ProfileName} = %NULL%
+#end
+#else
+account.${lastLineID}.${setting.ProfileName} = $!{setting.Value}
+#end
 #else
 account.${lastLineID}.${setting.ProfileName} = %NULL%
 #end

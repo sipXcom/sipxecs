@@ -1065,6 +1065,7 @@
 		<setting name="features.dnd.feature_key_sync.enable"><type><boolean/></type><value>0</value></setting>
 		<setting name="sip.notify_reboot_enable"><type refid="CheckSyncReboot_type"/><value>0</value></setting>
 		<setting name="phone_setting.backgrounds"><type><string/></type><value>Default:Default.png</value></setting>
+		<setting name="iant_custom_configs" advanced="yes"><type><string multiLine="true" maxLen="7400"/></type></setting>
 	</group>
     <group name="security">
 	<group name="PASSWORD">

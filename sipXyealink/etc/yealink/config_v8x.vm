@@ -93,6 +93,8 @@ account.${account}.codec.${i}.payload_type = $!{pt}
 #linesSetting($s,"")
 #elseif(${s.name} == "_RemotePhonebooks")
 #phonebooksSettings($s)
+#elseif(${s.name.matches("iant_custom_configs")})
+$!{s.Value}
 #else
 #if(${s.Value})
 ${s.ProfileName} = $!{s.Value}
