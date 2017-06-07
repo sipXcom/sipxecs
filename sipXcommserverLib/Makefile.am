@@ -6,11 +6,8 @@ include config/project.am
 
 SUBDIRS = \
 	. \
-	src \
-	etc \
-	include \
-	meta \
-	bin
+	bin \
+  etc
 
 # The final commands edit an existing subscription.xml file to add the
 # "component", "accept", and "version" columns, if they are not already

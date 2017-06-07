@@ -10,7 +10,7 @@
       <value>sipxconfig.properties</value>
     </constructor-arg>
   </bean>
-  
+
   <bean id="postgres-pwd.properties" class="org.springframework.core.io.ClassPathResource">
     <constructor-arg index="0">
       <value>postgres-pwd.properties</value>
@@ -23,7 +23,7 @@
       <ref local="sipxconfig.properties" />
     </property>
   </bean>
-  
+
   <bean id="postgres-pwd" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
     <property name="ignoreUnresolvablePlaceholders" value="true"/>
     <property name="location">
@@ -39,7 +39,7 @@
     </property>
     <property name="ignoreInvalidKeys" value="true" />
   </bean>
-  
+
   <bean class="org.springframework.beans.factory.config.PropertyOverrideConfigurer">
     <property name="location">
       <ref local="postgres-pwd.properties" />
@@ -62,7 +62,7 @@
       <value>org.postgresql.Driver</value>
     </property>
     <property name="jdbcUrl">
-      <value>jdbc:postgresql://postgres.ezuce/SIPXCONFIG</value>
+      <value>jdbc:postgresql://postgres.ezuce/sipxconfig</value>
     </property>
     <property name="user">
       <value>${sipxconfig.db.user}</value>
@@ -226,12 +226,12 @@
     <property name="indexer" ref="fastIndexer" />
     <property name="beanIndexHelper" ref="beanIndexHelper"/>
   </bean>
-  
+
   <bean id="abstractDaoImpl" abstract="true">
     <property name="sessionFactory" ref="sessionFactory"/>
-    <property name="daoEventPublisher" ref="daoEventPublisher"/>    
+    <property name="daoEventPublisher" ref="daoEventPublisher"/>
   </bean>
-  
+
   <!--
     - Use this instead of 'hibernateInterceptor' when you want to
     - load spring beans from hibernate mappings.  See common/common.beans.xml for example
@@ -245,7 +245,7 @@
       </list>
     </property>
   </bean>
-  
+
   <bean id="onDeleteAdvisor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
     <property name="advice">
       <ref local="onDeleteEventDispatcher" />
@@ -290,9 +290,9 @@
       </list>
     </property>
   </bean>
-  
-  <bean id="daoEventPublisherImpl" class="org.sipfoundry.sipxconfig.common.event.DaoEventPublisherImpl">  
-  </bean>  
+
+  <bean id="daoEventPublisherImpl" class="org.sipfoundry.sipxconfig.common.event.DaoEventPublisherImpl">
+  </bean>
 
   <bean id="onDeleteEventDispatcher" class="org.sipfoundry.sipxconfig.common.event.DaoEventDispatcher"
     factory-method="createDeleteDispatcher">
@@ -363,5 +363,5 @@
   <bean id="beanWithSettings" abstract="true">
     <property name="modelFilesContext" ref="modelFilesContext" />
   </bean>
-  
+
 </beans>

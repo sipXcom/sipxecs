@@ -6,7 +6,4 @@ include config/project.am
 
 SUBDIRS = \
 	. \
-	bin \
-	src \
-	include \
-	syslogviewer
+	bin

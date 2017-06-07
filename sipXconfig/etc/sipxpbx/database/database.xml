@@ -11,30 +11,30 @@
   -      defined at the top of schema.sql
   -
   -      Example:
-  
+
       <target name="xxx" unless="xxx">
           <db-patch patch="xxx"/>
       </target>
-  
+
   -
   -   3. add a reference to your patch in the ant target for the last version
-  - 
+  -
   -      Example:
   -
       <target name="versionN" ... >
       ...
-      <antcall target="xxx"/>  
-  
-  
+      <antcall target="xxx"/>
+
+
   -
-  - How to run some code to initialize tables beyond simple SQL.  
+  - How to run some code to initialize tables beyond simple SQL.
   -  1. Follow the same instructions for adding a patch and add this to your SQL
   -
   -       insert into setup (name) values ('xxx');
   -
   -    where 'xxx' is any meaningful lable you choose to represent your new operation
-  - 
-  -   2. The follow instructions in 
+  -
+  -   2. The follow instructions in
   -
   -        sipXconfig/neoconf/src/org/sipfoundry/sipXconfig/setup/SetupListener.java
   -
@@ -43,13 +43,13 @@
   -
   - How to write a database patch that will reset itself in case you anticipate more changes to the
   - schema.  Otherwise, you end up writing patches to the patches, and this can be messy.  The only
-  - disadvantage to this is that each time the system starts up, your data will be reset, but for 
+  - disadvantage to this is that each time the system starts up, your data will be reset, but for
   - brand new features in development, this is usually accepatable
   -
   - 1. Create sql patch file as you normally would and add a reference to it in the versionN section
   -
   - 2. By altering the dependency you will be telling ant to always reset and always apply your patch
-  
+
 
       <target name="reset-xxx" if="xxx">
           <sipx-sql>
@@ -72,7 +72,8 @@
   -
 -->
 <project name="database" basedir=".">
-  <property name="sipxconfig.db.name" value="SIPXCONFIG" />
+  <property name="postgres.host" value="postgres.ezuce" />
+  <property name="sipxconfig.db.name" value="sipxconfig" />
   <property name="sipxconfig.db.user" value="@POSTGRESQL_USER@" />
   <property name="sipxconfig.db.password" value="" />
   <property name="sql.dir" location="${basedir}" />
@@ -131,7 +132,7 @@
     <plsql-patch patch="truncate-all-function" />
   </target>
 
-  <!-- 
+  <!--
     - NOTE: Creating a database and apply schema. Does not run any patches or initialize task.
   -->
   <target name="create" depends="createdb,schema" description="create database with schema" />
@@ -314,7 +315,7 @@
     <antcall target="gateway-location" />
     <antcall target="add-device-timezone"/>
     <antcall target="add-mrtg-service"/>
-  	<antcall target="location-add-primary" />  	
+  	<antcall target="location-add-primary" />
   	<antcall target="conference-bridge-service" />
     <antcall target="location-bundle" />
     <antcall target="domain-add-realm" />
@@ -449,7 +450,7 @@
     <antcall target="cisco-to-linksys"/>
     <antcall target="branch-timezone" />
     <antcall target="add_value_storage_to_openacdline"/>
-    <antcall target="add_timeout_to_ldap"/>  	
+    <antcall target="add_timeout_to_ldap"/>
     <antcall target="remove-ldap-filter-constraint" />
     <antcall target="shards"/>
     <antcall target="region"/>
@@ -541,7 +542,7 @@
   <target name="ldap_settings" unless="ldap_settings">
     <db-patch patch="ldap_settings" />
   </target>
-  
+
   <target name="time_of_day" unless="time_of_day">
     <db-patch patch="time_of_day" />
   </target>
@@ -732,11 +733,11 @@
     </sipx-sql>
     <mark-patch-applied patch="first-run-task" />
   </target>
-  
+
   <target name="create-special-users" unless="create-special-users">
     <!-- this is temporary:
         - make sure that 'first-run' task is rerun to create special users
-        - no need to roll it in after freeze since only one patch needs to do that 
+        - no need to roll it in after freeze since only one patch needs to do that
     -->
     <sipx-sql>
       delete from initialization_task where name = 'first-run';
@@ -744,7 +745,7 @@
     </sipx-sql>
     <mark-patch-applied patch="create-special-users" />
   </target>
-  
+
   <target name="gateway-port" unless="gateway-port">
     <db-patch patch="gateway-port" />
   </target>
@@ -775,10 +776,10 @@
 
   <target name="override-language-not-null" unless="override-language-not-null">
     <db-patch patch="override-language-not-null" />
-  </target> 
+  </target>
 
   <target name="special-users" unless="special-users">
-    <db-patch patch="special-users"/>    
+    <db-patch patch="special-users"/>
   </target>
 
   <!-- do not roll in after upgrade - it's used to fix XCF-1934 only -->
@@ -821,10 +822,10 @@
   <target name="user-vcard-file" unless="user-vcard-file">
     <db-patch patch="user-vcard-file"/>
   </target>
-  	
+
   <target name="paging-group-add-timeout" unless="paging-group-add-timeout">
     <db-patch patch="paging-group-add-timeout"/>
-  </target>	
+  </target>
 
   <target name="location" unless="location">
     <db-patch patch="location"/>
@@ -837,10 +838,10 @@
   <target name="paging-server-advanced" unless="paging-server-advanced">
     <db-patch patch="paging-server-advanced" />
   </target>
-	
+
   <target name="add-sipx-supervisor-service" unless="add-sipx-supervisor-service">
 	<db-patch patch="add-sipx-supervisor-service"/>
-  </target>	
+  </target>
 
   <target name="add-proxy-service" unless="add-proxy-service">
     <db-patch patch="add-proxy-service"/>
@@ -865,7 +866,7 @@
   <target name="add-park-service" unless="add-park-service">
     <db-patch patch="add-park-service"/>
   </target>
-	
+
   <target name="add-presence-service" unless="add-presence-service">
     <db-patch patch="add-presence-service"/>
   </target>
@@ -873,7 +874,7 @@
   <target name="add-ivr-service" unless="add-ivr-service">
     <db-patch patch="add-ivr-service"/>
   </target>
-  
+
   <target name="add-mrtg-service" unless="add-mrtg-service">
     <db-patch patch="add-mrtg-service"/>
   </target>
@@ -889,7 +890,7 @@
   <target name="add-freeswitch-service" unless="add-freeswitch-service">
     <db-patch patch="add-freeswitch-service"/>
   </target>
-  
+
   <target name="remove-user-based-dialing" unless="remove-user-based-dialing">
     <db-patch patch="remove-user-based-dialing"/>
   </target>
@@ -989,14 +990,14 @@
 
 	<!--
     Migration Targets Legend
-    
+
     migrate-2.8          - PDS to SIPXCONFIG, 2.8 release to 3.0 release
   -->
 
-  <!-- 
+  <!--
     2.8 Migration
     Because 2.8 database schema was entirely different than 3.0 schema, we have one giant migration script
-    written in PL/pgSQL db language and uses the 'dblink' module, a postgres contrib package to 
+    written in PL/pgSQL db language and uses the 'dblink' module, a postgres contrib package to
     translate data.
   -->
   <target name="migrate-2.8-setup">
@@ -1026,7 +1027,7 @@
     </echo>
     <echo>${migration.log}</echo>
     <exec executable="psql" output="${migration.log}" failonerror="true">
-      <arg line="-a --set ON_ERROR_STOP=true -U ${sipxconfig.db.user} ${sipxconfig.db.name} -f ${sql.dir}/migrate-2.8.sql" />
+      <arg line="-a --set ON_ERROR_STOP=true -U ${sipxconfig.db.user} ${sipxconfig.db.name} -h ${postgres.host} -f ${sql.dir}/migrate-2.8.sql" />
     </exec>
   </target>
 
@@ -1068,8 +1069,8 @@
   <!--
     - version1 patches
   -->
-  <!-- 
-    - The phone uniqueness constraint was a mistake, get rid of it, 
+  <!--
+    - The phone uniqueness constraint was a mistake, get rid of it,
     - NOTE: Do not copy/paste this task to to create a new patch
     - THIS is not a patch, rather a left-over task incase a customer has this
     - issue.  Original schema was fixed.
@@ -1160,7 +1161,7 @@
     <plsql-patch patch="createlang-plpgsql"/>
   </target>
   <target name="createlang-plpgsql2" unless="createlang-plpgsql2">
-    <!-- 
+    <!--
       - if coming from v10 createlang-plpgsql will be true, but from v11 it wont
       - i think plsql patch was introduced post release but not entirely sure.
       - so we rerun it here, it's a safe to run multiple times.
@@ -1291,7 +1292,7 @@
   </target>
   <target name="openacd-insert-alias-did" unless="openacd-insert-alias-did">
     <db-patch patch="openacd-insert-alias-did" />
-  </target>	
+  </target>
   <target name="openacd-add-queue-recipe" unless="openacd-add-queue-recipe">
 	<db-patch patch="openacd-add-queue-recipe" />
   </target>
@@ -1351,7 +1352,7 @@
   </target>
   <target name="alarm_receiver" unless="alarm_receiver">
 	<db-patch patch="alarm_receiver" />
-  </target>	
+  </target>
   <target name="voicemail-pin" unless="voicemail-pin">
 	<plsql-patch patch="voicemail-pin"/>
   </target>
@@ -1361,11 +1362,11 @@
   <target name="crack-pin" if="migrate44.crack_pin">
     <sipx-sql>
       select uncover_pin_on_restore('${migrate44.crack_pin}', '${migrate44.crack_passwd}', ${migrate44.crack_pin_len});
-    </sipx-sql>  
+    </sipx-sql>
   </target>
   <target name="remove-im-password" unless="remove-im-password">
 	<plsql-patch patch="remove-im-password"/>
-  </target>	
+  </target>
   <target name="convert-init-task-to-setup" unless="convert-init-task-to-setup">
 	<db-patch patch="convert-init-task-to-setup"/>
   </target>
@@ -1416,7 +1417,7 @@
   </target>
   <target name="add_attendant_dial_regex" unless="add_attendant_dial_regex">
 	<db-patch patch="add_attendant_dial_regex"/>
-  </target>		
+  </target>
   <target name="holiday-dates" unless="holiday-dates">
     <db-patch patch="holiday-dates"/>
   </target>
@@ -1480,7 +1481,7 @@
   </target>
   <target name="add_vm_server_port" unless="add_vm_server_port">
   	<db-patch patch="add_vm_server_port"/>
-  </target>	
+  </target>
   <target name="openacd-permission-update2" unless="openacd-permission-update2">
     <db-patch patch="openacd-permission-update2"/>
   </target>
@@ -1581,17 +1582,17 @@
   <presetdef name="sipx-sql">
     <sql driver="org.postgresql.Driver" url="${sipxconfig.db.url}" userid="${sipxconfig.db.user}" password="${sipxconfig.db.password}" classpath="${jdbc-driver.jar}" />
   </presetdef>
-  
+
   <!--
    - PL/PGSQL that is not escaped with ' (see meetme_location.sql v.s. migrate-2.8.sql) cannot be run thru
    - java driver so use psql command.  Not having to escape ' with '' means easy to read script AND a script
-   - you can develop inside a SQL editor. Douglas  
-   --> 
+   - you can develop inside a SQL editor. Douglas
+   -->
   <macrodef name="plsql-patch">
     <attribute name="patch" />
     <sequential>
       <exec executable="psql" failonerror="true">
-        <arg line="-a --set ON_ERROR_STOP=true -U ${sipxconfig.db.user} ${sipxconfig.db.name} -f ${sql.dir}/@{patch}.sql" />
+        <arg line="-a --set ON_ERROR_STOP=true -U ${sipxconfig.db.user} ${sipxconfig.db.name} -h ${postgres.host} -f ${sql.dir}/@{patch}.sql" />
       </exec>
       <mark-patch-applied patch="@{patch}" />
     </sequential>
@@ -1603,7 +1604,7 @@
     <attribute name="mark-as" />
     <sequential>
       <exec executable="psql" failonerror="true">
-        <arg line="-a --set ON_ERROR_STOP=true -U ${sipxconfig.db.user} ${sipxconfig.db.name} -f ${sql.dir}/@{patch}.sql" />
+        <arg line="-a --set ON_ERROR_STOP=true -U ${sipxconfig.db.user} ${sipxconfig.db.name} -h ${postgres.host} -f ${sql.dir}/@{patch}.sql" />
       </exec>
       <mark-patch-applied patch="@{mark-as}" />
     </sequential>
@@ -1613,11 +1614,11 @@
     <attribute name="src" />
     <sequential>
       <exec executable="psql" failonerror="true">
-        <arg line="-a --set ON_ERROR_STOP=true -U ${sipxconfig.db.user} ${sipxconfig.db.name} -f @{src}" />
+        <arg line="-a --set ON_ERROR_STOP=true -U ${sipxconfig.db.user} ${sipxconfig.db.name} -h ${postgres.host} -f @{src}" />
       </exec>
     </sequential>
   </macrodef>
-  
+
   <!-- declare schema version -->
   <macrodef name="sipx-version">
     <attribute name="version" />
