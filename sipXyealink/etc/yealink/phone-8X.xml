@@ -462,7 +462,7 @@
 	    <setting name="features.dtmf.hide"><type><boolean/></type><value>1</value></setting>
 	    <!--// It enables or disables the phone to display the DTMF digits for a short period before displaying as sterisks when the parameter "features.dtmf.hide" is set to 1 (Enabled); 0-Disabled, 1-Enabled (default); //-->
 	    <setting name="features.dtmf.hide_delay"><type><boolean/></type><value>1</value></setting>
-
+	    <setting name="features.play_local_dtmf_tone_enable" if="yealinkPhone((SIPT[24])|(W5)|(VP530)).*"><type><boolean/></type><value>1</value></setting>
 	    <!--// #Configure the hotline number and delay time (in seconds). It ranges from 0 to 180, the default value is 4. //-->
 	    <setting name="features.hotline_number"><type><string/></type></setting>
 	    <setting name="features.hotline_delay"><type><integer min="0" max="180"/></type><value>4</value></setting>
