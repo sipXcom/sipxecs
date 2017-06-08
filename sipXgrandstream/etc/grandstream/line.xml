@@ -709,7 +709,7 @@
             </type>
             <value>0</value>
         </setting>
-        <setting name="26049-P26149-P26249-P26349-P26449-P26549" if="gsPhoneGxp21(30|35|40|60|70)">
+        <setting name="P26049-P26149-P26249-P26349-P26449-P26549" if="gsPhoneGxp21(30|35|40|60|70)">
             <label>Prefix for dialing password</label>
             <type>
                 <string/>
