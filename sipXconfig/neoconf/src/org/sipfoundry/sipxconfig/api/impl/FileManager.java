@@ -57,14 +57,14 @@ public class FileManager extends CurrentUser {
         for (Attachment attachment : attachments) {
             String name = getFileNameFromContentDisposition(attachment
                     .getHeader(ResponseUtils.CONTENT_DISPOSITION));
-            if (uploadFile(attachment.getDataHandler(), name)) {
+            if (!uploadFile(attachment.getDataHandler(), name)) {
                 failures.add(name);
             }
         }
         return failures;
     }
 
-    private String getFileNameFromContentDisposition(String header) {
+    protected String getFileNameFromContentDisposition(String header) {
         Pattern regex = Pattern.compile("(?<=filename=\").*?(?=\")");
         Matcher regexMatcher = regex.matcher(header);
         if (regexMatcher.find()) {

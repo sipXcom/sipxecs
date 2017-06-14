@@ -52,6 +52,7 @@
         <ref bean="dnsRestApi"/>
         <ref bean="mohRestApi"/>
         <ref bean="myMohRestApi"/>
+        <ref bean="myGreetingsRestApi"/>
         <ref bean="gatewayRestApi"/>
         <ref bean="scheduleRestApi"/>
         <ref bean="dialPlanRestApi"/>
@@ -131,6 +132,13 @@
     <bean class="org.sipfoundry.sipxconfig.api.impl.MyMohApiImpl" id="myMohRestApi">
         <property name="musicOnHoldManager" ref="musicOnHoldManager" />
         <property name="coreContext" ref="coreContext" />
+    </bean>
+    <bean class="org.sipfoundry.sipxconfig.api.impl.MyGreetingsApiImpl" id="myGreetingsRestApi">
+        <property name="mailstorePath" value="${sysdir.mailstore}"/>
+        <property name="coreContext" ref="coreContext" />
+        <property name="messages" ref="globalMessageSource" />
+        <property name="commandReplace" value="java -jar ${sysdir.share}/sipXivr/gridfs-voicemail-cli.jar --replacePrompt %s %s %s %s"/>
+        <property name="commandCopy" value="java -jar ${sysdir.share}/sipXivr/gridfs-voicemail-cli.jar --getPrompt  %s %s %s %s"/>
     </bean>
     <bean class="org.sipfoundry.sipxconfig.api.impl.PagingGroupApiImpl" id="pagingRestApi">
         <property name="pagingContext" ref="pagingContext"/>
