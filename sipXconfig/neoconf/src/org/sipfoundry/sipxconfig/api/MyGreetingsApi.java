@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2016 eZuce, Inc. All rights reserved.
+ * Copyright (c) 2017 eZuce, Inc. All rights reserved.
  * Contributed to sipXcom under a Contributor Agreement
  *
  * This software is free software; you can redistribute it and/or modify it under

@@ -17,8 +17,12 @@
  http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.0.xsd
  http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-    <bean id="loggingInInterceptor" class="org.apache.cxf.interceptor.LoggingInInterceptor" />
-    <bean id="loggingOutInterceptor" class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
+    <bean id="loggingInInterceptor" class="org.sipfoundry.sipxconfig.api.impl.SipXLoggingInInterceptor">
+      <property name="showBinaryContent" value="false"/>
+    </bean>
+    <bean id="loggingOutInterceptor" class="org.sipfoundry.sipxconfig.api.impl.SipXLoggingOutInterceptor">
+      <property name="showBinaryContent" value="false"/>
+    </bean>
 
     <util:list id="audioExtensions" value-type="java.lang.String">
         <value>wav</value>
