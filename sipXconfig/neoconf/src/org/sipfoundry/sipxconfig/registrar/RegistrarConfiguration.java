@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
+import org.elasticsearch.common.lang3.StringUtils;
 import org.sipfoundry.sipxconfig.address.Address;
 import org.sipfoundry.sipxconfig.admin.AbstractResLimitsConfig;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
@@ -101,6 +102,11 @@ public class RegistrarConfiguration implements ConfigProvider, ApplicationContex
         Setting root = settings.getSettings();
         file.writeSettings(SettingUtil.filter(NO_UNDERSCORE, root.getSetting("registrar-config")));
         file.writeSettings(SettingUtil.filter(NO_UNDERSCORE, root.getSetting("other")));
+        //settings that should not be written in config file if empty
+        String pickupBindPort = root.getSetting("registrar-config-empty/SIP_REDIRECT.100-PICKUP.BIND_PORT").getValue();
+        if (!StringUtils.isEmpty(pickupBindPort)) {
+            file.write("SIP_REDIRECT.100-PICKUP.BIND_PORT", pickupBindPort);
+        }
         // add authority levels
         file.write("SIP_REDIRECT_AUTHORITY_LEVEL.090-USERPARAM", "60");
         file.write("SIP_REDIRECT_AUTHORITY_LEVEL.100-PICKUP", "50");
