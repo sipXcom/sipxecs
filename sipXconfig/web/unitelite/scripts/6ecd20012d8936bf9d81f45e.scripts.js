@@ -2013,6 +2013,60 @@ uw.service('restService', [
       return deferred.promise;
     }
 
+    this.deleteGreetingFileWav = function () {
+      var deferred = $q.defer();
+
+      sipRest.deleteGreetingFileWav().
+      success(function (data) {
+        deferred.resolve(data);
+      }).
+      error(function (e) {
+        deferred.reject(e);
+      })
+
+      return deferred.promise;
+    }
+
+    this.deleteGreetingFileMp3 = function () {
+      var deferred = $q.defer();
+
+      sipRest.deleteGreetingFileMp3().
+      success(function (data) {
+        deferred.resolve(data);
+      }).
+      error(function (e) {
+        deferred.reject(e);
+      })
+
+      return deferred.promise;
+    }
+
+    this.listenGreetingFileWav = function () {
+      var deferred = $q.defer();
+
+      sipRest.listenGreetingFileWav().
+      success(function (data) {
+        deferred.resolve(data);
+      }).
+      error(function (e) {
+        deferred.reject(e);
+      })
+      return deferred.promise;
+    }
+
+    this.listenGreetingFileMp3 = function () {
+      var deferred = $q.defer();
+
+      sipRest.listenGreetingFileMp3().
+      success(function (data) {
+        deferred.resolve(data);
+      }).
+      error(function (e) {
+        deferred.reject(e);
+      })
+      return deferred.promise;
+    }
+
     this.getIMproperties = function () {
       var deferred = $q.defer();
 
@@ -2493,6 +2547,30 @@ uw.service('restService', [
           return request(authHeaders({
             method: 'GET',
             url:   baseRestNew + '/my/moh/prompts/'+data
+          }))
+        },
+        deleteGreetingFileWav: function (data) {
+          return request(authHeaders({
+            method: 'DELETE',
+            url:   baseRestNew + '/my/greetings/standard/wav'
+          }))
+        },
+        deleteGreetingFileMp3: function (data) {
+          return request(authHeaders({
+            method: 'DELETE',
+            url:   baseRestNew + '/my/greetings/standard/mp3'
+          }))
+        },
+        listenGreetingFileWav: function () {
+          return request(authHeaders({
+            method: 'GET',
+            url:   baseRestNew + '/my/greetings/standard/wav'
+          }))
+        },
+        listenGreetingFileMp3: function () {
+          return request(authHeaders({
+            method: 'GET',
+            url:   baseRestNew + '/my/greetings/standard/mp3'
           }))
         },
         getIMproperties: function () {
@@ -4226,6 +4304,43 @@ uw.service('restService', [
               main: null,
               selected: null,
               pass: null,
+              selectedGreeting: 'standard.mp3',
+              isSelectedGreetingWav: false,
+
+              deleteGreeting: function() {
+                if (secondary.settings.user.vm.isSelectedGreetingWav){
+                  restService.deleteGreetingFileWav().then(function () {
+                    console.log("deleted standard Greeting file wav");
+                    //secondary.settings.user.vm.selectedGreeting = 'standard.wav'
+                  }).catch(function (err) {
+                    console.log("error delete Greeting file");
+                  });
+                }
+                else{
+                  restService.deleteGreetingFileMp3().then(function () {
+                    console.log("deleted standard Greeting file mp3");
+                    //secondary.settings.user.vm.selectedGreeting = 'standard.mp3'
+                  }).catch(function (err) {
+                    console.log("error delete Greeting file");
+                  });
+                }
+              },
+              listenGreeting: function(){
+                if (secondary.settings.user.vm.isSelectedGreetingWav) {
+                  restService.listenGreetingFileWav().then(function (data) {
+                    window.open('/sipxconfig/api/my/greetings/standard/wav', '_blank');
+                  }).catch(function (err) {
+                    console.log("error listen greeting file");
+                  });
+                }
+                else {
+                  restService.listenGreetingFileMp3().then(function (data) {
+                    window.open('/sipxconfig/api/my/greetings/standard/mp3', '_blank');
+                  }).catch(function (err) {
+                    console.log("error listen greeting file");
+                  });
+                }
+              },
               select: [
                 {
                   name: 'Default system',
@@ -5664,6 +5779,102 @@ uw.
         console.info('onCompleteAll');
     };
   }]);
+})();
+
+(function(){
+  'use strict';
+
+  uw.controller('UploadGreetingFile', [
+    '$rootScope',
+    '$scope',
+    'restService',
+    'uiService',
+    'CONFIG',
+    'FileUploader',
+    function ($rootScope, $scope, restService, uiService, CONFIG, FileUploader) {
+      $scope.settings          = uiService.secondary.settings;
+      var baseRestNew = CONFIG.baseRest.replace("rest","api");
+
+      var uploader = $scope.uploader = new FileUploader({
+          url: baseRestNew + '/my/greetings/standard/wav'
+        //headers: { "Authorization": tokenHeader }
+        // withCredentials: true
+      });
+
+      // FILTERS
+
+      uploader.filters.push({
+        name: 'customFilter',
+        fn: function(item /*{File|FileLikeObject}*/, options) {
+          var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+
+          if (type.indexOf('mp3') !== -1 || type.indexOf('mpeg') !== -1) {
+            uploader.url = baseRestNew + '/my/greetings/standard/mp3';
+            $scope.settings.user.vm.isSelectedGreetingWav = false;
+            $scope.settings.user.vm.selectedGreeting = 'standard.mp3';
+            return '|mp3|mpeg|'.indexOf(type) !== -1;
+          }
+          else {
+            uploader.url = baseRestNew + '/my/greetings/standard/wav';
+            $scope.settings.user.vm.isSelectedGreetingWav = true;
+            $scope.settings.user.vm.selectedGreeting = 'standard.wav';
+            return '|x-wav|wav|'.indexOf(type) !== -1;
+          }
+          //return this.queue.length < 10;
+        }
+      });
+
+      // CALLBACKS
+
+      uploader.onWhenAddingFileFailed = function(item /*{File|FileLikeObject}*/, filter, options) {
+        console.info('onWhenAddingFileFailed', item, filter, options);
+      };
+      uploader.onAfterAddingFile = function(fileItem) {
+        console.info('onAfterAddingFile', fileItem);
+        //do not upload the same file
+        //var size = $scope.settings.user.voicemail.selectMoh.length;
+        var sameFile = false;
+        //for(var i = 0; i < size; i++){
+          if ($scope.settings.user.vm.selectGreeting === fileItem.file.name)
+          {
+            sameFile = true;
+          }
+        //}
+        if(sameFile === false){
+          fileItem.upload();
+          //$scope.settings.user.vm.selectGreeting = fileItem.file.name;
+        }
+      };
+      uploader.onAfterAddingAll = function(addedFileItems) {
+        console.info('onAfterAddingAll', addedFileItems);
+      };
+      uploader.onBeforeUploadItem = function(item) {
+        console.info('onBeforeUploadItem', item);
+      };
+      uploader.onProgressItem = function(fileItem, progress) {
+        console.info('onProgressItem', fileItem, progress);
+      };
+      uploader.onProgressAll = function(progress) {
+        console.info('onProgressAll', progress);
+      };
+      uploader.onSuccessItem = function(fileItem, response, status, headers) {
+        console.info('onSuccessItem', fileItem, response, status, headers);
+      };
+      uploader.onErrorItem = function(fileItem, response, status, headers) {
+        console.info('onErrorItem', fileItem, response, status, headers);
+      };
+      uploader.onCancelItem = function(fileItem, response, status, headers) {
+        console.info('onCancelItem', fileItem, response, status, headers);
+      };
+      uploader.onCompleteItem = function(fileItem, response, status, headers) {
+        console.info('onCompleteItem', fileItem, response, status, headers);
+        //$scope.settings.user.vm.selectedGreeting = fileItem.file.name;
+        //$scope.settings.user.vm.isSelectedGreetingWav = false;
+      };
+      uploader.onCompleteAll = function() {
+        console.info('onCompleteAll');
+      };
+    }]);
 })();
 
 (function() {
