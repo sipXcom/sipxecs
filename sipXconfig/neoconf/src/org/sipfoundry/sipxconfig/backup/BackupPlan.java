@@ -26,7 +26,7 @@ import org.sipfoundry.sipxconfig.feature.Feature;
  */
 @JsonPropertyOrder(alphabetic = true)
 public class BackupPlan extends BeanWithId implements DeployConfigOnEdit {
-    private Integer m_limitedCount = 50;
+    private Integer m_limitedCount = 5;
     private BackupType m_type = BackupType.local;
     private Collection<DailyBackupSchedule> m_schedules = new ArrayList<DailyBackupSchedule>(0);
     private Set<String> m_definitionIds = new HashSet<String>();
