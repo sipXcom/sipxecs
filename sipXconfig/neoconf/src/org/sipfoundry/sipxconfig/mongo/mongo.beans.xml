@@ -6,7 +6,7 @@
   <bean id="mongoDbFactory" class="org.sipfoundry.commons.mongo.MongoSpringFactory">
     <property name="configFile" value="${sysdir.etc}/mongo-client.ini" />
   </bean>
-  
+
   <bean id="mongoManager" class="org.springframework.aop.framework.ProxyFactoryBean" parent="abstractDao">
     <property name="target" ref="mongoManagerImpl"/>
     <property name="proxyInterfaces" value="org.sipfoundry.sipxconfig.mongo.MongoManager"/>
@@ -34,11 +34,11 @@
       </bean>
     </property>
     <property name="configManager" ref="configManager"/>
-    <property name="globalManager" ref="mongoReplSetManager"/>        
+    <property name="globalManager" ref="mongoReplSetManager"/>
     <property name="featureManager" ref="featureManager"/>
     <property name="configJdbcTemplate" ref="configJdbcTemplate"/>
   </bean>
-    
+
   <bean id="mongoConfig" class="org.sipfoundry.sipxconfig.mongo.MongoConfig">
     <property name="mongoManager" ref="mongoManager"/>
     <property name="regionManager" ref="regionManager"/>
@@ -48,16 +48,16 @@
   <bean id="mongoReplSetManager" class="org.sipfoundry.sipxconfig.mongo.MongoReplSetManagerImpl" scope="prototype">
     <property name="configManager" ref="configManager"/>
     <property name="featureManager" ref="featureManager"/>
-    <property name="mongoStatusScript" value="${sysdir.bin}/mongodb-status"/>        
+    <property name="mongoStatusScript" value="${sysdir.bin}/mongodb-status"/>
     <property name="mongoAnalyzerScript" value="${sysdir.bin}/mongodb-analyzer"/>
-    <!-- no path because this is a remote script -->        
+    <!-- no path because this is a remote script -->
     <property name="mongoAdminScript" value="mongodb-admin"/>
     <property name="nodeDb" ref="nodeDb"/>
   </bean>
 
   <bean id="mongoSettings" class="org.sipfoundry.sipxconfig.mongo.MongoSettings" parent="settingsBean">
   </bean>
-  
+
   <bean id="mongoAlarms" class="org.springframework.context.support.ResourceBundleMessageSource">
     <property name="basename">
       <value>org.sipfoundry.sipxconfig.mongo.mongo</value>
@@ -66,7 +66,7 @@
 
   <bean id="mongoApi" class="org.sipfoundry.sipxconfig.mongo.MongoApi" scope="prototype">
     <property name="locationsManager" ref="locationsManager"/>
-    <!-- 
+    <!--
       HACK : Spring silently refuses to set this property, suspect a circular dep somewhere, but
       cannot determine where.
     <property name="configManager" ref="configManager"/>
@@ -83,10 +83,6 @@
     <property name="globalApi" ref="mongoApi"/>
     <property name="regionManager" ref="regionManager"/>
   </bean>
-  <alias name="mongoLocalApi" alias="/mongoRegional/"/>  
-    
-  <bean id="mongoHealth" class="org.sipfoundry.sipxconfig.mongo.MongoHealthCheck">
-    <property name="mongoManager" ref="mongoManager"/>
-    <property name="mongoConfig" ref="mongoConfig"/>
-  </bean>
+  <alias name="mongoLocalApi" alias="/mongoRegional/"/>
+
 </beans>
