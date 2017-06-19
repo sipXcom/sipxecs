@@ -213,7 +213,7 @@ public class RegistrarConfiguration implements ConfigProvider, ApplicationContex
     }
 
     private File getLocationDataDirectory(Location location) {
-        File d = new File(m_etcDir, String.valueOf(location.getId()));
+        File d = new File(m_etcDir + "/conf", String.valueOf(location.getId()));
         if (!d.exists()) {
             d.mkdirs();
         }
