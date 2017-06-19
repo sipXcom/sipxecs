@@ -28,6 +28,8 @@
   <bean id="registrarConfiguration" class="org.sipfoundry.sipxconfig.registrar.RegistrarConfiguration">
     <property name="registrar" ref="registrar" />
     <property name="registrarLimitsConfig" ref="registrarResLimits" />
+    <property name="libDir" value="${sysdir.libdir}"/>
+    <property name="etcDir" value="${sysdir.etc}"/>
   </bean>
   
   <bean id="registrationContextImpl" class="org.sipfoundry.sipxconfig.registrar.RegistrationContextImpl">

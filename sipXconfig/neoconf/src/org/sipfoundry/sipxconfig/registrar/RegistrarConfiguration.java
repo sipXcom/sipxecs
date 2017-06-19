@@ -55,6 +55,8 @@ public class RegistrarConfiguration implements ConfigProvider, ApplicationContex
     private Registrar m_registrar;
     private ApplicationContext m_context;
     private AbstractResLimitsConfig m_registrarLimitsConfig;
+    private String m_libDir;
+    private String m_etcDir;
 
     @Override
     public void replicate(ConfigManager manager, ConfigRequest request) throws IOException {
@@ -74,7 +76,7 @@ public class RegistrarConfiguration implements ConfigProvider, ApplicationContex
             boolean enabled = fm.isFeatureEnabled(Registrar.FEATURE, location);
             ConfigUtils.enableCfengineClass(dir, "sipxregistrar.cfdat", enabled, "sipxregistrar");
             if (enabled) {
-                Writer w = new FileWriter(new File(dir, "registrar-config.part"));
+                Writer w = new FileWriter(new File(dir, "registrar-config"));
                 try {
                     write(w, settings, domain, location, proxy, imApi, presenceApi, fm);
                 } finally {
@@ -120,12 +122,12 @@ public class RegistrarConfiguration implements ConfigProvider, ApplicationContex
         file.write("SIP_REDIRECT_AUTHORITY_LEVEL.998-TIMEOFDAY", WEIGHT_100);
         file.write("SIP_REDIRECT_AUTHORITY_LEVEL.999-AUTHROUTER", WEIGHT_100);
 
-        file.write("SIP_REDIRECT.130-MAPPING.MAPPING_RULES_FILENAME", "$(sipx.SIPX_CONFDIR)/mappingrules.xml");
-        file.write("SIP_REDIRECT.140-FALLBACK.MAPPING_RULES_FILENAME", "$(sipx.SIPX_CONFDIR)/fallbackrules.xml");
-        file.write("SIP_REDIRECT_HOOK_LIBRARY.090-USERPARAM", "$(sipx.SIPX_LIBDIR)/libRedirectorUserParam.so");
-        file.write("SIP_REDIRECT_HOOK_LIBRARY.100-PICKUP", "$(sipx.SIPX_LIBDIR)/libRedirectorPickUp.so");
-        String aliasRedirector = "$(sipx.SIPX_LIBDIR)/libRedirectorAliasDB.so";
-        String regRedirector = "$(sipx.SIPX_LIBDIR)/libRedirectorRegDB.so";
+        file.write("SIP_REDIRECT.130-MAPPING.MAPPING_RULES_FILENAME", getFullEtcDir("mappingrules.xml"));
+        file.write("SIP_REDIRECT.140-FALLBACK.MAPPING_RULES_FILENAME", getFullEtcDir("fallbackrules.xml"));
+        file.write("SIP_REDIRECT_HOOK_LIBRARY.090-USERPARAM", getFullLibDir("libRedirectorUserParam.so"));
+        file.write("SIP_REDIRECT_HOOK_LIBRARY.100-PICKUP", getFullLibDir("libRedirectorPickUp.so"));
+        String aliasRedirector = getFullLibDir("libRedirectorAliasDB.so");
+        String regRedirector = getFullLibDir("libRedirectorRegDB.so");
         if (settings.isEarlyAliasResolutionEnabled()) {
             file.write("SIP_REDIRECT_HOOK_LIBRARY.110-ALIAS", aliasRedirector);
             file.write("SIP_REDIRECT_HOOK_LIBRARY.120-REG", regRedirector);
@@ -133,18 +135,19 @@ public class RegistrarConfiguration implements ConfigProvider, ApplicationContex
             file.write("SIP_REDIRECT_HOOK_LIBRARY.110-REG", regRedirector);
             file.write("SIP_REDIRECT_HOOK_LIBRARY.120-ALIAS", aliasRedirector);
         }
-        file.write("SIP_REDIRECT_HOOK_LIBRARY.130-MAPPING", "$(sipx.SIPX_LIBDIR)/libRedirectorMapping.so");
-        file.write("SIP_REDIRECT_HOOK_LIBRARY.140-FALLBACK", "$(sipx.SIPX_LIBDIR)/libRedirectorFallback.so");
-        file.write("SIP_REDIRECT_HOOK_LIBRARY.150-ISN", "$(sipx.SIPX_LIBDIR)/libRedirectorISN.so");
-        file.write("SIP_REDIRECT_HOOK_LIBRARY.160-ENUM", "$(sipx.SIPX_LIBDIR)/libRedirectorENUM.so");
-        file.write("SIP_REDIRECT_HOOK_LIBRARY.997-SUBSCRIBE", "$(sipx.SIPX_LIBDIR)/libRedirectorSubscribe.so");
-        file.write("SIP_REDIRECT_HOOK_LIBRARY.998-TIMEOFDAY", "$(sipx.SIPX_LIBDIR)/libRedirectorTimeOfDay.so");
-        file.write("SIP_REDIRECT_HOOK_LIBRARY.999-AUTHROUTER", "$(sipx.SIPX_LIBDIR)/libRedirectorAuthRouter.so");
-        file.write("SIP_REGISTRAR_HOOK_LIBRARY.MWI", "$(sipx.SIPX_LIBDIR)/libRegistrarImpliedMWI.so");
+        file.write("SIP_REDIRECT_HOOK_LIBRARY.130-MAPPING", getFullLibDir("libRedirectorMapping.so"));
+        file.write("SIP_REDIRECT_HOOK_LIBRARY.140-FALLBACK", getFullLibDir("libRedirectorFallback.so"));
+        file.write("SIP_REDIRECT_HOOK_LIBRARY.150-ISN", getFullLibDir("libRedirectorISN.so"));
+        file.write("SIP_REDIRECT_HOOK_LIBRARY.160-ENUM", getFullLibDir("libRedirectorENUM.so"));
+        file.write("SIP_REDIRECT_HOOK_LIBRARY.997-SUBSCRIBE", getFullLibDir("libRedirectorSubscribe.so"));
+        file.write("SIP_REDIRECT_HOOK_LIBRARY.998-TIMEOFDAY", getFullLibDir("libRedirectorTimeOfDay.so"));
+        file.write("SIP_REDIRECT_HOOK_LIBRARY.999-AUTHROUTER", getFullLibDir("libRedirectorAuthRouter.so"));
+        file.write("SIP_REGISTRAR_HOOK_LIBRARY.MWI", getFullLibDir("libRegistrarImpliedMWI.so"));
         file.write("SIP_REGISTRAR_AUTHENTICATE_REALM", domain.getSipRealm());
         file.write("SIP_REGISTRAR_DOMAIN_NAME", domain.getName());
         file.write("SIP_REGISTRAR_PROXY_PORT", proxy.getPort());
         file.write("SIP_REGISTRAR_NAME", location.getFqdn());
+        file.write("SIP_REGISTRAR_BIND_IP", location.getAddress());
         file.write("SIP_REGISTRAR_SYNC_WITH", "obsolete");
         file.writeSettings(root.getSetting("userparam"));
         file.writeSettings(root.getSetting("call-pick-up"));
@@ -191,5 +194,21 @@ public class RegistrarConfiguration implements ConfigProvider, ApplicationContex
     @Required
     public void setRegistrarLimitsConfig(AbstractResLimitsConfig registrarLimitsConfig) {
         m_registrarLimitsConfig = registrarLimitsConfig;
+    }
+
+    public void setLibDir(String libDir) {
+        m_libDir = libDir;
+    }
+
+    public void setEtcDir(String etcDir) {
+        m_etcDir = etcDir;
+    }
+
+    private String getFullLibDir(String lib) {
+        return m_libDir + "/" + lib;
+    }
+
+    private String getFullEtcDir(String lib) {
+        return m_etcDir + "/" + lib;
     }
 }
