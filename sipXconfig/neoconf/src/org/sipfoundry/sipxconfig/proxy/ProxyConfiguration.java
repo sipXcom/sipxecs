@@ -23,6 +23,8 @@ import org.apache.commons.io.IOUtils;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.sipfoundry.sipxconfig.admin.AbstractResLimitsConfig;
+import org.sipfoundry.sipxconfig.admin.AdminContext;
+import org.sipfoundry.sipxconfig.admin.AdminSettings;
 import org.sipfoundry.sipxconfig.cdr.CdrManager;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigProvider;
@@ -48,6 +50,9 @@ public class ProxyConfiguration implements ConfigProvider, ApplicationContextAwa
     private ProxyManager m_proxyManager;
     private ApplicationContext m_context;
     private AbstractResLimitsConfig m_proxyLimitsConfig;
+    private String m_libDir;
+    private AdminContext m_adminContext;
+    private String m_etcDir;
 
     @Override
     public void replicate(ConfigManager manager, ConfigRequest request) throws IOException {
@@ -62,7 +67,7 @@ public class ProxyConfiguration implements ConfigProvider, ApplicationContextAwa
         Domain domain = manager.getDomainManager().getDomain();
         Collection<TlsPeer> peers = m_tlsPeerManager.getTlsPeers();
         for (Location location : locations) {
-            File dir = manager.getLocationDataDirectory(location);
+            File dir = getLocationDataDirectory(location);
             boolean enabled = fm.isFeatureEnabled(ProxyManager.FEATURE, location);
             if (!enabled) {
                 ConfigUtils.enableCfengineClass(dir, PROXY_CFDAT, enabled, PROXY);
@@ -83,7 +88,7 @@ public class ProxyConfiguration implements ConfigProvider, ApplicationContextAwa
             if (!enabled) {
                 continue;
             }
-            Writer proxy = new FileWriter(new File(dir, "sipXproxy-config.part"));
+            Writer proxy = new FileWriter(new File(dir, "sipXproxy-config"));
             try {
                 write(proxy, settings, location, domain, isCdrOn);
             } finally {
@@ -122,33 +127,38 @@ public class ProxyConfiguration implements ConfigProvider, ApplicationContextAwa
         config.write("SIPX_PROXY_CALL_STATE_DB", isCdrOn ? "ENABLE" : "DISABLE");
         config.write("SIPX_PROXY_HOSTPORT", location.getAddress() + ':' + port);
         config.write("SIPX_PROXY_AUTHENTICATE_REALM", domain.getSipRealm());
+        
 
         // write proxy hooks
-        config.write("SIPX_PROXY_HOOK_LIBRARY.200_xfer", "$(sipx.SIPX_LIBDIR)/authplugins/libTransferControl.so");
+        config.write("SIPX_PROXY_HOOK_LIBRARY.200_xfer", getFullLibDir("authplugins/libTransferControl.so"));
         config.write("SIPX_PROXY_HOOK_LIBRARY.205_subscriptionauth",
-                "$(sipx.SIPX_LIBDIR)/authplugins/libSubscriptionAuth.so");
+                getFullLibDir("authplugins/libSubscriptionAuth.so"));
         config.write("SIPX_PROXY_HOOK_LIBRARY.210_msftxchghack",
-                "$(sipx.SIPX_LIBDIR)/authplugins/libMSFT_ExchangeTransferHack.so");
+                getFullLibDir("authplugins/libMSFT_ExchangeTransferHack.so"));
         config.write("SIPX_PROXY_HOOK_LIBRARY.300_calldestination",
-                "$(sipx.SIPX_LIBDIR)/authplugins/libCallDestination.so");
+                getFullLibDir("authplugins/libCallDestination.so"));
         config.write("SIPX_PROXY_HOOK_LIBRARY.350_calleralertinfo",
-                "$(sipx.SIPX_LIBDIR)/authplugins/libCallerAlertInfo.so");
+                getFullLibDir("authplugins/libCallerAlertInfo.so"));
         config.write("SIPX_PROXY_HOOK_LIBRARY.400_authrules",
-                "$(sipx.SIPX_LIBDIR)/authplugins/libEnforceAuthRules.so");
+                getFullLibDir("authplugins/libEnforceAuthRules.so"));
         config.write("SIPX_PROXY_HOOK_LIBRARY.700_fromalias",
-                "$(sipx.SIPX_LIBDIR)/authplugins/libCallerAlias.so");
+                getFullLibDir("authplugins/libCallerAlias.so"));
         config.write("SIPX_PROXY_HOOK_LIBRARY.900_ntap",
-                "$(sipx.SIPX_LIBDIR)/authplugins/libNatTraversalAgent.so");
+                getFullLibDir("authplugins/libNatTraversalAgent.so"));
         config.write("SIPX_PROXY_HOOK_LIBRARY.995_requestlinter",
-                "$(sipx.SIPX_LIBDIR)/authplugins/libRequestLinter.so");
+                getFullLibDir("authplugins/libRequestLinter.so"));
         config.write("SIPX_PROXY_HOOK_LIBRARY.990_emerglineid",
-                "$(sipx.SIPX_LIBDIR)/authplugins/libEmergencyLineIdentifier.so");
+                getFullLibDir("authplugins/libEmergencyLineIdentifier.so"));
+        config.write("SIPX_PROXY.400_authrules.RULES", getFullEtcDir("authrules.xml"));
+        config.write("SIPX_PROXY.990_emerglineid.EMERGRULES", getFullEtcDir("authrules.xml"));
+        config.write("SIPX_PROXY_BIND_IP", location.getAddress());
+        config.write("SIPX_PROXY_CALL_STATE_DB_PASSWORD", getPostgresPassword());
         Setting consultativeTransfer = proxyConfigurationSettings
                 .getSetting("SIPX_CONSULTATIVE_TRANSFER_GATEWAY_INITIAL_INVITE");
         boolean isConsultativeTransfer = Boolean.parseBoolean(consultativeTransfer.getValue());
         if (isConsultativeTransfer) {
             config.write("SIPX_TRAN_HOOK_LIBRARY.905_gatewaydest",
-                    "$(sipx.SIPX_LIBDIR)/transactionplugins/libGatewayDestPlugin.so");
+                    getFullLibDir("transactionplugins/libGatewayDestPlugin.so"));
         }
 
         // write plugin proxy hooks
@@ -174,6 +184,12 @@ public class ProxyConfiguration implements ConfigProvider, ApplicationContextAwa
         return document;
     }
 
+    private String getPostgresPassword() {
+        AdminSettings settings = m_adminContext.getSettings();
+        String password = settings.getPostgresPassword();
+        return password;
+    }
+
     @Required
     public void setTlsPeerManager(TlsPeerManager peerManager) {
         m_tlsPeerManager = peerManager;
@@ -191,5 +207,33 @@ public class ProxyConfiguration implements ConfigProvider, ApplicationContextAwa
     @Required
     public void setProxyLimitsConfig(AbstractResLimitsConfig proxyLimitsConfig) {
         m_proxyLimitsConfig = proxyLimitsConfig;
+    }
+
+    public void setAdminContext(AdminContext adminContext) {
+        m_adminContext = adminContext;
+    }
+
+    public void setLibDir(String libDir) {
+        m_libDir = libDir;
+    }
+
+    public void setEtcDir(String etcDir) {
+        m_etcDir = etcDir;
+    }
+
+    private String getFullLibDir(String lib) {
+        return m_libDir + "/" + lib;
+    }
+
+    private String getFullEtcDir(String lib) {
+        return m_etcDir + "/" + lib;
+    }
+
+    private File getLocationDataDirectory(Location location) {
+        File d = new File(m_etcDir, String.valueOf(location.getId()));
+        if (!d.exists()) {
+            d.mkdirs();
+        }
+        return d;
     }
 }

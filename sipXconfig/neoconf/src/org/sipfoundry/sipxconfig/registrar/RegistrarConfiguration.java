@@ -72,7 +72,7 @@ public class RegistrarConfiguration implements ConfigProvider, ApplicationContex
         Address presenceApi = manager.getAddressManager().getSingleAddress(Registrar.PRESENCE_MONITOR_ADDRESS);
         Address proxy = manager.getAddressManager().getSingleAddress(ProxyManager.TCP_ADDRESS);
         for (Location location : locations) {
-            File dir = manager.getLocationDataDirectory(location);
+            File dir = getLocationDataDirectory(location);
             boolean enabled = fm.isFeatureEnabled(Registrar.FEATURE, location);
             ConfigUtils.enableCfengineClass(dir, "sipxregistrar.cfdat", enabled, "sipxregistrar");
             if (enabled) {
@@ -210,5 +210,13 @@ public class RegistrarConfiguration implements ConfigProvider, ApplicationContex
 
     private String getFullEtcDir(String lib) {
         return m_etcDir + "/" + lib;
+    }
+
+    private File getLocationDataDirectory(Location location) {
+        File d = new File(m_etcDir, String.valueOf(location.getId()));
+        if (!d.exists()) {
+            d.mkdirs();
+        }
+        return d;
     }
 }
