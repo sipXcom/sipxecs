@@ -30,13 +30,10 @@ public class ZoiperProfileContext extends ProfileContext<ZoiperPhone> {
         context.put("phone", phone);
         List<Line> lines = phone.getLines();
 
-        HashMap<Long, Line> linesSettings = new HashMap<Long, Line>();
-        //this is how account id is computed in Jitsi software to ensure uniquenes
-        //here we generate multiple lines for an user and we make sure to ensure uniquenes
-        //based on the same pattern
-        long currentTime = System.currentTimeMillis();
+        HashMap<String, Line> linesSettings = new HashMap<String, Line>();
+
         for (Line line : lines) {
-            linesSettings.put(currentTime+=2, line);
+            linesSettings.put(line.getUserName(), line);
         }
         context.put("lines", linesSettings);
     }

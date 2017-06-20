@@ -5,6 +5,9 @@
  */
 package org.sipxcom.zoiper.device;
 
+import java.util.Collection;
+
+import org.apache.commons.lang.ArrayUtils;
 import org.sipfoundry.sipxconfig.common.User;
 import org.sipfoundry.sipxconfig.device.Device;
 import org.sipfoundry.sipxconfig.device.DeviceDefaults;
@@ -14,6 +17,9 @@ import org.sipfoundry.sipxconfig.device.ProfileFilter;
 import org.sipfoundry.sipxconfig.phone.Line;
 import org.sipfoundry.sipxconfig.phone.LineInfo;
 import org.sipfoundry.sipxconfig.phone.Phone;
+import org.sipfoundry.sipxconfig.phonebook.Phonebook;
+import org.sipfoundry.sipxconfig.phonebook.PhonebookEntry;
+import org.sipfoundry.sipxconfig.phonebook.PhonebookManager;
 import org.sipfoundry.sipxconfig.setting.SettingEntry;
 
 public class ZoiperPhone extends Phone {
@@ -42,13 +48,33 @@ public class ZoiperPhone extends Phone {
     public String getProfileFilename() {
         return getSerialNumber() + ".xml";
     }
+    
+    public String getPhonebookFilename() {
+        return getSerialNumber() + "_phonebook" + ".xml";
+    }
 
     @Override
     public Profile[] getProfileTypes() {
-        Profile[] profileTypes = new Profile[] {
+        
+        Profile[] profileTypes = new Profile[]{
             new PhoneProfile(getProfileFilename())
         };
-
+        
+        if (getPhonebookManager().getPhonebookManagementEnabled()) {
+            PhonebookManager pbm = getPhonebookManager();
+            if (null != pbm) {
+                User user = getPrimaryUser();
+                if (null != user) {
+                    Collection<Phonebook> phonebooks = pbm.getAllPhonebooksByUser(user);
+                    Collection<PhonebookEntry> entries = pbm.getEntries(phonebooks, user);
+                    if (null != entries) {
+                        profileTypes = (Profile[]) ArrayUtils.add(profileTypes,
+                            new PhonebookProfile(getPhonebookFilename(), entries));
+                    }
+                }
+            }
+        }
+        
         return profileTypes;
     }
     
@@ -73,6 +99,28 @@ public class ZoiperPhone extends Phone {
             return new ZoiperProfileContext(phone, phone.getModel().getProfileTemplate());
         }
     }
+    
+    static class PhonebookProfile extends Profile {
+        Collection<PhonebookEntry> m_entries;
+
+        public PhonebookProfile(String name, Collection<PhonebookEntry> entries) {
+            super(name, MIME_TYPE_PLAIN);
+            m_entries = entries;
+        }
+
+        @Override
+        protected ProfileFilter createFilter(Device device) {
+            return null;
+        }
+
+        @Override
+        protected ProfileContext createContext(Device device) {
+            ZoiperPhone phone = (ZoiperPhone) device;
+            ZoiperPhoneModel model = (ZoiperPhoneModel) phone.getModel();
+            
+            return new ZoiperPhonebookProfileContext(phone, model.getPhonebookProfileTemplate(), m_entries);
+        }
+    }    
     
     public static class ZoiperLineDefaults {
         private final Line m_line;

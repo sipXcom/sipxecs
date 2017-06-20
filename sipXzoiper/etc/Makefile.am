@@ -3,6 +3,7 @@ include $(top_srcdir)/config/utility.am
 cfgdir = $(SIPX_CONFDIR)/zoiper
 dist_cfg_DATA = \
 	zoiper/provisioning.xml.vm \
+	zoiper/phonebook.xml.vm \
     zoiper/line.properties \
 	zoiper/line.xml \
 	zoiper/phone.properties \

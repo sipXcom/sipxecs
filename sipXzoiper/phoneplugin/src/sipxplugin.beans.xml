@@ -6,7 +6,8 @@
     <property name="beanId" value="zoiper" />
     <property name="label" value="Zoiper" />
     <property name="maxLineCount" value="100"/>
-    <property name="profileTemplate" value="zoiper/provisioning.xml.vm" />          
+    <property name="profileTemplate" value="zoiper/provisioning.xml.vm" />
+    <property name="phonebookProfileTemplate" value="zoiper/phonebook.xml.vm" />        
     <property name="vendor" value="Zoiper"/>
     <property name="serialNumberPattern" value="[a-zA-Z0-9]+"/>
   </bean>

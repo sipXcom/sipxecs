@@ -35,7 +35,40 @@ public class ProvisioningController {
 
     @RequestMapping(value = "/provisioning", method = RequestMethod.GET)
     @ResponseBody
-    public String provision(ModelMap model, Authentication auth) {
+    public String provisionPhone(ModelMap model, Authentication auth) {
+        String mac = getPhoneMac(auth);
+
+        if (mac == null) {
+            LOG.error("No zoiper phone created for authenticated user");
+            return StringUtils.EMPTY;
+        } else {
+            return provision(model, auth, mac);
+        }
+    }
+
+    @RequestMapping(value = "/provisioning/phonebook", method = RequestMethod.GET)
+    @ResponseBody
+    public String provisionPhonebook(ModelMap model, Authentication auth) {
+        String mac = getPhoneMac(auth);
+
+        if (mac == null) {
+            LOG.error("No zoiper phone created for authenticated user");
+            return StringUtils.EMPTY;
+        } else {
+            return provision(model, auth, StringUtils.join(new String[] {mac, "phonebook"}, "_"));
+        }
+    }
+
+    private String getPhoneMac(Authentication auth) {
+        UserDetailsImpl user = (UserDetailsImpl)auth.getPrincipal();
+        String uid = user.getUsername();
+        LOG.info("Authenticated username " + uid);
+
+        Entity entity = repository.findOneByEntAndModelAndPhLinesContaining("phone", "Zoiper", uid);
+        return entity != null ? entity.getMac() : StringUtils.EMPTY;
+    }
+    
+    private String provision(ModelMap model, Authentication auth, String name) {
         String zoiperConfFilePath = this.getClass().getResource(ZOIPER_CONF).getFile();
         Properties props = new Properties();
         try {
@@ -46,25 +79,12 @@ public class ProvisioningController {
             return StringUtils.EMPTY;
         }
         String provisionPath = props.getProperty("provision.dir");
-
-        UserDetailsImpl user = (UserDetailsImpl)auth.getPrincipal();
-        String uid = user.getUsername();
-        LOG.info("Authenticated username " + uid);
-
         StringBuilder builder = new StringBuilder();
 
-        Entity entity = repository.findOneByEntAndModelAndPhLinesContaining("phone", "Zoiper", uid);
-        if (entity == null) {
-            LOG.error("No zoiper phone created for user: " + uid);
-            return builder.toString();
-        }
-
-        String mac = entity.getMac();
-
         LOG.info("Provision file path: " + provisionPath);
-        LOG.info("Zoiper phone mac: " + mac);
+        LOG.info("Zoiper phone provision filename: " + name);
 
-        String provisionFilePath = provisionPath + mac + ".xml";
+        String provisionFilePath = provisionPath + name + ".xml";
 
         String content = StringUtils.EMPTY;
         try {

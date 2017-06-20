@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Contacts>
+#set($i=1)
+#foreach ($entry in $!phonebookEntries)
+ <Contact id=$!i>
+   <Name>
+     <Display>$!entry.firstName $!entry.lastName</Display>
+     <First>$!entry.firstName</First>
+     <Last>$!entry.lastName</Last>
+   </Name>
+   <Info>
+     <Company>$!entry.addressBookEntry.companyName</Company>
+   </Info>
+   <Phone>
+     <Type>Work</Type>
+     <Type>Fax</Type>
+     <Phone>$!entry.addressBookEntry.faxNumber</Phone>
+   </Phone>
+   <Phone>
+     <Type>Home</Type>
+     <Type>Phone</Type>
+     <Phone>$!entry.addressBookEntry.homePhoneNumber</Phone>
+   </Phone>
+   <Phone>
+     <Type>Work</Type>
+     <Type>Phone</Type>
+     <Phone>$!entry.number</Phone>
+   </Phone>
+   <Phone>
+     <Type>Home</Type>
+     <Type>Cell</Type>
+     <Phone>$!entry.addressBookEntry.cellPhoneNumber</Phone>
+   </Phone>
+   <Phone>
+     <Type>Home</Type>
+     <Type>Mail</Type>
+     <Phone>$!entry.addressBookEntry.alternateEmailAddress</Phone>
+   </Phone>
+   <Phone>
+     <Type>Work</Type>
+     <Type>Mail</Type>
+     <Phone>$!entry.addressBookEntry.emailAddress</Phone>
+   </Phone>
+   <Avatar>
+     <URL>$!entry.addressBookEntry.avatar</URL>
+     <MIME>image/png</MIME>
+     <Data>base64imagedata</Data>
+   </Avatar>   
+ </Contact>
+ #set($i=$i + 1)
+#end
+</Contacts>
