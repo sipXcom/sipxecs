@@ -167,6 +167,25 @@
       </type>
       <value>20000</value>     
     </setting>
+    <setting name="SIPX_PROXY_CONGESTION_POLICY" advanced="yes">
+      <type>
+        <enum>
+          <option>
+            <value>SERVICE_UNAVAILABLE</value>
+          </option>
+          <option>
+            <value>IGNORE</value>
+          </option>
+        </enum>
+      </type>
+      <value>SERVICE_UNAVAILABLE</value>
+    </setting>
+    <setting name="SIPX_PROXY_QUEUE_SIZE" advanced="yes">
+      <type>
+        <integer required="yes"/>
+      </type>
+      <value>1024</value>
+    </setting>    
     <setting name="SIPX_PROXY_LOG_AUTH_CODES" advanced="yes">
       <type><boolean /></type>
       <value>0</value>
@@ -189,25 +208,6 @@
     </setting>    
     <setting name="SIPX_PROXY_CALL_STATE" hidden="yes">
       <type><string/></type>
-    </setting>
-    <setting name="SIPX_PROXY_CONGESTION_POLICY" advanced="yes">
-      <type>
-        <enum>
-          <option>
-            <value>SERVICE_UNAVAILABLE</value>
-          </option>
-          <option>
-            <value>IGNORE</value>
-          </option>
-        </enum>
-      </type>
-      <value>SERVICE_UNAVAILABLE</value>
-    </setting>
-    <setting name="SIPX_PROXY_QUEUE_SIZE" advanced="yes">
-      <type>
-        <integer required="yes"/>
-      </type>
-      <value>1024</value>
     </setting>
   </group>
   <group name="subscriptionauth">
