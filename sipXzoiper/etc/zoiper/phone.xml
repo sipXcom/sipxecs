@@ -204,6 +204,10 @@
     <setting name="enabled">
       <type refid="true-false"/>
       <value>false</value>
+    </setting>    
+    <setting name="enabled">
+      <type refid="true-false"/>
+      <value>false</value>
     </setting>
     <setting name="auto_answer_with_video">
       <type refid="true-false"/>

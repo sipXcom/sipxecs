@@ -270,10 +270,12 @@
       #set($i=0)
       #foreach($codec in $phone.getSettingValue('codecs/audio_codec').split("[|]"))
         <codec>
-          <name>$!codec</name>
           #codecId($!codec)
           <priority>$i</priority>
           <enabled>true</enabled>
+          <bps>0</bps>
+          <dtx>false</dtx>
+          <vbr>false</vbr>
         </codec>
         #set($i=$i + 1)
       #end
@@ -363,6 +365,7 @@
       <autoanswer_seconds>$!phone.getSettingValue('calls/autoanswer_seconds')</autoanswer_seconds>
       <play_sound_on_auto_answer>$!phone.getSettingValue('calls/play_sound_on_auto_answer')</play_sound_on_auto_answer>
       <auto_answer_keep_setting>$!phone.getSettingValue('calls/auto_answer_keep_setting')</auto_answer_keep_setting>
+      <enabled>$!phone.getSettingValue('calls/enabled')</enabled>      
       <auto_answer_with_video>$!phone.getSettingValue('calls/auto_answer_with_video')</auto_answer_with_video>
       <accept_server_auto_answer>$!phone.getSettingValue('calls/accept_server_auto_answer')</accept_server_auto_answer>
     </forwarding_and_auto_answer>
@@ -382,7 +385,7 @@
       <language>$!phone.getSettingValue('gui/language')</language>
       <auto_focus_window_on_incoming_chat>$!phone.getSettingValue('gui/auto_focus_window_on_incoming_chat')</auto_focus_window_on_incoming_chat>
       <auto_focus_window_on_incoming_call>$!phone.getSettingValue('gui/auto_focus_window_on_incoming_call')</auto_focus_window_on_incoming_call>
-      <skin>$!phone.getSettingValue('gui/theme/skin')</skin>
+      <background>$!phone.getSettingValue('gui/theme/skin')</background>
     </gui>
     <profile>
       <state>$!phone.getSettingValue('profile/state')</state>
@@ -459,10 +462,12 @@
             #set($i=0)
             #foreach($codec in $!line.getValue().getSettingValue('codecs/audio_codec').split("[|]"))
               <codec>
-                <name>$!codec</name>
                 #codecId($!codec)
                 <priority>$i</priority>
                 <enabled>true</enabled>
+                <bps>0</bps>
+                <dtx>false</dtx>
+                <vbr>false</vbr>                
               </codec>
               #set($i=$i + 1)
             #end  
@@ -477,6 +482,12 @@
               #set($i=$i + 1)              
             #end
           </codecs>
+          <stun>                    
+            <use_stun>$!line.getValue().getSettingValue('network/stun_options/use_stun')</use_stun>
+            <host>$!line.getValue().getSettingValue('network/stun_options/host')</host>
+            <port>$!line.getValue().getSettingValue('network/stun_options/port')</port>
+            <refresh_period>$!line.getValue().getSettingValue('network/stun_options/refresh_period')</refresh_period>
+          </stun>          
           <zrtp>
             <enabled>$!line.getValue().getSettingValue('encryption/zrtp/enabled')</enabled>
             <hash_algorithms>
@@ -523,7 +534,7 @@
                   #keyAgreement($!key_agreement_method)
                   <priority>$i</priority>
                   <enabled>true</enabled>
-                </auth_tag>
+                </key_agreement_method>
                 #set($i=$i + 1)
               #end                                                                                    
             </key_agreement_methods>
@@ -552,12 +563,14 @@
           <reregistration_time>$!line.getValue().getSettingValue('network/reregistration/reregistration_time')</reregistration_time>
           <resubscription_mode>$!line.getValue().getSettingValue('network/reregistration/resubscription_mode')</resubscription_mode>
           <resubscription_time>$!line.getValue().getSettingValue('network/reregistration/resubscription_time')</resubscription_time>
-          <stun>                    
-            <use_stun>$!line.getValue().getSettingValue('network/stun_options/use_stun')</use_stun>
-            <host>$!line.getValue().getSettingValue('network/stun_options/host')</host>
-            <port>$!line.getValue().getSettingValue('network/stun_options/port')</port>
-            <refresh_period>$!line.getValue().getSettingValue('network/stun_options/refresh_period')</refresh_period>
-          </stun>
+          <balance_url>$!line.getValue().getSettingValue('balance_call_rqURLS/balance_url')</balance_url>
+          <rate_url>$!line.getValue().getSettingValue('balance_call_rqURLS/rate_url')</rate_url>
+          <quality_rating_url>$!line.getValue().getSettingValue('balance_call_rqURLS/quality_rating_url')</quality_rating_url>
+          <sms>
+            <enabled>$!line.getValue().getSettingValue('sms/enabled')</enabled>
+            <enable_sms_center>$!line.getValue().getSettingValue('sms/enable_sms_center')</enable_sms_center>
+            <sms_center_uri>$!line.getValue().getSettingValue('sms/sms_center_uri')</sms_center_uri>
+          </sms>
         </account>       
         #if($line.getValue().getUser().isImEnabled())
           <account>

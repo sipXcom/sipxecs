@@ -471,5 +471,41 @@
       <type refid="IAX2_dtmf_type"/>
       <value>inband</value>
     </setting>        
+  </group>
+  <group name="balance_call_rqURLS">
+    <setting name="balance_url">
+      <type>
+       <string/>
+      </type>
+      <value></value>
+    </setting>
+    <setting name="rate_url">
+      <type>
+       <string/>
+      </type>
+      <value></value>
+    </setting>
+    <setting name="quality_rating_url">
+      <type>
+       <string/>
+      </type>
+      <value></value>
+    </setting>
+  </group>
+  <group name="sms">
+    <setting name="enabled">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>
+    <setting name="enable_sms_center">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>
+    <setting name="sms_center_uri">
+      <type>
+       <string/>
+      </type>
+      <value></value>
+    </setting>
   </group>   
 </model>
