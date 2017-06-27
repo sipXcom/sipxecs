@@ -38,11 +38,17 @@ import org.apache.cxf.jaxrs.model.wadl.Description;
 
 public interface MyGreetingsApi {
 
-
     @Path("{name}/{extension}")
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadGreeting(@Description("Greeting type name") @PathParam("name") String name,
+        @Description("Greeting type extension mp3 or wav") @PathParam("extension") String extension,
+        Attachment attachment, @Context HttpServletRequest request);
+
+    @Path("{name}/{extension}/newFilename")
+    @POST
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response uploadGreetingSetNewFilename(@Description("Greeting type name") @PathParam("name") String name,
         @Description("Greeting type extension mp3 or wav") @PathParam("extension") String extension,
         Attachment attachment, @Context HttpServletRequest request);
 
@@ -59,5 +65,10 @@ public interface MyGreetingsApi {
     })
     public Response streamGreeting(@Description("Greeting type name") @PathParam("name") String name,
         @Description("Greeting type extension mp3 or wav") @PathParam("extension") String extension,
+        @Context HttpServletRequest request);
+
+    @Path("{name}/newFilename")
+    @GET
+    public Response getGreetingNewFilename(@Description("Greeting type name") @PathParam("name") String name,
         @Context HttpServletRequest request);
 }
