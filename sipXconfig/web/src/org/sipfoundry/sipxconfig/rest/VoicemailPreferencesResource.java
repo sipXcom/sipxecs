@@ -24,13 +24,17 @@ import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
 import org.sipfoundry.sipxconfig.common.User;
+import org.sipfoundry.sipxconfig.ivr.Ivr;
 import org.sipfoundry.sipxconfig.vm.MailboxPreferences;
 import org.sipfoundry.sipxconfig.vm.MailboxPreferences.ActiveGreeting;
 import org.sipfoundry.sipxconfig.vm.MailboxPreferences.AttachType;
 import org.sipfoundry.sipxconfig.vm.MailboxPreferences.MailFormat;
+import org.springframework.beans.factory.annotation.Required;
 
 public class VoicemailPreferencesResource extends UserResource {
     private static final Log LOG = LogFactory.getLog(VoicemailPreferencesResource.class);
+    
+    private Ivr m_ivr;
 
     @Override
     public boolean allowDelete() {
@@ -50,6 +54,7 @@ public class VoicemailPreferencesResource extends UserResource {
 
         bean.setVoicemailPermission(getUser().hasVoicemailPermission());
         bean.setGreeting(prefs.getActiveGreeting());
+        bean.setVoicemailFormat(m_ivr.getAudioFormat());
         if (prefs.isEmailNotificationEnabled()) {
             bean.setEmail(prefs.getEmailAddress());
             bean.setEmailAttachType(prefs.getAttachVoicemailToEmail());
@@ -110,6 +115,11 @@ public class VoicemailPreferencesResource extends UserResource {
             getCoreContext().saveUser(user);
         }
     }
+    
+    @Required
+    public void setIvr(Ivr ivr) {
+        m_ivr = ivr;
+    }
 
     private static class VMPreferencesBean {
         private ActiveGreeting m_greeting;
@@ -122,6 +132,7 @@ public class VoicemailPreferencesResource extends UserResource {
         private MailFormat m_altEmailFormat;
         private Boolean m_altEmailIncludeAudioAttachment;
         private Boolean m_voicemailPermission;
+        private String m_voicemailFormat;
 
         public ActiveGreeting getGreeting() {
             return m_greeting;
@@ -211,7 +222,16 @@ public class VoicemailPreferencesResource extends UserResource {
                 + m_emailIncludeAudioAttachment + ", m_altEmail=" + m_altEmail + ", m_altEmailAttachType="
                 + m_altEmailAttachType + ", m_altEmailFormat=" + m_altEmailFormat
                 + ", m_altEmailIncludeAudioAttachment=" + m_altEmailIncludeAudioAttachment
-                + ", m_voicemailPermission=" + m_voicemailPermission + "]";
+                + ", m_voicemailPermission=" + m_voicemailPermission 
+                + ", m_voicemailFormat=" + m_voicemailFormat + "]";
         }
+                
+        public String getVoicemailFormat() {
+            return m_voicemailFormat;
+        }
+
+        public void setVoicemailFormat(String voicemailFormat) {
+            m_voicemailFormat = voicemailFormat;
+        }                
     }
 }

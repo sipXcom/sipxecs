@@ -252,6 +252,7 @@
 
   <bean id="voicemailPrefsResource" class="org.sipfoundry.sipxconfig.rest.VoicemailPreferencesResource" scope="prototype">
     <property name="coreContext" ref="coreContext" />
+    <property name="ivr" ref="ivr" />
     <property name="modifiable" value="true" />
     <property name="variants">
       <list>

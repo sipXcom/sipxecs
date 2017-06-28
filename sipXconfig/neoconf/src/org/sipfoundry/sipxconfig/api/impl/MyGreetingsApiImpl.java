@@ -126,10 +126,10 @@ public class MyGreetingsApiImpl extends PromptsApiImpl implements MyGreetingsApi
     }
 
     @Override
-    public Response getGreetingNewFilename(String name, HttpServletRequest request) {
+    public Response getGreetingNewFilename(String name, String extension, HttpServletRequest request) {
         if (!isSipxcom(request)) {
             SimpleCommandRunner commandRunner = new SimpleCommandRunner();
-            String command = format(m_commandGetMigratedFilename, name, getCurrentUser().getUserName());
+            String command = format(m_commandGetMigratedFilename, name, extension, getCurrentUser().getUserName());
             commandRunner.setRunParameters(command, m_commandTimeout);
             commandRunner.run();
             Integer exitCode = commandRunner.getExitCode();
