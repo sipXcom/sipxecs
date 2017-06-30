@@ -95,7 +95,12 @@ public class MyGreetingsApiImpl extends PromptsApiImpl implements MyGreetingsApi
                 }
             }
         } else {
-            return Response.serverError().entity("No initial greeting to replace with").build();
+            StringBuilder msg = new StringBuilder();
+            msg.append("{\"error\":\"");
+            msg.append("No initial greeting to replace with");
+            msg.append("\"}");
+            return Response.serverError().entity(msg.toString()).build();
+            //return Response.serverError().entity("No initial greeting to replace with").build();
         }
     }
 
@@ -129,6 +134,7 @@ public class MyGreetingsApiImpl extends PromptsApiImpl implements MyGreetingsApi
     public Response getGreetingNewFilename(String name, String extension, HttpServletRequest request) {
         if (!isSipxcom(request)) {
             SimpleCommandRunner commandRunner = new SimpleCommandRunner();
+
             String command = format(m_commandGetMigratedFilename, name, extension, getCurrentUser().getUserName());
             commandRunner.setRunParameters(command, m_commandTimeout);
             commandRunner.run();
