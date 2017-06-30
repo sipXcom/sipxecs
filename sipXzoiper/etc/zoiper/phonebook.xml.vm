@@ -2,7 +2,7 @@
 <Contacts>
 #set($i=1)
 #foreach ($entry in $!phonebookEntries)
- <Contact id=$!i>
+ <Contact id="$!i">
    <Name>
      <Display>$!entry.firstName $!entry.lastName</Display>
      <First>$!entry.firstName</First>
