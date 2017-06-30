@@ -15349,6 +15349,10 @@ select.default {
 #webchat-main .right-side-view .settings-details-wrapper {
   padding: 10px;
 }
+#webchat-main .right-side-view .settings-details-wrapper .buttons {
+  padding-left: 0px;
+  padding-bottom: 0px;
+}
 #webchat-main .right-side-view .settings.title-bar {
   background-color: #707173;
 }

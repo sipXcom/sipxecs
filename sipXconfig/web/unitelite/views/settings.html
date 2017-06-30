@@ -754,30 +754,39 @@
                     <select class="form-control"
                       data-ng-model="userSettings.user.vm.selected"
                       data-ng-disabled="!permission.enableSettingUserAnnouncement"
-                      data-ng-options="c.name for c in userSettings.user.vm.select">
+                      data-ng-options="c.name for c in userSettings.user.vm.select"
+                      data-ng-change="userSettings.user.vm.changeAnnouncement()">
                     </select>
                     <span class="help-block">
                       Voicemail prompt callers will hear before leaving a message.
                     </span>
                   </div>
                 </div>
-                <div class="form-group clearfix">
-                  <label class="col-sm-3 control-label">Standard Greeting</label>
+                <div class="form-group clearfix" data-ng-if="userSettings.user.vm.selected.greetigs.indexOf('none') == -1">
+                  <label class="col-sm-3 control-label">Greeting</label>
                   <div class="col-sm-9">
                     <input type="text" class="form-control" data-ng-disabled="true" data-ng-model="userSettings.user.vm.selectedGreeting">
-                    <div class="settings-details-wrapper">
+                    <div class="settings-details-wrapper buttons">
                       <button class="btn btn-default"
+                              data-ng-if="userSettings.user.vm.selectedGreeting != ''"
                               data-ng-click="userSettings.user.vm.listenGreeting()">
                         Listen
                       </button>
                       <button class="btn btn-default"
+                              data-ng-if="(userSettings.user.vm.selectedGreeting != '') && (userSettings.user.vm.selectedGreeting.indexOf(userSettings.user.vm.selected.greetigs) == -1)"
                               data-ng-click="userSettings.user.vm.deleteGreeting()">
                         Delete
                       </button>
                     </div>
+                    <div class="settings-details-wrapper buttons animated fade" data-ng-if="userSettings.errors.greetings">
+                      <div class="alert alert-warning">
+                        <p><strong>Deleting Greeting file failed</strong></p>
+                        No initial greeting to replace with. Please upload greeting file.
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div class="form-group clearfix">
+                <div class="form-group clearfix" data-ng-if="userSettings.user.vm.selected.greetigs.indexOf('none') == -1">
                   <label class="col-sm-3 control-label">Audio file</label>
                   <div class="col-sm-9">
                     <div ng-controller="UploadGreetingFile" class="entry-choose-file">
@@ -789,7 +798,7 @@
                       </button>-->
                     </div>
                     <span class="help-block">
-                      Choose the file from your computer to upload and make it the new Standard Greeting.
+                      Choose the file from your computer to upload and make it the new Greeting.
                     </span>
                   </div>
                 </div>
@@ -970,7 +979,7 @@
                     <span class="help-block">
                       Select the Music on Hold file
                     </span>
-                    <div class="settings-details-wrapper" data-ng-if="!(userSettings.user.moh.selectedMoh.val == 'NONE')">
+                    <div data-ng-if="!(userSettings.user.moh.selectedMoh.val == 'NONE')">
                       <button class="btn btn-default"
                         data-ng-click="userSettings.user.moh.listenMoh()">
                         Listen

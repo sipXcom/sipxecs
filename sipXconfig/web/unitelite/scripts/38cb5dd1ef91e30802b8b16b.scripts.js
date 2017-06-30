@@ -2013,10 +2013,10 @@ uw.service('restService', [
       return deferred.promise;
     }
 
-    this.deleteGreetingFileWav = function () {
+    this.setGreetingFilenameWav = function (greeting_type, data) {
       var deferred = $q.defer();
 
-      sipRest.deleteGreetingFileWav().
+      sipRest.setGreetingFilenameWav(greeting_type, data).
       success(function (data) {
         deferred.resolve(data);
       }).
@@ -2027,10 +2027,10 @@ uw.service('restService', [
       return deferred.promise;
     }
 
-    this.deleteGreetingFileMp3 = function () {
+    this.setGreetingFilenameMp3 = function (greeting_type, data) {
       var deferred = $q.defer();
 
-      sipRest.deleteGreetingFileMp3().
+      sipRest.setGreetingFilenameMp3(greeting_type, data).
       success(function (data) {
         deferred.resolve(data);
       }).
@@ -2041,10 +2041,66 @@ uw.service('restService', [
       return deferred.promise;
     }
 
-    this.listenGreetingFileWav = function () {
+    this.getGreetingFilenameWav = function (greeting_type) {
+      var deferred = $q.defer();
+      
+      sipRest.getGreetingFilenameWav(greeting_type).
+      success(function (data) {
+        deferred.resolve(data);
+      }).
+      error(function (e) {
+        deferred.reject(e);
+      })
+
+      return deferred.promise;
+    }
+
+    this.getGreetingFilenameMp3 = function (greeting_type) {
       var deferred = $q.defer();
 
-      sipRest.listenGreetingFileWav().
+      sipRest.getGreetingFilenameMp3(greeting_type).
+      success(function (data) {
+        deferred.resolve(data);
+      }).
+      error(function (e) {
+        deferred.reject(e);
+      })
+
+      return deferred.promise;
+    }
+
+    this.deleteGreetingFileWav = function (greeting_type) {
+      var deferred = $q.defer();
+
+      sipRest.deleteGreetingFileWav(greeting_type).
+      success(function (data) {
+        deferred.resolve(data);
+      }).
+      error(function (e) {
+        deferred.reject(e);
+      })
+
+      return deferred.promise;
+    }
+
+    this.deleteGreetingFileMp3 = function (greeting_type) {
+      var deferred = $q.defer();
+
+      sipRest.deleteGreetingFileMp3(greeting_type).
+      success(function (data) {
+        deferred.resolve(data);
+      }).
+      error(function (e) {
+        deferred.reject(e);
+      })
+
+      return deferred.promise;
+    }
+
+    this.listenGreetingFileWav = function (greeting_type) {
+      var deferred = $q.defer();
+
+      sipRest.listenGreetingFileWav(greeting_type).
       success(function (data) {
         deferred.resolve(data);
       }).
@@ -2054,10 +2110,10 @@ uw.service('restService', [
       return deferred.promise;
     }
 
-    this.listenGreetingFileMp3 = function () {
+    this.listenGreetingFileMp3 = function (greeting_type) {
       var deferred = $q.defer();
 
-      sipRest.listenGreetingFileMp3().
+      sipRest.listenGreetingFileMp3(greeting_type).
       success(function (data) {
         deferred.resolve(data);
       }).
@@ -2549,28 +2605,54 @@ uw.service('restService', [
             url:   baseRestNew + '/my/moh/prompts/'+data
           }))
         },
-        deleteGreetingFileWav: function (data) {
+        setGreetingFilenameWav: function (greeting_type, data) {
           return request(authHeaders({
-            method: 'DELETE',
-            url:   baseRestNew + '/my/greetings/standard/wav'
+            method: 'POST',
+            url:   baseRestNew + '/my/greetings/'+ greeting_type +'/wav/newFilename',
+            data: data
           }))
         },
-        deleteGreetingFileMp3: function (data) {
+        setGreetingFilenameMp3: function (greeting_type, data) {
           return request(authHeaders({
-            method: 'DELETE',
-            url:   baseRestNew + '/my/greetings/standard/mp3'
+            method: 'POST',
+            url:   baseRestNew + '/my/greetings/'+ greeting_type +'/mp3/newFilename',
+            data: data
           }))
         },
-        listenGreetingFileWav: function () {
+        getGreetingFilenameWav: function (greeting_type) {
           return request(authHeaders({
             method: 'GET',
-            url:   baseRestNew + '/my/greetings/standard/wav'
+            url:   baseRestNew + '/my/greetings/'+ greeting_type +'/wav/newFilename'
           }))
         },
-        listenGreetingFileMp3: function () {
+        getGreetingFilenameMp3: function (greeting_type) {
           return request(authHeaders({
             method: 'GET',
-            url:   baseRestNew + '/my/greetings/standard/mp3'
+            url:   baseRestNew + '/my/greetings/'+ greeting_type +'/mp3/newFilename'
+          }))
+        },
+        deleteGreetingFileWav: function (greeting_type) {
+          return request(authHeaders({
+            method: 'DELETE',
+            url:   baseRestNew + '/my/greetings/'+ greeting_type +'/wav'
+          }))
+        },
+        deleteGreetingFileMp3: function (greeting_type) {
+          return request(authHeaders({
+            method: 'DELETE',
+            url:   baseRestNew + '/my/greetings/'+ greeting_type +'/mp3'
+          }))
+        },
+        listenGreetingFileWav: function (greeting_type) {
+          return request(authHeaders({
+            method: 'GET',
+            url:   baseRestNew + '/my/greetings/'+ greeting_type +'/wav'
+          }))
+        },
+        listenGreetingFileMp3: function (greeting_type) {
+          return request(authHeaders({
+            method: 'GET',
+            url:   baseRestNew + '/my/greetings/'+ greeting_type +'/mp3'
           }))
         },
         getIMproperties: function () {
@@ -4309,54 +4391,104 @@ uw.service('restService', [
 
               deleteGreeting: function() {
                 if (secondary.settings.user.vm.isSelectedGreetingWav){
-                  restService.deleteGreetingFileWav().then(function () {
-                    console.log("deleted standard Greeting file wav");
-                    //secondary.settings.user.vm.selectedGreeting = 'standard.wav'
+                  restService.deleteGreetingFileWav(secondary.settings.user.vm.selected.greetigs).then(function () {
+                    //secondary.settings.user.vm.selectedGreeting = secondary.settings.user.vm.selected.greetigs + '.wav';
+                    secondary.settings.user.vm.setGreetingFilename();
                   }).catch(function (err) {
-                    console.log("error delete Greeting file");
+                    console.log("error delete Greeting file" + err.error);
+                    secondary.settings.errors.greetings = true;
                   });
                 }
                 else{
-                  restService.deleteGreetingFileMp3().then(function () {
-                    console.log("deleted standard Greeting file mp3");
-                    //secondary.settings.user.vm.selectedGreeting = 'standard.mp3'
+                  restService.deleteGreetingFileMp3(secondary.settings.user.vm.selected.greetigs).then(function () {
+                    secondary.settings.user.vm.setGreetingFilename();
+                    //secondary.settings.user.vm.selectedGreeting = secondary.settings.user.vm.selected.greetigs + '.mp3';
                   }).catch(function (err) {
                     console.log("error delete Greeting file");
+                    secondary.settings.errors.greetings = true;
                   });
                 }
               },
               listenGreeting: function(){
+                secondary.settings.errors.greetings = false;
                 if (secondary.settings.user.vm.isSelectedGreetingWav) {
-                  restService.listenGreetingFileWav().then(function (data) {
-                    window.open('/sipxconfig/api/my/greetings/standard/wav', '_blank');
+                  restService.listenGreetingFileWav(secondary.settings.user.vm.selected.greetigs).then(function (data) {
+                    window.open('/sipxconfig/api/my/greetings/'+ secondary.settings.user.vm.selected.greetigs +'/wav', '_blank');
                   }).catch(function (err) {
                     console.log("error listen greeting file");
+                    //secondary.settings.errors.greetings = true;
                   });
                 }
                 else {
-                  restService.listenGreetingFileMp3().then(function (data) {
-                    window.open('/sipxconfig/api/my/greetings/standard/mp3', '_blank');
+                  restService.listenGreetingFileMp3(secondary.settings.user.vm.selected.greetigs).then(function (data) {
+                    window.open('/sipxconfig/api/my/greetings/'+ secondary.settings.user.vm.selected.greetigs +'/mp3', '_blank');
                   }).catch(function (err) {
                     console.log("error listen greeting file");
+                    //secondary.settings.errors.greetings = true;
+                  });
+                }
+              },
+              changeAnnouncement: function() {
+                secondary.settings.user.vm.setGreetingFilename();
+              },
+              setGreetingFilename: function() {
+                secondary.settings.errors.greetings = false;
+                if(secondary.settings.user.vm.selected.greetigs === 'none' ) {
+                  return;
+                }
+                if (secondary.settings.user.vm.isSelectedGreetingWav) {
+                  //secondary.settings.user.vm.selectedGreeting = secondary.settings.user.vm.selected.greetigs + '.wav';
+                  restService.getGreetingFilenameWav(secondary.settings.user.vm.selected.greetigs).then(function (data) {
+                    if(data.filename != "null") {
+                      if(data.filename == "missing")
+                        secondary.settings.user.vm.selectedGreeting = '';
+                      else
+                        secondary.settings.user.vm.selectedGreeting = data.filename;
+                    }
+                    else
+                      secondary.settings.user.vm.selectedGreeting = secondary.settings.user.vm.selected.greetigs + '.wav';
+                  }).catch(function (err) {
+                    //console.log("error getGreetingFilename" + err);
+                    secondary.settings.user.vm.selectedGreeting = '';
+                  });
+                }
+                else {
+                  //secondary.settings.user.vm.selectedGreeting = secondary.settings.user.vm.selected.greetigs + '.mp3';
+                  restService.getGreetingFilenameMp3(secondary.settings.user.vm.selected.greetigs).then(function (data) {
+                    if(data.filename != "null") {
+                      if (data.filename == "missing")
+                        secondary.settings.user.vm.selectedGreeting = '';
+                      else
+                        secondary.settings.user.vm.selectedGreeting = data.filename;
+                    }
+                    else
+                      secondary.settings.user.vm.selectedGreeting = secondary.settings.user.vm.selected.greetigs + '.mp3';
+                  }).catch(function (err) {
+                    //console.log("error getGreetingFilename" + err);
+                    secondary.settings.user.vm.selectedGreeting = '';
                   });
                 }
               },
               select: [
                 {
                   name: 'Default system',
-                  val: 'NONE'
+                  val: 'NONE',
+                  greetigs: 'none'
                 },
                 {
                   name: 'Standard',
-                  val: 'STANDARD'
+                  val: 'STANDARD',
+                  greetigs: 'standard'
                 },
                 {
                   name: 'Out of office',
-                  val: 'OUT_OF_OFFICE'
+                  val: 'OUT_OF_OFFICE',
+                  greetigs: 'outofoffice'
                 },
                 {
                   name: 'Extended absence',
-                  val: 'EXTENDED_ABSENCE'
+                  val: 'EXTENDED_ABSENCE',
+                  greetigs: 'extendedabs'
                 }
               ]
             },
@@ -4438,6 +4570,7 @@ uw.service('restService', [
           },
 
           init: function () {
+            secondary.settings.errors.greetings      = null;
             secondary.settings.errors.notAvailable   = null;
             secondary.settings.errors.myBuddy        = null;
             secondary.settings.errors.voicemail      = null;
@@ -4461,6 +4594,8 @@ uw.service('restService', [
 
             restService.getVmPrefs().then(function (data) {
               secondary.settings.user.vm.main = data;
+              if(secondary.settings.user.vm.main.voicemailFormat === "wav")
+                secondary.settings.user.vm.isSelectedGreetingWav = true;
               setVmSelected();
             }).catch(function (err) {
               secondary.settings.errors.voicemail = true;
@@ -4508,6 +4643,14 @@ uw.service('restService', [
               for (i = 0; i < secondary.settings.user.vm.select.length; i++) {
                 if (greeting === secondary.settings.user.vm.select[i].val) {
                   secondary.settings.user.vm.selected = secondary.settings.user.vm.select[i];
+                  if (secondary.settings.user.vm.isSelectedGreetingWav) {
+                    //secondary.settings.user.vm.selectedGreeting = secondary.settings.user.vm.selected.greetigs + '.wav';
+                    secondary.settings.user.vm.setGreetingFilename();
+                  }
+                  else {
+                    //secondary.settings.user.vm.selectedGreeting = secondary.settings.user.vm.selected.greetigs + '.mp3';
+                    secondary.settings.user.vm.setGreetingFilename();
+                  }
                 }
               };
             }
@@ -5796,7 +5939,7 @@ uw.
       var baseRestNew = CONFIG.baseRest.replace("rest","api");
 
       var uploader = $scope.uploader = new FileUploader({
-          url: baseRestNew + '/my/greetings/standard/wav'
+          url: baseRestNew + '/my/greetings/standard/wav/newFilename'
         //headers: { "Authorization": tokenHeader }
         // withCredentials: true
       });
@@ -5809,15 +5952,13 @@ uw.
           var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
 
           if (type.indexOf('mp3') !== -1 || type.indexOf('mpeg') !== -1) {
-            uploader.url = baseRestNew + '/my/greetings/standard/mp3';
+            uploader.url = baseRestNew + '/my/greetings/'+ $scope.settings.user.vm.selected.greetigs + '/mp3/newFilename';
             $scope.settings.user.vm.isSelectedGreetingWav = false;
-            $scope.settings.user.vm.selectedGreeting = 'standard.mp3';
             return '|mp3|mpeg|'.indexOf(type) !== -1;
           }
           else {
-            uploader.url = baseRestNew + '/my/greetings/standard/wav';
+            uploader.url = baseRestNew + '/my/greetings/'+ $scope.settings.user.vm.selected.greetigs + '/wav/newFilename';
             $scope.settings.user.vm.isSelectedGreetingWav = true;
-            $scope.settings.user.vm.selectedGreeting = 'standard.wav';
             return '|x-wav|wav|'.indexOf(type) !== -1;
           }
           //return this.queue.length < 10;
@@ -5834,12 +5975,11 @@ uw.
         //do not upload the same file
         //var size = $scope.settings.user.voicemail.selectMoh.length;
         var sameFile = false;
-        //for(var i = 0; i < size; i++){
-          if ($scope.settings.user.vm.selectGreeting === fileItem.file.name)
-          {
-            sameFile = true;
-          }
-        //}
+        if ($scope.settings.user.vm.selectGreeting === fileItem.file.name)
+        {
+          sameFile = true;
+        }
+
         if(sameFile === false){
           fileItem.upload();
           //$scope.settings.user.vm.selectGreeting = fileItem.file.name;
@@ -5868,8 +6008,8 @@ uw.
       };
       uploader.onCompleteItem = function(fileItem, response, status, headers) {
         console.info('onCompleteItem', fileItem, response, status, headers);
-        //$scope.settings.user.vm.selectedGreeting = fileItem.file.name;
-        //$scope.settings.user.vm.isSelectedGreetingWav = false;
+        $scope.settings.user.vm.selectedGreeting = fileItem.file.name;
+        $scope.settings.errors.greetings = false;
       };
       uploader.onCompleteAll = function() {
         console.info('onCompleteAll');
