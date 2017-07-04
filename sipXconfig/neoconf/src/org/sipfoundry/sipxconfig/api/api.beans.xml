@@ -145,6 +145,7 @@
         <property name="commandReplaceWithFilename" value="java -jar ${sysdir.share}/sipXivr/gridfs-voicemail-cli.jar --replacePrompt %s %s %s %s setNewFilename"/>
         <property name="commandCopy" value="java -jar ${sysdir.share}/sipXivr/gridfs-voicemail-cli.jar --getPrompt  %s %s %s %s"/>
         <property name="commandGetMigratedFilename" value="java -jar ${sysdir.share}/sipXivr/gridfs-voicemail-cli.jar --getPromptNewFilename  %s %s %s"/>
+        <property name="commandDelete" value="java -jar ${sysdir.share}/sipXivr/gridfs-voicemail-cli.jar --deletePrompt %s %s %s"/>
     </bean>
     <bean class="org.sipfoundry.sipxconfig.api.impl.PagingGroupApiImpl" id="pagingRestApi">
         <property name="pagingContext" ref="pagingContext"/>

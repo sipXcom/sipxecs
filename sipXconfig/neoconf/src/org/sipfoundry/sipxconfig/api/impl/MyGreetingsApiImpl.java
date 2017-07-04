@@ -48,6 +48,7 @@ public class MyGreetingsApiImpl extends PromptsApiImpl implements MyGreetingsApi
     private String m_commandReplaceWithFilename;
     private String m_commandCopy;
     private String m_commandGetMigratedFilename;
+    private String m_commandDelete;
     private int m_commandTimeout = 5000;
     private MessageSource m_messages;
 
@@ -64,43 +65,31 @@ public class MyGreetingsApiImpl extends PromptsApiImpl implements MyGreetingsApi
 
     @Override
     public Response removeGreeting(String name, String extension, HttpServletRequest request) {
-        String absoluteCopyOrigFilePath = getAbsoluteCopyOrigFilePath(name, extension);
-        File original = new File(absoluteCopyOrigFilePath);
-        if (original.exists()) {
-            if (!isSipxcom(request)) {
-                //remove uploaded greeting (replace with the original one)
-                SimpleCommandRunner commandRunner = new SimpleCommandRunner();
-                String command = format(m_commandReplace, absoluteCopyOrigFilePath,
-                    extension, name, getCurrentUser().getUserName());
-                commandRunner.setRunParameters(command, m_commandTimeout);
-                commandRunner.run();
-                Integer exitCode = commandRunner.getExitCode();
-                if (exitCode != 0) {
-                    StringBuilder msg = new StringBuilder();
-                    msg.append(EXIT_CODE).append(exitCode).append(END_LINE);
-                    msg.append(commandRunner.getStderr());
-                    return Response.serverError().entity(msg.toString()).build();
-                }
-
-                return Response.ok().build();
-            } else {
-                String absoluteFilePath = getAbsoluteFilePath(name, extension);
-                try {
-                    FileUtils.deleteQuietly(new File(absoluteFilePath));
-                    FileUtils.deleteQuietly(new File(getAbsoluteFilePath(name, PROPERTIES_EXT)));
-                    FileUtils.moveFile(new File(absoluteCopyOrigFilePath), new File(absoluteFilePath));
-                    return Response.ok().build();
-                } catch (Exception ex) {
-                    return Response.serverError().entity(ex.getMessage()).build();
-                }
+        if (!isSipxcom(request)) {
+            //remove uploaded greeting (replace with the original one)
+            SimpleCommandRunner commandRunner = new SimpleCommandRunner();
+            String command = format(m_commandDelete,
+                extension, name, getCurrentUser().getUserName());
+            commandRunner.setRunParameters(command, m_commandTimeout);
+            commandRunner.run();
+            Integer exitCode = commandRunner.getExitCode();
+            if (exitCode != 0) {
+                StringBuilder msg = new StringBuilder();
+                msg.append(EXIT_CODE).append(exitCode).append(END_LINE);
+                msg.append(commandRunner.getStderr());
+                return Response.serverError().entity(msg.toString()).build();
             }
+            removePrompt(getAbsoluteActualFilePath(name, extension));
+            return Response.ok().build();
         } else {
-            StringBuilder msg = new StringBuilder();
-            msg.append("{\"error\":\"");
-            msg.append("No initial greeting to replace with");
-            msg.append("\"}");
-            return Response.serverError().entity(msg.toString()).build();
-            //return Response.serverError().entity("No initial greeting to replace with").build();
+            String absoluteFilePath = getAbsoluteFilePath(name, extension);
+            try {
+                FileUtils.deleteQuietly(new File(absoluteFilePath));
+                FileUtils.deleteQuietly(new File(getAbsoluteFilePath(name, PROPERTIES_EXT)));
+                return Response.ok().build();
+            } catch (Exception ex) {
+                return Response.serverError().entity(ex.getMessage()).build();
+            }
         }
     }
 
@@ -127,6 +116,35 @@ public class MyGreetingsApiImpl extends PromptsApiImpl implements MyGreetingsApi
             File greetingFile = new File(getAbsoluteFilePath(name, extension));
             setPath(greetingFile.getParent());
             return streamPrompt(greetingFile.getName());
+        }
+    }
+
+    @Override
+    public Response isCustomGreeting(String name, String extension, HttpServletRequest request) {
+        File greetingFile = null;
+        if (!isSipxcom(request)) {
+            String absoluteActualFilePath = getAbsoluteActualFilePath(name, extension);
+            SimpleCommandRunner commandRunner = new SimpleCommandRunner();
+            String command = format(m_commandCopy, name, extension,
+                getCurrentUser().getUserName(), absoluteActualFilePath);
+            commandRunner.setRunParameters(command, m_commandTimeout);
+            commandRunner.run();
+            Integer exitCode = commandRunner.getExitCode();
+            if (exitCode != 0) {
+                StringBuilder msg = new StringBuilder();
+                msg.append(EXIT_CODE).append(exitCode).append(END_LINE);
+                msg.append(commandRunner.getStderr());
+                return Response.serverError().entity(msg.toString()).build();
+            }
+            greetingFile = new File(absoluteActualFilePath);
+
+        } else {
+            greetingFile = new File(getAbsoluteFilePath(name, extension));
+        }
+        if (greetingFile.exists()) {
+            return Response.ok().entity("{\"exists\":true}").build();
+        } else {
+            return Response.ok().entity("{\"exists\":false}").build();
         }
     }
 
@@ -318,6 +336,11 @@ public class MyGreetingsApiImpl extends PromptsApiImpl implements MyGreetingsApi
     @Required
     public void setCommandCopy(String commandCopy) {
         m_commandCopy = commandCopy;
+    }
+
+    @Required
+    public void setCommandDelete(String commandDelete) {
+        m_commandDelete = commandDelete;
     }
 
     @Required

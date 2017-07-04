@@ -72,4 +72,10 @@ public interface MyGreetingsApi {
     public Response getGreetingNewFilename(@Description("Greeting type name") @PathParam("name") String name,
         @Description("Greeting type extension mp3 or wav") @PathParam("extension") String extension,
         @Context HttpServletRequest request);
+
+    @Path("custom/{name}/{extension}")
+    @GET
+    public Response isCustomGreeting(@Description("Greeting type name") @PathParam("name") String name,
+        @Description("Greeting type extension mp3 or wav") @PathParam("extension")  String extension,
+        @Context HttpServletRequest request);
 }
