@@ -32,6 +32,13 @@ import org.sipfoundry.sipxconfig.api.MyGreetingsApi;
 import org.sipfoundry.sipxconfig.common.SimpleCommandRunner;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.MessageSource;
+import org.springframework.data.mongodb.core.MongoTemplate;
+
+import com.mongodb.DB;
+import com.mongodb.DBObject;
+import com.mongodb.QueryBuilder;
+import com.mongodb.gridfs.GridFS;
+import com.mongodb.gridfs.GridFSDBFile;
 
 public class MyGreetingsApiImpl extends PromptsApiImpl implements MyGreetingsApi {
 
@@ -42,15 +49,16 @@ public class MyGreetingsApiImpl extends PromptsApiImpl implements MyGreetingsApi
     private static final String DOT = ".";
     private static final String PROPERTIES_EXT = "properties";
     private static final String FILENAME_PROP = "filename";
+    private static final String USER_QUERY = "metadata.user";
 
     private String m_mailstorePath;
     private String m_commandReplace;
     private String m_commandReplaceWithFilename;
-    private String m_commandCopy;
     private String m_commandGetMigratedFilename;
     private String m_commandDelete;
     private int m_commandTimeout = 5000;
     private MessageSource m_messages;
+    private MongoTemplate m_vmdbTemplate;
 
     @Override
     public Response uploadGreeting(String name, String extension, Attachment attachment, HttpServletRequest request) {
@@ -66,7 +74,7 @@ public class MyGreetingsApiImpl extends PromptsApiImpl implements MyGreetingsApi
     @Override
     public Response removeGreeting(String name, String extension, HttpServletRequest request) {
         if (!isSipxcom(request)) {
-            //remove uploaded greeting (replace with the original one)
+            //remove uploaded greeting
             SimpleCommandRunner commandRunner = new SimpleCommandRunner();
             String command = format(m_commandDelete,
                 extension, name, getCurrentUser().getUserName());
@@ -79,7 +87,6 @@ public class MyGreetingsApiImpl extends PromptsApiImpl implements MyGreetingsApi
                 msg.append(commandRunner.getStderr());
                 return Response.serverError().entity(msg.toString()).build();
             }
-            removePrompt(getAbsoluteActualFilePath(name, extension));
             return Response.ok().build();
         } else {
             String absoluteFilePath = getAbsoluteFilePath(name, extension);
@@ -96,22 +103,20 @@ public class MyGreetingsApiImpl extends PromptsApiImpl implements MyGreetingsApi
     @Override
     public Response streamGreeting(String name, String extension, HttpServletRequest request) {
         if (!isSipxcom(request)) {
-            String absoluteActualFilePath = getAbsoluteActualFilePath(name, extension);
-            SimpleCommandRunner commandRunner = new SimpleCommandRunner();
-            String command = format(m_commandCopy, name, extension,
-                getCurrentUser().getUserName(), absoluteActualFilePath);
-            commandRunner.setRunParameters(command, m_commandTimeout);
-            commandRunner.run();
-            Integer exitCode = commandRunner.getExitCode();
-            if (exitCode != 0) {
-                StringBuilder msg = new StringBuilder();
-                msg.append(EXIT_CODE).append(exitCode).append(END_LINE);
-                msg.append(commandRunner.getStderr());
-                return Response.serverError().entity(msg.toString()).build();
+            DB vmDb = m_vmdbTemplate.getDb();
+            GridFS vmFS = new GridFS(vmDb);
+            String fileName = (new StringBuilder().append(name).append(DOT).append(extension)).toString();
+            DBObject query = QueryBuilder.start(USER_QUERY).is(getCurrentUser().getUserName()).
+                and(FILENAME_PROP).is(fileName).get();
+            GridFSDBFile promptFile = vmFS.findOne(query);
+
+            if (promptFile != null) {
+                return ResponseUtils.buildStreamFileResponse(promptFile.getInputStream(),
+                    promptFile.getLength(), promptFile.getContentType());
+            } else {
+                return Response.serverError().entity("File not found").build();
             }
-            File greetingFile = new File(absoluteActualFilePath);
-            setPath(greetingFile.getParent());
-            return streamPrompt(greetingFile.getName());
+
         } else {
             File greetingFile = new File(getAbsoluteFilePath(name, extension));
             setPath(greetingFile.getParent());
@@ -121,31 +126,21 @@ public class MyGreetingsApiImpl extends PromptsApiImpl implements MyGreetingsApi
 
     @Override
     public Response isCustomGreeting(String name, String extension, HttpServletRequest request) {
-        File greetingFile = null;
+        boolean exists = false;
         if (!isSipxcom(request)) {
-            String absoluteActualFilePath = getAbsoluteActualFilePath(name, extension);
-            SimpleCommandRunner commandRunner = new SimpleCommandRunner();
-            String command = format(m_commandCopy, name, extension,
-                getCurrentUser().getUserName(), absoluteActualFilePath);
-            commandRunner.setRunParameters(command, m_commandTimeout);
-            commandRunner.run();
-            Integer exitCode = commandRunner.getExitCode();
-            if (exitCode != 0) {
-                StringBuilder msg = new StringBuilder();
-                msg.append(EXIT_CODE).append(exitCode).append(END_LINE);
-                msg.append(commandRunner.getStderr());
-                return Response.serverError().entity(msg.toString()).build();
-            }
-            greetingFile = new File(absoluteActualFilePath);
-
+            DB vmDb = m_vmdbTemplate.getDb();
+            GridFS vmFS = new GridFS(vmDb);
+            String fileName = (new StringBuilder().append(name).append(DOT).append(extension)).toString();
+            DBObject query = QueryBuilder.start(USER_QUERY).is(getCurrentUser().getUserName()).
+                and(FILENAME_PROP).is(fileName).get();
+            GridFSDBFile promptFile = vmFS.findOne(query);
+            exists = promptFile != null ? true : false;
         } else {
-            greetingFile = new File(getAbsoluteFilePath(name, extension));
+            File greetingFile = new File(getAbsoluteFilePath(name, extension));
+            exists = greetingFile.exists() ? true : false;
         }
-        if (greetingFile.exists()) {
-            return Response.ok().entity("{\"exists\":true}").build();
-        } else {
-            return Response.ok().entity("{\"exists\":false}").build();
-        }
+        return exists ? Response.ok().entity("{\"exists\":true}").build()
+            : Response.ok().entity("{\"exists\":false}").build();
     }
 
     @Override
@@ -195,16 +190,9 @@ public class MyGreetingsApiImpl extends PromptsApiImpl implements MyGreetingsApi
         if (response.getStatus() == 200) {
             if (!isSipxcom(request)) {
                 //replicate to mongo GridFS if available
-                //backup the initial greeting if not already backup-ed
-                File original = new File(getAbsoluteCopyOrigFilePath(name, extension));
+
                 SimpleCommandRunner commandRunner = null;
                 String command = null;
-                if (!original.exists()) {
-                    commandRunner = new SimpleCommandRunner();
-                    command = format(m_commandCopy, name, extension, getCurrentUser().getUserName(), original);
-                    commandRunner.setRunParameters(command, m_commandTimeout);
-                    commandRunner.run();
-                }
 
                 commandRunner = new SimpleCommandRunner();
                 String commandName = setNewFilename ? m_commandReplaceWithFilename : m_commandReplace;
@@ -224,14 +212,7 @@ public class MyGreetingsApiImpl extends PromptsApiImpl implements MyGreetingsApi
                 return Response.ok().build();
             } else {
                 String absoluteFilePath = getAbsoluteFilePath(name, extension);
-                String absoluteCopyOrigFilePath = getAbsoluteCopyOrigFilePath(name, extension);
                 try {
-                    File copyOrig = new File(absoluteCopyOrigFilePath);
-                    File orig = new File(absoluteFilePath);
-                    //backup the initial greeting before upload
-                    if (!copyOrig.exists() && orig.exists()) {
-                        FileUtils.moveFile(new File(absoluteFilePath), copyOrig);
-                    }
                     FileUtils.deleteQuietly(new File(absoluteFilePath));
                     File uploadedFile = new File(absoluteUploadedFilePath);
                     FileUtils.moveFile(uploadedFile, new File(absoluteFilePath));
@@ -292,28 +273,6 @@ public class MyGreetingsApiImpl extends PromptsApiImpl implements MyGreetingsApi
         return absoluteOrigFilePath.toString();
     }
 
-    private String getAbsoluteCopyOrigFilePath(String name, String extension) {
-        StringBuilder absoluteCopyOrigFilePath = new StringBuilder().
-            append(getGreetingPath()).
-            append(File.separator).
-            append(name).
-            append("_orig").
-            append(DOT).
-            append(extension);
-        return absoluteCopyOrigFilePath.toString();
-    }
-
-    private String getAbsoluteActualFilePath(String name, String extension) {
-        StringBuilder absoluteActualFilePath = new StringBuilder().
-            append(getGreetingPath()).
-            append(File.separator).
-            append(name).
-            append("_actual").
-            append(DOT).
-            append(extension);
-        return absoluteActualFilePath.toString();
-    }
-
     private boolean isSipxcom(HttpServletRequest request) {
         return m_messages.getMessage("product.name", null, request.getLocale()).equalsIgnoreCase(SIPXCOM);
     }
@@ -334,11 +293,6 @@ public class MyGreetingsApiImpl extends PromptsApiImpl implements MyGreetingsApi
     }
 
     @Required
-    public void setCommandCopy(String commandCopy) {
-        m_commandCopy = commandCopy;
-    }
-
-    @Required
     public void setCommandDelete(String commandDelete) {
         m_commandDelete = commandDelete;
     }
@@ -351,5 +305,9 @@ public class MyGreetingsApiImpl extends PromptsApiImpl implements MyGreetingsApi
     @Required
     public void setCommandGetMigratedFilename(String commandGetMigratedFilename) {
         m_commandGetMigratedFilename = commandGetMigratedFilename;
+    }
+
+    public void setVmdbTemplate(MongoTemplate vmdbTemplate) {
+        m_vmdbTemplate = vmdbTemplate;
     }
 }

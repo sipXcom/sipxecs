@@ -16,6 +16,7 @@ package org.sipfoundry.sipxconfig.api.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.LinkedList;
@@ -36,6 +37,7 @@ import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.job.Job;
 import org.sipfoundry.sipxconfig.setting.BeanWithSettings;
 import org.sipfoundry.sipxconfig.setting.Setting;
+import org.springframework.util.StreamUtils;
 
 public final class ResponseUtils {
     public static final String CONTENT_LENGTH = "Content-Length";
@@ -93,4 +95,17 @@ public final class ResponseUtils {
         responseBuilder.header(CONTENT_LENGTH, bean.getSize());
         return responseBuilder.build();
     }
+
+    public static Response buildStreamFileResponse(final InputStream inputStream, long size, String type) {
+        StreamingOutput stream = new StreamingOutput() {
+            @Override
+            public void write(OutputStream outputStream) throws IOException, WebApplicationException {
+                StreamUtils.copy(inputStream, outputStream);
+            }
+        };
+        ResponseBuilder responseBuilder = Response.ok(stream, type);
+        responseBuilder.header(CONTENT_LENGTH, size);
+        return responseBuilder.build();
+    }
+
 }
