@@ -2013,6 +2013,34 @@ uw.service('restService', [
       return deferred.promise;
     }
 
+    this.isCustomGreetingWav = function (greeting_type, data) {
+      var deferred = $q.defer();
+
+      sipRest.isCustomGreetingWav(greeting_type, data).
+      success(function (data) {
+        deferred.resolve(data);
+      }).
+      error(function (e) {
+        deferred.reject(e);
+      })
+
+      return deferred.promise;
+    }
+
+    this.isCustomGreetingMp3 = function (greeting_type, data) {
+      var deferred = $q.defer();
+
+      sipRest.isCustomGreetingMp3(greeting_type, data).
+      success(function (data) {
+        deferred.resolve(data);
+      }).
+      error(function (e) {
+        deferred.reject(e);
+      })
+
+      return deferred.promise;
+    }
+
     this.setGreetingFilenameWav = function (greeting_type, data) {
       var deferred = $q.defer();
 
@@ -2043,7 +2071,7 @@ uw.service('restService', [
 
     this.getGreetingFilenameWav = function (greeting_type) {
       var deferred = $q.defer();
-      
+
       sipRest.getGreetingFilenameWav(greeting_type).
       success(function (data) {
         deferred.resolve(data);
@@ -2603,6 +2631,18 @@ uw.service('restService', [
           return request(authHeaders({
             method: 'GET',
             url:   baseRestNew + '/my/moh/prompts/'+data
+          }))
+        },
+        isCustomGreetingWav: function (greeting_type) {
+          return request(authHeaders({
+            method: 'GET',
+            url:   baseRestNew + '/my/greetings/custom/'+ greeting_type +'/wav'
+          }))
+        },
+        isCustomGreetingMp3: function (greeting_type) {
+          return request(authHeaders({
+            method: 'GET',
+            url:   baseRestNew + '/my/greetings/custom/'+ greeting_type +'/mp3'
           }))
         },
         setGreetingFilenameWav: function (greeting_type, data) {
@@ -4438,34 +4478,55 @@ uw.service('restService', [
                 }
                 if (secondary.settings.user.vm.isSelectedGreetingWav) {
                   //secondary.settings.user.vm.selectedGreeting = secondary.settings.user.vm.selected.greetigs + '.wav';
-                  restService.getGreetingFilenameWav(secondary.settings.user.vm.selected.greetigs).then(function (data) {
-                    if(data.filename != "null") {
-                      if(data.filename == "missing")
-                        secondary.settings.user.vm.selectedGreeting = '';
-                      else
-                        secondary.settings.user.vm.selectedGreeting = data.filename;
+                  restService.isCustomGreetingWav(secondary.settings.user.vm.selected.greetigs).then(function (data) {
+                    if(data.exists == true) {
+                      restService.getGreetingFilenameWav(secondary.settings.user.vm.selected.greetigs).then(function (data) {
+                        if(data.filename != "null") {
+                          if(data.filename == "missing")
+                            secondary.settings.user.vm.selectedGreeting = '';
+                          else
+                            secondary.settings.user.vm.selectedGreeting = data.filename;
+                        }
+                        else
+                          secondary.settings.user.vm.selectedGreeting = secondary.settings.user.vm.selected.greetigs + '.wav';
+                      }).catch(function (err) {
+                        console.log("error getGreetingFilenameWav");
+                        //secondary.settings.user.vm.selectedGreeting = '';
+                      });
                     }
-                    else
-                      secondary.settings.user.vm.selectedGreeting = secondary.settings.user.vm.selected.greetigs + '.wav';
+                    else {
+                      secondary.settings.user.vm.selectedGreeting = '';
+                    }
                   }).catch(function (err) {
-                    //console.log("error getGreetingFilename" + err);
-                    secondary.settings.user.vm.selectedGreeting = '';
+                    console.log("error isCustomGreetingWav");
+                    console.log("error isCustomGreetingWav");
+                    //secondary.settings.user.vm.selectedGreeting = '';
                   });
                 }
                 else {
                   //secondary.settings.user.vm.selectedGreeting = secondary.settings.user.vm.selected.greetigs + '.mp3';
-                  restService.getGreetingFilenameMp3(secondary.settings.user.vm.selected.greetigs).then(function (data) {
-                    if(data.filename != "null") {
-                      if (data.filename == "missing")
-                        secondary.settings.user.vm.selectedGreeting = '';
-                      else
-                        secondary.settings.user.vm.selectedGreeting = data.filename;
+                  restService.isCustomGreetingMp3(secondary.settings.user.vm.selected.greetigs).then(function (data) {
+                    if (data.exists == true) {
+                      restService.getGreetingFilenameMp3(secondary.settings.user.vm.selected.greetigs).then(function (data) {
+                        if (data.filename != "null") {
+                          if (data.filename == "missing")
+                            secondary.settings.user.vm.selectedGreeting = '';
+                          else
+                            secondary.settings.user.vm.selectedGreeting = data.filename;
+                        }
+                        else
+                          secondary.settings.user.vm.selectedGreeting = secondary.settings.user.vm.selected.greetigs + '.mp3';
+                      }).catch(function (err) {
+                        console.log("error getGreetingFilenameMp3");
+                        ///secondary.settings.user.vm.selectedGreeting = '';
+                      });
                     }
-                    else
-                      secondary.settings.user.vm.selectedGreeting = secondary.settings.user.vm.selected.greetigs + '.mp3';
+                    else {
+                      secondary.settings.user.vm.selectedGreeting = '';
+                    }
                   }).catch(function (err) {
-                    //console.log("error getGreetingFilename" + err);
-                    secondary.settings.user.vm.selectedGreeting = '';
+                    console.log("error isCustomGreetingMp3");
+                    //secondary.settings.user.vm.selectedGreeting = '';
                   });
                 }
               },

@@ -766,6 +766,9 @@
                   <label class="col-sm-3 control-label">Greeting</label>
                   <div class="col-sm-9">
                     <input type="text" class="form-control" data-ng-disabled="true" data-ng-model="userSettings.user.vm.selectedGreeting">
+                    <span class="help-block"  data-ng-if="userSettings.user.vm.selectedGreeting == ''">
+                      No custom greeting, system greeting is used.
+                    </span>
                     <div class="settings-details-wrapper buttons">
                       <button class="btn btn-default"
                               data-ng-if="userSettings.user.vm.selectedGreeting != ''"
@@ -773,7 +776,7 @@
                         Listen
                       </button>
                       <button class="btn btn-default"
-                              data-ng-if="(userSettings.user.vm.selectedGreeting != '') && (userSettings.user.vm.selectedGreeting.indexOf(userSettings.user.vm.selected.greetigs) == -1)"
+                              data-ng-if="(userSettings.user.vm.selectedGreeting != '') && (userSettings.user.vm.selectedGreeting.indexOf(userSettings.user.vm.selected.greetigs) == -1 && (userSettings.user.vm.selectedGreeting.length != userSettings.user.vm.selected.greetigs.length + 4))"
                               data-ng-click="userSettings.user.vm.deleteGreeting()">
                         Delete
                       </button>
