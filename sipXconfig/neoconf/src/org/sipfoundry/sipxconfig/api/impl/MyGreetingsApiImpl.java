@@ -87,9 +87,7 @@ public class MyGreetingsApiImpl extends PromptsApiImpl implements MyGreetingsApi
                 msg.append(commandRunner.getStderr());
                 return Response.serverError().entity(msg.toString()).build();
             }
-            //ivr might save greeting on localfile when listening, make sure to delete this toos
-            String absoluteFilePath = getAbsoluteFilePath(name, extension);
-            FileUtils.deleteQuietly(new File(absoluteFilePath));
+
             return Response.ok().build();
         } else {
             String absoluteFilePath = getAbsoluteFilePath(name, extension);
