@@ -58,7 +58,7 @@ public final class PolycomModel extends PhoneModel {
     public static final DeviceVersion VER_5_4_6 = new DeviceVersion(PolycomPhone.BEAN_ID, "5.4.6");
     public static final DeviceVersion VER_5_5_0 = new DeviceVersion(PolycomPhone.BEAN_ID, "5.5.0");
     public static final DeviceVersion VER_5_5_1 = new DeviceVersion(PolycomPhone.BEAN_ID, "5.5.1");
-    public static final DeviceVersion VER_5_5_1 = new DeviceVersion(PolycomPhone.BEAN_ID, "5.5.2");
+    public static final DeviceVersion VER_5_5_2 = new DeviceVersion(PolycomPhone.BEAN_ID, "5.5.2");
     
     /** Firmware for Polycom RealPresence */
     public static final DeviceVersion VER_5_4_0_RP = new DeviceVersion(PolycomPhone.BEAN_ID, "5.4.0_RP");
