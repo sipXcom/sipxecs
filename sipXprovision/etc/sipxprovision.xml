@@ -141,6 +141,9 @@
       <option>
         <value>5.5.1</value>
       </option>
+      <option>
+        <value>5.5.2</value>
+      </option>
     </enum>
   </type>
   <group name="provision-config">
