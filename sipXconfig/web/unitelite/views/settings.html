@@ -776,7 +776,7 @@
                         Listen
                       </button>
                       <button class="btn btn-default"
-                              data-ng-if="(userSettings.user.vm.selectedGreeting != '') && (userSettings.user.vm.selectedGreeting.indexOf(userSettings.user.vm.selected.greetigs) == -1 && (userSettings.user.vm.selectedGreeting.length != userSettings.user.vm.selected.greetigs.length + 4))"
+                              data-ng-if="userSettings.user.vm.selectedGreeting != ''"
                               data-ng-click="userSettings.user.vm.deleteGreeting()">
                         Delete
                       </button>
