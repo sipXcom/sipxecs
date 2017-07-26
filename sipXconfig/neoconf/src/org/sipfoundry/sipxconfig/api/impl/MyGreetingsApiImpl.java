@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.sipfoundry.sipxconfig.api.MyGreetingsApi;
 import org.sipfoundry.sipxconfig.common.SimpleCommandRunner;
@@ -112,8 +113,12 @@ public class MyGreetingsApiImpl extends PromptsApiImpl implements MyGreetingsApi
             GridFSDBFile promptFile = vmFS.findOne(query);
 
             if (promptFile != null) {
+                String contentType = promptFile.getContentType();
+                if (StringUtils.isEmpty(contentType)) {
+                    contentType = StringUtils.equals(extension, "wav") ? "audio/x-wav" : "audio/mpeg";
+                }
                 return ResponseUtils.buildStreamFileResponse(promptFile.getInputStream(),
-                    promptFile.getLength(), promptFile.getContentType());
+                    promptFile.getLength(), contentType);
             } else {
                 return Response.serverError().entity("File not found").build();
             }

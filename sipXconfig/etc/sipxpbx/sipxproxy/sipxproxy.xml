@@ -209,6 +209,12 @@
     <setting name="SIPX_PROXY_CALL_STATE" hidden="yes">
       <type><string/></type>
     </setting>
+    <setting name="SIPX_PROXY_RETRY_AFTER">
+      <type>
+        <integer required="yes"/>
+      </type>
+      <value>60</value>
+    </setting>
   </group>
   <group name="subscriptionauth">
     <setting name="PACKAGES_REQUIRING_AUTHENTICATION" advanced="yes">
