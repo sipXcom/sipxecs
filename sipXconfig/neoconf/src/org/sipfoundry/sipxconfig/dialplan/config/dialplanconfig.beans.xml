@@ -24,6 +24,7 @@
   <bean id="dialPlanConfigGenerator" class="org.sipfoundry.sipxconfig.dialplan.config.ConfigGenerator">
     <property name="dialingRuleProvider" ref="dialingRuleCollector"/>
     <property name="planContext" ref="dialPlanContext"/>
+    <property name="etcDir" value="${sysdir.etc}"/>
   </bean>
 
 </beans>

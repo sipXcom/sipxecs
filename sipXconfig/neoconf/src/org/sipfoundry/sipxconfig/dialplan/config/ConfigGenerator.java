@@ -43,6 +43,7 @@ public class ConfigGenerator implements ConfigProvider, BeanFactoryAware {
     private DialingRuleProvider m_dialingRuleProvider;
     private DialPlanContext m_planContext;
     private ListableBeanFactory m_beanFactory;
+    private String m_etcDir;
 
     @Override
     public void replicate(ConfigManager manager, ConfigRequest request) throws IOException {
@@ -62,7 +63,7 @@ public class ConfigGenerator implements ConfigProvider, BeanFactoryAware {
             if (!manager.getFeatureManager().isFeatureEnabled(ProxyManager.FEATURE, location)) {
                 continue;
             }
-            File dir = manager.getLocationDataDirectory(location);
+            File dir = getLocationDataDirectory(location);
             Writer[] writers = new Writer[] {
                 new FileWriter(new File(dir, "mappingrules.xml")),
                 new FileWriter(new File(dir, "authrules.xml")),
@@ -133,5 +134,18 @@ public class ConfigGenerator implements ConfigProvider, BeanFactoryAware {
     @Override
     public void setBeanFactory(BeanFactory beanFactory) {
         m_beanFactory = (ListableBeanFactory) beanFactory;
+    }
+
+    @Required
+    public void setEtcDir(String etcDir) {
+        m_etcDir = etcDir;
+    }
+
+    private File getLocationDataDirectory(Location location) {
+        File d = new File(m_etcDir + "/conf", String.valueOf(location.getId()));
+        if (!d.exists()) {
+            d.mkdirs();
+        }
+        return d;
     }
 }
