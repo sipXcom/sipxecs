@@ -57,6 +57,8 @@ public class RegistrarConfiguration implements ConfigProvider, ApplicationContex
     private AbstractResLimitsConfig m_registrarLimitsConfig;
     private String m_libDir;
     private String m_etcDir;
+    private String m_hostname;
+    private String m_ip;
 
     @Override
     public void replicate(ConfigManager manager, ConfigRequest request) throws IOException {
@@ -146,8 +148,9 @@ public class RegistrarConfiguration implements ConfigProvider, ApplicationContex
         file.write("SIP_REGISTRAR_AUTHENTICATE_REALM", domain.getSipRealm());
         file.write("SIP_REGISTRAR_DOMAIN_NAME", domain.getName());
         file.write("SIP_REGISTRAR_PROXY_PORT", proxy.getPort());
-        file.write("SIP_REGISTRAR_NAME", location.getFqdn());
-        file.write("SIP_REGISTRAR_BIND_IP", location.getAddress());
+        //cfengine will be removed. we need to generate registrar container hostname and IP
+        file.write("SIP_REGISTRAR_NAME", m_hostname);
+        file.write("SIP_REGISTRAR_BIND_IP", m_ip);
         file.write("SIP_REGISTRAR_SYNC_WITH", "obsolete");
         file.writeSettings(root.getSetting("userparam"));
         file.writeSettings(root.getSetting("call-pick-up"));
@@ -194,6 +197,16 @@ public class RegistrarConfiguration implements ConfigProvider, ApplicationContex
     @Required
     public void setRegistrarLimitsConfig(AbstractResLimitsConfig registrarLimitsConfig) {
         m_registrarLimitsConfig = registrarLimitsConfig;
+    }
+
+    @Required
+    public void setHostname(String hostname) {
+        m_hostname = hostname;
+    }
+
+    @Required
+    public void setIp(String ip) {
+        m_ip = ip;
     }
 
     public void setLibDir(String libDir) {
