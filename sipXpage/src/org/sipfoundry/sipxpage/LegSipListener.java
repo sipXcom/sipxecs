@@ -91,6 +91,7 @@ public class LegSipListener implements SipListener
    ConcurrentHashMap<Leg, Dialog> legDialogMap ;
 
    static final String PCMU = Integer.toString(SdpConstants.PCMU) ;
+   static final String SNOM_ALERT_INFO_PARAMETER = ";info=alert-autoanswer;delay=0";
 
    public void init(SipFactory sipFactory, SipProvider sipProvider, LegListener inviteListener) throws Exception
    {
@@ -346,7 +347,8 @@ public class LegSipListener implements SipListener
       // Add the sipx-noroute=VoiceMail and sipx-userforward=false parameters
       requestURI.setParameter("sipx-noroute", "VoiceMail") ;
       requestURI.setParameter("sipx-userforward", "false") ;
-
+      // Add "intercom=true" parameter for intercom/paging on fitre devices
+      requestURI.setParameter("intercom", "true") ;
       // Create ViaHeaders
 
       ArrayList<ViaHeader> viaHeaders = new ArrayList<ViaHeader>();
@@ -380,7 +382,7 @@ public class LegSipListener implements SipListener
       {
          // Add Alert-Info header (Cannot use headerFactory.createAlertInfoHeader(URI), so
          // just use a generic header
-         Header alertInfo = headerFactory.createHeader("Alert-info", alertInfoKey) ;
+         Header alertInfo = headerFactory.createHeader("Alert-info", alertInfoKey + SNOM_ALERT_INFO_PARAMETER) ;
          request.addHeader(alertInfo) ;
       }
 
