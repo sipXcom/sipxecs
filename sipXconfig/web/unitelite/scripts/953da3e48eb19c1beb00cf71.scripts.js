@@ -4422,6 +4422,7 @@ uw.service('restService', [
             buddy:    null,
             success:  false,
             warning:  false,
+            closeWarn: true,
             vm: {
               main: null,
               selected: null,
@@ -4635,6 +4636,7 @@ uw.service('restService', [
               delete $cookies.logoutWarn;
             } else {
               secondary.settings.user.closeWarn = true;
+              localStorage.setItem(closeWarnID, 'true');
               $cookies.logoutWarn = true;
             }
 
@@ -4728,7 +4730,6 @@ uw.service('restService', [
 
           save: function (formUserSettings) {
 
-            saveCloseWarn();
             savePassword();
             saveImBot();
             saveVm();
@@ -4738,15 +4739,14 @@ uw.service('restService', [
             if(secondary.settings.errors.confBridge != true)
               saveConf();
 
-            function saveCloseWarn() {
-              var closeWarnID = restService.user+"closeWarn";
-              if (secondary.settings.user.closeWarn) {
-                localStorage.setItem(closeWarnID, 'true');
-                $cookies.logoutWarn = true;
-              } else {
-                localStorage.setItem(closeWarnID, 'false');
-                delete $cookies.logoutWarn;
-              }
+            var closeWarnID = restService.user+"closeWarn";
+            var closeWarn = angular.copy(secondary.settings.user.closeWarn);
+            if (closeWarn) {
+              $cookies.logoutWarn = true;
+              localStorage.setItem(closeWarnID, 'true');
+            } else {
+              delete $cookies.logoutWarn;
+              localStorage.setItem(closeWarnID, 'false');
             }
 
             function savePassword() {
