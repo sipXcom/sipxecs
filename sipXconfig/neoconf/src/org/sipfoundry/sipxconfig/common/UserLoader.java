@@ -123,7 +123,7 @@ public class UserLoader {
     }
 
     private void handleSearchConstraint(String search, Integer groupId) {
-        if (groupId != null) {
+        if (groupId != null && groupId != 0) {
             m_queryBuf.append(" join u.groups ugroups ");
         }
 
@@ -151,9 +151,12 @@ public class UserLoader {
             if (!addedWhere) {
                 m_queryBuf.append(AND);
             }
-
-            m_queryBuf.append(" ugroups.id = :groupId ");
-            m_params.put("groupId", groupId);
+            if (groupId != 0) {
+                m_queryBuf.append(" ugroups.id = :groupId ");
+                m_params.put("groupId", groupId);
+            } else {
+                m_queryBuf.append(" u.groups IS EMPTY");
+            }
         }
     }
 

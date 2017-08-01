@@ -121,6 +121,8 @@ public abstract class GroupFilter extends BaseComponent {
             Group g = (Group) i.next();
             actions.add(new GroupOptionAdapter(g));
         }
+        //search for users that do not belong to any group
+        actions.add(new GroupOptionAdapter(null));
 
         AdaptedSelectionModel model = new AdaptedSelectionModel();
         model.setCollection(actions);
@@ -237,15 +239,15 @@ public abstract class GroupFilter extends BaseComponent {
         }
 
         public Object getValue(Object option_, int index_) {
-            return m_group.getId();
+            return m_group != null ? m_group.getId() : 0;
         }
 
         public String getLabel(Object option_, int index_) {
-            return m_group.getName();
+            return m_group != null ? m_group.getName() : "no group";
         }
 
         public String squeezeOption(Object option_, int index_) {
-            return m_group.getId().toString();
+            return m_group!= null ? m_group.getId().toString() : "0";
         }
     }
 
