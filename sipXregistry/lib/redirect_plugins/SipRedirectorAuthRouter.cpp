@@ -54,7 +54,7 @@ void SipRedirectorAuthRouter::readConfig(OsConfigDb& configDb)
        && ! authProxyConfig.isNull()
        )
    {
-      Url authUrl(authProxyConfig);
+      Url authUrl("<" + authProxyConfig + ">");
       if ( Url::SipUrlScheme == authUrl.getScheme() )
       {
          authUrl.setUserId(NULL);
