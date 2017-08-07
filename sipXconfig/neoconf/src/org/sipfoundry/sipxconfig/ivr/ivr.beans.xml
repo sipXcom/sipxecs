@@ -56,4 +56,9 @@
       <value>org.sipfoundry.sipxconfig.ivr.ivr</value>
     </property>
   </bean>
+
+  <bean id="vmdb" class="org.sipfoundry.commons.mongo.MongoSpringTemplate">
+    <constructor-arg ref="mongoDbFactory"/>
+	<property name="dbname" value="vmdb"/>
+  </bean>
 </beans>
