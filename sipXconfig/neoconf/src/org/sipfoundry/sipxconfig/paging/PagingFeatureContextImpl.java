@@ -63,7 +63,6 @@ public class PagingFeatureContextImpl extends SipxHibernateDaoSupport<PagingGrou
     @Override
     public void featureChangePrecommit(FeatureManager manager, FeatureChangeValidator validator) {
         validator.requiresAtLeastOne(FEATURE, ProxyManager.FEATURE);
-        validator.singleLocationOnly(FEATURE);
     }
 
     @Override
