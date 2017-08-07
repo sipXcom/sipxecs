@@ -4635,6 +4635,7 @@ uw.service('restService', [
               delete $cookies.logoutWarn;
             } else {
               secondary.settings.user.closeWarn = true;
+              localStorage.setItem(closeWarnID, 'true');
               $cookies.logoutWarn = true;
             }
 
@@ -4727,43 +4728,38 @@ uw.service('restService', [
           },
 
           save: function (formUserSettings) {
-
-            saveCloseWarn();
-            savePassword();
-            saveImBot();
-            saveVm();
-            saveVmPass();
-            if(secondary.settings.errors.moh != true)
-              saveMoh();
-            if(secondary.settings.errors.confBridge != true)
-              saveConf();
-
-            function saveCloseWarn() {
-              var closeWarnID = restService.user+"closeWarn";
-              if (secondary.settings.user.closeWarn) {
-                localStorage.setItem(closeWarnID, 'true');
-                $cookies.logoutWarn = true;
-              } else {
-                localStorage.setItem(closeWarnID, 'false');
-                delete $cookies.logoutWarn;
-              }
+            //save browser exit warning value
+            var closeWarnID = restService.user + "closeWarn";
+            var closeWarn = angular.copy(secondary.settings.user.closeWarn);
+            if (closeWarn) {
+              $cookies.logoutWarn = true;
+              localStorage.setItem(closeWarnID, 'true');
+            } else {
+              delete $cookies.logoutWarn;
+              localStorage.setItem(closeWarnID, 'false');
             }
+
+            savePassword();
 
             function savePassword() {
               var pass = angular.copy(secondary.settings.user.pass);
               if (pass.length === 0) {
-                return;
+                saveImBot();
               }
-              if (pass.length < 8) {
+              else if (pass.length < 8) {
                 secondary.settings.user.errors.pass = true;
-                return
+                saveImBot();
               }
-              secondary.settings.user.loading = true;
-              restService.putPassword(pass).then(function (data) {
-                secondary.settings.user.loading = null;
-              }, function (err) {
-                console.log(err);
-              })
+              else {
+                secondary.settings.user.loading = true;
+                restService.putPassword(pass).then(function (data) {
+                  secondary.settings.user.loading = null;
+                  saveImBot();
+                }, function (err) {
+                  console.log(err);
+                  saveImBot();
+                })
+              }
             }
 
             function saveImBot() {
@@ -4773,13 +4769,16 @@ uw.service('restService', [
                 restService.getImBot().then(function (data) {
                   secondary.settings.user.loading = null;
                   secondary.settings.user.buddy = data;
+                  saveVm();
                 }, function (err) {
                   secondary.settings.user.loading = null;
                   console.log(err);
+                  saveVm();
                 })
               }, function (err) {
                 secondary.settings.user.loading = null;
                 console.log(err);
+                saveVm();
               })
             }
 
@@ -4794,18 +4793,45 @@ uw.service('restService', [
               }
               secondary.settings.user.vm.main.greeting = secondary.settings.user.vm.selected.val;
 
-              restService.putVmPrefs(angular.copy(secondary.settings.user.vm.main)).catch(function (err) {
+              restService.putVmPrefs(angular.copy(secondary.settings.user.vm.main)).then(function (data) {
+                secondary.settings.user.loading = null;
+                saveVmPass();
+              }, function (err) {
                 console.log(err);
+                saveVmPass();
               })
+            }
+
+            function saveVmPass() {
+              if (secondary.settings.user.vm.pass === null) {
+                  saveMoh();
+              } else {
+                var pass = angular.copy(secondary.settings.user.vm.pass);
+                restService.putVmPin(pass).then(function (data) {
+                  saveMoh();
+                }, function (err) {
+                  console.log(err);
+                  saveMoh();
+                })
+              }
             }
 
             function saveMoh() {
-              restService.putMohSettings(angular.copy(secondary.settings.user.moh.selected.val)).catch(function (err) {
-                console.log(err);
-              })
+              if(secondary.settings.errors.moh != true) {
+                restService.putMohSettings(angular.copy(secondary.settings.user.moh.selected.val)).then(function (data) {
+                  saveConf();
+                }, function (err) {
+                  console.log(err);
+                  saveConf();
+                })
+              }
+              else {
+                saveConf();
+              }
             }
 
-              function saveConf() {
+            function saveConf() {
+              if(secondary.settings.errors.confBridge != true) {
                 var data = angular.copy(secondary.settings.user.conf.main);
                 var conf = angular.copy(secondary.settings.user.conf.selected.name);
 
@@ -4813,18 +4839,9 @@ uw.service('restService', [
                   console.log(err);
                 })
               }
+            }
 
-              function saveVmPass() {
-                if (secondary.settings.user.vm.pass === null) {
-                  return
-                } else {
-                  var pass = angular.copy(secondary.settings.user.vm.pass);
-                  restService.putVmPin(pass).catch(function (err) {
-                    console.log(err);
-                  })
-                }
-              }
-              formUserSettings.$setPristine();
+            formUserSettings.$setPristine();
             },
 
             cancel: function () {
