@@ -1,5 +1,10 @@
 page_PKGS = \
 	sipxcommons \
+	commons-codec \
+	commons-lang \
+	commons-io \
+	commons-logging \
 	dom4j \
 	jain-sip-sdp \
+	mongo \
 	dnsjava

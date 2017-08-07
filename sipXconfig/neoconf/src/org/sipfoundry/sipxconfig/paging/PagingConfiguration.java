@@ -73,6 +73,7 @@ public class PagingConfiguration implements ConfigProvider {
         config.write("sip.udpPort", settings.getSipUdpPort());
         config.write("sip.tcpPort", settings.getSipTcpPort());
         config.write("sip.trace", settings.getSipTraceLevel());
+        config.write("haPaging", settings.getHaPagingEnable());
         for (int i = 0; i < groups.size(); i++) {
             PagingGroup g = groups.get(i);
             if (g.isEnabled()) {

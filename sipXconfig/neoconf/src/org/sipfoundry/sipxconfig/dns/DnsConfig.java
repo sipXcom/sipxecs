@@ -50,6 +50,7 @@ import org.sipfoundry.sipxconfig.commserver.LocationsManager;
 import org.sipfoundry.sipxconfig.domain.Domain;
 import org.sipfoundry.sipxconfig.im.ImManager;
 import org.sipfoundry.sipxconfig.nattraversal.NatTraversal;
+import org.sipfoundry.sipxconfig.paging.PagingContext;
 import org.sipfoundry.sipxconfig.proxy.ProxyManager;
 import org.sipfoundry.sipxconfig.region.Region;
 import org.sipfoundry.sipxconfig.region.RegionManager;
@@ -73,7 +74,7 @@ public class DnsConfig implements ConfigProvider {
     @Override
     public void replicate(ConfigManager manager, ConfigRequest request) throws IOException {
         if (!request.applies(DnsManager.FEATURE, LocationsManager.FEATURE, ProxyManager.FEATURE, Registrar.FEATURE,
-                ImManager.FEATURE, RegionManager.FEATURE_ID, NatTraversal.FEATURE)) {
+                ImManager.FEATURE, RegionManager.FEATURE_ID, NatTraversal.FEATURE, PagingContext.FEATURE)) {
             return;
         }
 
