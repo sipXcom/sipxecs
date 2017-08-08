@@ -181,8 +181,7 @@ public class MappingRules extends RulesXmlFile {
 
             Address page = m_addressManager.getSingleAddress(PagingContext.SIP_TCP, location);
             if (page != null) {
-                rulesString = rulesString.replace("${PAGE_SERVER_ADDR}", page.getAddress());
-                rulesString = rulesString.replace("${PAGE_SERVER_SIP_PORT}", String.valueOf(page.getPort()));
+                rulesString = rulesString.replace("${PAGE_SERVER_ADDR}:${PAGE_SERVER_SIP_PORT}", "page." + getDomainName());
             }
 
             StringReader stringReader = new StringReader(rulesString);
