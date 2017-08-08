@@ -39,7 +39,6 @@ import org.sipfoundry.sipxconfig.firewall.DefaultFirewallRule;
 import org.sipfoundry.sipxconfig.firewall.FirewallManager;
 import org.sipfoundry.sipxconfig.firewall.FirewallProvider;
 import org.sipfoundry.sipxconfig.firewall.FirewallRule;
-import org.sipfoundry.sipxconfig.mwi.Mwi;
 import org.sipfoundry.sipxconfig.setting.BeanWithSettingsDao;
 import org.sipfoundry.sipxconfig.snmp.ProcessDefinition;
 import org.sipfoundry.sipxconfig.snmp.ProcessProvider;
@@ -278,29 +277,28 @@ public class PagingContextImpl extends SipxHibernateDaoSupport implements Paging
 	@Override
 	public Collection<ResourceRecords> getResourceRecords(DnsManager manager) {
 		FeatureManager fm = manager.getAddressManager().getFeatureManager();
-        List<Location> locations = fm.getLocationsForEnabledFeature(FEATURE);
-        if (locations == null || locations.isEmpty()) {
-            return Collections.emptyList();
-        }
-        ResourceRecords udpRecords = new ResourceRecords("_sip._udp", "page", true);
-        int udpPort = getSettings().getSipUdpPort();
-        for (Location l : locations) {
-        	udpRecords.addRecord(new ResourceRecord(l.getHostname(), udpPort, l.getRegionId()));
-        }
-        ResourceRecords tcpRecords = new ResourceRecords("_sip._tcp", "page", true);
-        int tcpPort = getSettings().getSipTcpPort();
-        for (Location l : locations) {
-        	tcpRecords.addRecord(new ResourceRecord(l.getHostname(), tcpPort, l.getRegionId()));
-        }
-        ResourceRecords tlsRecords = new ResourceRecords("_sips._tcp", "page", true);
-        int tlsPort = getSettings().getSipTlsPort();
-        for (Location l : locations) {
-        	tlsRecords.addRecord(new ResourceRecord(l.getHostname(), tlsPort, l.getRegionId()));
-        }
-        Collection<ResourceRecords> rrCollection = Collections.singleton(udpRecords);
-        rrCollection.add(tcpRecords);
-        rrCollection.add(tlsRecords);
-        return rrCollection;
+		List<Location> locations = fm.getLocationsForEnabledFeature(FEATURE);
+		if (locations == null || locations.isEmpty()) {
+			return Collections.emptyList();
+		}
+
+		String page = "page";
+		ResourceRecords[] records = new ResourceRecords[] { 
+				new ResourceRecords("_sip._tcp", page, true),
+				new ResourceRecords("_sip._udp", page, true), 
+				new ResourceRecords("_sips._tcp", page, true),
+				new ResourceRecords("_sip._tls", page, true) };
+		int[] ports = new int[] { 
+				getSettings().getSipTcpPort(), 
+				getSettings().getSipUdpPort(),
+				getSettings().getSipTlsPort(), 
+				getSettings().getSipTlsPort() };
+		for (int i = 0; i < records.length; i++) {
+			for (Location l : locations) {
+				records[i].addRecord(new ResourceRecord(l.getHostname(), ports[i], l.getRegionId()));
+			}
+		}
+		return Arrays.asList(records);
 	}
 	
     private String getPagingAddress(String host) {
