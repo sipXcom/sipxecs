@@ -29,11 +29,17 @@ import org.sipfoundry.sipxconfig.common.UserException;
 import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.dialplan.DialingRule;
 import org.sipfoundry.sipxconfig.dialplan.PagingRule;
+import org.sipfoundry.sipxconfig.dns.DnsManager;
+import org.sipfoundry.sipxconfig.dns.DnsProvider;
+import org.sipfoundry.sipxconfig.dns.ResourceRecord;
+import org.sipfoundry.sipxconfig.dns.ResourceRecords;
+import org.sipfoundry.sipxconfig.domain.DomainManager;
 import org.sipfoundry.sipxconfig.feature.FeatureManager;
 import org.sipfoundry.sipxconfig.firewall.DefaultFirewallRule;
 import org.sipfoundry.sipxconfig.firewall.FirewallManager;
 import org.sipfoundry.sipxconfig.firewall.FirewallProvider;
 import org.sipfoundry.sipxconfig.firewall.FirewallRule;
+import org.sipfoundry.sipxconfig.mwi.Mwi;
 import org.sipfoundry.sipxconfig.setting.BeanWithSettingsDao;
 import org.sipfoundry.sipxconfig.snmp.ProcessDefinition;
 import org.sipfoundry.sipxconfig.snmp.ProcessProvider;
@@ -42,7 +48,7 @@ import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class PagingContextImpl extends SipxHibernateDaoSupport implements PagingContext,
-        AddressProvider, ProcessProvider, FirewallProvider {
+        AddressProvider, ProcessProvider, FirewallProvider, DnsProvider {
 
     /** Default ALERT-INFO - hardcoded in Polycom phone configuration */
     private static final String ALERT_INFO = "sipXpage";
@@ -52,6 +58,7 @@ public class PagingContextImpl extends SipxHibernateDaoSupport implements Paging
     private static final Collection<AddressType> ADDRESSES = Arrays.asList(SIP_TCP, SIP_TLS, SIP_UDP, RTP_PORT);
     private static final String VALID_SIP_REGEX = "([-_.!~*'\\(\\)=+$,;?/a-zA-Z0-9]|(%[0-9a-fA-F]{2}))+";
     private AliasManager m_aliasManager;
+    private DomainManager m_domainManager;
     private BeanWithSettingsDao<PagingSettings> m_settingsDao;
 
     private FeatureManager m_featureManager;
@@ -253,4 +260,53 @@ public class PagingContextImpl extends SipxHibernateDaoSupport implements Paging
                 ".*\\s-Dprocname=sipxpage\\s.*")) : null);
     }
 
+	@Override
+	public Address getAddress(DnsManager manager, AddressType t, Collection<Address> addresses, Location whoIsAsking) {
+        if (t.equals(SIP_TCP) || t.equals(SIP_UDP) || t.equals(SIP_TLS)) {
+            // NOTE: drop port, it's in DNS resource records
+            if (m_featureManager.isFeatureEnabled(FEATURE, whoIsAsking)) {
+                return new Address(t, getPagingAddress(whoIsAsking.getHostnameInSipDomain()));
+            } else {
+                return new Address(t, getPagingAddress(m_domainManager.getDomainName()));
+            }
+        }
+
+        return null;
+	}
+
+	@Override
+	public Collection<ResourceRecords> getResourceRecords(DnsManager manager) {
+		FeatureManager fm = manager.getAddressManager().getFeatureManager();
+        List<Location> locations = fm.getLocationsForEnabledFeature(FEATURE);
+        if (locations == null || locations.isEmpty()) {
+            return Collections.emptyList();
+        }
+        ResourceRecords udpRecords = new ResourceRecords("_sip._udp", "page", true);
+        int udpPort = getSettings().getSipUdpPort();
+        for (Location l : locations) {
+        	udpRecords.addRecord(new ResourceRecord(l.getHostname(), udpPort, l.getRegionId()));
+        }
+        ResourceRecords tcpRecords = new ResourceRecords("_sip._tcp", "page", true);
+        int tcpPort = getSettings().getSipTcpPort();
+        for (Location l : locations) {
+        	tcpRecords.addRecord(new ResourceRecord(l.getHostname(), tcpPort, l.getRegionId()));
+        }
+        ResourceRecords tlsRecords = new ResourceRecords("_sips._tcp", "page", true);
+        int tlsPort = getSettings().getSipTlsPort();
+        for (Location l : locations) {
+        	tlsRecords.addRecord(new ResourceRecord(l.getHostname(), tlsPort, l.getRegionId()));
+        }
+        Collection<ResourceRecords> rrCollection = Collections.singleton(udpRecords);
+        rrCollection.add(tcpRecords);
+        rrCollection.add(tlsRecords);
+        return rrCollection;
+	}
+	
+    private String getPagingAddress(String host) {
+        return String.format("page.%s", host);
+    }
+
+    public void setDomainManager(DomainManager domainManager) {
+        m_domainManager = domainManager;
+    }
 }
