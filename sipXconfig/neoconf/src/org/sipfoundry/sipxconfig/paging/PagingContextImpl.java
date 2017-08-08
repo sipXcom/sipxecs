@@ -44,6 +44,7 @@ import org.sipfoundry.sipxconfig.setting.BeanWithSettingsDao;
 import org.sipfoundry.sipxconfig.snmp.ProcessDefinition;
 import org.sipfoundry.sipxconfig.snmp.ProcessProvider;
 import org.sipfoundry.sipxconfig.snmp.SnmpManager;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -306,6 +307,7 @@ public class PagingContextImpl extends SipxHibernateDaoSupport implements Paging
         return String.format("page.%s", host);
     }
 
+    @Required
     public void setDomainManager(DomainManager domainManager) {
         m_domainManager = domainManager;
     }

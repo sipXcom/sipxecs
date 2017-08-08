@@ -27,6 +27,7 @@
   <bean id="pagingContextImpl" class="org.sipfoundry.sipxconfig.paging.PagingContextImpl" parent="abstractDaoImpl">
     <property name="featureManager" ref="featureManager" />
     <property name="aliasManager" ref="aliasManager" />
+    <property name="domainManager" ref="domainManager" />
     <property name="settingsDao">
       <bean parent="beanWithSettingsDao">
         <property name="target">
