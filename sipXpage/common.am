@@ -1,5 +1,6 @@
 page_PKGS = \
 	sipxcommons \
+	commons-io \
 	dom4j \
 	jain-sip-sdp \
 	mongo \
