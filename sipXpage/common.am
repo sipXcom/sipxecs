@@ -2,4 +2,15 @@ page_PKGS = \
 	sipxcommons \
 	dom4j \
 	jain-sip-sdp \
+	mongo \
+	spring-beans \
+	spring-context \
+	spring-context-support \
+	spring-core \
+	org.springframework.jdbc \
+	org.springframework.transaction \
+	spring-expression \
+	spring-aop \
+	spring-data-commons \
+	spring-data-mongodb \
 	dnsjava

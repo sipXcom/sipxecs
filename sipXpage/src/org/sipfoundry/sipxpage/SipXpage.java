@@ -324,7 +324,13 @@ public class SipXpage implements LegListener
    
    private void clearBusyStatesFromServer()
    {
-	   // TODO Remove all states from MongoDb with own IP (config.ipAddress)
-	   LOG.info("Clear busy states in node DB from server with IP: " + config.ipAddress);
+	   if(config != null)
+	   {
+	       // TODO Remove all states from MongoDb with own IP (config.ipAddress)
+	       LOG.info("Clear busy states in node DB from server with IP: " + config.ipAddress);
+	   } else
+	   {
+		   LOG.fatal("Could not clear busy states from server. IP is unknown.");   
+	   }
    }
 }
