@@ -287,7 +287,7 @@ public class SipXpage implements LegListener
          {
             if (p.getInbound() == event.getLeg())
             {
-                setUserBusy(p.getInbound().getRequestUri().getUser(), false, 0);
+                setUserBusy(event.getLeg().getRequestUri().getUser(), false, 0);
                 // End that page
                 p.end() ;
                 break ;
