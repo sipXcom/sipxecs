@@ -6,6 +6,7 @@
 package org.sipfoundry.sipxpage;
 
 import java.net.InetSocketAddress;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.Vector;
@@ -20,7 +21,14 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.sipfoundry.commons.log4j.SipFoundryLayout;
 import org.sipfoundry.commons.siprouter.ProxyRouter;
+import org.sipfoundry.commons.util.UnfortunateLackOfSpringSupportFactory;
 import org.sipfoundry.sipxpage.Configuration.PageGroupConfig;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 
 public class SipXpage implements LegListener
 {
@@ -41,6 +49,12 @@ public class SipXpage implements LegListener
    private Vector<PageGroup> pageGroups = new Vector<PageGroup>();
    private HashMap<String, PageGroup>user2Group = new HashMap<String, PageGroup>() ;
    
+   // MongoDB constants for paging
+   private final String MONGO_IP = "server_ip";
+   private final String MONGO_BUSY = "busy_state";
+   private final String MONGO_PAGING_USER = "paging_user";
+   private final String MONGO_COLLECTION_PAGING = "paging";
+   private final String MONGO_EXPIRE_TIME = "expire_time";
    /**
     * Initialize everything.
     *
@@ -88,19 +102,18 @@ public class SipXpage implements LegListener
 
       properties.setProperty("javax.sip.ROUTER_PATH", ProxyRouter.class.getName());
 
-      try {
-          // Load nodeDb from Context
-          //TODO DB connection
+	  if(getDbCollection() != null)
+	  {
+		  createIndexForPaging();
           // Clear old busy states written by this server. They must be from an old instance
           clearBusyStatesFromServer();
-      } catch (Exception e)
-      {
-          LOG.fatal("Cannot create MongoDB NodeDB connection", e) ;
-          System.err.println(e.getMessage());
+	  } else
+	  {
+          LOG.fatal("Cannot create MongoDB connection") ;
           System.exit(1); 
-      }
-      
-      try {
+	  }
+
+	  try {
          // Create SipStack object
          sipStack = sipFactory.createSipStack(properties);
          System.out.println("createSipStack " + sipStack);
@@ -250,7 +263,7 @@ public class SipXpage implements LegListener
          }
       } else
       {
-          setUserBusy(user, true);
+          setUserBusy(user, true, pageGroup.maximumDuration);
       }
    }
 
@@ -273,7 +286,7 @@ public class SipXpage implements LegListener
          {
             if (p.getInbound() == event.getLeg())
             {
-                setUserBusy(p.getInbound().getRequestUri().getUser(), false);
+                setUserBusy(p.getInbound().getRequestUri().getUser(), false, 0);
                 // End that page
                 p.end() ;
                 break ;
@@ -285,23 +298,37 @@ public class SipXpage implements LegListener
    
    private boolean isUserBusy(String user)
    {
-	   // TODO Ask MongoDB if user state is busy
+	   DBCollection pagingCollection = getDbCollection();
+	   BasicDBObject query = new BasicDBObject();
+	   query.append(MONGO_PAGING_USER, user);
+	   DBObject dbo = pagingCollection.findOne(query);
 	   
-	   
-	   
-	   return false;
+	   if(dbo != null)
+	   {
+		   return ((BasicDBObject)dbo).getBoolean(MONGO_BUSY, false);
+	   } else 
+	   {
+		   return false;
+	   }
    }
    
-   private void setUserBusy(String user, boolean busy)
+   private void setUserBusy(String user, boolean busy, int timeout)
    {
-	   // TODO Write to MongoDB, store state with user, own IP, busy state and time stamp for TTL
-       if(busy)
+	   DBCollection pagingCollection = getDbCollection();
+	   BasicDBObject query = new BasicDBObject();
+	   if(busy)
        {
-    	   //TODO Add entry to MongoDB
+		   query.append(MONGO_IP, config.ipAddress);
+		   query.append(MONGO_PAGING_USER, user);
+		   query.append(MONGO_BUSY, busy);
+		   query.append(MONGO_EXPIRE_TIME, new Date(System.currentTimeMillis() + timeout));
+		   pagingCollection.insert(query);
        }
        else
        {
-    	   //TODO Erase entry from MongoDB
+		   query.append(MONGO_IP, config.ipAddress);
+		   query.append(MONGO_PAGING_USER, user);
+		   pagingCollection.remove(query);
        }
    }
    
@@ -309,11 +336,53 @@ public class SipXpage implements LegListener
    {
 	   if(config != null)
 	   {
-	       // TODO Remove all states from MongoDb with own IP (config.ipAddress)
 	       LOG.info("Clear busy states in node DB from server with IP: " + config.ipAddress);
+		   DBCollection pagingCollection = getDbCollection();
+		   BasicDBObject query = new BasicDBObject();
+		   query.append(MONGO_IP, config.ipAddress);
+		   pagingCollection.remove(query);
 	   } else
 	   {
 		   LOG.fatal("Could not clear busy states from server. IP is unknown.");   
+	   }
+   }
+   
+   private DBCollection getDbCollection()
+   {
+	   DB imDb = UnfortunateLackOfSpringSupportFactory.getImdb();
+	   if(imDb != null)
+	   {
+		   return imDb.getCollection(MONGO_COLLECTION_PAGING);
+	   } else
+	   {
+		   return null;
+	   }
+   }
+   
+   private void createIndexForPaging()
+   {
+	   DBCollection pagingCollection = getDbCollection();
+	   if(pagingCollection != null)
+	   {
+	       DBCollection indexesCollection = UnfortunateLackOfSpringSupportFactory.getImdb().getCollection("system.indexes");
+
+	       // Add index for state TTL
+	       BasicDBObject dateField = new BasicDBObject().append(MONGO_EXPIRE_TIME, 1);
+	       BasicDBObject deleteObj = new BasicDBObject().append("expireAfterSeconds", 1);
+	   
+	       BasicDBObject query = new BasicDBObject();
+	       query.append("key", dateField);
+	       query.append("ns", "imdb" + "." + MONGO_COLLECTION_PAGING);
+	       query.append("expireAfterSeconds", 1);
+	   
+	       // Check if index already exist. If not create it
+	       DBCursor cursor = indexesCollection.find(query).limit(1);
+	       if(!cursor.hasNext())
+	       {
+	    	   // TTL could exist with different expire time. Drop to ensure correct time
+	    	   pagingCollection.dropIndex(dateField);
+	    	   pagingCollection.createIndex(dateField, deleteObj);
+	       }
 	   }
    }
 }
