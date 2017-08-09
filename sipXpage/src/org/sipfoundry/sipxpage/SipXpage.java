@@ -21,9 +21,6 @@ import org.apache.log4j.PropertyConfigurator;
 import org.sipfoundry.commons.log4j.SipFoundryLayout;
 import org.sipfoundry.commons.siprouter.ProxyRouter;
 import org.sipfoundry.sipxpage.Configuration.PageGroupConfig;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.data.mongodb.core.MongoTemplate;
 
 public class SipXpage implements LegListener
 {
@@ -43,9 +40,6 @@ public class SipXpage implements LegListener
    private Configuration config ;
    private Vector<PageGroup> pageGroups = new Vector<PageGroup>();
    private HashMap<String, PageGroup>user2Group = new HashMap<String, PageGroup>() ;
-   private ApplicationContext context ;
-   private MongoTemplate m_nodeDb;
-   
    
    /**
     * Initialize everything.
@@ -96,8 +90,7 @@ public class SipXpage implements LegListener
 
       try {
           // Load nodeDb from Context
-          m_nodeDb = (MongoTemplate) context.getBean("nodeDb");
-          LOG.info("MongoDB connection object loaded. " + m_nodeDb);
+          //TODO DB connection
           // Clear old busy states written by this server. They must be from an old instance
           clearBusyStatesFromServer();
       } catch (Exception e)
@@ -194,11 +187,6 @@ public class SipXpage implements LegListener
       try
       {
          SipXpage pager = new SipXpage() ;
-         
-         pager.setContext(new ClassPathXmlApplicationContext(new String[] {
-                 "classpath*:/sipxplugin.beans.xml"
-             }));       
-         
          pager.init() ;
       } catch (Exception e)
       {
@@ -293,11 +281,6 @@ public class SipXpage implements LegListener
          }
       }
       return true ;
-   }
-   
-   private void setContext(ApplicationContext context)
-   {
-	   this.context = context;
    }
    
    private boolean isUserBusy(String user)
