@@ -11,12 +11,20 @@ import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.URL;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.sdp.SessionDescription;
 import javax.sip.address.SipURI;
 
 import org.apache.log4j.Logger;
+import org.sipfoundry.commons.util.UnfortunateLackOfSpringSupportFactory;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.WriteResult;
 
 /**
  * A PageGroup is the object that, given an inbound call,
@@ -41,7 +49,7 @@ public class PageGroup implements LegListener
    Leg inbound = null ;
    InetSocketAddress inboundRtp = null ;
    URL beep ;
-   boolean busy = false ;
+   String user = "";
    int maximumDuration = 60000;
 
    PageGroup(LegSipListener legSipListener, String ipAddress, int rtpPort) throws SocketException
@@ -113,7 +121,13 @@ public class PageGroup implements LegListener
     */
    public boolean isBusy()
    {
-      return busy ;
+	   if(user.equals(""))
+	   {
+		   return false;
+	   } else 
+	   {
+           return isUserBusy(user);
+	   }
    }
 
    /**
@@ -135,13 +149,15 @@ public class PageGroup implements LegListener
     */
    public boolean page(Leg inbound, InetSocketAddress inboundRtp, String alertInfoKey)
    {
-      if (busy == false)
+	  
+      if (isBusy() == false)
       {
          LOG.debug("PageGroup::page starting") ;
-         busy = true ;
          this.inbound = inbound ;
          this.inboundRtp = inboundRtp ;
+         this.user = inbound.getRequestUri().getUser();
 
+         setUserBusy(user, true, maximumDuration);
          // Spin up the RTP forker
          rtpFork.start() ;
          try
@@ -235,7 +251,7 @@ public class PageGroup implements LegListener
          }
          inbound = null ;
       }
-      busy = false ;
+      setUserBusy(user, false, 0);
    }
 
    /**
@@ -328,5 +344,64 @@ public class PageGroup implements LegListener
 
 
       return true ;
+   }
+   
+   private DBCollection getDbCollection()
+   {
+	   DB imDb = UnfortunateLackOfSpringSupportFactory.getImdb();
+	   if(imDb != null)
+	   {
+		   return imDb.getCollection(SipXpage.MONGO_COLLECTION_PAGING);
+	   } else
+	   {
+		   return null;
+	   }
+   }
+   
+   private boolean isUserBusy(String user)
+   {
+	   DBCollection pagingCollection = getDbCollection();
+	   BasicDBObject query = new BasicDBObject();
+	   query.append(SipXpage.MONGO_PAGING_USER, user);
+	   DBObject dbo = pagingCollection.findOne(query);
+	   
+	   LOG.debug("SipXpage::isUserBusy::dbo " + dbo);
+	   if(dbo != null)
+	   {
+		   LOG.debug("SipXpage::isUserBusy::busyState " + ((BasicDBObject)dbo).getBoolean(SipXpage.MONGO_BUSY));
+		   return ((BasicDBObject)dbo).getBoolean(SipXpage.MONGO_BUSY, false);
+	   } else 
+	   {
+		   return false;
+	   }
+   }
+   
+   private void setUserBusy(String user, boolean busy, int timeout)
+   {
+	   DBCollection pagingCollection = getDbCollection();
+	   BasicDBObject query = new BasicDBObject();
+	   LOG.debug("SipXpage::setUserBusy::user " + user);
+	   LOG.debug("SipXpage::setUserBusy::busy " + busy);
+	   WriteResult result = null;
+	   if(busy)
+       {
+		   query.append(SipXpage.MONGO_IP, ipAddress);
+		   query.append(SipXpage.MONGO_PAGING_USER, user);
+		   query.append(SipXpage.MONGO_BUSY, busy);
+		   query.append(SipXpage.MONGO_EXPIRE_TIME, new Date(System.currentTimeMillis() + timeout));
+		   result = pagingCollection.insert(query);
+       }
+       else
+       {
+		   query.append(SipXpage.MONGO_PAGING_USER, user);
+		   result = pagingCollection.remove(query);
+       }
+	   if(result != null)
+	   {
+		   LOG.debug("PageGroup::setUserBusy::result " + result.toString());
+	   } else
+	   {
+		   LOG.debug("PageGroup::setUserBusy: No result found");
+	   }
    }
 }

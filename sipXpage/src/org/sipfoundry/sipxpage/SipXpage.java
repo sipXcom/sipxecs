@@ -6,7 +6,6 @@
 package org.sipfoundry.sipxpage;
 
 import java.net.InetSocketAddress;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.Vector;
@@ -28,8 +27,6 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.WriteResult;
 
 public class SipXpage implements LegListener
 {
@@ -51,11 +48,11 @@ public class SipXpage implements LegListener
    private HashMap<String, PageGroup>user2Group = new HashMap<String, PageGroup>() ;
    
    // MongoDB constants for paging
-   private final String MONGO_IP = "server_ip";
-   private final String MONGO_BUSY = "busy_state";
-   private final String MONGO_PAGING_USER = "paging_user";
-   private final String MONGO_COLLECTION_PAGING = "paging";
-   private final String MONGO_EXPIRE_TIME = "expire_time";
+   public static final String MONGO_IP = "server_ip";
+   public static final String MONGO_BUSY = "busy_state";
+   public static final String MONGO_PAGING_USER = "paging_user";
+   public static final String MONGO_COLLECTION_PAGING = "paging";
+   public static final String MONGO_EXPIRE_TIME = "expire_time";
    /**
     * Initialize everything.
     *
@@ -251,7 +248,7 @@ public class SipXpage implements LegListener
          return ;
       }
       
-      if (isUserBusy(user) == true || pageGroup.isBusy() == true ||
+      if (pageGroup.isBusy() == true ||
           pageGroup.page(leg, sdpAddress, alertInfoKey) == false)
       {
          // Already have an inbound call for that page group.  Return busy here response.
@@ -262,9 +259,6 @@ public class SipXpage implements LegListener
          {
             LOG.error("SipXpage::page", e) ;
          }
-      } else
-      {
-          setUserBusy(user, true, pageGroup.maximumDuration);
       }
    }
 
@@ -287,7 +281,6 @@ public class SipXpage implements LegListener
          {
             if (p.getInbound() == event.getLeg())
             {
-                setUserBusy(event.getLeg().getRequestUri().getUser(), false, 0);
                 // End that page
                 p.end() ;
                 break ;
@@ -295,53 +288,6 @@ public class SipXpage implements LegListener
          }
       }
       return true ;
-   }
-   
-   private boolean isUserBusy(String user)
-   {
-	   DBCollection pagingCollection = getDbCollection();
-	   BasicDBObject query = new BasicDBObject();
-	   query.append(MONGO_PAGING_USER, user);
-	   DBObject dbo = pagingCollection.findOne(query);
-	   
-	   LOG.debug("SipXpage::isUserBusy::dbo " + dbo);
-	   if(dbo != null)
-	   {
-		   LOG.debug("SipXpage::isUserBusy::busyState " + ((BasicDBObject)dbo).getBoolean(MONGO_BUSY));
-		   return ((BasicDBObject)dbo).getBoolean(MONGO_BUSY, false);
-	   } else 
-	   {
-		   return false;
-	   }
-   }
-   
-   private void setUserBusy(String user, boolean busy, int timeout)
-   {
-	   DBCollection pagingCollection = getDbCollection();
-	   BasicDBObject query = new BasicDBObject();
-	   LOG.debug("SipXpage::setUserBusy::user " + user);
-	   LOG.debug("SipXpage::setUserBusy::busy " + busy);
-	   WriteResult result = null;
-	   if(busy)
-       {
-		   query.append(MONGO_IP, config.ipAddress);
-		   query.append(MONGO_PAGING_USER, user);
-		   query.append(MONGO_BUSY, busy);
-		   query.append(MONGO_EXPIRE_TIME, new Date(System.currentTimeMillis() + timeout));
-		   result = pagingCollection.insert(query);
-       }
-       else
-       {
-		   query.append(MONGO_PAGING_USER, user);
-		   result = pagingCollection.remove(query);
-       }
-	   if(result != null)
-	   {
-		   LOG.debug("SipXpage::setUserBusy::result " + result.toString());
-	   } else
-	   {
-		   LOG.debug("SipXpage::setUserBusy: No result found");
-	   }
    }
    
    private void clearBusyStatesFromServer()
