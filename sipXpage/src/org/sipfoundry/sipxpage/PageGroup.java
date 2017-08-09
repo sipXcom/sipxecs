@@ -365,10 +365,10 @@ public class PageGroup implements LegListener
 	   query.append(SipXpage.MONGO_PAGING_USER, user);
 	   DBObject dbo = pagingCollection.findOne(query);
 	   
-	   LOG.debug("SipXpage::isUserBusy::dbo " + dbo);
+	   LOG.debug("PageGroup::isUserBusy::dbo " + dbo);
 	   if(dbo != null)
 	   {
-		   LOG.debug("SipXpage::isUserBusy::busyState " + ((BasicDBObject)dbo).getBoolean(SipXpage.MONGO_BUSY));
+		   LOG.debug("PageGroup::isUserBusy::busyState " + ((BasicDBObject)dbo).getBoolean(SipXpage.MONGO_BUSY));
 		   return ((BasicDBObject)dbo).getBoolean(SipXpage.MONGO_BUSY, false);
 	   } else 
 	   {
@@ -380,8 +380,8 @@ public class PageGroup implements LegListener
    {
 	   DBCollection pagingCollection = getDbCollection();
 	   BasicDBObject query = new BasicDBObject();
-	   LOG.debug("SipXpage::setUserBusy::user " + user);
-	   LOG.debug("SipXpage::setUserBusy::busy " + busy);
+	   LOG.debug("PageGroup::setUserBusy::user " + user);
+	   LOG.debug("PageGroup::setUserBusy::busy " + busy);
 	   WriteResult result = null;
 	   if(busy)
        {
