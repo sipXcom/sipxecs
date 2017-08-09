@@ -21,6 +21,9 @@ import org.apache.log4j.PropertyConfigurator;
 import org.sipfoundry.commons.log4j.SipFoundryLayout;
 import org.sipfoundry.commons.siprouter.ProxyRouter;
 import org.sipfoundry.sipxpage.Configuration.PageGroupConfig;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
 public class SipXpage implements LegListener
 {
@@ -40,8 +43,10 @@ public class SipXpage implements LegListener
    private Configuration config ;
    private Vector<PageGroup> pageGroups = new Vector<PageGroup>();
    private HashMap<String, PageGroup>user2Group = new HashMap<String, PageGroup>() ;
-
-
+   private ApplicationContext context ;
+   private MongoTemplate m_nodeDb;
+   
+   
    /**
     * Initialize everything.
     *
@@ -89,7 +94,19 @@ public class SipXpage implements LegListener
 
       properties.setProperty("javax.sip.ROUTER_PATH", ProxyRouter.class.getName());
 
-
+      try {
+          // Load nodeDb from Context
+          m_nodeDb = (MongoTemplate) context.getBean("nodeDb");
+          LOG.info("MongoDB connection object loaded. " + m_nodeDb);
+          // Clear old busy states written by this server. They must be from an old instance
+          clearBusyStatesFromServer();
+      } catch (Exception e)
+      {
+          LOG.fatal("Cannot create MongoDB NodeDB connection", e) ;
+          System.err.println(e.getMessage());
+          System.exit(1); 
+      }
+      
       try {
          // Create SipStack object
          sipStack = sipFactory.createSipStack(properties);
@@ -177,6 +194,11 @@ public class SipXpage implements LegListener
       try
       {
          SipXpage pager = new SipXpage() ;
+         
+         pager.setContext(new ClassPathXmlApplicationContext(new String[] {
+                 "classpath*:/sipxplugin.beans.xml"
+             }));       
+         
          pager.init() ;
       } catch (Exception e)
       {
@@ -226,8 +248,8 @@ public class SipXpage implements LegListener
          }
          return ;
       }
-
-      if (pageGroup.isBusy() == true ||
+      
+      if (isUserBusy(user) == true || pageGroup.isBusy() == true ||
           pageGroup.page(leg, sdpAddress, alertInfoKey) == false)
       {
          // Already have an inbound call for that page group.  Return busy here response.
@@ -238,6 +260,9 @@ public class SipXpage implements LegListener
          {
             LOG.error("SipXpage::page", e) ;
          }
+      } else
+      {
+          setUserBusy(user, true);
       }
    }
 
@@ -260,12 +285,46 @@ public class SipXpage implements LegListener
          {
             if (p.getInbound() == event.getLeg())
             {
-               // End that page
-               p.end() ;
-               break ;
+                setUserBusy(p.getInbound().getRequestUri().getUser(), false);
+                // End that page
+                p.end() ;
+                break ;
             }
          }
       }
       return true ;
+   }
+   
+   private void setContext(ApplicationContext context)
+   {
+	   this.context = context;
+   }
+   
+   private boolean isUserBusy(String user)
+   {
+	   // TODO Ask MongoDB if user state is busy
+	   
+	   
+	   
+	   return false;
+   }
+   
+   private void setUserBusy(String user, boolean busy)
+   {
+	   // TODO Write to MongoDB, store state with user, own IP, busy state and time stamp for TTL
+       if(busy)
+       {
+    	   //TODO Add entry to MongoDB
+       }
+       else
+       {
+    	   //TODO Erase entry from MongoDB
+       }
+   }
+   
+   private void clearBusyStatesFromServer()
+   {
+	   // TODO Remove all states from MongoDb with own IP (config.ipAddress)
+	   LOG.info("Clear busy states in node DB from server with IP: " + config.ipAddress);
    }
 }
