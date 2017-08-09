@@ -29,6 +29,7 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.WriteResult;
 
 public class SipXpage implements LegListener
 {
@@ -303,8 +304,10 @@ public class SipXpage implements LegListener
 	   query.append(MONGO_PAGING_USER, user);
 	   DBObject dbo = pagingCollection.findOne(query);
 	   
+	   LOG.debug("SipXpage::isUserBusy::dbo " + dbo);
 	   if(dbo != null)
 	   {
+		   LOG.debug("SipXpage::isUserBusy::busyState " + ((BasicDBObject)dbo).getBoolean(MONGO_BUSY));
 		   return ((BasicDBObject)dbo).getBoolean(MONGO_BUSY, false);
 	   } else 
 	   {
@@ -316,20 +319,29 @@ public class SipXpage implements LegListener
    {
 	   DBCollection pagingCollection = getDbCollection();
 	   BasicDBObject query = new BasicDBObject();
+	   LOG.debug("SipXpage::setUserBusy::user " + user);
+	   LOG.debug("SipXpage::setUserBusy::busy " + busy);
+	   WriteResult result = null;
 	   if(busy)
        {
 		   query.append(MONGO_IP, config.ipAddress);
 		   query.append(MONGO_PAGING_USER, user);
 		   query.append(MONGO_BUSY, busy);
 		   query.append(MONGO_EXPIRE_TIME, new Date(System.currentTimeMillis() + timeout));
-		   pagingCollection.insert(query);
+		   result = pagingCollection.insert(query);
        }
        else
        {
-		   query.append(MONGO_IP, config.ipAddress);
 		   query.append(MONGO_PAGING_USER, user);
-		   pagingCollection.remove(query);
+		   result = pagingCollection.remove(query);
        }
+	   if(result != null)
+	   {
+		   LOG.debug("SipXpage::setUserBusy::result " + result.toString());
+	   } else
+	   {
+		   LOG.debug("SipXpage::setUserBusy: No result found");
+	   }
    }
    
    private void clearBusyStatesFromServer()
