@@ -23,7 +23,7 @@ $(JAR_FILE) : javac-page $(page_RESOURCES)
 	  $(call JarInclude,$(JAVAROOT),.) \
 	  $(call JarInclude,$(srcdir),$(page_RESOURCES))
 	  
-style_SRC = $(yealink_SRC)
+style_SRC = $(page_SRC)
 precommit : style validate-xml
 
 validate-xml : sipxplugin.beans.xml
