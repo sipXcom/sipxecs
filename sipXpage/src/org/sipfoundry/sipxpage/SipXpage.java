@@ -248,8 +248,7 @@ public class SipXpage implements LegListener
          return ;
       }
       
-      if (pageGroup.isBusy() == true ||
-          pageGroup.page(leg, sdpAddress, alertInfoKey) == false)
+      if (pageGroup.page(leg, sdpAddress, alertInfoKey) == false)
       {
          // Already have an inbound call for that page group.  Return busy here response.
          try

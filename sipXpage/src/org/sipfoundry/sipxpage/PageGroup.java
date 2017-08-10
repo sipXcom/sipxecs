@@ -121,13 +121,7 @@ public class PageGroup implements LegListener
     */
    public boolean isBusy()
    {
-	   if(user.equals(""))
-	   {
-		   return false;
-	   } else 
-	   {
-           return isUserBusy(user);
-	   }
+	   return isUserBusy(user);
    }
 
    /**
@@ -148,16 +142,15 @@ public class PageGroup implements LegListener
     * @return
     */
    public boolean page(Leg inbound, InetSocketAddress inboundRtp, String alertInfoKey)
-   {
-	  
+   {	  
       if (isBusy() == false)
       {
          LOG.debug("PageGroup::page starting") ;
          this.inbound = inbound ;
          this.inboundRtp = inboundRtp ;
          this.user = inbound.getRequestUri().getUser();
-
          setUserBusy(user, true, maximumDuration);
+         
          // Spin up the RTP forker
          rtpFork.start() ;
          try
@@ -349,6 +342,7 @@ public class PageGroup implements LegListener
    private DBCollection getDbCollection()
    {
 	   DB imDb = UnfortunateLackOfSpringSupportFactory.getImdb();
+	   LOG.debug("PageGroup::MongoDebug::getDbCollection::imDb " + imDb);
 	   if(imDb != null)
 	   {
 		   return imDb.getCollection(SipXpage.MONGO_COLLECTION_PAGING);
@@ -365,13 +359,14 @@ public class PageGroup implements LegListener
 	   query.append(SipXpage.MONGO_PAGING_USER, user);
 	   DBObject dbo = pagingCollection.findOne(query);
 	   
-	   LOG.debug("PageGroup::isUserBusy::dbo " + dbo);
+	   LOG.debug("PageGroup::MongoDebug::isUserBusy::dbo " + dbo);
 	   if(dbo != null)
 	   {
-		   LOG.debug("PageGroup::isUserBusy::busyState " + ((BasicDBObject)dbo).getBoolean(SipXpage.MONGO_BUSY));
+		   LOG.debug("PageGroup::MongoDebug::isUserBusy::busyState_without_defaultstate " + ((BasicDBObject)dbo).getBoolean(SipXpage.MONGO_BUSY));
 		   return ((BasicDBObject)dbo).getBoolean(SipXpage.MONGO_BUSY, false);
 	   } else 
 	   {
+		   LOG.debug("PageGroup::MongoDebug::isUserBusy: No DBO, busy is false");
 		   return false;
 	   }
    }
@@ -380,8 +375,8 @@ public class PageGroup implements LegListener
    {
 	   DBCollection pagingCollection = getDbCollection();
 	   BasicDBObject query = new BasicDBObject();
-	   LOG.debug("PageGroup::setUserBusy::user " + user);
-	   LOG.debug("PageGroup::setUserBusy::busy " + busy);
+	   LOG.debug("PageGroup::MongoDebug::setUserBusy::user " + user);
+	   LOG.debug("PageGroup::MongoDebug::setUserBusy::busy " + busy);
 	   WriteResult result = null;
 	   if(busy)
        {
@@ -398,10 +393,10 @@ public class PageGroup implements LegListener
        }
 	   if(result != null)
 	   {
-		   LOG.debug("PageGroup::setUserBusy::result " + result.toString());
+		   LOG.debug("PageGroup::MongoDebug::setUserBusy::result " + result.toString());
 	   } else
 	   {
-		   LOG.debug("PageGroup::setUserBusy: No result found");
+		   LOG.debug("PageGroup::MongoDebug::setUserBusy: No result found");
 	   }
    }
 }
