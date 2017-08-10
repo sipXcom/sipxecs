@@ -50,7 +50,7 @@ public class SipXpage implements LegListener
    // MongoDB constants for paging
    public static final String MONGO_IP = "server_ip";
    public static final String MONGO_BUSY = "busy_state";
-   public static final String MONGO_PAGING_USER = "paging_user";
+   public static final String MONGO_PAGING_USER = "_id";
    public static final String MONGO_COLLECTION_PAGING = "paging";
    public static final String MONGO_EXPIRE_TIME = "expire_time";
    /**

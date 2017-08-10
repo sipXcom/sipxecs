@@ -23,7 +23,7 @@ import org.sipfoundry.commons.util.UnfortunateLackOfSpringSupportFactory;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
+import com.mongodb.DBCursor;
 import com.mongodb.WriteResult;
 
 /**
@@ -357,16 +357,17 @@ public class PageGroup implements LegListener
 	   DBCollection pagingCollection = getDbCollection();
 	   BasicDBObject query = new BasicDBObject();
 	   query.append(SipXpage.MONGO_PAGING_USER, user);
-	   DBObject dbo = pagingCollection.findOne(query);
+	   DBCursor cursor = pagingCollection.find(query);
 	   
-	   LOG.debug("PageGroup::MongoDebug::isUserBusy::dbo " + dbo);
-	   if(dbo != null)
+	   LOG.debug("PageGroup::MongoDebug::isUserBusy::cursor " + cursor);
+	   if(cursor.hasNext())
 	   {
+		   BasicDBObject dbo = (BasicDBObject)cursor.next();
 		   LOG.debug("PageGroup::MongoDebug::isUserBusy::busyState_without_defaultstate " + ((BasicDBObject)dbo).getBoolean(SipXpage.MONGO_BUSY));
 		   return ((BasicDBObject)dbo).getBoolean(SipXpage.MONGO_BUSY, false);
 	   } else 
 	   {
-		   LOG.debug("PageGroup::MongoDebug::isUserBusy: No DBO, busy is false");
+		   LOG.debug("PageGroup::MongoDebug::isUserBusy: No cursor, busy is false");
 		   return false;
 	   }
    }
