@@ -159,6 +159,7 @@ public class SipXpage implements LegListener
             {
                throw new Exception("beep for Page Group "+user+" is missing.") ;
             }
+            p.setUser(user);
             LOG.debug(String.format("Page Group %s adding beep %s",
                   user, pc.beep)) ;
             p.setBeep(pc.beep) ;

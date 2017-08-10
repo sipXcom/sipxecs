@@ -113,6 +113,16 @@ public class PageGroup implements LegListener
    {
        this.maximumDuration = timeout;
    }
+   
+   /**
+    * Set the user for this group.
+    *
+   * @param user The page group user
+    */
+   public void setUser(String user)
+   {
+       this.user = user;
+   }
 
    /**
     *
@@ -142,13 +152,12 @@ public class PageGroup implements LegListener
     * @return
     */
    public boolean page(Leg inbound, InetSocketAddress inboundRtp, String alertInfoKey)
-   {	  
+   {	
       if (isBusy() == false)
       {
          LOG.debug("PageGroup::page starting") ;
          this.inbound = inbound ;
          this.inboundRtp = inboundRtp ;
-         this.user = inbound.getRequestUri().getUser();
          setUserBusy(user, true, maximumDuration);
          
          // Spin up the RTP forker
@@ -363,8 +372,9 @@ public class PageGroup implements LegListener
 	   if(cursor.hasNext())
 	   {
 		   BasicDBObject dbo = (BasicDBObject)cursor.next();
-		   LOG.debug("PageGroup::MongoDebug::isUserBusy::busyState_without_defaultstate " + ((BasicDBObject)dbo).getBoolean(SipXpage.MONGO_BUSY));
-		   return ((BasicDBObject)dbo).getBoolean(SipXpage.MONGO_BUSY, false);
+		   boolean busyState = ((BasicDBObject)dbo).getBoolean(SipXpage.MONGO_BUSY, false);
+		   LOG.debug("PageGroup::MongoDebug::isUserBusy::busyState " + busyState);
+		   return busyState;
 	   } else 
 	   {
 		   LOG.debug("PageGroup::MongoDebug::isUserBusy: No cursor, busy is false");
