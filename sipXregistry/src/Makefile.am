@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = test sipXregTool
+SUBDIRS = test sipXregTool fbrulescheck arulescheck
 
 bin_PROGRAMS = sipregistrar
 

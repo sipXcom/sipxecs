@@ -170,9 +170,10 @@ EnforceAuthRules::authorizeAndModify(const UtlString& id,    /**< The authentica
     *   to describe what permission is needed for the request to succeed and returns
     *   DENY.
     */
+
    
-   
-   
+   UtlString strUri;
+   requestUri.toString(strUri); // for logging only
 
    UtlString unused;
    
@@ -195,8 +196,8 @@ EnforceAuthRules::authorizeAndModify(const UtlString& id,    /**< The authentica
       if (mpSipRouter->trustSbcRegisteredCalls() && mpRegDb->isRegisteredBinding(requestUri))
       {
         Os::Logger::instance().log(FAC_AUTH, PRI_INFO, "EnforceAuthRules[%s]::authorizeAndModify "
-                          " no permission required for call %s because the target is a registered binding.",
-                          mInstanceName.data(), callId.data() );
+                          " no permission required for call %s because the target %s is a registered binding.",
+                          mInstanceName.data(), callId.data(), strUri.data() );
         return ALLOW;
       }
      
@@ -212,8 +213,8 @@ EnforceAuthRules::authorizeAndModify(const UtlString& id,    /**< The authentica
          {
             result = ALLOW;
             Os::Logger::instance().log(FAC_AUTH, PRI_INFO, "EnforceAuthRules[%s]::authorizeAndModify "
-                          " no permission required for call %s",
-                          mInstanceName.data(), callId.data() );
+                          " no permission required for call %s and target %s",
+                          mInstanceName.data(), callId.data(), strUri.data() );
 
             if (!mpSipRouter->isRelayAllowed() && bSpiralingRequest)
             {
@@ -227,8 +228,8 @@ EnforceAuthRules::authorizeAndModify(const UtlString& id,    /**< The authentica
                 if (!mpSipRouter->isLocalDomain(requestUri, true))
                 {
                   Os::Logger::instance().log(FAC_AUTH, PRI_INFO, "EnforceAuthRules[%s]::authorizeAndModify "
-                          " %s REJECTED - Relay is not allowed!",
-                          mInstanceName.data(), callId.data() );
+                          " %s REJECTED - Relay is not allowed for target %s",
+                          mInstanceName.data(), callId.data(), strUri.data() );
 
                   return DENY;
                 }
@@ -245,9 +246,8 @@ EnforceAuthRules::authorizeAndModify(const UtlString& id,    /**< The authentica
              */
             result = DENY;
             Os::Logger::instance().log(FAC_AUTH, PRI_DEBUG, "EnforceAuthRules[%s]::authorizeAndModify "
-                          " request not authenticated but requires some permission. Call-Id = '%s'",
-                          mInstanceName.data(), callId.data() 
-                          );
+                          " request not authenticated because of originator id not defined, but requires some permission for call %s and target %s",
+                          mInstanceName.data(), callId.data(), strUri.data());
          }
          else
          {
@@ -257,15 +257,13 @@ EnforceAuthRules::authorizeAndModify(const UtlString& id,    /**< The authentica
 
             UtlString unmatchedPermissions;
             UtlString matchedPermission;
-            if (isAuthorized(id, requiredPermissions,
-                             matchedPermission, unmatchedPermissions)
+            if (isAuthorized(id, requiredPermissions, matchedPermission, unmatchedPermissions)
                 )
             {
                result = ALLOW;
                Os::Logger::instance().log(FAC_AUTH, PRI_DEBUG, "EnforceAuthRules[%s]::authorizeAndModify "
-                             " id '%s' authorized by '%s'",
-                             mInstanceName.data(), id.data(), matchedPermission.data()
-                             );
+                             " id %s authorized by matchedPermissions: %s, unmatchedPermissions: %s",
+                             mInstanceName.data(), id.data(), matchedPermission.data(), unmatchedPermissions.data());
             }
             else
             {
@@ -275,8 +273,8 @@ EnforceAuthRules::authorizeAndModify(const UtlString& id,    /**< The authentica
               {
                 Os::Logger::instance().log(FAC_AUTH, PRI_WARNING,
                               "EnforceAuthRules[%s]::authorizeAndModify "
-                              " call '%s' requires '%s'",
-                              mInstanceName.data(), callId.data(), unmatchedPermissions.data()
+                              "id %s for call %s, target %s requires %s",
+                              mInstanceName.data(), id.data(), callId.data(), strUri.data(), unmatchedPermissions.data()
                               );
                 // since the user is at least a valid user, help them debug the configuration
                 // by telling them what permissions would allow this request.
@@ -286,8 +284,7 @@ EnforceAuthRules::authorizeAndModify(const UtlString& id,    /**< The authentica
               else
               {
                 Os::Logger::instance().log(FAC_AUTH, PRI_DEBUG, "EnforceAuthRules[%s]::authorizeAndModify "
-                             " id '%s' is not authorized, unmatchedPermissions is empty",
-                             mInstanceName.data(), id.data());
+                             " id %s is not authorized, unmatchedPermissions is empty, target %s", mInstanceName.data(), id.data(), strUri.data());
               }
             }
          }
@@ -303,9 +300,8 @@ EnforceAuthRules::authorizeAndModify(const UtlString& id,    /**< The authentica
       // another plug-in already provided an authoritative result for this request so
       // don't waste time figuring it out.
       Os::Logger::instance().log(FAC_AUTH, PRI_DEBUG, "EnforceAuthRules[%s]::authorizeAndModify "
-                    "prior authorization result %s for call %s - rules skipped",
-                    mInstanceName.data(), AuthResultStr(priorResult), callId.data()
-                    );
+                    "prior authorization result %s for call %s and target %s - rules skipped",
+                    mInstanceName.data(), AuthResultStr(priorResult), callId.data(), strUri.data());
    }
    
    return result;
