@@ -135,6 +135,32 @@ EnforceAuthRules::readConfig( OsConfigDb& configDb /**< a subhash of the individ
    }
 }
 
+UtlString
+EnforceAuthRules::dumpRules(const ResultSet &records)
+{
+    UtlString result = "";
+
+    UtlSListIterator requiredRecs(records);
+    UtlHashMap* record;
+    UtlString permissionKey("permission");
+
+    while((record = dynamic_cast<UtlHashMap*>(requiredRecs())))
+    {
+        UtlString* reqPermission = dynamic_cast<UtlString*>(record->findValue(&permissionKey));
+        if (reqPermission && !reqPermission->isNull())
+        {
+            if (result != "")
+            {
+                result += "|";
+            }
+
+            result += *reqPermission;
+        }
+    }
+
+    return result;
+}
+
 AuthPlugin::AuthResult
 EnforceAuthRules::authorizeAndModify(const UtlString& id,    /**< The authenticated identity of the
                                                               *   request originator, if any (the null
@@ -196,7 +222,7 @@ EnforceAuthRules::authorizeAndModify(const UtlString& id,    /**< The authentica
       if (mpSipRouter->trustSbcRegisteredCalls() && mpRegDb->isRegisteredBinding(requestUri))
       {
         Os::Logger::instance().log(FAC_AUTH, PRI_INFO, "EnforceAuthRules[%s]::authorizeAndModify "
-                          " no permission required for call %s because the target %s is a registered binding.",
+                          "ALLOW - no permission required for call %s because the target %s is a registered binding.",
                           mInstanceName.data(), callId.data(), strUri.data() );
         return ALLOW;
       }
@@ -209,11 +235,13 @@ EnforceAuthRules::authorizeAndModify(const UtlString& id,    /**< The authentica
          ResultSet  requiredPermissions;
          mpAuthorizationRules->getPermissionRequired(requestUri, requiredPermissions);
 
+         UtlString requiredPermissionsStr = dumpRules(requiredPermissions);
+
          if (requiredPermissions.isEmpty())
          {
             result = ALLOW;
             Os::Logger::instance().log(FAC_AUTH, PRI_INFO, "EnforceAuthRules[%s]::authorizeAndModify "
-                          " no permission required for call %s and target %s",
+                          "ALLOW - no permission required for call %s and target %s",
                           mInstanceName.data(), callId.data(), strUri.data() );
 
             if (!mpSipRouter->isRelayAllowed() && bSpiralingRequest)
@@ -228,7 +256,7 @@ EnforceAuthRules::authorizeAndModify(const UtlString& id,    /**< The authentica
                 if (!mpSipRouter->isLocalDomain(requestUri, true))
                 {
                   Os::Logger::instance().log(FAC_AUTH, PRI_INFO, "EnforceAuthRules[%s]::authorizeAndModify "
-                          " %s REJECTED - Relay is not allowed for target %s",
+                          "DENY - %s, Relay is not allowed for target %s",
                           mInstanceName.data(), callId.data(), strUri.data() );
 
                   return DENY;
@@ -246,8 +274,8 @@ EnforceAuthRules::authorizeAndModify(const UtlString& id,    /**< The authentica
              */
             result = DENY;
             Os::Logger::instance().log(FAC_AUTH, PRI_DEBUG, "EnforceAuthRules[%s]::authorizeAndModify "
-                          " request not authenticated because of originator id not defined, but requires some permission for call %s and target %s",
-                          mInstanceName.data(), callId.data(), strUri.data());
+                          "DENY - request not authenticated because of originator id not defined, but requires permission for call %s and target %s requiredPermissions: %s",
+                          mInstanceName.data(), callId.data(), strUri.data(), requiredPermissionsStr.data());
          }
          else
          {
@@ -262,8 +290,8 @@ EnforceAuthRules::authorizeAndModify(const UtlString& id,    /**< The authentica
             {
                result = ALLOW;
                Os::Logger::instance().log(FAC_AUTH, PRI_DEBUG, "EnforceAuthRules[%s]::authorizeAndModify "
-                             " id %s authorized by matchedPermissions: %s, unmatchedPermissions: %s",
-                             mInstanceName.data(), id.data(), matchedPermission.data(), unmatchedPermissions.data());
+                             "ALLOW - id %s authorized by requiredPermissions: %s, matchedPermissions: %s, unmatchedPermissions: %s for call %s, target %s",
+                             mInstanceName.data(), id.data(), requiredPermissionsStr.data(), matchedPermission.data(), unmatchedPermissions.data(), callId.data(), strUri.data());
             }
             else
             {
@@ -273,8 +301,8 @@ EnforceAuthRules::authorizeAndModify(const UtlString& id,    /**< The authentica
               {
                 Os::Logger::instance().log(FAC_AUTH, PRI_WARNING,
                               "EnforceAuthRules[%s]::authorizeAndModify "
-                              "id %s for call %s, target %s requires %s",
-                              mInstanceName.data(), id.data(), callId.data(), strUri.data(), unmatchedPermissions.data()
+                              "DENY - id %s is not authorized for call %s, target %s requiredPermissions: %s, unmatchedPermissions: %s",
+                              mInstanceName.data(), id.data(), callId.data(), strUri.data(), requiredPermissionsStr.data(), unmatchedPermissions.data()
                               );
                 // since the user is at least a valid user, help them debug the configuration
                 // by telling them what permissions would allow this request.
@@ -284,7 +312,7 @@ EnforceAuthRules::authorizeAndModify(const UtlString& id,    /**< The authentica
               else
               {
                 Os::Logger::instance().log(FAC_AUTH, PRI_DEBUG, "EnforceAuthRules[%s]::authorizeAndModify "
-                             " id %s is not authorized, unmatchedPermissions is empty, target %s", mInstanceName.data(), id.data(), strUri.data());
+                             "DENY - id %s is not authorized, requiredPermissions: %s, unmatchedPermissions is empty, target %s", mInstanceName.data(), id.data(), requiredPermissionsStr.data(), strUri.data());
               }
             }
          }
@@ -333,7 +361,7 @@ bool EnforceAuthRules::isAuthorized(const UtlString& id,
     UtlSListIterator requiredRecs(requiredSet);
     UtlHashMap* requiredRecord;
     UtlString permissionKey("permission");
-       
+
     while((requiredRecord = dynamic_cast<UtlHashMap*>(requiredRecs())))
     {
       UtlString* reqPermission = dynamic_cast<UtlString*>(requiredRecord->findValue(&permissionKey));
@@ -382,7 +410,6 @@ bool EnforceAuthRules::isAuthorized(const UtlString& id,
                 unmatchedPermissions.append(iter->c_str());
             }
         }
-        
     }
 
     return authorized;
