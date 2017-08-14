@@ -16,6 +16,8 @@
 // APPLICATION INCLUDES
 #include "sipdb/ResultSet.h"
 #include "digitmaps/AuthRulesUrlMapping.h"
+#include "utl/UtlSListIterator.h"
+#include "utl/UtlHashMapIterator.h"
 #include <sipxproxy/AuthPlugin.h>
 
 // DEFINES
@@ -100,6 +102,8 @@ class EnforceAuthRules : public AuthPlugin
    virtual void announceAssociatedSipRouter( SipRouter* sipRouter );
   private:
    friend AuthPlugin* getAuthPlugin(const UtlString& name);
+
+   UtlString dumpRules(const ResultSet &records);
 
    /// Constructor - private so that only the factory can call it.
    EnforceAuthRules(const UtlString& instanceName ///< the configured name for this plugin instance
