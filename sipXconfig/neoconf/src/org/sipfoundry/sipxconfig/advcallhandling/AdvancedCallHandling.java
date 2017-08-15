@@ -16,7 +16,11 @@ package org.sipfoundry.sipxconfig.advcallhandling;
 
 public interface AdvancedCallHandling {
 
+    public static final String ENABLED = "general/enable";
+
     public AdvancedCallHandlingSettings getSettings();
 
     public void saveSettings(AdvancedCallHandlingSettings settings);
+
+    public boolean isEnabled();
 }

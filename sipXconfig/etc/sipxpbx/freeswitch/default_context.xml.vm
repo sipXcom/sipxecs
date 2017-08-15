@@ -137,12 +137,20 @@ sofia/${domainName}/$1@${domainName}"/>
       <action application="bridge" data="{ignore_early_media=true}sofia/$${domain}/$1@$${domain}"/>
     </condition>
   </extension>
-#if ($blindTransfer)
+#if ($blindTransfer || $advancedCallHandling)
   <extension name="going-in">
     <condition>
+#if( $advancedCallHandling ) 
+      <action application="set" data="bypass_media=true"/> 
+      <action application="export" data="sip_h_X-Origination-CallId=${sip_call_id}"/> 
+#end     
       <action application="set" data="ringback=${us-ring}"/>
+#if( $advancedCallHandling ) 
+      <action application="bridge" data="{sip_invite_call_id=${sip_h_X-Origination-CallId}}sofia/${domainName}/${destination_number}@${domainName}"/> 
+#else      
       <action application="bridge" data="#if( $simplify ){api_on_answer='uuid_simplify ${uuid}'}#end
 sofia/${domainName}/${destination_number}@${domainName}"/>
+#end
     </condition>
   </extension>
 #end

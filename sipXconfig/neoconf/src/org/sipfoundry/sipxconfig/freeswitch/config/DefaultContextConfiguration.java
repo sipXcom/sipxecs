@@ -16,6 +16,7 @@ import java.util.Set;
 
 import org.apache.velocity.VelocityContext;
 import org.sipfoundry.sipxconfig.acccode.AuthCodes;
+import org.sipfoundry.sipxconfig.advcallhandling.AdvancedCallHandling;
 import org.sipfoundry.sipxconfig.callback.CallbackOnBusy;
 import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.conference.Bridge;
@@ -38,6 +39,7 @@ public class DefaultContextConfiguration extends AbstractFreeswitchConfiguration
     private FreeswitchExtensionCollector m_freeswitchExtensionCollector;
     private FeatureManager m_featureManager;
     private ParkOrbitContext m_parkOrbitContext;
+    private AdvancedCallHandling m_advancedCallHandling;
     private String m_fsEtcDir;
 
     @Override
@@ -84,6 +86,7 @@ public class DefaultContextConfiguration extends AbstractFreeswitchConfiguration
         addAdditionalLocations(context, location);
         context.put("dollar", "$");
         context.put("conferenceExitScript", m_fsEtcDir + "conferenceExit.lua");
+        context.put("advancedCallHandling", m_advancedCallHandling.isEnabled());
         getFreeswitchExtensions(context, location, extensions);
         write(writer, context);
     }
@@ -144,5 +147,10 @@ public class DefaultContextConfiguration extends AbstractFreeswitchConfiguration
 
     public void setFreeswitchEtcDir(String directory) {
         m_fsEtcDir = directory;
+    }
+
+    @Required
+    public void setAdvancedCallHandling(AdvancedCallHandling advancedCallHandling) {
+        m_advancedCallHandling = advancedCallHandling;
     }
 }

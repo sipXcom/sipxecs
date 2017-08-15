@@ -32,4 +32,9 @@ public class AdvancedCallHandlingImpl implements AdvancedCallHandling {
     public void setSettingsDao(BeanWithSettingsDao<AdvancedCallHandlingSettings> settingsDao) {
         m_settingsDao = settingsDao;
     }
+
+    @Override
+    public boolean isEnabled() {
+        return (Boolean) getSettings().getSettingTypedValue(ENABLED);
+    }
 }
