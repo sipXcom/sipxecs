@@ -69,10 +69,22 @@
     </methodMatch>
 
 #end
-    <methodMatch>
-      <methodPattern>INVITE</methodPattern>
-      <routeTo>&lt;${regAddress.stripProtocol()};transport=tcp;x-sipx-routetoreg&gt;</routeTo>
-    </methodMatch>
+#if( $advancedCallHandling) 
+    <methodMatch> 
+      <methodPattern>INVITE</methodPattern> 
+        <fieldMatch fieldName="Contact"> 
+          <fieldPattern>.*mod_sofia@.*</fieldPattern> 
+          <routeTo>&lt;${regAddress.stripProtocol()};transport=tcp;x-sipx-routetoreg&gt;</routeTo> 
+        </fieldMatch> 
+
+      <routeTo>&lt;${freeswitchAddress}:15060&gt;</routeTo> 
+    </methodMatch> 
+#else 
+    <methodMatch> 
+      <methodPattern>INVITE</methodPattern> 
+      <routeTo>&lt;${regAddress.stripProtocol()};transport=tcp;x-sipx-routetoreg&gt;</routeTo> 
+    </methodMatch> 
+#end
 
     <!-- All other requests go to the SIP registry service -->
     <routeTo ruriParams="sipx-noroute=Voicemail">&lt;${regAddress.stripProtocol()};transport=tcp;x-sipx-routetoreg&gt;</routeTo>

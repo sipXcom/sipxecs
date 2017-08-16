@@ -20,11 +20,13 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.sipfoundry.sipxconfig.address.Address;
 import org.sipfoundry.sipxconfig.address.AddressManager;
+import org.sipfoundry.sipxconfig.advcallhandling.AdvancedCallHandling;
 import org.sipfoundry.sipxconfig.bridge.BridgeSbc;
 import org.sipfoundry.sipxconfig.dialplan.IDialingRule;
 import org.sipfoundry.sipxconfig.feature.FeatureManager;
 import org.sipfoundry.sipxconfig.feature.GlobalFeature;
 import org.sipfoundry.sipxconfig.feature.LocationFeature;
+import org.sipfoundry.sipxconfig.freeswitch.FreeswitchFeature;
 import org.sipfoundry.sipxconfig.mwi.Mwi;
 import org.sipfoundry.sipxconfig.proxy.ProxyManager;
 import org.sipfoundry.sipxconfig.registrar.Registrar;
@@ -32,6 +34,7 @@ import org.sipfoundry.sipxconfig.sbc.DefaultSbc;
 import org.sipfoundry.sipxconfig.sbc.SbcDevice;
 import org.sipfoundry.sipxconfig.sbc.SbcDeviceManager;
 import org.sipfoundry.sipxconfig.sbc.SbcManager;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
@@ -40,6 +43,9 @@ import org.springframework.context.ApplicationContextAware;
  * content.
  */
 public class ForwardingRules extends RulesFile implements ApplicationContextAware {
+
+    public static final String REG_ADDRESS = "regAddress";
+
     private SbcManager m_sbcManager;
     private List<String> m_routes;
     private SbcDeviceManager m_sbcDeviceManager;
@@ -47,6 +53,7 @@ public class ForwardingRules extends RulesFile implements ApplicationContextAwar
     private VelocityEngine m_velocityEngine;
     private ApplicationContext m_context;
     private FeatureManager m_featureManager;
+    private AdvancedCallHandling m_advancedCallHandling;
 
     public void setSbcManager(SbcManager sbcManager) {
         m_sbcManager = sbcManager;
@@ -91,11 +98,13 @@ public class ForwardingRules extends RulesFile implements ApplicationContextAwar
         context.put("proxyAddress", m_addressManager.getSingleAddress(ProxyManager.TCP_ADDRESS, getLocation()));
         context.put("statusAddress", m_addressManager.getSingleAddress(Mwi.SIP_TCP, getLocation()));
         context.put("regEventAddress", m_addressManager.getSingleAddress(Registrar.EVENT_ADDRESS, getLocation()));
+        context.put("freeswitchAddress", m_addressManager.
+            getSingleAddress(FreeswitchFeature.SIP_ADDRESS, getLocation()).getAddress());
         // Use Local registrar, if not available use global rr SRV record
-        if(m_featureManager.isFeatureEnabled(Registrar.FEATURE, getLocation())) {
-            context.put("regAddress", m_addressManager.getSingleAddress(Registrar.TCP_ADDRESS, getLocation()));
+        if (m_featureManager.isFeatureEnabled(Registrar.FEATURE, getLocation())) {
+            context.put(REG_ADDRESS, m_addressManager.getSingleAddress(Registrar.TCP_ADDRESS, getLocation()));
         } else {
-            context.put("regAddress", new Address(Registrar.TCP_ADDRESS, "rr." + getDomainName(),0));
+            context.put(REG_ADDRESS, new Address(Registrar.TCP_ADDRESS, "rr." + getDomainName(), 0));
         }
         context.put("location", getLocation());
 
@@ -134,7 +143,7 @@ public class ForwardingRules extends RulesFile implements ApplicationContextAwar
             context.put("addNotify", true);
             context.put("notifyFieldMatches", notifyPlugins);
         }
-
+        context.put("advancedCallHandling", m_advancedCallHandling.isEnabled());
         try {
             m_velocityEngine.mergeTemplate("commserver/forwardingrules.vm", context, writer);
         } catch (Exception e) {
@@ -157,5 +166,10 @@ public class ForwardingRules extends RulesFile implements ApplicationContextAwar
 
     public void setFeatureManager(FeatureManager featureManager) {
         m_featureManager = featureManager;
+    }
+
+    @Required
+    public void setAdvancedCallHandling(AdvancedCallHandling advancedCallHandling) {
+        m_advancedCallHandling = advancedCallHandling;
     }
 }

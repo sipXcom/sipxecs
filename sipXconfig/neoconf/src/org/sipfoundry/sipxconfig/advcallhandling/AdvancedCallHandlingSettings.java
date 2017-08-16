@@ -14,10 +14,11 @@
  */
 package org.sipfoundry.sipxconfig.advcallhandling;
 
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 
 import org.sipfoundry.sipxconfig.cfgmgt.DeployConfigOnEdit;
+import org.sipfoundry.sipxconfig.dialplan.DialPlanContext;
 import org.sipfoundry.sipxconfig.feature.Feature;
 import org.sipfoundry.sipxconfig.freeswitch.FreeswitchFeature;
 import org.sipfoundry.sipxconfig.setting.PersistableSettings;
@@ -27,7 +28,7 @@ public class AdvancedCallHandlingSettings extends PersistableSettings implements
 
     @Override
     public Collection<Feature> getAffectedFeaturesOnChange() {
-        return Collections.singleton((Feature) FreeswitchFeature.FEATURE);
+        return Arrays.asList((Feature) FreeswitchFeature.FEATURE, DialPlanContext.FEATURE);
     }
 
     @Override
