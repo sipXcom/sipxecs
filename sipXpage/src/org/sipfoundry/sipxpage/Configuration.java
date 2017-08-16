@@ -36,6 +36,7 @@ public class Configuration
    int tlsSipPort ;           // The SIP Listen port for TLS
    int startingRtpPort ;      // The starting RTP port range (4 per page group)
    String hostname;
+   boolean haPaging;
 
    Vector<PageGroupConfig> pageGroups ;
 
@@ -128,6 +129,7 @@ public class Configuration
          tcpSipPort = Integer.parseInt(props.getProperty(prop="sip.tcpPort")) ;
          tlsSipPort = Integer.parseInt(props.getProperty(prop="sip.tlsPort")) ;
          traceLevel = props.getProperty(prop="sip.trace") ;
+         haPaging = props.getProperty(prop="haPaging").equals("true");
          if (traceLevel == null)
          {
             traceLevel = "NONE" ;

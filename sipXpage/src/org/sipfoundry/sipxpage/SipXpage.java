@@ -100,16 +100,19 @@ public class SipXpage implements LegListener
 
       properties.setProperty("javax.sip.ROUTER_PATH", ProxyRouter.class.getName());
 
-	  if(getDbCollection() != null)
-	  {
-		  createIndexForPaging();
-          // Clear old busy states written by this server. They must be from an old instance
-          clearBusyStatesFromServer();
-	  } else
-	  {
-          LOG.fatal("Cannot create MongoDB connection") ;
-          System.exit(1); 
-	  }
+      if(config.haPaging)
+      {
+		  if(getDbCollection() != null)
+		  {
+			  createIndexForPaging();
+	          // Clear old busy states written by this server. They must be from an old instance
+	          clearBusyStatesFromServer();
+		  } else
+		  {
+	          LOG.fatal("Cannot create MongoDB connection") ;
+	          System.exit(1); 
+		  }
+      }
 
 	  try {
          // Create SipStack object
@@ -154,7 +157,7 @@ public class SipXpage implements LegListener
             pageGroupDescription = pc.description ;
             PageGroup p ;
             LOG.debug(String.format("Page Group %s (%s)", user, pageGroupDescription)) ;
-            p = new PageGroup(legSipListener, udpListeningPoint.getIPAddress(), rtpPort) ;
+            p = new PageGroup(legSipListener, udpListeningPoint.getIPAddress(), rtpPort, config.haPaging) ;
             if (pc.beep == null)
             {
                throw new Exception("beep for Page Group "+user+" is missing.") ;

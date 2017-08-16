@@ -49,16 +49,18 @@ public class PageGroup implements LegListener
    Leg inbound = null ;
    InetSocketAddress inboundRtp = null ;
    URL beep ;
+   boolean busy;
+   boolean haEnabled ;
    String user = "";
    int maximumDuration = 60000;
 
-   PageGroup(LegSipListener legSipListener, String ipAddress, int rtpPort) throws SocketException
+   PageGroup(LegSipListener legSipListener, String ipAddress, int rtpPort, boolean haEnabled) throws SocketException
    {
       this.legSipListener = legSipListener ;
       this.ipAddress = ipAddress ;
       this.rtpPort = rtpPort ;
       this.tossPort = rtpPort+2 ;
-
+      this.haEnabled = haEnabled;
       rtpSocket = new PacketSocket(rtpPort);
       tossSocket = new PacketSocket(tossPort);
       rtpFork = new RtpFork(rtpSocket, 20, this) ;
@@ -131,7 +133,14 @@ public class PageGroup implements LegListener
     */
    public boolean isBusy()
    {
-	   return isUserBusy(user);
+	   if(haEnabled)
+	   {
+		   return isUserBusy(user);
+	   }
+	   else
+	   {
+		   return busy;
+	   }
    }
 
    /**
@@ -384,30 +393,36 @@ public class PageGroup implements LegListener
    
    private void setUserBusy(String user, boolean busy, int timeout)
    {
-	   DBCollection pagingCollection = getDbCollection();
-	   BasicDBObject query = new BasicDBObject();
-	   LOG.debug("PageGroup::MongoDebug::setUserBusy::user " + user);
-	   LOG.debug("PageGroup::MongoDebug::setUserBusy::busy " + busy);
-	   WriteResult result = null;
-	   if(busy)
-       {
-		   query.append(SipXpage.MONGO_IP, ipAddress);
-		   query.append(SipXpage.MONGO_PAGING_USER, user);
-		   query.append(SipXpage.MONGO_BUSY, busy);
-		   query.append(SipXpage.MONGO_EXPIRE_TIME, new Date(System.currentTimeMillis() + timeout));
-		   result = pagingCollection.insert(query);
-       }
-       else
-       {
-		   query.append(SipXpage.MONGO_PAGING_USER, user);
-		   result = pagingCollection.remove(query);
-       }
-	   if(result != null)
+	   if(haEnabled)
 	   {
-		   LOG.debug("PageGroup::MongoDebug::setUserBusy::result " + result.toString());
+		   DBCollection pagingCollection = getDbCollection();
+		   BasicDBObject query = new BasicDBObject();
+		   LOG.debug("PageGroup::MongoDebug::setUserBusy::user " + user);
+		   LOG.debug("PageGroup::MongoDebug::setUserBusy::busy " + busy);
+		   WriteResult result = null;
+		   if(busy)
+	       {
+			   query.append(SipXpage.MONGO_IP, ipAddress);
+			   query.append(SipXpage.MONGO_PAGING_USER, user);
+			   query.append(SipXpage.MONGO_BUSY, busy);
+			   query.append(SipXpage.MONGO_EXPIRE_TIME, new Date(System.currentTimeMillis() + timeout));
+			   result = pagingCollection.insert(query);
+	       }
+	       else
+	       {
+			   query.append(SipXpage.MONGO_PAGING_USER, user);
+			   result = pagingCollection.remove(query);
+	       }
+		   if(result != null)
+		   {
+			   LOG.debug("PageGroup::MongoDebug::setUserBusy::result " + result.toString());
+		   } else
+		   {
+			   LOG.debug("PageGroup::MongoDebug::setUserBusy: No result found");
+		   }
 	   } else
 	   {
-		   LOG.debug("PageGroup::MongoDebug::setUserBusy: No result found");
+		   this.busy = busy;
 	   }
    }
 }

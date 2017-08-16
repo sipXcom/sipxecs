@@ -159,7 +159,7 @@ public class PagingContextImpl extends SipxHibernateDaoSupport implements Paging
         if (StringUtils.isEmpty(prefix)) {
             return Collections.emptyList();
         }
-        PagingRule rule = new PagingRule(prefix, ALERT_INFO);
+        PagingRule rule = new PagingRule(prefix, ALERT_INFO, getSettings().getHaPagingEnable());
         return Arrays.asList(rule);
     }
 
@@ -224,7 +224,7 @@ public class PagingContextImpl extends SipxHibernateDaoSupport implements Paging
 
     @Override
     public Collection<Address> getAvailableAddresses(AddressManager manager, AddressType type, Location requester) {
-        if (!ADDRESSES.contains(type)) {
+        if (!ADDRESSES.contains(type) || !getSettings().getHaPagingEnable()) {
             return null;
         }
 
@@ -262,7 +262,10 @@ public class PagingContextImpl extends SipxHibernateDaoSupport implements Paging
 
 	@Override
 	public Address getAddress(DnsManager manager, AddressType t, Collection<Address> addresses, Location whoIsAsking) {
-        if (t.equals(SIP_TCP) || t.equals(SIP_UDP) || t.equals(SIP_TLS)) {
+        if(!getSettings().getHaPagingEnable()) {
+        	return null;
+        }
+		if (t.equals(SIP_TCP) || t.equals(SIP_UDP) || t.equals(SIP_TLS)) {
             // NOTE: drop port, it's in DNS resource records
             if (m_featureManager.isFeatureEnabled(FEATURE, whoIsAsking)) {
                 return new Address(t, getPagingAddress(whoIsAsking.getHostnameInSipDomain()));
@@ -278,7 +281,7 @@ public class PagingContextImpl extends SipxHibernateDaoSupport implements Paging
 	public Collection<ResourceRecords> getResourceRecords(DnsManager manager) {
 		FeatureManager fm = manager.getAddressManager().getFeatureManager();
 		List<Location> locations = fm.getLocationsForEnabledFeature(FEATURE);
-		if (locations == null || locations.isEmpty()) {
+		if (locations == null || locations.isEmpty() || !getSettings().getHaPagingEnable()) {
 			return Collections.emptyList();
 		}
 

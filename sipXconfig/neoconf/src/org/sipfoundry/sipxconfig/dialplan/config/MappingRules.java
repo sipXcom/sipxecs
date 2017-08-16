@@ -181,7 +181,12 @@ public class MappingRules extends RulesXmlFile {
 
             Address page = m_addressManager.getSingleAddress(PagingContext.SIP_TCP, location);
             if (page != null) {
-                rulesString = rulesString.replace("${PAGE_SERVER_ADDR}:${PAGE_SERVER_SIP_PORT}", "page." + getDomainName());
+            	if(rulesString.contains("${PAGE_DNS_SRV_RECORD}")) {
+                	rulesString = rulesString.replace("${PAGE_DNS_SRV_RECORD}", "page." + getDomainName()); 		
+            	} else {
+                	rulesString = rulesString.replace("${PAGE_SERVER_ADDR}", page.getAddress());
+                	rulesString = rulesString.replace("${PAGE_SERVER_SIP_PORT}", String.valueOf(page.getPort())); 		
+            	}
             }
 
             StringReader stringReader = new StringReader(rulesString);
