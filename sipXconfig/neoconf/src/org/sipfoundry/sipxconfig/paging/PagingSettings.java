@@ -77,6 +77,10 @@ public class PagingSettings extends PersistableSettings implements DeployConfigO
     public int getMaxSessions() {
         return (Integer) getSettingTypedValue("page-config/max.sessions");
     }
+    
+    public boolean getHaPagingEnable() {
+    	return (boolean) getSettingTypedValue("page-config/haPaging");
+    }
 
     @Override
     public String getBeanId() {
