@@ -22,11 +22,9 @@ public class PagingRule extends DialingRule {
         m_dialPattern = new DialPattern(prefix, DialPattern.VARIABLE_DIGITS);
         m_transform = new FullTransform();
         m_transform.setUser("{vdigits}");
-        if(haEnabled)
-        {
+        if(haEnabled) {
             m_transform.setHost("${PAGE_DNS_SRV_RECORD}");	
-        } else
-        {
+        } else {
             m_transform.setHost("${PAGE_SERVER_ADDR}:${PAGE_SERVER_SIP_PORT}");        	
         }
         m_transform.setUrlParams(new String[] {
