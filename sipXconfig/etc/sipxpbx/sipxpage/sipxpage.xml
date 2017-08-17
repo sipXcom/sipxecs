@@ -83,5 +83,18 @@
       <type refid="loglevel" />
       <value>NOTICE</value>
     </setting>
+    <setting name="haPaging" advanced="yes">
+      <type>
+        <boolean>
+          <true>
+            <value>true</value>
+          </true>
+          <false>
+            <value>false</value>
+          </false>
+        </boolean>
+      </type>
+      <value>false</value>
+    </setting>
   </group>
 </model>

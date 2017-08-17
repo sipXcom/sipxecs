@@ -29,6 +29,11 @@ import org.sipfoundry.sipxconfig.common.UserException;
 import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.dialplan.DialingRule;
 import org.sipfoundry.sipxconfig.dialplan.PagingRule;
+import org.sipfoundry.sipxconfig.dns.DnsManager;
+import org.sipfoundry.sipxconfig.dns.DnsProvider;
+import org.sipfoundry.sipxconfig.dns.ResourceRecord;
+import org.sipfoundry.sipxconfig.dns.ResourceRecords;
+import org.sipfoundry.sipxconfig.domain.DomainManager;
 import org.sipfoundry.sipxconfig.feature.FeatureManager;
 import org.sipfoundry.sipxconfig.firewall.DefaultFirewallRule;
 import org.sipfoundry.sipxconfig.firewall.FirewallManager;
@@ -38,11 +43,12 @@ import org.sipfoundry.sipxconfig.setting.BeanWithSettingsDao;
 import org.sipfoundry.sipxconfig.snmp.ProcessDefinition;
 import org.sipfoundry.sipxconfig.snmp.ProcessProvider;
 import org.sipfoundry.sipxconfig.snmp.SnmpManager;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class PagingContextImpl extends SipxHibernateDaoSupport implements PagingContext,
-        AddressProvider, ProcessProvider, FirewallProvider {
+        AddressProvider, ProcessProvider, FirewallProvider, DnsProvider {
 
     /** Default ALERT-INFO - hardcoded in Polycom phone configuration */
     private static final String ALERT_INFO = "sipXpage";
@@ -52,6 +58,7 @@ public class PagingContextImpl extends SipxHibernateDaoSupport implements Paging
     private static final Collection<AddressType> ADDRESSES = Arrays.asList(SIP_TCP, SIP_TLS, SIP_UDP, RTP_PORT);
     private static final String VALID_SIP_REGEX = "([-_.!~*'\\(\\)=+$,;?/a-zA-Z0-9]|(%[0-9a-fA-F]{2}))+";
     private AliasManager m_aliasManager;
+    private DomainManager m_domainManager;
     private BeanWithSettingsDao<PagingSettings> m_settingsDao;
 
     private FeatureManager m_featureManager;
@@ -152,7 +159,7 @@ public class PagingContextImpl extends SipxHibernateDaoSupport implements Paging
         if (StringUtils.isEmpty(prefix)) {
             return Collections.emptyList();
         }
-        PagingRule rule = new PagingRule(prefix, ALERT_INFO);
+        PagingRule rule = new PagingRule(prefix, ALERT_INFO, getSettings().getHaPagingEnable());
         return Arrays.asList(rule);
     }
 
@@ -253,4 +260,56 @@ public class PagingContextImpl extends SipxHibernateDaoSupport implements Paging
                 ".*\\s-Dprocname=sipxpage\\s.*")) : null);
     }
 
+	@Override
+	public Address getAddress(DnsManager manager, AddressType t, Collection<Address> addresses, Location whoIsAsking) {
+        if(!getSettings().getHaPagingEnable()) {
+        	return null;
+        }
+		if (t.equals(SIP_TCP) || t.equals(SIP_UDP) || t.equals(SIP_TLS)) {
+            // NOTE: drop port, it's in DNS resource records
+            if (m_featureManager.isFeatureEnabled(FEATURE, whoIsAsking)) {
+                return new Address(t, getPagingAddress(whoIsAsking.getHostnameInSipDomain()));
+            } else {
+                return new Address(t, getPagingAddress(m_domainManager.getDomainName()));
+            }
+        }
+
+        return null;
+	}
+
+	@Override
+	public Collection<ResourceRecords> getResourceRecords(DnsManager manager) {
+		FeatureManager fm = manager.getAddressManager().getFeatureManager();
+		List<Location> locations = fm.getLocationsForEnabledFeature(FEATURE);
+		if (locations == null || locations.isEmpty() || !getSettings().getHaPagingEnable()) {
+			return Collections.emptyList();
+		}
+
+		String page = "page";
+		ResourceRecords[] records = new ResourceRecords[] { 
+				new ResourceRecords("_sip._tcp", page, true),
+				new ResourceRecords("_sip._udp", page, true), 
+				new ResourceRecords("_sips._tcp", page, true),
+				new ResourceRecords("_sip._tls", page, true) };
+		int[] ports = new int[] { 
+				getSettings().getSipTcpPort(), 
+				getSettings().getSipUdpPort(),
+				getSettings().getSipTlsPort(), 
+				getSettings().getSipTlsPort() };
+		for (int i = 0; i < records.length; i++) {
+			for (Location l : locations) {
+				records[i].addRecord(new ResourceRecord(l.getHostname(), ports[i], l.getRegionId()));
+			}
+		}
+		return Arrays.asList(records);
+	}
+	
+    private String getPagingAddress(String host) {
+        return String.format("page.%s", host);
+    }
+
+    @Required
+    public void setDomainManager(DomainManager domainManager) {
+        m_domainManager = domainManager;
+    }
 }

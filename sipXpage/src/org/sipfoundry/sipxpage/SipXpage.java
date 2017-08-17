@@ -20,7 +20,13 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.sipfoundry.commons.log4j.SipFoundryLayout;
 import org.sipfoundry.commons.siprouter.ProxyRouter;
+import org.sipfoundry.commons.util.UnfortunateLackOfSpringSupportFactory;
 import org.sipfoundry.sipxpage.Configuration.PageGroupConfig;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 
 public class SipXpage implements LegListener
 {
@@ -40,8 +46,13 @@ public class SipXpage implements LegListener
    private Configuration config ;
    private Vector<PageGroup> pageGroups = new Vector<PageGroup>();
    private HashMap<String, PageGroup>user2Group = new HashMap<String, PageGroup>() ;
-
-
+   
+   // MongoDB constants for paging
+   public static final String MONGO_IP = "server_ip";
+   public static final String MONGO_BUSY = "busy_state";
+   public static final String MONGO_PAGING_USER = "_id";
+   public static final String MONGO_COLLECTION_PAGING = "paging";
+   public static final String MONGO_EXPIRE_TIME = "expire_time";
    /**
     * Initialize everything.
     *
@@ -89,8 +100,21 @@ public class SipXpage implements LegListener
 
       properties.setProperty("javax.sip.ROUTER_PATH", ProxyRouter.class.getName());
 
+      if(config.haPaging)
+      {
+		  if(getDbCollection() != null)
+		  {
+			  createIndexForPaging();
+	          // Clear old busy states written by this server. They must be from an old instance
+	          clearBusyStatesFromServer();
+		  } else
+		  {
+	          LOG.fatal("Cannot create MongoDB connection") ;
+	          System.exit(1); 
+		  }
+      }
 
-      try {
+	  try {
          // Create SipStack object
          sipStack = sipFactory.createSipStack(properties);
          System.out.println("createSipStack " + sipStack);
@@ -133,11 +157,12 @@ public class SipXpage implements LegListener
             pageGroupDescription = pc.description ;
             PageGroup p ;
             LOG.debug(String.format("Page Group %s (%s)", user, pageGroupDescription)) ;
-            p = new PageGroup(legSipListener, udpListeningPoint.getIPAddress(), rtpPort) ;
+            p = new PageGroup(legSipListener, udpListeningPoint.getIPAddress(), rtpPort, config.haPaging) ;
             if (pc.beep == null)
             {
                throw new Exception("beep for Page Group "+user+" is missing.") ;
             }
+            p.setUser(user);
             LOG.debug(String.format("Page Group %s adding beep %s",
                   user, pc.beep)) ;
             p.setBeep(pc.beep) ;
@@ -226,9 +251,8 @@ public class SipXpage implements LegListener
          }
          return ;
       }
-
-      if (pageGroup.isBusy() == true ||
-          pageGroup.page(leg, sdpAddress, alertInfoKey) == false)
+      
+      if (pageGroup.page(leg, sdpAddress, alertInfoKey) == false)
       {
          // Already have an inbound call for that page group.  Return busy here response.
          try
@@ -260,12 +284,66 @@ public class SipXpage implements LegListener
          {
             if (p.getInbound() == event.getLeg())
             {
-               // End that page
-               p.end() ;
-               break ;
+                // End that page
+                p.end() ;
+                break ;
             }
          }
       }
       return true ;
+   }
+   
+   private void clearBusyStatesFromServer()
+   {
+	   if(config != null)
+	   {
+	       LOG.info("Clear busy states in node DB from server with IP: " + config.ipAddress);
+		   DBCollection pagingCollection = getDbCollection();
+		   BasicDBObject query = new BasicDBObject();
+		   query.append(MONGO_IP, config.ipAddress);
+		   pagingCollection.remove(query);
+	   } else
+	   {
+		   LOG.fatal("Could not clear busy states from server. IP is unknown.");   
+	   }
+   }
+   
+   private DBCollection getDbCollection()
+   {
+	   DB imDb = UnfortunateLackOfSpringSupportFactory.getImdb();
+	   if(imDb != null)
+	   {
+		   return imDb.getCollection(MONGO_COLLECTION_PAGING);
+	   } else
+	   {
+		   return null;
+	   }
+   }
+   
+   private void createIndexForPaging()
+   {
+	   DBCollection pagingCollection = getDbCollection();
+	   if(pagingCollection != null)
+	   {
+	       DBCollection indexesCollection = UnfortunateLackOfSpringSupportFactory.getImdb().getCollection("system.indexes");
+
+	       // Add index for state TTL
+	       BasicDBObject dateField = new BasicDBObject().append(MONGO_EXPIRE_TIME, 1);
+	       BasicDBObject deleteObj = new BasicDBObject().append("expireAfterSeconds", 1);
+	   
+	       BasicDBObject query = new BasicDBObject();
+	       query.append("key", dateField);
+	       query.append("ns", "imdb" + "." + MONGO_COLLECTION_PAGING);
+	       query.append("expireAfterSeconds", 1);
+	   
+	       // Check if index already exist. If not create it
+	       DBCursor cursor = indexesCollection.find(query).limit(1);
+	       if(!cursor.hasNext())
+	       {
+	    	   // TTL could exist with different expire time. Drop to ensure correct time
+	    	   pagingCollection.dropIndex(dateField);
+	    	   pagingCollection.createIndex(dateField, deleteObj);
+	       }
+	   }
    }
 }
