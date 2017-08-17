@@ -47,9 +47,12 @@ public abstract class CdrStatsPanel extends BaseComponent {
 
     @Parameter
     public abstract User getUser();
+    
+    @Parameter(defaultValue = "ognl:false")
+    public abstract Object getSipDiagram();    
 
     @Parameter
-    public abstract CdrSearch getCdrSearch();
+    public abstract CdrSearch getCdrSearch();     
 
     public CdrTableModel getCdrTableModel() {
         CdrTableModel tableModel = new CdrTableModel(getCdrManager());

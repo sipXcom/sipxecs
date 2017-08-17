@@ -30,6 +30,9 @@ public class ProxySettings extends PersistableSettings implements DeployConfigOn
     public static final String SIP_PORT_SETTING = "proxy-configuration/SIPX_PROXY_TCP_PORT";
     public static final String SIP_UDP_PORT_SETTING = "proxy-configuration/SIPX_PROXY_UDP_PORT";
     public static final String SIP_SECURE_PORT_SETTING = "proxy-configuration/SIPX_PROXY_TLS_PORT";
+    public static final String SIP_DIAGRAM_ENABLE = "sip-diagram-configuration/enabled";
+    public static final String INFO_LOG_LEVEL = "INFO";
+    public static final String NOTICE_LOG_LEVEL = "NOTICE";
 
     public int getSipTcpPort() {
         return (Integer) getSettingTypedValue(SIP_PORT_SETTING);
@@ -45,6 +48,18 @@ public class ProxySettings extends PersistableSettings implements DeployConfigOn
 
     public int getDefaultInitDelay() {
         return (Integer) getSettingTypedValue("proxy-configuration/SIPX_PROXY_DEFAULT_SERIAL_EXPIRES");
+    }
+
+    public String getLogLevel() {
+        return (String) getSettingTypedValue(LOG_SETTING);
+    }
+
+    public void setLogLevel(String logLevel) {
+        setSettingTypedValue(LOG_SETTING, logLevel);
+    }
+
+    public boolean isSipDiagramEnable() {
+        return (Boolean) getSettingTypedValue(SIP_DIAGRAM_ENABLE);
     }
 
     @Override

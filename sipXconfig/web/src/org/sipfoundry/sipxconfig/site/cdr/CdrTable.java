@@ -52,10 +52,13 @@ public abstract class CdrTable extends BaseComponent {
     public abstract ExpressionEvaluator getExpressionEvaluator();
 
     @InjectObject(value = "spring:gatewayContext")
-    public abstract GatewayContext getGatewayContext();
+    public abstract GatewayContext getGatewayContext();      
 
     @Parameter
-    public abstract Object getSource();
+    public abstract Object getSource(); 
+    
+    @Parameter(defaultValue = "ognl:false")
+    public abstract Object getSipDiagram();
 
     @Parameter
     public abstract String getTimeZone();
@@ -251,4 +254,8 @@ public abstract class CdrTable extends BaseComponent {
         return formatter.format(getRow().getStartTime());
     }
 
+    public String getLogLink() {
+        String callId = getRow().getCallId();
+        return "/siplogviewer/logview.php?call_id=" + callId;
+    }
 }

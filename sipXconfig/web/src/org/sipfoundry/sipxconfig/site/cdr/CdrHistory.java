@@ -25,6 +25,7 @@ import org.sipfoundry.sipxconfig.cdr.CdrSearch;
 import org.sipfoundry.sipxconfig.common.User;
 import org.sipfoundry.sipxconfig.components.ObjectSelectionModel;
 import org.sipfoundry.sipxconfig.components.TapestryUtils;
+import org.sipfoundry.sipxconfig.proxy.ProxyManager;
 import org.sipfoundry.sipxconfig.site.admin.time.EditTimeZoneSettings;
 import org.sipfoundry.sipxconfig.time.NtpManager;
 
@@ -46,6 +47,10 @@ public abstract class CdrHistory extends BaseComponent implements PageBeginRende
     public abstract CdrSearch getCdrSearch();
 
     public abstract void setCdrSearch(CdrSearch cdrSearch);
+    
+    public abstract Boolean getSipDiagram();
+    
+    public abstract void setSipDiagram(Boolean sipDiagram);
 
     @Persist
     public abstract ObjectSelectionModel getTimezones();
@@ -64,6 +69,9 @@ public abstract class CdrHistory extends BaseComponent implements PageBeginRende
 
     @InjectObject(value = "spring:ntpManager")
     public abstract NtpManager getTimeManager();
+    
+    @InjectObject(value = "spring:proxyManager")
+    public abstract ProxyManager getProxyManager();
 
     public IPropertySelectionModel getTimezoneSelectionModel() {
         return EditTimeZoneSettings.getTimezoneSelectionModel(getTimeManager());
@@ -98,6 +106,8 @@ public abstract class CdrHistory extends BaseComponent implements PageBeginRende
                     new ValidatorException(getMessages().getMessage("message.invalidDates")));
             return;
         }
+        
+        setSipDiagram(getProxyManager().isSipDiagramEnabled());               
     }
 
 }

@@ -28,4 +28,6 @@ public interface ProxyManager {
     public ProxySettings getSettings();
 
     public void saveSettings(ProxySettings settings);
+
+    boolean isSipDiagramEnabled();
 }

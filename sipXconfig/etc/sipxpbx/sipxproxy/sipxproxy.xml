@@ -298,5 +298,11 @@
       <type refid="true-false"/>
       <value>false</value>
     </setting>       
-  </group>  
+  </group>
+  <group name="sip-diagram-configuration">
+    <setting name="enabled">
+      <type refid="true-false"/>
+      <value>false</value>
+    </setting>
+  </group>
 </model>
