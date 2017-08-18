@@ -98,8 +98,10 @@ public class ForwardingRules extends RulesFile implements ApplicationContextAwar
         context.put("proxyAddress", m_addressManager.getSingleAddress(ProxyManager.TCP_ADDRESS, getLocation()));
         context.put("statusAddress", m_addressManager.getSingleAddress(Mwi.SIP_TCP, getLocation()));
         context.put("regEventAddress", m_addressManager.getSingleAddress(Registrar.EVENT_ADDRESS, getLocation()));
-        context.put("freeswitchAddress", m_addressManager.
-            getSingleAddress(FreeswitchFeature.SIP_ADDRESS, getLocation()).getAddress());
+        if (m_featureManager.isFeatureEnabled(FreeswitchFeature.FEATURE, getLocation())) {
+            context.put("freeswitchAddress", m_addressManager.
+                getSingleAddress(FreeswitchFeature.SIP_ADDRESS, getLocation()).getAddress());
+        }
         // Use Local registrar, if not available use global rr SRV record
         if (m_featureManager.isFeatureEnabled(Registrar.FEATURE, getLocation())) {
             context.put(REG_ADDRESS, m_addressManager.getSingleAddress(Registrar.TCP_ADDRESS, getLocation()));
@@ -143,7 +145,8 @@ public class ForwardingRules extends RulesFile implements ApplicationContextAwar
             context.put("addNotify", true);
             context.put("notifyFieldMatches", notifyPlugins);
         }
-        context.put("advancedCallHandling", m_advancedCallHandling.isEnabled());
+        context.put("advancedCallHandling", 
+            m_featureManager.isFeatureEnabled(FreeswitchFeature.FEATURE, getLocation()) ? m_advancedCallHandling.isEnabled() : false);
         try {
             m_velocityEngine.mergeTemplate("commserver/forwardingrules.vm", context, writer);
         } catch (Exception e) {

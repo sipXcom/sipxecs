@@ -38,8 +38,8 @@ public class AdvancedCallHandlingSettings extends PersistableSettings implements
 
     @Override
     protected Setting loadSettings() {
-        Setting ivrSetting = getModelFilesContext().loadModelFile("advcallhandling/advcallhandling.xml");
-        return ivrSetting;
+        Setting advSetting = getModelFilesContext().loadModelFile("advcallhandling/advcallhandling.xml");
+        return advSetting;
     }
 
 }

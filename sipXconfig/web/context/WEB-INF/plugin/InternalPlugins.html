@@ -31,7 +31,9 @@
      <span jwcid="@common/AdminNavigationMenu" pagePath="admin/AuthCodes" label="ognl:messages.getMessage('menu.authcodes')" />     
    </span>
    <span jwcid="@common/AdminNavigationMenu" pagePath="phonebook/ManagePhonebooks" label="ognl:messages.getMessage('menu.phonebook')" />
-   <span jwcid="@common/AdminNavigationMenu" pagePath="advcallhandling/AdvancedCallHandlingPage" label="ognl:messages.getMessage('menu.advcallhandling')" />
+   <span jwcid="@If" condition="ognl:isOn('freeSwitch')">
+     <span jwcid="@common/AdminNavigationMenu" pagePath="advcallhandling/AdvancedCallHandlingPage" label="ognl:messages.getMessage('menu.advcallhandling')" />
+   </span>  
 </span>
 <span jwcid="InternalPluginsSystemBottom@Block">
    <span jwcid="@common/AdminNavigationMenu" pagePath="backup/BackupPage" label="ognl:messages.getMessage('menu.backup')" />

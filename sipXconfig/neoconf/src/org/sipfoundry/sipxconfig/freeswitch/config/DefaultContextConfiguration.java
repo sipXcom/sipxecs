@@ -26,6 +26,7 @@ import org.sipfoundry.sipxconfig.domain.Domain;
 import org.sipfoundry.sipxconfig.feature.FeatureManager;
 import org.sipfoundry.sipxconfig.freeswitch.FreeswitchExtension;
 import org.sipfoundry.sipxconfig.freeswitch.FreeswitchExtensionCollector;
+import org.sipfoundry.sipxconfig.freeswitch.FreeswitchFeature;
 import org.sipfoundry.sipxconfig.freeswitch.FreeswitchSettings;
 import org.sipfoundry.sipxconfig.ivr.Ivr;
 import org.sipfoundry.sipxconfig.parkorbit.ParkOrbitContext;
@@ -86,7 +87,9 @@ public class DefaultContextConfiguration extends AbstractFreeswitchConfiguration
         addAdditionalLocations(context, location);
         context.put("dollar", "$");
         context.put("conferenceExitScript", m_fsEtcDir + "conferenceExit.lua");
-        context.put("advancedCallHandling", m_advancedCallHandling.isEnabled());
+        context.put("advancedCallHandling",
+            m_featureManager.
+            isFeatureEnabled(FreeswitchFeature.FEATURE, location) ? m_advancedCallHandling.isEnabled() : false);
         getFreeswitchExtensions(context, location, extensions);
         write(writer, context);
     }
