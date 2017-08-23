@@ -95,6 +95,7 @@ sipxconfig_neoconf_PKGS = \
 	cxf-rt-frontend-jaxrs \
 	cxf-rt-rs-extension-providers \
 	cxf-tools-wadlto-jaxrs \
+	cxf-rt-rs-client \
 	javax.ws.rs-api \
 	neethi \
 	xmlschema-core \
