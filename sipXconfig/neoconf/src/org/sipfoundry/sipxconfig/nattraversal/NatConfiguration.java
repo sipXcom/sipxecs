@@ -37,11 +37,13 @@ import org.sipfoundry.sipxconfig.sbc.SbcManager;
 import org.sipfoundry.sipxconfig.sbc.SbcRoutes;
 import org.sipfoundry.sipxconfig.setting.Setting;
 import org.sipfoundry.sipxconfig.setting.SettingUtil;
+import org.springframework.beans.factory.annotation.Required;
 
 public class NatConfiguration implements ConfigProvider {
     private VelocityEngine m_velocityEngine;
     private NatTraversal m_nat;
     private SbcManager m_sbcManager;
+    private String m_etcDir;
 
     @Override
     public void replicate(ConfigManager manager, ConfigRequest request) throws IOException {
@@ -57,7 +59,7 @@ public class NatConfiguration implements ConfigProvider {
         Address proxyTls = manager.getAddressManager().getSingleAddress(ProxyManager.TLS_ADDRESS);
         SbcRoutes routes = m_sbcManager.getRoutes();
         for (Location location : locations) {
-            File dir = manager.getLocationDataDirectory(location);
+            File dir = getLocationDataDirectory(location);
             boolean proxyEnabled = manager.getFeatureManager().isFeatureEnabled(ProxyManager.FEATURE, location);
             boolean enabled = (relayEnabled && proxyEnabled);
             if (enabled) {
@@ -104,5 +106,22 @@ public class NatConfiguration implements ConfigProvider {
 
     public void setSbcManager(SbcManager sbcManager) {
         m_sbcManager = sbcManager;
+    }
+
+    public String getEtcDir() {
+        return m_etcDir;
+    }
+
+    @Required
+    public void setEtcDir(String etcDir) {
+        this.m_etcDir = etcDir;
+    }
+
+    private File getLocationDataDirectory(Location location) {
+        File d = new File(m_etcDir + "/conf", String.valueOf(location.getId()));
+        if (!d.exists()) {
+            d.mkdirs();
+        }
+        return d;
     }
 }

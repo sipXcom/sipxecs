@@ -53,6 +53,7 @@
         <ref bean="gatewayRestApi"/>
         <ref bean="scheduleRestApi"/>
         <ref bean="dialPlanRestApi"/>
+        <ref bean="containerRestApi"/>
     </util:list>
 
     <bean class="org.sipfoundry.sipxconfig.api.impl.PhoneApiImpl" id="phoneRestApi">
@@ -157,5 +158,7 @@
     <bean class="org.sipfoundry.sipxconfig.api.impl.UserGroupApiImpl" id="userGroupRestApi">
         <property name="coreContext" ref="coreContext"/>
         <property name="settingDao" ref="settingDao" />
+    </bean>
+    <bean class="org.sipfoundry.sipxconfig.api.impl.ContainerApiImpl" id="containerRestApi" init-method="init">
     </bean>
 </beans>

@@ -32,5 +32,6 @@
     <property name="velocityEngine" ref="velocityEngine" />
     <property name="nat" ref="natTraveral" />
     <property name="sbcManager" ref="sbcManager"/>
+    <property name="etcDir" value="${sysdir.etc}"/>
   </bean>
 </beans>
