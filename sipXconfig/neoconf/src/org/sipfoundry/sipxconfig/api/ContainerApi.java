@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
 @Description("Phone Management REST API")
 public interface ContainerApi {
 
+    @GET
     public ContainerBean getContainerBean(String containerName);
 
     @Path("{containerName}/json")
