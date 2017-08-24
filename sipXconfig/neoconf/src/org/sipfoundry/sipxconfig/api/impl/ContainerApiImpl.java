@@ -8,7 +8,7 @@ public class ContainerApiImpl implements ContainerApi {
     ContainerApi m_service;
 
     public void init() {
-        m_service = JAXRSClientFactory.create("http://nginx/sipxconfig/api", ContainerApi.class);
+        m_service = JAXRSClientFactory.create("http://docker", ContainerApi.class);
     }
 
     @Override

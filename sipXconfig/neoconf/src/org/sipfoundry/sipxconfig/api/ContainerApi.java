@@ -10,7 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/docker/containers/")
+@Path("/containers/")
 @Description("Phone Management REST API")
 public interface ContainerApi {
     @Path("{containerName}/json")
