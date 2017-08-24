@@ -8,11 +8,11 @@ public class ContainerApiImpl implements ContainerApi {
     ContainerApi m_service;
 
     public void init() {
-        m_service = JAXRSClientFactory.create("http://docker", ContainerApi.class);
+        m_service = JAXRSClientFactory.create("http://nginx/docker", ContainerApi.class);
     }
 
     @Override
     public ContainerBean getContainer(String containerName) {
-        return m_service.getContainer("sipxproxy");
+        return m_service.getContainer(containerName);
     }
 }
