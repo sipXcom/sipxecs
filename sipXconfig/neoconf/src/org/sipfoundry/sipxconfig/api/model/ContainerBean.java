@@ -2,6 +2,9 @@ package org.sipfoundry.sipxconfig.api.model;
 
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement()
 @JsonPropertyOrder({
         "Id", "Created", "State"
 })

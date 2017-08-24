@@ -1,7 +1,13 @@
 package org.sipfoundry.sipxconfig.api.model;
 
-import java.util.Date;
+import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
+import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Date;
+@XmlRootElement()
+@JsonPropertyOrder({
+        "Status", "Running", "Paused", "Restarting", "OOMKilled", "Dead", "Pid", "ExitCode", "Error", "StartedAt", "FinishedAt"
+})
 public class ContainerStateBean {
     private String m_Status;
     private Boolean m_Running;
