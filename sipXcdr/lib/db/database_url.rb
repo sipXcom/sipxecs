@@ -15,7 +15,7 @@ class DatabaseUrl < Struct.new(:database, :port, :host, :adapter, :username, :pa
     end
     self[:database] ||= 'SIPXCDR'
     self[:port] ||= 5432 # Default port used by PostgreSQL
-    self[:host] ||= 'localhost'
+    self[:host] ||= 'postgres.cdr'
     self[:adapter] ||= 'postgresql'
     if self[:username].nil?
         raise ArgumentError, 'postgres username is required'
