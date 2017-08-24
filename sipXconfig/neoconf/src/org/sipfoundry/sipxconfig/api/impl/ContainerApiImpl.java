@@ -4,6 +4,9 @@ import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.sipfoundry.sipxconfig.api.ContainerApi;
 import org.sipfoundry.sipxconfig.api.model.ContainerBean;
 
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
 public class ContainerApiImpl implements ContainerApi {
     ContainerApi m_service;
 
@@ -12,7 +15,16 @@ public class ContainerApiImpl implements ContainerApi {
     }
 
     @Override
-    public ContainerBean getContainer(String containerName) {
-        return m_service.getContainer(containerName);
+    public ContainerBean getContainerBean(String containerName) {
+        return m_service.getContainerBean(containerName);
+    }
+
+    @Override
+    public Response getContainer(String containerName) {
+        ContainerBean bean = getContainerBean(containerName);
+        if (bean != null) {
+            return Response.ok().entity(bean).build();
+        }
+        return Response.status(Status.NOT_FOUND).build();
     }
 }

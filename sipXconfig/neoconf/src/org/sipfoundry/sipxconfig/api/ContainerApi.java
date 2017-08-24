@@ -13,7 +13,12 @@ import javax.ws.rs.core.Response;
 @Path("/containers/")
 @Description("Phone Management REST API")
 public interface ContainerApi {
+
+    public ContainerBean getContainerBean(String containerName);
+
     @Path("{containerName}/json")
     @GET
-    public ContainerBean getContainer(@Description("Docker container") @PathParam("containerName") String containerName);
+    public Response getContainer(String containerName);
+
+
 }
