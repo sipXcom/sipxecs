@@ -15,11 +15,12 @@ import javax.ws.rs.core.Response;
 public interface ContainerApi {
 
     @GET
+    @Path("{containerName}/json")
     public ContainerBean getContainerBean(String containerName);
 
-    @Path("{containerName}/json")
-    @GET
-    public Response getContainer(String containerName);
 
+    @GET
+    @Path("{containerName}/json2")
+    public Response getContainer(String containerName);
 
 }
