@@ -15,6 +15,9 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.sipfoundry.sipxconfig.admin.AdminSettings;
+import org.sipfoundry.sipxconfig.admin.PasswordPolicy;
+import org.sipfoundry.sipxconfig.admin.PasswordPolicyImpl;
 import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.test.TestHelper;
 
@@ -22,6 +25,7 @@ public class CdrConfigurationTest {
     private Location m_one;
     private Location m_two;
     private CdrSettings m_settings;
+    private AdminSettings m_adminSettings;
     private CdrConfiguration m_config;
 
     @Before
@@ -32,19 +36,16 @@ public class CdrConfigurationTest {
         m_two.setFqdn("two.example.org");
         m_settings = new CdrSettings();
         m_settings.setModelFilesContext(TestHelper.getModelFilesContext());
+        m_adminSettings = new AdminSettings();
+        m_adminSettings.setPasswordPolicy(new PasswordPolicyImpl());
+        m_adminSettings.setModelFilesContext(TestHelper.getModelFilesContext());
         m_config = new CdrConfiguration();
-    }
-
-    @Test
-    public void cseHosts() {
-        String actual = CdrConfiguration.cseHosts(Arrays.asList(m_one, m_two), 100);
-        assertEquals("one.example.org:100, two.example.org:100", actual);
     }
 
     @Test
     public void testConfig() throws Exception {
         StringWriter actual = new StringWriter();
-        m_config.write(actual, Collections.singletonList(m_one), m_settings);
+        m_config.write(actual, Collections.singletonList(m_one), m_settings, m_adminSettings);
         String expected = IOUtils.toString(getClass().getResourceAsStream("expected-callresolver-config-no-ha"));
         assertEquals(expected, actual.toString());
     }
@@ -53,7 +54,7 @@ public class CdrConfigurationTest {
     public void testHAConfig() throws Exception {
         List<Location> locations = Arrays.asList(m_one, m_two);
         StringWriter actual = new StringWriter();
-        m_config.write(actual, locations, m_settings);
+        m_config.write(actual, locations, m_settings, m_adminSettings);
         String expected = IOUtils.toString(getClass().getResourceAsStream("expected-callresolver-config"));
         assertEquals(expected, actual.toString());
     }

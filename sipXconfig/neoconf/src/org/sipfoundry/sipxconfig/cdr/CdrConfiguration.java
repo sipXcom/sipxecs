@@ -16,8 +16,6 @@
  */
 package org.sipfoundry.sipxconfig.cdr;
 
-import static org.apache.commons.lang.StringUtils.isEmpty;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -27,6 +25,7 @@ import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.sipfoundry.sipxconfig.admin.AdminContext;
+import org.sipfoundry.sipxconfig.admin.AdminSettings;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigProvider;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigRequest;
@@ -37,6 +36,7 @@ import org.sipfoundry.sipxconfig.proxy.ProxyManager;
 
 public class CdrConfiguration implements ConfigProvider {
     private CdrManager m_cdrManager;
+    private AdminContext m_adminContext;
 
     @Override
     public void replicate(ConfigManager manager, ConfigRequest request) throws IOException {
@@ -44,6 +44,7 @@ public class CdrConfiguration implements ConfigProvider {
             return;
         }
 
+        AdminSettings adminSettings = m_adminContext.getSettings();
         Set<Location> locations = request.locations(manager);
         CdrSettings settings = m_cdrManager.getSettings();
         List<Location> proxyLocations = manager.getFeatureManager().getLocationsForEnabledFeature(ProxyManager.FEATURE);
@@ -57,40 +58,27 @@ public class CdrConfiguration implements ConfigProvider {
             ConfigUtils.enableCfengineClass(dir, datfile, true, CdrManager.FEATURE.getId(), "postgres");
             FileWriter wtr = new FileWriter(new File(dir, "callresolver-config.part"));
             try {
-                write(wtr, proxyLocations, settings);
+                write(wtr, proxyLocations, settings, adminSettings);
             } finally {
                 IOUtils.closeQuietly(wtr);
             }
         }
     }
 
-    static String cseHosts(List<Location> locations, int port) {
-        StringBuilder cseHosts = new StringBuilder();
-        boolean first = true;
-        for (Location location : locations) {
-            if (first) {
-                cseHosts.append(location.getFqdn()).append(':').append(port);
-                first = false;
-                continue;
-            }
-            cseHosts.append(", ");
-            cseHosts.append(location.getFqdn()).append(':').append(port);
-        }
-        return cseHosts.toString();
-    }
-
-    void write(Writer wtr, List<Location> proxyLocations, CdrSettings settings) throws IOException {
+    void write(Writer wtr, List<Location> proxyLocations, CdrSettings settings, AdminSettings adminSettings) throws IOException {
         KeyValueConfiguration config = KeyValueConfiguration.colonSeparated(wtr);
         config.writeSettings(settings.getSettings());
         // legacy, not sure if it should be just ip or home interface
         config.write("SIP_CALLRESOLVER_AGENT_ADDR", "0.0.0.0");
-        String cseHosts = cseHosts(proxyLocations, AdminContext.SIPXCDR_DB_ADDRESS.getCanonicalPort());
-        if (!isEmpty(cseHosts)) {
-            config.write("SIP_CALLRESOLVER_CSE_HOSTS", cseHosts);
-        }
+        config.write("SIP_CALLRESOLVER_CSE_HOSTS", "postgres.cdr:5432");
+        config.write("SIP_CALLRESOLVER_DB_PASSWORD", adminSettings.getPostgresPassword());
     }
 
     public void setCdrManager(CdrManager cdrManager) {
         m_cdrManager = cdrManager;
+    }
+
+    public void setAdminContext(AdminContext adminContext) {
+        m_adminContext = adminContext;
     }
 }
