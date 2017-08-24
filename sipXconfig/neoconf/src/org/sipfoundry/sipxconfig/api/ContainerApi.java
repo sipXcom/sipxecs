@@ -16,11 +16,11 @@ public interface ContainerApi {
 
     @GET
     @Path("{containerName}/json")
-    public ContainerBean getContainerBean(String containerName);
+    public ContainerBean getContainerBean(@Description("Container name") @PathParam("containerName") String containerName);
 
 
     @GET
     @Path("{containerName}/json2")
-    public Response getContainer(String containerName);
+    public Response getContainer(@Description("Container name") @PathParam("containerName") String containerName);
 
 }
