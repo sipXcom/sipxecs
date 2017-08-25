@@ -153,6 +153,8 @@ public class ProxyConfiguration implements ConfigProvider, ApplicationContextAwa
         config.write("SIPX_PROXY.990_emerglineid.EMERGRULES", getFullEtcDir("authrules.xml"));
         config.write("SIPX_PROXY_BIND_IP", location.getAddress());
         config.write("SIPX_PROXY_CALL_STATE_DB_PASSWORD", getPostgresPassword());
+        config.write("SIPX_PROXY_CALL_STATE_DB_HOST", "postgres.cdr");
+        config.write("SIPX_PROXY_CALL_STATE_DB_NAME", "sipxcdr");
         Setting consultativeTransfer = proxyConfigurationSettings
                 .getSetting("SIPX_CONSULTATIVE_TRANSFER_GATEWAY_INITIAL_INVITE");
         boolean isConsultativeTransfer = Boolean.parseBoolean(consultativeTransfer.getValue());
