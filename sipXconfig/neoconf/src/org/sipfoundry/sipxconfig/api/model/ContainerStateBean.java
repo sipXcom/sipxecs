@@ -1,111 +1,142 @@
 package org.sipfoundry.sipxconfig.api.model;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
+
+
+
+
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
 import java.util.Date;
-@XmlRootElement()
+
 @JsonPropertyOrder({
         "Status", "Running", "Paused", "Restarting", "OOMKilled", "Dead", "Pid", "ExitCode", "Error", "StartedAt", "FinishedAt"
 })
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ContainerStateBean {
-    private String m_Status;
-    private Boolean m_Running;
-    private Boolean m_Paused;
-    private Boolean m_Restarting;
-    private Boolean m_OOMKilled;
-    private Boolean m_Dead;
-    private Integer m_Pid;
-    private Integer m_ExitCode;
-    private String m_Error;
-    private Date m_StartedAt;
-    private Date m_FinishedAt;
+    private String m_status;
+    private Boolean m_running;
+    private Boolean m_paused;
+    private Boolean m_restarting;
+    private Boolean m_oOMKilled;
+    private Boolean m_dead;
+    private Integer m_pid;
+    private Integer m_exitCode;
+    private String m_error;
+    private Date m_startedAt;
+    private Date m_finishedAt;
 
+    @JsonProperty("Status")
     public String getStatus() {
-        return m_Status;
+        return m_status;
+    }
+    
+    @JsonProperty("Status")
+    public void setStatus(String status) {
+        m_status = status;
     }
 
-    public void setStatus(String Status) {
-        m_Status = Status;
-    }
-
+    @JsonProperty("Running")
     public Boolean getRunning() {
-        return m_Running;
+        return m_running;
+    }
+    
+    @JsonProperty("Running")
+    public void setRunning(Boolean running) {
+        m_running = running;
     }
 
-    public void setRunning(Boolean Running) {
-        m_Running = Running;
-    }
-
+    @JsonProperty("Paused")
     public Boolean getPaused() {
-        return m_Paused;
+        return m_paused;
     }
 
-    public void setPaused(Boolean Paused) {
-        m_Paused = m_Paused;
+    @JsonProperty("Paused")
+    public void setPaused(Boolean paused) {
+        m_paused = paused;
     }
 
+    @JsonProperty("Restarting")
     public Boolean getRestarting() {
-        return m_Restarting;
+        return m_restarting;
     }
 
-    public void setRestarting(Boolean Restarting) {
-        m_Restarting = Restarting;
+    @JsonProperty("Restarting")
+    public void setRestarting(Boolean restarting) {
+        m_restarting = restarting;
     }
 
+    @JsonProperty("OOMKilled")
     public Boolean getOOMKilled() {
-        return m_OOMKilled;
+        return m_oOMKilled;
     }
 
-    public void setOOMKilled(Boolean OOMKilled) {
-        m_OOMKilled = OOMKilled;
+    @JsonProperty("OOMKilled")
+    public void setOOMKilled(Boolean oOMKilled) {
+        m_oOMKilled = oOMKilled;
     }
 
+    @JsonProperty("Dead")
     public Boolean getDead() {
-        return m_Dead;
+        return m_dead;
     }
 
-    public void setDead(Boolean Dead) {
-        m_Dead = Dead;
+    @JsonProperty("Dead")
+    public void setDead(Boolean dead) {
+        m_dead = dead;
     }
 
+    @JsonProperty("Pid")
     public Integer getPid() {
-        return m_Pid;
+        return m_pid;
     }
 
-    public void setPid(Integer Pid) {
-        m_Pid = Pid;
+    @JsonProperty("Pid")
+    public void setPid(Integer pid) {
+        m_pid = pid;
     }
 
+    @JsonProperty("ExitCode")
     public Integer getExitCode() {
-        return m_ExitCode;
+        return m_exitCode;
     }
 
-    public void setExitCode(Integer ExitCode) {
-        m_ExitCode = ExitCode;
+    @JsonProperty("ExitCode")
+    public void setExitCode(Integer exitCode) {
+        m_exitCode = exitCode;
     }
 
+    @JsonProperty("Error")
     public String getError() {
-        return m_Error;
+        return m_error;
     }
 
-    public void setError(String Error) {
-        m_Error = Error;
+    @JsonProperty("Error")
+    public void setError(String error) {
+        m_error = error;
     }
 
+    @JsonProperty("StartedAt")
     public Date getStartedAt() {
-        return m_StartedAt;
+        return m_startedAt;
     }
 
-    public void setStartedAt(Date StartedAt) {
-        m_StartedAt = StartedAt;
+    @JsonProperty("StartedAt")
+    public void setStartedAt(Date startedAt) {
+        m_startedAt = startedAt;
     }
 
+    @JsonProperty("FinishedAt")
     public Date getFinishedAt() {
-        return m_FinishedAt;
+        return m_finishedAt;
     }
 
-    public void setFinishedAt(Date FinishedAt) {
-        m_FinishedAt = FinishedAt;
+    @JsonProperty("FinishedAt")
+    public void setFinishedAt(Date finishedAt) {
+        m_finishedAt = finishedAt;
     }
 }

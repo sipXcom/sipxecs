@@ -11,7 +11,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/containers/")
-@Description("Phone Management REST API")
+@Description("Container API")
+@Produces({
+    MediaType.APPLICATION_JSON
+})
 public interface ContainerApi {
 
     @GET

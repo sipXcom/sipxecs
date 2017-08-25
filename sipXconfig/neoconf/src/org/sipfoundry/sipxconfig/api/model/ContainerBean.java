@@ -1,40 +1,48 @@
 package org.sipfoundry.sipxconfig.api.model;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement()
 @JsonPropertyOrder({
         "Id", "Created", "State"
 })
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ContainerBean {
-    private String m_Id;
-    private String m_Created;
-    private ContainerStateBean m_State;
+    private String m_id;
+    private String m_created;
+    private ContainerStateBean m_state;
 
+    @JsonProperty("Id")
     public String getId() {
-        return m_Id;
+        return m_id;
     }
 
-    public void setId(String Id) {
-        m_Id = Id;
+    @JsonProperty("Id")
+    public void setId(String id) {
+        m_id = id;
     }
 
+    @JsonProperty("Created")
     public String getCreated() {
-        return m_Created;
+        return m_created;
     }
 
-    public void setCreated(String Created) {
-        m_Created = Created;
+    @JsonProperty("Created")
+    public void setCreated(String created) {
+        m_created = created;
     }
 
+    @JsonProperty("State")
     public ContainerStateBean getState() {
-        return m_State;
+        return m_state;
     }
 
-    public void setState(ContainerStateBean State) {
-        m_State = State;
+    @JsonProperty("State")
+    public void setState(ContainerStateBean state) {
+        m_state = state;
     }
 }
