@@ -50,7 +50,7 @@ public class CdrConfiguration implements ConfigProvider {
         CdrSettings settings = m_cdrManager.getSettings();
         List<Location> proxyLocations = manager.getFeatureManager().getLocationsForEnabledFeature(ProxyManager.FEATURE);
         for (Location location : locations) {
-            File dir = manager.getLocationDataDirectory(location);
+            File dir = getLocationDataDirectory(location);
             String datfile = "sipxcdr.cfdat";
             if (!location.isPrimary()) {
                 ConfigUtils.enableCfengineClass(dir, datfile, false, CdrManager.FEATURE.getId());
