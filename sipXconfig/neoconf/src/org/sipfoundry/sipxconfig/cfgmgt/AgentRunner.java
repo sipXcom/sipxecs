@@ -53,17 +53,17 @@ public class AgentRunner {
      * @param subCommand does not include path to sipxagent command or host parameter
      */
     protected synchronized void run(Collection<Location> locations, String label, String subCommand) {
-        try {
-            m_inProgress = true;
-            List<Location> ok = new ArrayList<Location>(locations.size());
-            for (Location l : locations) {
-                String address = l.isPrimary() ? "127.0.0.1" : l.getAddress();
-                String command = format("%s --host %s %s", getCommand(), address, subCommand);
-                runJob(l, label, command);
-            }
-        } finally {
-            m_inProgress = false;
-        }
+//        try {
+//            m_inProgress = true;
+//            List<Location> ok = new ArrayList<Location>(locations.size());
+//            for (Location l : locations) {
+//                String address = l.isPrimary() ? "127.0.0.1" : l.getAddress();
+//                String command = format("%s --host %s %s", getCommand(), address, subCommand);
+//                runJob(l, label, command);
+//            }
+//        } finally {
+//            m_inProgress = false;
+//        }
     }
 
     /**
