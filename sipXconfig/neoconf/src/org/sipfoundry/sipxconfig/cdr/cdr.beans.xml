@@ -5,6 +5,7 @@
   <bean id="cdrConfiguration" class="org.sipfoundry.sipxconfig.cdr.CdrConfiguration">
     <property name="cdrManager" ref="cdrManager" />
     <property name="adminContext" ref="adminContext"/>
+    <property name="etcDir" value="${sysdir.etc}"/>
   </bean>
 
   <bean id="cdrDataSource" parent="dataSource">

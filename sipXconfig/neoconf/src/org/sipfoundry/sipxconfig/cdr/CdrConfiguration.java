@@ -37,6 +37,7 @@ import org.sipfoundry.sipxconfig.proxy.ProxyManager;
 public class CdrConfiguration implements ConfigProvider {
     private CdrManager m_cdrManager;
     private AdminContext m_adminContext;
+    private String m_etcDir;
 
     @Override
     public void replicate(ConfigManager manager, ConfigRequest request) throws IOException {
@@ -80,5 +81,17 @@ public class CdrConfiguration implements ConfigProvider {
 
     public void setAdminContext(AdminContext adminContext) {
         m_adminContext = adminContext;
+    }
+
+    public void setEtcDir(String etcDir) {
+        m_etcDir = etcDir;
+    }
+
+    private File getLocationDataDirectory(Location location) {
+        File d = new File(m_etcDir + "/conf", String.valueOf(location.getId()));
+        if (!d.exists()) {
+            d.mkdirs();
+        }
+        return d;
     }
 }
