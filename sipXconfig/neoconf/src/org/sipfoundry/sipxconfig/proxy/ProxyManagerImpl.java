@@ -81,8 +81,6 @@ public class ProxyManagerImpl implements ProxyManager, FeatureProvider, AddressP
     }
 
     public void saveSettings(ProxySettings settings) {
-        settings.setLogLevel(settings.isSipDiagramEnable()
-            ? ProxySettings.INFO_LOG_LEVEL : ProxySettings.NOTICE_LOG_LEVEL);
         m_settingsDao.upsert(settings);
     }
 

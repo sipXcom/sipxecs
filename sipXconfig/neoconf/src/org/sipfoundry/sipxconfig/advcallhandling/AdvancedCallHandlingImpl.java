@@ -14,11 +14,15 @@
  */
 package org.sipfoundry.sipxconfig.advcallhandling;
 
+import org.sipfoundry.sipxconfig.proxy.ProxyManager;
+import org.sipfoundry.sipxconfig.proxy.ProxySettings;
 import org.sipfoundry.sipxconfig.setting.BeanWithSettingsDao;
+import org.springframework.beans.factory.annotation.Required;
 
 public class AdvancedCallHandlingImpl implements AdvancedCallHandling {
 
     private BeanWithSettingsDao<AdvancedCallHandlingSettings> m_settingsDao;
+    private ProxyManager m_proxyManager;
 
     public AdvancedCallHandlingSettings getSettings() {
         return m_settingsDao.findOrCreateOne();
@@ -27,6 +31,10 @@ public class AdvancedCallHandlingImpl implements AdvancedCallHandling {
     @Override
     public void saveSettings(AdvancedCallHandlingSettings settings) {
         m_settingsDao.upsert(settings);
+        if (isEnabled()) {
+            m_proxyManager.getSettings().setLogLevel(ProxySettings.INFO_LOG_LEVEL);
+            m_proxyManager.saveSettings(m_proxyManager.getSettings());
+        }
     }
 
     public void setSettingsDao(BeanWithSettingsDao<AdvancedCallHandlingSettings> settingsDao) {
@@ -37,4 +45,9 @@ public class AdvancedCallHandlingImpl implements AdvancedCallHandling {
     public boolean isEnabled() {
         return (Boolean) getSettings().getSettingTypedValue(ENABLED);
     }
+
+    @Required
+    public void setProxyManager(ProxyManager proxyManager) {
+        m_proxyManager = proxyManager;
+    }        
 }
