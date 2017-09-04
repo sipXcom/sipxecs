@@ -7,5 +7,9 @@
       <type><boolean/></type>
       <value>0</value>
     </setting>
+    <setting name="enable-anchor">
+      <type><boolean/></type>
+      <value>0</value>
+    </setting>
   </group>
 </model>

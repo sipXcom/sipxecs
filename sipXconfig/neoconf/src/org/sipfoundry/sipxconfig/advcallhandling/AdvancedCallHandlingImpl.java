@@ -46,8 +46,13 @@ public class AdvancedCallHandlingImpl implements AdvancedCallHandling {
         return (Boolean) getSettings().getSettingTypedValue(ENABLED);
     }
 
+    @Override
+    public boolean isEnabledAnchor() {
+        return (Boolean) getSettings().getSettingTypedValue(ENABLE_ANCHOR);
+    }
+
     @Required
     public void setProxyManager(ProxyManager proxyManager) {
         m_proxyManager = proxyManager;
-    }        
+    }
 }

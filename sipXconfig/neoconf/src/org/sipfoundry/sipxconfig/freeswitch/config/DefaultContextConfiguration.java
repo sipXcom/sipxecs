@@ -90,6 +90,9 @@ public class DefaultContextConfiguration extends AbstractFreeswitchConfiguration
         context.put("advancedCallHandling",
             m_featureManager.
             isFeatureEnabled(FreeswitchFeature.FEATURE, location) ? m_advancedCallHandling.isEnabled() : false);
+        context.put("proxyMediaThroughFS",
+            m_featureManager.
+            isFeatureEnabled(FreeswitchFeature.FEATURE, location) ? m_advancedCallHandling.isEnabledAnchor() : false);
         getFreeswitchExtensions(context, location, extensions);
         write(writer, context);
     }

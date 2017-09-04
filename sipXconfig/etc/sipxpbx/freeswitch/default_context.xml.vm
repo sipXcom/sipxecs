@@ -140,8 +140,10 @@ sofia/${domainName}/$1@${domainName}"/>
 #if ($blindTransfer || $advancedCallHandling)
   <extension name="going-in">
     <condition>
-#if( $advancedCallHandling ) 
-      <action application="set" data="bypass_media=true"/> 
+#if( $advancedCallHandling )
+#if( !$proxyMediaThroughFS )       
+      <action application="set" data="bypass_media=true"/>
+#end           
       <action application="export" data="sip_h_X-Origination-CallId=${sip_call_id}"/> 
 #end     
       <action application="set" data="ringback=${us-ring}"/>

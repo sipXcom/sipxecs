@@ -17,10 +17,13 @@ package org.sipfoundry.sipxconfig.advcallhandling;
 public interface AdvancedCallHandling {
 
     public static final String ENABLED = "general/enable";
+    public static final String ENABLE_ANCHOR = "general/enable-anchor";
 
     public AdvancedCallHandlingSettings getSettings();
 
     public void saveSettings(AdvancedCallHandlingSettings settings);
 
     public boolean isEnabled();
+
+    public boolean isEnabledAnchor();
 }
