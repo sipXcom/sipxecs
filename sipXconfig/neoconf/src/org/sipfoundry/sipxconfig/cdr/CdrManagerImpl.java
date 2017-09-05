@@ -283,7 +283,7 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
 
     private String getActiveCdrsRestUrl(User user) {
         Address address = getCdrAgentAddress();
-        return String.format("http://%s:%d/activecdrs?name=%s", address.getAddress(), address.getPort(),
+        return String.format("http://sipxcdr:%d/activecdrs?name=%s", address.getPort(),
                 user.getUserName());
     }
 
