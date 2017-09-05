@@ -29,6 +29,7 @@
         </property>
       </bean>
     </property>
+    <property name="domainManager" ref="domainManager" />
   </bean>
 
   <bean id="cdrManager" class="org.springframework.aop.framework.ProxyFactoryBean" parent="abstractDao">

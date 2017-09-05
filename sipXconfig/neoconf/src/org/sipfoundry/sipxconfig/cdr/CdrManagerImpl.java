@@ -53,6 +53,7 @@ import org.sipfoundry.sipxconfig.cdr.Cdr.Termination;
 import org.sipfoundry.sipxconfig.common.User;
 import org.sipfoundry.sipxconfig.common.UserException;
 import org.sipfoundry.sipxconfig.commserver.Location;
+import org.sipfoundry.sipxconfig.domain.DomainManager;
 import org.sipfoundry.sipxconfig.feature.Bundle;
 import org.sipfoundry.sipxconfig.feature.BundleConstraint;
 import org.sipfoundry.sipxconfig.feature.FeatureChangeRequest;
@@ -113,6 +114,7 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
     private FeatureManager m_featureManager;
     private BeanWithSettingsDao<CdrSettings> m_settingsDao;
     private NtpManager m_ntpManager;
+    private DomainManager m_domainManager;
 
     @Override
     public CdrSettings getSettings() {
@@ -283,7 +285,7 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
 
     private String getActiveCdrsRestUrl(User user) {
         Address address = getCdrAgentAddress();
-        return String.format("http://%s:%d/activecdrs?name=%s", address.getAddress(), address.getPort(),
+        return String.format("http://sipxcdr.%s:%d/activecdrs?name=%s", m_domainManager.getDomainName(), address.getPort(),
                 user.getUserName());
     }
 
@@ -700,6 +702,10 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
     @Required
     public void setNtpManager(NtpManager ntpManager) {
         m_ntpManager = ntpManager;
+    }
+
+    public void setDomainManager(DomainManager domainManager) {
+        m_domainManager = domainManager;
     }
 
 }
