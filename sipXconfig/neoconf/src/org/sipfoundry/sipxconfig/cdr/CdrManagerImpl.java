@@ -290,7 +290,7 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
     public CdrService getCdrService() {
         try {
             Address address = getCdrAgentAddress();
-            URL url = new URL("http", address.getAddress(), address.getPort(), StringUtils.EMPTY);
+            URL url = new URL("http", "sipxcdr", address.getPort(), StringUtils.EMPTY);
             return new CdrImplServiceLocator().getCdrService(url);
         } catch (ServiceException e) {
             throw new UserException(e);
