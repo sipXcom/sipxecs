@@ -21,6 +21,7 @@
     </property>
     <property name="locationsManager" ref="locationsManager" />
     <property name="systemAuditManager" ref="systemAuditManager" />
+    <property name="containerApi" ref="containerRestApi" />
   </bean>
   
   <bean id="snmpSettings" class="org.sipfoundry.sipxconfig.snmp.SnmpSettings" parent="settingsBean">

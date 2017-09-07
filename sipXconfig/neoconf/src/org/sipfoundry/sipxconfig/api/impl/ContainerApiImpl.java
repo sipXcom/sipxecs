@@ -1,6 +1,7 @@
 package org.sipfoundry.sipxconfig.api.impl;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -10,6 +11,7 @@ import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 import org.sipfoundry.sipxconfig.api.ContainerApi;
 import org.sipfoundry.sipxconfig.api.SipxecsExceptionMapper;
 import org.sipfoundry.sipxconfig.api.model.ContainerBean;
+import org.sipfoundry.sipxconfig.api.model.ContainersBean;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -43,5 +45,39 @@ public class ContainerApiImpl implements ContainerApi {
             return Response.ok().entity(bean).build();
         }
         return Response.status(Status.NOT_FOUND).build();
+    }
+
+    @Override
+    public List<ContainersBean> getContainersBeans(int all) {
+        List<ContainersBean> beans = null;
+        try {
+            beans = m_service.getContainersBeans(all);
+        } catch (Exception ex) {
+            LOG.error("Cannot retrieve containers ", ex);
+        }
+        return beans;
+    }
+
+    @Override
+    public Response getContainers() {
+        List<ContainersBean> beans = getContainersBeans(0);
+        if (beans != null) {
+            return Response.ok().entity(beans).build();
+        }
+        return Response.status(Status.NOT_FOUND).build();
+    }
+    
+    @Override
+    public Response getAllContainers() {
+        List<ContainersBean> beans = getContainersBeans(1);
+        if (beans != null) {
+            return Response.ok().entity(beans).build();
+        }
+        return Response.status(Status.NOT_FOUND).build();
+    }    
+
+    @Override
+    public Response restartContainer(String containerName) {        
+        return m_service.restartContainer(containerName);
     }
 }

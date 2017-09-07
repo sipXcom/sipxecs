@@ -8,12 +8,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 @JsonPropertyOrder({
-        "Id", "Created", "State"
+        "Id", "Created", "Name", "State"
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ContainerBean {
     private String m_id;
     private String m_created;
+    private String m_name;
     private ContainerStateBean m_state;
 
     @JsonProperty("Id")
@@ -34,6 +35,16 @@ public class ContainerBean {
     @JsonProperty("Created")
     public void setCreated(String created) {
         m_created = created;
+    }        
+
+    @JsonProperty("Name")
+    public String getName() {
+        return m_name;
+    }
+
+    @JsonProperty("Name")
+    public void setName(String name) {
+        m_name = name;
     }
 
     @JsonProperty("State")

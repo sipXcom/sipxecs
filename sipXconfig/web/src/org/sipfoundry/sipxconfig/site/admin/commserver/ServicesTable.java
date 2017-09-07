@@ -30,6 +30,7 @@ import org.apache.tapestry.annotations.InjectObject;
 import org.apache.tapestry.annotations.InjectPage;
 import org.apache.tapestry.annotations.Parameter;
 import org.apache.tapestry.services.ExpressionEvaluator;
+import org.sipfoundry.sipxconfig.api.ContainerApi;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
 import org.sipfoundry.sipxconfig.common.CoreContext;
 import org.sipfoundry.sipxconfig.common.UserException;
@@ -56,6 +57,9 @@ public abstract class ServicesTable extends BaseComponent {
 
     @InjectObject("spring:locationsManager")
     public abstract LocationsManager getLocationsManager();
+    
+    @InjectObject("spring:containerRestApi")
+    public abstract ContainerApi getContainerRestApi();
 
     @InjectObject("spring:snmpManager")
     public abstract SnmpManager getSnmpManager();
@@ -152,8 +156,9 @@ public abstract class ServicesTable extends BaseComponent {
         @SuppressWarnings("unchecked")
         Collection<String> selected = getSelections().getAllSelected();
         if (selected.size() > 0) {
-            List<ProcessDefinition> defs = getSnmpManager().getProcessDefinitions(getServiceLocation(), selected);
-            getSnmpManager().restartProcesses(getServiceLocation(), defs);
+            for (String name : selected) {
+                getContainerRestApi().restartContainer(name);
+            }
             String msg = getMessages().getMessage("statusMessage.servicesRestarted");
             ((SipxValidationDelegate) TapestryUtils.getValidator(getPage())).recordSuccess(msg);
         }

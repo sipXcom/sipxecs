@@ -32,6 +32,9 @@ import org.sipfoundry.sipxconfig.address.Address;
 import org.sipfoundry.sipxconfig.address.AddressManager;
 import org.sipfoundry.sipxconfig.address.AddressProvider;
 import org.sipfoundry.sipxconfig.address.AddressType;
+import org.sipfoundry.sipxconfig.api.ContainerApi;
+import org.sipfoundry.sipxconfig.api.model.ContainerBean;
+import org.sipfoundry.sipxconfig.api.model.ContainersBean;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
 import org.sipfoundry.sipxconfig.cfgmgt.RunRequest;
 import org.sipfoundry.sipxconfig.common.UserException;
@@ -53,6 +56,7 @@ import org.sipfoundry.sipxconfig.systemaudit.SystemAuditManager;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.beans.factory.annotation.Required;
 
 public class SnmpManagerImpl implements BeanFactoryAware, SnmpManager, FeatureProvider, ProcessProvider,
         FirewallProvider, AddressProvider {
@@ -66,6 +70,7 @@ public class SnmpManagerImpl implements BeanFactoryAware, SnmpManager, FeaturePr
     private ConfigManager m_configManager;
     private LocationsManager m_locationsManager;
     private SystemAuditManager m_systemAuditManager;
+    private ContainerApi m_containerApi;
 
     @Override
     public List<ProcessDefinition> getProcessDefinitions(Location location) {
@@ -102,14 +107,22 @@ public class SnmpManagerImpl implements BeanFactoryAware, SnmpManager, FeaturePr
 
     @Override
     public List<ServiceStatus> getServicesStatuses(Location location) {
-        ProcessSnmpReader reader = new ProcessSnmpReader();
-        try {
-            String communityString = getSettings().getCommunityString();
-            List<ServiceStatus> statuses = reader.read(location.getAddress(), communityString);
-            return statuses;
-        } catch (IOException e) {
-            throw new UserException("Could not get SNMP data", e);
+        List<ServiceStatus> serviceStatuses = new ArrayList<ServiceStatus>();
+        List<ContainersBean> containers = m_containerApi.getContainersBeans(1);
+        for  (ContainersBean containersBean : containers) {
+            ContainerBean bean = m_containerApi.getContainerBean(containersBean.getNames().get(0));
+            ServiceStatus.Status status = ServiceStatus.Status.ShutDown;
+            if (bean.getState().getRunning()) {
+                status = ServiceStatus.Status.Running;
+            }
+            if (bean.getState().getRestarting()) {
+                status = ServiceStatus.Status.Starting;
+            }            
+            ServiceStatus serviceStatus = new ServiceStatus(bean.getName(), status, false, false);
+            serviceStatuses.add(serviceStatus);
         }
+        return serviceStatuses;
+
     }
 
     @Override
@@ -226,4 +239,9 @@ public class SnmpManagerImpl implements BeanFactoryAware, SnmpManager, FeaturePr
     public void setSystemAuditManager(SystemAuditManager systemAuditManager) {
         m_systemAuditManager = systemAuditManager;
     }
+
+    @Required
+    public void setContainerApi(ContainerApi containerApi) {
+        m_containerApi = containerApi;
+    }        
 }
