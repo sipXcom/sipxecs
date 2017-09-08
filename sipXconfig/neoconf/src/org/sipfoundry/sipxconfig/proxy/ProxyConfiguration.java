@@ -72,7 +72,7 @@ public class ProxyConfiguration implements ConfigProvider, ApplicationContextAwa
             if (!enabled) {
                 ConfigUtils.enableCfengineClass(dir, PROXY_CFDAT, enabled, PROXY);
             } else {
-                ConfigUtils.enableCfengineClass(dir, PROXY_CFDAT, enabled, "postgres", PROXY);
+                ConfigUtils.enableCfengineClass(dir, PROXY_CFDAT, enabled, PROXY, "postgres");
             }
 
             // always generate only because sipxbridge needs file and harmless to generate
