@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.elasticsearch.common.lang3.StringUtils;
 import org.sipfoundry.sipxconfig.address.Address;
 import org.sipfoundry.sipxconfig.address.AddressManager;
 import org.sipfoundry.sipxconfig.address.AddressProvider;
@@ -81,8 +82,10 @@ public class ProxyManagerImpl implements ProxyManager, FeatureProvider, AddressP
     }
 
     public void saveSettings(ProxySettings settings) {
-        settings.setLogLevel(settings.isSipDiagramEnable()
-            ? ProxySettings.INFO_LOG_LEVEL : ProxySettings.NOTICE_LOG_LEVEL);
+        String logLevel = settings.getLogLevel();
+        if (!StringUtils.equals(logLevel, ProxySettings.DEBUG_LOG_LEVEL) && settings.isSipDiagramEnable()) {
+            settings.setLogLevel(ProxySettings.INFO_LOG_LEVEL);
+        }
         m_settingsDao.upsert(settings);
     }
 

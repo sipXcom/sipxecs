@@ -33,6 +33,7 @@ public class ProxySettings extends PersistableSettings implements DeployConfigOn
     public static final String SIP_DIAGRAM_ENABLE = "sip-diagram-configuration/enabled";
     public static final String INFO_LOG_LEVEL = "INFO";
     public static final String NOTICE_LOG_LEVEL = "NOTICE";
+    public static final String DEBUG_LOG_LEVEL = "DEBUG";
 
     public int getSipTcpPort() {
         return (Integer) getSettingTypedValue(SIP_PORT_SETTING);
