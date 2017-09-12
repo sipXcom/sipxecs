@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
+import java.net.InetAddress;
+
 import javax.sip.SipProvider;
 import javax.sip.address.Address;
 import javax.sip.address.Hop;
@@ -34,6 +36,11 @@ import org.sipfoundry.sipxbridge.xmlrpc.RegistrationRecord;
 
 public class ItspAccountInfo  {
     private static Logger logger = Logger.getLogger(ItspAccountInfo.class);
+
+    /**
+     *  original proxy info for the account configuration
+     */
+    private String outboundProxyFromConfig;
 
     /**
      * The outbound proxy for the account.
@@ -333,11 +340,53 @@ public class ItspAccountInfo  {
         return this.globalAddressingUsed;
     }
 
+    public void resetOutboundProxy() { // use to get new SRV record for example
+        logger.info("Timeout during registration, reset SRV if exists " + this.outboundProxyFromConfig + " " + this.outboundProxy);
+        if (this.outboundProxyFromConfig != null) {
+           String currentOutboundProxy = this.outboundProxy;
+	   setOutboundProxy(this.outboundProxyFromConfig);
+
+	   if (currentOutboundProxy.equals(this.outboundProxy)) {
+              logger.info("Current and new values of SRV for outboundProxy are the same, so try again: " + this.outboundProxy);
+	      setOutboundProxy(this.outboundProxyFromConfig); 
+	   }
+
+           this.inboundProxy = null; // reset also the inboundProxy
+	   logger.info("The reset outboundProxy is " + this.outboundProxy);
+	}
+    }
+        
+
     public void setOutboundProxy(String resolvedName) {
         this.outboundProxy = resolvedName;
         this.configuredOutboundProxy = resolvedName;
         this.reUseOutboundProxySetting = true;
 
+        // check that hop is a real IP address otherwise check next to get a possible DNS SRV Record 
+        try { 
+           InetAddress.getByName(resolvedName); 
+        } catch (Exception ex) { 
+           logger.error("Error in the setOutboundProxy with resolvingName", ex);
+           try {
+              SipURI sipUri = ProtocolObjects.addressFactory.createSipURI(null, resolvedName);
+              sipUri.setTransportParam(this.outboundTransport);
+              Hop hop = new FindSipServer(logger).findServer(sipUri);
+           
+              if ( this.outboundProxyPort != 5060 ) {
+                this.setOutboundProxyPort(hop.getPort());
+              }
+              this.outboundProxy = hop.getHost();
+              this.configuredOutboundProxy = hop.getHost();
+              this.reUseOutboundProxySetting = true;
+	      setHopToRegistrar(hop); // So the new location for registration is set
+              logger.info("Find SRV record for Itsp account: " +  this.outboundProxy);
+              this.outboundProxyFromConfig = resolvedName;
+            } catch (Exception ex2) {
+               logger.error(
+                    "Exception in processing -- could not add ITSP account ",
+                    ex2);
+            }
+	}	
     }
 
     public void lookupAccount() {

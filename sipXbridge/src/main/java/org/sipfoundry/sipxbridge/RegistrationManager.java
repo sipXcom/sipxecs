@@ -292,6 +292,10 @@ public class RegistrationManager {
         ClientTransaction ctx = timeoutEvent.getClientTransaction();
         ItspAccountInfo itspAccount = ((TransactionContext) ctx
                 .getApplicationData()).getItspAccountInfo();
+
+        // reset ITSP proxy value with new SRV if available
+        itspAccount.resetOutboundProxy();
+
         /*
          * Try again to register after 60 seconds ( maybe somebody pulled the
          * plug).
