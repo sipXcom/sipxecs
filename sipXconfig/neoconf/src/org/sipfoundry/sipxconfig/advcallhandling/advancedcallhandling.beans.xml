@@ -20,6 +20,5 @@
         </property>
       </bean>
     </property>
-    <property name="proxyManager" ref="proxyManager"/>
   </bean>
  </beans> 
