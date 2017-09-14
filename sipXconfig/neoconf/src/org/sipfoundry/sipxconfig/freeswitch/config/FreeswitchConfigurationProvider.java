@@ -28,10 +28,12 @@ import org.sipfoundry.sipxconfig.freeswitch.FreeswitchSettings;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.beans.factory.annotation.Required;
 
 public class FreeswitchConfigurationProvider implements ConfigProvider, BeanFactoryAware {
     private FreeswitchFeature m_freeswitch;
     private ListableBeanFactory m_beanFactory;
+    private String m_etcDir;
 
     @Override
     public void replicate(ConfigManager manager, ConfigRequest request) throws IOException {
@@ -41,7 +43,7 @@ public class FreeswitchConfigurationProvider implements ConfigProvider, BeanFact
 
         Set<Location> locations = request.locations(manager);
         for (Location location : locations) {
-            File dir = manager.getLocationDataDirectory(location);
+            File dir = getLocationDataDirectory(location);
             boolean enabled = manager.getFeatureManager().isFeatureEnabled(FreeswitchFeature.FEATURE, location);
             ConfigUtils.enableCfengineClass(dir, "sipxfreeswitch.cfdat", enabled, "sipxfreeswitch");
             FreeswitchSettings settings = m_freeswitch.getSettings(location);
@@ -81,6 +83,14 @@ public class FreeswitchConfigurationProvider implements ConfigProvider, BeanFact
         }
     }
 
+    private File getLocationDataDirectory(Location location) {
+        File d = new File(m_etcDir + "/conf", String.valueOf(location.getId()));
+        if (!d.exists()) {
+            d.mkdirs();
+        }
+        return d;
+    }
+
     public void setFreeswitch(FreeswitchFeature freeswitch) {
         m_freeswitch = freeswitch;
     }
@@ -88,5 +98,10 @@ public class FreeswitchConfigurationProvider implements ConfigProvider, BeanFact
     @Override
     public void setBeanFactory(BeanFactory beanFactory) {
         m_beanFactory = (ListableBeanFactory) beanFactory;
+    }
+
+    @Required
+    public void setEtcDir(String m_etcDir) {
+        this.m_etcDir = m_etcDir;
     }
 }

@@ -4,6 +4,7 @@
   
   <bean id="freeswitchConfigProvider" class="org.sipfoundry.sipxconfig.freeswitch.config.FreeswitchConfigurationProvider">
     <property name="freeswitch" ref="freeswitchFeature" />
+    <property name="etcDir" value="${sysdir.etc}"/>
   </bean>
   <bean id="freeswitchConfigFile" abstract="true" scope="prototype">
     <property name="velocityEngine" ref="velocityEngine" />
