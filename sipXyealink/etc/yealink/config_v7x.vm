@@ -133,6 +133,7 @@ account.${lastLineID}.user_name = $!{setting.Value}
 #else
 #if (${setting.Value} && ${setting.Value} != "")
 account.${lastLineID}.${setting.ProfileName} = $!{setting.Value}
+#end
 #else
 account.${lastLineID}.${setting.ProfileName} = %NULL%
 #end
