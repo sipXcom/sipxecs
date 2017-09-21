@@ -17,13 +17,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang.StringUtils;
+import org.elasticsearch.common.lang3.ArrayUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.sipfoundry.sipxconfig.alias.AliasManager;
+import org.sipfoundry.sipxconfig.api.ContainerApi;
+import org.sipfoundry.sipxconfig.api.model.ContainerBean;
 import org.sipfoundry.sipxconfig.common.BeanId;
 import org.sipfoundry.sipxconfig.common.ExtensionInUseException;
 import org.sipfoundry.sipxconfig.common.NameInUseException;
@@ -55,12 +59,23 @@ public class ConferenceBridgeContextImpl extends SipxHibernateDaoSupport impleme
     private AliasManager m_aliasManager;
     private BeanFactory m_beanFactory;
     private DomainManager m_domainManager;
+    private ContainerApi m_containerApi;
 
-    public List<Bridge> getBridges() {
-        return getHibernateTemplate().loadAll(Bridge.class);
+    public List<Bridge> getBridges() {        
+        List<Bridge> bridges = getHibernateTemplate().loadAll(Bridge.class);                
+        return bridges;
     }
 
     public void saveBridge(Bridge bridge) {
+        ContainerBean bean = m_containerApi.getContainerBean("sipxfreeswitch");
+        String address = bean.getNetworkSettings().getNetworks().get("ezuce-private").getIpAddress();
+        String name = "/sipxfreeswitch";
+        String hostname = bean.getConfig().getHostname();
+        
+        bridge.setSettingValue(Bridge.DOCKER_FS_ADDRESS, address);
+        bridge.setSettingValue(Bridge.DOCKER_FS_NAME, name);
+        bridge.setSettingValue(Bridge.DOCKER_FS_HOSTNAME, hostname);
+        
         if (bridge.isNew()) {
             getHibernateTemplate().save(bridge);
             // need to make sure that ID is set
@@ -310,6 +325,11 @@ public class ConferenceBridgeContextImpl extends SipxHibernateDaoSupport impleme
     public void setAliasManager(AliasManager aliasManager) {
         m_aliasManager = aliasManager;
     }
+    
+    @Required
+    public void setContainerApi(ContainerApi containerApi) {
+        m_containerApi = containerApi;
+    }    
 
     @Override
     public void removeBridge(Bridge bridge) {

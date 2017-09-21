@@ -47,6 +47,11 @@ public class Bridge extends BeanWithSettings implements DeployConfigOnEdit, Syst
     public static final String CALL_CONTROL_TALK_RESET = "fs-conf-bridge/dtmf-commands/audio-volume/mic-reset";
     public static final String CALL_CONTROL_TALK_DOWN = "fs-conf-bridge/dtmf-commands/audio-volume/mic-down";
     public static final String CALL_CONTROL_HANGUP = "fs-conf-bridge/dtmf-commands/hung-up/hungup";
+    
+    public static final String DOCKER_FS_ADDRESS = "docker/sipxfreeswitch/address";
+    public static final String DOCKER_FS_NAME = "docker/sipxfreeswitch/name";
+    public static final String DOCKER_FS_HOSTNAME = "docker/sipxfreeswitch/hostname";
+    
     public static final String SLASH = System.getProperty("file.separator");
 
     private Set<Conference> m_conferences = new LinkedHashSet<Conference>();
@@ -86,11 +91,15 @@ public class Bridge extends BeanWithSettings implements DeployConfigOnEdit, Syst
     }
 
     public String getDescription() {
-        return getLocation().getName();
+        return getSettingValue(DOCKER_FS_NAME);
     }
 
     public String getName() {
-        return getLocation().getFqdn();
+        return getSettingValue(DOCKER_FS_HOSTNAME);
+    }
+    
+    public String getAddress() {
+        return getSettingValue(DOCKER_FS_ADDRESS);
     }
 
     public String getHangupCode() {
@@ -152,7 +161,7 @@ public class Bridge extends BeanWithSettings implements DeployConfigOnEdit, Syst
     }
 
     public String getHost() {
-        return getLocation().getFqdn();
+        return getSettingValue(DOCKER_FS_HOSTNAME);
     }
 
     public void setLocation(Location location) {

@@ -40,6 +40,19 @@
   <type id="upload-music">
     <file variable="yes" />
   </type>
+  <group name="docker" hidden="yes">
+    <group name="sipxfreeswitch" hidden="yes">
+      <setting name="name" hidden="yes">
+          <value />
+      </setting>
+      <setting name="address" hidden="yes">
+          <value />
+      </setting>
+      <setting name="hostname" hidden="yes">
+          <value />
+      </setting>      
+    </group>
+  </group>
   <group name="fs-conf-bridge">
     <setting name="log-level" hidden="yes">
       <type refid="loglevel" />

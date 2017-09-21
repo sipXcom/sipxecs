@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 @JsonPropertyOrder({
-        "Id", "Created", "Name", "State"
+        "Id", "Created", "Name", "State", "NetworkSettings", "Config"
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ContainerBean {
@@ -16,6 +16,8 @@ public class ContainerBean {
     private String m_created;
     private String m_name;
     private ContainerStateBean m_state;
+    private ContainerNetworkSettingsBean m_networkSettings;
+    private ContainerConfigBean m_config;
 
     @JsonProperty("Id")
     public String getId() {
@@ -55,5 +57,24 @@ public class ContainerBean {
     @JsonProperty("State")
     public void setState(ContainerStateBean state) {
         m_state = state;
+    }
+
+    @JsonProperty("NetworkSettings")
+    public ContainerNetworkSettingsBean getNetworkSettings() {
+        return m_networkSettings;
+    }
+
+    @JsonProperty("NetworkSettings")
+    public void setNetworkSettings(ContainerNetworkSettingsBean networkSettings) {
+        m_networkSettings = networkSettings;
+    }
+
+    public ContainerConfigBean getConfig() {
+        return m_config;
+    }
+
+    @JsonProperty("Config")
+    public void setConfig(ContainerConfigBean config) {
+        m_config = config;
     }
 }
