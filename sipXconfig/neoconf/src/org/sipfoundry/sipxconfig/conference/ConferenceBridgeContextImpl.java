@@ -45,6 +45,7 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.util.CollectionUtils;
 
 public class ConferenceBridgeContextImpl extends SipxHibernateDaoSupport implements BeanFactoryAware,
         ConferenceBridgeContext, DaoEventListener {
@@ -62,20 +63,33 @@ public class ConferenceBridgeContextImpl extends SipxHibernateDaoSupport impleme
     private ContainerApi m_containerApi;
 
     public List<Bridge> getBridges() {        
-        List<Bridge> bridges = getHibernateTemplate().loadAll(Bridge.class);                
+        List<Bridge> bridges = getHibernateTemplate().loadAll(Bridge.class);
+        //The dockerized version will contain only one Bridge instance attached to sipxconfig container
+        //when multiple freeswitch containers will be available, the information will be saved at this
+        //bridge instance
+        if (!CollectionUtils.isEmpty(bridges)) {
+            Bridge bridge = bridges.get(0);
+            //save sipxfreeswitch container data if available. The bridges UI page has a auto-refresh mechanism,
+            //so when supervisor will be ready with starting sipxfreeswitch (if fs service is recently enabled)
+            //the UI page will show its availability. This is the reason why saveBridge does not save gs container
+            // data, because fs container might not be ready when enabled in service telephony page
+            ContainerBean bean = m_containerApi.getContainerBean("sipxfreeswitch");
+            if (bean != null) {
+                String address = bean.getNetworkSettings().getNetworks().get("ezuce-public").getIpAddress();
+                String name = "/sipxfreeswitch";
+                String hostname = bean.getConfig().getHostname();
+
+                bridge.setSettingValue(Bridge.DOCKER_FS_ADDRESS, address);
+                bridge.setSettingValue(Bridge.DOCKER_FS_NAME, name);
+                bridge.setSettingValue(Bridge.DOCKER_FS_HOSTNAME, hostname);
+
+                saveBridge(bridge);
+            }
+        }
         return bridges;
     }
 
     public void saveBridge(Bridge bridge) {
-        ContainerBean bean = m_containerApi.getContainerBean("sipxfreeswitch");
-        String address = bean.getNetworkSettings().getNetworks().get("ezuce-private").getIpAddress();
-        String name = "/sipxfreeswitch";
-        String hostname = bean.getConfig().getHostname();
-        
-        bridge.setSettingValue(Bridge.DOCKER_FS_ADDRESS, address);
-        bridge.setSettingValue(Bridge.DOCKER_FS_NAME, name);
-        bridge.setSettingValue(Bridge.DOCKER_FS_HOSTNAME, hostname);
-        
         if (bridge.isNew()) {
             getHibernateTemplate().save(bridge);
             // need to make sure that ID is set

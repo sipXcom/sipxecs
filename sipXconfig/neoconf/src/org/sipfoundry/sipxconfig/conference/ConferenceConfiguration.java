@@ -42,6 +42,7 @@ public class ConferenceConfiguration implements ConfigProvider, BeanFactoryAware
     private ListableBeanFactory m_beanFactory;
     private String m_mohLocalStreamUrl;
     private String m_portAudioUrl;
+    private String m_etcDir;
 
     @Override
     public void replicate(ConfigManager manager, ConfigRequest request) throws IOException {
@@ -51,7 +52,7 @@ public class ConferenceConfiguration implements ConfigProvider, BeanFactoryAware
 
         Set<Location> locations = request.locations(manager);
         for (Location location : locations) {
-            File dir = manager.getLocationDataDirectory(location);
+            File dir = getLocationDataDirectory(location);
             boolean enabled = manager.getFeatureManager().isFeatureEnabled(FEATURE, location);
             ConfigUtils.enableCfengineClass(dir, "sipxconference.cfdat", enabled, "sipxconference");
             if (!enabled) {
@@ -119,6 +120,19 @@ public class ConferenceConfiguration implements ConfigProvider, BeanFactoryAware
     @Required
     public void setPortAudioUrl(String portAudioUrl) {
         m_portAudioUrl = portAudioUrl;
+    }
+
+    @Required
+    public void setEtcDir(String etcDir) {
+        m_etcDir = etcDir;
+    }
+
+    private File getLocationDataDirectory(Location location) {
+        File d = new File(m_etcDir + "/conf", String.valueOf(location.getId()));
+        if (!d.exists()) {
+            d.mkdirs();
+        }
+        return d;
     }
 
     public void setVelocityEngine(VelocityEngine velocityEngine) {

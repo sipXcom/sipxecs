@@ -101,7 +101,7 @@ public class FreeswitchConfigurationProvider implements ConfigProvider, BeanFact
     }
 
     @Required
-    public void setEtcDir(String m_etcDir) {
-        this.m_etcDir = m_etcDir;
+    public void setEtcDir(String etcDir) {
+        this.m_etcDir = etcDir;
     }
 }

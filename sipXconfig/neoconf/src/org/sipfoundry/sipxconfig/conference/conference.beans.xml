@@ -70,6 +70,7 @@
     <property name="conferenceBridgeContext" ref="conferenceBridgeContext" />
     <property name="mohLocalStreamUrl" value="local_stream://moh" />
     <property name="portAudioUrl" value="portaudio_stream://" />
+    <property name="etcDir" value="${sysdir.etc}"/>
   </bean>
 
   <bean id="identity" class="org.sipfoundry.sipxconfig.conference.BridgeConferenceIdentityImpl">
