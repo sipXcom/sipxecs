@@ -62,6 +62,7 @@ bundle edit_line elasticsearch_config_file {
   insert_lines:
     any::
       "path.repo: [\"$(tmpDir)\", \"$(tmpDir)/elasticsearch_backup\"]";
+      "script.engine.groovy.inline.aggs: on";
 }
 
 bundle agent elasticsearch_sysv_running {
