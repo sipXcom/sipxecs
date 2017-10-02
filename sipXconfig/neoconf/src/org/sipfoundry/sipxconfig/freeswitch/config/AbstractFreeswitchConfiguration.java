@@ -72,4 +72,8 @@ public abstract class AbstractFreeswitchConfiguration implements FreeswitchProvi
     public void setFreeswitchFeature(FreeswitchFeature freeswitchFeature) {
         m_freeswitchFeature = freeswitchFeature;
     }
+
+    public String getBeanId() {
+        return "AbstractFreeswitchConfiguration";
+    }
 }

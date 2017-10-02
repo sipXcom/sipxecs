@@ -40,4 +40,6 @@
   <bean id="freeswitchIvrConfig" class="org.sipfoundry.sipxconfig.freeswitch.config.IvrConfiguration" parent="freeswitchConfigFile">
     <property name="mediaServer" value="${sysdir.vxml}" />
   </bean>
+  <bean id="freeswitchDefaultSofiaConfig" class="org.sipfoundry.sipxconfig.freeswitch.config.SofiaDefaultConfiguration" parent="freeswitchConfigFile">
+  </bean>
 </beans>
