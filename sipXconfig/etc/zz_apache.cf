@@ -75,6 +75,13 @@ bundle agent apache_config {
         edit_defaults => empty,
         edit_line => expand_template("$(sipx.SIPX_CONFDIR)/unite/unitelite.conf"),
         classes => if_repaired("restart_apache");
+        
+      "$(sipx.APACHE2_CONFDIR)/siplogviewer.conf"
+        comment => "add apache unite conf $(this.promiser)",
+        create => "true",
+        edit_defaults => empty,
+        edit_line => expand_template("$(sipx.SIPX_CONFDIR)/siplogviewer/siplogviewer.conf"),
+        classes => if_repaired("restart_apache");        
 
       "$(sipx.APACHE2_CONFDIR)/ssl/."
         create => "true",
