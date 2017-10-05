@@ -73,19 +73,14 @@ public class AttendantRule extends DialingRule implements Replicable {
             return;
         }
         String[] aliases = AttendantRule.getAttendantAliasesAsArray(m_attendantAliases);
+        aliases = (String[]) ArrayUtils.add(aliases, getAttendantIdentity());
         if (!StringUtils.isEmpty(m_did)) {
             aliases = (String[]) ArrayUtils.add(aliases, m_did);
         }
 
         m_mediaServer.setLocation(getLocation());
-        DialingRule attendantRule = null;
-        if (isLiveAttendant()) {
-            attendantRule = new MappingRule.Operator(getName(), getDescription(), getSystemName(),
-                getAttendantIdentity(), ArrayUtils.EMPTY_STRING_ARRAY, m_mediaServer);
-        } else {
-            attendantRule = new MappingRule.Operator(getName(), getDescription(), getSystemName(), m_extension,
+        DialingRule attendantRule = new MappingRule.Operator(getName(), getDescription(), getSystemName(), m_extension,
                 aliases, m_mediaServer);
-        }
         rules.add(attendantRule);
     }
 
