@@ -12,6 +12,7 @@
       <userPattern>100</userPattern>
       <userPattern>0</userPattern>
       <userPattern>operator</userPattern>
+      <userPattern>aa_live_-1</userPattern>
       <permissionMatch>
         <transform>
           <url>&lt;sip:IVR@ivr.example.org:3333;action=autoattendant;schedule_id=aa_-1;locale=en_US&gt;</url>
