@@ -43,6 +43,7 @@ bundle common sipx {
   vars:
     any::
       "location_id" string => readfile("@SIPX_CFDATA@/defaults/location_id", "100");
+      "sipx_environment" string => readfile("@SIPX_CFDATA@/defaults/sipx_environment", "32");
       "iface"
         string => "$(sys.interface)",
         policy => "overridable";
@@ -78,6 +79,8 @@ bundle common sipx {
       #
       # comparing where the service directory is seems like a solid test if src based install
       "src" not => strcmp("@SIPX_SERVICEDIR@", "/etc/init.d");
+
+      "centos_dev" expression => strcmp("$(sipx_environment)", "CENTOS_DEV");
 
       # established assumption
       "primary" expression => strcmp("$(location_id)", "1");
