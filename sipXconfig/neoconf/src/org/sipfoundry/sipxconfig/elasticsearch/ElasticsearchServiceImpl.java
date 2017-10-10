@@ -17,6 +17,7 @@
 package org.sipfoundry.sipxconfig.elasticsearch;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -40,6 +41,11 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.sort.SortOrder;
+import org.sipfoundry.sipxconfig.address.Address;
+import org.sipfoundry.sipxconfig.address.AddressManager;
+import org.sipfoundry.sipxconfig.address.AddressProvider;
+import org.sipfoundry.sipxconfig.address.AddressType;
+import org.sipfoundry.sipxconfig.address.AddressType.Protocol;
 import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.feature.Bundle;
 import org.sipfoundry.sipxconfig.feature.FeatureChangeRequest;
@@ -48,6 +54,10 @@ import org.sipfoundry.sipxconfig.feature.FeatureManager;
 import org.sipfoundry.sipxconfig.feature.FeatureProvider;
 import org.sipfoundry.sipxconfig.feature.GlobalFeature;
 import org.sipfoundry.sipxconfig.feature.LocationFeature;
+import org.sipfoundry.sipxconfig.firewall.DefaultFirewallRule;
+import org.sipfoundry.sipxconfig.firewall.FirewallManager;
+import org.sipfoundry.sipxconfig.firewall.FirewallProvider;
+import org.sipfoundry.sipxconfig.firewall.FirewallRule;
 import org.sipfoundry.sipxconfig.search.SearchableBean;
 import org.sipfoundry.sipxconfig.search.SearchableService;
 import org.sipfoundry.sipxconfig.snmp.ProcessDefinition;
@@ -60,10 +70,15 @@ import com.google.gson.Gson;
 /**
  * Elastic search implementation for SearchableService
  */
-public class ElasticsearchServiceImpl implements SearchableService, FeatureProvider, ProcessProvider {
+public class ElasticsearchServiceImpl implements SearchableService, FeatureProvider, ProcessProvider, FirewallProvider, AddressProvider {
 
     public static final String ELASTICSEARCH = "elasticsearch";
     public static final LocationFeature FEATURE = new LocationFeature(ELASTICSEARCH);
+    public static final AddressType ES_UDP = new AddressType("esUdp", Protocol.udp);
+    public static final AddressType ES_TCP = new AddressType("esTcp", Protocol.tcp);
+    private static final Collection<AddressType> ADDRESS_TYPES = Arrays.asList(new AddressType[] {
+        ES_UDP, ES_TCP
+    });
 
     private static final Log LOG = LogFactory.getLog(ElasticsearchServiceImpl.class);
     private static final String FILTERING_ERROR_MESSAGE = "Filtering is supported only by QueryBuilder objects.";
@@ -198,6 +213,32 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
             LOG.debug(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
             return null;
         }
+    }
+
+    @Override
+    public Collection<Address> getAvailableAddresses(AddressManager manager, AddressType type, Location requester) {
+        if (!ADDRESS_TYPES.contains(type)) {
+            return null;
+        }
+        Collection<Location> locations = manager.getFeatureManager().getLocationsForEnabledFeature(FEATURE);
+        Collection<Address> addresses = new ArrayList<Address>(locations.size());
+
+        for (Location location : locations) {
+            Address address = null;
+            if (type.equals(ES_UDP)) {
+                address = new Address(ES_UDP, location.getAddress(), 9300);
+            } else if (type.equals(ES_TCP)) {
+                address = new Address(ES_TCP, location.getAddress(), 9300);
+            }
+            addresses.add(address);
+        }
+
+        return addresses;
+    }
+
+    @Override
+    public Collection<DefaultFirewallRule> getFirewallRules(FirewallManager manager) {
+        return DefaultFirewallRule.rules(ADDRESS_TYPES, FirewallRule.SystemId.CLUSTER);
     }
 
     @Override
