@@ -28,6 +28,7 @@ import org.sipfoundry.sipxconfig.commserver.LocationsManager;
 
 public class DomainConfiguration implements ConfigProvider {
     private LocationsManager m_locationsManager;
+    private String m_etcDir;
 
     @Override
     public void replicate(ConfigManager manager, ConfigRequest request) throws IOException {
@@ -38,10 +39,10 @@ public class DomainConfiguration implements ConfigProvider {
         Domain domain = domainManager.getDomain();
         String fqdn = m_locationsManager.getPrimaryLocation().getFqdn();
         String lang = manager.getDomainManager().getExistingLocalization().getLanguage();
-        File gdir = manager.getGlobalDataDirectory();
-        Writer wtr1 = new FileWriter(new File(gdir, "domain-config.part"));
+        File gdir = getLocationDataDirectory(m_locationsManager.getPrimaryLocation());
+        Writer wtr1 = new FileWriter(new File(gdir, "domain-config"));
         try {
-            writeDomainConfigPart(wtr1, domain, fqdn);
+            writeDomainConfigPart(wtr1, domain, fqdn, lang);
         } finally {
             IOUtils.closeQuietly(wtr1);
         }
@@ -62,10 +63,15 @@ public class DomainConfiguration implements ConfigProvider {
         config.write("lang", lang);
     }
 
-    void writeDomainConfigPart(Writer wtr, Domain domain, String fqdn) throws IOException {
+    void writeDomainConfigPart(Writer wtr, Domain domain, String fqdn, String lang) throws IOException {
         KeyValueConfiguration config = KeyValueConfiguration.colonSeparated(wtr);
         config.write("SIP_DOMAIN_ALIASES", getDomainAliases(domain));
         config.write("CONFIG_HOSTS", fqdn);
+        config.write("SIP_DOMAIN_NAME", domain.getName());
+        config.write("SIP_REALM", domain.getSipRealm());
+        config.write("SHARED_SECRET", domain.getSharedSecret());
+        config.write("DEFAULT_LANGUAGE", lang);
+        config.write("SUPERVISOR_PORT", "8092");
     }
 
     /**
@@ -93,5 +99,17 @@ public class DomainConfiguration implements ConfigProvider {
 
     public void setLocationsManager(LocationsManager locationsManager) {
         m_locationsManager = locationsManager;
+    }
+
+    public void setEtcDir(String etcDir) {
+        m_etcDir = etcDir;
+    }
+
+    private File getLocationDataDirectory(Location location) {
+        File d = new File(m_etcDir + "/conf", String.valueOf(location.getId()));
+        if (!d.exists()) {
+            d.mkdirs();
+        }
+        return d;
     }
 }

@@ -50,11 +50,13 @@ import org.sipfoundry.sipxconfig.snmp.ProcessDefinition;
 import org.sipfoundry.sipxconfig.snmp.ProcessProvider;
 import org.sipfoundry.sipxconfig.snmp.SnmpManager;
 import org.sipfoundry.sipxconfig.tls.TlsPeerManager;
+import org.springframework.beans.factory.annotation.Required;
 
 public class BridgeSbcConfiguration implements ConfigProvider, ProcessProvider, FeatureProvider, AlarmProvider {
     // uses of this definition are not related, just defined in one place to avoid checkstyle err
     private static final String SIPXBRIDGE = "sipxbridge";
     private SbcDeviceManager m_sbcDeviceManager;
+    private String m_etcDir;
 
     @Override
     public void replicate(ConfigManager manager, ConfigRequest request) throws IOException {
@@ -71,7 +73,7 @@ public class BridgeSbcConfiguration implements ConfigProvider, ProcessProvider, 
         for (Location location : locations) {
             BridgeSbc bridge = bridgesMap.get(location.getId());
             boolean bridgeHere = bridge != null ? true : false;
-            File dir = manager.getLocationDataDirectory(location);
+            File dir = getLocationDataDirectory(location);
             ConfigUtils.enableCfengineClass(dir, "sipxbridge.cfdat", bridgeHere, SIPXBRIDGE);
 
             if (bridgeHere) {
@@ -156,5 +158,18 @@ public class BridgeSbcConfiguration implements ConfigProvider, ProcessProvider, 
         };
 
         return AlarmDefinition.asArray(ids);
+    }
+
+    private File getLocationDataDirectory(Location location) {
+        File d = new File(m_etcDir + "/conf", String.valueOf(location.getId()) + "/");
+        if (!d.exists()) {
+            d.mkdirs();
+        }
+        return d;
+    }
+
+    @Required
+    public void setEtcDir(String etcDir) {
+        m_etcDir = etcDir;
     }
 }

@@ -22,7 +22,9 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.sipfoundry.sipxconfig.address.Address;
@@ -88,6 +90,8 @@ public class NatConfiguration implements ConfigProvider {
         context.put("xmlRpcPort", settings.getXmlRpcPort());
         context.put("proxyTcpPort", proxyTcpPort);
         context.put("proxyTlsPort", proxyTlsPort);
+        context.put("relayAddress", getIpRelayAddress(location));
+        context.put("proxyAddress", getIpProxyAddress(location));
         context.put("routes", routes);
         try {
             m_velocityEngine.mergeTemplate("nattraversal/nattraversalrules.vm", context, writer);
@@ -123,5 +127,23 @@ public class NatConfiguration implements ConfigProvider {
             d.mkdirs();
         }
         return d;
+    }
+
+    private String getIpRelayAddress(Location location) {
+        try {
+            File ip = new File(m_etcDir + "/conf/" + String.valueOf(location.getId()), "sipxrelay");
+            return FileUtils.readFileToString(ip);
+        } catch (Exception ex) {
+            return StringUtils.EMPTY;
+        }
+    }
+
+    private String getIpProxyAddress(Location location) {
+        try {
+            File ip = new File(m_etcDir + "/conf/" + String.valueOf(location.getId()), "sipxproxy");
+            return FileUtils.readFileToString(ip);
+        } catch (Exception ex) {
+            return StringUtils.EMPTY;
+        }
     }
 }

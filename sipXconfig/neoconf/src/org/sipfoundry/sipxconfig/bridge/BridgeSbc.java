@@ -10,12 +10,15 @@
 package org.sipfoundry.sipxconfig.bridge;
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
 import org.sipfoundry.sipxconfig.cfgmgt.DeployConfigOnEdit;
 import org.sipfoundry.sipxconfig.commserver.Location;
@@ -49,6 +52,7 @@ public class BridgeSbc extends SbcDevice implements DeployConfigOnEdit {
     private LocationsManager m_locationsManager;
     private Location m_location;
     private ConfigManager m_configManager;
+    private String m_etcDir;
 
     @Required
     public void setGatewayContext(GatewayContext gatewayContext) {
@@ -86,7 +90,7 @@ public class BridgeSbc extends SbcDevice implements DeployConfigOnEdit {
 
     @Override
     public ProfileLocation getProfileLocation() {
-        String path = m_configManager.getLocationDataDirectory(getLocation()).getAbsolutePath();
+        String path = getLocationDataDirectory(getLocation()).getAbsolutePath();
         FileSystemProfileLocation profileLocation = new FileSystemProfileLocation();
         profileLocation.setParentDir(path);
         return profileLocation;
@@ -208,7 +212,7 @@ public class BridgeSbc extends SbcDevice implements DeployConfigOnEdit {
         @SettingEntry(paths = {"bridge-configuration/local-address", "bridge-configuration/external-address"
                 })
         public String getExternalAddress() {
-            return m_location.getAddress();
+            return getIpBridgeAddress(m_location);
         }
 
         @SettingEntry(path = "bridge-configuration/global-address")
@@ -256,7 +260,29 @@ public class BridgeSbc extends SbcDevice implements DeployConfigOnEdit {
             (Feature) ProxyManager.FEATURE);
     }
 
+    private File getLocationDataDirectory(Location location) {
+        File d = new File(m_etcDir + "/conf", String.valueOf(location.getId()) + "/");
+        if (!d.exists()) {
+            d.mkdirs();
+        }
+        return d;
+    }
+
+    @Required
+    public void setEtcDir(String etcDir) {
+        m_etcDir = etcDir;
+    }
+
     public void setConfigManager(ConfigManager configManager) {
         m_configManager = configManager;
+    }
+
+    private String getIpBridgeAddress(Location location) {
+        try {
+            File ip = new File(m_etcDir + "/conf/" + String.valueOf(location.getId()), "sipxbridge");
+            return FileUtils.readFileToString(ip);
+        } catch (Exception ex) {
+            return StringUtils.EMPTY;
+        }
     }
 }

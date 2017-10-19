@@ -20,12 +20,12 @@
     <useSTUN>false</useSTUN>
 #end
     <publicunsecureport>${location.publicPort}</publicunsecureport>
-    <proxyunsecurehostport>${location.address}:${proxyTcpPort}</proxyunsecurehostport>
+    <proxyunsecurehostport>${proxyAddress}:${proxyTcpPort}</proxyunsecurehostport>
     <publicsecureport>${location.publicTlsPort}</publicsecureport>
-    <proxysecurehostport>${location.address}:${proxyTlsPort}</proxysecurehostport>
+    <proxysecurehostport>${proxyAddress}:${proxyTlsPort}</proxysecurehostport>
     <mediarelayxml-rpc-port>${settings.xmlRpcPort}</mediarelayxml-rpc-port>
     <relayaggressiveness>${nat.getSetting('media-relay-temperament').Value}</relayaggressiveness>
-    <mediarelaynativeaddress>${location.address}</mediarelaynativeaddress>
+    <mediarelaynativeaddress>${relayAddress}</mediarelaynativeaddress>
     <concurrentrelays>50</concurrentrelays>
     <port-range>${location.startRtpPort}:${location.stopRtpPort}</port-range>
     <log-directory>@SIPX_LOGDIR@</log-directory>

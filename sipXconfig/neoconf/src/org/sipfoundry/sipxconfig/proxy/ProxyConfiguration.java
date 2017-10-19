@@ -19,7 +19,9 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.sipfoundry.sipxconfig.admin.AbstractResLimitsConfig;
@@ -120,12 +122,12 @@ public class ProxyConfiguration implements ConfigProvider, ApplicationContextAwa
         config.writeSetting(xferPlugin, root.getSetting("msftxchghack/EXCHANGE_SERVER_FQDN"));
         config.writeSetting(xferPlugin, root.getSetting("msftxchghack/ADDITIONAL_EXCHANGE_SERVER_FQDN"));
         config.writeSetting("SIPX_PROXY.210_msftxchghack.", root.getSetting("msftxchghack/USERAGENT"));
-        config.write("SIPX_PROXY_HOST_NAME", location.getFqdn());
+        config.write("SIPX_PROXY_HOST_NAME", "sipxproxy." + Domain.getDomain().getName());
         int port = settings.getSipTcpPort();
-        String aliases = format("%s:%d %s:%d", location.getAddress(), port, location.getFqdn(), port);
+        String aliases = format("%s:%d %s:%d", getIpProxyAddress(location), port, getIpMachineAddress(location), port);
         config.write("SIPX_PROXY_HOST_ALIASES", aliases);
         config.write("SIPX_PROXY_CALL_STATE_DB", isCdrOn ? "ENABLE" : "DISABLE");
-        config.write("SIPX_PROXY_HOSTPORT", location.getAddress() + ':' + port);
+        config.write("SIPX_PROXY_HOSTPORT", getIpProxyAddress(location) + ':' + port);
         config.write("SIPX_PROXY_AUTHENTICATE_REALM", domain.getSipRealm());
         
 
@@ -151,7 +153,7 @@ public class ProxyConfiguration implements ConfigProvider, ApplicationContextAwa
                 getFullLibDir("authplugins/libEmergencyLineIdentifier.so"));
         config.write("SIPX_PROXY.400_authrules.RULES", getFullEtcDir("authrules.xml"));
         config.write("SIPX_PROXY.990_emerglineid.EMERGRULES", getFullEtcDir("authrules.xml"));
-        config.write("SIPX_PROXY_BIND_IP", location.getAddress());
+        config.write("SIPX_PROXY_BIND_IP", getIpProxyAddress(location));
         config.write("SIPX_PROXY_CALL_STATE_DB_PASSWORD", getPostgresPassword());
         config.write("SIPX_PROXY_CALL_STATE_DB_HOST", "postgres.cdr");
         config.write("SIPX_PROXY_CALL_STATE_DB_NAME", "sipxcdr");
@@ -237,5 +239,23 @@ public class ProxyConfiguration implements ConfigProvider, ApplicationContextAwa
             d.mkdirs();
         }
         return d;
+    }
+
+    private String getIpProxyAddress(Location location) {
+        try {
+            File ip = new File(m_etcDir + "/conf/" + String.valueOf(location.getId()), "sipxproxy");
+            return FileUtils.readFileToString(ip);
+        } catch (Exception ex) {
+            return StringUtils.EMPTY;
+        }
+    }
+
+    private String getIpMachineAddress(Location location) {
+        try {
+            File ip = new File(m_etcDir + "/conf/" + String.valueOf(location.getId()), "machine");
+            return FileUtils.readFileToString(ip);
+        } catch (Exception ex) {
+            return StringUtils.EMPTY;
+        }
     }
 }

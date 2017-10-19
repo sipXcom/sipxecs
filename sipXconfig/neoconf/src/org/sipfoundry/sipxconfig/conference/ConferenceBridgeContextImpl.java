@@ -75,7 +75,7 @@ public class ConferenceBridgeContextImpl extends SipxHibernateDaoSupport impleme
             // data, because fs container might not be ready when enabled in service telephony page
             ContainerBean bean = m_containerApi.getContainerBean("sipxfreeswitch");
             if (bean != null) {
-                String address = bean.getNetworkSettings().getNetworks().get("ezuce-public").getIpAddress();
+                String address = bean.getNetworkSettings().getNetworks().get("ezuce-private").getIpAddress();
                 String name = "/sipxfreeswitch";
                 String hostname = bean.getConfig().getHostname();
 

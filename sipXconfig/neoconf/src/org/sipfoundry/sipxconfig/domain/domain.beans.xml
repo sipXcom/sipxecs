@@ -15,6 +15,7 @@
 
   <bean id="domainConfiguration" class="org.sipfoundry.sipxconfig.domain.DomainConfiguration">
     <property name="locationsManager" ref="locationsManager" />
+    <property name="etcDir" value="${sysdir.etc}"/>
   </bean>
   
 </beans>

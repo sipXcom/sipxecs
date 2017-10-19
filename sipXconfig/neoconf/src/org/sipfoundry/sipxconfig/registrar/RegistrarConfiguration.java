@@ -25,7 +25,9 @@ import java.io.Writer;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.sipfoundry.sipxconfig.address.Address;
 import org.sipfoundry.sipxconfig.admin.AbstractResLimitsConfig;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
@@ -150,7 +152,7 @@ public class RegistrarConfiguration implements ConfigProvider, ApplicationContex
         file.write("SIP_REGISTRAR_PROXY_PORT", proxy.getPort());
         //cfengine will be removed. we need to generate registrar container hostname and IP
         file.write("SIP_REGISTRAR_NAME", m_hostname);
-        file.write("SIP_REGISTRAR_BIND_IP", m_ip);
+        file.write("SIP_REGISTRAR_BIND_IP", getIpRegistrarAddress(location));
         file.write("SIP_REGISTRAR_SYNC_WITH", "obsolete");
         file.writeSettings(root.getSetting("userparam"));
         file.writeSettings(root.getSetting("call-pick-up"));
@@ -231,5 +233,14 @@ public class RegistrarConfiguration implements ConfigProvider, ApplicationContex
             d.mkdirs();
         }
         return d;
+    }
+
+    private String getIpRegistrarAddress(Location location) {
+        try {
+            File ip = new File(m_etcDir + "/conf/" + String.valueOf(location.getId()), "sipxregistrar");
+            return FileUtils.readFileToString(ip);
+        } catch (Exception ex) {
+            return StringUtils.EMPTY;
+        }
     }
 }
