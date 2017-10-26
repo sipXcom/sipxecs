@@ -59,16 +59,15 @@ class Backup < ArchiveBase
 	add_additional_databases(params)
 
     elasticsearch_started = cmd "service elasticsearch status"
-    elasticsearch_folder = ""
+    elasticsearch_folder = "elasticsearch_backup/"
 
     if elasticsearch_started
-        cmd "curl -XPUT 'http://localhost:9200/_snapshot/sipXcom_backup?wait_for_completion=true' -d '{ \"type\": \"fs\", \"settings\": { \"location\": \"#{@tmpdir}/elasticsearch_backup/\", \"compress\": true }}'" or
+        cmd "curl -XPUT 'http://localhost:9200/_snapshot/sipXcom_backup?wait_for_completion=true' -d '{ \"type\": \"fs\", \"settings\": { \"location\": \"#{@tmpdir}/elasticsearch_backup/audit\", \"compress\": true }}'" or
           raise "Could not create elasticsearch snapshot repository"
         cmd "curl -XDELETE 'http://localhost:9200/_snapshot/sipXcom_backup/elasticsearch_backup?wait_for_completion=true' -d '{ \"indices\": \"audit\" }'" or
           raise "Could delete old elasticsearch snapshot"
         cmd "curl -XPUT 'http://localhost:9200/_snapshot/sipXcom_backup/elasticsearch_backup?wait_for_completion=true' -d '{ \"indices\": \"audit\" }'" or
           raise "Could not create elasticsearch snapshot"
-        elasticsearch_folder="elasticsearch_backup/"
     end
 
     cmd "echo @PACKAGE_VERSION@ > #{@tmpdir}/version" or
@@ -170,6 +169,9 @@ class Restore < ArchiveBase
       cmd "mongorestore --db profiles --collection fs.chunks #{@tmpdir}/dump/profiles/fs.chunks.bson" or
         cmd "echo Failed to restore avatar database"
 
+      cmd "tar -zxvf #{params[:file]} -C / #{@tmpdir} elasticsearch_backup" or
+        cmd "echo Failed to extract elasticsearch backup from archive"
+
 	  restore_additional_databases()	  
     else
       sql_exec(@restoredb, "insert into setup(setup_id) values ('migrate_profiles');") or
@@ -178,9 +180,7 @@ class Restore < ArchiveBase
 
     elasticsearch_started = cmd "service elasticsearch status"
     if (!pre_elasticsearch and elasticsearch_started)
-      cmd "tar -zxvf #{params[:file]} -C / elasticsearch_backup" or
-        cmd "echo Failed to extract elasticsearch backup from archive"
-      cmd "curl -XPUT 'http://localhost:9200/_snapshot/sipXcom_backup?wait_for_completion=true' -d '{ \"type\": \"fs\", \"settings\": { \"location\": \"#{@tmpdir}/elasticsearch_backup/\", \"compress\": true }}'" or
+      cmd "curl -XPUT 'http://localhost:9200/_snapshot/sipXcom_backup?wait_for_completion=true' -d '{ \"type\": \"fs\", \"settings\": { \"location\": \"#{@tmpdir}/elasticsearch_backup/audit/\", \"compress\": true }}'" or
         cmd "echo Could not create elasticsearch snapshot repository"
       cmd "curl -XDELETE 'http://localhost:9200/audit?wait_for_completion=true'" or
         cmd "echo Failed to remove old audit index"
