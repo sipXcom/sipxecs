@@ -169,7 +169,7 @@ class Restore < ArchiveBase
       cmd "mongorestore --db profiles --collection fs.chunks #{@tmpdir}/dump/profiles/fs.chunks.bson" or
         cmd "echo Failed to restore avatar database"
 
-      cmd "tar -zxvf #{params[:file]} -C / #{@tmpdir} elasticsearch_backup" or
+      cmd "tar -zxvf #{params[:file]} -C #{@tmpdir} elasticsearch_backup" or
         cmd "echo Failed to extract elasticsearch backup from archive"
 
 	  restore_additional_databases()	  
