@@ -17,7 +17,7 @@
 
 bundle agent elasticsearch {
   methods:
-    primary::
+    elasticsearch::
       "any" usebundle => elasticsearch_config;
     fedora16_or_greater::
       "any" usebundle => "elasticsearch_systemctl_running";
