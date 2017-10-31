@@ -89,7 +89,7 @@ class Backup < ArchiveBase
 
     # by stripping @localstatedir@ we can backup/restore from/to source/production machines
     localstatedir = '@localstatedir@'[1..-1]
-    cmd "tar --directory #{@tmpdir} --transform='s,^#{localstatedir}/,var/,' -cvzf #{params[:file]} db.tar version dump/ #{elasticsearch_folder} #{attachments.join('/ ')}" or
+    cmd "tar --ignore-failed-read --directory #{@tmpdir} --transform='s,^#{localstatedir}/,var/,' -cvzf #{params[:file]} db.tar version dump/ #{elasticsearch_folder} #{attachments.join('/ ')}" or
       raise "Could not archive databases"
     if elasticsearch_started
         cmd "curl -XDELETE 'http://localhost:9200/_snapshot/sipXcom_backup?wait_for_completion=true'"
