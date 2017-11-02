@@ -26,6 +26,8 @@
 
   <bean id="provisionConfiguration" class="org.sipfoundry.sipxconfig.provision.ProvisionConfiguration">
     <property name="provision" ref="provision" />
+    <property name="etcDir" value="${sysdir.etc}"/>
+    <property name="logDirectory" value="${sysdir.log}"></property>
   </bean>
   
   <bean id="provisionFeatureHook" class="org.sipfoundry.sipxconfig.web.plugin.ProvisionFeatureHook" />
