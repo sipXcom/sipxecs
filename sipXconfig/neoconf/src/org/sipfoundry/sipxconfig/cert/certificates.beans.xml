@@ -38,5 +38,6 @@
   <bean id="certificateConfig" class="org.sipfoundry.sipxconfig.cert.CertificateConfig">
     <property name="certificateManager" ref="certificateManager"/>
     <property name="velocityEngine" ref="velocityEngine" />
+    <property name="etcDir" value="${sysdir.etc}"/>
   </bean>
 </beans>

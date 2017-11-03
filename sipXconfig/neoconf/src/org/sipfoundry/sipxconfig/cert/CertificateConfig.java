@@ -30,6 +30,7 @@ import org.apache.velocity.app.VelocityEngine;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigProvider;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigRequest;
+import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.domain.Domain;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -37,6 +38,7 @@ public class CertificateConfig implements ConfigProvider {
     private static final String OPENFIRE_KEY = "ssl-openfire.key";
     private CertificateManager m_certificateManager;
     private VelocityEngine m_velocityEngine;
+    private String m_etcDir;
 
     @Override
     public void replicate(ConfigManager manager, ConfigRequest request) throws IOException {
@@ -46,7 +48,7 @@ public class CertificateConfig implements ConfigProvider {
 
         boolean chainCertificate = false;
         boolean caCertificate = false;
-        File dir = manager.getGlobalDataDirectory();
+        File dir = getLocationDataDirectory(manager.getLocationManager().getPrimaryLocation());
         String sipCert = m_certificateManager.getCommunicationsCertificate();
         FileUtils.writeStringToFile(new File(dir, "ssl.crt"), sipCert);
         String sipKey = m_certificateManager.getCommunicationsPrivateKey();
@@ -134,6 +136,14 @@ public class CertificateConfig implements ConfigProvider {
         }
     }
 
+    private File getLocationDataDirectory(Location location) {
+        File d = new File(m_etcDir + "/conf", String.valueOf(location.getId()));
+        if (!d.exists()) {
+            d.mkdirs();
+        }
+        return d;
+    }
+
     @Required
     public void setCertificateManager(CertificateManager certificateManager) {
         m_certificateManager = certificateManager;
@@ -142,5 +152,10 @@ public class CertificateConfig implements ConfigProvider {
     @Required
     public void setVelocityEngine(VelocityEngine velocityEngine) {
         m_velocityEngine = velocityEngine;
+    }
+
+    @Required
+    public void setEtcDir(String etcDir) {
+        m_etcDir = etcDir;
     }
 }
