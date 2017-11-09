@@ -48,6 +48,15 @@
     <property name="autoAttendantManager" ref="autoAttendantManager" />
     <property name="adminContext" ref="adminContext" />
     <property name="locationsManager" ref="locationsManager" />
+    <property name="logDirectory" value="${sysdir.log}"></property>
+    <property name="dataDirectory" value="${sysdir.vxml}" />
+    <property name="mailstoreDirectory" value="${sysdir.mailstore}" />
+    <property name="promptsDirectory" value="${sysdir.vxml.prompts}" />
+    <property name="scriptsDirectory" value="${sysdir.vxml.scripts}" />
+    <property name="docDirectory" value="${sysdir.doc}" />
+    <property name="binDirectory" value="${sysdir.bin}" />
+    <property name="varDirectory" value="${sysdir.var}" />
+    <property name="etcDir" value="${sysdir.etc}"/>
   </bean>
 
   <bean id="sipXivrMessages" class="org.springframework.context.support.ResourceBundleMessageSource">

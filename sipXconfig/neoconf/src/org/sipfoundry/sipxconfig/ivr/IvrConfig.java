@@ -62,6 +62,15 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
     private AutoAttendantManager m_aaManager;
     private AdminContext m_adminContext;
     private LocationsManager m_locationsManager;
+    private String m_logDirectory;
+    private String m_dataDirectory;
+    private String m_mailstoreDirectory;
+    private String m_promptsDirectory;
+    private String m_scriptsDirectory;
+    private String m_docDirectory;
+    private String m_binDirectory;
+    private String m_varDirectory;
+    private String m_etcDir;
 
     @Override
     public void replicate(ConfigManager manager, ConfigRequest request) throws IOException {
@@ -83,7 +92,7 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
         Setting ivrSettings = settings.getSettings().getSetting("ivr");
         AutoAttendantSettings aaSettings = m_aaManager.getSettings();
         for (Location location : locations) {
-            File dir = manager.getLocationDataDirectory(location);
+            File dir = getLocationDataDirectory(location);
             boolean enabled = featureManager.isFeatureEnabled(Ivr.FEATURE, location);
 
             Writer w = new FileWriter(new File(dir, "sipxivr.cfdat"));
@@ -188,6 +197,19 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
         config.write("aa.dtmf.interDigitTimeout", aaSettings.getInterDigit());
         config.write("aa.dtmf.extraDigitTimeout", aaSettings.getExtraDigit());
         config.write("ivr.hzEnabled", hzEnabled);
+        config.write("ivr.sipxchangeDomainName", domain.getName());
+        config.write("ivr.realm", domain.getSipRealm());
+        config.write("log.file", m_logDirectory + "/sipxivr.log");
+        config.write("ivr.dataDirectory", m_dataDirectory);
+        config.write("ivr.identity", location.getId());
+        config.write("ivr.mailstoreDirectory", m_mailstoreDirectory);
+        config.write("ivr.promptsDirectory", m_promptsDirectory);
+        config.write("ivr.scriptsDirectory", m_scriptsDirectory);
+        config.write("ivr.docDirectory", m_docDirectory);
+        config.write("ivr.logDirectory", m_logDirectory);
+        config.write("ivr.organizationPrefs", m_dataDirectory + "/organizationprefs.xml");
+        config.write("ivr.binDirectory", m_binDirectory);
+        config.write("ivr.backupPath", m_varDirectory + "/backup");
     }
 
     @Override
@@ -224,5 +246,49 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
 
     public void setAdminContext(AdminContext adminContext) {
         m_adminContext = adminContext;
+    }
+
+    public void setLogDirectory(String logDirectory) {
+        m_logDirectory = logDirectory;
+    }
+
+    public void setDataDirectory(String dataDirectory) {
+        m_dataDirectory = dataDirectory;
+    }
+
+    public void setMailstoreDirectory(String mailstoreDirectory) {
+        m_mailstoreDirectory = mailstoreDirectory;
+    }
+
+    public void setPromptsDirectory(String promptsDirectory) {
+        m_promptsDirectory = promptsDirectory;
+    }
+
+    public void setScriptsDirectory(String scriptsDirectory) {
+        m_scriptsDirectory = scriptsDirectory;
+    }
+
+    public void setDocDirectory(String docDirectory) {
+        m_docDirectory = docDirectory;
+    }
+
+    public void setBinDirectory(String binDirectory) {
+        m_binDirectory = binDirectory;
+    }
+
+    public void setVarDirectory(String varDirectory) {
+        m_varDirectory = varDirectory;
+    }
+
+    public void setEtcDir(String etcDir) {
+        m_etcDir = etcDir;
+    }
+
+    private File getLocationDataDirectory(Location location) {
+        File d = new File(m_etcDir + "/conf", String.valueOf(location.getId()));
+        if (!d.exists()) {
+            d.mkdirs();
+        }
+        return d;
     }
 }

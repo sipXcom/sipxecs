@@ -49,6 +49,14 @@ public class IvrConfigTest {
     @Before
     public void setUp() {
         m_config = new IvrConfig();
+        m_config.setLogDirectory("/var/log/sipxpbx");
+        m_config.setDataDirectory("/var/sipxdata/mediaserver/data");
+        m_config.setMailstoreDirectory("/var/sipxdata/mediaserver/data/mailstore");
+        m_config.setPromptsDirectory("/var/sipxdata/mediaserver/data/prompts");
+        m_config.setScriptsDirectory("/usr/share/www/doc/aa_vxml");
+        m_config.setDocDirectory("/usr/share/www/doc");
+        m_config.setBinDirectory("/usr/bin");
+        m_config.setVarDirectory("/var/sipxdata");
         m_featureManager = EasyMock.createMock(FeatureManager.class);
         List<Location> locations = new ArrayList<Location>();
         m_location = TestHelper.createDefaultLocation();
