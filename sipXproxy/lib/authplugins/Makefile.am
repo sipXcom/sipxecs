@@ -154,6 +154,7 @@ authplugins_libCallDestination_la_LIBADD = \
     -lboost_system-mt
 
 authplugins_libEmergencyLineIdentifier_la_SOURCES = \
+    EmergencyDB.h \
     EmergencyLineIdentifier.h \
     EmergencyLineIdentifier.cpp
 

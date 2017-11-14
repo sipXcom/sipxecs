@@ -18,10 +18,10 @@
 #include <string>
 #include <boost/thread.hpp>
 
+#include "EmergencyDB.h"
 #include "EmergencyLineIdentifier.h"
 #include "sipXecsService/SipXecsService.h"
 #include "digitmaps/EmergencyRulesUrlMapping.h"
-#include "sipdb/EntityDB.h"
 #include "os/OsLogger.h"
 
 const char DEFAULT_EMERG_RULES_FILENAME[] = "authrules.xml";
@@ -36,30 +36,17 @@ static AuthPlugin* gpInstance = 0;
 static mutex gInstanceMutex;
 static EmergencyRulesUrlMapping* gpEmergencyRules = 0;
 
-
-class DB : public EntityDB
-{
-public:
-  DB() : EntityDB(MongoDB::ConnectionInfo (MongoDB::ConnectionInfo::connectionStringFromFile(), EntityDB::NS)){};
-  bool findE911LineIdentifier(
-    const std::string& userId,
-    std::string& e911,
-    std::string& address,
-    std::string& location);
-};
-
-static DB* gpEntity = 0;
-
+static EmergencyDB* gpEmergency = 0;
 
 extern "C" AuthPlugin* getAuthPlugin(const UtlString& pluginName)
 {
   mutex_lock lock(gInstanceMutex);
   if (!gpInstance)
   {
-    assert(!gpEntity);
+    assert(!gpEmergency);
     assert(!gpEmergencyRules);
     MongoDB::ConnectionInfo info(MongoDB::ConnectionInfo::connectionStringFromFile(), EntityDB::NS);
-    gpEntity = new DB();
+    gpEmergency = new EmergencyDB();
     return new EmergencyLineIdentifier(pluginName);
   }
   else
@@ -75,7 +62,7 @@ EmergencyLineIdentifier::EmergencyLineIdentifier(const UtlString& pluginName)
 
 EmergencyLineIdentifier::~EmergencyLineIdentifier()
 {
-  delete gpEntity;
+  delete gpEmergency;
 }
 
 void EmergencyLineIdentifier::readConfig(OsConfigDb& configDb)
@@ -103,40 +90,6 @@ void EmergencyLineIdentifier::readConfig(OsConfigDb& configDb)
   OS_LOG_NOTICE(FAC_SIP, "E911: Emergency Line Identifier successfully loaded " << fileName.data());
 }
 
-bool DB::findE911LineIdentifier(
-  const std::string& userId,
-    std::string& e911,
-    std::string& address,
-    std::string& location)
-{
-  mongo::BSONObj query = BSON(EntityRecord::identity_fld() << userId);
-  MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getReadQueryTimeout()));
-
-  mongo::BSONObj entityObj = conn->get()->findOne(_info.getNS(), readQueryMaxTimeMS(query));
-  if (!entityObj.isEmpty())
-  {
-    if (entityObj.hasField("elin"))
-    {
-      e911 = entityObj.getStringField("elin");
-
-      if (entityObj.hasField("addrinfo"))
-      {
-        address = entityObj.getStringField("addrinfo");
-      }
-      
-      if (entityObj.hasField("loctn"))
-      {
-        location = entityObj.getStringField("loctn");
-      }
-
-      conn->done();
-      return true;
-    }
-  }
-  conn->done();
-  return false;
-}
-
 AuthPlugin::AuthResult EmergencyLineIdentifier::authorizeAndModify(const UtlString& id,
   const Url&  requestUri,
   RouteState& routeState,
@@ -147,7 +100,7 @@ AuthPlugin::AuthResult EmergencyLineIdentifier::authorizeAndModify(const UtlStri
   UtlString&  reason
 )
 {
-  if (!gpEmergencyRules || !gpEntity)
+  if (!gpEmergencyRules || !gpEmergency)
     return AuthPlugin::CONTINUE;
 
   UtlString nameStr;
@@ -159,8 +112,7 @@ AuthPlugin::AuthResult EmergencyLineIdentifier::authorizeAndModify(const UtlStri
   {
     if (!request.getHeaderValue( 0, E911LINE))
     {
-      
-      if (gpEntity->findE911LineIdentifier(id.data(), e911, address, location))
+      if (gpEmergency->findE911LineIdentifier(id.data(), e911, address, location))
       {
         request.setHeaderValue( E911LINE, e911.c_str(), 0 );
         OS_LOG_NOTICE(FAC_SIP, "E911: Setting Line Identifier for user " << id.data() << " to " << e911);

@@ -18,10 +18,10 @@
 #include <string>
 #include <boost/thread.hpp>
 
+#include "EmergencyDB.h"
 #include "EmergencyLineIdentifier.h"
 #include "sipXecsService/SipXecsService.h"
 #include "digitmaps/EmergencyRulesUrlMapping.h"
-#include "sipdb/EntityDB.h"
 #include "os/OsLogger.h"
 #include <net/NetAttributeTokenizer.h>
 
@@ -37,42 +37,17 @@ static AuthPlugin* gpInstance = 0;
 static mutex gInstanceMutex;
 static EmergencyRulesUrlMapping* gpEmergencyRules = 0;
 
-
-class DB : public EntityDB
-{
-public:
-  DB(const MongoDB::ConnectionInfo& info) : EntityDB(info){};
-  bool findE911LineIdentifier(
-    const std::string& userId,
-    std::string& e911,
-    std::string& address,
-    std::string& location);
-
-  bool findE911InstrumentIdentifier(
-    const std::string& instrument,
-    std::string& e911,
-    std::string& address,
-    std::string& location);
-
-  bool findE911Location(
-    MongoDB::ScopedDbConnectionPtr& conn,
-    const std::string& e911,
-    std::string& address,
-    std::string& location);
-};
-
-static DB* gpEntity = 0;
-
+static EmergencyDB* gpEmergency = 0;
 
 extern "C" AuthPlugin* getAuthPlugin(const UtlString& pluginName)
 {
   mutex_lock lock(gInstanceMutex);
   if (!gpInstance)
   {
-    assert(!gpEntity);
+    assert(!gpEmergency);
     assert(!gpEmergencyRules);
     MongoDB::ConnectionInfo info = MongoDB::ConnectionInfo::globalInfo();
-    gpEntity = new DB(info);
+    gpEmergency = new EmergencyDB(info);
     return new EmergencyLineIdentifier(pluginName);
   }
   else
@@ -88,7 +63,7 @@ EmergencyLineIdentifier::EmergencyLineIdentifier(const UtlString& pluginName)
 
 EmergencyLineIdentifier::~EmergencyLineIdentifier()
 {
-  delete gpEntity;
+  delete gpEmergency;
 }
 
 void EmergencyLineIdentifier::readConfig(OsConfigDb& configDb)
@@ -116,96 +91,6 @@ void EmergencyLineIdentifier::readConfig(OsConfigDb& configDb)
   OS_LOG_NOTICE(FAC_SIP, "E911: Emergency Line Identifier successfully loaded " << fileName.data());
 }
 
-bool DB::findE911Location(
-  MongoDB::ScopedDbConnectionPtr& conn,
-  const std::string& e911,
-  std::string& address,
-  std::string& location)
-{
-  mongo::BSONObj e911LocationQuery = BSON("ent" << "e911location" << "elin" << e911);
-
-  mongo::BSONObjBuilder e911LocBuilder;
-  BaseDB::nearest(e911LocBuilder, e911LocationQuery);
-
-  mongo::BSONObj e911LocationObj = conn->get()->findOne(ns(), e911LocBuilder.obj(), 0, mongo::QueryOption_SlaveOk);
-  if (!e911LocationObj.isEmpty())
-  {
-    if (e911LocationObj.hasField("addrinfo"))
-    {
-      address = e911LocationObj.getStringField("addrinfo");
-    }
-
-    if (e911LocationObj.hasField("loctn"))
-    {
-      location = e911LocationObj.getStringField("loctn");
-    }
-  }
-  return true;
-}
-
-bool DB::findE911LineIdentifier(
-  const std::string& userId,
-    std::string& e911,
-    std::string& address,
-    std::string& location)
-{
-  mongo::BSONObj query = BSON(EntityRecord::identity_fld() << userId);
-  MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getReadQueryTimeout()));
-  mongo::BSONObjBuilder builder;
-  BaseDB::nearest(builder, query);
-
-  mongo::BSONObj entityObj = conn->get()->findOne(ns(), readQueryMaxTimeMS(builder.obj()), 0, mongo::QueryOption_SlaveOk);
-  if (!entityObj.isEmpty())
-  {
-    if (entityObj.hasField("elin"))
-    {
-      e911 = entityObj.getStringField("elin");
-      if (!e911.empty())
-      {
-        findE911Location(conn, e911, address, location);
-      }
-      conn->done();
-      return !e911.empty();
-    }
-  }
-  conn->done();
-  return false;
-}
-
-bool DB::findE911InstrumentIdentifier(
-    const std::string& instrument,
-    std::string& e911,
-    std::string& address,
-    std::string& location)
-{
-
-  OS_LOG_INFO(FAC_SIP, "");
-  mongo::BSONObj query = BSON("mac" << instrument);
-
-  MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getReadQueryTimeout()));
-
-  mongo::BSONObjBuilder builder;
-  BaseDB::nearest(builder, query);
-
-  mongo::BSONObj instrumentObj = conn->get()->findOne(ns(), readQueryMaxTimeMS(builder.obj()), 0, mongo::QueryOption_SlaveOk);
-  if (!instrumentObj.isEmpty())
-  {
-    if (instrumentObj.hasField("elin"))
-    {
-      e911 = instrumentObj.getStringField("elin");
-
-      if (!e911.empty())
-      {
-        findE911Location(conn, e911, address, location);
-      }
-      conn->done();
-      return !e911.empty();
-    }
-  }
-  conn->done();
-  return false;
-}
-
 AuthPlugin::AuthResult EmergencyLineIdentifier::authorizeAndModify(const UtlString& id,
   const Url&  requestUri,
   RouteState& routeState,
@@ -216,7 +101,7 @@ AuthPlugin::AuthResult EmergencyLineIdentifier::authorizeAndModify(const UtlStri
   UtlString&  reason
 )
 {
-  if (!gpEmergencyRules || !gpEntity)
+  if (!gpEmergencyRules || !gpEmergency)
     return AuthPlugin::CONTINUE;
 
   UtlString nameStr;
@@ -232,14 +117,14 @@ AuthPlugin::AuthResult EmergencyLineIdentifier::authorizeAndModify(const UtlStri
       //
       // Check if the instrument identifier is in the database
       //
-      
-      if (getInstrument(request, instrument) && gpEntity->findE911InstrumentIdentifier(instrument, e911, address, location))
+
+      if (getInstrument(request, instrument) && gpEmergency->findE911InstrumentIdentifier(instrument, e911, address, location))
       {
 
         request.setHeaderValue( E911LINE, e911.c_str(), 0 );
         OS_LOG_NOTICE(FAC_SIP, "E911: Setting Line Identifier for user " << id.data() << "/" << instrument << " to " << e911);
       }
-      else if (gpEntity->findE911LineIdentifier(id.data(), e911, address, location))
+      else if (gpEmergency->findE911LineIdentifier(id.data(), e911, address, location))
       {
         request.setHeaderValue( E911LINE, e911.c_str(), 0 );
         OS_LOG_NOTICE(FAC_SIP, "E911: Setting Line Identifier for user " << id.data() << " to " << e911);
