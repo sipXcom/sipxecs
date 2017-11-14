@@ -85,6 +85,8 @@ static const char* RETRY_AFTER_HDR = "Retry-After";
 static const char* CONGESTION_POLICY_DEFAULT = "SERVICE_UNAVAILABLE";
 static const char* CONGESTION_POLICY_IGNORE = "IGNORE";
 
+size_t SipRouter::_entityCacheExpire = 0;
+
 // STRUCTS
 // TYPEDEFS
 // FORWARD DECLARATIONS
@@ -93,16 +95,19 @@ static const char* CONGESTION_POLICY_IGNORE = "IGNORE";
 
 EntityDB* SipRouter::getEntityDBInstance()
 {
-  static EntityDB* pEntityDb = new EntityDB(MongoDB::ConnectionInfo::globalInfo());
+  static EntityDB* pEntityDb = (_entityCacheExpire == 0 ?
+            new EntityDB(MongoDB::ConnectionInfo::globalInfo()) :
+            new EntityDB(MongoDB::ConnectionInfo::globalInfo(), _entityCacheExpire));
+
   return pEntityDb;
 }
-   
+
 RegDB* SipRouter::getRegDBInstance()
 {
   static RegDB* pRegDB = RegDB::CreateInstance();
   return pRegDB;
 }
-   
+
 SubscribeDB* SipRouter::getSubscribeDBInstance()
 {
   static SubscribeDB* pSubscribeDB = SubscribeDB::CreateInstance();
@@ -441,6 +446,9 @@ void SipRouter::readConfig(OsConfigDb& configDb, const Url& defaultUri)
    }
 
    OS_LOG_INFO(FAC_SIP, "SipRouter::readConfig retryAfter: " << _503retryAfter);
+
+   configDb.get("SIPX_PROXY_ENTITY_CACHE_EXPIRE", (int&)_entityCacheExpire);
+   OS_LOG_INFO(FAC_SIP, "SipRouter::readConfig entityCacheExpire: " << _entityCacheExpire);
 }
 
 // Destructor

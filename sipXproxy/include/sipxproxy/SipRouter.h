@@ -352,6 +352,7 @@ class SipRouter : public OsServerTask
    UtlBoolean _suppressAlertIndicatorForTransfers;
    UtlString _congestionPolicy;
    int _503retryAfter;
+   static size_t _entityCacheExpire;
 };
 
 /* ============================ INLINE METHODS ============================ */
