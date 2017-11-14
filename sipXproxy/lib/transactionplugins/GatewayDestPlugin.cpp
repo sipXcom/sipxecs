@@ -1,4 +1,5 @@
 #include "GatewayDestPlugin.h"
+#include <sipxproxy/SipRouter.h>
 #include <cassert>
 #include <utl/UtlString.h>
 #include <sys/time.h>
@@ -25,10 +26,7 @@ GatewayDestPlugin::GatewayDestPlugin(const UtlString& instanceName, int priority
     _gatewayDestDB = new GatewayDestDB(info, GatewayDestDB::NS);
   }
 
-  {
-    MongoDB::ConnectionInfo info(MongoDB::ConnectionInfo::globalInfo());
-    _entityDB = new EntityDB(info, EntityDB::NS);
-  }
+  _entityDB = SipRouter::getEntityDBInstance();
 }
 
 GatewayDestPlugin::~GatewayDestPlugin()
@@ -39,12 +37,6 @@ GatewayDestPlugin::~GatewayDestPlugin()
   {
     delete _gatewayDestDB;
     _gatewayDestDB = NULL;
-  }
-
-  if (_entityDB)
-  {
-    delete _entityDB;
-    _entityDB = NULL;
   }
 }
 
