@@ -904,6 +904,9 @@ void SipRouter::handleRequest(SipMessage* pSipRequest)
   statistics::StatisticsManager::Instance().add(statistics::Data("proxy_msq_queue_size", getMessageQueue()->numMsgs()));
   statistics::StatisticsManager::Instance().add(statistics::Data("proxy_ua_queue_size", mpSipUserAgent->getMessageQueue()->numMsgs()));
   statistics::StatisticsManager::Instance().add(statistics::Data("proxy_active_transaction_count", mpSipUserAgent->getSipTransactions().size()));
+  statistics::StatisticsManager::Instance().add(statistics::Data("proxy_avg_dispatch_speed", getAverageDispatchSpeed()));
+  statistics::StatisticsManager::Instance().add(statistics::Data("proxy_avg_entity_db_read", mpEntityDb->getReadAverageSpeed()));
+  statistics::StatisticsManager::Instance().add(statistics::Data("proxy_avg_regdb_read", mpRegDb->getReadAverageSpeed()));
 
   if (timedDispatch)
   {
