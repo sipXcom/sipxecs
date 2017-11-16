@@ -140,7 +140,7 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
         IndexRequest indexRequest = getIndexRequest(index, source);
         try {
             getClient().index(indexRequest).actionGet();
-        } catch (Exception e) {
+        } catch (NoNodeAvailableException e) {
             LOG.error(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
         }
     }
@@ -160,7 +160,7 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
                 LOG.error("Perstisting searchable object encountered errors:"
                         + bulkResponse.buildFailureMessage());
             }
-        } catch (Exception e) {
+        } catch (NoNodeAvailableException e) {
             LOG.error(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
         }
     }
@@ -187,7 +187,7 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
             SearchResponse response = searchBuilder.execute().actionGet();
             return mapSearchResponseToObject(response, clazz);
         } catch (NoNodeAvailableException e) {
-            LOG.debug(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
+            LOG.error(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
             return new ArrayList<T>();
         }
     }
@@ -215,7 +215,7 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
             SearchResponse response = req.execute().actionGet();
             return mapSearchResponseToObject(response, clazz).get(0);
         } catch (NoNodeAvailableException e) {
-            LOG.debug(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
+            LOG.error(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
             return null;
         }
     }
@@ -300,7 +300,7 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
             return getClient().admin().indices().prepareExists(indexName).execute()
                 .actionGet().isExists();
         } catch (NoNodeAvailableException e) {
-            LOG.debug(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
+            LOG.error(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
             return false;
         }
     }
@@ -343,7 +343,7 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
                 }
             }
         } catch (NoNodeAvailableException e) {
-            LOG.debug(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
+            LOG.error(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
         }
     }
 
