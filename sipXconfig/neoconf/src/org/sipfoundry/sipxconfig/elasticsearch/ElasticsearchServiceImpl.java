@@ -35,6 +35,8 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.NoNodeAvailableException;
 import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.settings.ImmutableSettings;
+import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.index.query.IdsQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
@@ -47,6 +49,7 @@ import org.sipfoundry.sipxconfig.address.AddressProvider;
 import org.sipfoundry.sipxconfig.address.AddressType;
 import org.sipfoundry.sipxconfig.address.AddressType.Protocol;
 import org.sipfoundry.sipxconfig.commserver.Location;
+import org.sipfoundry.sipxconfig.commserver.LocationsManager;
 import org.sipfoundry.sipxconfig.feature.Bundle;
 import org.sipfoundry.sipxconfig.feature.FeatureChangeRequest;
 import org.sipfoundry.sipxconfig.feature.FeatureChangeValidator;
@@ -90,6 +93,7 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
     private String m_hostName;
     private int m_port;
     private Gson m_gson;
+    private LocationsManager m_locationsManager;
 
     @Required
     public void setHostName(String hostName) {
@@ -109,11 +113,12 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
     private Client getClient() {
         if (m_client == null) {
             try {
-                m_client = new TransportClient()
-                        .addTransportAddress(new InetSocketTransportAddress(
-                                m_hostName, m_port));
+                String fqdn = m_locationsManager.getPrimaryLocation().getFqdn();
+                Settings settings = ImmutableSettings.settingsBuilder().
+                        put("cluster.name", fqdn).build();
+                m_client = new TransportClient(settings).addTransportAddress(new InetSocketTransportAddress(fqdn, m_port));
             } catch (Exception e) {
-                LOG.debug("Cannot create elasticsearch client, probably elasticsearh service is not up yet.", e);
+                LOG.error("Cannot create elasticsearch client, probably elasticsearh service is not up yet.", e);
             }
         }
         return m_client;
@@ -136,7 +141,7 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
         try {
             getClient().index(indexRequest).actionGet();
         } catch (NoNodeAvailableException e) {
-            LOG.debug(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
+            LOG.error(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
         }
     }
 
@@ -156,7 +161,7 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
                         + bulkResponse.buildFailureMessage());
             }
         } catch (NoNodeAvailableException e) {
-            LOG.debug(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
+            LOG.error(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
         }
     }
 
@@ -182,7 +187,7 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
             SearchResponse response = searchBuilder.execute().actionGet();
             return mapSearchResponseToObject(response, clazz);
         } catch (NoNodeAvailableException e) {
-            LOG.debug(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
+            LOG.error(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
             return new ArrayList<T>();
         }
     }
@@ -210,7 +215,7 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
             SearchResponse response = req.execute().actionGet();
             return mapSearchResponseToObject(response, clazz).get(0);
         } catch (NoNodeAvailableException e) {
-            LOG.debug(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
+            LOG.error(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
             return null;
         }
     }
@@ -295,7 +300,7 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
             return getClient().admin().indices().prepareExists(indexName).execute()
                 .actionGet().isExists();
         } catch (NoNodeAvailableException e) {
-            LOG.debug(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
+            LOG.error(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
             return false;
         }
     }
@@ -338,8 +343,12 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
                 }
             }
         } catch (NoNodeAvailableException e) {
-            LOG.debug(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
+            LOG.error(NO_NODE_AVAILABLE_ERROR_MESSAGE, e);
         }
+    }
+
+    public void setLocationsManager(LocationsManager locationsManager) {
+        m_locationsManager = locationsManager;
     }
 
 }

@@ -48,6 +48,7 @@ start() {
       [ $Status -eq 0 ] || { echo_failure; echo; }
     fi
   fi
+  chmod 644 @SIPX_LOGDIR@/sipXproxy.log
 }
 
 stop() {

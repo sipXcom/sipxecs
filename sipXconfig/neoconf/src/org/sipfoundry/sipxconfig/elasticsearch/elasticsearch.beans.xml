@@ -6,6 +6,7 @@
     <property name="hostName" value="localhost" />
     <property name="port" value="9300" />
     <property name="gson" ref="gson" />
+    <property name="locationsManager" ref="locationsManager"/>
   </bean>
 
   <bean id="elasticsearchConfig" class="org.sipfoundry.sipxconfig.elasticsearch.ElasticsearchConfig">
