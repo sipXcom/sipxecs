@@ -1,4 +1,5 @@
-db = new Mongo().getDB("node");
+
+db = new Mongo(mongoHost).getDB("node");
 // update registrations
 db.registrar.find().forEach(function(doc) {
   db.registrar.update({"_id":doc._id},{$set:{"expirationTime":getDateFromEpoch(doc.expirationTime + "")}} );

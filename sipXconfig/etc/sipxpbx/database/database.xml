@@ -77,6 +77,7 @@
   <property name="sipxconfig.db.user" value="@POSTGRESQL_USER@" />
   <property name="sipxconfig.db.password" value="" />
   <property name="sql.dir" location="${basedir}" />
+  <property name="mongo.host" value="mongo" />
   <property name="sipxpbx.conf.dir" location="${basedir}/.." />
   <property name="sipxconfig.db.url" value="jdbc:postgresql://postgres.ezuce/${sipxconfig.db.name}" />
   <property name="dblink.sql" location="/usr/share/pgsql/contrib/dblink.sql" />
@@ -1563,7 +1564,7 @@
     <attribute name="patch" />
     <sequential>
       <exec executable="mongo">
-        <arg line="${sql.dir}/@{patch}.js" />
+        <arg line="--host ${mongo.host} --eval &quot;var mongoHost = '${mongo.host}'&quot; ${sql.dir}/@{patch}.js" />
       </exec>
       <mark-patch-applied patch="@{patch}" />
     </sequential>
