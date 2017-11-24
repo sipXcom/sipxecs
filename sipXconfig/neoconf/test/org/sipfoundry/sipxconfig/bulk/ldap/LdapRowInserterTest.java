@@ -41,23 +41,31 @@ import org.sipfoundry.sipxconfig.test.TestHelper;
 import org.sipfoundry.sipxconfig.vm.MailboxManager;
 
 public class LdapRowInserterTest extends TestCase {
-    private static final String JOE = "joe";
-    private static final String SALES = "sales";
+    protected static final String SALES = "sales";
     private static final String LDAP = "ldap";
     private static final String NO_LDAP = "noldap";
+    private static final String JOE = "joe";
 
-    private LdapRowInserter m_rowInserter;
-    private AdminContext m_adminContext;
-    private SettingDao m_settingDao;
+    protected String m_joe;
+    protected LdapRowInserter m_rowInserter;
+    protected AdminContext m_adminContext;
+    protected SettingDao m_settingDao;
 
     @Override
     protected void setUp() {
+        m_joe = "joe";
         m_rowInserter = new LdapRowInserter();
         m_adminContext = createMock(AdminContext.class);
         m_adminContext.getNewLdapUserGroupNamePrefix();
         expectLastCall().andReturn("grPrefix_").anyTimes();
         m_adminContext.getStripUserName();
         expectLastCall().andReturn(0).anyTimes();
+        m_adminContext.getRegexUsername();
+        expectLastCall().andReturn("").anyTimes();
+        m_adminContext.getPrefixUsername();
+        expectLastCall().andReturn("").anyTimes();
+        m_adminContext.getSuffixUsername();
+        expectLastCall().andReturn("").anyTimes();
         replay(m_adminContext);
         Group newGroup = new Group();
         newGroup.setName("grPrefix_example.com");
@@ -78,14 +86,23 @@ public class LdapRowInserterTest extends TestCase {
         IMocksControl control = org.easymock.classextension.EasyMock.createNiceControl();
         UserMapper userMapper = control.createMock(UserMapper.class);
         SearchResult searchResult = control.createMock(SearchResult.class);
+        
         Attributes attributes = control.createMock(Attributes.class);
-
+        Attribute attribute = control.createMock(Attribute.class);
+        searchResult.getAttributes();
+        control.andReturn(attributes);
+        attributes.get("identity");
+        control.andReturn(attribute);
         userMapper.getUserName(attributes);
-        control.andReturn(JOE);
+        control.andReturn(m_joe);
+        
+        userMapper.getUserName(attributes);
+        control.andReturn(m_joe);
         userMapper.getGroupNames(searchResult);
+        
         control.andReturn(Collections.singleton(SALES));
-        control.replay();
-
+        control.replay();       
+        
         User joe = new User();
         PermissionManager pManager = createMock(PermissionManager.class);
         pManager.getPermissionModel();
@@ -101,6 +118,7 @@ public class LdapRowInserterTest extends TestCase {
         importGroup.setUniqueId();
 
         AttrMap map = new AttrMap();
+        map.setAttribute(Index.USERNAME.getName(), "identity");
         map.setObjectClass("person");
         map.setDefaultGroupName("test-import");
 
@@ -154,6 +172,7 @@ public class LdapRowInserterTest extends TestCase {
         m_rowInserter.setDomain("example.com");
         m_rowInserter.setPermissionManager(pManager);
         m_rowInserter.beforeInserting(null);
+        m_rowInserter.checkRowData(searchResult);
         m_rowInserter.insertRow(searchResult, attributes);
         m_rowInserter.afterInserting();
 
@@ -196,7 +215,10 @@ public class LdapRowInserterTest extends TestCase {
         }
     }
 
-    public void testCheckRowData() throws Exception {
+    /**
+     * Test applies in cases when username is valid no matter if is formatted or not @see LdapRowInserter.formatUserName
+     */
+    public void testCheckRowDataValid() throws Exception {
         IMocksControl control = org.easymock.classextension.EasyMock.createNiceControl();
         UserMapper userMapper = control.createMock(UserMapper.class);
         SearchResult searchResult = control.createMock(SearchResult.class);
@@ -218,19 +240,6 @@ public class LdapRowInserterTest extends TestCase {
         attributes.get("identity");
         control.andReturn(attribute);
         userMapper.getUserName(attributes);
-        control.andReturn("@McQueen");
-        userMapper.getGroupNames(searchResult);
-        control.andReturn(Collections.singleton(SALES));
-        control.replay();
-        m_rowInserter.setUserMapper(userMapper);
-        assertEquals(RowStatus.FAILURE, m_rowInserter.checkRowData(searchResult).getRowStatus());
-
-        control.reset();
-        searchResult.getAttributes();
-        control.andReturn(attributes);
-        attributes.get("identity");
-        control.andReturn(attribute);
-        userMapper.getUserName(attributes);
         control.andReturn("McQueen");
         userMapper.getGroupNames(searchResult);
         control.andReturn(Collections.singleton(SALES));
@@ -238,4 +247,28 @@ public class LdapRowInserterTest extends TestCase {
         m_rowInserter.setUserMapper(userMapper);
         assertEquals(RowStatus.SUCCESS, m_rowInserter.checkRowData(searchResult).getRowStatus());
     }
+    
+    /**
+     * Test applies in cases when username is not valid when not formatted and valid otherwise not @see LdapRowInserter.formatUserName
+     */    
+    public void testCheckRowDataNotValid() throws Exception {
+        IMocksControl control = org.easymock.classextension.EasyMock.createNiceControl();
+        UserMapper userMapper = control.createMock(UserMapper.class);
+        SearchResult searchResult = control.createMock(SearchResult.class);
+        Attributes attributes = control.createMock(Attributes.class);
+        Attribute attribute = control.createMock(Attribute.class);
+        
+        searchResult.getAttributes();
+        control.andReturn(attributes);
+        attributes.get("identity");
+        control.andReturn(attribute);
+        userMapper.getUserName(attributes);
+        control.andReturn("@McQueen");
+        userMapper.getGroupNames(searchResult);
+        control.andReturn(Collections.singleton(SALES));
+        control.replay();
+        m_rowInserter.setUserMapper(userMapper);
+        m_rowInserter.beforeInserting(null);
+        assertEquals(RowStatus.FAILURE, m_rowInserter.checkRowData(searchResult).getRowStatus());
+    }    
 }

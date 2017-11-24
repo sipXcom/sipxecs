@@ -98,8 +98,8 @@ public class LdapRowInserter extends RowInserter<SearchResult> {
         String userNameWithDefault = null;
         try {
             String userName = m_userMapper.getUserName(attrs);
-            userName = StringUtils.substring(userName, m_adminContext.getStripUserName());
             userNameWithDefault = StringUtils.defaultIfEmpty(userName, EMPTY);
+            userName = formatUserName(userName);
             user = m_coreContext.loadUserByUserName(userName);
             newUser = (user == null);
             if (newUser) {
@@ -164,7 +164,7 @@ public class LdapRowInserter extends RowInserter<SearchResult> {
                 } catch (Exception ex) {
                     LOG.error(
                         "Failed inserting row with IM ID: "
-                            + StringUtils.defaultIfEmpty(user.getImId(), StringUtils.EMPTY), e);
+                            + StringUtils.defaultIfEmpty(user.getImId(), EMPTY), e);
                     m_notImportedUserNames.add(userNameWithDefault);
                     throw new UserException(e);
                 }
@@ -174,6 +174,20 @@ public class LdapRowInserter extends RowInserter<SearchResult> {
                 throw new UserException(e);
             }
         }
+    }
+
+    private String formatUserName(String userName) {
+        String userNameLocal = userName;
+        if (!StringUtils.isEmpty(userNameLocal)) {
+            userNameLocal = StringUtils.substring(userNameLocal, m_adminContext.getStripUserName());
+            String regex = StringUtils.defaultIfEmpty(m_adminContext.getRegexUsername(), StringUtils.EMPTY);
+            String prefix = StringUtils.defaultIfEmpty(m_adminContext.getPrefixUsername(), StringUtils.EMPTY);
+            String suffix = StringUtils.defaultIfEmpty(m_adminContext.getSuffixUsername(), StringUtils.EMPTY);
+            userNameLocal = StringUtils.isEmpty(regex)
+                ? userNameLocal : userNameLocal.replaceAll(regex, StringUtils.EMPTY);
+            userNameLocal = new StringBuilder(prefix).append(userNameLocal).append(suffix).toString();
+        }
+        return userNameLocal;
     }
 
     private void saveRow(boolean newUser, User user) {
@@ -216,6 +230,7 @@ public class LdapRowInserter extends RowInserter<SearchResult> {
         try {
             userName = m_userMapper.getUserName(attrs);
             userNameWithDefault = StringUtils.defaultIfEmpty(userName, EMPTY);
+            userName = formatUserName(userName);
             // check username
             if (!UserValidationUtils.isValidUserName(userName)
                 || (m_importedUserNames != null && m_importedUserNames.contains(userName))) {

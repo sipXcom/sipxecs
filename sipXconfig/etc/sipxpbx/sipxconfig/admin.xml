@@ -194,7 +194,22 @@
     	<integer/>
       </type>
       <value>0</value>
-    </setting>        
+    </setting>
+    <setting name="regex">
+      <type>
+        <string/>
+      </type>      
+    </setting>
+    <setting name="prefix">
+      <type>
+        <string/>
+      </type>      
+    </setting>
+    <setting name="suffix">
+      <type>
+        <string/>
+      </type>      
+    </setting>
   </group>
   <group name="user-portal">
     <setting name="old-portal">

@@ -58,6 +58,12 @@ public interface AdminContext {
 
     int getStripUserName();
 
+    String getRegexUsername();
+
+    String getPrefixUsername();
+
+    String getSuffixUsername();
+
     boolean isHazelcastEnabled();
 
     boolean isSyncExtAvatar();

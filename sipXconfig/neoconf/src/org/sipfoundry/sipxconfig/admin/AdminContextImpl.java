@@ -255,4 +255,19 @@ public class AdminContextImpl extends HibernateDaoSupport implements AdminContex
     public int getStripUserName() {
         return getSettings().getStripUsername();
     }
+
+    @Override
+    public String getRegexUsername() {
+        return getSettings().getRegexUsername();
+    }
+
+    @Override
+    public String getPrefixUsername() {
+        return getSettings().getPrefixUsername();
+    }
+
+    @Override
+    public String getSuffixUsername() {
+        return getSettings().getSuffixUsername();
+    }
 }
