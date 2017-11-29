@@ -15,7 +15,10 @@
               <input jwcid="overwritePin@Checkbox" id="ldap:overwritePin" value="ognl:overwritePin"/>
             </tr>
             <tr>
-    		  <fieldset jwcid="@setting/SettingsFieldset" settings="ognl:adminSettings.settings.getSetting('ldap-management')" />            
+    		  <fieldset jwcid="all@setting/SettingsFieldset" settings="ognl:adminSettings.settings.getSetting('ldap-management')" />            
+            </tr>            
+            <tr>
+    		  <fieldset jwcid="connection@setting/SettingsFieldset" settings="ognl:ldapConnectionParams.settings.getSetting('ldap-management')" />            
             </tr>
         </tbody>
       </table>

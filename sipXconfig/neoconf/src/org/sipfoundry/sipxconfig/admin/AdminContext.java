@@ -44,8 +44,6 @@ public interface AdminContext {
 
     int getAge();
 
-    public int getPageImportSize();
-
     boolean isDisable();
 
     boolean isDelete();
@@ -53,16 +51,6 @@ public interface AdminContext {
     boolean isAuthAccName();
 
     boolean isAuthEmailAddress();
-
-    String getNewLdapUserGroupNamePrefix();
-
-    int getStripUserName();
-
-    String getRegexUsername();
-
-    String getPrefixUsername();
-
-    String getSuffixUsername();
 
     boolean isHazelcastEnabled();
 

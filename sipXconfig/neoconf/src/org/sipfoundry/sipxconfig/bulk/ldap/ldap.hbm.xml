@@ -26,6 +26,7 @@
       cascade="all" foreign-key="ldap_connection_cron_schedule">
       <column name="cron_schedule_id" />
     </many-to-one>
+    <many-to-one cascade="all" name="valueStorage" column="value_storage_id" class="org.sipfoundry.sipxconfig.setting.ValueStorage" />
   </class>
 
   <class name="AttrMap" table="ldap_attr_map">

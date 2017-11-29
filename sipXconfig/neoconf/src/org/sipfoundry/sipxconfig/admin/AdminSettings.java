@@ -40,15 +40,10 @@ public class AdminSettings extends PersistableSettings implements DeployConfigOn
     private static final String LDAP_MANAGEMENT_DISABLE = "ldap-management/disable";
     private static final String LDAP_MANAGEMENT_DELETE = "ldap-management/delete";
     private static final String LDAP_MANAGEMENT_AGE = "ldap-management/age";
-    private static final String LDAP_MANAGEMENT_PAGE_SIZE = "ldap-management/pageImportSize";
     private static final String AUTHENTICATION_AUTH_ACC_NAME = "configserver-config/account-name";
     private static final String AUTHENTICATION_EMAIL_ADDRESS = "configserver-config/email-address";
     private static final String CORS_DOMAIN_SETTING = "configserver-config/corsDomains";
     private static final String NEW_LDAP_USERS_GROUP_PREFIX = "ldap-management/newUserGroupPrefix";
-    private static final String STRIP_USERNAME = "ldap-management/stripUserName";
-    private static final String REGEX_USERNAME = "ldap-management/regex";
-    private static final String PREFIX_USERNAME = "ldap-management/prefix";
-    private static final String SUFFIX_USERNAME = "ldap-management/suffix";
     private static final String PASSWORD_POLICY = "configserver-config/password-policy";
     private static final String DEFAULT_PASSWORD = "configserver-config/password-default";
     private static final String DEFAULT_PASSWORD_CONFIRM = "configserver-config/password-default-confirm";
@@ -114,10 +109,6 @@ public class AdminSettings extends PersistableSettings implements DeployConfigOn
         return (Integer) getSettingTypedValue(LDAP_MANAGEMENT_AGE);
     }
 
-    public int getPageImportSize() {
-        return (Integer) getSettingTypedValue(LDAP_MANAGEMENT_PAGE_SIZE);
-    }
-
     public boolean isDisable() {
         return (Boolean) getSettingTypedValue(LDAP_MANAGEMENT_DISABLE);
     }
@@ -128,22 +119,6 @@ public class AdminSettings extends PersistableSettings implements DeployConfigOn
 
     public String getNewLdapUserGroupNamePrefix() {
         return (String) getSettingTypedValue(NEW_LDAP_USERS_GROUP_PREFIX);
-    }
-
-    public int getStripUsername() {
-        return (Integer) getSettingTypedValue(STRIP_USERNAME);
-    }
-
-    public String getRegexUsername() {
-        return (String) getSettingTypedValue(REGEX_USERNAME);
-    }
-
-    public String getPrefixUsername() {
-        return (String) getSettingTypedValue(PREFIX_USERNAME);
-    }
-
-    public String getSuffixUsername() {
-        return (String) getSettingTypedValue(SUFFIX_USERNAME);
     }
 
     public void setDisable(boolean disable) {

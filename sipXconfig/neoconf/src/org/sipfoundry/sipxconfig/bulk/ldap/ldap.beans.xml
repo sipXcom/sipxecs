@@ -59,7 +59,7 @@
   	<property name="configured" value="false"/>
   </bean>
 
-  <bean id="ldapConnectionParams" class="org.sipfoundry.sipxconfig.bulk.ldap.LdapConnectionParams" scope="prototype">
+  <bean id="ldapConnectionParams" class="org.sipfoundry.sipxconfig.bulk.ldap.LdapConnectionParams" scope="prototype" parent="beanWithSettings">
     <property name="host" value="localhost" />    
     <property name="referral" value="follow" />
   </bean>
@@ -75,7 +75,6 @@
     </property>
     <property name="settingDao" ref="settingDao" />
     <property name="permissionManager" ref="permissionManager" />
-    <property name="adminContext" ref="adminContext" />
   </bean>
 
   <bean id="ldapUserMapper" class="org.sipfoundry.sipxconfig.bulk.ldap.UserMapper" scope="prototype">

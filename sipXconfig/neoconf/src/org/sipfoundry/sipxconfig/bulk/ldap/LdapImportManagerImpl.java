@@ -59,7 +59,9 @@ public class LdapImportManagerImpl extends HibernateDaoSupport implements LdapIm
         LOG.info("***** START INSERTING DATA *****");
         try {
             m_rowInserter.setAttrMap(m_ldapManager.getAttrMap(connectionId));
-            m_rowInserter.setDomain(m_ldapManager.getConnectionParams(connectionId).getDomain());
+            LdapConnectionParams connParams = m_ldapManager.getConnectionParams(connectionId);
+            m_rowInserter.setDomain(connParams.getDomain());
+            m_rowInserter.setLdapConnectionParams(connParams);
             m_rowInserter.beforeInserting(null);
             CollectingNameClassPairCallbackHandler handler = new NameClassPairMapperClosureAdapter(m_rowInserter);
             runSearch(0, handler, connectionId);
@@ -153,10 +155,6 @@ public class LdapImportManagerImpl extends HibernateDaoSupport implements LdapIm
         m_previewSize = previewSize;
     }
 
-    private Integer getPageImportSize() {
-        return m_adminContext.getPageImportSize();
-    }
-
     private List<UserPreview> searchPreview(int limit, int connectionId) {
         try {
             LdapTemplate template = m_templateFactory.getLdapTemplate(m_ldapManager.getConnectionParams(connectionId));
@@ -174,10 +172,11 @@ public class LdapImportManagerImpl extends HibernateDaoSupport implements LdapIm
     private void runSearch(int limit, CollectingNameClassPairCallbackHandler handler, int connectionId) {
         SearchControls sc = new SearchControls();
         sc.setSearchScope(SearchControls.SUBTREE_SCOPE);
-        int pageImportSize = getPageImportSize();
+        LdapConnectionParams connParams = m_ldapManager.getConnectionParams(connectionId);
+        int pageImportSize = connParams.getPageImportSize();
         AttrMap attrMap = m_ldapManager.getAttrMap(connectionId);
         if (!attrMap.verified()) {
-            m_ldapManager.verify(m_ldapManager.getConnectionParams(connectionId), attrMap);
+            m_ldapManager.verify(connParams, attrMap);
         }
 
         sc.setReturningAttributes(attrMap.getLdapAttributesArray());

@@ -204,11 +204,6 @@ public class AdminContextImpl extends HibernateDaoSupport implements AdminContex
     }
 
     @Override
-    public int getPageImportSize() {
-        return getSettings().getPageImportSize();
-    }
-
-    @Override
     public boolean isDisable() {
         return getSettings().isDisable();
     }
@@ -225,10 +220,6 @@ public class AdminContextImpl extends HibernateDaoSupport implements AdminContex
 
     public boolean isAuthEmailAddress() {
         return getSettings().isAuthEmailAddress();
-    }
-
-    public String getNewLdapUserGroupNamePrefix() {
-        return getSettings().getNewLdapUserGroupNamePrefix();
     }
 
     @Required
@@ -249,25 +240,5 @@ public class AdminContextImpl extends HibernateDaoSupport implements AdminContex
     @Override
     public boolean isAllowSubscriptionsToSelf() {
         return (Boolean) getSettings().isAllowSubscriptionsToSelf();
-    }
-
-    @Override
-    public int getStripUserName() {
-        return getSettings().getStripUsername();
-    }
-
-    @Override
-    public String getRegexUsername() {
-        return getSettings().getRegexUsername();
-    }
-
-    @Override
-    public String getPrefixUsername() {
-        return getSettings().getPrefixUsername();
-    }
-
-    @Override
-    public String getSuffixUsername() {
-        return getSettings().getSuffixUsername();
     }
 }

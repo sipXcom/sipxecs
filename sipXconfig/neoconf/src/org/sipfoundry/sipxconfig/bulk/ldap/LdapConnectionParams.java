@@ -24,19 +24,27 @@ import java.util.Map;
 import javax.naming.Context;
 
 import org.sipfoundry.sipxconfig.cfgmgt.DeployConfigOnEdit;
-import org.sipfoundry.sipxconfig.common.BeanWithId;
 import org.sipfoundry.sipxconfig.common.CronSchedule;
 import org.sipfoundry.sipxconfig.feature.Feature;
+import org.sipfoundry.sipxconfig.setting.BeanWithSettings;
+import org.sipfoundry.sipxconfig.setting.Setting;
 import org.sipfoundry.sipxconfig.systemaudit.SystemAuditable;
 import org.springframework.ldap.core.support.LdapContextSource;
 
 /**
  * Used to store LDAP connections in the DB LdapConnectionParams
  */
-public class LdapConnectionParams extends BeanWithId implements DeployConfigOnEdit, SystemAuditable {
+public class LdapConnectionParams extends BeanWithSettings implements DeployConfigOnEdit, SystemAuditable {
     public static final String LDAP_TIMEOUT = "com.sun.jndi.ldap.connect.timeout";
     private static final int DEFAULT_PORT = 389;
     private static final int DEFAULT_SSL_PORT = 636;
+
+    private static final String LDAP_MANAGEMENT_PAGE_SIZE = "ldap-management/pageImportSize";
+    private static final String STRIP_USERNAME = "ldap-management/stripUserName";
+    private static final String REGEX_USERNAME = "ldap-management/regex";
+    private static final String PREFIX_USERNAME = "ldap-management/prefix";
+    private static final String SUFFIX_USERNAME = "ldap-management/suffix";
+    private static final String NEW_LDAP_USERS_GROUP_PREFIX = "ldap-management/newUserGroupPrefix";
 
     private String m_host;
     private String m_fullHost;
@@ -187,5 +195,34 @@ public class LdapConnectionParams extends BeanWithId implements DeployConfigOnEd
     @Override
     public String getConfigChangeType() {
         return LdapConnectionParams.class.getSimpleName();
+    }
+
+    @Override
+    protected Setting loadSettings() {
+        return getModelFilesContext().loadModelFile("ldap/ldap-connection-settings.xml");
+    }
+
+    public int getStripUsername() {
+        return (Integer) getSettingTypedValue(STRIP_USERNAME);
+    }
+
+    public String getRegexUsername() {
+        return (String) getSettingTypedValue(REGEX_USERNAME);
+    }
+
+    public String getPrefixUsername() {
+        return (String) getSettingTypedValue(PREFIX_USERNAME);
+    }
+
+    public String getSuffixUsername() {
+        return (String) getSettingTypedValue(SUFFIX_USERNAME);
+    }
+
+    public String getNewLdapUserGroupNamePrefix() {
+        return (String) getSettingTypedValue(NEW_LDAP_USERS_GROUP_PREFIX);
+    }
+
+    public int getPageImportSize() {
+        return (Integer) getSettingTypedValue(LDAP_MANAGEMENT_PAGE_SIZE);
     }
 }

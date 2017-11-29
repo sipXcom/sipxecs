@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE model 
+    PUBLIC "-//SIPFoundry//sipXconfig//Model specification 2.0//EN"
+    "http://www.sipfoundry.org/sipXconfig/dtd/setting_2_0.dtd">
+<model>
+  <group name="ldap-management">
+    <setting name="pageImportSize">
+      <type>
+    	<integer/>
+      </type>
+      <value>1000</value>
+    </setting>  
+    <setting name="newUserGroupPrefix">
+      <type>
+    	<string/>
+      </type>
+      <value>New_LDAP</value>
+    </setting>
+    <setting name="stripUserName">
+      <type>
+    	<integer/>
+      </type>
+      <value>0</value>
+    </setting>
+    <setting name="regex">
+      <type>
+        <string/>
+      </type>      
+    </setting>
+    <setting name="prefix">
+      <type>
+        <string/>
+      </type>      
+    </setting>
+    <setting name="suffix">
+      <type>
+        <string/>
+      </type>      
+    </setting>
+  </group>
+</model>

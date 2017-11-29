@@ -16,10 +16,12 @@ package org.sipfoundry.sipxconfig.site.admin.ldap;
 
 import org.apache.tapestry.BaseComponent;
 import org.apache.tapestry.annotations.InjectObject;
+import org.apache.tapestry.annotations.Parameter;
 import org.apache.tapestry.event.PageBeginRenderListener;
 import org.apache.tapestry.event.PageEvent;
 import org.sipfoundry.sipxconfig.admin.AdminContext;
 import org.sipfoundry.sipxconfig.admin.AdminSettings;
+import org.sipfoundry.sipxconfig.bulk.ldap.LdapConnectionParams;
 import org.sipfoundry.sipxconfig.bulk.ldap.LdapManager;
 import org.sipfoundry.sipxconfig.bulk.ldap.LdapSystemSettings;
 import org.sipfoundry.sipxconfig.bulk.ldap.OverwritePinBean;
@@ -43,6 +45,15 @@ public abstract class LdapManagementSettings extends BaseComponent implements Pa
     public abstract AdminSettings getAdminSettings();
 
     public abstract void setAdminSettings(AdminSettings adminSettings);
+    
+    @Parameter(required = true)
+    public abstract int getCurrentConnectionId();
+    
+    public abstract void setCurrentConnectionId(int currentConnectionId);
+    
+    public abstract LdapConnectionParams getLdapConnectionParams();
+    
+    public abstract void setLdapConnectionParams(LdapConnectionParams ldapConnectionParams);
 
     @Override
     public void pageBeginRender(PageEvent event) {
@@ -56,12 +67,18 @@ public abstract class LdapManagementSettings extends BaseComponent implements Pa
 
         LdapManager manager = getLdapManager();
         setSettings(manager.getSystemSettings());
+        
+        if (getLdapConnectionParams() == null) {
+            setLdapConnectionParams(getLdapManager().getConnectionParams(getCurrentConnectionId()));
+        }
     }
 
     public void submitManagementSettings() {
         // save system settings even if no valid connection - e.g. if uncheck LDAP configured
         getLdapManager().saveSystemSettings(getSettings());
         getLdapManager().saveOverwritePin(getOverwritePin());
+                       
         getAdminContext().saveSettings(getAdminSettings());
+        getLdapManager().setConnectionParams(getLdapConnectionParams());
     }
 }

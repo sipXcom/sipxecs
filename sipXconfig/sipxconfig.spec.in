@@ -298,6 +298,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{sipxpbxconf}/unmanagedPhone/*
 %config(noreplace) %{sipxpbxconf}/sipxcallback/*
 %config(noreplace) %{sipxpbxconf}/advcallhandling/*
+%config(noreplace) %{sipxpbxconf}/ldap/*
 %config(noreplace) %{sipxpbxconf}/siplogviewer/*
 %config(noreplace) %{sipxpbxconf}/unite/unitelite.conf
 %config(noreplace) %attr(755,sipx,sipx) %{_localstatedir}/sipxdata/parkserver/music

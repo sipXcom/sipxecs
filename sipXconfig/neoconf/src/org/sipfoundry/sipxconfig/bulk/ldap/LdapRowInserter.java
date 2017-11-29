@@ -22,7 +22,6 @@ import javax.naming.directory.SearchResult;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.sipfoundry.sipxconfig.admin.AdminContext;
 import org.sipfoundry.sipxconfig.bulk.RowInserter;
 import org.sipfoundry.sipxconfig.common.CoreContext;
 import org.sipfoundry.sipxconfig.common.DuplicateType;
@@ -60,7 +59,7 @@ public class LdapRowInserter extends RowInserter<SearchResult> {
     private List<String> m_importedUserNames;
     private List<String> m_notImportedUserNames;
     private SettingDao m_settingDao;
-    private AdminContext m_adminContext;
+    private LdapConnectionParams m_ldapConnectionParams;
 
     @Override
     protected Log getLog() {
@@ -105,7 +104,7 @@ public class LdapRowInserter extends RowInserter<SearchResult> {
             if (newUser) {
                 user = m_coreContext.newUser();
                 String newUserGroupName = StringUtils.
-                    join(new String[] {m_adminContext.getNewLdapUserGroupNamePrefix(), m_domain});
+                    join(new String[] {m_ldapConnectionParams.getNewLdapUserGroupNamePrefix(), m_domain});
                 user.setUserName(userName);
                 user.addGroup(m_settingDao.
                     getGroupCreateIfNotFound(CoreContext.USER_GROUP_RESOURCE_ID, newUserGroupName));
@@ -179,10 +178,10 @@ public class LdapRowInserter extends RowInserter<SearchResult> {
     private String formatUserName(String userName) {
         String userNameLocal = userName;
         if (!StringUtils.isEmpty(userNameLocal)) {
-            userNameLocal = StringUtils.substring(userNameLocal, m_adminContext.getStripUserName());
-            String regex = StringUtils.defaultIfEmpty(m_adminContext.getRegexUsername(), StringUtils.EMPTY);
-            String prefix = StringUtils.defaultIfEmpty(m_adminContext.getPrefixUsername(), StringUtils.EMPTY);
-            String suffix = StringUtils.defaultIfEmpty(m_adminContext.getSuffixUsername(), StringUtils.EMPTY);
+            userNameLocal = StringUtils.substring(userNameLocal, m_ldapConnectionParams.getStripUsername());
+            String regex = StringUtils.defaultIfEmpty(m_ldapConnectionParams.getRegexUsername(), StringUtils.EMPTY);
+            String prefix = StringUtils.defaultIfEmpty(m_ldapConnectionParams.getPrefixUsername(), StringUtils.EMPTY);
+            String suffix = StringUtils.defaultIfEmpty(m_ldapConnectionParams.getSuffixUsername(), StringUtils.EMPTY);
             userNameLocal = StringUtils.isEmpty(regex)
                 ? userNameLocal : userNameLocal.replaceAll(regex, StringUtils.EMPTY);
             userNameLocal = new StringBuilder(prefix).append(userNameLocal).append(suffix).toString();
@@ -306,8 +305,7 @@ public class LdapRowInserter extends RowInserter<SearchResult> {
         return m_notImportedUserNames;
     }
 
-    @Required
-    public void setAdminContext(AdminContext adminContext) {
-        m_adminContext = adminContext;
+    public void setLdapConnectionParams(LdapConnectionParams ldapConnectionParams) {
+        m_ldapConnectionParams = ldapConnectionParams;
     }
 }

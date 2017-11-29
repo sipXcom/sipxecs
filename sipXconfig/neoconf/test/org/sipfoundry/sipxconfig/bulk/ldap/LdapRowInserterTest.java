@@ -29,14 +29,17 @@ import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 import org.junit.Assert;
 import org.sipfoundry.commons.userdb.profile.UserProfile;
-import org.sipfoundry.sipxconfig.admin.AdminContext;
 import org.sipfoundry.sipxconfig.bulk.RowInserter.RowStatus;
 import org.sipfoundry.sipxconfig.bulk.csv.Index;
 import org.sipfoundry.sipxconfig.common.CoreContext;
 import org.sipfoundry.sipxconfig.common.User;
 import org.sipfoundry.sipxconfig.permission.PermissionManager;
+import org.sipfoundry.sipxconfig.setting.AbstractSetting;
 import org.sipfoundry.sipxconfig.setting.Group;
 import org.sipfoundry.sipxconfig.setting.SettingDao;
+import org.sipfoundry.sipxconfig.setting.SettingImpl;
+import org.sipfoundry.sipxconfig.setting.SettingSet;
+import org.sipfoundry.sipxconfig.setting.type.IntegerSetting;
 import org.sipfoundry.sipxconfig.test.TestHelper;
 import org.sipfoundry.sipxconfig.vm.MailboxManager;
 
@@ -48,25 +51,30 @@ public class LdapRowInserterTest extends TestCase {
 
     protected String m_joe;
     protected LdapRowInserter m_rowInserter;
-    protected AdminContext m_adminContext;
+    protected LdapConnectionParams m_connParams;
     protected SettingDao m_settingDao;
 
     @Override
     protected void setUp() {
         m_joe = "joe";
         m_rowInserter = new LdapRowInserter();
-        m_adminContext = createMock(AdminContext.class);
-        m_adminContext.getNewLdapUserGroupNamePrefix();
-        expectLastCall().andReturn("grPrefix_").anyTimes();
-        m_adminContext.getStripUserName();
-        expectLastCall().andReturn(0).anyTimes();
-        m_adminContext.getRegexUsername();
-        expectLastCall().andReturn("").anyTimes();
-        m_adminContext.getPrefixUsername();
-        expectLastCall().andReturn("").anyTimes();
-        m_adminContext.getSuffixUsername();
-        expectLastCall().andReturn("").anyTimes();
-        replay(m_adminContext);
+        m_connParams = new LdapConnectionParams();
+        SettingSet root = new SettingSet();
+        AbstractSetting ldapManagement = (AbstractSetting) root.addSetting(new SettingSet("ldap-management"));
+        AbstractSetting newGroupNamePrefix = (AbstractSetting) ldapManagement.addSetting(new SettingImpl("newUserGroupPrefix"));
+        newGroupNamePrefix.setValue("grPrefix_");
+        AbstractSetting stripUsername = (AbstractSetting) ldapManagement.addSetting(new SettingImpl("stripUserName"));
+        stripUsername.setType(new IntegerSetting());
+        stripUsername.setTypedValue(new Integer(0));
+        AbstractSetting regex = (AbstractSetting) ldapManagement.addSetting(new SettingImpl("regex"));
+        regex.setTypedValue("");
+        AbstractSetting prefix = (AbstractSetting) ldapManagement.addSetting(new SettingImpl("prefix"));
+        prefix.setTypedValue("");
+        AbstractSetting suffix = (AbstractSetting) ldapManagement.addSetting(new SettingImpl("suffix"));
+        suffix.setTypedValue("");        
+
+        m_connParams.setSettings(root);
+        
         Group newGroup = new Group();
         newGroup.setName("grPrefix_example.com");
         newGroup.setResource(CoreContext.USER_GROUP_RESOURCE_ID);
@@ -78,7 +86,7 @@ public class LdapRowInserterTest extends TestCase {
         attrMap.setDefaultGroupName("test-import");
         attrMap.setAttribute(Index.USERNAME.getName(), "identity");
         m_rowInserter.setAttrMap(attrMap);
-        m_rowInserter.setAdminContext(m_adminContext);
+        m_rowInserter.setLdapConnectionParams(m_connParams);
         m_rowInserter.setSettingDao(m_settingDao);
     }
 

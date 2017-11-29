@@ -165,12 +165,6 @@
       </type>
       <value>24</value>
     </setting>
-    <setting name="pageImportSize">
-      <type>
-    	<integer/>
-      </type>
-      <value>1000</value>
-    </setting>
     <setting name="disable">
       <type>
     	<boolean/>
@@ -182,33 +176,6 @@
     	<boolean/>
       </type>
       <value>false</value>
-    </setting>
-    <setting name="newUserGroupPrefix">
-      <type>
-    	<string/>
-      </type>
-      <value>New_LDAP</value>
-    </setting>
-    <setting name="stripUserName">
-      <type>
-    	<integer/>
-      </type>
-      <value>0</value>
-    </setting>
-    <setting name="regex">
-      <type>
-        <string/>
-      </type>      
-    </setting>
-    <setting name="prefix">
-      <type>
-        <string/>
-      </type>      
-    </setting>
-    <setting name="suffix">
-      <type>
-        <string/>
-      </type>      
     </setting>
   </group>
   <group name="user-portal">
