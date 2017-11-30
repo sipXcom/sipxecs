@@ -200,16 +200,24 @@ class MongoRSAdmin:
             raise MongoAdminException('Server not available')
 
         def functor(c):
-            l = c['local']
-            config = self.eval(l, 'rs.config()')
-            if None == config:
-                op = 'rs.initiate({"_id" : "%s", "version" : 1, "members" : ' \
-                    '[{ "_id" : 0, "host" : "%s"}]})' % (self.model['replSet'], 
-                    self.host_port)
-                logging.debug('initializing replicaset')
-                self.checkErr(self.eval(l, op))
-            else:
-                logging.debug('replicaset already initialized')
+            try:
+              l = c['local']
+              config = self.eval(l, 'rs.config()')
+              if None == config:
+                  op = 'rs.initiate({"_id" : "%s", "version" : 1, "members" : ' \
+                      '[{ "_id" : 0, "host" : "%s"}]})' % (self.model['replSet'], 
+                      self.host_port)
+                  logging.debug('initializing replicaset')
+                  self.checkErr(self.eval(l, op))
+              else:
+                  logging.debug('replicaset already initialized')
+            except:
+              logging.debug('initializing replicaset')
+              op = 'rs.initiate({"_id" : "%s", "version" : 1, "members" : ' \
+                  '[{ "_id" : 0, "host" : "%s"}]})' % (self.model['replSet'], 
+                  self.host_port)
+              logging.debug('initializing replicaset')
+              self.checkErr(self.eval(l, op))
 
         self.mongoCommand(self.host_port, functor)
         if not self.waitFor(self.host_port, initializedCheck):

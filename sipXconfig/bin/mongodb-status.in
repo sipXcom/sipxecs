@@ -285,8 +285,8 @@ class MongoAdmin:
             c = Connection(host_port, connecttimeoutms=1000, sockettimeoutms=5000)
             logging.debug('getting status')
             l = c['local']
-            cfg = self.eval(l, 'rs.config()')
-            status = self.eval(l, 'rs.status()')
+            cfg = self.eval(l, 'processedconf=rs.config(); delete processedconf["settings"]; delete processedconf["protocolVersion"];processedconf')
+            status = self.eval(l, 'procstatus=rs.status();delete procstatus["heartbeatIntervalMillis"];delete procstatus["optimes"];procstatus')
             m = {'server' : host_port, 'available': True, 'status' : status, 'config' : cfg}
             c.close
             c = None
