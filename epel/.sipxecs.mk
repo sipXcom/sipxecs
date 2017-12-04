@@ -67,6 +67,7 @@ BUILD_EPEL = \
 # Technincally these could be build and runtime requirements
 RUNTIME_EPEL = \
 	elasticsearch-* \
+	mongodb-org-* \
 	erlang-lager-* \
 	erlang-gen_leader-* \
 	erlang-gproc-* \
