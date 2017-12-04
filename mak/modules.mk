@@ -34,7 +34,6 @@ sipx_core = \
   sipXpolycom \
   sipXrls \
   sipXsaa \
-  sipXyard \
   sipXrelease \
   sipXjitsi \
   sipXzoiper \
@@ -54,7 +53,6 @@ sipx_extra = \
   sipXcallController \
   sipXcdrLog \
   sipXrecording \
-  sipXhomer \
   sipXcallQueue \
   sipXAocBilling \
   sipXtools \
@@ -113,12 +111,10 @@ sipx_all = \
 lib_all = \
   epel \
   rubygem-file-tail \
-  erlang \
   freeswitch \
   freeswitch-sounds-en-us-callie \
   hiredis \
   net-snmp \
-  homer \
   openfire \
   ruby-dbi \
   cfengine \
@@ -129,12 +125,10 @@ lib_all = \
   libjsonrpccpp \
   libevent2 \
   mongo-cxx-driver \
-  mongodb \
   bcg729
 
 lib_exclude_fedora_16 = \
   epel \
-  erlang \
   rrdtool \
   rubygem-net-ssh \
   rubygem-net-sftp
@@ -154,7 +148,6 @@ lib = $(filter-out $(lib_exclude_$(DISTRO_OS)_$(DISTRO_VER)),$(lib_all))
 
 # Project compile-time dependencies. Only list project that if
 # it's dependecies were recompiled then you'd want to recompile.
-freeswitch_DEPS = erlang
 sipXtackLib_DEPS = sipXportLib
 sipXmediaLib_DEPS = sipXtackLib
 sipXmediaAdapterLib_DEPS = sipXmediaLib
@@ -177,13 +170,10 @@ sipXpage_DEPS = sipXcommons
 sipXpolycom_DEPS = sipXconfig
 sipXrls_DEPS = sipXsqa sipXcallLib sipXcommserverLib
 sipXsaa_DEPS = sipXsqa sipXcallLib sipXcommserverLib
-sipXhomer_DEPS = sipXsqa sipXresiprocate
-sipXsbc_DEPS = sipXconfig sipXsqa sipXregistry
 sipXcallQueue_DEPS = sipXconfig
 sipXAocBilling_DEPS = sipXconfig
 sipXexample_DEPS = sipXcommserverLib sipXconfig
 sipXsss_DEPS = sipXsqa sipXcommserverLib sipXresiprocate
-sipXyard = sipXcommserverLib
 sipXtools_DEPS = sipXtackLib sipXcommserverLib
 
 all = \

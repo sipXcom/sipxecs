@@ -4,12 +4,6 @@
 [submodule "sipXcustomCallerId"]
 	path = sipXcustomCallerId
 	url = git://github.com/ezuce/sipXcustomCallerId.git
-[submodule "homer"]
-	path = homer
-	url = http://code.google.com/p/homer/
-[submodule "sipXhomer"]
-	path = sipXhomer
-	url = git://github.com/sipXcom/sipXhomer.git
 [submodule "sipXlang-abitibi-fr_CA"]
 	path = sipXlang-abitibi-fr_CA
 	url = git://github.com/sipXcom/sipXlang-abitibi-fr_CA.git
@@ -58,36 +52,15 @@
 [submodule "oss_core"]
 	path = oss_core
 	url = git://github.com/joegen/oss_core.git
-[submodule "sipXsbc"]
-	path = sipXsbc
-	url = git://github.com/ezuce/sipXsbc.git
 [submodule "openfire"]
 	path = openfire
 	url = git://github.com/sipXcom/openfire.git
-[submodule "oacd_freeswitch"]
-	path = oacd_freeswitch
-	url = git://github.com/sipxopenacd/oacd_freeswitch.git
-[submodule "oacd_dialplan"]
-	path = oacd_dialplan
-	url = git://github.com/sipxopenacd/oacd_dialplan.git
-[submodule "oacd_web"]
-	path = oacd_web
-	url = git://github.com/sipxopenacd/oacd_web.git
-[submodule "sipxopenacd"]
-	path = sipxopenacd
-	url = git://github.com/sipxopenacd/sipxplugin.git
-[submodule "openacd"]
-	path = openacd
-	url = git://github.com/sipxopenacd/openacd.git
 [submodule "sipXcallQueue"]
 	path = sipXcallQueue
 	url = git://github.com/sipXcom/sipXcallQueue.git
 [submodule "sipXresiprocate"]
 	path = sipXresiprocate
 	url = git://github.com/sipXcom/resiprocate.git
-[submodule "freeswitch_edge"]
-	path = freeswitch_edge
-	url = git://github.com/sipXcom/freeswitch.git
 [submodule "sipXAocBilling"]
 	path = sipXAocBilling
 	url = https://github.com/sipXcom/sipXAocBilling.git
