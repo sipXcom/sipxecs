@@ -62,9 +62,11 @@ bundle agent mongodb {
 
     any_mongo::
       "any" usebundle => allow_ssh_command("mongodb-admin");
+      "any" usebundle => rh_chkconfig_status("disable-transparent-hugepages on");
 
     !any_mongo::
       "any" usebundle => disallow_ssh_command("mongodb-admin");
+      "any" usebundle => rh_chkconfig_status("disable-transparent-hugepages off");
 
     fedora16_or_greater.mongodb_redhat::
       "any" usebundle => mongodb_systemctl_running;

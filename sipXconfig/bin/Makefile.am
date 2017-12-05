@@ -15,7 +15,8 @@ initd_SCRIPTS = \
 	mongod-arbiter \
 	mongo-local \
 	mongo-local-arbiter \
-	mongodb-sync
+	mongodb-sync \
+	disable-transparent-hugepages
 
 bin_SCRIPTS = \
 	sipxconfig-archive \
