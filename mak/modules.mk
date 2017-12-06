@@ -116,6 +116,7 @@ lib_all = \
   hiredis \
   net-snmp \
   openfire \
+  rocketchat \
   ruby-dbi \
   cfengine \
   rubygem-net-ssh \
