@@ -1,0 +1,53 @@
+config_opts['root'] = 'centos-7-x86_64'
+config_opts['target_arch'] = 'x86_64'
+config_opts['legal_host_arches'] = ('x86_64',)
+config_opts['chroot_setup_cmd'] = 'groupinstall buildsys-build'
+config_opts['dist'] = 'el7'  # only useful for --resultdir variable subst
+
+config_opts['yum.conf'] = """
+[main]
+cachedir=/var/cache/yum
+debuglevel=1
+reposdir=/dev/null
+logfile=/var/log/yum.log
+retries=20
+obsoletes=1
+gpgcheck=0
+assumeyes=1
+syslog_ident=mock
+syslog_device=
+@DOWNLOAD_PROXY_CONFIG_LINE@
+
+# repos
+[base]
+name=BaseOS
+enabled=1
+@CENTOS_BASE_URL_ON@baseurl=@CENTOS_BASE_URL@/7/os/x86_64
+@CENTOS_BASE_URL_OFF@mirrorlist=http://mirrorlist.centos.org/?release=7&arch=x86_64&repo=os
+failovermethod=priority
+
+[updates]
+name=updates
+enabled=1
+@CENTOS_BASE_URL_ON@baseurl=@CENTOS_BASE_URL@/7/updates/x86_64
+@CENTOS_BASE_URL_OFF@mirrorlist=http://mirrorlist.centos.org/?release=7&arch=x86_64&repo=updates
+failovermethod=priority
+
+[epel]
+name=epel
+enabled=1
+@CENTOS_BASE_URL_ON@baseurl=http://download.fedoraproject.org/pub/epel/7/$basearch
+@CENTOS_BASE_URL_OFF@mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=epel-7&arch=$basearch
+failovermethod=priority
+
+# Normally from EPEL, just a list of rpms to create a basic build system
+[buildsys-build]
+name=buildsys-build
+baseurl=http://download.sipxcom.org/pub/sipXecs/buildsys-build/
+enabled=1
+
+[build]
+name=build
+baseurl=http://localhost:@REPO_PORT@/CentOS_7/x86_64/
+
+"""

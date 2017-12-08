@@ -34,7 +34,7 @@ AC_ARG_WITH(yum-proxy, [--with-yum-proxy send downloads thru caching proxy like 
 # Require BASE URL otherwise download proxy will be useless
 AC_ARG_VAR(CENTOS_BASE_URL, [Where to find CentOS distribution. Example: http://centos.aol.com])
 if test -z "$CENTOS_BASE_URL"; then
-  if test -n "$MIRROR_SITE"; then 
+  if test -n "$MIRROR_SITE"; then
     CENTOS_BASE_URL=$MIRROR_SITE/centos
   else
     AC_MSG_ERROR([You must provide a value for CENTOS_BASE_URL or MIRROR_SITE if you are using a download proxy.\
@@ -44,7 +44,7 @@ fi
 
 AC_ARG_VAR(FEDORA_BASE_URL, [Where to find Fedora distribution. Example: http://mirrors.kernel.org/fedora/linux])
 if test -z "$FEDORA_BASE_URL"; then
-  if test -n "$MIRROR_SITE"; then 
+  if test -n "$MIRROR_SITE"; then
     FEDORA_BASE_URL=$MIRROR_SITE/fedora/linux
   else
     AC_MSG_ERROR([You must provide a value for FEDORA_BASE_URL or MIRROR_SITE if you are using a download proxy.\
@@ -54,7 +54,7 @@ fi
 
 AC_ARG_VAR(FEDORA_ARCHIVE_BASE_URL, [Where to find Fedora archives. Example: http://mirrors.kernel.org/archive/fedora/linux])
 if test -z "$FEDORA_ARCHIVE_BASE_URL"; then
-  if test -n "$MIRROR_SITE"; then 
+  if test -n "$MIRROR_SITE"; then
     FEDORA_ARCHIVE_BASE_URL=$MIRROR_SITE/archive/fedora/linux
   else
     AC_MSG_ERROR([You must provide a value for FEDORA_ARCHIVE_BASE_URL or MIRROR_SITE if you are using a download proxy.\
@@ -64,7 +64,7 @@ fi
 
 AC_ARG_VAR(EPEL_BASE_URL, [Where to find EPEL distribution. Example: http://mirrors.kernel.org/epel])
 if test -z "$EPEL_BASE_URL"; then
-  if test -n "$MIRROR_SITE"; then 
+  if test -n "$MIRROR_SITE"; then
     EPEL_BASE_URL=$MIRROR_SITE/epel
   else
     AC_MSG_ERROR([You must provide a value for EPEL_BASE_URL or MIRROR_SITE if you are using a download proxy.\
@@ -75,7 +75,7 @@ fi
 ],)
 
 dnl NOTE: To support non-rpm based distos, write equivalent of this that defines DISTRO_* vars
-AC_CHECK_FILE(/bin/rpm, 
+AC_CHECK_FILE(/bin/rpm,
 [
   RPMBUILD_TOPDIR="\$(shell rpm --eval '%{_topdir}')"
   AC_SUBST(RPMBUILD_TOPDIR)
@@ -97,7 +97,7 @@ AC_CHECK_FILE(/bin/rpm,
 AC_ARG_VAR(DISTRO, [What operating system you are compiling for. Default is ${DistroDefault}])
 test -n "${DISTRO}" || DISTRO="centos-6-x86_64"
 
-AllDistrosDefault="fedora-16-i386 fedora-16-x86_64 fedora-17-i386 fedora-17-x86_64 fedora-18-i386 fedora-18-x86_64 fedora-19-i386 fedora-19-x86_64 centos-6-i386 centos-6-x86_64"
+AllDistrosDefault="fedora-16-i386 fedora-16-x86_64 fedora-17-i386 fedora-17-x86_64 fedora-18-i386 fedora-18-x86_64 fedora-19-i386 fedora-19-x86_64 centos-6-i386 centos-6-x86_64 centos-7-x86_64"
 AC_ARG_VAR(ALL_DISTROS, [All distros which using cross distroy compiling (xc.* targets) Default is ${AllDistrosDefault}])
 test -n "${ALL_DISTROS}" || ALL_DISTROS="${AllDistrosDefault}"
 
@@ -148,6 +148,7 @@ AC_ARG_ENABLE(rpm, [--enable-rpm Using mock package to build rpms],
   AC_CONFIG_FILES([mak/mock/site-defaults.cfg])
   AC_CONFIG_FILES([mak/mock/centos-6-i386.cfg])
   AC_CONFIG_FILES([mak/mock/centos-6-x86_64.cfg])
+  AC_CONFIG_FILES([mak/mock/centos-7-x86_64.cfg])
   AC_CONFIG_FILES([mak/mock/fedora-16-i386.cfg])
   AC_CONFIG_FILES([mak/mock/fedora-16-x86_64.cfg])
   AC_CONFIG_FILES([mak/mock/fedora-17-i386.cfg])
