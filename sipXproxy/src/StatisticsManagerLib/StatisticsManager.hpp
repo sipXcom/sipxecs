@@ -11,9 +11,17 @@ namespace statistics
     struct Data
     {
         explicit Data() {}
-        Data(const std::string &n, int64_t v) : name(n), value(v) {}
+
+        template<typename T>
+        Data(const std::string &n, const T &v) : name(n)
+        {
+            std::stringstream s;
+            s << v;
+            value = s.str();
+        }
+
         std::string name;
-        int64_t value;
+        std::string value;
     };
 
     std::ostream & operator<< (std::ostream &out, Data &d);

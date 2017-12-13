@@ -24,9 +24,11 @@ libStatisticsManager_la_LDFLAGS = \
 libStatisticsManager_la_SOURCES =  \
 	StatisticsManager.cpp \
 	StatisticsManager.hpp \
+	SipStatistics.hpp \
+	SipStatistics.cpp \
 	Fifo.hpp
 
 libStatisticsManager_la_CXXFLAGS = \
 	$(STATISTICSMANAGER_COMMON_CXX_FLAGS)
-	
+
 libStatisticsManager_la_CFLAGS =

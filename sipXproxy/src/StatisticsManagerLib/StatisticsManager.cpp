@@ -100,8 +100,7 @@ namespace statistics
                     BOOST_FOREACH(const ProcessorMap::value_type &p, mProcessors)
                     {
                         p.second->process(data);
-                        Data qs("queue_size", queueSize);
-                        p.second->process(qs);
+                        p.second->process(Data("queue_size", queueSize));
                     }
                 }
             }

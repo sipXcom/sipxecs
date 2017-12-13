@@ -879,7 +879,7 @@ SipRouter::handleMessage( OsMsg& eventMessage )
 
 void SipRouter::handleRequest(SipMessage* pSipRequest)
 {
-  
+
   bool timedDispatch = false;
   UtlString method;
   if (!pSipRequest->isResponse())
@@ -887,8 +887,8 @@ void SipRouter::handleRequest(SipMessage* pSipRequest)
     pSipRequest->getRequestMethod(&method); // only time dispatch of INVITE, SUBSCRIBE and REGISTER
     timedDispatch = method.compareTo( SIP_INVITE_METHOD ) == 0 || method.compareTo( SIP_REGISTER_METHOD ) == 0 || method.compareTo( SIP_SUBSCRIBE_METHOD ) == 0;
   }
-  
-  
+
+
   SipRouter::ProxyAction action = SipRouter::DoNothing;
   SipMessage sipResponse;
   if (timedDispatch)
@@ -901,12 +901,7 @@ void SipRouter::handleRequest(SipMessage* pSipRequest)
     action = proxyMessage(*pSipRequest, sipResponse);
   }
 
-  statistics::StatisticsManager::Instance().add(statistics::Data("proxy_msq_queue_size", getMessageQueue()->numMsgs()));
-  statistics::StatisticsManager::Instance().add(statistics::Data("proxy_ua_queue_size", mpSipUserAgent->getMessageQueue()->numMsgs()));
-  statistics::StatisticsManager::Instance().add(statistics::Data("proxy_active_transaction_count", mpSipUserAgent->getSipTransactions().size()));
-  statistics::StatisticsManager::Instance().add(statistics::Data("proxy_avg_dispatch_speed", getAverageDispatchSpeed()));
-  statistics::StatisticsManager::Instance().add(statistics::Data("proxy_avg_entity_db_read", mpEntityDb->getReadAverageSpeed()));
-  statistics::StatisticsManager::Instance().add(statistics::Data("proxy_avg_regdb_read", mpRegDb->getReadAverageSpeed()));
+  reportStatistics();
 
   if (timedDispatch)
   {
@@ -924,7 +919,7 @@ void SipRouter::handleRequest(SipMessage* pSipRequest)
         " Total Active Transactions: " <<  mpSipUserAgent->getSipTransactions().size()
         );
   }
-  
+
   switch (action)
   {
   case SendRequest:
@@ -955,9 +950,9 @@ void SipRouter::handleRequest(SipMessage* pSipRequest)
                    "SipRouter::proxyMessage returned invalid action");
      assert(false);
   }
-  
+
   delete pSipRequest;
-  
+
   if (ENFORCE_MAX_CONCURRENT_THREADS)
     _pThreadPoolSem->set();
 }
@@ -2501,6 +2496,16 @@ bool SipRouter::preprocessMessage(SipMessage& parsedMsg,
     OS_LOG_WARNING(FAC_SIP, "Dropping message, unable to parse incoming message - \n" << msgText.data());
     return false;
   }
-  
+
   return true;
+}
+
+void SipRouter::reportStatistics()
+{
+  statistics::StatisticsManager::Instance().add(statistics::Data("proxy_msq_queue_size", getMessageQueue()->numMsgs()));
+  statistics::StatisticsManager::Instance().add(statistics::Data("proxy_ua_queue_size", mpSipUserAgent->getMessageQueue()->numMsgs()));
+  statistics::StatisticsManager::Instance().add(statistics::Data("proxy_active_transaction_count", mpSipUserAgent->getSipTransactions().size()));
+  statistics::StatisticsManager::Instance().add(statistics::Data("proxy_avg_dispatch_speed", getAverageDispatchSpeed()));
+  statistics::StatisticsManager::Instance().add(statistics::Data("proxy_avg_entity_db_read", mpEntityDb->getReadAverageSpeed()));
+  statistics::StatisticsManager::Instance().add(statistics::Data("proxy_avg_regdb_read", mpRegDb->getReadAverageSpeed()));
 }

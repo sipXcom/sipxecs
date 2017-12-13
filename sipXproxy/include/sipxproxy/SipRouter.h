@@ -233,6 +233,9 @@ class SipRouter : public OsServerTask
   private:
    friend class SipRouterTest;
 
+   /// prepare and report statistics
+   void reportStatistics();
+
    /// Extract configuration parameters from the configuration file.
    void readConfig(OsConfigDb& configDb,  /// database to read for parameters
                    const Url&  defaultUri /// to be used for default realm and route
