@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Fifo.hpp"
+#include "Data.hpp"
 #include <string>
 #include <iostream>
 
@@ -28,40 +30,13 @@ typedef enum
    MAX_METHODS
 } MethodType;
 
-std::string MethodNames[] =
-{
-   "UNKNOWN"
-   "ACK",
-   "BYE",
-   "CANCEL",
-   "INVITE",
-   "NOTIFY",
-   "OPTIONS",
-   "REFER",
-   "REGISTER",
-   "SUBSCRIBE",
-   "RESPONSE",
-   "MESSAGE",
-   "INFO",
-   "PRACK",
-   "PUBLISH",
-   "SERVICE",
-   "UPDATE"
-};
-
 class SipStatistics
 {
-   public:
-      enum {MaxCode = 700};
+public:
 
-      unsigned int tuFifoSize;
-      unsigned int transportFifoSizeSum;
-      unsigned int transactionFifoSize;
-      unsigned int activeTimers;
-      unsigned int openTcpConnections; // .dlb. not implemented
-      unsigned int activeClientTransactions;
-      unsigned int activeServerTransactions;
-      unsigned int pendingDnsQueries; // .dlb. not implemented
+      SipStatistics(Fifo<Data> &fifo) : mFifo(fifo) {};
+
+      enum {MaxCode = 700};
 
       unsigned int requestsSent; // includes retransmissions
       unsigned int responsesSent; // includes retransmissions
@@ -88,15 +63,18 @@ class SipStatistics
       unsigned int sum2xxOut(MethodType method) const;
       unsigned int sumErrOut(MethodType method) const;
 
-      bool received(MethodType metod, bool request, unsigned int code);
-      bool sent(MethodType method, bool request, unsigned int code);
-      bool retransmitted(MethodType method, bool request, unsigned int code);
+      void received(MethodType method, bool request, unsigned int code);
+      void sent(MethodType method, bool request, unsigned int code);
+      void retransmitted(MethodType method, bool request, unsigned int code);
 
-      MethodType getMethodType(const std::string &method) const;
+      static std::string getMethodName(MethodType method);
+      static MethodType getMethodType(const std::string &method);
+
+      void updateStats(MethodType method);
 
       void zeroOut();
+private:
+      Fifo<Data> &mFifo;
 };
-
-std::ostream &operator<<(std::ostream& strm, const SipStatistics& stats);
 
 } // namespace statistics

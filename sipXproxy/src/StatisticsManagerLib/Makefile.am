@@ -26,6 +26,7 @@ libStatisticsManager_la_SOURCES =  \
 	StatisticsManager.hpp \
 	SipStatistics.hpp \
 	SipStatistics.cpp \
+	Data.hpp \
 	Fifo.hpp
 
 libStatisticsManager_la_CXXFLAGS = \

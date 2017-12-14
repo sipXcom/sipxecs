@@ -1,4 +1,6 @@
 #pragma once
+#include "SipStatistics.hpp"
+#include "Data.hpp"
 #include "Fifo.hpp"
 
 #include <signal.h>
@@ -6,26 +8,6 @@
 
 namespace statistics
 {
-    /// \class Data
-    /// \brief statistics data exchange type
-    struct Data
-    {
-        explicit Data() {}
-
-        template<typename T>
-        Data(const std::string &n, const T &v) : name(n)
-        {
-            std::stringstream s;
-            s << v;
-            value = s.str();
-        }
-
-        std::string name;
-        std::string value;
-    };
-
-    std::ostream & operator<< (std::ostream &out, Data &d);
-
     /// \class StatsProcessor
     /// \brief data processing interface
     ///
@@ -138,6 +120,15 @@ namespace statistics
         /// log callback registration
         void registerLoggerFunc(void (*f)(const std::string &));
 
+        /// update SIP statistics on message received
+        void received(MethodType method, bool request, unsigned int code);
+
+        /// update SIP statistics on message sent
+        void sent(MethodType method, bool request, unsigned int code);
+
+        /// update SIP statistics on message retransmitted
+        void retransmitted(MethodType method, bool request, unsigned int code);
+
     private:
 
         /// logger func
@@ -148,5 +139,6 @@ namespace statistics
         Fifo<Data> mFifo;
         boost::thread mWorkerThread;
         void (*mLoggerFunc)(const std::string &);
+        SipStatistics *mSipStatistics;
     };
 } // namespace statistics
