@@ -67,6 +67,8 @@ libsipXproxy_la_SOURCES = \
    CallStateEventWriter_XML.cpp \
    CallStateEventWriter_DB.h \
    CallStateEventWriter_DB.cpp \
+   StatisticsManagerLib/SipStatistics.cpp \
+   StatisticsManagerLib/SipStatistics.hpp \
    StatisticsManagerLib/StatisticsManager.cpp \
    StatisticsManagerLib/StatisticsManager.hpp \
    StatisticsManagerLib/Fifo.hpp
