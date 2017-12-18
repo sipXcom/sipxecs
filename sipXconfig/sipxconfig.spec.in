@@ -125,6 +125,8 @@ Obsoletes: sipxpark
 
 # XX-11486 - obsolete sipxevent (event notifier) service should be removed
 Obsoletes: sipxevent
+Obsoletes: mongodb
+Obsoletes: mongodb-server
 
 %if %{_vendor} == suse
 Requires: apache2-prefork
