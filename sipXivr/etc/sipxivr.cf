@@ -93,6 +93,8 @@ bundle agent sync_moh_prompts {
 }
 
 bundle edit_line sipxivr_properties_contents {
+  classes:
+    "external_vm_mongo" expression => fileexists("$(sipx.SIPX_CONFDIR)/mongo-vm-client.ini");
   insert_lines:
     any::
       "$(sipx.SIPX_CFDATA)/$(sipx.location_id)/sipxivr.properties.part"
@@ -110,6 +112,10 @@ bundle edit_line sipxivr_properties_contents {
       "ivr.organizationPrefs=$(sipx.SIPX_IVRDATADIR)/organizationprefs.xml";
       "ivr.binDirectory=$(sipx.SIPX_BINDIR)";
      "ivr.backupPath=$(sipx.SIPX_VARDIR)/backup";
+    external_vm_mongo::
+      "ivr.mongoVmConfigFile=$(sipx.SIPX_CONFDIR)/mongo-vm-client.ini";
+    !external_vm_mongo::
+      "ivr.mongoVmConfigFile=$(sipx.SIPX_CONFDIR)/mongo-client.ini";
   delete_lines:
     any::
       ".*";
