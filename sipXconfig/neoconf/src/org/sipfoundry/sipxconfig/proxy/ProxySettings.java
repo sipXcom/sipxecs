@@ -30,7 +30,6 @@ public class ProxySettings extends PersistableSettings implements DeployConfigOn
     public static final String SIP_PORT_SETTING = "proxy-configuration/SIPX_PROXY_TCP_PORT";
     public static final String SIP_UDP_PORT_SETTING = "proxy-configuration/SIPX_PROXY_UDP_PORT";
     public static final String SIP_SECURE_PORT_SETTING = "proxy-configuration/SIPX_PROXY_TLS_PORT";
-    public static final String SIP_DIAGRAM_ENABLE = "sip-diagram-configuration/enabled";
     public static final String INFO_LOG_LEVEL = "INFO";
     public static final String NOTICE_LOG_LEVEL = "NOTICE";
     public static final String DEBUG_LOG_LEVEL = "DEBUG";
@@ -60,7 +59,7 @@ public class ProxySettings extends PersistableSettings implements DeployConfigOn
     }
 
     public boolean isSipDiagramEnable() {
-        return (Boolean) getSettingTypedValue(SIP_DIAGRAM_ENABLE);
+        return false;
     }
 
     @Override
