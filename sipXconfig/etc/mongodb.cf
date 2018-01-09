@@ -142,20 +142,29 @@ bundle agent mongodb_arbiter_config {
 }
 
 bundle edit_line mongodb_arbiter_config_contents {
-  # bind_ip=0.0.0.0 may not be nec, but if it's anything else
-  # mongo config will not be right so reinforce the default
   insert_lines:
-"replSet=sipxecs
-port=27018
-logpath=/var/log/$(mongodb.id)/arbiter/mongodb.log
-fork=true
-pidfilepath=/var/run/$(mongodb.id)/mongodb-arbiter.pid
-smallfiles=true
-journal=true
-nohttpinterface=true
-dbpath=/var/lib/mongodb-arbiter
-bind_ip=0.0.0.0
-";
+    any::
+      "systemLog:";
+      "  destination: file";
+      "  logAppend: true";
+      "  path: /var/log/mongodb/arbiter/mongodb.log";
+      "storage:";
+      "  dbPath: /var/lib/mongodb-arbiter";
+      "  journal:";
+      "    enabled: true";
+      "  mmapv1:";
+      "    smallFiles: true";
+      "processManagement:";
+      "  fork: true";
+      "  pidFilePath: /var/run/mongodb/mongodb-arbiter.pid";
+      "net:";
+      "  port: 27018";
+      "  bindIp: 0.0.0.0";
+      "replication:";
+      "  replSetName: sipxecs";                 
+  delete_lines:
+    any::
+      ".*";
 }
 
 bundle edit_line mongo_arbiter_logrotate_contents {
