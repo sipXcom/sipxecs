@@ -145,8 +145,13 @@ SipRegistrar::SipRegistrar(OsConfigDb* configDb) :
       aliasIndex++;
    }
 
+   size_t SipRouter::_entityCacheExpire = 0;
+   configDb.get("SIP_REGISTRAR_ENTITY_CACHE_EXPIRE", (int&)_entityCacheExpire);
+   Os::Logger::instance().log(FAC_SIP, PRI_INFO, "SipRegistrar::SipRegistrar entityCacheExpire: " << _entityCacheExpire);
+
    MongoDB::ConnectionInfo gInfo = MongoDB::ConnectionInfo::globalInfo();
-   mpEntityDb = new EntityDB(gInfo);
+   mpEntityDb = (_entityCacheExpire == 0 ? new EntityDB(gInfo) : new EntityDB(gInfo, _entityCacheExpire));
+
    mpRegDb = RegDB::CreateInstance(true /* ensure indexes */);
    mpSubscribeDb = SubscribeDB::CreateInstance(true /* ensure indexes creation */);
 
