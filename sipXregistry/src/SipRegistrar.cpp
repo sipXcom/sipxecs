@@ -146,7 +146,7 @@ SipRegistrar::SipRegistrar(OsConfigDb* configDb) :
    }
 
    size_t _entityCacheExpire = 0;
-   configDb.get("SIP_REGISTRAR_ENTITY_CACHE_EXPIRE", (int&)_entityCacheExpire);
+   mConfigDb->get("SIP_REGISTRAR_ENTITY_CACHE_EXPIRE", (int&)_entityCacheExpire);
    Os::Logger::instance().log(FAC_SIP, PRI_INFO, "SipRegistrar::SipRegistrar entityCacheExpire: " << _entityCacheExpire);
 
    MongoDB::ConnectionInfo gInfo = MongoDB::ConnectionInfo::globalInfo();
