@@ -652,6 +652,9 @@ SipRouter::applyCongestionPolicy(SipMessage *sipRequest, UtlString &policy)
         }
 
         mpSipUserAgent->send(finalResponse);
+
+        // collect statistics about outgoing packet
+        reportSipStatistics(finalResponse, false);
     }
     else if (policy == CONGESTION_POLICY_IGNORE)
     {
@@ -812,6 +815,9 @@ SipRouter::handleMessage( OsMsg& eventMessage )
                     finalResponse.setResponseData(pMsg, SIP_SERVICE_UNAVAILABLE_CODE, "No Thread Available");
                     mpSipUserAgent->send(finalResponse);
 
+                    // collect statistics about outgoing packet
+                    reportSipStatistics(finalResponse, false);
+
                     OS_LOG_ERROR(FAC_SIP, "SipRouter::handleMessage failed to create pooled thread!  Threadpool size="
                       << _threadPool.threadPool().available());
 
@@ -871,6 +877,9 @@ SipRouter::handleMessage( OsMsg& eventMessage )
       SipMessage finalResponse;
       finalResponse.setResponseData(&message, SIP_SERVICE_UNAVAILABLE_CODE, errorString.c_str());
       mpSipUserAgent->send(finalResponse);
+
+      // collect statistics about outgoing packet
+      reportSipStatistics(finalResponse, false);
     }
   }
 
@@ -881,6 +890,10 @@ void SipRouter::handleRequest(SipMessage* pSipRequest)
 {
 
   bool timedDispatch = false;
+
+  // collect statistics about incoming packet
+  reportSipStatistics(*pSipRequest);
+
   UtlString method;
   if (!pSipRequest->isResponse())
   {
@@ -930,6 +943,9 @@ void SipRouter::handleRequest(SipMessage* pSipRequest)
      //mutex_critic_sec_lock lock(_outboundMutex);
      pSipRequest->resetTransport();
      mpSipUserAgent->send(*pSipRequest);
+
+     // collect statistics about outgoing packet
+     reportSipStatistics(*pSipRequest, false);
   }
      break;
 
@@ -938,6 +954,9 @@ void SipRouter::handleRequest(SipMessage* pSipRequest)
      //mutex_critic_sec_lock lock(_outboundMutex);
      sipResponse.resetTransport();
      mpSipUserAgent->send(sipResponse);
+
+     // collect statistics about outgoing packet
+     reportSipStatistics(*pSipRequest, false);
   }
      break;
 
@@ -2508,4 +2527,25 @@ void SipRouter::reportStatistics()
   statistics::StatisticsManager::Instance().add(statistics::Data("proxy_avg_dispatch_speed", getAverageDispatchSpeed()));
   statistics::StatisticsManager::Instance().add(statistics::Data("proxy_avg_entity_db_read", mpEntityDb->getReadAverageSpeed()));
   statistics::StatisticsManager::Instance().add(statistics::Data("proxy_avg_regdb_read", mpRegDb->getReadAverageSpeed()));
+}
+
+void SipRouter::reportSipStatistics(const SipMessage& msg, bool received)
+{
+  UtlString m;
+  msg.getRequestMethod(&m);
+
+  bool isRequest = !msg.isResponse();
+
+  int code = (isRequest ? 0 : msg.getResponseStatusCode());
+
+  statistics::MethodType method = statistics::SipStatistics::getMethodType(m.data());
+
+  if (received)
+  {
+     statistics::StatisticsManager::Instance().received(method, isRequest, code);
+  }
+  else
+  {
+     statistics::StatisticsManager::Instance().sent(method, isRequest, code);
+  }
 }
