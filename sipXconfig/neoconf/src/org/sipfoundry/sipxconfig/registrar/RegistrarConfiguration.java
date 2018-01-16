@@ -102,6 +102,7 @@ public class RegistrarConfiguration implements ConfigProvider, ApplicationContex
         Setting root = settings.getSettings();
         file.writeSettings(SettingUtil.filter(NO_UNDERSCORE, root.getSetting("registrar-config")));
         file.writeSettings(SettingUtil.filter(NO_UNDERSCORE, root.getSetting("other")));
+        file.writeSettings(SettingUtil.filter(NO_UNDERSCORE, root.getSetting("database")));
         //settings that should not be written in config file if empty
         String pickupBindPort = root.getSetting("registrar-config-empty/SIP_REDIRECT.100-PICKUP.BIND_PORT").getValue();
         if (!StringUtils.isEmpty(pickupBindPort)) {

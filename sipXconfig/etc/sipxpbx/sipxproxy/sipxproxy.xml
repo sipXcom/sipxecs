@@ -267,6 +267,14 @@
       <value>300</value>
     </setting>
   </group>
+  <group name="database">
+    <setting name="SIPX_PROXY_ENTITY_CACHE_EXPIRE">
+      <type>
+    	<integer min="30"/>
+      </type>
+      <value>30</value>
+    </setting>
+  </group>
   <group name="msftxchghack"  advanced="yes">
     <setting name="USERAGENT" advanced="yes">
       <type><string/></type>

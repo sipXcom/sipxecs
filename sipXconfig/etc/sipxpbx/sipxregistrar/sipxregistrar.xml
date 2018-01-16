@@ -206,6 +206,14 @@
       <value>Y</value>
     </setting>
   </group>
+  <group name="database">
+    <setting name="SIP_REGISTRAR_ENTITY_CACHE_EXPIRE">
+      <type>
+    	<integer min="30"/>
+      </type>
+      <value>30</value>
+    </setting>
+  </group>
   <group name="other">
     <setting name="SIPX_SEND_TRYING_FOR_NIST" advanced="yes">
       <type>
