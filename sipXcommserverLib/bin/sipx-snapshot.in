@@ -442,6 +442,7 @@ function marshal_configuration_information () {
    /var/log/maillog
    /var/log/messages
    /var/log/mongodb
+   /var/log/elasticsearch
    /var/log/mysqld.log
    /var/log/tomcat6
    /var/log/yum.log
@@ -922,6 +923,18 @@ EOF
        iptables --table $t --list --verbose --numeric --line-numbers 2>&1
      done
    fi
+
+   # Get elasticsearch indices
+   echo ""
+   echo "======== Elasticsearch indices:"
+   echo "curl http://localhost:9200/_cat/indices?v"
+   curl http://localhost:9200/_cat/indices?v
+   
+   # Get elasticsearch shards
+   echo ""
+   echo "======== Elasticsearch shards:"
+   echo "curl http://localhost:9200/_cat/shards?v"
+   curl http://localhost:9200/_cat/shards?v
 
    # Get mongodb rs config
    echo ""

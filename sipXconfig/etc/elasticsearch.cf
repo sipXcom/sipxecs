@@ -64,6 +64,9 @@ bundle edit_line elasticsearch_config_file {
       "path.repo: [\"$(tmpDir)\", \"$(tmpDir)/elasticsearch_backup\"]";
       "script.engine.groovy.inline.aggs: on";
       "cluster.name: $(sipx.host).$(sipx.net_domain)";
+      "node.name: $(sipx.host)$(sipx.net_domain)";
+      "index.number_of_replicas: 0";
+      "discovery.zen.ping.multicast.enabled: false";
 }
 
 bundle agent elasticsearch_sysv_running {

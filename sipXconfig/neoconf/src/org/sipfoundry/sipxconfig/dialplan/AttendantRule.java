@@ -310,7 +310,7 @@ public class AttendantRule extends DialingRule implements Replicable {
         if (isLiveAttendant()) {
             ringFor = m_liveAttendantRingFor;
         }
-        if (m_followUserCallForward) {
+        if (m_followUserCallForward && m_liveAttendant) {
             liveContact = String.format(LIVE_ATTENDANT_CONTACT, getLiveAttendantExtension(), domainName,
                 ringFor);
         } else {
@@ -332,7 +332,9 @@ public class AttendantRule extends DialingRule implements Replicable {
         if (m_liveAttendantEnabled) {
             mappings.add(liveAttendantAlias);
         }
-        mappings.add(attendantAlias);
+        if (m_liveAttendant) {
+            mappings.add(attendantAlias);
+        }
 
         String[] aliases = getAttendantAliasesAsArray(getAttendantAliases());
         if (!StringUtils.isEmpty(m_did)) {
