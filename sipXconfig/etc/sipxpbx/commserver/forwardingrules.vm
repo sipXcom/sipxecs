@@ -85,9 +85,17 @@
       <routeTo>&lt;${regAddress.stripProtocol()};transport=tcp;x-sipx-routetoreg&gt;</routeTo> 
     </methodMatch> 
 #end
+#if( $rlsAddress)
 
+    <!-- Requests go to the resource list service -->
+    <routeTo>&lt;${rlsAddress.stripProtocol()};transport=tcp&gt;</routeTo>
+    
+#else
+    
     <!-- All other requests go to the SIP registry service -->
     <routeTo ruriParams="sipx-noroute=Voicemail">&lt;${regAddress.stripProtocol()};transport=tcp;x-sipx-routetoreg&gt;</routeTo>
+    
+#end
   </route>
 
 #if(${sbc.enabled})

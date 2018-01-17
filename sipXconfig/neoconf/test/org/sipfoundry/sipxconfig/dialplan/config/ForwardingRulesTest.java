@@ -411,6 +411,7 @@ public class ForwardingRulesTest extends XMLTestCase {
         rules.setSbcDeviceManager(m_sbcDeviceManager);
         rules.setDomainName("example.org");
         rules.setApplicationContext(m_applicationContext);
+        rules.setFeatureManager(new MockFeatureManager());
         rules.begin();
         rules.generate(rule);
         rules.end();

@@ -30,6 +30,7 @@ import org.sipfoundry.sipxconfig.freeswitch.FreeswitchFeature;
 import org.sipfoundry.sipxconfig.mwi.Mwi;
 import org.sipfoundry.sipxconfig.proxy.ProxyManager;
 import org.sipfoundry.sipxconfig.registrar.Registrar;
+import org.sipfoundry.sipxconfig.rls.Rls;
 import org.sipfoundry.sipxconfig.sbc.DefaultSbc;
 import org.sipfoundry.sipxconfig.sbc.SbcDevice;
 import org.sipfoundry.sipxconfig.sbc.SbcDeviceManager;
@@ -97,9 +98,10 @@ public class ForwardingRules extends RulesFile implements ApplicationContextAwar
         context.put("domainName", getDomainName());
         context.put("proxyAddress", m_addressManager.getSingleAddress(ProxyManager.TCP_ADDRESS, getLocation()));
         context.put("statusAddress", m_addressManager.getSingleAddress(Mwi.SIP_TCP, getLocation()));
+        context.put("rlsAddress", getRlsAddress());
         context.put("regEventAddress", m_addressManager.getSingleAddress(Registrar.EVENT_ADDRESS, getLocation()));
         if (m_featureManager.isFeatureEnabled(FreeswitchFeature.FEATURE, getLocation())) {
-            context.put("freeswitchAddress", m_addressManager.
+            context.put("freeswitchAddresAddressManager m_addressManager;s", m_addressManager.
                 getSingleAddress(FreeswitchFeature.SIP_ADDRESS, getLocation()).getAddress());
         }
         // Use Local registrar, if not available use global rr SRV record
@@ -154,6 +156,10 @@ public class ForwardingRules extends RulesFile implements ApplicationContextAwar
         }
     }
 
+    public Address getRlsAddress() {
+        return null;
+    }
+
     @Override
     public void setApplicationContext(ApplicationContext context) {
         m_context = context;
@@ -161,6 +167,10 @@ public class ForwardingRules extends RulesFile implements ApplicationContextAwar
 
     public void setAddressManager(AddressManager addressManager) {
         m_addressManager = addressManager;
+    }
+
+    public AddressManager getAddressManager() {
+        return m_addressManager;
     }
 
     public void setVelocityEngine(VelocityEngine velocityEngine) {
