@@ -101,7 +101,7 @@ public class ForwardingRules extends RulesFile implements ApplicationContextAwar
         context.put("rlsAddress", getRlsAddress());
         context.put("regEventAddress", m_addressManager.getSingleAddress(Registrar.EVENT_ADDRESS, getLocation()));
         if (m_featureManager.isFeatureEnabled(FreeswitchFeature.FEATURE, getLocation())) {
-            context.put("freeswitchAddresAddressManager m_addressManager;s", m_addressManager.
+            context.put("freeswitchAddress", m_addressManager.
                 getSingleAddress(FreeswitchFeature.SIP_ADDRESS, getLocation()).getAddress());
         }
         // Use Local registrar, if not available use global rr SRV record
