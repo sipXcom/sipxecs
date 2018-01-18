@@ -64,10 +64,9 @@
       <methodPattern>INVITE</methodPattern> 
       <routeTo>&lt;rr.example.org:0;transport=tcp;x-sipx-routetoreg&gt;</routeTo> 
     </methodMatch> 
-    
+
     <!-- All other requests go to the SIP registry service -->
     <routeTo ruriParams="sipx-noroute=Voicemail">&lt;rr.example.org:0;transport=tcp;x-sipx-routetoreg&gt;</routeTo>
-    
   </route>
 
     <route mappingType='local ip address'>
