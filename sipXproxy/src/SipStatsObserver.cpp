@@ -16,7 +16,7 @@ SipStatsObserver::SipStatsObserver(SipUserAgent &sipUserAgent) :
                                    TRUE, // Requests,
                                    TRUE, //Responses,
                                    TRUE, //Incoming,
-                                   TRUE, //OutGoing,
+                                   FALSE, //OutGoing,
                                    "", //eventName,
                                    NULL, // any session
                                    NULL // no observerData
