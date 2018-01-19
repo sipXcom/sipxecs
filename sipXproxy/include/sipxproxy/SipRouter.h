@@ -236,9 +236,6 @@ class SipRouter : public OsServerTask
    /// prepare and report statistics
    void reportStatistics();
 
-   /// prepare and report SIP statistics
-   void reportSipStatistics(const SipMessage& msg, bool received = true);
-
    /// Extract configuration parameters from the configuration file.
    void readConfig(OsConfigDb& configDb,  /// database to read for parameters
                    const Url&  defaultUri /// to be used for default realm and route
