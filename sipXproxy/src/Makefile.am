@@ -55,6 +55,8 @@ libsipXproxy_la_SOURCES = \
 	RouteState.cpp \
 	SipXProxyCseObserver.h \
 	SipXProxyCseObserver.cpp \
+	SipStatsObserver.h \
+	SipStatsObserver.cpp \
    CallStateEventBuilder.h \
    CallStateEventBuilder.cpp \
    CallStateEventBuilder_XML.h \
