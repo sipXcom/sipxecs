@@ -14,9 +14,9 @@ SipStatsObserver::SipStatsObserver(SipUserAgent &sipUserAgent) :
    sipUserAgent.addMessageObserver(*getMessageQueue(),
                                    "", // all methods
                                    TRUE, // Requests,
-                                   FALSE, //Responses,
+                                   TRUE, //Responses,
                                    TRUE, //Incoming,
-                                   FALSE, //OutGoing,
+                                   TRUE, //OutGoing,
                                    "", //eventName,
                                    NULL, // any session
                                    NULL // no observerData

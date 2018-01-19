@@ -33,6 +33,7 @@
 #include <sipXecsService/daemon.h>
 #include <ForwardRules.h>
 #include <SipXProxyCseObserver.h>
+#include <SipStatsObserver.h>
 #include <utl/Instrumentation.h>
 #include <os/OsResourceLimit.h>
 #include "StatisticsManagerLib/StatisticsManager.hpp"
@@ -637,6 +638,10 @@ int proxy()
       }
     }
 
+    SipStatsObserver *statObserver = NULL;
+    statObserver = new SipStatsObserver(*pSipUserAgent);
+    statObserver->start();
+
     // Create a router to route stuff either
     // to a local server or on out to the real world
     SipRouter* pRouter = new SipRouter(*pSipUserAgent, 
@@ -670,6 +675,11 @@ int proxy()
     // This is a server task so gracefully shutdown the
     // router task by deleting it.
     delete pRouter ;
+
+    if (statObserver)
+    {
+        delete statObserver;
+    }
 
     // Stop the SipUserAgent.
     pSipUserAgent->shutdown();
