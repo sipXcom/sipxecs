@@ -49,6 +49,11 @@
 
 #end
 #if( $rlsAddress)
+      <fieldMatch fieldName="User-Agent"> 
+        <fieldPattern>.*redirectorPickup</fieldPattern> 
+        <routeTo>&lt;${regAddress.stripProtocol()};transport=tcp&gt;</routeTo> 
+     </fieldMatch> 
+
       <!-- All other SUBSCRIBE requests go to the Resource list server -->
       <routeTo>&lt;${rlsAddress.stripProtocol()};transport=tcp&gt;</routeTo>
 #else
