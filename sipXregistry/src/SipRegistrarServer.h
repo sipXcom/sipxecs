@@ -17,6 +17,7 @@
 #include "os/OsLock.h"
 #include "os/OsServerTask.h"
 #include "os/OsThreadPool.h"
+#include <Poco/Semaphore.h>
 #include "sipXecsService/SipNonceDb.h"
 #include "utl/PluginHooks.h"
 #include "sipdb/RegExpireThread.h"
@@ -117,13 +118,13 @@ protected:
         bool& isUnregister, std::vector<RegBinding::Ptr>& newBindings);
 
     void mergeNewBindings(
-      const RegDB::Bindings& unexpiredRegs, 
-      const std::vector<RegBinding::Ptr>& newBindings, 
+      const RegDB::Bindings& unexpiredRegs,
+      const std::vector<RegBinding::Ptr>& newBindings,
       RegDB::Bindings& mergedResult);
-    
+
     void validateUnregisteredBindings(
-      const SipMessage& registerMessage, 
-      const RegDB::Bindings& unexpiredBindings, 
+      const SipMessage& registerMessage,
+      const RegDB::Bindings& unexpiredBindings,
       RegDB::Bindings& mergedResult);
 
     // Process a single REGISTER request
@@ -150,6 +151,8 @@ protected:
     bool isRegistrantBehindNat( const SipMessage& registerRequest ) const;
 
     OsThreadPool<SipMessage*> _registerHandler;
+    Poco::Semaphore *_registerHandlerSem;
+    int _maxConcurrentThreads;
 };
 
 #endif // SIPREGISTRARSERVER_H
