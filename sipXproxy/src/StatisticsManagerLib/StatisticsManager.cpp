@@ -56,6 +56,8 @@ TimedMapFileWriter::touch()
       {
             mLastWriteTime = now;
             writeToFile(mFileName);
+            statistics::StatisticsManager::Instance().getSipStatistics()->zeroOut();
+            mData.clear();
       }
 }
 
@@ -196,4 +198,11 @@ StatisticsManager::retransmitted(MethodType method, bool request, unsigned int c
             mSipStatistics->retransmitted(method, request, code);
       }
 }
+
+SipStatistics *
+StatisticsManager::getSipStatistics() const
+{
+      return mSipStatistics;
+}
+
 } // namespace statistics

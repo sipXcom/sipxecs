@@ -129,6 +129,8 @@ namespace statistics
         /// update SIP statistics on message retransmitted
         void retransmitted(MethodType method, bool request, unsigned int code);
 
+        /// get SipStatistics pointer
+        SipStatistics *getSipStatistics() const;
     private:
 
         /// logger func
