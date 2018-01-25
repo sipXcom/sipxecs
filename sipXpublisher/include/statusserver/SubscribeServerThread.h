@@ -17,8 +17,11 @@
 
 // APPLICATION INCLUDES
 #include "os/OsServerTask.h"
+#include "os/OsThreadPool.h"
 #include "sipXecsService/SipNonceDb.h"
 #include "statusserver/DomainValidator.h"
+
+#include <Poco/Semaphore.h>
 
 // DEFINES
 // MACROS
@@ -100,7 +103,8 @@ public:
     } SubscribeStatus;
 
     UtlBoolean handleMessage( OsMsg& eventMessage );
-    
+    void handleRequest( SipMessage *msg );
+
 protected:
     StatusServer& mStatusServer;
     SipUserAgent* mpSipUserAgent;
@@ -159,5 +163,9 @@ protected:
     int removeErrorSubscription(const SipMessage& sipMessage);
 
     friend class Notifier;
+
+    OsThreadPool<SipMessage*> mThreadPool;
+    Poco::Semaphore* mThreadPoolSem;
+    int mMaxConcurrentThreads;
 };
 #endif // SUBSCRIBESERVERTHREAD_H
