@@ -86,6 +86,34 @@ public interface PhoneApi {
     })
     public Response sendPhonesProfileRestart(IdsList idsList);
 
+    @Path("sendProfile/all")
+    @PUT
+    public Response sendPhonesProfile();
+
+    @Path("sendProfile/all/restart")
+    @PUT
+    public Response sendPhonesProfileRestart();
+
+    @Path("{userId}/sendProfile/user")
+    @PUT
+    public Response sendUserPhonesProfile(@Description("User Id to which returned phones belong to")
+        @PathParam("userId") String userId);
+
+    @Path("{userId}/sendProfile/user/restart")
+    @PUT
+    public Response sendUserPhonesProfileRestart(@Description("User Id to which returned phones belong to")
+        @PathParam("userId") String userId);
+
+    @Path("{phoneGroupId}/sendProfile/phoneGroup")
+    @PUT
+    public Response sendPhoneGroupPhonesProfile(@Description("Phone group Id to which returned phones belong to")
+        @PathParam("phoneGroupId") String phoneGroupId);
+
+    @Path("{phoneGroupId}/sendProfile/phoneGroup/restart")
+    @PUT
+    public Response sendPhoneGroupPhonesProfileRestart(@Description("Phone group Id to which returned phones belong to")
+        @PathParam("phoneGroupId") String phoneGroupId);
+
     @Path("{phoneId}")
     @PUT
     @Consumes({

@@ -249,6 +249,54 @@ public class PhoneApiImpl implements PhoneApi {
         return Response.ok().build();
     }
 
+    @Override
+    public Response sendPhonesProfile() {
+        List<Integer> allIds = m_phoneContext.getAllPhoneIds();
+        m_profileManager.generateProfiles(allIds, false, null);
+        return Response.ok().build();
+    }
+
+    @Override
+    public Response sendPhonesProfileRestart() {
+        // TODO Auto-generated method stub
+        List<Integer> allIds = m_phoneContext.getAllPhoneIds();
+        m_profileManager.generateProfiles(allIds, true, null);
+        return Response.ok().build();
+    }
+
+    @Override
+    public Response sendUserPhonesProfile(String userId) {
+        Collection<Phone> phones = m_phoneContext.getPhonesByUserId(Integer.parseInt(userId));
+        List<Integer> userPhonesIds = getPhonesIds(phones);
+        m_profileManager.generateProfiles(userPhonesIds, false, null);
+        return Response.ok().build();
+    }
+
+    @Override
+    public Response sendUserPhonesProfileRestart(String userId) {
+        Collection<Phone> phones = m_phoneContext.getPhonesByUserId(Integer.parseInt(userId));
+        List<Integer> userPhonesIds = getPhonesIds(phones);
+        m_profileManager.generateProfiles(userPhonesIds, true, null);
+        return Response.ok().build();
+    }
+
+
+    @Override
+    public Response sendPhoneGroupPhonesProfile(String phoneGroupId) {
+        Collection<Phone> phones = m_phoneContext.getPhonesByGroupId(Integer.parseInt(phoneGroupId));
+        List<Integer> groupPhonesIds = getPhonesIds(phones);
+        m_profileManager.generateProfiles(groupPhonesIds, false, null);
+        return Response.ok().build();
+    }
+
+    @Override
+    public Response sendPhoneGroupPhonesProfileRestart(String phoneGroupId) {
+        Collection<Phone> phones = m_phoneContext.getPhonesByGroupId(Integer.parseInt(phoneGroupId));
+        List<Integer> groupPhonesIds = getPhonesIds(phones);
+        m_profileManager.generateProfiles(groupPhonesIds, true, null);
+        return Response.ok().build();
+    }
+
     private Response sendPhoneProfile(String phoneId, boolean restart) {
         Phone phone = getPhoneByIdOrMac(phoneId);
         m_profileManager.generateProfile(phone.getId(), restart, null);
@@ -265,6 +313,14 @@ public class PhoneApiImpl implements PhoneApi {
             phone = m_phoneContext.getPhoneBySerialNumber(id);
         }
         return phone;
+    }
+
+    private List<Integer> getPhonesIds(Collection<Phone> phones) {
+        List<Integer> userPhoneIds = new ArrayList();
+        for (Phone phone : phones) {
+            userPhoneIds.add(phone.getId());
+        }
+        return userPhoneIds;
     }
 
     public void setPhoneContext(PhoneContext context) {
