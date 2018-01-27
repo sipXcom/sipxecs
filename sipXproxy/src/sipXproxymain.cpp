@@ -513,20 +513,6 @@ int proxy()
     {
       OS_LOG_NOTICE(FAC_SIP,  "Retransmit count set to default.  Value: " << sipRetran << " times");
     }
-   
-    // setup statistics manager
-    // TODO get timeout and file name from configuration
-    bool statisticsManagerEnabled = true;
-
-    statistics::TimedMapFileWriter *pStatsPrinter = NULL;
-
-    if (statisticsManagerEnabled)
-    {
-        statistics::StatisticsManager::Instance().registerLoggerFunc(&logFunc);
-        pStatsPrinter = new statistics::TimedMapFileWriter(5, "/var/log/sipxpbx/proxy_stats.json");
-        statistics::StatisticsManager::Instance().registerProcessor("file_printer", pStatsPrinter);
-        statistics::StatisticsManager::Instance().start();
-    }
 
     int proxyQueueSize;
     if (osServiceOptions.getOption("SIPX_PROXY_QUEUE_SIZE", proxyQueueSize) != OS_SUCCESS)
@@ -638,9 +624,33 @@ int proxy()
       }
     }
 
+    // setup statistics manager if enabled
+    bool statisticsManagerEnabled;
+    int statisticsUpdatePeriod;
+    UtlString statisticsFile;;
+
+    osServiceOptions.getOption("SIPX_PROXY_STATISTICS_PERIOD", statisticsUpdatePeriod, 5);
+    osServiceOptions.getOption("SIPX_PROXY_STATISTICS_MANAGER", statisticsManagerEnabled, false);
+    osServiceOptions.getOption("SIPX_PROXY_STATISTICS_FILE", statisticsFile, "/var/log/sipxpbx/proxy_stats.json");
+
+    statistics::TimedMapFileWriter *pStatsPrinter = NULL;
     SipStatsObserver *statObserver = NULL;
-    statObserver = new SipStatsObserver(*pSipUserAgent);
-    statObserver->start();
+
+    if (statisticsManagerEnabled)
+    {
+        OS_LOG_INFO(FAC_SIP,  "StatisticsManager enabled, period: " << statisticsUpdatePeriod << " seconds, output file: " << statisticsFile);
+        statObserver = new SipStatsObserver(*pSipUserAgent);
+        statObserver->start();
+
+        statistics::StatisticsManager::Instance().registerLoggerFunc(&logFunc);
+        pStatsPrinter = new statistics::TimedMapFileWriter(statisticsUpdatePeriod, statisticsFile.data());
+        statistics::StatisticsManager::Instance().registerProcessor("file_printer", pStatsPrinter);
+        statistics::StatisticsManager::Instance().start();
+    }
+    else
+    {
+        OS_LOG_INFO(FAC_SIP,  "StatisticsManager disabled");
+    }
 
     // Create a router to route stuff either
     // to a local server or on out to the real world

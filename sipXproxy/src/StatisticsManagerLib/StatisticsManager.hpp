@@ -142,5 +142,6 @@ namespace statistics
         boost::thread mWorkerThread;
         void (*mLoggerFunc)(const std::string &);
         SipStatistics *mSipStatistics;
+        bool mStarted;
     };
 } // namespace statistics

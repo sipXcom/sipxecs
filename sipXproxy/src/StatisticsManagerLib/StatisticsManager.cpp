@@ -82,6 +82,7 @@ StatisticsManager::start()
       mSipStatistics = new SipStatistics(mFifo);
       mWorkerThread = boost::thread(boost::bind(&StatisticsManager::worker, this));
       log("StatisticsManager started");
+      mStarted = true;
 }
 
 void
@@ -123,7 +124,10 @@ StatisticsManager::worker()
 void
 StatisticsManager::add(const Data &data)
 {
-      mFifo.push(data);
+      if (mStarted)
+      {
+            mFifo.push(data);
+      }
 }
 
 void
@@ -133,6 +137,7 @@ StatisticsManager::stop()
       mWorkerThread.join();
       log("StatisticsManager stopped");
       delete mSipStatistics;
+      mStarted = false;
 }
 
 void
@@ -175,7 +180,7 @@ StatisticsManager::log(const std::string &msg)
 void
 StatisticsManager::received(MethodType method, bool request, unsigned int code)
 {
-      if (mSipStatistics)
+      if (mSipStatistics && mStarted)
       {
             mSipStatistics->received(method, request, code);
       }
@@ -184,7 +189,7 @@ StatisticsManager::received(MethodType method, bool request, unsigned int code)
 void
 StatisticsManager::sent(MethodType method, bool request, unsigned int code)
 {
-      if (mSipStatistics)
+      if (mSipStatistics && mStarted)
       {
             mSipStatistics->sent(method, request, code);
       }
@@ -193,7 +198,7 @@ StatisticsManager::sent(MethodType method, bool request, unsigned int code)
 void
 StatisticsManager::retransmitted(MethodType method, bool request, unsigned int code)
 {
-      if (mSipStatistics)
+      if (mSipStatistics && mStarted)
       {
             mSipStatistics->retransmitted(method, request, code);
       }
