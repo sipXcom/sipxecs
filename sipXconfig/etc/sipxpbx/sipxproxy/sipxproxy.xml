@@ -216,6 +216,18 @@
       <value>60</value>
     </setting>
   </group>
+  <group name="proxy-statistics">
+    <setting name="SIPX_PROXY_STATISTICS_MANAGER">
+      <type><boolean /></type>
+      <value>0</value>
+    </setting>
+    <setting name="SIPX_PROXY_STATISTICS_PERIOD">
+      <type>
+        <integer/>
+      </type>
+      <value>5</value>
+    </setting>
+  </group>
   <group name="subscriptionauth">
     <setting name="PACKAGES_REQUIRING_AUTHENTICATION" advanced="yes">
       <type>

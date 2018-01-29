@@ -108,6 +108,8 @@ public class ProxyConfiguration implements ConfigProvider, ApplicationContextAwa
         Setting root = settings.getSettings();
         Setting proxyConfigurationSettings = root.getSetting("proxy-configuration");
         config.writeSettings(proxyConfigurationSettings);
+        Setting proxyStatsSettings = root.getSetting("proxy-statistics");
+        config.writeSettings(proxyStatsSettings);
         Setting databaseSettings = root.getSetting("database");
         config.writeSettings(databaseSettings);
         config.writeSettings("SIPX_PROXY.205_subscriptionauth.", root.getSetting("subscriptionauth"));
