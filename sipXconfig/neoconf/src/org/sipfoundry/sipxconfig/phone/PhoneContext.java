@@ -108,7 +108,11 @@ public interface PhoneContext extends DataObjectSource {
 
     Collection<Phone> getPhonesByGroupId(Integer groupId);
 
+    Collection<Phone> getPhonesByGroupName(String groupName);
+
     Collection<Phone> getPhonesByUserId(Integer userId);
+
+    Collection<Phone> getPhonesByUserName(String userName);
 
     void addToGroup(Integer groupId, Collection<Integer> ids);
 

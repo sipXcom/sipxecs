@@ -94,24 +94,28 @@ public interface PhoneApi {
     @PUT
     public Response sendPhonesProfileRestart();
 
-    @Path("{userId}/sendProfile/user")
+    @Path("user/{userId}/sendProfile")
     @PUT
     public Response sendUserPhonesProfile(@Description("User Id to which returned phones belong to")
+        @QueryParam("field") String field,
         @PathParam("userId") String userId);
 
-    @Path("{userId}/sendProfile/user/restart")
+    @Path("user/{userId}/sendProfile/restart")
     @PUT
     public Response sendUserPhonesProfileRestart(@Description("User Id to which returned phones belong to")
+        @QueryParam("field") String field,
         @PathParam("userId") String userId);
 
-    @Path("{phoneGroupId}/sendProfile/phoneGroup")
+    @Path("phoneGroup/{phoneGroupId}/sendProfile")
     @PUT
     public Response sendPhoneGroupPhonesProfile(@Description("Phone group Id to which returned phones belong to")
+        @QueryParam("field") String field,
         @PathParam("phoneGroupId") String phoneGroupId);
 
-    @Path("{phoneGroupId}/sendProfile/phoneGroup/restart")
+    @Path("phoneGroup/{phoneGroupId}/sendProfile/restart")
     @PUT
     public Response sendPhoneGroupPhonesProfileRestart(@Description("Phone group Id to which returned phones belong to")
+        @QueryParam("field") String field,
         @PathParam("phoneGroupId") String phoneGroupId);
 
     @Path("{phoneId}")

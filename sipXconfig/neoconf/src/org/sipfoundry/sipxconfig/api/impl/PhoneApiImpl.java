@@ -44,6 +44,9 @@ import org.sipfoundry.sipxconfig.setting.SettingDao;
 import org.springframework.beans.factory.annotation.Required;
 
 public class PhoneApiImpl implements PhoneApi {
+    private static final String ID = "id";
+    private static final String NAME = "name";
+
     private PhoneContext m_phoneContext;
     private ModelSource<PhoneModel> m_modelSource;
     private SettingDao m_settingDao;
@@ -265,16 +268,16 @@ public class PhoneApiImpl implements PhoneApi {
     }
 
     @Override
-    public Response sendUserPhonesProfile(String userId) {
-        Collection<Phone> phones = m_phoneContext.getPhonesByUserId(Integer.parseInt(userId));
+    public Response sendUserPhonesProfile(String field, String userId) {
+        Collection<Phone> phones = getPhonesByUserIdOrName(field, userId);
         List<Integer> userPhonesIds = getPhonesIds(phones);
         m_profileManager.generateProfiles(userPhonesIds, false, null);
         return Response.ok().build();
     }
 
     @Override
-    public Response sendUserPhonesProfileRestart(String userId) {
-        Collection<Phone> phones = m_phoneContext.getPhonesByUserId(Integer.parseInt(userId));
+    public Response sendUserPhonesProfileRestart(String field, String userId) {
+        Collection<Phone> phones = getPhonesByUserIdOrName(field, userId);
         List<Integer> userPhonesIds = getPhonesIds(phones);
         m_profileManager.generateProfiles(userPhonesIds, true, null);
         return Response.ok().build();
@@ -282,16 +285,16 @@ public class PhoneApiImpl implements PhoneApi {
 
 
     @Override
-    public Response sendPhoneGroupPhonesProfile(String phoneGroupId) {
-        Collection<Phone> phones = m_phoneContext.getPhonesByGroupId(Integer.parseInt(phoneGroupId));
+    public Response sendPhoneGroupPhonesProfile(String field, String phoneGroupId) {
+        Collection<Phone> phones = getPhonesByGroupIdOrName(field, phoneGroupId);
         List<Integer> groupPhonesIds = getPhonesIds(phones);
         m_profileManager.generateProfiles(groupPhonesIds, false, null);
         return Response.ok().build();
     }
 
     @Override
-    public Response sendPhoneGroupPhonesProfileRestart(String phoneGroupId) {
-        Collection<Phone> phones = m_phoneContext.getPhonesByGroupId(Integer.parseInt(phoneGroupId));
+    public Response sendPhoneGroupPhonesProfileRestart(String field, String phoneGroupId) {
+        Collection<Phone> phones = getPhonesByGroupIdOrName(field, phoneGroupId);
         List<Integer> groupPhonesIds = getPhonesIds(phones);
         m_profileManager.generateProfiles(groupPhonesIds, true, null);
         return Response.ok().build();
@@ -313,6 +316,26 @@ public class PhoneApiImpl implements PhoneApi {
             phone = m_phoneContext.getPhoneBySerialNumber(id);
         }
         return phone;
+    }
+
+    private Collection<Phone> getPhonesByGroupIdOrName(String field, String id) {
+        Collection<Phone> phones = null;
+        if (StringUtils.equals(field, ID)) {
+            phones = m_phoneContext.getPhonesByGroupId(Integer.parseInt(id));
+        } else if (StringUtils.equals(field, NAME)) {
+            phones = m_phoneContext.getPhonesByGroupName(id);
+        }
+        return phones;
+    }
+
+    private Collection<Phone> getPhonesByUserIdOrName(String field, String id) {
+        Collection<Phone> phones = null;
+        if (StringUtils.equals(field, ID)) {
+            phones = m_phoneContext.getPhonesByUserId(Integer.parseInt(id));
+        } else if (StringUtils.equals(field, NAME)) {
+            phones = m_phoneContext.getPhonesByUserName(id);
+        }
+        return phones;
     }
 
     private List<Integer> getPhonesIds(Collection<Phone> phones) {

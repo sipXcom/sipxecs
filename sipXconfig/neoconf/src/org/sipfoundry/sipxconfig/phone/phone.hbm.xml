@@ -55,10 +55,18 @@
   <query name="phonesByGroupId">
     <![CDATA[select p from Phone as p join p.groups as pgroups where pgroups.id = :groupId]]>
   </query>
+  
+  <query name="phonesByGroupName">
+    <![CDATA[select p from Phone as p join p.groups as pgroups where pgroups.name = :groupName]]>
+  </query>
 
   <query name="phonesByUserId">
     <![CDATA[select distinct line.phone from Line as line join line.user as line_user where line_user.id = :userId]]>
   </query>
+  
+  <query name="phonesByUserName">
+    <![CDATA[select distinct line.phone from Line as line join line.user as line_user where line_user.userName = :userName]]>
+  </query>  
 
   <query name="phonesByUserIdAndPhoneModel">
     <![CDATA[select distinct line.phone from Line as line join line.user as line_user where line_user.id = :userId and line.phone.modelId = :modelId]]>

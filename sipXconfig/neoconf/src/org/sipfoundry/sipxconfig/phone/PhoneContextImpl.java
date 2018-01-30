@@ -82,6 +82,7 @@ public class PhoneContextImpl extends SipxHibernateDaoSupport implements BeanFac
     private static final String ALARM_PHONE_DELETED = "ALARM_PHONE_DELETED Phone with id %d serial %s was deleted.";
 
     private static final String USER_ID = "userId";
+    private static final String USER_NAME = "userName";
     private static final String VALUE = "value";
     private static final String SQL_SELECT_GROUP = "select p.phone_id,p.serial_number "
             + "from phone p join phone_group pg on pg.phone_id = p.phone_id where pg.group_id=%d";
@@ -353,6 +354,13 @@ public class PhoneContextImpl extends SipxHibernateDaoSupport implements BeanFac
     }
 
     @Override
+    public Collection<Phone> getPhonesByGroupName(String groupName) {
+        Collection<Phone> phones = getHibernateTemplate().findByNamedQueryAndNamedParam("phonesByGroupName",
+            "groupName", groupName);
+        return phones;
+    }
+
+    @Override
     public void onDelete(Object entity) {
         Class c = entity.getClass();
         if (User.class.equals(c)) {
@@ -444,6 +452,11 @@ public class PhoneContextImpl extends SipxHibernateDaoSupport implements BeanFac
     @Override
     public Collection<Phone> getPhonesByUserId(Integer userId) {
         return getHibernateTemplate().findByNamedQueryAndNamedParam("phonesByUserId", USER_ID, userId);
+    }
+
+    @Override
+    public Collection<Phone> getPhonesByUserName(String userName) {
+        return getHibernateTemplate().findByNamedQueryAndNamedParam("phonesByUserName", USER_NAME, userName);
     }
 
     @Override
@@ -622,6 +635,4 @@ public class PhoneContextImpl extends SipxHibernateDaoSupport implements BeanFac
         return q.list().size() > 0 ? (Integer) q.uniqueResult() : 0;
 
     }
-
-
 }
