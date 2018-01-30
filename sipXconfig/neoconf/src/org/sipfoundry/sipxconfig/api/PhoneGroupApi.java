@@ -73,6 +73,13 @@ public interface PhoneGroupApi {
     public Response movePhoneGroupDown(
             @Description("Phone group internal id or name") @PathParam("groupId") String groupId);
 
+    @Path("{groupId}/model/{modelId}/firmware/{firmware}")
+    @PUT
+    public Response updatePhoneGroupFirmware(
+            @Description("Phone group internal id or name") @PathParam("groupId") String groupId,
+            @Description("Phone model id") @PathParam("modelId") String modelId,
+            @Description("Firmware") @PathParam("firmware") String firmware);
+
     @Path("{groupId}/models")
     @GET
     public Response getPhoneGroupModels(

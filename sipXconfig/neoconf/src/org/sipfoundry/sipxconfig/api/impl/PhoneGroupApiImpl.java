@@ -25,7 +25,9 @@ import org.sipfoundry.sipxconfig.api.PhoneGroupApi;
 import org.sipfoundry.sipxconfig.api.model.GroupBean;
 import org.sipfoundry.sipxconfig.api.model.ModelBean.ModelList;
 import org.sipfoundry.sipxconfig.api.model.SettingsList;
+import org.sipfoundry.sipxconfig.device.DeviceVersion;
 import org.sipfoundry.sipxconfig.device.ModelSource;
+import org.sipfoundry.sipxconfig.phone.Line;
 import org.sipfoundry.sipxconfig.phone.Phone;
 import org.sipfoundry.sipxconfig.phone.PhoneContext;
 import org.sipfoundry.sipxconfig.phone.PhoneModel;
@@ -117,6 +119,20 @@ public class PhoneGroupApiImpl extends GroupApiImpl  implements PhoneGroupApi {
             return Response.ok().entity(group.getId()).build();
         }
         return Response.status(Status.NOT_FOUND).build();
+    }
+
+    @Override
+    public Response updatePhoneGroupFirmware(String groupId, String modelId, String firmware) {
+        PhoneModel model = m_phoneModelSource.getModel(modelId);
+        Group group = getPhoneGroupByIdOrName(groupId);
+        Phone phone = m_phoneContext.newPhone(model);
+        Line line = phone.createLine();
+        phone.addLine(line);
+
+        m_phoneContext.applyGroupFirmwareVersion(group,
+            DeviceVersion.getDeviceVersion(phone.getBeanId()
+                    + firmware), phone.getModelId());
+        return Response.ok().entity(group.getId()).build();
     }
 
     @Override
