@@ -94,29 +94,48 @@ public interface PhoneApi {
     @PUT
     public Response sendPhonesProfileRestart();
 
-    @Path("user/{userId}/sendProfile")
+    @Path("user/id/{userId}/sendProfile")
     @PUT
-    public Response sendUserPhonesProfile(@Description("User Id to which returned phones belong to")
-        @QueryParam("field") String field,
+    public Response sendUserIdPhonesProfile(@Description("User Id to which returned phones belong to")
         @PathParam("userId") String userId);
 
-    @Path("user/{userId}/sendProfile/restart")
+    @Path("user/id/{userId}/sendProfile/restart")
     @PUT
-    public Response sendUserPhonesProfileRestart(@Description("User Id to which returned phones belong to")
-        @QueryParam("field") String field,
+    public Response sendUserIdPhonesProfileRestart(@Description("User Id to which returned phones belong to")
         @PathParam("userId") String userId);
 
-    @Path("phoneGroup/{phoneGroupId}/sendProfile")
+    @Path("user/name/{userName}/sendProfile")
     @PUT
-    public Response sendPhoneGroupPhonesProfile(@Description("Phone group Id to which returned phones belong to")
-        @QueryParam("field") String field,
+    public Response sendUserNamePhonesProfile(@Description("User Name to which returned phones belong to")
+        @PathParam("userName") String userName);
+
+    @Path("user/name/{userName}/sendProfile/restart")
+    @PUT
+    public Response sendUserNamePhonesProfileRestart(@Description("User Name to which returned phones belong to")
+        @PathParam("userName") String userName);
+
+    @Path("phoneGroup/id/{phoneGroupId}/sendProfile")
+    @PUT
+    public Response sendPhoneGroupIdPhonesProfile(@Description("Phone group Id to which returned phones belong to")
         @PathParam("phoneGroupId") String phoneGroupId);
 
-    @Path("phoneGroup/{phoneGroupId}/sendProfile/restart")
+    @Path("phoneGroup/id/{phoneGroupId}/sendProfile/restart")
     @PUT
-    public Response sendPhoneGroupPhonesProfileRestart(@Description("Phone group Id to which returned phones belong to")
-        @QueryParam("field") String field,
+    public Response sendPhoneGroupIdPhonesProfileRestart(
+        @Description("Phone group Id to which returned phones belong to")
         @PathParam("phoneGroupId") String phoneGroupId);
+
+    @Path("phoneGroup/name/{phoneGroupName}/sendProfile")
+    @PUT
+    public Response sendPhoneGroupNamePhonesProfile(
+        @Description("Phone group Name to which returned phones belong to")
+        @PathParam("phoneGroupName") String phoneGroupName);
+
+    @Path("phoneGroup/name/{phoneGroupName}/sendProfile/restart")
+    @PUT
+    public Response sendPhoneGroupNamePhonesProfileRestart(
+        @Description("Phone group Name to which returned phones belong to")
+        @PathParam("phoneGroupName") String phoneGroupName);
 
     @Path("{phoneId}")
     @PUT

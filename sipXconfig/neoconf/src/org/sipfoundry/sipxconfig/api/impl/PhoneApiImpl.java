@@ -268,16 +268,32 @@ public class PhoneApiImpl implements PhoneApi {
     }
 
     @Override
-    public Response sendUserPhonesProfile(String field, String userId) {
-        Collection<Phone> phones = getPhonesByUserIdOrName(field, userId);
+    public Response sendUserIdPhonesProfile(String userId) {
+        Collection<Phone> phones = getPhonesByUserIdOrName(ID, userId);
         List<Integer> userPhonesIds = getPhonesIds(phones);
         m_profileManager.generateProfiles(userPhonesIds, false, null);
         return Response.ok().build();
     }
 
     @Override
-    public Response sendUserPhonesProfileRestart(String field, String userId) {
-        Collection<Phone> phones = getPhonesByUserIdOrName(field, userId);
+    public Response sendUserIdPhonesProfileRestart(String userId) {
+        Collection<Phone> phones = getPhonesByUserIdOrName(ID, userId);
+        List<Integer> userPhonesIds = getPhonesIds(phones);
+        m_profileManager.generateProfiles(userPhonesIds, true, null);
+        return Response.ok().build();
+    }
+
+    @Override
+    public Response sendUserNamePhonesProfile(String userName) {
+        Collection<Phone> phones = getPhonesByUserIdOrName(NAME, userName);
+        List<Integer> userPhonesIds = getPhonesIds(phones);
+        m_profileManager.generateProfiles(userPhonesIds, false, null);
+        return Response.ok().build();
+    }
+
+    @Override
+    public Response sendUserNamePhonesProfileRestart(String userName) {
+        Collection<Phone> phones = getPhonesByUserIdOrName(NAME, userName);
         List<Integer> userPhonesIds = getPhonesIds(phones);
         m_profileManager.generateProfiles(userPhonesIds, true, null);
         return Response.ok().build();
@@ -285,16 +301,32 @@ public class PhoneApiImpl implements PhoneApi {
 
 
     @Override
-    public Response sendPhoneGroupPhonesProfile(String field, String phoneGroupId) {
-        Collection<Phone> phones = getPhonesByGroupIdOrName(field, phoneGroupId);
+    public Response sendPhoneGroupIdPhonesProfile(String phoneGroupId) {
+        Collection<Phone> phones = getPhonesByGroupIdOrName(ID, phoneGroupId);
         List<Integer> groupPhonesIds = getPhonesIds(phones);
         m_profileManager.generateProfiles(groupPhonesIds, false, null);
         return Response.ok().build();
     }
 
     @Override
-    public Response sendPhoneGroupPhonesProfileRestart(String field, String phoneGroupId) {
-        Collection<Phone> phones = getPhonesByGroupIdOrName(field, phoneGroupId);
+    public Response sendPhoneGroupIdPhonesProfileRestart(String phoneGroupId) {
+        Collection<Phone> phones = getPhonesByGroupIdOrName(ID, phoneGroupId);
+        List<Integer> groupPhonesIds = getPhonesIds(phones);
+        m_profileManager.generateProfiles(groupPhonesIds, true, null);
+        return Response.ok().build();
+    }
+
+    @Override
+    public Response sendPhoneGroupNamePhonesProfile(String phoneGroupName) {
+        Collection<Phone> phones = getPhonesByGroupIdOrName(NAME, phoneGroupName);
+        List<Integer> groupPhonesIds = getPhonesIds(phones);
+        m_profileManager.generateProfiles(groupPhonesIds, false, null);
+        return Response.ok().build();
+    }
+
+    @Override
+    public Response sendPhoneGroupNamePhonesProfileRestart(String phoneGroupName) {
+        Collection<Phone> phones = getPhonesByGroupIdOrName(NAME, phoneGroupName);
         List<Integer> groupPhonesIds = getPhonesIds(phones);
         m_profileManager.generateProfiles(groupPhonesIds, true, null);
         return Response.ok().build();
