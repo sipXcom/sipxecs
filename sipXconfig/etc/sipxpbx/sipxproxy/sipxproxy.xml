@@ -103,6 +103,10 @@
       <type><boolean /></type>
       <value>0</value>
     </setting>
+    <setting name="SIPX_DISABLE_REGISTRAR_DNS_LOOKUP">
+      <type><boolean /></type>
+      <value>0</value>
+    </setting>
     <setting name="SIPX_PROXY_DEFAULT_RTT" advanced="yes">
       <type>
         <integer min="100" max="500"/>

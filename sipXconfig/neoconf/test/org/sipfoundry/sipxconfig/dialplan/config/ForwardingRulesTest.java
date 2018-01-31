@@ -31,6 +31,7 @@ import java.util.Set;
 import org.apache.commons.io.IOUtils;
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.custommonkey.xmlunit.XMLUnit;
+import org.easymock.EasyMock;
 import org.sipfoundry.sipxconfig.address.Address;
 import org.sipfoundry.sipxconfig.address.AddressManager;
 import org.sipfoundry.sipxconfig.bridge.BridgeSbc;
@@ -48,6 +49,7 @@ import org.sipfoundry.sipxconfig.gateway.SipTrunk;
 import org.sipfoundry.sipxconfig.mwi.Mwi;
 import org.sipfoundry.sipxconfig.phone.PhoneTestDriver;
 import org.sipfoundry.sipxconfig.proxy.ProxyManager;
+import org.sipfoundry.sipxconfig.proxy.ProxySettings;
 import org.sipfoundry.sipxconfig.registrar.Registrar;
 import org.sipfoundry.sipxconfig.sbc.AuxSbc;
 import org.sipfoundry.sipxconfig.sbc.DefaultSbc;
@@ -67,6 +69,7 @@ public class ForwardingRulesTest extends XMLTestCase {
     private SbcDeviceManager m_sbcDeviceManager;
     private ApplicationContext m_applicationContext;
     private AddressManager m_addressManager;
+    private ProxyManager m_proxyManager;
     private Location m_location;
 
     @Override
@@ -91,6 +94,10 @@ public class ForwardingRulesTest extends XMLTestCase {
         expectLastCall().andReturn(new Address(Registrar.TCP_ADDRESS, "reg.example.org", 9904)).once();
         replay(m_addressManager);
 
+        m_proxyManager = createMock(ProxyManager.class);
+        EasyMock.expect(m_proxyManager.getSettings()).andReturn(new MockProxySettings());
+        replay(m_proxyManager);
+
         List<Location> locations = new ArrayList<Location>();
         m_statusLocation = new Location();
         m_statusLocation.setAddress("192.168.1.5");
@@ -110,6 +117,7 @@ public class ForwardingRulesTest extends XMLTestCase {
         replay(m_sbcDeviceManager);
 
         m_applicationContext = createMock(ApplicationContext.class);
+        EasyMock.expect(m_applicationContext.getBean("proxyManager")).andReturn(m_proxyManager);
         m_applicationContext.getBeansOfType(ForwardingRulesPlugin.class);
         expectLastCall().andReturn(null);
         replay(m_applicationContext);
@@ -154,6 +162,7 @@ public class ForwardingRulesTest extends XMLTestCase {
 
     public void testGenerateWithPlugins() throws Exception {
         ApplicationContext applicationContext = createMock(ApplicationContext.class);
+        EasyMock.expect(applicationContext.getBean("proxyManager")).andReturn(m_proxyManager);
         applicationContext.getBeansOfType(ForwardingRulesPlugin.class);
         expectLastCall().andReturn(getPlugins());
         replay(applicationContext);
@@ -572,6 +581,13 @@ public class ForwardingRulesTest extends XMLTestCase {
         @Override
         public List<Bundle> getBundles() {
             return null;
+        }
+    }
+
+    private static class MockProxySettings extends ProxySettings {
+        @Override
+        public boolean isDNSLookupDisable() {
+            return false;
         }
     }
 }

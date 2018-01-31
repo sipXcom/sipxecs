@@ -30,6 +30,7 @@ public class ProxySettings extends PersistableSettings implements DeployConfigOn
     public static final String SIP_PORT_SETTING = "proxy-configuration/SIPX_PROXY_TCP_PORT";
     public static final String SIP_UDP_PORT_SETTING = "proxy-configuration/SIPX_PROXY_UDP_PORT";
     public static final String SIP_SECURE_PORT_SETTING = "proxy-configuration/SIPX_PROXY_TLS_PORT";
+    public static final String DISABLE_REGISTRAR_DNS_LOOKUP_SETTING = "proxy-configuration/SIPX_DISABLE_REGISTRAR_DNS_LOOKUP";
     public static final String INFO_LOG_LEVEL = "INFO";
     public static final String NOTICE_LOG_LEVEL = "NOTICE";
     public static final String DEBUG_LOG_LEVEL = "DEBUG";
@@ -48,6 +49,10 @@ public class ProxySettings extends PersistableSettings implements DeployConfigOn
 
     public int getDefaultInitDelay() {
         return (Integer) getSettingTypedValue("proxy-configuration/SIPX_PROXY_DEFAULT_SERIAL_EXPIRES");
+    }
+
+    public boolean isDNSLookupDisable() {
+        return (Boolean) getSettingTypedValue(DISABLE_REGISTRAR_DNS_LOOKUP_SETTING);
     }
 
     public String getLogLevel() {
