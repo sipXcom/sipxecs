@@ -18,6 +18,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -39,6 +40,7 @@ import org.sipfoundry.commons.userdb.profile.UserProfile;
 import org.sipfoundry.sipxconfig.api.UserApi;
 import org.sipfoundry.sipxconfig.api.model.GroupBean;
 import org.sipfoundry.sipxconfig.api.model.GroupList;
+import org.sipfoundry.sipxconfig.api.model.PhoneList;
 import org.sipfoundry.sipxconfig.api.model.SettingBean;
 import org.sipfoundry.sipxconfig.api.model.SettingsList;
 import org.sipfoundry.sipxconfig.api.model.UserBean;
@@ -48,6 +50,8 @@ import org.sipfoundry.sipxconfig.branch.Branch;
 import org.sipfoundry.sipxconfig.branch.BranchManager;
 import org.sipfoundry.sipxconfig.common.CoreContext;
 import org.sipfoundry.sipxconfig.common.User;
+import org.sipfoundry.sipxconfig.phone.Phone;
+import org.sipfoundry.sipxconfig.phone.PhoneContext;
 import org.sipfoundry.sipxconfig.setting.Group;
 import org.sipfoundry.sipxconfig.setting.Setting;
 import org.sipfoundry.sipxconfig.setting.SettingDao;
@@ -57,6 +61,7 @@ public class UserApiImpl implements UserApi {
     private static final String COMMA = ",";
     private static final Log LOG = LogFactory.getLog(UserApiImpl.class);
     private CoreContext m_coreContext;
+    private PhoneContext m_phoneContext;
     private SettingDao m_settingDao;
     private BranchManager m_branchManager;
 
@@ -252,6 +257,27 @@ public class UserApiImpl implements UserApi {
     }
 
     @Override
+    public Response getNameUserPhones(String userNameOrAlias) {
+        User user = m_coreContext.loadUserByUserNameOrAlias(userNameOrAlias);
+        Collection<Phone> phones = m_phoneContext.getPhonesByUserName(user.getUserName());
+        if (phones != null) {
+            return Response.ok().entity(PhoneList.convertPhoneList(new ArrayList<Phone>(phones))).build();
+        }
+        return Response.status(Status.NOT_FOUND).build();
+
+    }
+
+    @Override
+    public Response getIdUserPhones(String id) {
+        Collection<Phone> phones = m_phoneContext.getPhonesByUserId(Integer.parseInt(id));
+        if (phones != null) {
+            return Response.ok().entity(PhoneList.convertPhoneList(new ArrayList<Phone>(phones))).build();
+        }
+        return Response.status(Status.NOT_FOUND).build();
+
+    }
+
+    @Override
     public Response removeUserGroups(String userNameOrAlias) {
         User user = m_coreContext.loadUserByUserNameOrAlias(userNameOrAlias);
         if (user != null) {
@@ -300,6 +326,11 @@ public class UserApiImpl implements UserApi {
 
     public void setBranchManager(BranchManager branchManager) {
         m_branchManager = branchManager;
+    }
+
+    @Required
+    public void setPhoneContext(PhoneContext phoneContext) {
+        m_phoneContext = phoneContext;
     }
 
     @Override

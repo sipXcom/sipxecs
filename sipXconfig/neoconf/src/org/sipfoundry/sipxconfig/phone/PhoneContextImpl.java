@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
@@ -94,6 +95,9 @@ public class PhoneContextImpl extends SipxHibernateDaoSupport implements BeanFac
         + "JOIN group_storage gs ON ph.group_id = gs.group_id WHERE ph.phone_id=%d";
     private static final String SQL_GROUP_WEIGHT = "SELECT gs.weight FROM group_storage gs WHERE gs.group_id = %d";
     private static final String SLASH = "/";
+    private static final String LINES = "lines";
+    private static final String PERCENT = "%";
+    private static final String FIELD_USER = "user";
 
     private CoreContext m_coreContext;
 
@@ -587,8 +591,47 @@ public class PhoneContextImpl extends SipxHibernateDaoSupport implements BeanFac
         return ((Long) DataAccessUtils.requiredSingleResult(results)).intValue();
     }
 
+    @Override
+    public List<Phone> getPhonesWithLinesLike(String value) {
+        DetachedCriteria crit = DetachedCriteria.forClass(Phone.class);
+        addByFilteredInternalLinesCriteria(crit, value);
+        List<Phone> phones = getHibernateTemplate().findByCriteria(crit);
+        crit = DetachedCriteria.forClass(Phone.class);
+        addByExternalLinesCriteria(crit);
+        List<Phone> extLinePhones = getHibernateTemplate().findByCriteria(crit);
+        List<Phone> phonesToRemove = new ArrayList<Phone>();
+        for (Phone phone : extLinePhones) {
+            boolean remove = true;
+            for (Line line : phone.getLines()) {
+                if (StringUtils.contains(line.getDisplayLabel(), value)) {
+                    remove = false;
+                }
+                if (!remove) {
+                    break;
+                }
+            }
+            if (remove) {
+                phonesToRemove.add(phone);
+            }
+        }
+        extLinePhones.removeAll(phonesToRemove);
+        phones.addAll(extLinePhones);
+        return phones;
+    }
+
     public static void addByNoLinesCriteria(DetachedCriteria crit) {
-        crit.add(Restrictions.isEmpty("lines"));
+        crit.add(Restrictions.isEmpty(LINES));
+    }
+
+    public static void addByFilteredInternalLinesCriteria(DetachedCriteria crit, String value) {
+        String sqlValue = new StringBuilder(PERCENT).append(value).append(PERCENT).toString();
+        crit.createCriteria(LINES).
+            createAlias(FIELD_USER, FIELD_USER).
+            add(Restrictions.like("user.userName", sqlValue));
+    }
+
+    public static void addByExternalLinesCriteria(DetachedCriteria crit) {
+        crit.createCriteria(LINES).add(Restrictions.isNull(FIELD_USER));
     }
 
     static class InvalidGoogleEntrySearchPredicate implements Predicate {

@@ -44,6 +44,11 @@ public interface PhoneApi {
     public Response getPhones(@Description("First Phone row") @QueryParam("start") Integer startId,
             @Description("Number of phones to be returned") @QueryParam("limit") Integer limit);
 
+    @Path("line")
+    @GET
+    public Response getPhonesLine(@Description("Phones with line given lineFilter param")
+            @QueryParam("lineFilter") String lineFilter);
+
     @POST
     @Consumes({
         MediaType.APPLICATION_JSON, MediaType.TEXT_XML, MediaType.APPLICATION_XML

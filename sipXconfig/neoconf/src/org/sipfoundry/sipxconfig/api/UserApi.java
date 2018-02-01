@@ -114,6 +114,16 @@ public interface UserApi {
     public Response getUserGroups(
             @Description("User name or alias") @PathParam("userNameOrAlias") String userId);
 
+    @Path("name/{userNameOrAlias}/phones")
+    @GET
+    public Response getNameUserPhones(
+            @Description("User name or alias") @PathParam("userNameOrAlias") String userNameOrAlias);
+
+    @Path("id/{id}/phones")
+    @GET
+    public Response getIdUserPhones(
+            @Description("User id") @PathParam("id") String id);
+
     @Path("{userNameOrAlias}/groups")
     @DELETE
     public Response removeUserGroups(

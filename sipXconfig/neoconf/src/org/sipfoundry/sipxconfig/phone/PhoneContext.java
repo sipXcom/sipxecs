@@ -146,6 +146,8 @@ public interface PhoneContext extends DataObjectSource {
 
     int getPhonesWithNoLinesCount();
 
+    public List<Phone> getPhonesWithLinesLike(String value);
+
     List<Phone> loadPhonesWithNoLinesByPage(int firstRow, int pageSize, String[] orderBy, boolean orderAscending);
 
     Phone getPhoneBySerialNumber(String serialNumber);

@@ -60,6 +60,12 @@ public class PhoneApiImpl implements PhoneApi {
         return buildPhoneList(m_phoneContext.loadPhones());
     }
 
+    @Override
+    public Response getPhonesLine(String lineFilter) {
+        List<Phone> phones = m_phoneContext.getPhonesWithLinesLike(lineFilter);
+        return buildPhoneList(phones);
+    }
+
     private Response buildPhoneList(List<Phone> phones) {
         if (phones != null) {
             return Response.ok().entity(PhoneList.convertPhoneList(phones)).build();

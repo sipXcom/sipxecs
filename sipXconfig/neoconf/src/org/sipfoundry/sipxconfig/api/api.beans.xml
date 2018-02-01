@@ -173,6 +173,7 @@
     
     <bean class="org.sipfoundry.sipxconfig.api.impl.UserApiImpl" id="userRestApi">
         <property name="coreContext" ref="coreContext"/>
+        <property name="phoneContext" ref="phoneContext"/>
         <property name="settingDao" ref="settingDao" />
         <property name="branchManager" ref="branchManager" />
     </bean>
