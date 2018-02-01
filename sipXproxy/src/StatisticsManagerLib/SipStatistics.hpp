@@ -38,6 +38,14 @@ public:
 
       enum {MaxCode = 700};
 
+      enum StatisticsUpdateSet
+      {
+         All = 0,
+         Received,
+         Sent,
+         Retransmitted
+      };
+
       unsigned int requestsSent; // includes retransmissions
       unsigned int responsesSent; // includes retransmissions
       unsigned int requestsRetransmitted; // counts each retransmission
@@ -63,14 +71,14 @@ public:
       unsigned int sum2xxOut(MethodType method) const;
       unsigned int sumErrOut(MethodType method) const;
 
-      void received(MethodType method, bool request, unsigned int code);
-      void sent(MethodType method, bool request, unsigned int code);
-      void retransmitted(MethodType method, bool request, unsigned int code);
+      void received(MethodType method, bool isRequest, unsigned int code);
+      void sent(MethodType method, bool isRequest, unsigned int code);
+      void retransmitted(MethodType method, bool isRequest, unsigned int code);
 
       static std::string getMethodName(MethodType method);
       static MethodType getMethodType(const std::string &method);
 
-      void updateStats(MethodType method);
+      void updateStats(MethodType method, StatisticsUpdateSet updateType, bool isRequest);
 
       void zeroOut();
 private:

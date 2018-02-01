@@ -97,9 +97,9 @@ SipStatistics::zeroOut()
 }
 
 void
-SipStatistics::received(MethodType method, bool request, unsigned int code)
+SipStatistics::received(MethodType method, bool isRequest, unsigned int code)
 {
-      if (request)
+      if (isRequest)
       {
             ++requestsReceived;
             ++requestsReceivedByMethod[method];
@@ -115,13 +115,13 @@ SipStatistics::received(MethodType method, bool request, unsigned int code)
             ++responsesReceivedByMethodByCode[method][code];
       }
 
-      updateStats(method);
+      updateStats(method, Received, isRequest);
 }
 
 void
-SipStatistics::sent(MethodType method, bool request, unsigned int code)
+SipStatistics::sent(MethodType method, bool isRequest, unsigned int code)
 {
-      if (request)
+      if (isRequest)
       {
             ++requestsSent;
             ++requestsSentByMethod[method];
@@ -138,13 +138,13 @@ SipStatistics::sent(MethodType method, bool request, unsigned int code)
             ++responsesSentByMethodByCode[method][code];
       }
 
-      updateStats(method);
+      updateStats(method, Sent, isRequest);
 }
 
 void
-SipStatistics::retransmitted(MethodType method, bool request, unsigned int code)
+SipStatistics::retransmitted(MethodType method, bool isRequest, unsigned int code)
 {
-      if (request)
+      if (isRequest)
       {
             ++requestsRetransmitted;
             ++requestsRetransmittedByMethod[method];
@@ -156,7 +156,7 @@ SipStatistics::retransmitted(MethodType method, bool request, unsigned int code)
             ++responsesRetransmittedByMethodByCode[method][code];
       }
 
-      updateStats(method);
+      updateStats(method, Retransmitted, isRequest);
 }
 
 std::string
@@ -183,24 +183,44 @@ SipStatistics::getMethodType(const std::string &method)
 }
 
 void
-SipStatistics::updateStats(MethodType m)
+SipStatistics::updateStats(MethodType m, StatisticsUpdateSet updateType, bool isRequest)
 {
-      mFifo.push(Data(getMethodName(m) + "i", requestsReceivedByMethod[m]));
-      mFifo.push(Data(getMethodName(m) + "o", requestsSentByMethod[m] - requestsRetransmittedByMethod[m]));
+      if (updateType == Sent || updateType == All)
+      {
+            if (isRequest)
+            {
+                  mFifo.push(Data(getMethodName(m) + "o", requestsSentByMethod[m] - requestsRetransmittedByMethod[m]));
+                  mFifo.push(Data("reqo", requestsSent));
+            }
+            else
+            {
+                  mFifo.push(Data("rspo", responsesSent));
+                  mFifo.push(Data(getMethodName(m) + "iS", sum2xxOut(m)));
+                  mFifo.push(Data(getMethodName(m) + "iF", sumErrOut(m)));
+            }
 
-      mFifo.push(Data(getMethodName(m) + "iS", sum2xxOut(m)));
-      mFifo.push(Data(getMethodName(m) + "iF", sumErrOut(m)));
+      }
 
-      mFifo.push(Data(getMethodName(m) + "oS", sum2xxIn(m)));
-      mFifo.push(Data(getMethodName(m) + "oF", sumErrIn(m)));
+      if (updateType == Received || updateType == All)
+      {
+            if (isRequest)
+            {
+                  mFifo.push(Data(getMethodName(m) + "i", requestsReceivedByMethod[m]));
+                  mFifo.push(Data("reqi", requestsReceived));
+            }
+            else
+            {
+                  mFifo.push(Data("rspi", responsesReceived));
+                  mFifo.push(Data(getMethodName(m) + "oS", sum2xxIn(m)));
+                  mFifo.push(Data(getMethodName(m) + "oF", sumErrIn(m)));
+            }
 
-      mFifo.push(Data(getMethodName(m) + "x", requestsRetransmittedByMethod[m]));
+      }
 
-      mFifo.push(Data("reqi", requestsReceived));
-      mFifo.push(Data("reqo", requestsSent));
-      mFifo.push(Data("rspi", responsesReceived));
-      mFifo.push(Data("rspo", responsesSent));
-
+      if (updateType == Retransmitted || updateType == All)
+      {
+            mFifo.push(Data(getMethodName(m) + "x", requestsRetransmittedByMethod[m]));
+      }
 }
 
 } // namespace statistics
