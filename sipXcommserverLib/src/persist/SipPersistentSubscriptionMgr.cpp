@@ -65,7 +65,7 @@ UtlBoolean SipPersistentSubscriptionMgr::initialize(OsMsgQ* pMsgQ)
    {
       return FALSE;
    }
-
+/*
    // Read the subscription table and initialize the SipSubscriptionMgr.
    unsigned long now = OsDateTime::getSecsSinceEpoch();
    SubscribeDB::Subscriptions subscriptions;
@@ -161,7 +161,7 @@ UtlBoolean SipPersistentSubscriptionMgr::initialize(OsMsgQ* pMsgQ)
 											  row.version());
       }
    }
-
+*/
    return TRUE;
 }
 
