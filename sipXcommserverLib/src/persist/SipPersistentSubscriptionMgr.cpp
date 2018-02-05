@@ -52,6 +52,8 @@ SipPersistentSubscriptionMgr::~SipPersistentSubscriptionMgr()
 /* ============================ MANIPULATORS ============================== */
 UtlBoolean SipPersistentSubscriptionMgr::initialize(OsMsgQ* pMsgQ)
 {
+   Os::Logger::instance().log(FAC_SIP, PRI_NOTICE, "SipPersistentSubscriptionMgr::initialize - loading all subscriptions from database");
+
    // initialize the base class, if needed
    if (!mBaseInitialized)
    {
