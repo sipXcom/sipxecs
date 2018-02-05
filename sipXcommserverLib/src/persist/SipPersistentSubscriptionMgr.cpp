@@ -66,8 +66,6 @@ UtlBoolean SipPersistentSubscriptionMgr::initialize(OsMsgQ* pMsgQ)
       return FALSE;
    }
 
-   // SIPX-722: checking registrar (call directed pickup), RLS and SAA without loading all subscriptions from db
-/* 
    // Read the subscription table and initialize the SipSubscriptionMgr.
    unsigned long now = OsDateTime::getSecsSinceEpoch();
    SubscribeDB::Subscriptions subscriptions;
@@ -163,7 +161,6 @@ UtlBoolean SipPersistentSubscriptionMgr::initialize(OsMsgQ* pMsgQ)
 											  row.version());
       }
    }
-*/
 
    return TRUE;
 }
