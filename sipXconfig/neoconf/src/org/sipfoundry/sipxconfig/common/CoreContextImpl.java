@@ -371,6 +371,16 @@ public abstract class CoreContextImpl extends SipxHibernateDaoSupport<User> impl
     }
 
     @Override
+    public List<User> loadUsersContainsEmail(String email) {
+        List<User> users = new ArrayList<User>();
+        List<Integer> userIds = getUserProfileService().getUserIdsContainsEmail(email);
+        for (Integer userId : userIds) {
+            users.add(loadUser(userId));
+        }
+        return users;
+    }
+
+    @Override
     public List<User> loadUserByAdmin() {
         return getHibernateTemplate().findByNamedQuery(USER_ADMIN);
     }
@@ -955,7 +965,7 @@ public abstract class CoreContextImpl extends SipxHibernateDaoSupport<User> impl
         User newUser = newUser();
         newUser.setUserName(specialUser.getUserName());
         newUser.setSipPassword(specialUser.getSipPassword());
-        
+
         // if this is the provisioning user we don't want to have to much permissions
         // these are auto provisioned phones which better shouldn't have dialout
         // permissions at all
@@ -985,7 +995,7 @@ public abstract class CoreContextImpl extends SipxHibernateDaoSupport<User> impl
                 PermissionName.SUBSCRIBE_TO_PRESENCE.getPath(), false);
             newUser.setSettingTypedValue(
                 PermissionName.SUPERADMIN.getPath(), false);
-            
+
             // We could allow this theoretically but it would be better
             // to only allow real users to dial out
             newUser.setSettingTypedValue(
@@ -994,7 +1004,7 @@ public abstract class CoreContextImpl extends SipxHibernateDaoSupport<User> impl
                 PermissionName.TUI_CHANGE_PIN.getPath(), false);
             newUser.setSettingTypedValue(
                 PermissionName.VOICEMAIL.getPath(), false);
-            
+
             // Emergency dialing is the only allowed thing!
             // Does not matter, cause we can't disable it at all
         }

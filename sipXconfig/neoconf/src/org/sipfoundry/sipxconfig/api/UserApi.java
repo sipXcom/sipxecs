@@ -41,9 +41,16 @@ import org.sipfoundry.sipxconfig.api.model.UserBean;
 })
 @Description("User Management REST API")
 public interface UserApi {
+
     @GET
     public Response getUsers(@Description("First User row") @QueryParam("start") Integer startId,
-            @Description("Number of users to be returned") @QueryParam("limit") Integer limit);
+            @Description("Number of users to be returned") @QueryParam("limit") Integer limit,
+            @Description("Email filtering") @QueryParam("email") String email);
+
+    @Path("email")
+    @GET
+    public Response getUsersEmail(@Description("Users with email given emailFilter param")
+            @QueryParam("emailFilter") String emailFilter);
 
     @Path("{userNameOrAlias}/settings")
     @GET
