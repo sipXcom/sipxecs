@@ -29,6 +29,7 @@ import javax.ws.rs.core.Response;
 
 import org.apache.cxf.jaxrs.model.wadl.Description;
 import org.sipfoundry.sipxconfig.api.model.GroupBean;
+import org.sipfoundry.sipxconfig.api.model.SettingsList;
 
 @Path("/phoneGroups/")
 @Produces({
@@ -111,6 +112,17 @@ public interface PhoneGroupApi {
             @PathParam("groupId") String groupId,
             @PathParam("modelName") String modelName,
             @Description("Path to Phone group setting") @PathParam("path") String path, String value);
+
+    @Path("{groupId}/model/{modelName}/settings")
+    @PUT
+    @Consumes({
+        MediaType.APPLICATION_JSON, MediaType.TEXT_XML, MediaType.APPLICATION_XML
+    })
+    public Response setPhoneGroupSettings(
+            @Description("Phone group internal id or name")
+            @PathParam("groupId") String groupId,
+            @PathParam("modelName") String modelName,
+            @Description("List of settings") SettingsList list);
 
     @Path("{groupId}/model/{modelName}/settings/{path:.*}")
     @DELETE
