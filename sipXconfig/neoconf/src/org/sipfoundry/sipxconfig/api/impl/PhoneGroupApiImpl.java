@@ -24,6 +24,7 @@ import javax.ws.rs.core.Response.Status;
 import org.sipfoundry.sipxconfig.api.PhoneGroupApi;
 import org.sipfoundry.sipxconfig.api.model.GroupBean;
 import org.sipfoundry.sipxconfig.api.model.ModelBean.ModelList;
+import org.sipfoundry.sipxconfig.api.model.SettingBean;
 import org.sipfoundry.sipxconfig.api.model.SettingsList;
 import org.sipfoundry.sipxconfig.device.DeviceVersion;
 import org.sipfoundry.sipxconfig.device.ModelSource;
@@ -202,5 +203,18 @@ public class PhoneGroupApiImpl extends GroupApiImpl  implements PhoneGroupApi {
     @Required
     public void setPhoneModelSource(ModelSource<PhoneModel> phoneModelSource) {
         m_phoneModelSource = phoneModelSource;
+    }
+
+    @Override
+    public Response setPhoneGroupSettings(String groupId, String modelName, SettingsList list) {
+        Group group = getPhoneGroupByIdOrName(groupId);
+        if (group != null) {
+            for (SettingBean bean : list.getSettings()) {
+                group.setSettingValue(bean.getPath(), bean.getValue());
+            }
+            m_settingDao.saveGroup(group);
+            return Response.ok().build();
+        }
+        return Response.status(Status.NOT_FOUND).build();
     }
 }

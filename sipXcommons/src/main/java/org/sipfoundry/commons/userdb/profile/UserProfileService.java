@@ -52,10 +52,14 @@ public interface UserProfileService {
     List<UserProfile> getUserProfileByAuthAccountName(String authAccountName);
 
     List<UserProfile> getUserProfileByEmail(String email);
+    
+    List<UserProfile> getUserProfileContainsEmail(String email);
 
     List<Integer> getUserIdsByAuthAccountName(String authAccountName);
 
     List<Integer> getUserIdsByEmail(String email);
+    
+    List<Integer> getUserIdsContainsEmail(String email);
 
     InputStream getAvatar(String userName);
 

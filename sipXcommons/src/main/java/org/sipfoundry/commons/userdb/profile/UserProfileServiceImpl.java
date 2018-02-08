@@ -168,6 +168,17 @@ public class UserProfileServiceImpl implements UserProfileService {
         }
         return null;
     }
+    
+    @Override
+    public List<UserProfile> getUserProfileContainsEmail(String email) {
+        if (email != null) {
+            Query query = new Query(new Criteria().orOperator(Criteria.where(PRIMARY_EMAIL).regex(email),
+                    Criteria.where(ALTERNATE_EMAIL).regex(email),
+                    Criteria.where(ALIASES_EMAIL_SET).regex(email)));
+            return m_template.find(query, UserProfile.class, USER_PROFILE_COLLECTION);
+        }
+        return null;
+    }
 
     @Override
     public List<Integer> getUserIdsByAuthAccountName(String authAccountName) {
@@ -188,6 +199,16 @@ public class UserProfileServiceImpl implements UserProfileService {
         }
         return ids;
     }
+    
+    @Override
+    public List<Integer> getUserIdsContainsEmail(String email) {
+        List<Integer> ids = new ArrayList<Integer>();
+        List<UserProfile> userProfiles = getUserProfileContainsEmail(email);
+        for (UserProfile userProfile : userProfiles) {
+            ids.add(Integer.valueOf(userProfile.getUserId()));
+        }
+        return ids;
+    }    
 
     @Override
     public List<UserProfile> getAllUserProfiles() {

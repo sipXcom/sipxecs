@@ -112,6 +112,8 @@ public interface CoreContext extends DataObjectSource<User>, AliasOwner, Replica
 
     List<User> loadUsersByEmail(String email);
 
+    List<User> loadUsersContainsEmail(String email);
+
     List<User> getSharedUsers();
 
     /**

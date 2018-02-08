@@ -31,6 +31,7 @@ import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.converters.DateConverter;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -132,12 +133,32 @@ public class UserApiImpl implements UserApi {
         return Response.ok("upload success").build();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Response getUsers(Integer startId, Integer pageSize) {
+    public Response getUsers(Integer startId, Integer pageSize, final String email) {
+        List<User> users = null;
         if (startId != null && pageSize != null) {
-            return buildUserList(m_coreContext.loadUsersByPage(startId, pageSize));
+            users = m_coreContext.loadUsersByPage(startId, pageSize);
+        } else {
+            users = m_coreContext.loadUsers();
         }
-        return buildUserList(m_coreContext.loadUsers());
+        if (email != null) {
+            users = (List<User>) CollectionUtils.select(users, new org.apache.commons.collections.Predicate() {
+                public boolean evaluate(Object userObject) {
+                    User validUser = (User) userObject;
+                    return (StringUtils.contains(validUser.getEmailAddress(), email)
+                        || StringUtils.contains(validUser.getEmailAddressAliases(), email)
+                        || StringUtils.contains(validUser.getAlternateEmailAddress(), email));
+                }
+            });
+        }
+        return buildUserList(users);
+    }
+
+    @Override
+    public Response getUsersEmail(String emailFilter) {
+        List<User> users = m_coreContext.loadUsersContainsEmail(emailFilter);
+        return buildUserList(users);
     }
 
     @Override

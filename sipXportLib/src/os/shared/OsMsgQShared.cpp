@@ -50,6 +50,7 @@ OsMsgQShared::OsMsgQShared(const char* name,
     else
     {
         _empty = NULL;
+        _reportFull = false;
         _full = new Semaphore();
     }
 }
