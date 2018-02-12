@@ -13,8 +13,6 @@
 
   <bean id="cdrManagerImpl" class="org.sipfoundry.sipxconfig.cdr.CdrManagerImpl">
     <property name="dataSource" ref="cdrDataSource" />
-    <property name="csvLimit" value="25000" />
-    <property name="jsonLimit" value="500" />
     <property name="addressManager" ref="addressManager" />
     <property name="featureManager" ref="featureManager" />
     <property name="ntpManager" ref="ntpManager" />
