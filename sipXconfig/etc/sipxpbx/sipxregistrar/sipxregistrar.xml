@@ -117,7 +117,7 @@
       <type refid="yesNo"/>
       <value>N</value>
     </setting>
-    <setting name="SIP_REGISTRAR_MAX_CONCURRENT">
+    <setting name="SIPX_REGISTRAR_MAX_CONCURRENT">
       <type>
         <integer min="5" max="1024"/>
       </type>
