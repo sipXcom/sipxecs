@@ -317,6 +317,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/snmp/mibs/SIPXECS-ALARM-NOTIFICATION-MIB.txt
 %{_localstatedir}/sipxdata/unitelite/*
 %post
+mongo --quiet /usr/bin/mongo-dump.js > /var/sipxdata/tmp/config.json
 if test -e %{_sysconfdir}/logrotate.d/freeswitch; then rm -f %{_sysconfdir}/logrotate.d/freeswitch; fi
 
 # XX-10812 - Note some centos machines seemed to re-adjust sysv startup orders
