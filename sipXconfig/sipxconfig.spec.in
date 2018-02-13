@@ -317,7 +317,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/snmp/mibs/SIPXECS-ALARM-NOTIFICATION-MIB.txt
 %{_localstatedir}/sipxdata/unitelite/*
 %post
-mongo --quiet /usr/bin/mongo-dump.js > /var/sipxdata/tmp/config.json
+if [ `mongo --quiet --eval "db.version()"` == 2.6.7 ]
+then
+  echo "dumping config and db from 2.6.7 version"
+  mongo --quiet --eval "var cfg=rs.config();cfg.version=1;printjson(cfg)" > config3.json
+  mongodump --db=profiles --out=/var/sipxdata/tmp
+fi
 if test -e %{_sysconfdir}/logrotate.d/freeswitch; then rm -f %{_sysconfdir}/logrotate.d/freeswitch; fi
 
 # XX-10812 - Note some centos machines seemed to re-adjust sysv startup orders

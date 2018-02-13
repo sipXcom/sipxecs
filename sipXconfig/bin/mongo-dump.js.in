@@ -1,8 +1,0 @@
-db = new Mongo().getDB("admin");
-var version = db.version();
-if (version == "2.6.7") {
-  run("mongodump", "--db=profiles", "--out=/var/sipxdata/tmp")
-  var oldConfig = rs.config();
-  oldConfig.version = 1;
-  printjson(oldConfig);
-}

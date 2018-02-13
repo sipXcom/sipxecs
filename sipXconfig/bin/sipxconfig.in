@@ -133,6 +133,16 @@ setupCheck() {
   fi
 }
 
+mongoUpgradeCheck() {
+  if [ -s @SIPX_TMPDIR@/config.json ]
+  then
+    config=`cat @SIPX_TMPDIR@/config.json`
+    mongo --eval "rs.initiate($config)"
+    mongorestore --db profiles @SIPX_TMPDIR@/profiles
+    rm -rf @SIPX_TMPDIR@/config.json && rm -rf @SIPX_TMPDIR@/profiles
+  fi
+}
+
 buildCommand() {
   procNameId=$1
 
@@ -158,6 +168,7 @@ buildCommand() {
 
 runTask() {
   setupCheck
+  mongoUpgradeCheck
   databaseCommand upgrade
   databaseVersionCheck    
   buildCommand task-$taskId
