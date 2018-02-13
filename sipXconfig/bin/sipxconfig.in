@@ -168,7 +168,6 @@ buildCommand() {
 
 runTask() {
   setupCheck
-  mongoUpgradeCheck
   databaseCommand upgrade
   databaseVersionCheck    
   buildCommand task-$taskId
@@ -181,6 +180,7 @@ runTask() {
 # Run Web interface
 start() {
   setupCheck
+  mongoUpgradeCheck
   databaseCommand upgrade
   databaseVersionCheck
   clearIndexLocks
