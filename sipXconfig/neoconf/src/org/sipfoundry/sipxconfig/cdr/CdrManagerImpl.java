@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.rmi.RemoteException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -99,9 +98,6 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
     static final String CALLED_NUMBER = "called_number";
     static final String GATEWAY = "gateway";
 
-    private int m_csvLimit;
-    private int m_jsonLimit;
-
     /**
      * CDRs database at the moment is using 'timestamp' type to store UTC time. Postgres
      * 'timestamp' does not store any time zone information and JDBC driver for postgres would
@@ -171,7 +167,7 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
         CdrSearch search, User user) throws IOException {
         ColumnInfoFactory columnInforFactory = new DefaultColumnInfoFactory(m_tz, displayTimeZone);
         CdrsWriter resultReader = new CdrsCsvWriter(writer, columnInforFactory);
-        dump(resultReader, from, to, displayTimeZone, search, user, m_csvLimit);
+        dump(resultReader, from, to, displayTimeZone, search, user, getSettings().getCsvLimit());
     }
 
     @Override
@@ -182,7 +178,7 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
         // if we cannot see all the result - get only the latest
         CdrSearch cdrSearch = new CdrSearch();
         cdrSearch.setOrder(START_TIME, false);
-        dump(resultReader, null, null, null, cdrSearch, null, m_jsonLimit);
+        dump(resultReader, null, null, null, cdrSearch, null, getSettings().getJsonLimit());
     }
 
     /**
@@ -247,7 +243,7 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
             return getActiveCallsRESTCall(user);
         }
     }
-    
+
     private List<Cdr> getActiveCallsRESTCall(User user) throws IOException {
         HttpClient client = new HttpClient();
         GetMethod getMethod = new GetMethod(getActiveCdrsRestUrl(user));
@@ -309,14 +305,6 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
         } catch (MalformedURLException e) {
             throw new UserException(e);
         }
-    }
-
-    public void setCsvLimit(int csvLimit) {
-        m_csvLimit = csvLimit;
-    }
-
-    public void setJsonLimit(int jsonLimit) {
-        m_jsonLimit = jsonLimit;
     }
 
     abstract static class CdrsStatementCreator implements PreparedStatementCreator {

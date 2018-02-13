@@ -117,20 +117,32 @@
       <value />
     </setting>
     <setting name="SIP_CALLRESOLVER_PRIVACY" advanced="yes">
-+      <type refid="enablestate" />
-+      <value>DISABLE</value>
-+    </setting>
-+    <setting name="SIP_CALLRESOLVER_PRIVACY_LENGTH" advanced="yes">
-+      <type>
-+        <integer min="1" max="25" />
-+      </type>
-+      <value>5</value>
-+    </setting>
-+    <setting name="SIP_CALLRESOLVER_PRIVACY_EXCLUDE" advanced="yes">
-+      <type>
-+        <string />
-+      </type>
-+      <value></value>
-+    </setting>
+      <type refid="enablestate" />
+      <value>DISABLE</value>
+    </setting>
+    <setting name="SIP_CALLRESOLVER_PRIVACY_LENGTH" advanced="yes">
+      <type>
+        <integer min="1" max="25" />
+      </type>
+      <value>5</value>
+    </setting>
+    <setting name="SIP_CALLRESOLVER_PRIVACY_EXCLUDE" advanced="yes">
+      <type>
+        <string />
+      </type>
+      <value></value>
+    </setting>
+    <setting name="CSV_LIMIT">
+      <type>
+        <integer />
+      </type>
+      <value>25000</value>    
+    </setting>
+    <setting name="JSON_LIMIT" hidden="true">
+      <type>
+        <integer />
+      </type>
+      <value>500</value>    
+    </setting>    
   </group>
 </model>

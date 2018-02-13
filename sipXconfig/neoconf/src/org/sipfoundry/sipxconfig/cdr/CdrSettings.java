@@ -38,6 +38,14 @@ public class CdrSettings extends PersistableSettings implements DeployConfigOnEd
         return (Integer) getSettingTypedValue("callresolver/SIP_CALLRESOLVER_PRIVACY_LENGTH");
     }
 
+    public int getCsvLimit() {
+        return (Integer) getSettingTypedValue("callresolver/CSV_LIMIT");
+    }
+
+    public int getJsonLimit() {
+        return (Integer) getSettingTypedValue("callresolver/JSON_LIMIT");
+    }
+
     public String getPrivacyExcludeList() {
         String excludeList = (String) getSettingTypedValue("callresolver/SIP_CALLRESOLVER_PRIVACY_EXCLUDE");
         if (excludeList == null) {
