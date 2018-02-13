@@ -138,6 +138,7 @@ mongoUpgradeCheck() {
   then
     config=`cat @SIPX_TMPDIR@/config.json`
     mongo --eval "rs.initiate($config)"
+    sleep 25
     mongorestore --db profiles @SIPX_TMPDIR@/profiles
     rm -rf @SIPX_TMPDIR@/config.json && rm -rf @SIPX_TMPDIR@/profiles
   fi
