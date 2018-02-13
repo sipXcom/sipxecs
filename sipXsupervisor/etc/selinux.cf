@@ -43,7 +43,7 @@ bundle agent selinux {
 
 bundle edit_line disable_selinux {
   insert_lines:
-    "SELINUX=disabled";
+    "SELINUX=enforcing";
   delete_lines:
     "SELINUX=.*";
 }
