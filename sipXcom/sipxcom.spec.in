@@ -142,6 +142,7 @@ Requires: sipxzoiper >= %version
 
 Obsoletes: %{name}-doc
 Obsoletes: epel-release
+Obsoletes: sipxhomer
 
 Source: %name-%version.tar.gz
 Prefix: %_prefix
