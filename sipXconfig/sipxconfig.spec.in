@@ -317,11 +317,19 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/snmp/mibs/SIPXECS-ALARM-NOTIFICATION-MIB.txt
 %{_localstatedir}/sipxdata/unitelite/*
 %post
-if [ `mongo --quiet --eval "db.version()"` == 2.6.7 ]
+if [ `mongo --quiet --eval "db.isMaster().ismaster"` == true ] && [ `mongo --quiet --eval "db.version()"` == 2.6.7 ]
 then
-  echo "dumping config and db from 2.6.7 version"
+  echo "exporting mongodb replica set configuration from 2.6.7 version"
   mongo --quiet --eval "var cfg=rs.config();cfg.version=1;printjson(cfg)" > /var/sipxdata/tmp/config.json
+  echo "exporting mongodb user profiles database from 2.6.7 version"
   mongodump --db=profiles --out=/var/sipxdata/tmp
+  echo "exporting registrations and subscriptions database from 2.6.7 version"
+  mongodump --db=node --out=/var/sipxdata/tmp
+  if [ ! -f /var/sipxdata/tmp/no-vmdb ]
+  then
+    echo "exporting voicemail database from 2.6.7 version"
+    mongodump --db=vmdb --out=/var/sipxdata/tmp
+  fi
 fi
 if test -e %{_sysconfdir}/logrotate.d/freeswitch; then rm -f %{_sysconfdir}/logrotate.d/freeswitch; fi
 
