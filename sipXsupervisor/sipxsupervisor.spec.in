@@ -41,6 +41,8 @@ Requires: make
 Requires: rubygem-net-sftp
 # iptables
 Requires: policycoreutils
+#semanage
+Requires: policycoreutils-python
 # fail2ban
 Requires: fail2ban
 
