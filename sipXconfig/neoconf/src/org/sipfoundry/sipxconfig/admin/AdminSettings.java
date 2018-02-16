@@ -53,6 +53,7 @@ public class AdminSettings extends PersistableSettings implements DeployConfigOn
     private static final String POSTGRES_PASSWORD_CONFIRM = "configserver-config/postgres-pwd-confirm";
     private static final String SYSTEM_AUDIT_KEEP_CHANGES = "config-change-audit/keep-changes";
     private static final String ALLOW_SUBSCRIPTIONS_TO_SELF = "configserver-config/allow-subscription-to-self";
+    private static final String SELINUX = "configserver-config/selinux";
     private PasswordPolicy m_passwordPolicy;
     private String[] m_logLevelKeys;
 
@@ -169,6 +170,14 @@ public class AdminSettings extends PersistableSettings implements DeployConfigOn
 
     public boolean isAllowSubscriptionsToSelf() {
         return (Boolean) getSettingTypedValue(ALLOW_SUBSCRIPTIONS_TO_SELF);
+    }
+
+    public String getSelinux() {
+        return getSettingValue(SELINUX);
+    }
+
+    public boolean isSelinux() {
+        return !StringUtils.equals(getSettingValue(SELINUX), "disabled");
     }
 
     protected static String validateDomainList(String corsDomains) {

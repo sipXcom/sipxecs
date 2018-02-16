@@ -25,6 +25,7 @@ import org.sipfoundry.sipxconfig.cfgmgt.CfengineModuleConfiguration;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigProvider;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigRequest;
+import org.sipfoundry.sipxconfig.cfgmgt.ConfigUtils;
 import org.sipfoundry.sipxconfig.cfgmgt.KeyValueConfiguration;
 import org.sipfoundry.sipxconfig.cfgmgt.LoggerKeyValueConfiguration;
 import org.sipfoundry.sipxconfig.commserver.Location;
@@ -33,6 +34,9 @@ import org.sipfoundry.sipxconfig.setting.Setting;
 import org.sipfoundry.sipxconfig.setting.SettingUtil;
 
 public class AdminConfig implements ConfigProvider {
+
+    private static final String SELINUX_FILE = "selinux.cfdat";
+
     private AdminContext m_adminContext;
     private String m_adminSettingsKey = "configserver-config";
 
@@ -49,6 +53,11 @@ public class AdminConfig implements ConfigProvider {
 
         for (Location l : locations) {
             File dir = manager.getLocationDataDirectory(l);
+            if (settings.isSelinux()) {
+                ConfigUtils.enableCfengineClass(dir, SELINUX_FILE, true, settings.getSelinux());
+            } else {
+                ConfigUtils.enableCfengineClass(dir, SELINUX_FILE, false, "permissive", "enforcing");
+            }
             if (l.isPrimary() || manager.getFeatureManager().isFeatureEnabled(ProxyManager.FEATURE, l)) {
                 Writer pwd = new FileWriter(new File(dir, "postgres-pwd.properties"));
                 Writer pwdCfdat = new FileWriter(new File(dir, "postgres-pwd.cfdat"));

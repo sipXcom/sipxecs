@@ -53,11 +53,28 @@
       </option>
     </enum>
   </type>
+  <type id="selinuxMode">
+    <enum>
+      <option>
+        <value>disabled</value>
+      </option>
+      <option>
+        <value>permissive</value>
+      </option>
+      <option>
+        <value>enforcing</value>
+      </option>      
+    </enum>
+  </type>  
   <group name="configserver-config">
     <setting name="log.level">
       <type refid="loglevel" />
       <value>NOTICE</value>
     </setting>
+    <setting name="selinux" advanced="yes">
+      <type refid="selinuxMode" />
+      <value>disabled</value>    
+    </setting>    
     <setting name="systemAudit">
       <type refid="true-false"/>
       <value>true</value>
