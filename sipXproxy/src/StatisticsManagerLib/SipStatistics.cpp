@@ -3,6 +3,8 @@
 #include <string>
 #include <string.h>
 
+#define STATISTICS_FREQUENCY 10
+
 namespace statistics
 {
 
@@ -182,9 +184,44 @@ SipStatistics::getMethodType(const std::string &method)
       return rc;
 }
 
+bool
+SipStatistics::readyToUpdate(bool isRequest)
+{
+      bool rc = false;
+
+      if (isRequest)
+      {
+            mRequestsCount++;
+
+            if (mRequestsCount > STATISTICS_FREQUENCY)
+            {
+                  mRequestsCount = 0;
+                  rc = true;
+            }
+      }
+      else
+      {
+            mResponsesCount++;
+
+            if (mResponsesCount > STATISTICS_FREQUENCY)
+            {
+                  mResponsesCount = 0;
+                  rc = true;
+            }
+      }
+
+      return rc;
+}
+
 void
 SipStatistics::updateStats(MethodType m, StatisticsUpdateSet updateType, bool isRequest)
 {
+      if (!readyToUpdate(isRequest))
+      {
+            // don't push statistics too often
+            return;
+      }
+
       if (updateType == Sent || updateType == All)
       {
             if (isRequest)

@@ -34,7 +34,7 @@ class SipStatistics
 {
 public:
 
-      SipStatistics(Fifo<Data> &fifo) : mFifo(fifo) {};
+      SipStatistics(Fifo<Data> &fifo) : mFifo(fifo), mRequestsCount(0), mResponsesCount(0) {};
 
       enum {MaxCode = 700};
 
@@ -82,7 +82,12 @@ public:
 
       void zeroOut();
 private:
+
+      bool readyToUpdate(bool isRequest);
+
       Fifo<Data> &mFifo;
+      int mRequestsCount;
+      int mResponsesCount;
 };
 
 } // namespace statistics
