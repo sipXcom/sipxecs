@@ -11,20 +11,20 @@ namespace statistics
 typedef enum
 {
    UNKNOWN,
+   INVITE,
+   REGISTER,
+   SUBSCRIBE,
+   NOTIFY,
    ACK,
    BYE,
    CANCEL,
-   INVITE,
-   NOTIFY,
    OPTIONS,
+   PUBLISH,
    REFER,
-   REGISTER,
-   SUBSCRIBE,
    RESPONSE,
    MESSAGE,
    INFO,
    PRACK,
-   PUBLISH,
    SERVICE,
    UPDATE,
    MAX_METHODS
@@ -34,7 +34,7 @@ class SipStatistics
 {
 public:
 
-      SipStatistics(Fifo<Data> &fifo) : mFifo(fifo), mRequestsCount(0), mResponsesCount(0) {};
+      SipStatistics(Fifo<Data> &fifo) : mFifo(fifo) {};
 
       enum {MaxCode = 700};
 
@@ -79,15 +79,14 @@ public:
       static MethodType getMethodType(const std::string &method);
 
       void updateStats(MethodType method, StatisticsUpdateSet updateType, bool isRequest);
+      void updateStats(MethodType method, StatisticsUpdateSet updateType);
+      void updateAllStats();
 
       void zeroOut();
 private:
 
-      bool readyToUpdate(bool isRequest);
 
       Fifo<Data> &mFifo;
-      int mRequestsCount;
-      int mResponsesCount;
 };
 
 } // namespace statistics

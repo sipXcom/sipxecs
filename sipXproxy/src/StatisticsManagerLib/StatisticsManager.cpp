@@ -56,6 +56,7 @@ TimedMapFileWriter::touch()
       {
             mLastWriteTime = now;
             writeToFile(mFileName);
+            statistics::StatisticsManager::Instance().getSipStatistics()->updateAllStats();
             statistics::StatisticsManager::Instance().getSipStatistics()->zeroOut();
             mData.clear();
       }
