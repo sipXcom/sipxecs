@@ -148,47 +148,69 @@ bundle agent mount_secondary(server_line)
 
 bundle agent nfs_systemctl_running {
   vars:
-    any::
-      "nfs_fedora_service" string => "nfs.service";
-      "rpc_fedora_service" string => "rpc.service";
-
+    "nfs_fedora_service" string => "nfs-server.service";
+    "rpc_fedora_service" string => "rpc.service";
+    
   classes:
-    # wrap w/fedora16_or_greater to avoid
-    fedora16_or_greater::
+    fedora16_or_greater::    
       "nfs_running" expression => returnszero("$(sipx.systemctl) is-active $(nfs_fedora_service)","noshell");
       "rpcbind_running" expression => returnszero("$(sipx.systemctl) is-active $(rpc_fedora_service)","noshell");
 
   commands:
-    !rpcbind_running::
+    !rpcbind_running.sipxtcpdumplog.!stop_sipxecs::
       "$(sipx.systemctl)"
         comment => "start rpcbind",
         args => "start $(rpc_fedora_service)";
-
-    !nfs_running::
+        
+    (!sipxtcpdumplog|stop_sipxecs).rpcbind_running::
       "$(sipx.systemctl)"
-        comment => "start nfs",
+        comment => "stop rpcbind",
+        args => "stop $(rpc_fedora_service)";        
+
+    !nfs_running.sipxtcpdumplog.!stop_sipxecs::
+      "$(sipx.systemctl)"
+        comment => "start nfs $(nfs_running)",
         args => "start $(nfs_fedora_service)";
+
+    (!sipxtcpdumplog|stop_sipxecs).nfs_running::
+      "$(sipx.systemctl)"
+        comment => "stop nfs",
+        args => "stop $(nfs_fedora_service)";
 }
 
 bundle agent nfs_sysv_running {
   vars:
-    "nfs_service" string => "/etc/rc.d/init.d/nfs";
-    "rpcbind_service" string => "/etc/rc.d/init.d/rpcbind";
+    any::
+      "nfs_service" string => "/etc/rc.d/init.d/nfs";
+      "nfs_service_command" string => ".*nfsd.*";
+      "rpcbind_service" string => "/etc/rc.d/init.d/rpcbind";
+      "rpcbind_service_command" string => ".*rpcbind.*";
 
   methods:
-    "any" usebundle => find_service_by_command("$(nfs_service)", "nfs_running", "root");
-    "any" usebundle => find_service_by_command("$(rpcbind_service)", "rpcbind_running", "root");
+    "any" usebundle => find_service_by_command("$(nfs_service_command)", "nfs_running", "root");
+    "any" usebundle => find_service_by_command("$(rpcbind_service_command)", "rpcbind_running", "rpc");
 
   commands:
-    !rpcbind_running::
+    !rpcbind_running.sipxtcpdumplog.!stop_sipxecs::
       "$(rpcbind_service)"
         comment => "start rpcbind",
         args => "start";
+        
+    (!sipxtcpdumplog|stop_sipxecs).rpcbind_running::
+      "$(rpcbind_service)"
+        comment => "stop rpcbind",
+        args => "stop";
 
-    !nfs_running::
+    !nfs_running.sipxtcpdumplog.!stop_sipxecs::
       "$(nfs_service)"
         comment => "start nfs",
         args => "start";
+
+    (!sipxtcpdumplog|stop_sipxecs).nfs_running::
+      "$(nfs_service)"
+        comment => "stop nfs",
+        args => "stop";
+        
 }
 
 body file_select tcpdump_file
