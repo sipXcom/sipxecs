@@ -47,7 +47,31 @@ bundle agent selinux {
         
       "/usr/sbin/semanage"
         comment => "Enable port 8090 in selinux",
-        args => "port -a -t http_port_t -p tcp 8090";        
+        args => "port -a -t http_port_t -p tcp 8090";
+        
+      "/usr/sbin/semanage"
+        comment => "Enable port 12000 in selinux",
+        args => "port -a -t http_port_t -p tcp 12000";
+        
+      "/usr/sbin/setsebool"
+        comment => "Allow httpd to connect to network",
+        args => "-P httpd_can_network_connect 1";
+                
+      "/usr/sbin/setsebool"
+        comment => "Enable snmptrapd in selinux",
+        args => "-P allow_ypbind 1";
+        
+      "/usr/sbin/setsebool"
+        comment => "Turn off SELinux controls on the Chrome plugins.",
+        args => "-P unconfined_chrome_sandbox_transition 0";
+        
+      "/usr/sbin/setsebool"
+        comment => "Enable nis",
+        args => "-P nis_enabled 1";
+
+      "/usr/sbin/semodule"
+        comment => "Allow setcap access on processes labeled chrome_sandbox_t",
+        args => "-i mypol.pp";
 }
 
 bundle edit_line configure_selinux {
