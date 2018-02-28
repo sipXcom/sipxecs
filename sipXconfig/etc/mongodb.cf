@@ -113,7 +113,7 @@ bundle agent mongodb_arbiter_config {
   vars:
     mongod_arbiter::
       "dirs" slist => {
-        "/var/lib/mongodb-arbiter",
+        "/var/lib/mongod-arbiter",
         "/var/run/$(mongodb.id)",
         "/var/log/mongodb/arbiter"
       };
