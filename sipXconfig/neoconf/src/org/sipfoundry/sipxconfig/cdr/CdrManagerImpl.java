@@ -97,6 +97,8 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
     static final String CALLER_CONTACT = "caller_contact";
     static final String CALLED_NUMBER = "called_number";
     static final String GATEWAY = "gateway";
+    static final int DUMP_PAGE = 100000;
+    static final int MAX_COUNT = 1000000;
 
     /**
      * CDRs database at the moment is using 'timestamp' type to store UTC time. Postgres
@@ -200,11 +202,29 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
             from = TimeZoneUtils.getSameDateWithNewTimezone(fromDate, timezone);
             to = TimeZoneUtils.getSameDateWithNewTimezone(toDate, timezone);
         }
-        PreparedStatementCreator psc = new SelectAll(from, to, search, user, (user != null)
-                ? (user.getTimezone()) : m_tz, limit, 0);
+
+        int count = (limit == 0 ? getCdrCount(from, to, search, user) : limit);
+        count = (count > MAX_COUNT) ? MAX_COUNT : count;
+
         try {
             resultReader.writeHeader();
-            getJdbcTemplate().query(psc, resultReader);
+
+            int offset = 0;
+            int pages = count / DUMP_PAGE;
+            int remaining = count - pages * DUMP_PAGE;
+
+            for (int i = 0; i < pages; i++) {
+                PreparedStatementCreator psc = new SelectAll(from, to, search, user, (user != null)
+                    ? (user.getTimezone()) : m_tz, DUMP_PAGE, offset);
+                getJdbcTemplate().query(psc, resultReader);
+                offset += DUMP_PAGE;
+            }
+            if (remaining > 0) {
+                PreparedStatementCreator psc = new SelectAll(from, to, search, user, (user != null)
+                    ? (user.getTimezone()) : m_tz, remaining, offset);
+                getJdbcTemplate().query(psc, resultReader);
+            }
+
             resultReader.writeFooter();
         } catch (DataAccessException e) {
             // unwrap IOException that might happen during reading DB
