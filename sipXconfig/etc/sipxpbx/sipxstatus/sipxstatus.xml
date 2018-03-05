@@ -80,12 +80,6 @@
     <setting name="SIP_STATUS_LOG_CONSOLE" hidden="yes">
       <type><string/></type>
     </setting>
-    <setting name="SIP_STATUS_MAX_CONCURRENT">
-      <type>
-        <integer min="5" max="1024"/>
-      </type>
-      <value>10</value>     
-    </setting>
   </group>
   <group name="resource-limits" advanced="yes">
     <setting name="fd-soft">

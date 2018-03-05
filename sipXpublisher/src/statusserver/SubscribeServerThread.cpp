@@ -42,7 +42,6 @@
 // FORWARD DECLARATIONS
 #define MIN_EXPIRES_TIME 300
 #define DEFAULT_Q_VALUE " "
-#define MAX_CONCURRENT_THREADS 10
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -54,9 +53,7 @@ SubscribeServerThread::SubscribeServerThread(StatusServer& statusServer):
     mIsStarted(FALSE),
     mDefaultSubscribePeriod( 24*60*60 ), //24 hours
     mPluginTable(NULL),
-    mLock(OsBSem::Q_PRIORITY, OsBSem::FULL),
-    mThreadPoolSem(0),
-    mMaxConcurrentThreads(MAX_CONCURRENT_THREADS)
+    mLock(OsBSem::Q_PRIORITY, OsBSem::FULL)
 {}
 
 SubscribeServerThread::~SubscribeServerThread()
@@ -73,9 +70,6 @@ SubscribeServerThread::~SubscribeServerThread()
       delete _domainValidator;
       _domainValidator = NULL;
     }
-
-    delete mThreadPoolSem;
-    mThreadPoolSem = 0;
 }
 
 ///////////////////////////PUBLIC///////////////////////////////////
@@ -157,16 +151,6 @@ SubscribeServerThread::initialize (
       }
     }
 
-    StatusServer::getConfigDb().get("SIP_STATUS_MAX_CONCURRENT", mMaxConcurrentThreads);
-
-    if (mMaxConcurrentThreads < 5)
-    {
-      mMaxConcurrentThreads = MAX_CONCURRENT_THREADS;
-    }
-
-    Os::Logger::instance().log(FAC_SIP, PRI_INFO, "SIP_STATUS_MAX_CONCURRENT : %d", mMaxConcurrentThreads);
-    mThreadPoolSem = new Poco::Semaphore(mMaxConcurrentThreads);
-
     //get Plugin table
     if ( pluginTable )
     {
@@ -235,12 +219,13 @@ void SubscribeServerThread::removeErrorRow (
    }
 }
 
+
 //functions
 UtlBoolean
 SubscribeServerThread::handleMessage(OsMsg& eventMessage)
 {
   std::string errorString;
-
+  
   try
   {
     // Only handle SIP messages
@@ -250,93 +235,9 @@ SubscribeServerThread::handleMessage(OsMsg& eventMessage)
        return FALSE ;
     }
 
-    const SipMessage &msg = *((SipMessageEvent&)eventMessage).getMessage();
-    SipMessage* message = new SipMessage(msg);
+    const SipMessage* message =
+        ((SipMessageEvent&)eventMessage).getMessage();
 
-    mThreadPoolSem->wait();
-
-    Url fromUrl;
-    Url toUrl;
-    UtlString fromTag;
-    UtlString toTag;
-
-    message->getFromUrl(fromUrl);
-    fromUrl.getFieldParameter("tag", fromTag);
-
-    message->getToUrl(toUrl);
-    toUrl.getFieldParameter("tag", toTag);
-
-    bool midDialog = !fromTag.isNull() && !toTag.isNull();
-
-    if (midDialog)
-    {
-        handleRequest(message);
-    }
-    else if (!mThreadPool.schedule(boost::bind(&SubscribeServerThread::handleRequest, this, _1), message))
-    {
-       SipMessage finalResponse;
-       finalResponse.setResponseData(message, SIP_SERVICE_UNAVAILABLE_CODE, "No Thread Available");
-       mpSipUserAgent->send(finalResponse);
-
-       OS_LOG_ERROR(FAC_SIP, "SubscribeServerThread::handleMessage failed to create pooled thread!  Threadpool size="
-         << mThreadPool.threadPool().available());
-
-       delete message;
-    }
-    else
-    {
-       OS_LOG_INFO(FAC_SIP, "SubscribeServerThread::handleMessage scheduled new request.  Threadpool size="
-         << mThreadPool.threadPool().available());
-    }
-
-    return TRUE;
-  }
-#ifdef MONGO_assert
-  catch (mongo::DBException& e)
-  {
-    errorString = "MWI - Mongo DB Exception";
-    OS_LOG_ERROR( FAC_SIP, "SubscribeServerThread::handleMessage() Exception: "
-             << e.what() );
-  }
-#endif
-  catch (boost::exception& e)
-  {
-    errorString = "MWI - Boost Library Exception";
-    OS_LOG_ERROR( FAC_SIP, "SubscribeServerThread::handleMessage() Exception: "
-             << boost::diagnostic_information(e));
-  }
-  catch (std::exception& e)
-  {
-    errorString = "MWI - Standard Library Exception";
-    OS_LOG_ERROR( FAC_SIP, "SubscribeServerThread::handleMessage() Exception: "
-             << e.what() );
-  }
-  catch (...)
-  {
-    errorString = "MWI - Unknown Exception";
-    OS_LOG_ERROR( FAC_SIP, "SubscribeServerThread::handleMessage() Exception: Unknown Exception");
-  }
-
-  //
-  // If it ever get here, that means we caught an exception
-  //
-  if (eventMessage.getMsgType()  == OsMsg::PHONE_APP)
-  {
-    const SipMessage& message = *((SipMessageEvent&)eventMessage).getMessage();
-    if (!message.isResponse())
-    {
-      SipMessage finalResponse;
-      finalResponse.setResponseData(&message, SIP_5XX_CLASS_CODE, errorString.c_str());
-      mpSipUserAgent->send(finalResponse);
-    }
-  }
-
-  return(TRUE);
-}
-
-void
-SubscribeServerThread::handleRequest(SipMessage *message)
-{
     UtlString userKey;
     UtlString uri;
     SipMessage finalResponse;
@@ -434,7 +335,7 @@ SubscribeServerThread::handleRequest(SipMessage *message)
                               message->getRequestUri(&requestUri);
                               finalResponse.setContactField(requestUri);
                            }
-
+                           
                            // The notifier will be responsible for removing the subscription
                            // after it sends the final notify.  We MUST NOT remove
                            // the subscription here because NOTIFY will be sent
@@ -604,10 +505,49 @@ SubscribeServerThread::handleRequest(SipMessage *message)
           removeErrorSubscription ( *message );
        }
     }
+    return TRUE;
+  }
+#ifdef MONGO_assert
+  catch (mongo::DBException& e)
+  {
+    errorString = "MWI - Mongo DB Exception";
+    OS_LOG_ERROR( FAC_SIP, "SubscribeServerThread::handleMessage() Exception: "
+             << e.what() );
+  }
+#endif
+  catch (boost::exception& e)
+  {
+    errorString = "MWI - Boost Library Exception";
+    OS_LOG_ERROR( FAC_SIP, "SubscribeServerThread::handleMessage() Exception: "
+             << boost::diagnostic_information(e));
+  }
+  catch (std::exception& e)
+  {
+    errorString = "MWI - Standard Library Exception";
+    OS_LOG_ERROR( FAC_SIP, "SubscribeServerThread::handleMessage() Exception: "
+             << e.what() );
+  }
+  catch (...)
+  {
+    errorString = "MWI - Unknown Exception";
+    OS_LOG_ERROR( FAC_SIP, "SubscribeServerThread::handleMessage() Exception: Unknown Exception");
+  }
 
-    delete message;
+  //
+  // If it ever get here, that means we caught an exception
+  //
+  if (eventMessage.getMsgType()  == OsMsg::PHONE_APP)
+  {
+    const SipMessage& message = *((SipMessageEvent&)eventMessage).getMessage();
+    if (!message.isResponse())
+    {
+      SipMessage finalResponse;
+      finalResponse.setResponseData(&message, SIP_5XX_CLASS_CODE, errorString.c_str());
+      mpSipUserAgent->send(finalResponse);
+    }
+  }
 
-    mThreadPoolSem->set();
+  return(TRUE);
 }
 
 UtlBoolean
