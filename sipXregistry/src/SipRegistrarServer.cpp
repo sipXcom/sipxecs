@@ -74,7 +74,7 @@ const RegEx InstanceUrnUuidMac(
 #define MAX_EXPIRES_TIME_NORMAL 7200
 #define MIN_EXPIRES_TIME_NATED   180
 #define MAX_EXPIRES_TIME_NATED   300
-#define MAX_CONCURRENT_THREADS   10
+
 // STRUCTS
 // TYPEDEFS
 
@@ -95,9 +95,7 @@ SipRegistrarServer::SipRegistrarServer(SipRegistrar& registrar) :
     mSipUserAgent(NULL),
     mSendExpiresInResponse(TRUE),
     mSendAllContactsInResponse(FALSE),
-    mNonceExpiration(5*60),
-    _registerHandlerSem(0),
-    _maxConcurrentThreads(MAX_CONCURRENT_THREADS)
+    mNonceExpiration(5*60)
 {
 }
 
@@ -283,26 +281,17 @@ SipRegistrarServer::initialize(
                                            ,RegisterPlugin::Prefix
                                            );
     mpSipRegisterPlugins->readConfig(*pOsConfigDb);
-
+    
     //
     // Set the grace period for expirations
     //
-
+    
     int gracePeriod = 0;
     if ( OS_SUCCESS == pOsConfigDb->get("SIP_REGISTRAR_EXPIRE_GRACE_PERIOD", gracePeriod));
     {
       SipRegistrar::getInstance(NULL)->getRegDB()->setExpireGracePeriod(gracePeriod * 60);
     }
-
-    // read maximum concurent threads number
-    pOsConfigDb->get("SIPX_REGISTRAR_MAX_CONCURRENT", _maxConcurrentThreads);
-    if (_maxConcurrentThreads < 5)
-      _maxConcurrentThreads = MAX_CONCURRENT_THREADS;
-      _registerHandlerSem = new Poco::Semaphore(_maxConcurrentThreads);
-      Os::Logger::instance().log(FAC_SIP, PRI_INFO,
-         "SipRegistrarServer::initialize SIPX_REGISTRAR_MAX_CONCURRENT is %d", _maxConcurrentThreads);
-
-    }
+}
 
 
 
@@ -845,7 +834,7 @@ void SipRegistrarServer::mergeNewBindings(const RegDB::Bindings& unexpiredRegs, 
         break;
       }
     }
-
+    
     if (!found)
       mergedResult.push_back(*(rec.get()));
   }
@@ -948,24 +937,25 @@ void SipRegistrarServer::handleRegister(SipMessage* pMsg)
 
                   UtlString identity_;
                   toUri.getIdentity(identity_);
-
+                  
                   RegDB::Bindings unexpiredRegs;
                   SipRegistrar::getInstance(NULL)->getRegDB()->getUnexpiredContactsUser(identity_.str(),
                       timeNow, unexpiredRegs);
-
+                  
+                  
                   RegDB::Bindings registrations;
-
+                  
                   if (!isUnregister)
                     mergeNewBindings(unexpiredRegs, newBindings, registrations);
                   else
                     validateUnregisteredBindings(message, unexpiredRegs, registrations);
-
+                           
                   if (!isUnregister && applyStatus == REGISTER_SUCCESS && registrations.empty())
                   {
                     //
                     // This should not happen.  Send out a 500 internal server error
                     //
-
+                    
                     finalResponse.setResponseData(&message,SIP_5XX_CLASS_CODE,"Unable To Retrieve Contacts From RegDB");
                     break;
                   }
@@ -1237,9 +1227,9 @@ void SipRegistrarServer::handleRegister(SipMessage* pMsg)
 
   mSipUserAgent->send(finalResponse);
 
-  delete pMsg;
 
-  _registerHandlerSem->set();
+
+  delete pMsg;
 }
 
 //functions
@@ -1271,8 +1261,6 @@ SipRegistrarServer::handleMessage( OsMsg& eventMessage )
         //
         // Schedule the processing using the threadPool
         //
-        _registerHandlerSem->wait();
-
         SipMessage* pMsg = new SipMessage(*((SipMessageEvent&)eventMessage).getMessage());
         if (!_registerHandler.schedule(boost::bind(&SipRegistrarServer::handleRegister, this, _1), pMsg))
         {
@@ -1282,7 +1270,7 @@ SipRegistrarServer::handleMessage( OsMsg& eventMessage )
 
           OS_LOG_ERROR(FAC_SIP, "SipRegistrarServer::handleMessage failed to create pooled thread!  Threadpool size="
             << _registerHandler.threadPool().available());
-
+            
           delete pMsg;
         }
         else
@@ -1290,7 +1278,6 @@ SipRegistrarServer::handleMessage( OsMsg& eventMessage )
           OS_LOG_INFO(FAC_SIP, "SipRegistrarServer::handleMessage scheduled new REGISTER request.  Threadpool size="
             << _registerHandler.threadPool().available());
         }
-
         handled = TRUE;
     }
     else if ( msgType == OsMsg::OS_SHUTDOWN )
@@ -1560,8 +1547,6 @@ bool SipRegistrarServer::isRegistrantBehindNat( const SipMessage& registerReques
 
 SipRegistrarServer::~SipRegistrarServer()
 {
-   delete _registerHandlerSem;
-   _registerHandlerSem = 0;
 }
 
 void RegisterPlugin::takeAction( const SipMessage&   registerMessage
