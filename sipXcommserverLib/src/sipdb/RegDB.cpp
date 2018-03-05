@@ -156,9 +156,7 @@ void RegDB::updateBinding(RegBinding& binding)
   MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
   mongo::DBClientBase* client = conn->get();
 
-  client->remove(_ns, query);
-  client->insert(_ns, update);
-  ensureIndexes(client);
+  client->update(_ns, query, updateOp, true, false);
 
   string e = client->getLastError();
   if ( !e.empty() )
@@ -192,7 +190,6 @@ void RegDB::expireOldBindings(const string& identity, const string& callId, unsi
     mongo::DBClientBase* client = conn->get();
 
 	client->remove(_ns, query);
-	ensureIndexes(client);
 
 	conn->done();
 }
@@ -214,7 +211,6 @@ void RegDB::expireAllBindings(const string& identity, const string& callId, unsi
   mongo::DBClientBase* client = conn->get();
 
   client->remove(_ns, query);
-  ensureIndexes(client);
 
 	conn->done();
 }
@@ -242,7 +238,6 @@ void RegDB::removeAllExpired()
   mongo::DBClientBase* client = conn->get();
 
   client->remove(_ns, query);
-  ensureIndexes(client);
 
   conn->done();
 }

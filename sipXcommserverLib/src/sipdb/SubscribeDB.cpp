@@ -172,7 +172,6 @@ void SubscribeDB::upsert (
     MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
     mongo::DBClientBase* client = conn->get();
     client->update(_ns, query, update, true, false);
-    ensureIndexes(client);
     conn->done();
 }
 
@@ -455,7 +454,6 @@ void SubscribeDB::updateNotifyUnexpiredSubscription(
     MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
     mongo::DBClientBase* client = conn->get();
     client->update(_ns, query, update);
-    ensureIndexes(client);
     conn->done();
 }
 
@@ -561,7 +559,6 @@ void SubscribeDB::updateToTag(
                             mongo::BSONObj update = BSON("$set" << BSON(Subscription::toUri_fld() << dummy.data()));
 
                             client->update(_ns, query, update);
-                            ensureIndexes(client);
                         }
                         else
                         {
