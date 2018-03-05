@@ -153,6 +153,11 @@ void RegDB::updateBinding(RegBinding& binding)
 
   mongo::BSONObj update = binding.toBSONObj();
 
+  mongo::BSONObjBuilder opBuilder;
+  opBuilder.append("$set", update);
+
+  mongo::BSONObj updateOp = opBuilder.obj();
+
   MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getWriteQueryTimeout()));
   mongo::DBClientBase* client = conn->get();
 
