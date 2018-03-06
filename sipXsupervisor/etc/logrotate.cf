@@ -82,5 +82,18 @@ $(sipx.SIPX_LOGDIR)/firewall/*.log {
 /opt/openfire/logs/*.log {
     copytruncate
 }
+
+/var/log/mongodb/*.log {
+       weekly
+       rotate 10
+       copytruncate
+       delaycompress
+       compress
+       notifempty
+       missingok
+       postrotate
+          /bin/kill -USR1 `cat /var/run/mongodb/mongod.pid 2>/dev/null` 2> /dev/null|| true
+       endscript
+}
 ";
 }
