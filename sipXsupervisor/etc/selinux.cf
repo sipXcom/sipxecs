@@ -52,6 +52,14 @@ bundle agent selinux {
       "/usr/sbin/semanage"
         comment => "Enable port 12000 in selinux",
         args => "port -a -t http_port_t -p tcp 12000";
+
+      "/usr/sbin/semanage"
+        comment => "semanage SELINUX - offer ftp remote write access to tftproot",
+        args => "fcontext -a -t public_content_rw_t \"$(sipx.SIPX_VARDIR)/sipxdata/configserver/phone/profile/tftproot(/.*)?\"";
+        
+      "/sbin/restorecon"
+        comment => "restorecon SELINUX - offer ftp remote write access to tftproot",
+        args => "-F -R -v $(sipx.SIPX_VARDIR)/sipxdata/configserver/phone/profile/tftproot";
         
       "/usr/sbin/setsebool"
         comment => "Allow httpd to connect to network",
