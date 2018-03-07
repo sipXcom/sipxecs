@@ -317,32 +317,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/snmp/mibs/SIPXECS-ALARM-NOTIFICATION-MIB.txt
 %{_localstatedir}/sipxdata/unitelite/*
 %post
-if [ `mongo --quiet --eval "db.isMaster().ismaster"` == true ] && [ `mongo --quiet --eval "db.version()"` == 2.6.7 ]
-then
-  echo "exporting mongodb replica set configuration from 2.6.7 version"
-  mongo --quiet --eval "var cfg=rs.config();cfg.version=1;printjson(cfg)" > /var/sipxdata/tmp/config.json
-  echo "exporting mongodb user profiles database from 2.6.7 version"
-  mongodump --db=profiles --out=/var/sipxdata/tmp
-  echo "exporting registrations and subscriptions database from 2.6.7 version"
-  mongodump --db=node --out=/var/sipxdata/tmp
-  if [ ! -f /var/sipxdata/tmp/no-vmdb ]
-  then
-    echo "exporting voicemail database from 2.6.7 version"
-    mongodump --db=vmdb --out=/var/sipxdata/tmp
-  fi
-fi
-if [ `mongo --quiet --eval "db.version()"` == 2.6.7 ]
-then
-  service mongod stop
-  service mongod-arbiter stop
-  kill -9 `cat /var/run/mongodb/mongodb.pid` && rm -rf /var/run/mongodb/mongodb.pid && rm -rf /tmp/mongodb-27017.sock 
-  kill -9 `cat /var/run/mongodb/mongodb-arbiter.pid` && rm -rf /var/run/mongodb/mongodb-arbiter.pid && rm -rf /tmp/mongodb-27018.sock 
-  rm /etc/mongodb.conf
-  rm /etc/mongod-arbiter.conf
-  rm -rf /var/lib/mongodb/*
-  rm -rf /var/lib/mongodb-arbiter/*
-fi
-
 if test -e %{_sysconfdir}/logrotate.d/freeswitch; then rm -f %{_sysconfdir}/logrotate.d/freeswitch; fi
 
 # XX-10812 - Note some centos machines seemed to re-adjust sysv startup orders

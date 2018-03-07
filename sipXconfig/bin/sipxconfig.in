@@ -133,32 +133,6 @@ setupCheck() {
   fi
 }
 
-mongoUpgradeCheck() {
-  if [ -s @SIPX_TMPDIR@/config.json ]
-  then
-    echo -n "mongodb upgrade detected, applying replica set configuration"
-    config=`cat @SIPX_TMPDIR@/config.json`
-    mongo --eval "rs.initiate($config)" && rm -rf @SIPX_TMPDIR@/config.json
-    sleep 25
-    if [ -d @SIPX_TMPDIR@/profiles ]
-    then
-      echo -n "restoring user profiles database"
-      mongorestore --db profiles @SIPX_TMPDIR@/profiles && rm -rf @SIPX_TMPDIR@/profiles
-    fi
-    if [ -d @SIPX_TMPDIR@/node ]
-    then
-      echo -n "restoring registrations and subscriptions database"
-      mongorestore --db node @SIPX_TMPDIR@/node && rm -rf @SIPX_TMPDIR@/node
-    fi
-    if [ ! -f @SIPX_TMPDIR@/no-vmdb ] && [ -d @SIPX_TMPDIR@/vmdb ] && [ "$(ls -A @SIPX_TMPDIR@/vmdb)" ]
-    then
-      echo -n "restoring voicemail database"
-      mongorestore --db vmdb @SIPX_TMPDIR@/vmdb && rm -rf @SIPX_TMPDIR@/vmdb && rm -rf @SIPX_TMPDIR@/no-vmdb
-    fi
-    echo -n "mongodb upgrade completed"
-  fi
-}
-
 buildCommand() {
   procNameId=$1
 
@@ -196,7 +170,6 @@ runTask() {
 # Run Web interface
 start() {
   setupCheck
-  #mongoUpgradeCheck
   databaseCommand upgrade
   databaseVersionCheck
   clearIndexLocks
