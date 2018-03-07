@@ -196,7 +196,7 @@ runTask() {
 # Run Web interface
 start() {
   setupCheck
-  mongoUpgradeCheck
+  #mongoUpgradeCheck
   databaseCommand upgrade
   databaseVersionCheck
   clearIndexLocks
