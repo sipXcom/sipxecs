@@ -55,11 +55,11 @@ bundle agent selinux {
 
       "/usr/sbin/semanage"
         comment => "semanage SELINUX - offer ftp remote write access to tftproot",
-        args => "fcontext -a -t public_content_rw_t \"$(sipx.SIPX_VARDIR)/sipxdata/configserver/phone/profile/tftproot(/.*)?\"";
+        args => "fcontext -a -t public_content_rw_t \"$(sipx.SIPX_VARDIR)/configserver/phone/profile/tftproot(/.*)?\"";
         
       "/sbin/restorecon"
         comment => "restorecon SELINUX - offer ftp remote write access to tftproot",
-        args => "-F -R -v $(sipx.SIPX_VARDIR)/sipxdata/configserver/phone/profile/tftproot";
+        args => "-F -R -v $(sipx.SIPX_VARDIR)/configserver/phone/profile/tftproot";
         
       "/usr/sbin/setsebool"
         comment => "Allow httpd to connect to network",
