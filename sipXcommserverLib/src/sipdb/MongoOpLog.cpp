@@ -41,7 +41,7 @@ MongoOpLog::MongoOpLog(const MongoDB::ConnectionInfo& info,
 	MongoDB::BaseDB(info, NS),
   _isRunning(false),
   _pThread(0),
-  _querySleepTime(60),
+  _querySleepTime(querySleepTime),
   _startFromTimestamp(startFromTimestamp),
   _customQuery(customQuery)
 {
