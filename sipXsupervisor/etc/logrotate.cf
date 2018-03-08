@@ -84,7 +84,7 @@ $(sipx.SIPX_LOGDIR)/firewall/*.log {
 }
 
 /var/log/mongodb/*.log {
-       weekly
+       daily
        rotate 10
        copytruncate
        delaycompress
