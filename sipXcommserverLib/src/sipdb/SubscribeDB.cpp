@@ -192,8 +192,8 @@ void SubscribeDB::ensureIndexes(mongo::DBClientBase* client)
   }
 
   clientPtr->ensureIndex(_ns,  BSON(Subscription::key_fld() << 1));
-  clientPtr->ensureIndex(_ns,  BSON(Subscription::toUri_fld() << 1));
   clientPtr->ensureIndex(_ns,  BSON(Subscription::shardId_fld() << 1));
+  clientPtr->ensureIndex(_ns, mongo::fromjson("{\"toUri\":1, \"fromUri\":1, \"callId\":1, \"eventTypeKey\":1}"));
 
   // drop the 'expires' index in case this is the 1st call
   if (_isFirstEnsureIndexes)

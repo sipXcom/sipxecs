@@ -75,8 +75,8 @@ void RegDB::ensureIndexes(mongo::DBClientBase* client)
     clientPtr = conn->get();
   }
 
-  clientPtr->ensureIndex(_ns, BSON(RegBinding::identity_fld() << 1 ));
   clientPtr->ensureIndex(_ns, BSON(RegBinding::instrument_fld() << 1 ));
+  clientPtr->ensureIndex(_ns, mongo::fromjson("{\"identity\":1, \"contact\":1, \"shardId\":1}"));
 
   // shape the new expirationtime index TTL
   int newExpirationTimeIndexTTL = (mongoMod::EXPIRES_AFTER_SECONDS_MINIMUM_SECS > static_cast<int>(_expireGracePeriod)) ? mongoMod::EXPIRES_AFTER_SECONDS_MINIMUM_SECS : static_cast<int>(_expireGracePeriod);
