@@ -237,8 +237,8 @@ public class MongoManagerImpl implements AddressProvider, FeatureProvider, Mongo
         }
 
         Collection<AlarmDefinition> defs = Arrays.asList(new AlarmDefinition[] {
-            MONGO_FATAL_REPLICATION_STOP, MONGO_FAILED_ELECTION, MONGO_MEMBER_DOWN, MONGO_NODE_STATE_CHANGED,
-            MONGO_CANNOT_SEE_MAJORITY, MONGO_DNS_LOOKUP_FAILED
+            /*MONGO_FATAL_REPLICATION_STOP*/ MONGO_FAILED_ELECTION, MONGO_MEMBER_DOWN, MONGO_NODE_STATE_CHANGED,
+            MONGO_CANNOT_SEE_MAJORITY, /*MONGO_DNS_LOOKUP_FAILED*/
         });
         return defs;
     }
