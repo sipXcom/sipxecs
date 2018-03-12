@@ -21,7 +21,7 @@ window=60
 thresh=<%= MONGO_MEMBER_DOWN[:minThreshold] %>
 <% 
   end
-  if MONGO_FATAL_REPLICATION_STOP[:groupName] != 'disabled'
+  if false
 %>
 type=Single
 ptype=RegExp
@@ -48,7 +48,7 @@ desc=Replica set error, node cannot see majority
 action=shellcmd @SIPX_BINDIR@/sipxtrap MONGO_CANNOT_SEE_MAJORITY %s
 <% 
   end
-  if MONGO_DNS_LOOKUP_FAILED[:groupName] != 'disabled'
+  if false
 %>
 type=SingleWithThreshold
 ptype=RegExp
