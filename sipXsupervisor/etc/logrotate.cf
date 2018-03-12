@@ -83,7 +83,8 @@ $(sipx.SIPX_LOGDIR)/firewall/*.log {
     copytruncate
 }
 
-/var/log/mongodb/*.log {
+/var/log/mongodb/mongod.log {
+    create 644 mongod mongod
     daily
     rotate 30
     size 50M
@@ -94,6 +95,7 @@ $(sipx.SIPX_LOGDIR)/firewall/*.log {
     sharedscripts
     postrotate
         /bin/kill -SIGUSR1 `cat /var/lib/mongo/mongod.lock 2> /dev/null` 2> /dev/null || true
+        chown mongod:mongod /var/log/mongodb/mongod*
     endscript
 }
 ";
