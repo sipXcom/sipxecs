@@ -84,16 +84,17 @@ $(sipx.SIPX_LOGDIR)/firewall/*.log {
 }
 
 /var/log/mongodb/*.log {
-       daily
-       rotate 10
-       copytruncate
-       delaycompress
-       compress
-       notifempty
-       missingok
-       postrotate
-          /bin/kill -USR1 `cat /var/run/mongodb/mongod.pid 2>/dev/null` 2> /dev/null|| true
-       endscript
+    daily
+    rotate 30
+    size 50M
+    compress
+    dateext
+    missingok
+    notifempty
+    sharedscripts
+    postrotate
+        /bin/kill -SIGUSR1 `cat /var/lib/mongo/mongod.lock 2> /dev/null` 2> /dev/null || true
+    endscript
 }
 ";
 }

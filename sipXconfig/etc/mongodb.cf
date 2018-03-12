@@ -147,6 +147,7 @@ bundle edit_line mongodb_arbiter_config_contents {
       "systemLog:";
       "  destination: file";
       "  logAppend: true";
+      "  logRotate: reopen";
       "  path: /var/log/mongodb/mongod-arbiter.log";
       "storage:";
       "  dbPath: /var/lib/mongod-arbiter";
@@ -156,7 +157,7 @@ bundle edit_line mongodb_arbiter_config_contents {
       "    smallFiles: true";
       "processManagement:";
       "  fork: true";
-      "  pidFilePath: /var/run/mongodb/mongod-arbiter.pid";
+      "  pidFilePath: /var/run/mongodb/mongod.pid";
       "net:";
       "  port: 27018";
       "  bindIp: 0.0.0.0";
@@ -382,6 +383,7 @@ bundle edit_line mongodb_config_contents {
       "systemLog:";
       "  destination: file";
       "  logAppend: true";
+      "  logRotate: reopen";
       "  path: /var/log/mongodb/mongod.log";
       "storage:";
       "  dbPath: /var/lib/mongo";
