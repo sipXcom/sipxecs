@@ -97,7 +97,7 @@ EntityDB* SipRouter::getEntityDBInstance()
 {
   static EntityDB* pEntityDb = (_entityCacheExpire == 0 ?
             new EntityDB(MongoDB::ConnectionInfo::globalInfo()) :
-            new EntityDB(MongoDB::ConnectionInfo::globalInfo(), _entityCacheExpire));
+            new EntityDB(MongoDB::ConnectionInfo::globalInfo(), _entityCacheExpire * 1000));
 
   return pEntityDb;
 }
