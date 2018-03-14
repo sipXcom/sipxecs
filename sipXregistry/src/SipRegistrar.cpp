@@ -147,10 +147,10 @@ SipRegistrar::SipRegistrar(OsConfigDb* configDb) :
 
    size_t _entityCacheExpire = 0;
    mConfigDb->get("SIP_REGISTRAR_ENTITY_CACHE_EXPIRE", (int&)_entityCacheExpire);
-   Os::Logger::instance().log(FAC_SIP, PRI_INFO, "SipRegistrar::SipRegistrar entityCacheExpire: %d", _entityCacheExpire);
+   Os::Logger::instance().log(FAC_SIP, PRI_INFO, "SipRegistrar::SipRegistrar entityCacheExpire: %d seconds", _entityCacheExpire);
 
    MongoDB::ConnectionInfo gInfo = MongoDB::ConnectionInfo::globalInfo();
-   mpEntityDb = (_entityCacheExpire == 0 ? new EntityDB(gInfo) : new EntityDB(gInfo, _entityCacheExpire));
+   mpEntityDb = (_entityCacheExpire == 0 ? new EntityDB(gInfo) : new EntityDB(gInfo, _entityCacheExpire * 1000));
 
    mpRegDb = RegDB::CreateInstance(true /* ensure indexes */);
    mpSubscribeDb = SubscribeDB::CreateInstance(true /* ensure indexes creation */);
