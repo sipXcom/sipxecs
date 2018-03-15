@@ -23,6 +23,11 @@ public interface CdrManager {
     public static final LocationFeature FEATURE = new LocationFeature("sipxcdr");
     public static final AddressType CDR_API = new AddressType("cdrApi");
     public static final String ARCHIVE = "cdr.tar.gz";
+    public static final int DUMP_PAGE = 100000;
+    public static final int DUMP_PAGE2 = 20000;
+    public static final int MAX_COUNT = 1000000;
+    public static final int MAX_COUNT2 = 250000;
+
 
     final String CONTEXT_BEAN_NAME = "cdrManager";
 

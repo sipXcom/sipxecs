@@ -42,6 +42,10 @@ public class CdrSettings extends PersistableSettings implements DeployConfigOnEd
         return (Integer) getSettingTypedValue("callresolver/CSV_LIMIT");
     }
 
+    public int getReportLimit() {
+        return (Integer) getSettingTypedValue("callresolver/REPORT_LIMIT");
+    }
+
     public int getJsonLimit() {
         return (Integer) getSettingTypedValue("callresolver/JSON_LIMIT");
     }

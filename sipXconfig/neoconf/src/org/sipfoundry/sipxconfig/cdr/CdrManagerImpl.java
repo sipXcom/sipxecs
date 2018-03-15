@@ -97,8 +97,6 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
     static final String CALLER_CONTACT = "caller_contact";
     static final String CALLED_NUMBER = "called_number";
     static final String GATEWAY = "gateway";
-    static final int DUMP_PAGE = 100000;
-    static final int MAX_COUNT = 1000000;
 
     /**
      * CDRs database at the moment is using 'timestamp' type to store UTC time. Postgres
@@ -431,17 +429,24 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
         private final List<Cdr> m_cdrs = new ArrayList<Cdr>();
 
         private final Calendar m_calendar;
+        private final Calendar m_calendarGMT = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         private TimeZone m_systemTimeZone;
 
         private boolean m_privacy;
         private int m_privacyLimit;
         private String m_privacyExcluded;
+        private String m_mask = StringUtils.EMPTY;
+        private DateTimeZone m_dateTimeZone;
 
         public CdrsResultReader(TimeZone tz, boolean privacy, int limit, String excluded) {
             m_calendar = Calendar.getInstance(tz);
             m_privacy = privacy;
             m_privacyLimit = limit;
             m_privacyExcluded = excluded;
+            m_dateTimeZone = DateTimeZone.forTimeZone(m_calendar.getTimeZone());
+            for (int i = 0; i < m_privacyLimit; i++) {
+                m_mask += "*";
+            }
         }
 
         public CdrsResultReader(TimeZone tz) {
@@ -454,7 +459,12 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
 
         @Override
         public void processRow(ResultSet rs) throws SQLException {
-            Cdr cdr = new Cdr(m_privacy, m_privacyLimit, m_privacyExcluded);
+            Cdr cdr = new Cdr();
+            cdr.setPrivacy(m_privacy);
+            cdr.setPrivacyExcluded(m_privacyExcluded);
+            cdr.setLimit(m_privacyLimit);
+            cdr.setMask(m_mask);
+
             cdr.setCalleeAor(rs.getString(CALLEE_AOR));
             cdr.setCallerAor(rs.getString(CALLER_AOR));
             cdr.setCallId(rs.getString(CALL_ID));
@@ -463,10 +473,9 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
             cdr.setCalleeRoute(rs.getString(CALLEE_ROUTE));
             cdr.setCalleeContact(rs.getString(CALLEE_CONTACT));
             cdr.setCallerContact(rs.getString(CALLER_CONTACT));
-            Date startTime = rs.getTimestamp(START_TIME, Calendar.getInstance(TimeZone.getTimeZone("GMT")));
+            Date startTime = rs.getTimestamp(START_TIME, m_calendarGMT);
 
-            cdr.setStartTime((new DateTime(startTime).withZone(DateTimeZone.forTimeZone(m_calendar.getTimeZone()))
-                    .toLocalDateTime().toDate()));
+            cdr.setStartTime((new DateTime(startTime).withZone(m_dateTimeZone).toLocalDateTime().toDate()));
             Date connectTime = rs.getTimestamp(CONNECT_TIME, m_calendar);
             cdr.setConnectTime(connectTime);
             cdr.setEndTime(rs.getTimestamp(END_TIME, m_calendar));

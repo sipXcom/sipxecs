@@ -138,6 +138,12 @@
       </type>
       <value>25000</value>    
     </setting>
+    <setting name="REPORT_LIMIT">
+      <type>
+        <integer />
+      </type>
+      <value>25000</value>    
+    </setting>    
     <setting name="JSON_LIMIT" hidden="true">
       <type>
         <integer />
