@@ -77,9 +77,9 @@ class ConnectionInfo
 {
 public:
   ConnectionInfo();
-  
+
 	ConnectionInfo(const ConnectionInfo& rhs);
-  
+
   ConnectionInfo(const mongo::ConnectionString& connectionString);
 
 	ConnectionInfo(std::ifstream& configFile);
@@ -87,9 +87,9 @@ public:
 	~ConnectionInfo()
 	{
 	}
-	
+
   ConnectionInfo& operator=(const ConnectionInfo& conn);
-  
+
 
 
 	/**
@@ -141,7 +141,7 @@ public:
 		return !_connectionString.isValid();
 	}
 	;
-  
+
   const std::string& getClusterId() const
   {
     return _clusterId;
@@ -174,7 +174,7 @@ private:
 
   mongo::ConnectionString _connectionString;
   int _shard;
-  bool _useReadTags; 
+  bool _useReadTags;
   std::string _clusterId;
   unsigned int _readQueryTimeoutMs;
   unsigned int _writeQueryTimeoutMs;
@@ -217,29 +217,29 @@ public:
 	void forEach(mongo::BSONObj& query, const std::string& ns, boost::function<void(mongo::BSONObj)> doSomething);
 
 	void  nearest(mongo::BSONObjBuilder& builder, mongo::BSONObj query) const;
-	
+
 	void  primaryPreferred(mongo::BSONObjBuilder& builder, mongo::BSONObj query) const;
-	
+
 	void  setReadPreference(mongo::BSONObjBuilder& builder, mongo::BSONObj query, const char* readPreferrence) const;
 
 	const int getShardId() const { return _info.getShardId(); };
 
 	const bool useReadTags() const { return _info.useReadTags(); };
-  
+
   const std::string& getClusterId() const { return _info.getClusterId(); }
 
   void registerTimer(const UpdateTimer* pTimer);
-  
+
   void registerTimer(const ReadTimer* pTimer);
-  
+
   Int64 getUpdateAverageSpeed() const;
-  
+
   Int64 getLastUpdateSpeed() const;
-  
+
   Int64 getReadAverageSpeed() const;
-  
+
   Int64 getLastReadSpeed() const;
-  
+
   const double getReadQueryTimeout() const { double readQueryTimeout = _info.getReadQueryTimeoutMs(); return readQueryTimeout/1000; }
 
   const double getWriteQueryTimeout() const { double writeQueryTimeout = _info.getWriteQueryTimeoutMs(); return writeQueryTimeout/1000; }
@@ -272,8 +272,8 @@ protected:
 	mutable ConnectionInfo _info;
   boost::circular_buffer<Int64> _updateTimerSamples;
   boost::circular_buffer<Int64> _readTimerSamples;
-  mutable boost::mutex _updateTimerSamplesMutex; 
-  mutable boost::mutex _readTimerSamplesMutex; 
+  mutable boost::mutex _updateTimerSamplesMutex;
+  mutable boost::mutex _readTimerSamplesMutex;
   Int64 _lastReadSpeed;
   Int64 _lastUpdateSpeed;
   long _lastAlarmLog;
@@ -284,11 +284,13 @@ class UpdateTimer
 public:
   UpdateTimer(BaseDB& db);
   ~UpdateTimer();
-  
+  inline void setDBConnOK(bool state) {_isDBConnOK = state;};
+
 protected:
   Int64 _start;
   Int64 _end;
   BaseDB& _db;
+  bool _isDBConnOK;
   friend class BaseDB;
 };
 
@@ -297,12 +299,14 @@ class ReadTimer
 public:
   ReadTimer(BaseDB& db);
   ~ReadTimer();
-  
+  inline void setDBConnOK(bool state) {_isDBConnOK = state;};
+
 protected:
   Int64 _start;
   Int64 _end;
   BaseDB& _db;
-  friend class BaseDB;  
+  bool _isDBConnOK;
+  friend class BaseDB;
 };
 
 
