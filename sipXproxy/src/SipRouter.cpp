@@ -353,6 +353,9 @@ void SipRouter::readConfig(OsConfigDb& configDb, const Url& defaultUri)
    mRelayAllowed = configDb.getBoolean("SIPX_PROXY_RELAY_ALLOWED", TRUE);
    SipTransaction::enableTcpResend = configDb.getBoolean("SIPX_PROXY_ENABLE_TCP_RESEND", FALSE);
 
+   configDb.get("SIPX_PROXY_ENTITY_CACHE_EXPIRE", (int&)_entityCacheExpire);
+   OS_LOG_INFO(FAC_SIP, "SipRouter::readConfig entityCacheExpire: " << _entityCacheExpire);
+
    // these should really be redundant with the existing aliases,
    // but it's better to be safe and add them to ensure that they are
    // properly recognized (the alias db prunes duplicates anyway)
@@ -446,9 +449,6 @@ void SipRouter::readConfig(OsConfigDb& configDb, const Url& defaultUri)
    }
 
    OS_LOG_INFO(FAC_SIP, "SipRouter::readConfig retryAfter: " << _503retryAfter);
-
-   configDb.get("SIPX_PROXY_ENTITY_CACHE_EXPIRE", (int&)_entityCacheExpire);
-   OS_LOG_INFO(FAC_SIP, "SipRouter::readConfig entityCacheExpire: " << _entityCacheExpire);
 }
 
 // Destructor
