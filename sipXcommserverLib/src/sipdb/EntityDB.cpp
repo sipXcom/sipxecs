@@ -135,7 +135,7 @@ static bool cidr_compare(const std::string& cidr, const std::string& ip)
 EntityDB::EntityDB(const MongoDB::ConnectionInfo& info, size_t cacheExpire) :
    BaseDB(info, NS), _cache(cacheExpire), _typeCache(cacheExpire)
 {
-  OS_LOG_INFO(FAC_ODBC, "EntityDB::EntityDB - cache expiration" << cacheExpire << " milliseconds");
+  OS_LOG_INFO(FAC_ODBC, "EntityDB::EntityDB - cache expiration " << cacheExpire << " milliseconds");
   init();
 }
 
@@ -143,7 +143,7 @@ EntityDB::EntityDB(const MongoDB::ConnectionInfo& info, size_t cacheExpire) :
 EntityDB::EntityDB(const MongoDB::ConnectionInfo& info, const std::string& ns, size_t cacheExpire) :
    BaseDB(info, ns), _cache(cacheExpire), _typeCache(cacheExpire)
 {
-  OS_LOG_INFO(FAC_ODBC, "EntityDB::EntityDB - cache expiration" << cacheExpire << " milliseconds");
+  OS_LOG_INFO(FAC_ODBC, "EntityDB::EntityDB - cache expiration " << cacheExpire << " milliseconds");
   init();
 }
 
