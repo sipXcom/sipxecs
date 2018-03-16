@@ -26,7 +26,7 @@ public interface CdrManager {
     public static final int DUMP_PAGE = 100000;
     public static final int DUMP_PAGE2 = 20000;
     public static final int MAX_COUNT = 1000000;
-    public static final int MAX_COUNT2 = 250000;
+    public static final int MAX_COUNT2 = 100000;
 
 
     final String CONTEXT_BEAN_NAME = "cdrManager";
