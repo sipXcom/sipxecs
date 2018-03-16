@@ -46,18 +46,8 @@ public:
 	    _lastTailId = mongoMod::minKey.firstElement();
 	}
 
-	EntityDB(const MongoDB::ConnectionInfo& info, size_t cacheExpire = 1000 * ENTITYDB_CACHE_EXPIRE) :
-		BaseDB(info, NS), _cache(cacheExpire), _typeCache(cacheExpire)
-	{
-		init();
-	}
-
-
-	EntityDB(const MongoDB::ConnectionInfo& info, const std::string& ns, size_t cacheExpire = 1000 * ENTITYDB_CACHE_EXPIRE) :
-		BaseDB(info, ns), _cache(cacheExpire), _typeCache(cacheExpire)
-	{
-		init();
-	}
+	EntityDB(const MongoDB::ConnectionInfo& info, size_t cacheExpire = 1000 * ENTITYDB_CACHE_EXPIRE);
+	EntityDB(const MongoDB::ConnectionInfo& info, const std::string& ns, size_t cacheExpire = 1000 * ENTITYDB_CACHE_EXPIRE);
 
 	~EntityDB()
 	{

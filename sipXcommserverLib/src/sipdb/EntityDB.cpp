@@ -29,7 +29,6 @@ static const std::string ID_SIPX_PROVISION = "~~id~sipXprovision";
 
 const std::string EntityDB::NS("imdb.entity");
 
-
 static std::string validate_identity_string(const std::string& identity)
 {
   //
@@ -133,11 +132,27 @@ static bool cidr_compare(const std::string& cidr, const std::string& ip)
   return false;
 }
 
+EntityDB::EntityDB(const MongoDB::ConnectionInfo& info, size_t cacheExpire) :
+   BaseDB(info, NS), _cache(cacheExpire), _typeCache(cacheExpire)
+{
+  OS_LOG_INFO(FAC_ODBC, "EntityDB::EntityDB - cache expiration" << cacheExpire << " milliseconds");
+  init();
+}
+
+
+EntityDB::EntityDB(const MongoDB::ConnectionInfo& info, const std::string& ns, size_t cacheExpire) :
+   BaseDB(info, ns), _cache(cacheExpire), _typeCache(cacheExpire)
+{
+  OS_LOG_INFO(FAC_ODBC, "EntityDB::EntityDB - cache expiration" << cacheExpire << " milliseconds");
+  init();
+}
+
+
 bool EntityDB::findByIdentity(const string& ident, EntityRecord& entity) const
 {
   MongoDB::ReadTimer readTimer(const_cast<EntityDB&>(*this));
   std::string identity = validate_identity_string(ident);
-  
+
   OS_LOG_INFO(FAC_ODBC, "EntityDB::findByIdentity - Finding entity record for " << identity << " from namespace " << _ns);
   //
   // Check if we have it cache
@@ -194,7 +209,7 @@ void EntityDB::getEntitiesByType(const std::string& entityType, Entities& entiti
       return;
     }
   }
-  
+
   mongo::BSONObj query = BSON(EntityRecord::entity_fld() << entityType);
 
   MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString(), getReadQueryTimeout()));
@@ -206,7 +221,7 @@ void EntityDB::getEntitiesByType(const std::string& entityType, Entities& entiti
             query() and iterate the cursor.
       void findN(vector<BSONObj>& out, const string&ns, Query query, int nToReturn, int nToSkip = 0, const BSONObj *fieldsToReturn = 0, int queryOptions = 0);
     */
-      
+
   BSONObjects objects;
   conn->get()->findN(
     objects, // out
@@ -228,7 +243,7 @@ void EntityDB::getEntitiesByType(const std::string& entityType, Entities& entiti
       entities.push_back(entity);
     }
   }
-  
+
   if (entities.empty())
   {
     OS_LOG_DEBUG(FAC_ODBC, entityType << " is NOT present in namespace " << _ns);
@@ -239,7 +254,7 @@ void EntityDB::getEntitiesByType(const std::string& entityType, Entities& entiti
     const_cast<EntityTypeCache&>(_typeCache).add(entityType, EntityTypeCacheable(new Entities(entities)));
     OS_LOG_DEBUG(FAC_ODBC, "EntityDB::getEntitiesByType - " << entityType << " is present in namespace " << _ns);
   }
-  
+
   conn->done();
 }
 
@@ -247,12 +262,12 @@ void EntityDB::getCallerLocation(CallerLocations& locations, std::string& fallba
 {
   Entities branches;
   getEntitiesByType(EntityRecord::entity_branch_str(), branches);
-  
+
   OS_LOG_INFO(FAC_ODBC, "EntityDB::getCallerLocation( identity=" << identity << ", host=" << host << ", address=" << address << ")");
-  
+
   EntityRecord userEntity;
   if (findByIdentity(identity, userEntity) && !userEntity.allowedLocations().empty())
-  {   
+  {
     //
     // Now that we have the locations for this user, check for branch associated locations
     //
@@ -269,10 +284,10 @@ void EntityDB::getCallerLocation(CallerLocations& locations, std::string& fallba
         }
       }
     }
-    
+
     return;
   }
-  
+
   //
   // Get locations by domain or subnet
   //
@@ -295,7 +310,7 @@ void EntityDB::getCallerLocation(CallerLocations& locations, std::string& fallba
         }
       }
     }
-     
+
     if (!address.empty() && !host_iter->loc_restr_sbnet().empty() && !host_iter->inboundAssociatedLocations().empty())
     {
       for (EntityRecord::LocationSubnet::iterator subnetIter = host_iter->loc_restr_sbnet().begin(); subnetIter != host_iter->loc_restr_sbnet().end(); subnetIter++)
@@ -319,9 +334,9 @@ void EntityDB::getCallerLocation(CallerLocations& locations, std::string& fallba
 bool EntityDB::findByUserId(const string& uid, EntityRecord& entity) const
 {
   MongoDB::ReadTimer readTimer(const_cast<EntityDB&>(*this));
-  
+
   std::string userId = validate_identity_string(uid);
-  
+
   OS_LOG_INFO(FAC_ODBC, "EntityDB::findByUserId - Finding entity record for " << userId << " from namespace " << _ns);
   ExpireCacheable pCacheObj = const_cast<ExpireCache&>(_cache).get(userId);
   if (pCacheObj)
@@ -380,7 +395,7 @@ bool EntityDB::findByAliasUserId(const string& alias, EntityRecord& entity) cons
 {
 
   MongoDB::ReadTimer readTimer(const_cast<EntityDB&>(*this));
-  
+
   ExpireCacheable pCacheObj = const_cast<ExpireCache&>(_cache).get(alias);
   if (pCacheObj)
   {
@@ -509,7 +524,7 @@ bool  EntityDB::tail(std::vector<std::string>& opLogs) {
   // minKey is smaller than any other possible value
 
   MongoDB::ReadTimer readTimer(const_cast<EntityDB&>(*this));
-  
+
   static bool hasLastTailId = false;
   MongoDB::ScopedDbConnectionPtr conn(mongoMod::ScopedDbConnection::getScopedDbConnection(_info.getConnectionString().toString()));
   if (!hasLastTailId)
