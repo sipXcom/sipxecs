@@ -185,10 +185,14 @@ bundle agent nfs_sysv_running {
       "nfs_service_command" string => ".*nfsd.*";
       "rpcbind_service" string => "/etc/rc.d/init.d/rpcbind";
       "rpcbind_service_command" string => ".*rpcbind.*";
+      "rpcstatd_service" string => "/etc/rc.d/init.d/nfslock";
+      "rpcstatd_service_command" string => ".*rpc.statd.*";
+      
 
   methods:
     "any" usebundle => find_service_by_command("$(nfs_service_command)", "nfs_running", "root");
     "any" usebundle => find_service_by_command("$(rpcbind_service_command)", "rpcbind_running", "rpc");
+    "any" usebundle => find_service_by_command("$(rpcstatd_service_command)", "rpcstatd_running", "rpcuser");
 
   commands:
     !rpcbind_running.sipxtcpdumplog.!stop_sipxecs::
@@ -210,7 +214,16 @@ bundle agent nfs_sysv_running {
       "$(nfs_service)"
         comment => "stop nfs",
         args => "stop";
-        
+
+    !rpcstatd_running.sipxtcpdumplog.!stop_sipxecs::
+      "$(rpcstatd_service)"
+        comment => "start rpc.statd",
+        args => "start";
+
+    (!sipxtcpdumplog|stop_sipxecs).rpcstatd_running::
+      "$(rpcstatd_service)"
+        comment => "stop rpc.statd",
+        args => "stop";        
 }
 
 body file_select tcpdump_file
