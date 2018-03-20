@@ -1,0 +1,1 @@
+delete from alarm_code where alarm_code_id='MONGO_CANNOT_SEE_MAJORITY';

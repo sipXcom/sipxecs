@@ -46,6 +46,8 @@ ptype=RegExp
 pattern=Not starting an election, since we are not electable due to: Not standing for election because I cannot see a majority
 desc=Replica set error, node cannot see majority
 action=shellcmd @SIPX_BINDIR@/sipxtrap MONGO_CANNOT_SEE_MAJORITY %s
+window=60
+thresh=<%= MONGO_CANNOT_SEE_MAJORITY[:minThreshold] %>
 <% 
   end
   if false

@@ -42,7 +42,7 @@ public interface MongoManager extends MongoReplSetManager {
     public static final AlarmDefinition MONGO_FAILED_ELECTION = new AlarmDefinition("MONGO_FAILED_ELECTION", 1);
     public static final AlarmDefinition MONGO_MEMBER_DOWN = new AlarmDefinition("MONGO_MEMBER_DOWN", 2);
     public static final AlarmDefinition MONGO_NODE_STATE_CHANGED = new AlarmDefinition("MONGO_NODE_STATE_CHANGED");
-    public static final AlarmDefinition MONGO_CANNOT_SEE_MAJORITY = new AlarmDefinition("MONGO_CANNOT_SEE_MAJORITY");
+    public static final AlarmDefinition MONGO_CANNOT_SEE_MAJORITY = new AlarmDefinition("MONGO_CANNOT_SEE_MAJORITY", 1);
     public static final AlarmDefinition MONGO_DNS_LOOKUP_FAILED = new AlarmDefinition("MONGO_DNS_LOOKUP_FAILED", 2);
 
     public MongoSettings getSettings();

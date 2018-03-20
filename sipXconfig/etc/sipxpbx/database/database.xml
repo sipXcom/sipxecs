@@ -504,6 +504,7 @@
   	<antcall target="remove-community" />
   	<antcall target="agent-group-outbound-update"/>
   	<antcall target="ldap-connection-settings"/>
+  	<antcall target="mongo_cannot_see_majority"/>
   </target>
 
   <target name="plugin-patches">
@@ -1568,6 +1569,9 @@
   </target>
   <target name="ldap-connection-settings" unless="ldap-connection-settings">
   	<db-patch patch="ldap-connection-settings"/>
+  </target>
+  <target name="mongo_cannot_see_majority" unless="mongo_cannot_see_majority">
+  	<db-patch patch="mongo_cannot_see_majority"/>
   </target>	
 
 	<!--
