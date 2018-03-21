@@ -22,7 +22,7 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
+import org.sipfoundry.sipxconfig.cfgmgt.RunBundleAgent;
 import org.sipfoundry.sipxconfig.cfgmgt.RunRequest;
 import org.sipfoundry.sipxconfig.common.UserException;
 import org.sipfoundry.sipxconfig.commserver.Location;
@@ -31,7 +31,7 @@ import org.sipfoundry.sipxconfig.commserver.LocationsManager;
 public class AlarmHistoryManagerImpl implements AlarmHistoryManager {
     private static final String ERROR_IO_EXCEPTION = "&error.io.exception";
     private static final Log LOG = LogFactory.getLog(AlarmHistoryManagerImpl.class);
-    private ConfigManager m_configManager;
+    private RunBundleAgent m_runAgent;
     private LocationsManager m_locationsManager;
     private File m_logDirectory;
 
@@ -72,15 +72,16 @@ public class AlarmHistoryManagerImpl implements AlarmHistoryManager {
         Location l = m_locationsManager.getPrimaryLocation();
         RunRequest getLogs = new RunRequest("alarm logs", Collections.singleton(l));
         getLogs.setBundles("upload_alarm_log");
-        m_configManager.run(getLogs);
+        LOG.info("Running " + getLogs.getLabel());
+        m_runAgent.run(getLogs.getLocations(), getLogs.getLabel(), getLogs.getBundles(), getLogs.getDefines());
     }
 
     public void setLocationsManager(LocationsManager locationsManager) {
         m_locationsManager = locationsManager;
     }
 
-    public void setConfigManager(ConfigManager configManager) {
-        m_configManager = configManager;
+    public void setRunAgent(RunBundleAgent runAgent) {
+        m_runAgent = runAgent;
     }
 
     public void setLogDirectory(String logDirectory) {

@@ -34,4 +34,8 @@
   
   <bean id="runAgent" class="org.sipfoundry.sipxconfig.cfgmgt.RunBundleAgent" parent="cfAgent"/>
   
+  <bean id="runAgentBackground" class="org.sipfoundry.sipxconfig.cfgmgt.RunBundleAgent" parent="cfAgent">
+    <property name="background" value="true"/>     
+  </bean>
+  
 </beans>

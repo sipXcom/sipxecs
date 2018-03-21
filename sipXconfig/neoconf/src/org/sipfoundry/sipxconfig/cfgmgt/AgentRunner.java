@@ -43,7 +43,9 @@ public class AgentRunner {
     private volatile boolean m_inProgress;
     private LocationsManager m_locationsManager;
     private int m_timeout = 300000;
+    private int m_foreground = 30000;
     private JobContext m_jobContext;
+    private boolean m_background;
 
     /**
      * Entry point for subclasses to all sipxagent command with a generic CFEngine task
@@ -122,7 +124,11 @@ public class AgentRunner {
             new Thread(outGobbler).start();
             Thread work = new Thread(worker);
             work.start();
-            work.join(m_timeout);
+            if (!m_background) {
+                work.join(m_timeout);
+            } else {
+                work.join(m_foreground);
+            }
             err.join(1000);
             if (errGobbler.m_error != null) {
                 LOG.error("Error logging output stream from agent run", outGobbler.m_error);
@@ -130,7 +136,7 @@ public class AgentRunner {
             return worker.getExitCode();
         } catch (InterruptedException e) {
             throw new ConfigException(format("Interrupted error. Could not complete agent command in %d ms.",
-                    m_timeout));
+                m_background ? m_foreground : m_timeout));
         } catch (IOException e) {
             throw new ConfigException("IO error. Could not complete agent command " + e.getMessage());
         } finally {
@@ -154,6 +160,10 @@ public class AgentRunner {
 
     public void setTimeout(int timeout) {
         m_timeout = timeout;
+    }
+
+    public void setBackground(boolean background) {
+        m_background = background;
     }
 
     class Worker implements Runnable {

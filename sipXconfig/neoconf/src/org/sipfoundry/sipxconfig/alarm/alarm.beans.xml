@@ -11,7 +11,7 @@
   </bean>
 
   <bean id="alarmHistoryManager" class="org.sipfoundry.sipxconfig.alarm.AlarmHistoryManagerImpl">
-    <property name="configManager" ref="configManager"/>
+    <property name="runAgent" ref="runAgentBackground"/>
     <property name="locationsManager" ref="locationsManager"/>
     <property name="logDirectory" value="${sysdir.var}/upload/snmptrapd"/>
   </bean>
