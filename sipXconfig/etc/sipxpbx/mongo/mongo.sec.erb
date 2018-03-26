@@ -41,7 +41,7 @@ action=shellcmd @SIPX_BINDIR@/sipxtrap MONGO_NODE_STATE_CHANGED %s
   end
   if MONGO_CANNOT_SEE_MAJORITY[:groupName] != 'disabled'
 %>
-type=Single
+type=SingleWithThreshold
 ptype=RegExp
 pattern=Not starting an election, since we are not electable due to: Not standing for election because I cannot see a majority
 desc=Replica set error, node cannot see majority
