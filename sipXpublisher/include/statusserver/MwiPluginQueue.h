@@ -121,6 +121,8 @@ private:
       _mutex.lock();
       if (_maxQueueSize && _queue.size() > _maxQueueSize)
       {
+        if (data.subscribe)
+          delete data.subscribe;
         _mutex.unlock();
         return;
       }
