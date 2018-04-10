@@ -20,6 +20,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -40,7 +43,6 @@ import org.sipfoundry.sipxconfig.cfgmgt.ConfigProvider;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigRequest;
 import org.sipfoundry.sipxconfig.cfgmgt.LoggerKeyValueConfiguration;
 import org.sipfoundry.sipxconfig.commserver.Location;
-import org.sipfoundry.sipxconfig.commserver.LocationsManager;
 import org.sipfoundry.sipxconfig.dialplan.AutoAttendantManager;
 import org.sipfoundry.sipxconfig.dialplan.DialPlanContext;
 import org.sipfoundry.sipxconfig.dialplan.attendant.AutoAttendantSettings;
@@ -58,11 +60,13 @@ import org.sipfoundry.sipxconfig.setting.SettingUtil;
 import org.springframework.beans.factory.annotation.Required;
 
 public class IvrConfig implements ConfigProvider, AlarmProvider {
+
+    private static final String VOICEMAIL_PATH_KEY = "=SIPX_IVRDATADIR=";
+
     private Ivr m_ivr;
     private Mwi m_mwi;
     private AutoAttendantManager m_aaManager;
     private AdminContext m_adminContext;
-    private LocationsManager m_locationsManager;
     private FreeswitchRecordingContext m_fsRecording;
 
     @Override
@@ -83,16 +87,35 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
         List<Location> mwiLocations = manager.getFeatureManager().getLocationsForEnabledFeature(Mwi.FEATURE);
         int mwiPort = m_mwi.getSettings().getHttpApiPort();
         Setting ivrSettings = settings.getSettings().getSetting("ivr");
+        String voicemailPath = settings.getVoicemailPath();
         AutoAttendantSettings aaSettings = m_aaManager.getSettings();
         FreeswitchRecordingSettings recordingSettings = m_fsRecording.getSettings();
+
+        File defaultDir = manager.getGlobalDataDirectory();
+        File dirsFile = new File(defaultDir, "defaults/dirs.cfdat");
+
+        List<String> fileContent = new ArrayList<String>(Files.readAllLines(dirsFile.toPath(), StandardCharsets.UTF_8));
+        for (int i = 0; i < fileContent.size(); i++) {
+            String line = fileContent.get(i);
+            if (line.startsWith(VOICEMAIL_PATH_KEY)) {
+                if (!StringUtils.isEmpty(voicemailPath)) {
+                    fileContent.set(i, VOICEMAIL_PATH_KEY.concat(voicemailPath));
+                }
+                break;
+            }
+        }
+        Files.write(dirsFile.toPath(), fileContent, StandardCharsets.UTF_8);
+
         for (Location location : locations) {
             File dir = manager.getLocationDataDirectory(location);
             boolean enabled = featureManager.isFeatureEnabled(Ivr.FEATURE, location);
 
             Writer w = new FileWriter(new File(dir, "sipxivr.cfdat"));
+
             try {
                 CfengineModuleConfiguration config = new CfengineModuleConfiguration(w);
                 config.writeClass("sipxivr", enabled);
+
                 if (location.isPrimary()) {
                     config.write("CLEANUP_VOICEMAIL_HOUR", settings.getCleanupVoicemailHour());
                 }
@@ -235,11 +258,6 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
     @Required
     public void setAutoAttendantManager(AutoAttendantManager aaManager) {
         m_aaManager = aaManager;
-    }
-
-    @Required
-    public void setLocationsManager(LocationsManager locationsManager) {
-        m_locationsManager = locationsManager;
     }
 
     @Required

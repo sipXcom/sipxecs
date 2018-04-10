@@ -37,6 +37,8 @@ public class IvrSettings extends PersistableSettings implements DeployConfigOnEd
     private static final String AUDIO_FORMAT = "ivr/audio.format";
     private static final String IVR_AUTO_ENTER_PIN_EXTERNAL_DIGITS = "ivr/security.autoEnterPinExternalDigits";
     private static final String CLEANUP_VOICEMAIL_HOUR = "ivr/security.cleanupVoicemailHour";
+    private static final String MONGO_VM = "ivr/mongo_vm";
+    private static final String VOICEMAIL_PATH = "ivr/path";
     private FeatureManager m_featureManager;
 
     @Override
@@ -73,6 +75,14 @@ public class IvrSettings extends PersistableSettings implements DeployConfigOnEd
 
     public String getCleanupVoicemailHour() {
         return getSettingValue(CLEANUP_VOICEMAIL_HOUR);
+    }
+
+    public String getMongoVm() {
+        return getSettingValue(MONGO_VM);
+    }
+
+    public String getVoicemailPath() {
+        return getSettingValue(VOICEMAIL_PATH);
     }
 
     @Override

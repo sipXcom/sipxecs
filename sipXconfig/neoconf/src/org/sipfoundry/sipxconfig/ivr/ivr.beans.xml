@@ -47,7 +47,6 @@
     <property name="mwi" ref="mwi" />
     <property name="autoAttendantManager" ref="autoAttendantManager" />
     <property name="adminContext" ref="adminContext" />
-    <property name="locationsManager" ref="locationsManager" />
     <property name="fsRecordingContext" ref="fsRecordingContext" />
   </bean>
 
