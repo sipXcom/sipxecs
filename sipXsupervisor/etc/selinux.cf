@@ -57,6 +57,14 @@ bundle agent selinux {
         comment => "semanage SELINUX - offer ftp remote write access to tftproot",
         args => "fcontext -a -t public_content_rw_t \"$(sipx.SIPX_VARDIR)/configserver/phone/profile/tftproot(/.*)?\"";
         
+      "/usr/sbin/semanage"
+        comment => "Enable httpd log parsing",
+        args => "permissive -a httpd_t";
+
+      "/usr/sbin/semanage"
+        comment => "Enable httpd scripting",
+        args => "permissive -a httpd_sys_script_t";        
+        
       "/sbin/restorecon"
         comment => "restorecon SELINUX - offer ftp remote write access to tftproot",
         args => "-F -R -v $(sipx.SIPX_VARDIR)/configserver/phone/profile/tftproot";
