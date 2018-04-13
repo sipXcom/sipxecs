@@ -192,7 +192,7 @@ bundle agent mongo_local_config {
       "dirs" slist => {
         "/var/lib/mongo-local",
         "/var/run/$(mongodb.id)",
-        "/var/log/mongodb/local"
+        "/var/log/mongo/local"
       };
 
   files:
@@ -241,21 +241,30 @@ body file_select all {
 
 
 bundle edit_line mongo_local_config_contents {
-  # bind_ip=0.0.0.0 may not be nec, but if it's anything else
-  # mongo config will not be right so reinforce the default
   insert_lines:
-"replSet=sipxlocal
-port=27019
-logappend=true
-logpath=/var/log/$(mongodb.id)/local/mongodb.log
-fork=true
-smallfiles=true
-pidfilepath=/var/run/$(mongodb.id)/local.pid
-journal=true
-nohttpinterface=true
-dbpath=/var/lib/mongo-local
-bind_ip=0.0.0.0
-";
+    any::
+      "systemLog:";
+      "  destination: file";
+      "  logAppend: true";
+      "  logRotate: reopen";
+      "  path: /var/log/$(mongodb.id)/local/mongodb.log";
+      "storage:";
+      "  dbPath: /var/lib/mongo-local";
+      "  journal:";
+      "    enabled: true";
+      "  mmapv1:";
+      "    smallFiles: true";
+      "processManagement:";
+      "  fork: true";
+      "  pidFilePath: /var/run/mongodb/local.pid";
+      "net:";
+      "  port: 27019";
+      "  bindIp: 0.0.0.0";
+      "replication:";
+      "  replSetName: sipxlocal";                 
+  delete_lines:
+    any::
+      ".*";
 }
 
 bundle agent mongo_local_sync {
@@ -313,7 +322,8 @@ bundle agent mongo_local_arbiter_config {
     any::
       "dirs" slist => {
         "/var/lib/mongo-local-arbiter",
-        "/var/run/$(mongodb.id)"
+        "/var/run/$(mongodb.id)",
+        "/var/log/mongo/local"
       };
 
   files:
@@ -333,21 +343,30 @@ bundle agent mongo_local_arbiter_config {
 }
 
 bundle edit_line mongo_local_arbiter_config_contents {
-  # bind_ip=0.0.0.0 may not be nec, but if it's anything else
-  # mongo config will not be right so reinforce the default
   insert_lines:
-"replSet=sipxlocal
-port=27020
-logappend=true
-logpath=/var/log/$(mongodb.id)/local-arbiter.log
-fork=true
-pidfilepath=/var/run/$(mongodb.id)/local-arbiter.pid
-journal=true
-smallfiles=true
-nohttpinterface=true
-dbpath=/var/lib/mongo-local-arbiter
-bind_ip=0.0.0.0
-";
+    any::
+      "systemLog:";
+      "  destination: file";
+      "  logAppend: true";
+      "  logRotate: reopen";
+      "  path: /var/log/$(mongodb.id)/local/local-arbiter.log";
+      "storage:";
+      "  dbPath: /var/lib/mongo-local-arbiter";
+      "  journal:";
+      "    enabled: true";
+      "  mmapv1:";
+      "    smallFiles: true";
+      "processManagement:";
+      "  fork: true";
+      "  pidFilePath: /var/run/mongodb/local-arbiter.pid";
+      "net:";
+      "  port: 27020";
+      "  bindIp: 0.0.0.0";
+      "replication:";
+      "  replSetName: sipxlocal";                 
+  delete_lines:
+    any::
+      ".*";
 }
 
 # mongod.conf is the only file we attempt to merge our settings into
