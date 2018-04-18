@@ -217,16 +217,6 @@ bundle agent mongo_local_config {
         edit_defaults => empty,
         edit_line => mongo_local_logrotate_contents;
 
-    !mongo_local::
-      "/var/lib/mongo-local"
-        comment => "Remove required mongo local dirs $(this.promiser)",
-        delete => tidyfiles,
-        file_select => all,
-        depth_search => recurse("inf");
-
-      "/var/lib/mongo-local"
-        comment => "Remove required mongo local dirs $(this.promiser)",
-        delete => tidyfiles;
 }
 
 body delete tidyfiles {
