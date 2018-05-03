@@ -158,6 +158,21 @@ sipXcom config plugin
 %configure --enable-rpmbuild @SIPX_RPM_CONFIGURE_OPTIONS@
 make
 
+%pre
+if [ `rpm -qa | grep mongodb-server | wc -l` > 0 ] && [ `mongo --quiet --eval "db.isMaster().ismaster"` == true ]; then
+  if [ ! -f /var/sipxdata/tmp/config.json ]; then
+    echo "    ###############################################################"
+    echo "    ## DO A FULL BACKUP BEFORE STARTING THE UPGRADE             ###"
+    echo "    ## THIS UPDATE IMPLIES SIGNIFICANT CORE CHANGES             ###"
+    echo "    ## IT IS MANDATORY TO FOLLOW THE INSTRUCTIONS AT            ###"
+    echo "    ## http://wiki.ezuce.com/display/sipXcom/sipXcom+18.04      ###"
+    echo "    ## OTHERWISE YOU MAY LOSE ALL YOUR DATA                     ###"
+    echo "    ###############################################################"
+    exit 1
+  fi
+fi
+
+
 %install
 rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install

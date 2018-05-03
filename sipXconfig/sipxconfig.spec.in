@@ -207,19 +207,6 @@ mv %{_builddir}/%name-%version/%name-rpmlintrc %{_sourcedir}
 cp config.log %name.configlog
 make
 
-%pre
-if [ `rpm -qa | grep mongodb-server | wc -l` > 0 ] && [ `mongo --quiet --eval "db.isMaster().ismaster"` == true ]; then
-  if [ ! -f /var/sipxdata/tmp/config.json ]; then
-    echo "    ###############################################################"
-    echo "    ## DO A FULL BACKUP BEFORE STARTING THE UPGRADE             ###"
-    echo "    ## THIS UPDATE IMPLIES SIGNIFICANT CORE CHANGES             ###"
-    echo "    ## IT IS MANDATORY TO FOLLOW THE INSTRUCTIONS AT            ###"
-    echo "    ## http://wiki.ezuce.com/display/sipXcom/sipXcom+18.04      ###"
-    echo "    ## OTHERWISE YOU MAY LOSE ALL YOUR DATA                     ###"
-    exit 1
-  fi
-fi
-
 %install
 export NO_BRP_CHECK_BYTECODE_VERSION=true
 # makeinstall RPM macro doesn't leverage DESTDIR but instead overrides
