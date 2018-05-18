@@ -220,6 +220,16 @@ public abstract class AbstractMailboxManager implements MailboxManager {
     public void migrate(String path) {
         // do nothing, classes that extends this should provide a mean for migrating voicemails
     }
+    
+    @Override
+    public void migrate(String path, boolean remove) {
+        // do nothing, classes that extends this should provide a mean for migrating voicemails
+    }
+    
+    @Override
+    public void remove() {
+       // do nothing, classes that extends this should provide a mean for removing all voicemails
+    }
 
     private MessageDescriptor createMessageDescriptor(String destUser, TempMessage message, String messageId,
             String subject, String identity) {
@@ -412,6 +422,10 @@ public abstract class AbstractMailboxManager implements MailboxManager {
 
     public void setPromptsDirectory(String dir) {
         m_promptsDirectory = dir;
+    }
+
+    public String getPromptsDirectory() {
+        return m_promptsDirectory;
     }
 
     public void setOperatorAddr(String operatorAddr) {

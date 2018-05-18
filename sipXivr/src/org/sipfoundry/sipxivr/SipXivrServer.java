@@ -24,6 +24,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.sipfoundry.commons.log4j.SipFoundryLayout;
 import org.sipfoundry.voicemail.mailbox.MailboxManager;
+import org.sipfoundry.voicemail.mailbox.MailboxManagerMigrator;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -45,7 +46,7 @@ public abstract class SipXivrServer {
                 thread.start();
             }
         } catch (IOException ex) {
-            System.out.println("FAILED TO START IVR SERVER" + ex);
+            LOG.error("FAILED TO START IVR SERVER", ex);
             ex.printStackTrace();
             System.exit(1);
         }
@@ -78,11 +79,23 @@ public abstract class SipXivrServer {
             });
             SipXivrServer socket = (SipXivrServer) context.getBean("sipxIvrServer");
             for (int i = 0; i < args.length; i++) {
-                if (args[i].equalsIgnoreCase("--migrate")) {
+                if (args[i].startsWith("--migrate") || args[i].startsWith("--remove")) {
                     String pathToMailbox = args[i+1];
                     LOG.info(String.format("Starting sipXivr with --migrate from %s", pathToMailbox));
-                    MailboxManager manager = (MailboxManager) context.getBean("mailboxManager");
-                    manager.migrate(pathToMailbox);
+                    MailboxManagerMigrator manager = (MailboxManagerMigrator) context.getBean("mailboxManager");
+                    if (args[i].equalsIgnoreCase("--migrate")) {
+                        manager.migrateFromFlatToMongo(pathToMailbox);
+                    } else if (args[i].equalsIgnoreCase("--migrateWithRemove")) {
+                        manager.migrateFromFlatToMongo(pathToMailbox, true);
+                    } else if (args[i].equalsIgnoreCase("--remove")) {
+                        manager.removeFromMongo();
+                    } else if (args[i].equalsIgnoreCase("--migrateToFlat")) {
+                        manager.migrateFromMongoToFlat(pathToMailbox);
+                    } else if (args[i].equalsIgnoreCase("--migrateToFlatWithRemove")) {
+                        manager.migrateFromMongoToFlat(pathToMailbox, true);
+                    } else if (args[i].equalsIgnoreCase("--removeFromFlat")) {
+                        manager.removeFromFlat();
+                    }
                 }
             }
             socket.runServer();

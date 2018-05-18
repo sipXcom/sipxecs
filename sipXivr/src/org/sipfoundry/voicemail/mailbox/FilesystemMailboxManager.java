@@ -658,6 +658,15 @@ public class FilesystemMailboxManager extends AbstractMailboxManager {
             LOG.error(String.format("failed to delete mailbox for user %s", user.getUserName()), ex);
         }
     }
+    
+    @Override
+    public void remove() {
+        try {
+            FileUtils.cleanDirectory(new File(m_mailstoreDirectory));
+        } catch (IOException e) {
+            LOG.error(String.format("Failed to clean mailstore directory: %s", m_mailstoreDirectory), e);
+        }        
+    }    
 
     private File getFolder(String username, Folder folder) {
         File file = new File(getUserDirectory(username), folder.toString());
@@ -667,7 +676,7 @@ public class FilesystemMailboxManager extends AbstractMailboxManager {
         return file;
     }
 
-    private File getUserDirectory(String username) {
+    public File getUserDirectory(String username) {
         return new File(m_mailstoreDirectory + File.separator + username);
     }
 
@@ -727,4 +736,7 @@ public class FilesystemMailboxManager extends AbstractMailboxManager {
         m_descriptorReader = reader;
     }
 
+    public MessageDescriptorWriter getDescriptorWriter() {
+        return m_descriptorWriter;
+    }
 }

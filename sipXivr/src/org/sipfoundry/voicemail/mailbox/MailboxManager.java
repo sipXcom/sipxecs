@@ -25,6 +25,7 @@ public interface MailboxManager {
 
     public static final String VOICEMAIL_SUBJECT = "Voice Message ";
     public static final String CONFERENCE_CALL = "Conference Call ";
+    public static final String USER = "user";
 
     MailboxDetails getMailboxDetails(String username);
 
@@ -91,6 +92,10 @@ public interface MailboxManager {
     void renameMailbox(User user, String oldUser);
 
     void migrate(String path);
+    
+    void migrate(String path, boolean remove);
+    
+    void remove();
 
     boolean manageLiveAttendant(String code, boolean enable);
 
