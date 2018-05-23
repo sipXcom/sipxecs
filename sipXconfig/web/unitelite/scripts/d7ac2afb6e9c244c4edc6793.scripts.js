@@ -4541,6 +4541,11 @@ uw.service('restService', [
                   name: 'Extended absence',
                   val: 'EXTENDED_ABSENCE',
                   greetigs: 'extendedabs'
+                },
+                {
+                  name: 'Name',
+                  val: 'NAME',
+                  greetigs: 'name'
                 }
               ]
             },
