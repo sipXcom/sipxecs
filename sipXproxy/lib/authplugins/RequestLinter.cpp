@@ -14,7 +14,6 @@
 #include "RequestLinter.h"
 
 // DEFINES
-#define PASS_PAI_HEADER_CONFIG_KEY "SIPX_PASS_P_ASSERTED_IDENTITY"
 // CONSTANTS
 // TYPEDEFS
 // FORWARD DECLARATIONS
@@ -42,8 +41,8 @@ RequestLinter::readConfig( OsConfigDb& configDb /**< a subhash of the individual
                                                     * parameters for this instance of this plugin. */
                              )
 {
-   mPassPAIHeader = configDb.getBoolean(PASS_PAI_HEADER_CONFIG_KEY, false);
-   Os::Logger::instance().log(FAC_SIP,PRI_INFO ,"RequestLinter[%s]::readConfig %s : '%s'", PASS_PAI_HEADER_CONFIG_KEY, (mPassPAIHeader ? "true" : "false"));
+   mPassPAIHeader = configDb.getBoolean("PASS_PAI_HEADER_CONFIG_KEY", false);
+   Os::Logger::instance().log(FAC_SIP,PRI_INFO ,"RequestLinter[%s]::readConfig PASS_PAI_HEADER_CONFIG_KEY: %s", mInstanceName.data(), (mPassPAIHeader ? "true" : "false"));
 }
 
 void
