@@ -1,18 +1,20 @@
-// 
-// Copyright (C) 2009 Nortel, certain elements licensed under a Contributor Agreement.  
+//
+// Copyright (C) 2009 Nortel, certain elements licensed under a Contributor Agreement.
 // Contributors retain copyright to elements licensed under a Contributor Agreement.
 // Licensed to the User under the LGPL license.
-// 
+//
 //////////////////////////////////////////////////////////////////////////////
 
 // SYSTEM INCLUDES
 // APPLICATION INCLUDES
 #include <sipxproxy/SipRouter.h>
 #include "os/OsLogger.h"
+#include "os/OsConfigDb.h"
 #include "net/SipXauthIdentity.h"
 #include "RequestLinter.h"
 
 // DEFINES
+#define PASS_PAI_HEADER_CONFIG_KEY "SIPX_PASS_P_ASSERTED_IDENTITY"
 // CONSTANTS
 // TYPEDEFS
 // FORWARD DECLARATIONS
@@ -27,6 +29,7 @@ extern "C" AuthPlugin* getAuthPlugin(const UtlString& pluginName)
 RequestLinter::RequestLinter(const UtlString& pluginName ///< the name for this instance
                                    )
    : AuthPlugin(pluginName),
+     mPassPAIHeader(true),
      mpSipRouter( 0 )
 {
    Os::Logger::instance().log(FAC_SIP,PRI_INFO,"RequestLinter plugin instantiated '%s'",
@@ -39,10 +42,11 @@ RequestLinter::readConfig( OsConfigDb& configDb /**< a subhash of the individual
                                                     * parameters for this instance of this plugin. */
                              )
 {
-   // no configuration to read...
+   mPassPAIHeader = configDb.getBoolean(PASS_PAI_HEADER_CONFIG_KEY, false);
+   Os::Logger::instance().log(FAC_SIP,PRI_INFO ,"RequestLinter[%s]::readConfig %s : '%s'", PASS_PAI_HEADER_CONFIG_KEY, (mPassPAIHeader ? "true" : "false"));
 }
 
-void 
+void
 RequestLinter::announceAssociatedSipRouter( SipRouter* pSipRouter )
 {
    mpSipRouter = pSipRouter;
@@ -58,16 +62,16 @@ RequestLinter::authorizeAndModify(const UtlString& id,    /**< The authenticated
                                                               *   without the scheme or any parameters.
                                                               */
                                      const Url&  requestUri, ///< parsed target Uri
-                                     RouteState& routeState, ///< the state for this request.  
+                                     RouteState& routeState, ///< the state for this request.
                                      const UtlString& method,///< the request method
                                      AuthResult  priorResult,///< results from earlier plugins.
                                      SipMessage& request,    ///< see AuthPlugin wrt modifying
-                                     bool bSpiralingRequest, ///< request spiraling indication 
+                                     bool bSpiralingRequest, ///< request spiraling indication
                                      UtlString&  reason      ///< rejection reason
                                      )
 {
    AuthResult result = CONTINUE;
-   if( bSpiralingRequest == false )
+   if( bSpiralingRequest == false && !mPassPAIHeader)
    {
       removeOurPAssertedIdentityHeader( request );
    }
@@ -75,17 +79,17 @@ RequestLinter::authorizeAndModify(const UtlString& id,    /**< The authenticated
 }
 
 
-bool 
+bool
 RequestLinter::removeOurPAssertedIdentityHeader( SipMessage& request )
 {
    bool bRemoved = false;
-   
+
    if( mpSipRouter )
    {
       int index = 0;
       const char* pPAssertedIdentity;
-      
-      while( ( pPAssertedIdentity = request.getHeaderValue( index, SipXauthIdentity::PAssertedIdentityHeaderName ) ) ) 
+
+      while( ( pPAssertedIdentity = request.getHeaderValue( index, SipXauthIdentity::PAssertedIdentityHeaderName ) ) )
       {
          Url pAssertedIdentityUrl( pPAssertedIdentity );
          // check if the P-Asserted-Identity is for our domain.
