@@ -1,8 +1,8 @@
-// 
-// Copyright (C) 2009 Nortel., certain elements licensed under a Contributor Agreement.  
+//
+// Copyright (C) 2009 Nortel., certain elements licensed under a Contributor Agreement.
 // Contributors retain copyright to elements licensed under a Contributor Agreement.
 // Licensed to the User under the LGPL license.
-// 
+//
 // $$
 //////////////////////////////////////////////////////////////////////////////
 #ifndef _REQUESTLINTER_H_
@@ -21,14 +21,14 @@ class RequestLinterTest;
 extern "C" AuthPlugin* getAuthPlugin(const UtlString& name);
 
 /**
- * The purpose of this auth plugin is to remove from a request all the  elements 
+ * The purpose of this auth plugin is to remove from a request all the  elements
  * (headers, parameters, ...) that should not be presented to the request target.
- * 
+ *
  * The logic of this plugin is only executed when bSpiralingRequest == false
- * so that the unwanted elements only get removed after the request has fininshed 
+ * so that the unwanted elements only get removed after the request has fininshed
  * spiraling and is about to be sent towards the request target.
  *
- * The first application of this plugin is remove the P-Asserted-Identity to 
+ * The first application of this plugin is remove the P-Asserted-Identity to
  * address XECS-2233 (Caller ID is not displayed on the Gateway)
  */
 class RequestLinter : public AuthPlugin
@@ -48,11 +48,11 @@ class RequestLinter : public AuthPlugin
                                                              *   without the scheme or any parameters.
                                                              */
                                     const Url&  requestUri, ///< parsed target Uri
-                                    RouteState& routeState, ///< the state for this request.  
+                                    RouteState& routeState, ///< the state for this request.
                                     const UtlString& method,///< the request method
                                     AuthResult  priorResult,///< results from earlier plugins.
                                     SipMessage& request,    ///< see AuthPlugin regarding modifying
-                                    bool bSpiralingRequest, ///< request spiraling indication 
+                                    bool bSpiralingRequest, ///< request spiraling indication
                                     UtlString&  reason      ///< rejection reason
                                     );
    /**<
@@ -74,15 +74,17 @@ class RequestLinter : public AuthPlugin
     */
 
    virtual void announceAssociatedSipRouter( SipRouter* sipRouter );
-   
+
   protected:
   private:
+
+   bool mPassPAIHeader;
    friend class RequestLinterTest;
    friend AuthPlugin* getAuthPlugin(const UtlString& name);
 
    /// Removes P-Asserted-Identity headers matching our domain.
    bool removeOurPAssertedIdentityHeader( SipMessage& request );
-   
+
    /// Constructor - private so that only the factory can call it.
    RequestLinter(const UtlString& instanceName ///< the configured name for this plugin instance
                     );
@@ -90,7 +92,7 @@ class RequestLinter : public AuthPlugin
    SipRouter* mpSipRouter; ///< stores pointer to owning SipRouter.
 
 // @cond INCLUDENOCOPY
-   
+
    /// There is no copy constructor.
    RequestLinter(const RequestLinter& nocopyconstructor);
 
