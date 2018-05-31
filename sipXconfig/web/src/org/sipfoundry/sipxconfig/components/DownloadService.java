@@ -29,6 +29,8 @@ public class DownloadService extends FileService {
     private static final String PARAM_CONTENT_TYPE = "contentType";
 
     private static final String PARAM_DIGEST = "digest";
+    
+    private static final String PARAM_FILENAME = "filename";
 
     public String getName() {
         return SERVICE_NAME;
@@ -41,7 +43,8 @@ public class DownloadService extends FileService {
         File file = getFile(cycle);
         String expectedMd5Digest = cycle.getParameter(PARAM_DIGEST);
         ContentType contentType = getContentType(cycle);
-        sendFile(file, expectedMd5Digest, contentType);
+        String fileName = cycle.getParameter(PARAM_FILENAME);
+        sendFile(file, expectedMd5Digest, contentType, fileName);
     }
 
     /**
@@ -78,6 +81,7 @@ public class DownloadService extends FileService {
         parameters.put(ServiceConstants.SERVICE, getName());
         parameters.put(PARAM_PATH, info.getPath());
         parameters.put(PARAM_CONTENT_TYPE, info.getContentType());
+        parameters.put(PARAM_FILENAME, info.getFileName());
         try {
             String digest = getDigestSource().getDigestForResource(userId, info.getPath());
             parameters.put(PARAM_DIGEST, digest);
@@ -86,5 +90,5 @@ public class DownloadService extends FileService {
         }
 
         return getLinkFactory().constructLink(this, post, parameters, false);
-    }
+    }        
 }

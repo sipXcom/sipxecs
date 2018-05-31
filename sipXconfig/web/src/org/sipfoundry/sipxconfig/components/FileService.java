@@ -69,7 +69,7 @@ public abstract class FileService implements IEngineService {
         m_stateManager = stateManager;
     }
 
-    protected void sendFile(File file, String expectedMd5Digest, ContentType contentType) throws IOException {
+    protected void sendFile(File file, String expectedMd5Digest, ContentType contentType, String fileName) throws IOException {
         Integer userId = getUserId();
         if (userId == null) {
             m_response.sendError(HttpServletResponse.SC_UNAUTHORIZED, file.getPath());
@@ -94,12 +94,17 @@ public abstract class FileService implements IEngineService {
         m_response.setHeader("Expires", "0");
         m_response.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
         m_response.setHeader("Pragma", "public");
-        m_response.setHeader("Content-Disposition", "attachment; filename=\"" + file.getName()
+        String name = fileName != null ? fileName : file.getName();
+        m_response.setHeader("Content-Disposition", "attachment; filename=\"" + name
                 + "\"");
 
         OutputStream responseOutputStream = m_response.getOutputStream(contentType);
         InputStream stream = new FileInputStream(file);
         IOUtils.copy(stream, responseOutputStream);
+    }
+    
+    protected void sendFile(File file, String expectedMd5Digest, ContentType contentType) throws IOException {
+        sendFile(file, expectedMd5Digest, contentType, null);
     }
 
     protected Integer requireUserId() {
