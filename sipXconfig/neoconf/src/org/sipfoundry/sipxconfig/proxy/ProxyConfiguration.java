@@ -154,6 +154,7 @@ public class ProxyConfiguration implements ConfigProvider, ApplicationContextAwa
             config.write("SIPX_TRAN_HOOK_LIBRARY.905_gatewaydest",
                     "$(sipx.SIPX_LIBDIR)/transactionplugins/libGatewayDestPlugin.so");
         }
+        config.write("SIPX_PROXY.995_requestlinter.SIPX_PASS_P_ASSERTED_IDENTITY", proxyConfigurationSettings.getSetting("SIPX_PASS_P_ASSERTED_IDENTITY").getValue());
 
         // write plugin proxy hooks
         Map<String, ProxyHookPlugin> beans = m_context.getBeansOfType(ProxyHookPlugin.class);
