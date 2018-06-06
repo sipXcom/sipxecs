@@ -314,11 +314,11 @@
     <group name="codecPref">
       <setting name="IP_300" if="IP_300_CodecPref">
         <type refid="basic-three-codecs-type"/>
-        <value>G711Mu|G711A|G729AB</value>
+        <value>G711Mu|G711A</value>
       </setting>
       <setting name="OTHERS" if="OTHERS_CodecPref">
         <type refid="basic-three-codecs-type"/>
-        <value>G711Mu|G711A|G729AB</value>
+        <value>G711Mu|G711A</value>
       </setting>
       <setting name="IP_4000" if="IP_4000_CodecPref">
         <type refid="basic-three-codecs-type"/>
@@ -333,7 +333,7 @@
 		      <option><value>G729AB</value></option>
 		    </multi-enum>
 		  </type>
-        <value>G722|G711Mu|G711A|G729AB</value>
+        <value>G722|G711Mu|G711A</value>
       </setting>
       <setting name="IP_5000" if="IP_5000_CodecPref">
         <type>
@@ -344,7 +344,7 @@
             <option><value>G722</value></option>
           </multi-enum>
         </type>
-        <value>G722|G711Mu|G711A|G729AB</value>
+        <value>G722|G711Mu|G711A</value>
       </setting>
       <setting name="IP_6000" if="IP_6000_CodecPref">
         <type>
@@ -364,7 +364,7 @@
             <option><value>Siren14.48kbps</value></option>
           </multi-enum>
         </type>
-        <value>G7221C.48kbps|Siren14.48kbps|G722|G7221.32kbps|G711Mu|G711A|G729AB</value>
+        <value>G7221C.48kbps|Siren14.48kbps|G722|G7221.32kbps|G711Mu|G711A</value>
       </setting>
       <setting name="IP_7000" if="IP_7000_CodecPref">
         <type>
@@ -390,7 +390,7 @@
             <option><value>Siren22.64kbps</value></option>
           </multi-enum>
         </type>
-        <value>Siren22.64kbps|G7221C.48kbps|Siren14.48kbps|G722|G7221.32kbps|G711Mu|G711A|G729AB</value>
+        <value>Siren22.64kbps|G7221C.48kbps|Siren14.48kbps|G722|G7221.32kbps|G711Mu|G711A</value>
       </setting>
       <setting name="VVX_1500" if="VVX_1500_CodecPref">
         <type>
@@ -415,7 +415,7 @@
             <option><value>Siren14.48kbps</value></option>
           </multi-enum>
         </type>
-        <value>G7221C.48kbps|G7221.32kbps|G722|G711Mu|G711A|G729AB</value>
+        <value>G7221C.48kbps|G7221.32kbps|G722|G711Mu|G711A</value>
       </setting>
     </group>
     <group name="audioProfile">

@@ -36,7 +36,7 @@
     <setting name='sip_service_domain' advanced="yes" />
     <setting name="moh_url" advanced="yes" />
     <setting name='preferred_codec'>
-      <value>pcmu pcma g729 amr g723 h264 h263</value>
+      <value>pcmu pcma amr g723 h264 h263</value>
     </setting>
   </group>
   <group name='NETTIME'>

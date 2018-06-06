@@ -356,11 +356,11 @@
     <group name="codecPref">
       <setting name="IP_300" if="IP_300_CodecPref">
         <type refid="basic-three-codecs-type"/>
-        <value>G711_Mu|G711_A|G729_AB</value>
+        <value>G711_Mu|G711_A</value>
       </setting>
       <setting name="OTHERS" if="OTHERS_CodecPref">
         <type refid="basic-three-codecs-type"/>
-        <value>G711_Mu|G711_A|G729_AB</value>
+        <value>G711_Mu|G711_A</value>
       </setting>
       <setting name="IP_4000" if="IP_4000_CodecPref">
         <type refid="basic-three-codecs-type"/>
@@ -375,7 +375,7 @@
 		      <option><value>G729_AB</value></option>
 		    </multi-enum>
 		  </type>
-        <value>G722|G711_Mu|G711_A|G729_AB</value>
+        <value>G722|G711_Mu|G711_A</value>
       </setting>
       <setting name="IP_5000" if="IP_5000_CodecPref">
         <type>
@@ -386,7 +386,7 @@
             <option><value>G722</value></option>
           </multi-enum>
         </type>
-        <value>G722|G711_Mu|G711_A|G729_AB</value>
+        <value>G722|G711_Mu|G711_A</value>
       </setting>
       <setting name="IP_6000" if="IP_6000_CodecPref">
         <type>
@@ -406,7 +406,7 @@
             <option><value>Siren14.48kbps</value></option>
           </multi-enum>
         </type>
-        <value>G7221_C.48kbps|Siren14.48kbps|G722|G7221.32kbps|G711_Mu|G711_A|G729_AB</value>
+        <value>G7221_C.48kbps|Siren14.48kbps|G722|G7221.32kbps|G711_Mu|G711_A</value>
       </setting>
       <setting name="IP_7000" if="IP_7000_CodecPref">
         <type>
@@ -432,7 +432,7 @@
             <option><value>Siren22.64kbps</value></option>
           </multi-enum>
         </type>
-        <value>Siren22.64kbps|G7221_C.48kbps|Siren14.48kbps|G722|G7221.32kbps|G711_Mu|G711_A|G729_AB</value>
+        <value>Siren22.64kbps|G7221_C.48kbps|Siren14.48kbps|G722|G7221.32kbps|G711_Mu|G711_A</value>
       </setting>
       <setting name="VVX_1500" if="VVX_1500_CodecPref">
         <type>
@@ -457,7 +457,7 @@
             <option><value>Siren14.48kbps</value></option>
           </multi-enum>
         </type>
-        <value>G7221_C.48kbps|G7221.32kbps|G722|G711_Mu|G711_A|G729_AB</value>
+        <value>G7221_C.48kbps|G7221.32kbps|G722|G711_Mu|G711_A</value>
       </setting>
       <setting name="VVX_500" if="VVX_500_CodecPref">
         <type>
@@ -472,7 +472,7 @@
             <option><value>iLBC.15_2kbps</value></option>
           </multi-enum>
         </type>
-        <value>G722|G7221.32kbps|G7221_C.48kbps|G729_AB|G711_Mu</value>
+        <value>G722|G7221.32kbps|G7221_C.48kbps|G711_Mu</value>
       </setting>      
     </group>
     <group name="audioProfile">

@@ -204,7 +204,7 @@
 	<!-- account.1.codec.y.payload_type = -->
 	<!-- account.1.codec.y.priority = -->
 	<!-- account.1.codec.y.rtpmap = -->
-	<setting name="codec"><type refid="codecs_type"/><value>9:G722|8:PCMA|0:PCMU|18:G729</value></setting>
+	<setting name="codec"><type refid="codecs_type"/><value>9:G722|8:PCMA|0:PCMU</value></setting>
     </group>
     <group name="video-codecs" if="yealinkPhoneVP530">
 	<!-- Video codecs for account 1 (X ranges from 1 to 3) -->
