@@ -28,7 +28,7 @@
     <setting name="codec_info">
       <profileName>$ignore$</profileName>
       <type refid="preferred-codecs-type"/>
-      <value>G722|PCMA|PCMU|G729|G723</value>
+      <value>G722|PCMA|PCMU|G723</value>
     </setting>
   </group>
   <group name="sip">

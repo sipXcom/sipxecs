@@ -823,7 +823,7 @@
   <group name="voiceCodecs">
     <setting name="preferredCodec">
       <type refid="preferred-codecs-type"/>
-      <value>g711ulaw|g711alaw|g729</value>
+      <value>g711ulaw|g711alaw</value>
     </setting>
   </group>
   <!--  RTP SETTINGS  -->
