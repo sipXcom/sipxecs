@@ -439,7 +439,7 @@
     <group name="audio_codecs">
       <setting name="voiceCodecs">
         <type refid="preffered-voice-codecs-type"/>
-        <value>g722|broadvoice32|g711u|ilbc|g711a|g729</value>
+        <value>g722|broadvoice32|g711u|ilbc|g711a</value>
       </setting>
     </group>
     <group name="video_codecs">

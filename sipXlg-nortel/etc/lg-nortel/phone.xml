@@ -226,7 +226,7 @@
     <setting name='preferred_codec'>
       <!--TODO: preferred codec list, g729/g723/pcmu/pcma (default: priority 1, g.729) -->
       <type refid="preffered-codecs-type"/>
-      <value>pcmu pcma g729 g723</value>
+      <value>pcmu pcma g723</value>
     </setting>
     <setting name='timer_register_expires' advanced="yes">
       <type>
