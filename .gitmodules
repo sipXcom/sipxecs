@@ -63,10 +63,10 @@
 	url = git://github.com/sipXcom/resiprocate.git
 [submodule "sipXAocBilling"]
 	path = sipXAocBilling
-	url = https://github.com/sipXcom/sipXAocBilling.git
+	url = git://github.com/sipXcom/sipXAocBilling.git
 [submodule "sipXdashboard"]
 	path = sipXdashboard
-	url = https://github.com/sipXcom/sipXdashboard.git
+	url = git://github.com/sipXcom/sipXdashboard.git
 [submodule "sipXlang-pt"]
 	path = sipXlang-pt
-	url = https://github.com/sipXcom/sipXlang-pt.git
+	url = git://github.com/sipXcom/sipXlang-pt.git
