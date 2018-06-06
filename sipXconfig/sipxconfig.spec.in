@@ -210,7 +210,7 @@ cp config.log %name.configlog
 make
 
 %pre
-if [ `rpm -qa | grep mongodb-server | wc -l` > 0 ] && [ `mongo --quiet --eval "db.isMaster().ismaster"` == true ]; then
+if [ `rpm -qa | grep mongodb-server | wc -l` -gt 0 ] && [ `mongo --quiet --eval "db.isMaster().ismaster"` == true ]; then
   if [ ! -f /var/sipxdata/tmp/config.json ]; then
     echo "    ###############################################################"
     echo "    ## DO A FULL BACKUP BEFORE STARTING THE UPGRADE             ###"
