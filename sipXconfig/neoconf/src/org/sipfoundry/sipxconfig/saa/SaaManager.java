@@ -24,6 +24,7 @@ import org.sipfoundry.sipxconfig.address.AddressType;
 import org.sipfoundry.sipxconfig.address.AddressType.Protocol;
 import org.sipfoundry.sipxconfig.feature.LocationFeature;
 import org.sipfoundry.sipxconfig.firewall.DefaultFirewallRule;
+import org.sipfoundry.sipxconfig.firewall.FirewallRule;
 import org.sipfoundry.sipxconfig.setting.PersistableSettings;
 
 public interface SaaManager {
@@ -33,7 +34,7 @@ public interface SaaManager {
         SAA_TCP, SAA_UDP
     });
 
-    final Collection<DefaultFirewallRule> DEFAULT_RULES = DefaultFirewallRule.rules(SUPPORTED_ADDRESS_TYPES);
+    final Collection<DefaultFirewallRule> DEFAULT_RULES = DefaultFirewallRule.rules(SUPPORTED_ADDRESS_TYPES, FirewallRule.SystemId.PUBLIC);
 
     final LocationFeature FEATURE = new LocationFeature("saa");
 
