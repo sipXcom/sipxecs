@@ -35,6 +35,6 @@
     "commit": "f7fd126ded5c845841fc6e8309aade9e646334ec"
   },
   "_source": "https://github.com/fisshy/angular-drag-drop.git",
-  "_target": "*",
+  "_target": "1.1.5",
   "_originalSource": "angular-dragndrop"
 }

@@ -1,18 +1,17 @@
 // Utilities
-var autoprefixer = require('autoprefixer');
-var cssnano = require('cssnano');
 var fs = require('fs');
 
 // Gulp
 var gulp = require('gulp');
 
 // Gulp plugins
-var concat = require('gulp-concat');
 var gutil = require('gulp-util');
+var concat = require('gulp-concat');
 var header = require('gulp-header');
-var postcss = require('gulp-postcss');
-var rename = require('gulp-rename');
+var autoprefixer = require('gulp-autoprefixer');
 var runSequence = require('run-sequence');
+var minify = require('gulp-cssnano');
+var rename = require('gulp-rename');
 
 // Misc/global vars
 var pkg = JSON.parse(fs.readFileSync('package.json'));
@@ -55,15 +54,10 @@ gulp.task('default', function() {
 gulp.task('createCSS', function() {
   return gulp.src(activatedAnimations)
     .pipe(concat(opts.concatName))
-    .pipe(postcss([
-      autoprefixer(opts.autoprefixer)
-    ]))
+    .pipe(autoprefixer(opts.autoprefixer))
     .pipe(gulp.dest(opts.destPath))
-    .pipe(postcss([
-      autoprefixer(opts.autoprefixer),
-      cssnano({reduceIdents: {keyframes: false}})
-    ]))
     .pipe(rename(opts.minRename))
+    .pipe(minify({reduceIdents: {keyframes: false}}))
     .pipe(gulp.dest(opts.destPath));
 });
 

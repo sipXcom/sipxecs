@@ -37,6 +37,6 @@
     "commit": "10251d14ec671d127ce62a21f8eca7c8a171d56d"
   },
   "_source": "https://github.com/fmquaglia/ngOrderObjectBy.git",
-  "_target": "*",
+  "_target": "1.3.0",
   "_originalSource": "angular-order-object-by"
 }
