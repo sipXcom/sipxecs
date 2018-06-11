@@ -792,7 +792,7 @@
                 <div class="form-group clearfix" data-ng-if="userSettings.user.vm.selected.greetigs.indexOf('none') == -1">
                   <label class="col-sm-3 control-label">Audio file</label>
                   <div class="col-sm-9">
-                    <div ng-controller="UploadGreetingFile" class="entry-choose-file">
+                    <div ng-controller="UploadGreetingFile" ng-click="formUserSettings.$setDirty()" class="entry-choose-file">
                       <input type="file" nv-file-select uploader="uploader">
                       <!--<button class="btn btn-default"
                               data-ng-click="userSettings.user.moh.addMoh(userSettings.user.moh.audioData)"
