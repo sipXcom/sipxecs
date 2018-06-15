@@ -7,6 +7,7 @@
     <property name="promptsDir" value="${ivr.promptsDirectory}" />
     <property name="validUsers" ref="validUsers" />
     <property name="eslRequestController" ref="mohEslRequestController" />
+    <property name="timeout" value="${moh_timeout}" />
   </bean>
 
   <bean id="mohEslRequestController" class="org.sipfoundry.moh.MohEslRequestController" scope="eslRequest">

@@ -19,6 +19,7 @@ import org.sipfoundry.commons.userdb.User;
 import org.sipfoundry.commons.userdb.ValidUsers;
 import org.sipfoundry.commons.util.AudioUtil;
 import org.sipfoundry.sipxivr.SipxIvrApp;
+import org.springframework.beans.factory.annotation.Required;
 
 public class Moh extends SipxIvrApp {
     static final Logger LOG = Logger.getLogger("org.sipfoundry.sipxivr");
@@ -33,6 +34,7 @@ public class Moh extends SipxIvrApp {
     private String m_dataDirectory;
     private String m_promptsDir;
     private ValidUsers m_validUsers;
+    private String m_timeout;
 
     enum NextAction {
         repeat, exit, nextAttendant;
@@ -74,12 +76,14 @@ public class Moh extends SipxIvrApp {
      * </pre>
      */
     void moh(String id, MohEslRequestController controller) {
-        LOG.info("Moh::moh Starting moh id (" + id + ") in locale " + controller.getLocale());
+        LOG.info("Moh::moh Starting moh id (" + id + ") in locale " + controller.getLocale() + " and timeout: " + m_timeout);
 
         PromptList pl = controller.getPromptList();
         String musicPath;
+        
+        String localStream = (m_timeout == null || StringUtils.equals(m_timeout, "0")) ? "local_stream://moh" : StringUtils.join(new Object[] {"{timeout=", m_timeout, "}local_stream://moh"});
         if (id.equals("l")) {
-            musicPath = "local_stream://moh";
+            musicPath = localStream;
         } else if (id.equals("p")) {
             musicPath = "portaudio_stream://";
         } else if (id.startsWith("u")) {
@@ -91,7 +95,7 @@ public class Moh extends SipxIvrApp {
                 if (moh.equalsIgnoreCase(NONE)) {
                     return;
                 } else if (moh.equalsIgnoreCase(FILES_SRC)) {
-                    musicPath = "local_stream://moh";
+                    musicPath = localStream;
                 } else if (moh.equalsIgnoreCase(SOUNDCARD_SRC)) {
                     musicPath = "portaudio_stream://";
                 } else if (moh.equalsIgnoreCase(PERSONAL_FILES_SRC)) {
@@ -103,7 +107,7 @@ public class Moh extends SipxIvrApp {
                 }
             } else {
                 // Use default FreeSWITCH MOH
-                musicPath = "local_stream://moh";
+                musicPath = localStream;
             }
         } else if (id.equals("n")) {
             // "n" means "Music Source None". Easiest thing to do is just hangup.
@@ -158,4 +162,8 @@ public class Moh extends SipxIvrApp {
         m_validUsers = validUsers;
     }
 
+    @Required
+    public void setTimeout(String timeout) {
+        m_timeout = timeout;
+    }       
 }

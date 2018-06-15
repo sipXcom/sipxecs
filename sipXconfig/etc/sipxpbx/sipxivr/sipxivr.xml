@@ -71,6 +71,10 @@
     <setting name="path">
       <string />
     </setting>
+    <setting name="moh_timeout">
+       <type><integer min="0" /></type>
+       <value>1800000</value>
+    </setting>
     <setting name="fax.format">
       <type refid="faxformat" />
       <value>pdf</value>
