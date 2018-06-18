@@ -271,6 +271,14 @@ def cmd_no_die(cmd)
 end
 
 def network_settings
+  # if it is centos 7 use nmtui else use system-config-network-tui
+  os = `uname -r`
+  if os.include? ".el7."
+    tui = "/usr/bin/nmtui"
+  else
+    tui = "/usr/sbin/system-config-network-tui"
+  end
+
   change = false
   while true
     net = get_network(true)
@@ -279,7 +287,7 @@ def network_settings
     reprompt = prompt_confirm("Would you like to configure your system\'s \e[0;31m network settings\e[m?") unless $prompt[:noui]
     if reprompt
       change = true
-      system("/usr/sbin/system-config-network-tui")
+      system(tui)
       system("/etc/init.d/network reload")
     else
       break

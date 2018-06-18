@@ -38,6 +38,8 @@ end
 # On Suse 'postgres' is installed as ruby gem: loading rubygems explictely enables
 # us to find it.
 def load_postgres_driver()
+  require 'pg_ext'
+rescue LoadError
   require 'postgres'
 rescue LoadError
   require 'rubygems'

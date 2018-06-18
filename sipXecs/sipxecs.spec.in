@@ -69,7 +69,6 @@ Requires: freeswitch-codec-passthru-g729
 Requires: freeswitch-codec-silk
 Requires: freeswitch-codec-siren
 Requires: freeswitch-codec-theora
-Requires: freeswitch-codec-vp8
 Requires: freeswitch-config-vanilla
 Requires: freeswitch-endpoint-dingaling
 Requires: freeswitch-endpoint-portaudio

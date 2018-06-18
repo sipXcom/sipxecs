@@ -21,7 +21,7 @@ extern "C"
   #include <hiredis/hiredis.h>
   #include <hiredis/async.h>
   #include <sys/types.h>
-  #include <libev/ev.h>
+  #include <ev.h>
 }
 
 #include <cassert>

@@ -39,6 +39,7 @@ BuildRequires: net-snmp-agent-libs >= 5.7.1
 BuildRequires: pcre-devel
 
 BuildRequires: sipxcommons >= %version
+BuildRequires: sipxcdr >= %version
 BuildRequires: sipxcdr-client >= %version
 
 %define sipxpbxlog %{_localstatedir}/log/sipxpbx
@@ -77,6 +78,7 @@ Requires: net-snmp-python
 Requires: sipxcommons >= %version
 Requires: sipxtacklib >= %version
 Requires: sipxcommserverlib >= %version
+Requires: sipxcdr >= %version
 Requires: sipxcdr-client >= %version
 Requires: sipxsupervisor >= %version
 Requires: chkconfig

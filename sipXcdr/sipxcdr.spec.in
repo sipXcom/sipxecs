@@ -26,11 +26,15 @@ Requires: stunnel
 Requires: ruby
 Requires: ruby-dbi
 Requires: rubygems
+%if 0%{?rhel} >= 7
+Requires: rubygem-pg
+%else
 %if %{_vendor} == suse
 Requires: rubygem-postgres
 %else
 Requires: ruby-libs
 Requires: ruby-postgres
+%endif
 %endif
 
 Obsoletes: sipxproxy-cdr

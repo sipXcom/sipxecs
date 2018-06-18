@@ -12,7 +12,7 @@ Url:      http://www.pingtel.com
 BuildRequires: automake
 BuildRequires: gcc-c++
 BuildRequires: cppunit-devel
-BuildRequires: zeromq-devel
+BuildRequires: zeromq-devel = 2.2.0
 BuildRequires: pcre-devel >= 4.5
 BuildRequires: unixODBC-devel
 BuildRequires: zip
@@ -53,6 +53,7 @@ BuildRequires: vixie-cron
 %endif
 Requires: sipxcommserverlib >= %version
 Requires: sipxrelay >= %version
+Requires: zeromq = 2.2.0
 Requires: chkconfig
 
 Prefix:    %_prefix

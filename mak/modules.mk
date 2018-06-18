@@ -16,6 +16,7 @@ sipx_core = \
   sipXeslLib \
   sipXsupervisor \
   sipXcommserverLib \
+  zeromq \
   sipXsqa \
   sipXcommons \
   sipXrelay \
