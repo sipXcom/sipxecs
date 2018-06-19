@@ -16,7 +16,6 @@ sipx_core = \
   sipXeslLib \
   sipXsupervisor \
   sipXcommserverLib \
-  zeromq \
   sipXsqa \
   sipXcommons \
   sipXrelay \
@@ -111,6 +110,7 @@ sipx_all = \
 # think it's called as ruby-postgres is obsoleted.
 lib_all = \
   epel \
+  zeromq \
   rubygem-file-tail \
   freeswitch \
   freeswitch-sounds-en-us-callie \
@@ -122,7 +122,6 @@ lib_all = \
   cfengine \
   rubygem-net-ssh \
   rubygem-net-sftp \
-  ruby-postgres \
   jasperserver \
   libjsonrpccpp \
   libevent2 \

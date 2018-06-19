@@ -32,6 +32,7 @@ BuildRequires: sipxconfig >= %version
 # ruby
 BuildRequires: rubygems
 
+BuildRequires: dart-sdk
 
 # R U N T I M E - typical only, please adjust accordingly
 

@@ -9,7 +9,7 @@
 #
 #  sudo bash -x ./setup.sh
 #
-BUILD_DEPS = gcc-c++ wget libtool rubygems ruby-devel erlang-erts 'java-devel >= 1.6'
+BUILD_DEPS = gcc-c++ wget libtool rubygems ruby-devel erlang-erts openssl openssl-devel 'java-devel >= 1.6'
 
 # Some build deps are included for rpm builds sometimes because project's
 # autoconf dep checking cannot be disabled even though all we run is dist
@@ -96,6 +96,11 @@ define rpm_setup_header
 
 # packages needed on host to build srpms and to use mock build system
 yum install -y $(RPM_BUILD_DEPS) $(foreach P,$(lib),$($(P)_YUM_SETUP))
+
+# download and install thttpd package which is missing in centos 7
+wget http://li.nux.ro/download/nux/misc/el7/x86_64/thttpd-2.25b-33.el7.nux.x86_64.rpm
+rpm -ivh thttpd-2.25b-33.el7.nux.x86_64.rpm
+rm thttpd-2.25b-33.el7.nux.x86_64.rpm
 
 # required to run mock commands
 usermod -a -G mock @SIPXPBXUSER@
