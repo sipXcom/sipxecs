@@ -68,6 +68,7 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
     private AutoAttendantManager m_aaManager;
     private AdminContext m_adminContext;
     private FreeswitchRecordingContext m_fsRecording;
+    private String m_mailstoreDirectory;
 
     @Override
     public void replicate(ConfigManager manager, ConfigRequest request) throws IOException {
@@ -100,6 +101,8 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
             if (line.startsWith(VOICEMAIL_PATH_KEY)) {
                 if (!StringUtils.isEmpty(voicemailPath)) {
                     fileContent.set(i, VOICEMAIL_PATH_KEY.concat(voicemailPath));
+                } else {
+                    fileContent.set(i, VOICEMAIL_PATH_KEY.concat(m_mailstoreDirectory));                    
                 }
                 break;
             }
@@ -268,4 +271,9 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
     public void setAdminContext(AdminContext adminContext) {
         m_adminContext = adminContext;
     }
+
+    @Required
+    public void setMailstoreDirectory(String mailstoreDirectory) {
+        m_mailstoreDirectory = mailstoreDirectory;
+    }        
 }

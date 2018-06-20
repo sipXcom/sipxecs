@@ -25,7 +25,9 @@ get_prop_value() {
         $1
 }
 
-MAILSTORE_DIR=@SIPX_VXMLDATADIR@/mailstore
+IVRDATA_DIR=`get_prop_value @SIPX_CONFDIR@/sipxivr.properties ivr.dataDirectory`
+MAILSTORE_DIR=${IVRDATA_DIR}/mailstore
+ONLY_DELETED="-type d -name deleted"
 DAYS=`get_prop_value @SIPX_CONFDIR@/sipxivr.properties ivr.voiceMailExpiry`
 
 # Override the DAYS variable with optional command line argument
@@ -37,12 +39,24 @@ if [ "$1" == "--days" ]; then
   fi
 fi
 
+if [ "$1" == "--all" ]; then
+  ONLY_DELETED="-type d"
+fi
+
+if [ "$2" == "--days" ]; then
+  DAYS=$3
+fi
+
+if [ "$4" == "--user" ]; then
+  MAILSTORE_DIR=${MAILSTORE_DIR}/$5
+fi
+
 CleanList=`mktemp -t voicemail_clean.XXXXXX`
 trap "rm ${CleanList} 2>/dev/null" 0
 
 if [ -d ${MAILSTORE_DIR} ]
 then
-    for deleted_dir in `find ${MAILSTORE_DIR} -maxdepth 2 -type d -name deleted `
+    for deleted_dir in `find ${MAILSTORE_DIR} -maxdepth 2 ${ONLY_DELETED} `
     do
         if cd "${deleted_dir}" > /dev/null 2>&1
         then
@@ -64,13 +78,14 @@ then
                 # Now that we've deleted messages, the summary.xml file is no longer
                 # accurate.  Delete it so that it gets recreated next time it is accessed.
                 test -f summary.xml && echo summary.xml >> ${CleanList}
+                echo "Files to clean: `cat ${CleanList}` from directory: ${deleted_dir}"
                 rm -f `cat ${CleanList}`
             fi
         else
             echo "failed to cd to '${deleted_dir}'" 1>&2
         fi
     done
-
+    
 	[ -f "@SIPX_BINDIR@/additional-voicemail-cleanup" ] && . @SIPX_BINDIR@/additional-voicemail-cleanup ${DAYS}
 else
     echo "Mailstore '${MAILSTORE_DIR}' not found" 1>&2
