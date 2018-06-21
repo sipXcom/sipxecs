@@ -29,20 +29,13 @@ epel.clean :
 # Only used for building, not required for ISO
 BUILD_EPEL = \
 	b/bakefile-* \
-	c/c-ares19-* \
-	c/c-ares19-devel-* \
 	c/Canna-libs-* \
 	c/ccache-* \
 	c/compface-1.5*\
 	e/erlang-* \
-	g/gperftools-devel-* \
 	g/gtest-devel-* \
 	g/gyp-* \
-	h/http-parser-* \
-	h/http-parser-devel-* \
 	l/libmcrypt-devel-* \
-	l/libdnet-* \
-	l/libdnet-devel-* \
 	l/libev-* \
 	l/libuv-* \
 	l/libuv-devel-* \
@@ -60,7 +53,6 @@ BUILD_EPEL = \
 	w/wxGTK-media-* \
 	x/xemacs-* \
 	l/leveldb-devel-* \
-	l/ldns-devel-* \
 	p/portaudio-devel-* \
 	j/jack-audio-connection-kit-devel*
 
@@ -69,20 +61,14 @@ RUNTIME_EPEL = \
 	e/elasticsearch-* \
 	f/freeswitch-* \
 	m/mongodb-org-* \
-	e/erlang-lager-* \
-	e/erlang-gen_leader-* \
-	e/erlang-gproc-* \
 	e/erlang-erlando-* \
 	e/erlang-ibrowse-* \
 	e/erlang-rpm-macros-* \
 	f/fail2ban-* \
-	g/gperftools-libs-* \
 	g/gtest-1* \
 	j/js-* \
-	l/libiodbc-3* \
 	l/libev-4.* \
 	l/libmcrypt-* \
-	l/libunwind-* \
 	m/monit-* \
 	o/openpgm-5* \
 	p/php-pecl-mongo-* \
@@ -98,16 +84,13 @@ RUNTIME_EPEL = \
 	p/poco-util-* \
 	p/poco-xml-* \
 	p/poco-zip-* \
-	p/python-argparse-* \
 	p/python-bson-2.5* \
-	p/python-inotify-0* \
 	p/python-pymongo-2.5* \
 	r/redis-* \
 	r/rubygem-daemons-* \
 	s/sec-* \
-	s/shorewall-4* \
+	s/shorewall-5* \
 	s/shorewall-core-* \
-	s/snappy-* \
 	v/v8-3* \
 	w/wxBase-* \
 	w/wxGTK-2.* \
@@ -116,8 +99,6 @@ RUNTIME_EPEL = \
 	l/leveldb-* \
 	p/python-pymongo-gridfs-2.5* \
 	s/sipp-* \
-	s/socat-1.7.* \
-	l/ldns-1.6.16-2* \
 	p/portaudio-19* \
 	j/jack-audio-connection-kit-*
 
