@@ -16,7 +16,7 @@ epel.dist epel.srpm:;
 epel.rpm :
 	rsync -av \
 	  $(EXCLUDE_ARCH) \
-	  $(addprefix $(CENTOS_RSYNC_URL)/epel/6/$(DISTRO_ARCH)/,$(RUNTIME_EPEL) $(BUILD_EPEL)) \
+	  $(addprefix $(CENTOS_RSYNC_URL)/epel7/7/$(DISTRO_ARCH)/Packages,$(RUNTIME_EPEL) $(BUILD_EPEL)) \
 	  $(MOCK_RESULTS_DIR)/
 	mock $(MOCK_OPTS) --scrub=cache
 	$(MAKE) repo-dedup
@@ -28,95 +28,96 @@ epel.clean :
 
 # Only used for building, not required for ISO
 BUILD_EPEL = \
-	bakefile-* \
-	c-ares19-* \
-	c-ares19-devel-* \
-	Canna-libs-* \
-	ccache-* \
-	compface-1.5*\
-	erlang-* \
-	gperftools-devel-* \
-	gtest-devel-* \
-	gyp-* \
-	http-parser-* \
-	http-parser-devel-* \
-	libmcrypt-devel-* \
-	libdnet-* \
-	libdnet-devel-* \
-	libev-* \
-	libuv-* \
-	libuv-devel-* \
-	neXtaw-* \
-	node-gyp-* \
-	nodejs-* \
-	npm-* \
-	poco-* \
-	poco-debug-* \
-	python-empy-* \
-	rubygem-mocha-* \
-	v8-* \
-	v8-devel-* \
-	wxGTK-devel-* \
-	wxGTK-media-* \
-	xemacs-* \
-	leveldb-devel-* \
-	ldns-devel-* \
-	portaudio-devel-* \
-	jack-audio-connection-kit-devel*
+	b/bakefile-* \
+	c/c-ares19-* \
+	c/c-ares19-devel-* \
+	c/Canna-libs-* \
+	c/ccache-* \
+	c/compface-1.5*\
+	e/erlang-* \
+	g/gperftools-devel-* \
+	g/gtest-devel-* \
+	g/gyp-* \
+	h/http-parser-* \
+	h/http-parser-devel-* \
+	l/libmcrypt-devel-* \
+	l/libdnet-* \
+	l/libdnet-devel-* \
+	l/libev-* \
+	l/libuv-* \
+	l/libuv-devel-* \
+	n/neXtaw-* \
+	n/node-gyp-* \
+	n/nodejs-* \
+	n/npm-* \
+	p/poco-* \
+	p/poco-debug-* \
+	p/python-empy-* \
+	r/rubygem-mocha-* \
+	v/v8-* \
+	v/v8-devel-* \
+	w/wxGTK-devel-* \
+	w/wxGTK-media-* \
+	x/xemacs-* \
+	l/leveldb-devel-* \
+	l/ldns-devel-* \
+	p/portaudio-devel-* \
+	j/jack-audio-connection-kit-devel*
 
 # Technincally these could be build and runtime requirements
 RUNTIME_EPEL = \
-	elasticsearch-* \
-	mongodb-org-* \
-	erlang-lager-* \
-	erlang-gen_leader-* \
-	erlang-gproc-* \
-	erlang-erlando-* \
-	erlang-ibrowse-* \
-	erlang-rpm-macros-* \
-	fail2ban-* \
-	gperftools-libs-* \
-	gtest-1* \
-	js-* \
-	libiodbc-3* \
-	libev-4.* \
-	libmcrypt-* \
-	libunwind-* \
-	monit-* \
-	openpgm-5* \
-	php-pecl-mongo-* \
-	poco-crypto-* \
-	poco-data-* \
-	poco-foundation-* \
-	poco-mysql-* \
-	poco-net-* \
-	poco-netssl-* \
-	poco-odbc-* \
-	poco-pagecompiler-* \
-	poco-sqlite-* \
-	poco-util-* \
-	poco-xml-* \
-	poco-zip-* \
-	python-argparse-* \
-	python-bson-2.5* \
-	python-inotify-0* \
-	python-pymongo-2.5* \
-	redis-* \
-	rubygem-daemons-* \
-	sec-* \
-	shorewall-4* \
-	shorewall-core-* \
-	snappy-* \
-	v8-3* \
-	wxBase-* \
-	wxGTK-2.* \
-	wxGTK-gl-* \
-	zeromq-* \
-	leveldb-* \
-	python-pymongo-gridfs-2.5* \
-	sipp-* \
-	socat-1.7.* \
-	ldns-1.6.16-2* \
-	portaudio-19* \
-	jack-audio-connection-kit-*
+	e/elasticsearch-* \
+	f/freeswitch-* \
+	m/mongodb-org-* \
+	e/erlang-lager-* \
+	e/erlang-gen_leader-* \
+	e/erlang-gproc-* \
+	e/erlang-erlando-* \
+	e/erlang-ibrowse-* \
+	e/erlang-rpm-macros-* \
+	f/fail2ban-* \
+	g/gperftools-libs-* \
+	g/gtest-1* \
+	j/js-* \
+	l/libiodbc-3* \
+	l/libev-4.* \
+	l/libmcrypt-* \
+	l/libunwind-* \
+	m/monit-* \
+	o/openpgm-5* \
+	p/php-pecl-mongo-* \
+	p/poco-crypto-* \
+	p/poco-data-* \
+	p/poco-foundation-* \
+	p/poco-mysql-* \
+	p/poco-net-* \
+	p/poco-netssl-* \
+	p/poco-odbc-* \
+	p/poco-pagecompiler-* \
+	p/poco-sqlite-* \
+	p/poco-util-* \
+	p/poco-xml-* \
+	p/poco-zip-* \
+	p/python-argparse-* \
+	p/python-bson-2.5* \
+	p/python-inotify-0* \
+	p/python-pymongo-2.5* \
+	r/redis-* \
+	r/rubygem-daemons-* \
+	s/sec-* \
+	s/shorewall-4* \
+	s/shorewall-core-* \
+	s/snappy-* \
+	v/v8-3* \
+	w/wxBase-* \
+	w/wxGTK-2.* \
+	w/wxGTK-gl-* \
+	z/zeromq-* \
+	l/leveldb-* \
+	p/python-pymongo-gridfs-2.5* \
+	s/sipp-* \
+	s/socat-1.7.* \
+	l/ldns-1.6.16-2* \
+	p/portaudio-19* \
+	j/jack-audio-connection-kit-*
 
