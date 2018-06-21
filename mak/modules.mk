@@ -112,8 +112,6 @@ lib_all = \
   epel \
   zeromq \
   rubygem-file-tail \
-  freeswitch \
-  freeswitch-sounds-en-us-callie \
   hiredis \
   net-snmp \
   openfire \
