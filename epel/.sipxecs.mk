@@ -47,6 +47,8 @@ BUILD_EPEL = \
 	p/poco-debug-* \
 	p/python-empy-* \
 	r/rubygem-mocha-* \
+	r/rubygem-net-ssh-* \
+	r/rubygem-net-sftp-* \
 	v/v8-* \
 	v/v8-devel-* \
 	w/wxGTK-devel-* \

@@ -118,8 +118,6 @@ lib_all = \
   rocketchat \
   ruby-dbi \
   cfengine \
-  rubygem-net-ssh \
-  rubygem-net-sftp \
   jasperserver \
   libjsonrpccpp \
   libevent2 \
