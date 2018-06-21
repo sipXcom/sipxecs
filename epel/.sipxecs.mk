@@ -16,7 +16,7 @@ epel.dist epel.srpm:;
 epel.rpm :
 	rsync -av \
 	  $(EXCLUDE_ARCH) \
-	  $(addprefix $(CENTOS_RSYNC_URL)/epel7/7/$(DISTRO_ARCH)/Packages,$(RUNTIME_EPEL) $(BUILD_EPEL)) \
+	  $(addprefix $(CENTOS_RSYNC_URL)/epel7/7/$(DISTRO_ARCH)/Packages/,$(RUNTIME_EPEL) $(BUILD_EPEL)) \
 	  $(MOCK_RESULTS_DIR)/
 	mock $(MOCK_OPTS) --scrub=cache
 	$(MAKE) repo-dedup
