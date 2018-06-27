@@ -62,7 +62,7 @@ Group: Development/Libraries
 Vendor: SIPfoundry
 Summary: Internal documentation for %name
 Requires: sipxcommserverlib-devel >= %version
-Requires: zeromq = 2.2.0
+Requires: zeromq-devel = 2.2.0
 
 %description devel
 Internal class documentation for the SQA classes
