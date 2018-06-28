@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.tapestry.IComponent;
 import org.apache.tapestry.IPage;
@@ -39,7 +41,7 @@ import org.sipfoundry.sipxconfig.site.PluginHookManager;
 @ComponentClass(allowBody = false, allowInformalParameters = false)
 public abstract class Plugin extends AdminNavigation implements PageBeginRenderListener {
 
-    public abstract void setHookBlocks(Collection<IComponent> hookBlock);
+    public abstract void setHookBlocks(Collection<ComparableComponent> hookBlock);
 
     public abstract void setHookBlock(IComponent hookBlock);
 
@@ -51,7 +53,7 @@ public abstract class Plugin extends AdminNavigation implements PageBeginRenderL
 
     @Override
     public void pageBeginRender(PageEvent arg0) {
-        List<IComponent> hookBlocks = new ArrayList<IComponent>();
+        Set<ComparableComponent> hookBlocks = new TreeSet<ComparableComponent>();
         Collection<PluginHook> hooks = getPluginHookManager().getHooks();
         for (PluginHook hook : hooks) {
             String featureId = hook.getFeatureId();
@@ -62,7 +64,7 @@ public abstract class Plugin extends AdminNavigation implements PageBeginRenderL
                 Map components = hookPage.getComponents();
                 IComponent c = (IComponent) components.get(id);
                 if (c != null) {
-                    hookBlocks.add(c);
+                    hookBlocks.add(new ComparableComponent(c));
                 }
             }
         }

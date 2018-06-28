@@ -279,5 +279,23 @@
   </bean>
 
   <bean id="internalMenuPluginHook" class="org.sipfoundry.sipxconfig.site.InternalPluginsHook"/>
+  <bean id="aLetterPluginsHook" class="org.sipfoundry.sipxconfig.site.SimplePluginHook">
+    <property name="hookId" value="ALetterPlugins"/>    
+  </bean>
+  <bean id="callParkPluginHook" class="org.sipfoundry.sipxconfig.site.SimplePluginHook">
+    <property name="hookId" value="CallAParkPlugin"/>    
+  </bean>
+  <bean id="callBackOnBusyPluginHook" class="org.sipfoundry.sipxconfig.site.SimplePluginHook">
+    <property name="hookId" value="CallBackOnBusyPlugin"/>    
+  </bean>
+  <bean id="conferencingPluginHook" class="org.sipfoundry.sipxconfig.site.SimplePluginHook">
+    <property name="hookId" value="ConferencingPlugin"/>    
+  </bean>
+  <bean id="intercomPluginHook" class="org.sipfoundry.sipxconfig.site.SimplePluginHook">
+    <property name="hookId" value="IntercomPlugin"/>    
+  </bean>
+  <bean id="huntGroupsPluginHook" class="org.sipfoundry.sipxconfig.site.SimplePluginHook">
+    <property name="hookId" value="HuntGroupsPlugin"/>    
+  </bean>  
 
 </beans>
