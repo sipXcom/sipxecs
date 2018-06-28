@@ -60,17 +60,28 @@ BUILD_EPEL = \
 
 # Technincally these could be build and runtime requirements
 RUNTIME_EPEL = \
+	b/broadvoice-0.* \
+	c/codec2-* \
 	e/elasticsearch-* \
 	f/freeswitch-* \
 	m/mongodb-org-* \
 	e/erlang-erlando-* \
 	e/erlang-ibrowse-* \
 	e/erlang-rpm-macros-* \
+	f/flite-* \
 	f/fail2ban-* \
+	g/g722_1-* \
 	g/gtest-1* \
+	h/hiredis-* \
+	i/ilbc-* \
+	i/ilbc2-* \
 	j/js-* \
+	j/jemalloc-* \
 	l/libev-4.* \
+	l/libdb4-* \
 	l/libmcrypt-* \
+	l/libffado-* \
+	l/libsilk-* \
 	m/monit-* \
 	o/openpgm-5* \
 	p/php-pecl-mongo-* \
@@ -90,6 +101,7 @@ RUNTIME_EPEL = \
 	p/python-pymongo-2.5* \
 	r/redis-* \
 	r/rubygem-daemons-* \
+	r/rubygem-pg-* \
 	s/sec-* \
 	s/shorewall-5* \
 	s/shorewall-core-* \
