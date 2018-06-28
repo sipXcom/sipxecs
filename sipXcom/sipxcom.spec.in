@@ -56,7 +56,6 @@ Requires: freeswitch-asrtts-pocketsphinx
 Requires: freeswitch-asrtts-tts-commandline
 Requires: freeswitch-asrtts-unimrcp
 Requires: freeswitch-codec-bv
-Requires: freeswitch-codec-celt
 Requires: freeswitch-codec-codec2
 Requires: freeswitch-codec-h26x
 Requires: freeswitch-codec-ilbc
@@ -82,7 +81,6 @@ Requires: freeswitch-event-json-cdr
 Requires: freeswitch-event-multicast
 Requires: freeswitch-event-rayo
 Requires: freeswitch-format-local-stream
-Requires: freeswitch-format-mod-shout
 Requires: freeswitch-format-native-file
 Requires: freeswitch-format-portaudio-stream
 Requires: freeswitch-format-shell-stream
