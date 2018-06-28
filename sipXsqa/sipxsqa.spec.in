@@ -17,7 +17,7 @@ BuildRequires: java-1.7.0-openjdk-devel
 BuildRequires: automake
 BuildRequires: gcc-c++
 BuildRequires: zeromq-devel = 2.2.0
-BuildRequires: hiredis-devel
+BuildRequires: hiredis-devel = 0.10.1
 BuildRequires: libev-devel
 BuildRequires: libuuid-devel
 BuildRequires: swig
