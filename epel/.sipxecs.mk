@@ -61,7 +61,6 @@ BUILD_EPEL = \
 # Technincally these could be build and runtime requirements
 RUNTIME_EPEL = \
 	b/broadvoice-0.* \
-	c/codec2-* \
 	e/elasticsearch-* \
 	f/freeswitch-* \
 	m/mongodb-org-* \
@@ -72,16 +71,17 @@ RUNTIME_EPEL = \
 	f/fail2ban-* \
 	g/g722_1-* \
 	g/gtest-1* \
-	h/hiredis-* \
 	i/ilbc-* \
 	i/ilbc2-* \
 	j/js-* \
 	j/jemalloc-* \
+	l/libcodec2-* \
 	l/libev-4.* \
 	l/libdb4-* \
 	l/libmcrypt-* \
 	l/libffado-* \
 	l/libsilk-* \
+	l/libxml++-* \
 	m/monit-* \
 	o/openpgm-5* \
 	p/php-pecl-mongo-* \
