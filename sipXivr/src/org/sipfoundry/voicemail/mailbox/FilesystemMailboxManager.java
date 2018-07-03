@@ -663,6 +663,7 @@ public class FilesystemMailboxManager extends AbstractMailboxManager {
     public void remove() {
         try {
             FileUtils.cleanDirectory(new File(m_mailstoreDirectory));
+            LOG.info(String.format("Mailstore directory: %s is deleted ", m_mailstoreDirectory));
         } catch (IOException e) {
             LOG.error(String.format("Failed to clean mailstore directory: %s", m_mailstoreDirectory), e);
         }        
