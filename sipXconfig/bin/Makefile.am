@@ -25,7 +25,8 @@ bin_SCRIPTS = \
 	mongodb-admin \
 	sipxtrap \
 	sipx-dns-validator-regions \
-	postgres_change_pwd
+	postgres_change_pwd \
+	audit_clean
 
 libexecdir = $(SIPX_LIBEXECDIR)
 libexec_SCRIPTS = \

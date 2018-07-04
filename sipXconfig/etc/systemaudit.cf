@@ -23,8 +23,8 @@ bundle agent systemaudit {
 bundle agent system_audit_config {
   vars:
     # execute it every day after midnight
-    "cron" string => "10 0 * * * curl -X DELETE http://localhost:9200/audit/_query -d \"{ \"query\" : { \"range\": { \"dateTime\": { \"lte\": `perl -e 'print time-$(sipx.AUDIT_DAYS_TO_KEEP)*24*3600'` } } } }\"";
-    "cron_id" string => ".*audit/_query.*"; #regex
+    "cron" string => "10 0 * * * $(sipx.SIPX_BINDIR)/audit_clean $(sipx.AUDIT_DAYS_TO_KEEP) > $(sipx.SIPX_LOGDIR)/audit-cleanup.log";
+    "cron_id" string => ".*/audit_clean .*"; #regex
 
   methods:
     sysaudit::
