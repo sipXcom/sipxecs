@@ -28,11 +28,6 @@ bundle agent phonelog {
 bundle agent rsyslog_config {
   files:
     phonelog::
-      "/etc/rsyslog.conf"
-        comment => "add phonelog config to rsyslog.conf",
-        edit_line => append_if_no_line('$IncludeConfig /etc/rsyslog.d/phonelog.conf'),
-        classes => if_repaired("restart_rsyslogd");
-
       "/etc/rsyslog.d/phonelog.conf"
         comment => "create phonelog config",
         create => "true",
@@ -41,11 +36,6 @@ bundle agent rsyslog_config {
         classes => if_repaired("restart_rsyslogd");
 
     !phonelog::
-      "/etc/rsyslog.conf"
-        comment => "remove phonelog config from rsyslog.conf",
-        edit_line => delete_lines_matching('$IncludeConfig /etc/rsyslog.d/phonelog.conf'),
-        classes => if_repaired("restart_rsyslogd");
-      
       "/etc/rsyslog.d/phonelog.conf"
         comment => "remove phonelog config",
         delete => tidy,
