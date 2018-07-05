@@ -61,7 +61,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 public class IvrConfig implements ConfigProvider, AlarmProvider {
 
-    private static final String VOICEMAIL_PATH_KEY = "=SIPX_IVRDATADIR=";
+    private static final String VOICEMAIL_PATH_KEY = "SIPX_IVRDATADIR";
 
     private Ivr m_ivr;
     private Mwi m_mwi;
@@ -92,23 +92,6 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
         AutoAttendantSettings aaSettings = m_aaManager.getSettings();
         FreeswitchRecordingSettings recordingSettings = m_fsRecording.getSettings();
 
-        File defaultDir = manager.getGlobalDataDirectory();
-        File dirsFile = new File(defaultDir, "defaults/dirs.cfdat");
-
-        List<String> fileContent = new ArrayList<String>(Files.readAllLines(dirsFile.toPath(), StandardCharsets.UTF_8));
-        for (int i = 0; i < fileContent.size(); i++) {
-            String line = fileContent.get(i);
-            if (line.startsWith(VOICEMAIL_PATH_KEY)) {
-                if (!StringUtils.isEmpty(voicemailPath)) {
-                    fileContent.set(i, VOICEMAIL_PATH_KEY.concat(voicemailPath));
-                } else {
-                    fileContent.set(i, VOICEMAIL_PATH_KEY.concat(m_mailstoreDirectory));                    
-                }
-                break;
-            }
-        }
-        Files.write(dirsFile.toPath(), fileContent, StandardCharsets.UTF_8);
-
         for (Location location : locations) {
             File dir = manager.getLocationDataDirectory(location);
             boolean enabled = featureManager.isFeatureEnabled(Ivr.FEATURE, location);
@@ -118,7 +101,12 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
             try {
                 CfengineModuleConfiguration config = new CfengineModuleConfiguration(w);
                 config.writeClass("sipxivr", enabled);
-
+                if (!StringUtils.isEmpty(voicemailPath)) {
+                    config.write(VOICEMAIL_PATH_KEY, voicemailPath);
+                } else {
+                    config.write(VOICEMAIL_PATH_KEY, m_mailstoreDirectory);                    
+                }                
+                
                 if (location.isPrimary()) {
                     config.write("CLEANUP_VOICEMAIL_HOUR", settings.getCleanupVoicemailHour());
                 }
