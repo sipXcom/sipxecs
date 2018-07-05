@@ -34,6 +34,7 @@ public class VoicemailCleanup {
             String userName = ValidUsers.getStringValue(users, UID);
             Integer daysToKeepVM = ValidUsers.getIntegerValue(users, DAYS_TO_KEEP_VM);
             if (daysToKeepVM != null && daysToKeepVM != DISABLE_VOICEMAIL_CLEANUP) {
+                LOG.debug(String.format("Cleanup voicemail for user %s ", userName));
                 m_mailboxManager.cleanupMailbox(userName, daysToKeepVM);
             }
         }
