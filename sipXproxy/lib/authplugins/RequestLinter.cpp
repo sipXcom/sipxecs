@@ -41,8 +41,8 @@ RequestLinter::readConfig( OsConfigDb& configDb /**< a subhash of the individual
                                                     * parameters for this instance of this plugin. */
                              )
 {
-   mPassPAIHeader = configDb.getBoolean("PASS_PAI_HEADER_CONFIG_KEY", false);
-   Os::Logger::instance().log(FAC_SIP,PRI_INFO ,"RequestLinter[%s]::readConfig PASS_PAI_HEADER_CONFIG_KEY: %s", mInstanceName.data(), (mPassPAIHeader ? "true" : "false"));
+   mPassPAIHeader = configDb.getBoolean("SIPX_PASS_P_ASSERTED_IDENTITY", false);
+   Os::Logger::instance().log(FAC_SIP,PRI_INFO ,"RequestLinter[%s]::readConfig SIPX_PASS_P_ASSERTED_IDENTITY: %s", mInstanceName.data(), (mPassPAIHeader ? "true" : "false"));
 }
 
 void
