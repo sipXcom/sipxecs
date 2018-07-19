@@ -35,6 +35,24 @@ start() {
     ${SIPXIVR_OPTS} \
     org.sipfoundry.sipxivr.SipXivrServer \
     ${@}"
+      
+  if [[ "$2" == "--migrate" || "$2" == "--migrateWithRemove" || "$2" == "--remove" || "$2" == "--migrateToFlat" || "$2" == "--migrateToFlatWithRemove" || "$2" == "--removeFromFlat" ]]; then
+    echo -e $"Command parameters: ${@} "
+    read -p "Are you sure to perform voicemail migrate and/or remove (y/n) ? " -n 1 -r
+    echo    # move to a new line
+    if [[ $REPLY =~ ^[Nn]$ ]]
+    then
+      echo "Exiting sipxivr script with no change"
+      exit 0;
+    fi
+    checkRunningInstance @SIPXPBXUSER@ $regex > /dev/null
+    Status=$?
+    if [ $Status -eq 0 ]; then    
+      echo -e $"sipXivr is running and voicemail migration parameter is passed - we need to stop sipxivr first: "
+      stop
+    fi
+  fi
+  
   if [ -n "${NoFork}" ] ; then
     killAnyOrphans @SIPXPBXUSER@ $regex
     runuser -s /bin/bash @SIPXPBXUSER@ -c "${Command}"

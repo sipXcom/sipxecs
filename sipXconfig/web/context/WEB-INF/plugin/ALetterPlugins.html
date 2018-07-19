@@ -1,0 +1,13 @@
+<span jwcid="ALetterPluginsFeaturesTop@Block">
+  <span jwcid="@If" condition="ognl:isOn('authCode')">
+    <span jwcid="@common/AdminNavigationMenu" pagePath="admin/AuthCodes" label="ognl:messages.getMessage('menu.authcodes')" />     
+  </span>
+  <span jwcid="@If" condition="ognl:isOn('ivr')">
+    <span jwcid="@common/AdminNavigationMenu" pagePath="dialplan/ManageAttendants" label="ognl:messages.getMessage('menu.attendants')" />
+  </span>
+  <!-- UC-4478 - hide this option from UI for 17.10 release
+   <span jwcid="@If" condition="ognl:isOn('freeSwitch')">
+     <span jwcid="@common/AdminNavigationMenu" pagePath="advcallhandling/AdvancedCallHandlingPage" label="ognl:messages.getMessage('menu.advcallhandling')" />
+   </span>
+  --> 
+</span>

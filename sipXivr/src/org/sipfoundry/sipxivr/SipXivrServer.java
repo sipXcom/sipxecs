@@ -38,6 +38,7 @@ public abstract class SipXivrServer {
     public void runServer() {
         try {
             ServerSocket serverSocket = new ServerSocket(m_eventSocketPort);
+            LOG.info("SipXivr started... opening socket");
             for (;;) {
                 Socket client = serverSocket.accept();
                 SipXivr sipxIvr = getSipxIvrHandler();
@@ -80,19 +81,18 @@ public abstract class SipXivrServer {
             SipXivrServer socket = (SipXivrServer) context.getBean("sipxIvrServer");
             for (int i = 0; i < args.length; i++) {
                 if (args[i].startsWith("--migrate") || args[i].startsWith("--remove")) {
-                    String pathToMailbox = args[i+1];
-                    LOG.info(String.format("Starting sipXivr with --migrate from %s", pathToMailbox));
+                    LOG.info(String.format("Starting sipXivr with %s flag ", args[i]));
                     MailboxManagerMigrator manager = (MailboxManagerMigrator) context.getBean("mailboxManager");
                     if (args[i].equalsIgnoreCase("--migrate")) {
-                        manager.migrateFromFlatToMongo(pathToMailbox);
+                        manager.migrateFromFlatToMongo();
                     } else if (args[i].equalsIgnoreCase("--migrateWithRemove")) {
-                        manager.migrateFromFlatToMongo(pathToMailbox, true);
+                        manager.migrateFromFlatToMongo(true);
                     } else if (args[i].equalsIgnoreCase("--remove")) {
                         manager.removeFromMongo();
                     } else if (args[i].equalsIgnoreCase("--migrateToFlat")) {
-                        manager.migrateFromMongoToFlat(pathToMailbox);
+                        manager.migrateFromMongoToFlat();
                     } else if (args[i].equalsIgnoreCase("--migrateToFlatWithRemove")) {
-                        manager.migrateFromMongoToFlat(pathToMailbox, true);
+                        manager.migrateFromMongoToFlat(true);
                     } else if (args[i].equalsIgnoreCase("--removeFromFlat")) {
                         manager.removeFromFlat();
                     }

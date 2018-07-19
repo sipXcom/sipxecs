@@ -2,40 +2,15 @@
  -  When pages internal to sipXconfig leverage the plugins API.  Easiest to assemble all 
  -  components into one place but these could be separate files for each section 
  -->
-<span jwcid="InternalPluginsFeaturesTop@Block">
-  <span jwcid="@If" condition="ognl:isOn('park')">
-      <span jwcid="@common/AdminNavigationMenu" pagePath="park/ListParkOrbits" label="ognl:messages.getMessage('menu.park.featureMenu')" />
+ 
+<span jwcid="InternalPluginsFeaturesBottom@Block">
+  <span jwcid="@If" condition="ognl:isOn('moh')">
+    <span jwcid="@common/AdminNavigationMenu" pagePath="admin/MusicOnHold" label="ognl:messages.getMessage('menu.musicOnHold')" />     
   </span>
   <span jwcid="@If" condition="ognl:isOn('page')">
-      <span jwcid="@common/AdminNavigationMenu" pagePath="paging/PagingGroupsPage" label="ognl:messages.getMessage('menu.paging.featureMenu')" />
-  </span>
-   <span jwcid="@If" condition="ognl:isOn('conference')">
-     <span jwcid="@common/AdminNavigationMenu" pagePath="conference/ListBridges" label="ognl:messages.getMessage('menu.conferenceBridge')" />
-   </span>
-   <span jwcid="@If" condition="ognl:isOn('ivr')">
-     <span jwcid="@common/AdminNavigationMenu" pagePath="dialplan/ManageAttendants" label="ognl:messages.getMessage('menu.attendants')" />
-   </span>
-   <span jwcid="@If" condition="ognl:isOn('intercom')">
-     <span jwcid="@common/AdminNavigationMenu" pagePath="admin/Intercom" label="ognl:messages.getMessage('menu.intercom')" />
-   </span>
-   <span jwcid="@If" condition="ognl:isOn('callback')">
-     <span jwcid="@common/AdminNavigationMenu" pagePath="callback/EditCallback" label="ognl:messages.getMessage('menu.callback')" />
-   </span>
-   <span jwcid="@If" condition="ognl:isOn('proxy')">
-     <span jwcid="@common/AdminNavigationMenu" pagePath="admin/ListCallGroups" label="ognl:messages.getMessage('menu.huntGroups')" />     
-   </span>
-   <span jwcid="@If" condition="ognl:isOn('moh')">
-     <span jwcid="@common/AdminNavigationMenu" pagePath="admin/MusicOnHold" label="ognl:messages.getMessage('menu.musicOnHold')" />     
-   </span>
-   <span jwcid="@If" condition="ognl:isOn('authCode')">
-     <span jwcid="@common/AdminNavigationMenu" pagePath="admin/AuthCodes" label="ognl:messages.getMessage('menu.authcodes')" />     
-   </span>
-   <span jwcid="@common/AdminNavigationMenu" pagePath="phonebook/ManagePhonebooks" label="ognl:messages.getMessage('menu.phonebook')" />
-   <!-- UC-4478 - hide this option from UI for 17.10 release
-   <span jwcid="@If" condition="ognl:isOn('freeSwitch')">
-     <span jwcid="@common/AdminNavigationMenu" pagePath="advcallhandling/AdvancedCallHandlingPage" label="ognl:messages.getMessage('menu.advcallhandling')" />
-   </span>
-    -->  
+     <span jwcid="@common/AdminNavigationMenu" pagePath="paging/PagingGroupsPage" label="ognl:messages.getMessage('menu.paging.featureMenu')" />
+  </span>  
+  <span jwcid="@common/AdminNavigationMenu" pagePath="phonebook/ManagePhonebooks" label="ognl:messages.getMessage('menu.phonebook')" />
 </span>
 <span jwcid="InternalPluginsSystemBottom@Block">
    <span jwcid="@common/AdminNavigationMenu" pagePath="backup/BackupPage" label="ognl:messages.getMessage('menu.backup')" />

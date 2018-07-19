@@ -217,12 +217,12 @@ public abstract class AbstractMailboxManager implements MailboxManager {
     }
 
     @Override
-    public void migrate(String path) {
+    public void migrate() {
         // do nothing, classes that extends this should provide a mean for migrating voicemails
     }
     
     @Override
-    public void migrate(String path, boolean remove) {
+    public void migrate(boolean remove) {
         // do nothing, classes that extends this should provide a mean for migrating voicemails
     }
     

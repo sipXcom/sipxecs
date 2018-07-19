@@ -48,6 +48,7 @@
     <property name="autoAttendantManager" ref="autoAttendantManager" />
     <property name="adminContext" ref="adminContext" />
     <property name="fsRecordingContext" ref="fsRecordingContext" />
+    <property name="mailstoreDirectory" value="${sysdir.vxml}" />
   </bean>
 
   <bean id="sipXivrMessages" class="org.springframework.context.support.ResourceBundleMessageSource">

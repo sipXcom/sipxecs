@@ -633,13 +633,17 @@ public class FilesystemMailboxManager extends AbstractMailboxManager {
         Date deleteFrom = TimeZoneUtils.getDateXDaysAgo(daysToKeepVM);
         try {
             File mailbox = getUserDirectory(userName);
-            List<File> files = (List<File>) FileUtils.listFiles(mailbox,
+            if (mailbox.exists()) {
+                LOG.debug(String.format("User Directory to cleanup: %s ", mailbox.getAbsolutePath()));
+                List<File> files = (List<File>) FileUtils.listFiles(mailbox,
                     TrueFileFilter.TRUE, TrueFileFilter.TRUE);
-            for (File file : files) {
-                BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
-                FileTime fileCreationTime = attr.creationTime();
-                if (fileCreationTime.toMillis() < deleteFrom.getTime()) {
-                    file.delete();
+                for (File file : files) {
+                    BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
+                    FileTime fileCreationTime = attr.creationTime();
+                    if (fileCreationTime.toMillis() < deleteFrom.getTime()) {
+                        LOG.debug(String.format("Delete file %s", file.getAbsolutePath()));
+                        file.delete();
+                    }
                 }
             }
         } catch (Exception ex) {
@@ -663,6 +667,7 @@ public class FilesystemMailboxManager extends AbstractMailboxManager {
     public void remove() {
         try {
             FileUtils.cleanDirectory(new File(m_mailstoreDirectory));
+            LOG.info(String.format("Mailstore directory: %s is deleted ", m_mailstoreDirectory));
         } catch (IOException e) {
             LOG.error(String.format("Failed to clean mailstore directory: %s", m_mailstoreDirectory), e);
         }        

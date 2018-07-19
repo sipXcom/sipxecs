@@ -1,0 +1,4 @@
+#!/bin/bash
+
+EPOCH=$(($(date --date="-$1 day" +%s%N)/1000000))
+curl -XDELETE 'http://localhost:9200/audit/_query' -d '{"query" : {"range":{"dateTime":{"lte": '$EPOCH'}}}}'

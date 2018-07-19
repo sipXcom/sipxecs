@@ -14,6 +14,7 @@ import java.util.Arrays;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.sipfoundry.commons.freeswitch.DisconnectException;
 import org.sipfoundry.commons.freeswitch.PromptList;
 import org.sipfoundry.commons.userdb.User;
 import org.sipfoundry.commons.userdb.ValidUsers;
@@ -142,12 +143,15 @@ public class Moh extends SipxIvrApp {
                 pl.addUrl("local_stream://moh");
             }
         }
-        // Play the music until someone hangs up.
+        // Play the music until someone hangs up or MoH gets to timeout setting.
         // (FreeSWITCH will hang up after 300 seconds with no RTP)
-        for (;;) {
+        long startTime = System.currentTimeMillis();
+        long endTime = startTime + Long.valueOf(m_timeout);
+        while (System.currentTimeMillis() < endTime ) {
             controller.play(pl, "");
             controller.sleep(1000);
         }
+        throw new DisconnectException();
     }
 
     public void setDataDirectory(String dir) {

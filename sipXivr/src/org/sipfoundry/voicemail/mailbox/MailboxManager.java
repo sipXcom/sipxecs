@@ -91,9 +91,9 @@ public interface MailboxManager {
 
     void renameMailbox(User user, String oldUser);
 
-    void migrate(String path);
+    void migrate();
     
-    void migrate(String path, boolean remove);
+    void migrate(boolean remove);
     
     void remove();
 

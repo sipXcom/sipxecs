@@ -2,15 +2,15 @@ package org.sipfoundry.voicemail.mailbox;
 
 public interface MailboxManagerMigrator extends MailboxManager {
     
-    void migrateFromFlatToMongo(String path);
+    void migrateFromFlatToMongo();
     
-    void migrateFromFlatToMongo(String path, boolean remove);
+    void migrateFromFlatToMongo(boolean remove);
     
     void removeFromFlat();
     
-    void migrateFromMongoToFlat(String path);
+    void migrateFromMongoToFlat();
     
-    void migrateFromMongoToFlat(String path, boolean remove);
+    void migrateFromMongoToFlat(boolean remove);
     
     void removeFromMongo();
     
