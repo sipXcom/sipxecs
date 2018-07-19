@@ -26,7 +26,7 @@ public class IMFeatureHook implements PluginHook {
 
     @Override
     public String getHookId() {
-        return "IMFeature";
+        return "InstantMessaging";
     }
 
     @Override

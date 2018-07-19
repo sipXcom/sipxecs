@@ -23,7 +23,7 @@ public class RecordingFeatureHook implements PluginHook {
 
     @Override
     public String getHookId() {
-        return RecordingFeature.PAGE_ID;
+        return ConferenceEventListener.PAGE_ID;
     }
 
     @Override

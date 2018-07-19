@@ -1,0 +1,52 @@
+<html>
+<head>
+<style>
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    left: 120px
+    top: 0px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 4px 4px 4px 4px;
+    z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+</style>
+</head>
+<body>
+
+<div class="dropdown">
+  <li jwcid="@If" condition="ognl:isAllowed"><a jwcid="@PageLink" page="ognl:pagePath"><span jwcid="@Insert" value="ognl:label"/></a>
+    <div class="dropdown-content">
+      <ul>
+        <span jwcid="@common/AdminNavigationMenu" pagePath="admin/EditAdmin" label="ognl:messages.getMessage('menu.adminSettings')" />
+        <span jwcid="@common/AuthenticationNavigation"  pagePath="#" label="ognl:messages.getMessage('menu.authentication.navigation')" />
+        <span jwcid="@common/AdminNavigationMenu" pagePath="admin/TimeSettingsPage" label="ognl:messages.getMessage('menu.timeSettings')" />
+        <span jwcid="@common/AdminNavigationMenu" pagePath="admin/ManageDomain" label="ognl:messages.getMessage('menu.domain')" />
+        <span jwcid="@common/AdminNavigationMenu" pagePath="dialplan/sbc/InternetCalling" label="ognl:messages.getMessage('menu.internetCalling')" />
+        <span jwcid="@common/Plugin" blockId="SettingsMiddle"/>
+        <span jwcid="@common/AdminNavigationMenu" pagePath="admin/LocalizationPage" label="ognl:messages.getMessage('menu.localization')" />
+        <span jwcid="@common/AdminNavigationMenu" pagePath="branch/BranchesPage" label="ognl:messages.getMessage('menu.branches')" />
+        <span jwcid="@If" condition="ognl:isOn('natTraversal')">
+          <span jwcid="@common/AdminNavigationMenu" pagePath="nat/EditNatTraversal" label="ognl:messages.getMessage('menu.nat.featureMenu')" />
+        </span>
+        <span jwcid="@common/AdminNavigationMenu" pagePath="permission/ListPermissions" label="ognl:messages.getMessage('menu.permissions')" />
+        <span jwcid="@common/PhoneProvisioningNavigation"  pagePath="#" label="ognl:messages.getMessage('menu.phoneprov.navigation')" />        
+        <span jwcid="@common/AdminNavigationMenu" pagePath="region/Regions" label="ognl:messages.getMessage('menu.regions')" />
+        <span jwcid="@common/Plugin" blockId="SettingsBottom"/>         
+      </ul>
+    </div>
+  </li>
+</div>
+
+</body>
+</html>

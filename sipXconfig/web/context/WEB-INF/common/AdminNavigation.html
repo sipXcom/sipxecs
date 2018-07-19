@@ -18,8 +18,7 @@
 			<div class="navigationMenuItemTop">
 				<a class="heading"><span key="menu.section.devices">Devices</span></a>
 				<ul>
-					<span jwcid="@common/Plugin" blockId="DevicesTop"/>
-					<span jwcid="@common/AdminNavigationMenu" pagePath="upload/ManageUploads" label="ognl:messages.getMessage('menu.uploads')" />
+					<span jwcid="@common/Plugin" blockId="DevicesTop"/>					
 					<span jwcid="@common/AdminNavigationMenu" pagePath="device/TimeZonePage" label="ognl:messages.getMessage('menu.timezone')" />
 					<span jwcid="@common/AdminNavigationMenu" pagePath="gateway/ListGateways" label="ognl:messages.getMessage('menu.gateways')" />
 					<span jwcid="@common/AdminNavigationMenu" pagePath="phone/ManagePhones" label="ognl:messages.getMessage('menu.devices')" />
@@ -45,29 +44,12 @@
 				<a class="heading"><span key="menu.section.system">System</span></a>
 				<ul>
 					<span jwcid="@common/Plugin" blockId="SystemTop"/>
+					<span jwcid="@common/DatabaseNavigation"  pagePath="#" label="ognl:messages.getMessage('menu.database.navigation')" />
+					<span jwcid="@common/DialingNavigation"  pagePath="#" label="ognl:messages.getMessage('menu.dialing.navigation')" />
+					<span jwcid="@common/SecurityNavigation"  pagePath="#" label="ognl:messages.getMessage('menu.security.navigation')" />
 					<span jwcid="@common/AdminNavigationMenu" pagePath="admin/commserver/LocationsPage" label="ognl:messages.getMessage('menu.locations')" />
-					<span jwcid="@common/AdminNavigationMenu" pagePath="branch/BranchesPage" label="ognl:messages.getMessage('menu.branches')" />
-          <span jwcid="@common/AdminNavigationMenu" pagePath="region/Regions" label="ognl:messages.getMessage('menu.regions')" />
-					<span jwcid="@common/AdminNavigationMenu" pagePath="admin/ManageDomain" label="ognl:messages.getMessage('menu.domain')" />
-				    <span jwcid="@If" condition="ognl:isOn('proxy')">
-					  <span jwcid="@common/AdminNavigationMenu" pagePath="dialplan/EditFlexibleDialPlan" label="ognl:messages.getMessage('menu.dialPlans')" />
-					</span>
-					<span jwcid="@If" condition="ognl:isOn('ftp')">
-					  <span jwcid="@common/AdminNavigationMenu" pagePath="ftp/EditFtp" label="ognl:messages.getMessage('menu.ftp')" />
-					</span>
-					<span jwcid="@common/AdminNavigationMenu" pagePath="dialplan/sbc/InternetCalling" label="ognl:messages.getMessage('menu.internetCalling')" />
-					<span jwcid="@common/AdminNavigationMenu" pagePath="admin/EditAdmin" label="ognl:messages.getMessage('menu.adminSettings')" />
-					<span jwcid="@If" condition="ognl:isOn('fail2ban')">
-					  <span jwcid="@common/AdminNavigationMenu" pagePath="fail2ban/ListFail2banFilters" label="ognl:messages.getMessage('menu.fail2ban')" />
-					</span>
-					<span jwcid="@common/AdminNavigationMenu" pagePath="permission/ListPermissions" label="ognl:messages.getMessage('menu.permissions')" />
-					<span jwcid="@common/AdminNavigationMenu" pagePath="admin/BulkImport" label="ognl:messages.getMessage('menu.importCsv')" />
-					<span jwcid="@common/AdminNavigationMenu" pagePath="admin/ldap/LdapPage" label="ognl:messages.getMessage('menu.ldap')" />
-					<span jwcid="@common/AdminNavigationMenu" pagePath="admin/LocalizationPage" label="ognl:messages.getMessage('menu.localization')" />
-					<span jwcid="@common/AdminNavigationMenu" pagePath="admin/ManageCertificates" label="ognl:messages.getMessage('menu.certificates')" />
-					<span jwcid="@common/AdminNavigationMenu" pagePath="admin/TimeSettingsPage" label="ognl:messages.getMessage('menu.timeSettings')" />
-					<span jwcid="@common/AdminNavigationMenu" pagePath="mongo/ManageMongo" label="ognl:messages.getMessage('menu.manageMongo')" />
-					<span jwcid="@common/AdminNavigationMenu" pagePath="admin/EditMongo" label="ognl:messages.getMessage('menu.mongoSettings')" />
+                    <span jwcid="@common/ServicesNavigation"  pagePath="#" label="ognl:messages.getMessage('menu.services.navigation')" />
+                    <span jwcid="@common/SettingsNavigation"  pagePath="#" label="ognl:messages.getMessage('menu.settings.navigation')" />									
 					<span jwcid="@common/Plugin" blockId="SystemBottom"/>
 				</ul>
 			</div>
@@ -75,15 +57,8 @@
 		<li>
 			<div class="navigationMenuItemTop">
 				<a class="heading"><span key="menu.section.diag">Diagnostics</span></a>
-				<ul>
+				<ul>				    
 					<span jwcid="@common/Plugin" blockId="DiagnosticsTop"/>
-					<span jwcid="@common/AdminNavigationMenu" pagePath="admin/JobStatusPage" label="ognl:messages.getMessage('menu.jobs')" />
-					<span jwcid="@common/AdminNavigationMenu" pagePath="admin/SnapshotPage" label="ognl:messages.getMessage('menu.snapshot')" />
-					<span jwcid="@If" condition="ognl:isOn('systemaudit')">
-						<span jwcid="@common/AdminNavigationMenu" pagePath="admin/systemaudit/ManageSystemAudit" label="ognl:messages.getMessage('menu.managesystemaudit')" />
-					</span>
-					<span jwcid="@common/AdminNavigationMenu" pagePath="admin/AlarmsPage" label="ognl:messages.getMessage('menu.alarms')" />
-					<li><span jwcid="@admin/AboutDialog" id="menu.about" linkTitle="message:menu.about"/></li>
 					<span jwcid="@common/Plugin" blockId="DiagnosticsBottom"/>
 				</ul>
 			</div>

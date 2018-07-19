@@ -1,0 +1,3 @@
+<page-specification class="org.sipfoundry.sipxconfig.web.plugin.ConferenceEventListener">
+	<description>ConferenceEventListener</description>
+</page-specification>

@@ -1,0 +1,43 @@
+<html>
+<head>
+<style>
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 120px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 4px 4px 4px 50px;
+    z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+</style>
+</head>
+<body>
+
+<div class="dropdown">
+  <li jwcid="@If" condition="ognl:isAllowed"><a jwcid="@PageLink" page="ognl:pagePath"><span jwcid="@Insert" value="ognl:label"/></a>
+    <div class="dropdown-content">
+      <ul>
+        <span jwcid="@common/AdminNavigationMenu" pagePath="admin/ManageCertificates" label="ognl:messages.getMessage('menu.certificates')" />
+        <span jwcid="@If" condition="ognl:isOn('firewall')">
+          <span jwcid="@common/AdminNavigationMenu" pagePath="firewall/ManageFirewall" label="ognl:messages.getMessage('menu.firewall.featureMenu')" />
+        </span>
+		<span jwcid="@If" condition="ognl:isOn('fail2ban')">
+			<span jwcid="@common/AdminNavigationMenu" pagePath="fail2ban/ListFail2banFilters" label="ognl:messages.getMessage('menu.fail2ban')" />
+		</span>        
+      </ul>
+    </div>
+  </li>
+</div>
+
+</body>
+</html>
