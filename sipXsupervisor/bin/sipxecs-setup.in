@@ -221,7 +221,7 @@ def reset_all
 
   # may not work, but try to shut down whatever is running
   cmd_no_die("#{$bindir}/sipxagent -d stop_sipxecs")
-  cmd_no_die("#{$serviceder}/sipxsupervisor stop")
+  cmd_no_die("/usr/bin/systemctl stop sipxsupervisor.service")
 
   # cannot rely stop_sipxecs worked all the way
   cmd_no_die("killall -9 java")
@@ -247,7 +247,7 @@ def reset_all
   # test if postgres is supposed to be running on the machine
   has_postgres_data = File.directory? "/var/lib/pgsql/data/base"
   if has_postgres_data
-    cmd_no_die("/etc/init.d/postgresql restart")
+    cmd_no_die("/usr/bin/systemctl restart postgresql.service")
   end
 
   # references to project specific data, but we cannot rely that system is
@@ -288,7 +288,7 @@ def network_settings
     if reprompt
       change = true
       system(tui)
-      system("/etc/init.d/network reload")
+      system("/usr/bin/systemctl reload network.service")
     else
       break
     end
@@ -625,7 +625,7 @@ while true
 end
 
 def ntpd_running?
- system("/sbin/service ntpd status")
+ system("/bin/systemctl status ntpd.service")
 end
 
 # First pass generated cfdata info

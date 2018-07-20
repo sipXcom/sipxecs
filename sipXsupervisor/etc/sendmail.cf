@@ -17,7 +17,9 @@ bundle agent sendmail {
   methods:
     sendmail::
       "any" usebundle => "sendmail_config";
-    any::
+	fedora16_or_greater::
+	  "any" usebundle => "sendmail_systemctl_running";
+    !fedora16_or_greater::
       "any" usebundle => "sendmail_sysv_running";
 }
 
@@ -86,6 +88,61 @@ bundle edit_line sendmail_mc {
 
   delete_lines:
     ".*dnl configured by sipxecs";
+}
+
+bundle agent sendmail_systemctl_running {
+  vars:
+    "sendmail_service" string => "sendmail.service";
+	"postfix_service" string => "postfix.service";
+    "postfix_location" string => "/usr/libexec/postfix/master";
+	
+	classes:
+	  fedora16_or_greater::
+	    "sendmail_running" expression => returnszero("$(sipx.systemctl) is-active $(sendmail_service)","noshell");
+	  any::
+		"postfix_installed" expression => fileexists("$(postfix_location)");
+		
+	methods:
+	  postfix_installed::
+        # use full path to search for postfix - this has been tested on centos and fedora systems
+        "any" usebundle => find_service_by_command("$(postfix_location)", "postfix_running", "root");
+	  
+	commands:
+	  sendmail_running.!sendmail::
+	    "$(sipx.systemctl)"
+	      comment => "stop sendmail",
+		  args => "stop $(sendmail_service)";
+	
+	    "$(sipx.systemctl)"
+	      comment => "disable sendmail",
+		  args => "disable $(sendmail_service)";
+
+	  sendmail.postfix_running::
+	    "$(sipx.systemctl)"
+	      comment => "stop postfix",
+		  args => "stop $(postfix_service)";
+	
+	    "$(sipx.systemctl)"
+	      comment => "disable postfix",
+		  args => "disable $(postfix_service)";
+
+		"$(sipx.systemctl)"
+	      comment => "restart sendmail",
+		  args => "restart $(sendmail_service)";
+	  
+	  !sendmail_running.sendmail::
+	    "$(sipx.systemctl)"
+	      comment => "start sendmail",
+		  args => "start $(sendmail_service)";
+	
+	    "$(sipx.systemctl)"
+	      comment => "enable sendmail",
+		  args => "enable $(sendmail_service)";
+		  
+	  sendmail.sendmail_running.restart_sendmail::
+	    "$(sipx.systemctl)"
+	      comment => "restart sendmail",
+		  args => "restart $(sendmail_service)";
 }
 
 bundle agent sendmail_sysv_running {

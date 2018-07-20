@@ -13,30 +13,13 @@
 
 # Mongo configuration for sipXecs
 
-bundle common mongo {
-  classes:
-    # 10gen and fedora mongo mainatain cannot settle on right file names or
-    # package names for that matter. Support both at this time. 
-    any::
-      "mongodb_10gen" expression => fileexists("/etc/mongod.conf");
-      "mongodb_redhat" not => "mongodb_10gen";
-}
-
 bundle agent mongodb {
   vars:
     any::
       "config_arbiter" string => "/etc/mongod-arbiter.conf";
       "config_local" string => "/etc/mongo-local.conf";
       "config_local_arbiter" string => "/etc/mongo-local-arbiter.conf";
-
-    mongodb_redhat::
       "id" string => "mongodb";
-      "config" string => "/etc/mongod.conf";
-      "user" string => "mongod";
-      "group" string => "mongod";
-
-    mongodb_10gen::
-      "id" string => "mongo";
       "config" string => "/etc/mongod.conf";
       "user" string => "mongod";
       "group" string => "mongod";
@@ -68,11 +51,11 @@ bundle agent mongodb {
       "any" usebundle => disallow_ssh_command("mongodb-admin");
       "any" usebundle => rh_chkconfig_status("disable-transparent-hugepages off");
 
-    fedora16_or_greater.mongodb_redhat::
+    fedora16_or_greater::
       "any" usebundle => mongodb_systemctl_running;
 
     # assumes 10gen on fedora would never drop sysv scripts
-    !fedora16_or_greater|mongodb_10gen::
+    !fedora16_or_greater::
       "any" usebundle => mongodb_sysv_running;
 
     any::

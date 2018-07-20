@@ -82,8 +82,8 @@ bundle common sipx {
       # established assumption
       "primary" expression => strcmp("$(location_id)", "1");
 
-    fedora::
-      "fedora16_or_greater" expression => "fedora_16|fedora_17|fedora_18|fedora_19|fedora_20";
+    fedora|centos::
+      "fedora16_or_greater" expression => "fedora_16|fedora_17|fedora_18|fedora_19|fedora_20|centos_7";
 }
 
 # add a crontab. Will automaticall reload crontab service
