@@ -41,6 +41,9 @@ Requires: pwdutils
 Requires: xerces-c >= 2.6.0
 Requires: rpm-libs
 %endif
+%if 0%{?rhel} >= 7
+Requires: net-tools
+%endif
 Requires: sipxportlib >= %version
 Requires: sipxtacklib >= %version
 Requires: unixODBC >= 2.2
