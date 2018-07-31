@@ -22,13 +22,13 @@
 	</span>    
 </span>
 <span jwcid="InternalPluginsDiagnosticsBottom@Block">
-    <span jwcid="@common/AdminNavigationMenu" pagePath="admin/JobStatusPage" label="ognl:messages.getMessage('menu.jobs')" />	
+    <span jwcid="@common/AdminNavigationMenu" pagePath="admin/JobStatusPage" label="ognl:messages.getMessage('menu.jobs')" />
+    <span jwcid="@If" condition="ognl:isOn('tcpdump')">
+      <span jwcid="@common/AdminNavigationMenu" pagePath="tcpdumplog/EditTcpdumpLogService" label="ognl:messages.getMessage('menu.tcpdumplog.featureMenu')" />
+    </span>    	
 	<span jwcid="@If" condition="ognl:isOn('registrar')">
 	  <span jwcid="@common/AdminNavigationMenu" pagePath="admin/commserver/Registrations" label="ognl:messages.getMessage('menu.registrations')" />
 	</span>
-    <span jwcid="@If" condition="ognl:isOn('tcpdump')">
-     <span jwcid="@common/AdminNavigationMenu" pagePath="tcpdumplog/EditTcpdumpLogService" label="ognl:messages.getMessage('menu.tcpdumplog.featureMenu')" />
-   </span>
     <span jwcid="@If" condition="ognl:isOn('sbcBridge')">
       <span jwcid="@common/AdminNavigationMenu" pagePath="sbc/BridgeSbcStatisticsPage" label="ognl:messages.getMessage('menu.sbcStats')" />
     </span>

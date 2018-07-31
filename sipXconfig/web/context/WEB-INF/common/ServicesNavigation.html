@@ -42,10 +42,10 @@
 		<span jwcid="@If" condition="ognl:isOn('ftp')">
 		  <span jwcid="@common/AdminNavigationMenu" pagePath="ftp/EditFtp" label="ognl:messages.getMessage('menu.ftp')" />
 		</span>
+        <span jwcid="@common/Plugin" blockId="ServicesSystemMiddle"/>		
         <span jwcid="@If" condition="ognl:isOn('sipxlogwatcher')">
           <span jwcid="@common/AdminNavigationMenu" pagePath="logwatcher/EditLogWatcher" label="ognl:messages.getMessage('menu.logwatcher.featureMenu')" />
-        </span>
-        <span jwcid="@common/Plugin" blockId="ServicesSystemMiddle"/>        
+        </span>        
         <span jwcid="@If" condition="ognl:isOn('freeSwitch')">
           <span jwcid="@common/AdminNavigationMenu" pagePath="freeswitch/EditFreeswitch" label="ognl:messages.getMessage('menu.freeswitch.featureMenu')" />
         </span>
