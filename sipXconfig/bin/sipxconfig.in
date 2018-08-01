@@ -73,7 +73,7 @@ waitForListenPortTime=100
 . @SIPX_LIBEXECDIR@/sipx-utils.sh
 [ -e @SIPX_CONFDIR@/sipxconfigrc ] && . @SIPX_CONFDIR@/sipxconfigrc
 
-Database=SIPXCONFIG
+Database=sipxconfig
 RequiredDatabaseVersion=13
 IndexDir=${TmpDir}/index
 Dependencies=`@SIPX_BINDIR@/java-dep -d ${CommonsLibDir} -d ${LibDir} sipxconfig sipxconfig-web @web_PKGS@ cdr-binding`

@@ -139,7 +139,7 @@ Call State Event Database Design Specification
 
         - SIPX_PROXY_CALL_STATE_DB : DISABLE/ENABLE
 
-            ENABLE will direct CSE logging to PostgreSQL database "SIPXCDR".
+            ENABLE will direct CSE logging to PostgreSQL database "sipxcdr".
             (default: DISABLE)
 
         - SIPX_PROXY_CALL_STATE_DB_HOST : [hostname]

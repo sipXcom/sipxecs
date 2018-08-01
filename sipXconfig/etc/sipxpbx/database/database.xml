@@ -72,7 +72,7 @@
   -
 -->
 <project name="database" basedir=".">
-  <property name="sipxconfig.db.name" value="SIPXCONFIG" />
+  <property name="sipxconfig.db.name" value="sipxconfig" />
   <property name="sipxconfig.db.user" value="@POSTGRESQL_USER@" />
   <property name="sipxconfig.db.password" value="" />
   <property name="sql.dir" location="${basedir}" />

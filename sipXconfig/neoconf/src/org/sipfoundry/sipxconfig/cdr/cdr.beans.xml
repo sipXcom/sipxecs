@@ -7,7 +7,7 @@
   </bean>
 
   <bean id="cdrDataSource" parent="dataSource">
-    <property name="jdbcUrl" value="jdbc:postgresql://localhost/SIPXCDR" />
+    <property name="jdbcUrl" value="jdbc:postgresql://localhost/sipxcdr" />
   </bean>
 
 

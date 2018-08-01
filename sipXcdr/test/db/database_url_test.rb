@@ -24,7 +24,7 @@ class DatabaseUrlTest < Test::Unit::TestCase
 
   def test_defaults
     url = DatabaseUrl.new(:username => "anyone")    
-    assert_equal('SIPXCDR', url.database)
+    assert_equal('sipxcdr', url.database)
     assert_equal(5432, url.port)
     assert_equal('localhost', url.host)
     assert_equal('postgresql', url.adapter)
@@ -60,7 +60,7 @@ class DatabaseUrlTest < Test::Unit::TestCase
   end
   
   def test_to_dbi
-    url = DatabaseUrl.new(:database => 'SIPXCDR', :host => 'localhost', :username => 'anyone')
-    assert_equal("dbi:Pg:database=SIPXCDR;host=localhost;port=5432", url.to_dbi)
+    url = DatabaseUrl.new(:database => 'sipxcdr', :host => 'localhost', :username => 'anyone')
+    assert_equal("dbi:Pg:database=sipxcdr;host=localhost;port=5432", url.to_dbi)
   end
 end

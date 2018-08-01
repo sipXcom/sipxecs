@@ -74,7 +74,7 @@ fi
 : ${CallResolverMain:=@GEM_LOCAL_LIB_DIR@/gems/sipxcallresolver-@sipxcallresolver_VER@/lib/main.rb}
 
 resolverArgs="--daemon --confdir ${ConfDir} --logdir ${LogDir}"
-Database=SIPXCDR
+Database=sipxcdr
 Today=`date`
 regex="${CallResolverMain}"
 prog="sipxcdr"
@@ -201,7 +201,7 @@ databaseCheck() {
       if [ "$1" != "Silent" ]; then
          cat <<ERROR
 
-Error: The SIPXCDR database does not exist.
+Error: The sipxcdr database does not exist.
 Login as root and run the sipxcdr script with the --setup parameter.
    $0 --setup
 

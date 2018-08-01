@@ -13,7 +13,7 @@ class DatabaseUrl < Struct.new(:database, :port, :host, :adapter, :username, :pa
     args.each do |field, value| 
         self[field] = value
     end
-    self[:database] ||= 'SIPXCDR'
+    self[:database] ||= 'sipxcdr'
     self[:port] ||= 5432 # Default port used by PostgreSQL
     self[:host] ||= 'localhost'
     self[:adapter] ||= 'postgresql'

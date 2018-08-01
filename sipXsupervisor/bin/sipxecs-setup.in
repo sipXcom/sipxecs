@@ -253,8 +253,8 @@ def reset_all
   # references to project specific data, but we cannot rely that system is
   # in a state that cfengine can run reliably so we must delete straight away
   if has_postgres_data
-    drop_db_if_exists('SIPXCONFIG')
-    drop_db_if_exists('SIPXCDR')
+    drop_db_if_exists('sipxconfig')
+    drop_db_if_exists('sipxcdr')
     drop_db_if_exists('openfire')
   end
   cmd_no_die("#{$bindir}/mongodb-admin --obliterate")

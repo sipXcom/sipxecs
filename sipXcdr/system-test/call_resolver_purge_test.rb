@@ -182,7 +182,7 @@ class CallResolverPurgeTest < Test::Unit::TestCase
         :adapter  => "postgresql",
         :host     => "localhost",
         :username => "postgres",
-        :database => "SIPXCDR")
+        :database => "sipxcdr")
     
     # Clear database
     CallStateEvent.delete_all

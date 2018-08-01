@@ -23,7 +23,7 @@ class ArchiveBase
 
   def initialize
     @pguser = "postgres"
-    @db = "SIPXCDR"
+    @db = "sipxcdr"
     @tmpdir = "/var/sipxdata/tmp"
     @initd = "@SIPX_SERVICEDIR@"
   end

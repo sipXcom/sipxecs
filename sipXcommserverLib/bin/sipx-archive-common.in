@@ -1,7 +1,7 @@
 # Common to both the sipx-backup and sipx-restore scripts.
 
-CONFIG_DATABASE_NAME=SIPXCONFIG
-CDR_DATABASE_NAME=SIPXCDR
+CONFIG_DATABASE_NAME=sipxconfig
+CDR_DATABASE_NAME=sipxcdr
 DB_TAR=db.tar
 DB_CDR_TAR=db_cdr.tar
 SIPX_CERTDB_DIR=@SIPX_VARDIR@/certdb

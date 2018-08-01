@@ -148,7 +148,7 @@ def contains(string, line):
 	
 def get_servers():
 	
-	cmd = "psql SIPXCONFIG -U postgres -c 'select location_id, name, fqdn, ip_address from location;'"
+	cmd = "psql sipxconfig -U postgres -c 'select location_id, name, fqdn, ip_address from location;'"
 	
 	result = do_psql_query(cmd)
 	
@@ -162,7 +162,7 @@ def get_servers():
 
 def get_registrars():
 	
-	cmd = '''psql SIPXCONFIG -U postgres -c "select feature_id, location_id from feature_local where feature_id = 'registrar';"'''
+	cmd = '''psql sipxconfig -U postgres -c "select feature_id, location_id from feature_local where feature_id = 'registrar';"'''
 	
 	result = do_psql_query(cmd)
 	

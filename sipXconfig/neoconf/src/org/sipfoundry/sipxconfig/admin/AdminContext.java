@@ -22,7 +22,7 @@ public interface AdminContext {
     //This is used for secured websocket access
     public static final AddressType HTTPS_ADDRESS_AUTH = new AddressType("adminApiSSLAuth", URL_SSL_FORMAT, 8076);
     public static final AddressType SIPXCDR_DB_ADDRESS = new AddressType(
-            "sipxcdr", "jdbc:postgresql://%s/SIPXCDR", 5432);
+            "sipxcdr", "jdbc:postgresql://%s/sipxcdr", 5432);
     public static final AlarmDefinition ALARM_LOGIN_FAILED = new AlarmDefinition("LOGIN_FAILED", 3);
     public static final AlarmDefinition ALARM_DNS_LOOKUP = new AlarmDefinition("DNS_LOOKUP_FAILED");
     public static final String ARCHIVE = "configuration.tar.gz";

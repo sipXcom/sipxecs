@@ -987,12 +987,12 @@ EOF
    if [ "${Action}" = "SNAPSHOT" ]
    then
      # Record the sipXconfig database contents
-     pg_dump -U @POSTGRESQL_USER@ --attribute-inserts SIPXCONFIG > ${ConfigDb}
+     pg_dump -U @POSTGRESQL_USER@ --attribute-inserts sipxconfig > ${ConfigDb}
 
      if [ "${IncludeCallRecords}" = "TRUE" ]
      then
 	 # Record the call state event and detail record database contents
-	 pg_dump -d SIPXCDR -U @POSTGRESQL_USER@ --attribute-inserts > ${CallDetailDb} 2> /dev/null
+	 pg_dump -d sipxcdr -U @POSTGRESQL_USER@ --attribute-inserts > ${CallDetailDb} 2> /dev/null
      fi
 
      # Include the Phone and Gateway profile files, if specified.
