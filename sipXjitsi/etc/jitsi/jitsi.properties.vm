@@ -100,9 +100,9 @@ net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.PROXY_ADDRESS=$p
 #if($proxyPort)
 net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.PROXY_PORT=$proxyPort
 #end
-#set ($proxyPrefTransport = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/connection/proxy/PREFFERED_TRANSPORT'))
+#set ($proxyPrefTransport = $line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/connection/proxy/PREFERRED_TRANSPORT'))
 #if($proxyPrefTransport)
-net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.PREFFERED_TRANSPORT=$proxyPrefTransport
+net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.PREFERRED_TRANSPORT=$proxyPrefTransport
 #end
 net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.KEEP_ALIVE_METHOD=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/connection/keep_alive/KEEP_ALIVE_METHOD')
 net.java.sip.communicator.impl.protocol.sip.acc${line.getKey()}.KEEP_ALIVE_INTERVAL=$line.getValue().getSettingValue('net.java.sip.communicator.impl.protocol.sip/connection/keep_alive/KEEP_ALIVE_INTERVAL')
