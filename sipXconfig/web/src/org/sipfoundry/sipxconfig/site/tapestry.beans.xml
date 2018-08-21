@@ -297,5 +297,7 @@
   <bean id="huntGroupsPluginHook" class="org.sipfoundry.sipxconfig.site.SimplePluginHook">
     <property name="hookId" value="HuntGroupsPlugin"/>    
   </bean>  
-
+  <bean id="CDRPluginsHook" class="org.sipfoundry.sipxconfig.site.SimplePluginHook">
+    <property name="hookId" value="CDR"/>    
+  </bean>
 </beans>

@@ -2,9 +2,6 @@
   <li jwcid="@If" condition="ognl:isAllowed"><a jwcid="@PageLink" page="ognl:pagePath"><span jwcid="@Insert" value="ognl:label"/></a>
     <div class="dropdown-content">
       <ul>
-        <span jwcid="@If" condition="ognl:isOn('sipxcdr')">
-          <span jwcid="@common/AdminNavigationMenu" pagePath="cdr/EditCdr" label="ognl:messages.getMessage('menu.sipxcdr.featureMenu')" />
-        </span>
         <span jwcid="@common/Plugin" blockId="ServicesSystemTop"/>
         <span jwcid="@If" condition="ognl:isOn('dhcpd')">
           <span jwcid="@common/AdminNavigationMenu" pagePath="dhcp/EditDhcpd" label="ognl:messages.getMessage('menu.dhcpd.featureMenu')" />
@@ -28,6 +25,7 @@
         <span jwcid="@If" condition="ognl:isOn('imbot')">
           <span jwcid="@common/AdminNavigationMenu" pagePath="imbot/EditIMBot" label="ognl:messages.getMessage('menu.imbot.featureMenu')" />
         </span>
+        <span jwcid="@common/PhoneProvisioningNavigation"  pagePath="#" label="ognl:messages.getMessage('menu.phoneprov.navigation')" />
         <span jwcid="@If" condition="ognl:isOn('restServer')">
           <span jwcid="@common/AdminNavigationMenu" pagePath="restServer/EditRestServer" label="ognl:messages.getMessage('menu.restServer.featureMenu')" />
         </span>
@@ -47,6 +45,9 @@
         <span jwcid="@If" condition="ognl:isOn('registrar')">
           <span jwcid="@common/AdminNavigationMenu" pagePath="registrar/EditRegistrar" label="ognl:messages.getMessage('menu.registrar.featureMenu')" />
         </span>
+		<span jwcid="@If" condition="ognl:isOn('sbcBridge')">
+		  <span jwcid="@common/AdminNavigationMenu" pagePath="bridge/ListBridgeSbcs" label="ognl:messages.getMessage('menu.internalsbcs')" />
+		</span>                 
         <span jwcid="@If" condition="ognl:isOn('event')">
           <span jwcid="@common/AdminNavigationMenu" pagePath="websocket/EditWebsocket" label="ognl:messages.getMessage('menu.websocket.featureMenu')" />
         </span>
@@ -55,7 +56,7 @@
         </span>        
         <span jwcid="@If" condition="ognl:isOn('ivr')">
           <span jwcid="@common/AdminNavigationMenu" pagePath="ivr/EditIvr" label="ognl:messages.getMessage('menu.ivr.featureMenu')" />
-        </span>
+        </span>       
       </ul>
     </div>
   </li>
