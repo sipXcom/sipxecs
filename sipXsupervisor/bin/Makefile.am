@@ -36,9 +36,9 @@ initd_SCRIPTS = \
 
 systemddir = /usr/lib/systemd/system
 systemd_SCRIPTS = \
-	sipxsupervisor.service.in
+	sipxsupervisor.service
 
-$(libexec_SCRIPTS) $(cfmod_SCRIPTS) $(initd_SCRIPTS) $(bin_SCRIPTS) : % : %.in Makefile
+$(libexec_SCRIPTS) $(cfmod_SCRIPTS) $(initd_SCRIPTS) $(bin_SCRIPTS) $(systemd_SCRIPTS) : % : %.in Makefile
 	@$(call SearchAndReplace,$<,$@)
 
-CLEANFILES = $(bin_SCRIPTS) $(initd_SCRIPTS) $(libexec_SCRIPTS) $(cfmod_SCRIPTS)
+CLEANFILES = $(bin_SCRIPTS) $(initd_SCRIPTS) $(libexec_SCRIPTS) $(cfmod_SCRIPTS) $(systemd_SCRIPTS)

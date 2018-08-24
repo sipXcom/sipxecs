@@ -21,7 +21,7 @@ initd_SCRIPTS = \
 
 systemddir = /usr/lib/systemd/system
 systemd_SCRIPTS = \
-	sipxconfig.service.in
+	sipxconfig.service
 
 bin_SCRIPTS = \
 	sipxconfig-archive \
@@ -49,7 +49,7 @@ tunnel-% : MODE = $(word 2,$(subst -, ,$@))
 $(tunnel_daemon_SCRIPTS) : tunnel.in Makefile
 	@$(call SearchAndReplace,$<,$@,MODE)
 
-$(initd_SCRIPTS) $(bin_SCRIPTS) $(libexec_SCRIPTS) : % : %.in Makefile
+$(initd_SCRIPTS) $(bin_SCRIPTS) $(libexec_SCRIPTS) $(systemd_SCRIPTS) : % : %.in Makefile
 	@$(call SearchAndReplace,$<,$@,$(EXTRA_REPLACE))
 
 mongodb_TESTS = \
@@ -142,4 +142,4 @@ check-admin:
 	$(srcdir)/mongodb-admin.in --host_port swift.hubler.us:27019 --dryrun --primary swift.hubler.us:27017 --model $(srcdir)/mongo-test-data/SET_MEMBER_META-tags.model.json SET_MEMBER_META > actual
 	diff -u $(srcdir)/mongo-test-data/SET_MEMBER_META-tags.dryrun actual
 
-CLEANFILES = $(bin_SCRIPTS) $(initd_SCRIPTS) $(libexec_SCRIPTS) $(tunnel_daemon_SCRIPTS)
+CLEANFILES = $(bin_SCRIPTS) $(initd_SCRIPTS) $(libexec_SCRIPTS) $(tunnel_daemon_SCRIPTS) $(systemd_SCRIPTS)
