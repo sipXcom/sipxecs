@@ -6,7 +6,8 @@ EXTRA_DIST = \
 	$(bin_SCRIPTS:=.in) \
 	$(initd_SCRIPTS:=.in) \	
 	$(libexec_SCRIPTS:=.in) \
-	mongo-test-data
+	mongo-test-data \
+	$(systemd_SCRIPTS:=.in)
 
 initddir = @SIPX_SERVICEDIR@
 initd_SCRIPTS = \
@@ -17,6 +18,10 @@ initd_SCRIPTS = \
 	mongo-local-arbiter \
 	mongodb-sync \
 	disable-transparent-hugepages
+
+systemddir = /usr/lib/systemd/system
+systemd_SCRIPTS = \
+	sipxconfig.service
 
 bin_SCRIPTS = \
 	sipxconfig-archive \
