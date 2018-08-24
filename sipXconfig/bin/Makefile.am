@@ -21,7 +21,7 @@ initd_SCRIPTS = \
 
 systemddir = /usr/lib/systemd/system
 systemd_SCRIPTS = \
-	sipxconfig.service
+	sipxconfig.service.in
 
 bin_SCRIPTS = \
 	sipxconfig-archive \

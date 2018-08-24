@@ -36,7 +36,7 @@ initd_SCRIPTS = \
 
 systemddir = /usr/lib/systemd/system
 systemd_SCRIPTS = \
-	sipxsupervisor.service
+	sipxsupervisor.service.in
 
 $(libexec_SCRIPTS) $(cfmod_SCRIPTS) $(initd_SCRIPTS) $(bin_SCRIPTS) : % : %.in Makefile
 	@$(call SearchAndReplace,$<,$@)
