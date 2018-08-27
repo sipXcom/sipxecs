@@ -236,7 +236,7 @@ COMMIT
       end
     }
 
-    if defined? mangle && !mangle.nil?
+    if defined?(mangle) && !mangle.nil?
       mangle.each { |rule|
 %><%= rule %>
 <%

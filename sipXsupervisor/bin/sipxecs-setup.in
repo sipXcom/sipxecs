@@ -53,6 +53,12 @@ def set_nonroot_keys
   exit 1 unless run_command "su - #{$user} sh -c '/usr/sbin/cf-key'"
 end
 
+def disable_firewalld
+  #harmless if re-run
+  puts "Disabling firewalld..."
+  exit 1 unless run_command "systemctl stop firewalld && systemctl disable firewalld"
+end
+
 def set_secondary_role
   return true if File.exists?($secondary_dat)
   puts "Configuring as an additional server..."
@@ -612,6 +618,7 @@ raise 'Must run as root' unless Process.uid == 0
 if __FILE__ == $0
 set_root_keys()
 network_settings
+disable_firewalld
 custom_hook
 role_settings = nil
 
