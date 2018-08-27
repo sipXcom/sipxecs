@@ -97,7 +97,7 @@ fi
 %doc  README   ChangeLog %name.configlog
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_sysconfdir}/init.d/*
-%attr(755,root,root) /usr/lib/systemd/system/*
+%attr(644,root,root) /usr/lib/systemd/system/*
 %attr(755,root,root) %{_sysconfdir}/sipxpbx/dhcp/*
 %attr(755,root,root) %{_sysconfdir}/sipxpbx/ntpd/*
 %attr(755,root,root) %{_sysconfdir}/sipxpbx/firewall/*
