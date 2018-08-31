@@ -77,8 +77,8 @@ public class IvrSettings extends PersistableSettings implements DeployConfigOnEd
         return getSettingValue(CLEANUP_VOICEMAIL_HOUR);
     }
 
-    public String getMongoVm() {
-        return getSettingValue(MONGO_VM);
+    public boolean getMongoVm() {
+        return (Boolean)getSettingTypedValue(MONGO_VM);
     }
 
     public String getVoicemailPath() {
