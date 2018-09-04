@@ -42,7 +42,7 @@ class Backup < ArchiveBase
       f.puts @ver
     }
     if params[:path].nil?
-      params[:path] = "{@sipxdata}/mediaserver/data"
+      params[:path] = "#{@sipxdata}/mediaserver/data"
     end
     cmd "tar -cz -f #{params[:file]} version -C #{@sipxdata}/../.. #{params[:path]}" or
       raise "Unabled to archive voicemail #{params[:file]} #{params[:path]}"
@@ -57,7 +57,7 @@ class Restore < ArchiveBase
 
   def run(params)
     if params[:path].nil?
-      params[:path] = "{@sipxdata}/mediaserver/data"
+      params[:path] = "#{@sipxdata}/mediaserver/data"
     end  
     cmd "tar -tzf #{params[:file]} version" or
       raise "Verification failed. Could not determine format of #{params[:file]}"    
