@@ -61,7 +61,7 @@ bundle common sipx {
       "nologin"
         string => "/sbin/nologin",
         policy => "overridable";
-      "lock" string => "@SIPX_RUNDIR@/sipxagent.lock";
+      "lock" string => "@SIPX_RUNDIR@/sipxsupervisor/sipxagent.lock";
 
     SuSE::
       "crontabs" string => "/var/spool/cron/tabs";

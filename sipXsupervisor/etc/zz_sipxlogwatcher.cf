@@ -45,7 +45,7 @@ bundle agent sipxlogwatcher_config {
 bundle edit_line sipxlogwatcher_config_contents {
   insert_lines:
     any::
-      "SEC_ARGS=\"--log=$(sipx.SIPX_LOGDIR)/sipxlogwatcher.log --debug=$(sipx.logwatcher_debug) --detach --conf=$(sipx.SIPX_CONFDIR)/sipxlogwatcher.d/*.sec --input=/var/log/mongodb/mongod.log --input=$(sipx.SIPX_LOGDIR)/*-alarms.log --input=$(sipx.SIPX_LOGDIR)/sipxconfig.log --input=$(sipx.SIPX_LOGDIR)/sipxsecurity.log --input=$(sipx.SIPX_LOGDIR)/backup.log --pid=$(sipx.SIPX_RUNDIR)/sipxlogwatcher.pid --quoting\"";
+      "SEC_ARGS=\"--log=$(sipx.SIPX_LOGDIR)/sipxlogwatcher.log --debug=$(sipx.logwatcher_debug) --detach --conf=$(sipx.SIPX_CONFDIR)/sipxlogwatcher.d/*.sec --input=/var/log/mongodb/mongod.log --input=$(sipx.SIPX_LOGDIR)/*-alarms.log --input=$(sipx.SIPX_LOGDIR)/sipxconfig.log --input=$(sipx.SIPX_LOGDIR)/sipxsecurity.log --input=$(sipx.SIPX_LOGDIR)/backup.log --pid=$(sipx.SIPX_RUNDIR)/sipxlogwatcher/sipxlogwatcher.pid --quoting\"";
 
   delete_lines:
     any::

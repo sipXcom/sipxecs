@@ -59,7 +59,7 @@ USAGE
 Daemon=true
 Status=0
 JavaCmd=`@bindir@/sipx-config --java`
-PidFile=@SIPX_RUNDIR@/sipxconfig.pid
+PidFile=@SIPX_RUNDIR@/sipxconfig/sipxconfig.pid
 LibDir=@SIPX_JAVADIR@/sipXconfig
 PluginDir=@SIPX_JAVADIR@/sipXconfig/plugins
 CommonsLibDir=@SIPX_JAVADIR@/sipXcommons

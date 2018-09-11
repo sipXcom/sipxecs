@@ -12,7 +12,7 @@ progName="sipxlogwatcher"
 prog="sec"
 exec="/usr/bin/sec"
 lockfile="/var/lock/subsys/sec"
-PidFile=@SIPX_RUNDIR@/sipxlogwatcher.pid
+PidFile=@SIPX_RUNDIR@/sipxlogwatcher/sipxlogwatcher.pid
 rc=@SIPX_CONFDIR@/sipxlogwatcher-rc
 
 [ -e $rc ] && . $rc

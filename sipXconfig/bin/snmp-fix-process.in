@@ -3,7 +3,7 @@
 # Do not do anything if cfengine is running because cfengine already ensures services are running
 # AND we avoid race condition where cfengine is shutting services down because they are supposed
 # to be off and snmp just didn't get configured yet.
-! test -f @SIPX_RUNDIR@/sipxagent.lock || exit 0
+! test -f @SIPX_RUNDIR@/sipxsupervisor/sipxagent.lock || exit 0
 
 ! test -f @SIPX_CFDATA@/snmp_fix_dead_processes
 RESTART=$?

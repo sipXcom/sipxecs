@@ -5,7 +5,8 @@ EXTRA_DIST = \
 	$(cflib_DATA:=.in) \
 	security.erb \
 	security.sec.erb.in \
-	cfengine_stdlib.cf
+	cfengine_stdlib.cf \
+	$(tmpfilesd_SCRIPTS:=.in)
 
 cfdefaultsdir = $(SIPX_CFDATA)/defaults
 cfdefaults_DATA = \
@@ -74,6 +75,10 @@ cflib_DATA = \
 	change_timezone.cf \
 	snapshot.cf
 
+tmpfilesddir = /etc/tmpfiles.d
+tmpfilesd_SCRIPTS = \
+	sipxsupervisor.conf
+
 cfinputs_PROMISES = \
 	sipxsupervisord.cf \
 	sipx.cf \
@@ -89,7 +94,7 @@ $(emptydirs) :
 
 install-data-hook : $(emptydirs)
 
-$(cflib_DATA) $(cfinputs_PROMISES) security.sec.erb : % : %.in Makefile
+$(cflib_DATA) $(cfinputs_PROMISES) $(tmpfilesd_SCRIPTS) security.sec.erb : % : %.in Makefile
 	@$(call SearchAndReplace, $<, $@)
 
-CLEANFILES = $(cfinputs_PROMISES) $(cfdefaults_DATA) $(cflib_DATA) security.sec.erb
+CLEANFILES = $(cfinputs_PROMISES) $(cfdefaults_DATA) $(cflib_DATA) $(tmpfilesd_SCRIPTS) security.sec.erb

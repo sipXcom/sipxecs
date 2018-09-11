@@ -1,10 +1,10 @@
-[Unit]                                                                                                                                                                                                                                       
-Description=sipxconfig                                                                                                                                                                                                                       
-Documentation=http://sipxcom.org                                                                                                                                                                                                     
-After=network.target syslog.target                                                                                                                                                                                                           
-                                                                                                                                                                                                                                             
-[Service]                                                                                                                                                                                                                                    
-# see man systemd.service                                                                                                                                                                                                                    
+[Unit]
+Description=sipxconfig
+Documentation=http://sipxcom.org
+After=network.target syslog.target
+
+[Service]
+# see man systemd.service
 Type=oneshot
 ExecStart=@SIPX_SERVICEDIR@/sipxconfig start
 RemainAfterExit=true

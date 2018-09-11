@@ -20,10 +20,12 @@ progName="cf-serverd"
 # used to tell which config is in use.
 configid=/var/run/sipxsupervisor-configid
 
+pidfolder="/var/run/sipxpbx/sipxsupervisor"
+
 [ -e /etc/sysconfig/sipxsupervisor ] && . /etc/sysconfig/sipxsupervisor
 
 lockfile=/var/lock/subsys/$prog
-sipxagentlockfile="@SIPX_RUNDIR@/sipxagent.lock"
+sipxagentlockfile="@SIPX_RUNDIR@/sipxsupervisor/sipxagent.lock"
 
 start() {
   [ -x $exec ] || { echo -n "$execError"; echo_failure; echo; exit $ENOEXEC; }

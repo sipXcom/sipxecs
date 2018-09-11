@@ -5,7 +5,8 @@ include $(top_srcdir)/common.am
 all : $(addprefix out/,$(conf_SOURCE))
 
 EXTRA_DIST = \
-	$(addprefix sipxpbx/,$(conf_SOURCE))
+	$(addprefix sipxpbx/,$(conf_SOURCE)) \
+	$(tmpfilesd_SCRIPTS:=.in)
 
 # Directories should be created in the application layer to make it more resiliant to IT administation errors
 # but these may exist for historical or special reasons
@@ -81,6 +82,10 @@ mibsdir = $(datadir)/snmp/mibs
 dist_mibs_DATA = \
 	SIPXECS-ALARM-NOTIFICATION-MIB.txt
 
+tmpfilesddir = /etc/tmpfiles.d
+tmpfilesd_SCRIPTS = \
+	sipxconfig.conf
+
 # automatically selects configuration files, but as importantly, also has to distinguish what is NOT
 # a configuration file in the 'find' statement
 confdir = @SIPX_CONFDIR@
@@ -93,6 +98,9 @@ out/% : sipxpbx/% Makefile
 
 $(emptydirs) :
 	$(INSTALL) -d $@
+
+$(tmpfilesd_SCRIPTS) : % : %.in Makefile
+	@$(call SearchAndReplace,$<,$@)
 
 install-data-hook : $(addprefix out/,$(conf_SOURCE)) $(emptydirs)
 	@echo "$$Installer" | \
@@ -123,4 +131,4 @@ SETTINGS_XML = \
 	  \) \
 	)
 
-CLEANFILES = apache.cfdat postgres.cfdat sipxfreeswitch.cfdat
+CLEANFILES = apache.cfdat postgres.cfdat sipxfreeswitch.cfdat $(tmpfilesd_SCRIPTS)

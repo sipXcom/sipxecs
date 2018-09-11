@@ -10,7 +10,7 @@ if not os.path.isfile('@SIPX_CFDATA@/snmp_fix_dead_processes'):
     sys.exit(0)
 
 # Do not do anything if cfengine is running because cfengine already ensures services are running
-if os.path.isfile('@SIPX_RUNDIR@/sipxagent.lock'):
+if os.path.isfile('@SIPX_RUNDIR@/sipxsupervisor/sipxagent.lock'):
     sys.exit(0)
 
 # check uptime for server to be greater than 5 minutes
