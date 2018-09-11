@@ -5,9 +5,14 @@ initd_SCRIPTS = \
     sipxproxy
 
 EXTRA_DIST = \
-	$(initd_SCRIPTS:=.in)
+	$(initd_SCRIPTS:=.in) \
+	$(systemd_SCRIPTS:=.in)
+	
+systemddir = /usr/lib/systemd/system
+systemd_SCRIPTS = \
+	sipxproxy.service
 
-$(initd_SCRIPTS) : % : %.in Makefile
+$(initd_SCRIPTS) $(systemd_SCRIPTS) : % : %.in Makefile
 	@$(call SearchAndReplace,$<,$@)
 
-CLEANFILES = $(initd_SCRIPTS)
+CLEANFILES = $(initd_SCRIPTS) $(systemd_SCRIPTS)

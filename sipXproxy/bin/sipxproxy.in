@@ -15,7 +15,7 @@
 prog=sipXproxy
 exec="@SIPX_BINDIR@/${prog}"
 config="@SIPX_CONFDIR@/sipXproxy-config"
-pidfile="@SIPX_RUNDIR@/sipxproxy.pid"
+pidfile="@SIPX_RUNDIR@/sipxproxy/sipxproxy.pid"
 
 [ -e @SIPX_CONFDIR@/sysconfig/$prog ] && . @SIPX_CONFDIR@/sysconfig/$prog
 

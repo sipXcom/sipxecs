@@ -102,6 +102,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc  ChangeLog %name.configlog
 %attr(755,root,root) %{_sysconfdir}/init.d/sipxproxy
+%attr(644,root,root) %{_sysconfdir}/tmpfiles.d/sipxproxy.conf
+%attr(644,root,root) /usr/lib/systemd/system/*
 %attr(755,root,root) %{_sysconfdir}/sipxpbx/sipxproxy/sipxproxy.sec.erb
 %{_datadir}/sipxecs/cfinputs/plugin.d/sipxproxy.cf
 %attr(755,root,root) %{_bindir}/sipXproxy
