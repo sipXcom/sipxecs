@@ -20,7 +20,7 @@
 prog=sipregistrar
 exec="@SIPX_BINDIR@/${prog}"
 config="@SIPX_CONFDIR@/registrar-config"
-pidfile="@SIPX_RUNDIR@/sipxregistrar.pid"
+pidfile="@SIPX_RUNDIR@/sipxregistrar/sipxregistrar.pid"
 
 [ -e @SIPX_CONFDIR@/sysconfig/$prog ] && . @SIPX_CONFDIR@/sysconfig/$prog
 
