@@ -1,1 +1,1 @@
-d /run/sipxpbx/sipxproxy 0755 @SIPXPBXUSER@ @SIPXPBXGROUP@
+d @SIPX_RUNDIR@/sipxproxy 0755 @SIPXPBXUSER@ @SIPXPBXGROUP@
