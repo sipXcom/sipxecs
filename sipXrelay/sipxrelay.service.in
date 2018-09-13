@@ -1,0 +1,14 @@
+[Unit]
+Description=sipxrelay
+Documentation=http://sipxcom.org
+After=network.target syslog.target
+
+[Service]
+Type=oneshot
+ExecStart=@SIPX_SERVICEDIR@/sipxrelay start
+RemainAfterExit=true
+ExecStop=@SIPX_SERVICEDIR@/sipxrelay stop
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target

@@ -1,2 +1,2 @@
-d /run/sipxpbx/sipxsupervisor 0755 @SIPXPBXUSER@ @SIPXPBXGROUP@
-d /run/sipxpbx/sipxlogwatcher 0755 @SIPXPBXUSER@ @SIPXPBXGROUP@
+d @SIPX_RUNDIR@/sipxsupervisor 0755 @SIPXPBXUSER@ @SIPXPBXGROUP@
+d @SIPX_RUNDIR@/sipxlogwatcher 0755 @SIPXPBXUSER@ @SIPXPBXGROUP@

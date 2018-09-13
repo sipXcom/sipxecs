@@ -22,7 +22,7 @@
 . @SIPX_LIBEXECDIR@/sipx-utils.sh || { echo_failure; echo; exit $ENOENT; }
 
 prog=sipxrelay
-pidfile="@SIPX_RUNDIR@/sipxrelay.pid"
+pidfile="@SIPX_RUNDIR@/sipxrelay/sipxrelay.pid"
 regex="Dprocname=sipxrelay"
 
 [ -e @SIPX_CONFDIR@/${prog}rc ] && . @SIPX_CONFDIR@/sysconfig/${prog}rc
