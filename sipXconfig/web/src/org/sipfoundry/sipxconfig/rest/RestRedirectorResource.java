@@ -129,6 +129,12 @@ public class RestRedirectorResource extends UserResource {
         String mediaRelativeUrl = StringUtils.substringAfter(url, MEDIA);
         byte[] result = null;
         if (!StringUtils.isEmpty(cdrRelativeUrl)) {
+            String userName = StringUtils.substringAfter(cdrRelativeUrl, "/");
+            userName = (userName.indexOf("?") >=0 ) ? StringUtils.substringBefore(userName, "?") : userName;
+            if (!StringUtils.equals(userName, getUser().getUserName())) {
+                throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED,
+                    "Authenticated user does not match url user");
+            }
             result = m_httpInvoker.invokeGet(m_addressManager.getSingleAddress(RestServer.HTTP_API) + CDR
                     + cdrRelativeUrl);
         } else if (!StringUtils.isEmpty(mailboxRelativeUrl)) {
