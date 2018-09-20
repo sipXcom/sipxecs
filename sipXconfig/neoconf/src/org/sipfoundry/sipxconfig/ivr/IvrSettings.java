@@ -24,6 +24,7 @@ import org.sipfoundry.sipxconfig.cfgmgt.DeployConfigOnEdit;
 import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.feature.Feature;
 import org.sipfoundry.sipxconfig.feature.FeatureManager;
+import org.sipfoundry.sipxconfig.setting.AbstractSetting;
 import org.sipfoundry.sipxconfig.setting.AbstractSettingVisitor;
 import org.sipfoundry.sipxconfig.setting.PersistableSettings;
 import org.sipfoundry.sipxconfig.setting.Setting;
@@ -79,6 +80,10 @@ public class IvrSettings extends PersistableSettings implements DeployConfigOnEd
 
     public boolean getMongoVm() {
         return (Boolean)getSettingTypedValue(MONGO_VM);
+    }
+    
+    public AbstractSetting getMongoVmSetting() {
+        return (AbstractSetting)getSettings().getSetting(IvrSettings.MONGO_VM);
     }
 
     public String getVoicemailPath() {

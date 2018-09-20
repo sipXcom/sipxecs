@@ -64,7 +64,7 @@
       <type><integer /></type>
       <value>300</value>
     </setting>
-    <setting name="mongo_vm">
+    <setting name="mongo_vm" hidden="yes">
       <type><boolean /></type>
       <value>1</value>    
     </setting>
