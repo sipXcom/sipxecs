@@ -1,0 +1,121 @@
+#!/bin/env ruby
+
+# Copyright (c) 2018 eZuce, Inc. All rights reserved.
+# Contributed to SIPfoundry under a Contributor Agreement
+#
+# This software is free software; you can redistribute it and/or modify it under
+# the terms of the Affero General Public License (AGPL) as published by the
+# Free Software Foundation; either version 3 of the License, or (at your option)
+# any later version.
+#
+# This software is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+# details.
+
+
+# Archive and Restore commands
+
+require 'yaml'
+require 'fileutils'
+require 'uri'
+require 'rubygems'
+require 'logger'
+
+class Base
+  attr_writer :verbose
+  attr_writer :out
+  attr_writer :dryrun
+
+  def initialize(config = nil)
+    @bin_dir = '@SIPX_BINDIR@'
+    @ivrdir = '@SIPX_JAVADIR@/sipXivr'
+    @out = $stdout
+    @ssh_params = "-o 'StrictHostKeyChecking=no' -i @SIPX_CONFDIR@/.cfagent/ppkeys/localhost.nopass.priv"
+    load_config_file(config) unless config == nil
+    redirect_output
+  end
+
+  def load_config_file(config_file)
+    @config = config_file
+    @data = YAML::load_file(config_file)
+  end
+
+  def load_config_stream(config_stream)
+    @data = YAML::load(config_stream)
+  end
+
+  def cmd(cmd)
+    puts cmd if @verbose
+    @dryrun ? true : system(cmd)
+  end
+  
+  def get_log_file
+  end
+  
+  def redirect_output
+    log_file = get_log_file
+    unless log_file == nil
+      @logger = Logger.new(log_file)
+      $stdout.reopen(log_file, "a")
+      $stdout.sync = true
+      $stderr.reopen(log_file, "a")
+      $stderr.sync = true
+    end
+  end
+end
+
+class IvrCli < Base  
+  def run(params, args)
+      @data['hosts'].each { |ip, meta|
+      params = meta['params']
+      if cmd("ssh #{@ssh_params} root@#{ip} java -jar #{@ivrdir}/gridfs-voicemail-cli.jar #{params} < #{@config}")
+        @logger.info("java -jar #{@ivrdir}/gridfs-voicemail-cli.jar #{params} Completed on host #{ip}")
+      else
+        @logger.error("java -jar #{@ivrdir}/gridfs-voicemail-cli.jar #{params} error: Cannot complete on host #{ip}")
+        raise "Error condition. EXIT"
+      end
+    }
+  end
+  
+  def get_log_file
+    return '@SIPX_LOGDIR@/sipxivr.log'
+  end
+
+  def define_param(params)
+    ""
+  end
+end
+
+if __FILE__ == $0
+
+require 'optparse'
+params = {}
+operation = nil
+dryrun = false
+
+verbose = false
+args = OptionParser.new { |opts|
+  opts.banner = <<EOF
+Create or restore backups and archives.
+EOF
+
+  opts.on("--exec config.yaml",
+      "Voicemail cli execution"){ |v|    
+    operation = IvrCli.new(v)
+  }  
+}
+args.parse!
+
+if operation.nil?
+  raise "Must specify voicemail cli options."
+end
+
+operation.verbose = verbose
+operation.dryrun = dryrun
+operation.out = $output
+operation.run(params, ARGV)
+exit 0
+
+end
+
