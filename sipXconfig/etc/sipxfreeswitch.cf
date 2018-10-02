@@ -19,14 +19,13 @@ bundle agent sipxfreeswitch {
     sipxfreeswitch::
       "any" usebundle => "sipxfreeswitch_config";
     any::
-      "any" usebundle => "sipxfreeswitch_setup";
       "any" usebundle => "sipxfreeswitch_running";
 }
 
 bundle agent sipxfreeswitch_config {
   vars:    
     any::
-      "conference_file" string => "$(sipx.SIPX_CONFDIR)/freeswitch/conf/autoload_configs/conference.conf.xml";
+      "conference_file" string => "$(sipx.SIPX_FSCONFDIR)/sipxpbx/conf/autoload_configs/conference.conf.xml";
 
       "xml_file_reload_only" slist => { 
         "dialplan/sipX_context.xml",
@@ -55,51 +54,51 @@ bundle agent sipxfreeswitch_config {
       "$(conference_file)"
         comment => "install freeswitch config $(this.promiser)",
         create => "true",
-        perms => m("644"),
+        perms => mog("644","freeswitch","daemon"),
         copy_from => copy_from_cfdata("$(sipx.location_id)/conference.conf.xml"),
         classes => if_repaired("reload_sipxfreeswitch");
 
     any::
-      "$(sipx.SIPX_CONFDIR)/freeswitch/conf/$(xml_file)"
+      "$(sipx.SIPX_FSCONFDIR)/sipxpbx/conf/$(xml_file)"
         comment => "install freeswitch config $(this.promiser)",
         create => "true",
-        perms => m("644"),
+        perms => mog("644","freeswitch","daemon"),
         copy_from => copy_from_cfdata("$(sipx.location_id)/$(xml_file)"),
         classes => if_repaired("restart_sipxfreeswitch");
 
     any::
-      "$(sipx.SIPX_CONFDIR)/freeswitch/conf/$(xml_file_reload_only)"
+      "$(sipx.SIPX_FSCONFDIR)/sipxpbx/conf/$(xml_file_reload_only)"
         comment => "install freeswitch config $(this.promiser)",
         create => "true",
-        perms => m("644"),
+        perms => mog("644","freeswitch","daemon"),
         copy_from => copy_from_cfdata("$(sipx.location_id)/$(xml_file_reload_only)"),
         classes => if_repaired("reload_sipxfreeswitch");
 
     any::
-      "$(sipx.SIPX_CONFDIR)/freeswitch/conf/autoload_configs/modules.conf.xml"
+      "$(sipx.SIPX_FSCONFDIR)/sipxpbx/conf/autoload_configs/modules.conf.xml"
         comment => "install freeswitch config $(this.promiser)",
         create => "true",
-        perms => m("644"),
+        perms => mog("644","freeswitch","daemon"),
         edit_line => sipxfreeswitch_modules,
         classes => if_repaired("restart_sipxfreeswitch");
 
     any::
-      "$(sipx.SIPX_CONFDIR)/freeswitch/conf/"
+      "$(sipx.SIPX_FSCONFDIR)/sipxpbx/conf/"
         comment => "copy mod_en configuration files in sipxecs config directory",
-        perms => m("644"),
+        perms => mog("644","freeswitch","daemon"),
         copy_from => local_cp("/etc/freeswitch/lang/."),
         depth_search => recurse("inf");
 
     fs_core::
       "/etc/sysctl.conf"
-        comment => "Adding kernel network parameters $(this.promoiser)",
+        comment => "Adding kernel network parameters $(this.promiser)",
         perms => mog("0644","root","root"),
         edit_line => add_sysctl_conf_core(),
         classes => if_repaired("update_sysctl_core");
 
     !fs_core::
       "/etc/sysctl.conf"
-        comment => "Deleting kernel network parameters $(this.promoiser)",
+        comment => "Deleting kernel network parameters $(this.promiser)",
         perms => mog("0644","root","root"),
         edit_line => delete_sysctl_conf_core(),
         classes => if_repaired("update_sysctl_core");
@@ -219,41 +218,41 @@ any::
     ".*";
 }
 
-bundle agent sipxfreeswitch_setup {
-  methods:
-    !src.sipxfreeswitch::
-      "any" usebundle => rh_chkconfig_status("sipxfreeswitch on");
-    !src.!sipxfreeswitch::
-      "any" usebundle => rh_chkconfig_status("sipxfreeswitch off");
-}
-
 bundle agent sipxfreeswitch_running {
   vars:
     any::
-      "service_command" string => "freeswitch";
+      "service" string => "freeswitch.service";
 
-  methods:
+  classes:
     any::
-      "any" usebundle => find_sipxservice_by_command("$(service_command)","sipxfreeswitch_running");
+      "sipxfreeswitch_running" expression => returnszero("$(sipx.systemctl) is-active $(service)","noshell");
 
   commands:
     (!sipxfreeswitch|stop_sipxecs).sipxfreeswitch_running::
-      "$(sipx.SIPX_SERVICEDIR)/sipxfreeswitch"
+      "$(sipx.systemctl)"
         comment => "stop freeswitch",
-        args => "stop";
+        args => "stop $(service)";
+
+      "$(sipx.systemctl)"
+        comment => "disable freeswitch",
+        args => "disable $(service)";
 
     sipxfreeswitch.!sipxfreeswitch_running.!stop_sipxecs::
-      "$(sipx.SIPX_SERVICEDIR)/sipxfreeswitch"
+      "$(sipx.systemctl)"
         comment => "start freeswitch",
-        args => "start";
+        args => "start $(service)";
+
+      "$(sipx.systemctl)"
+        comment => "enable freeswitch",
+        args => "enable $(service)";
 
     sipxfreeswitch.sipxfreeswitch_running.reload_sipxfreeswitch::
-      "$(sipx.SIPX_SERVICEDIR)/sipxfreeswitch"
+      "$(sipx.systemctl)"
         comment => "reload freeswitch",
-        args => "reload";
+        args => "reload $(service)";
 
     sipxfreeswitch.sipxfreeswitch_running.(restart_sipxecs|restart_sipxfreeswitch|restart_mediaservice|update_sysctl_core)::
-      "$(sipx.SIPX_SERVICEDIR)/sipxfreeswitch"
+      "$(sipx.systemctl)"
         comment => "restart freeswitch",
-        args => "asyncrestart";
+        args => "restart $(service)";
 }

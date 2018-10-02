@@ -31,6 +31,10 @@ AC_SUBST(SIPX_LOGDIR,  [${localstatedir}/log/sipxpbx])
 AC_SUBST(SIPX_RUNDIR,  [${localstatedir}/run/sipxpbx])
 AC_SUBST(SIPX_VARLIB,  [${localstatedir}/lib/sipxpbx])
 AC_SUBST(SIPX_SERVICEDIR, [${sysconfdir}/init.d])
+AC_SUBST(SIPX_FSCONFDIR,  [${sysconfdir}/freeswitch])
+AC_SUBST(SIPX_FSLOGDIR,  [${localstatedir}/log/freeswitch])
+AC_SUBST(SIPX_FSDBDIR,   [${localstatedir}/tmp/freeswitch])
+AC_SUBST(SIPX_FSRUNDIR,  [${localstatedir}/run/freeswitch])
 # sipx RPMs should be hardcoded to use sipxchange user for their sipx user, not the buildbot user
 AC_SUBST(SIPX_RPM_CONFIGURE_OPTIONS,  [SIPXPBXUSER=sipx])
 

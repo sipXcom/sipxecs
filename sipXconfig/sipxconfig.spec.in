@@ -230,6 +230,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc  README  NOTICE  ChangeLog %name.configlog
 %attr(755,root,root) %{_sysconfdir}/init.d/*
+%attr(644,root,root) %{_sysconfdir}/systemd/system/*
 %attr(644,root,root) %{_sysconfdir}/tmpfiles.d/sipxconfig.conf
 %attr(644,root,root) /usr/lib/systemd/system/*
 %{_datadir}/sipxecs/cfinputs/plugin.d/*.cf
@@ -255,6 +256,10 @@ rm -rf $RPM_BUILD_ROOT
 #    %config(noreplace) %/somedir/somefile
 # otherwise /somedir will have root permissions
 # see http://lists.rpm.org/pipermail/rpm-list/2011-July/000946.html
+
+%dir %attr(755,freeswitch,daemon) %{_sysconfdir}/freeswitch/sipxpbx
+%defattr(644,freeswitch,daemon,755)
+%config(noreplace) %{_sysconfdir}/freeswitch/sipxpbx/*
 
 %defattr(644,root,root,755)
 %config(noreplace) %{sipxpbxconf}/VM_global_library.vm

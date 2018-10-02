@@ -2,18 +2,19 @@ include $(top_srcdir)/config/utility.am
 include $(top_srcdir)/config/sipxconfig.am
 include $(top_srcdir)/common.am
 
-all : $(addprefix out/,$(conf_SOURCE))
+all : $(addprefix out/,$(conf_SOURCE)) \
+	$(addprefix outfs/,$(fsconf_SOURCE))
 
 EXTRA_DIST = \
 	$(addprefix sipxpbx/,$(conf_SOURCE)) \
-	$(tmpfilesd_SCRIPTS:=.in)
+	$(addprefix freeswitch/,$(fsconf_SOURCE)) \
+	$(tmpfilesd_SCRIPTS:=.in) \
+	$(systemd_SCRIPTS:=.in)
 
 # Directories should be created in the application layer to make it more resiliant to IT administation errors
 # but these may exist for historical or special reasons
 emptydirs = \
 	$(DESTDIR)@SIPX_CFDATA@/1 \
-	$(DESTDIR)@SIPX_CONFDIR@/freeswitch/conf/dialplan \
-	$(DESTDIR)@SIPX_CONFDIR@/freeswitch/conf/sip_profiles \
 	$(DESTDIR)@SIPX_CONFDIR@/database/plugin.d/v12 \
 	$(DESTDIR)@SIPX_VARDIR@/mrtg/thresh \
 	$(DESTDIR)@SIPX_VARDIR@/configserver/web-cert \
@@ -24,6 +25,10 @@ emptydirs = \
 	$(DESTDIR)@SIPX_DATADIR@/devicefiles \
 	$(DESTDIR)@SIPX_VARDIR@/phonebook \
 	$(DESTDIR)@SIPX_JAVADIR@/sipXconfig/plugins
+	
+fsemptydirs = \
+	$(DESTDIR)@SIPX_FSCONFDIR@/sipxpbx/conf/dialplan \
+	$(DESTDIR)@SIPX_FSCONFDIR@/sipxpbx/conf/sip_profiles
 
 cfinputsdir = @SIPX_CFINPUTS@/plugin.d
 dist_cfinputs_DATA = \
@@ -86,31 +91,56 @@ tmpfilesddir = /etc/tmpfiles.d
 tmpfilesd_SCRIPTS = \
 	sipxconfig.conf
 
+systemddir = ${sysconfdir}/systemd/system
+systemd_SCRIPTS = \
+	freeswitch.service
+	
 # automatically selects configuration files, but as importantly, also has to distinguish what is NOT
 # a configuration file in the 'find' statement
 confdir = @SIPX_CONFDIR@
 conf_SOURCE = \
 	$(shell cd $(srcdir)/sipxpbx; find -type f -printf '%P\n')
 
+fsconfdir = @SIPX_FSCONFDIR@
+fsconf_SOURCE = \
+	$(shell cd $(srcdir)/freeswitch; find -type f -printf '%P\n')
+
 out/% : sipxpbx/% Makefile
+	@test -d $(@D) || mkdir -p $(@D)
+	@$(call SearchAndReplace,$<,$@,$(EXTRA_REPLACE))
+
+outfs/% : freeswitch/% Makefile
 	@test -d $(@D) || mkdir -p $(@D)
 	@$(call SearchAndReplace,$<,$@,$(EXTRA_REPLACE))
 
 $(emptydirs) :
 	$(INSTALL) -d $@
 
-$(tmpfilesd_SCRIPTS) : % : %.in Makefile
+$(fsemptydirs) :
+	$(INSTALL) -d $@
+
+$(tmpfilesd_SCRIPTS) $(systemd_SCRIPTS) : % : %.in Makefile
 	@$(call SearchAndReplace,$<,$@)
 
-install-data-hook : $(addprefix out/,$(conf_SOURCE)) $(emptydirs)
+hook-conf : $(addprefix out/,$(conf_SOURCE)) $(emptydirs)
 	@echo "$$Installer" | \
 	  InstallFileList="$(conf_SOURCE)" \
 	  InstallSourceDir=out \
 	  InstallDestDir=$(DESTDIR)@SIPX_CONFDIR@ \
 	  bash
 
+hook-fsconf : $(addprefix outfs/,$(fsconf_SOURCE)) $(fsemptydirs)
+	@echo "$$Installer" | \
+	  InstallFileList="$(fsconf_SOURCE)" \
+	  InstallSourceDir=outfs \
+	  InstallDestDir=$(DESTDIR)@SIPX_FSCONFDIR@/sipxpbx \
+	  bash
+
+install-data-hook : hook-conf hook-fsconf
+
 clean-local :
 	! test -d out || rm -rf out
+	! test -d outfs || rm -rf outfs
 
 check : validate-xml
 
@@ -131,4 +161,4 @@ SETTINGS_XML = \
 	  \) \
 	)
 
-CLEANFILES = apache.cfdat postgres.cfdat sipxfreeswitch.cfdat $(tmpfilesd_SCRIPTS)
+CLEANFILES = apache.cfdat postgres.cfdat sipxfreeswitch.cfdat $(tmpfilesd_SCRIPTS) $(systemd_SCRIPTS)

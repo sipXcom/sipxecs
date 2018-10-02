@@ -51,7 +51,7 @@ missingok
     copytruncate
 }
 
-@SIPX_LOGDIR@/freeswitch*.log {
+@SIPX_FSLOGDIR@/freeswitch*.log {
     notifempty
     postrotate
         # Tell freeswitch to reopen the log file

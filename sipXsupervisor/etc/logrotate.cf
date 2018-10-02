@@ -64,7 +64,7 @@ $(sipx.SIPX_LOGDIR)/phonelog/*/phonelog.log {
     endscript
 }
 
-$(sipx.SIPX_LOGDIR)/freeswitch*.log {
+$(sipx.SIPX_FSLOGDIR)/freeswitch*.log {
     notifempty
     postrotate
         # Tell freeswitch to reopen the log file

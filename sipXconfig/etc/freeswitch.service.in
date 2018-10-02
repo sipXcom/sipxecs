@@ -1,0 +1,14 @@
+[Unit]
+Description=FreeSWITCH
+After=syslog.target network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStart=@SIPX_SERVICEDIR@/freeswitch start
+ExecStop=@SIPX_SERVICEDIR@/freeswitch stop
+ExecReload=@SIPX_SERVICEDIR@/freeswitch reload
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target
