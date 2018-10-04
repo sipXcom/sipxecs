@@ -62,6 +62,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
+%attr(644,root,root) %{_sysconfdir}/tmpfiles.d/sipxsaa.conf
+%attr(644,root,root) /usr/lib/systemd/system/*
 %attr(644,root,root) %{_datadir}/sipxecs/schema/appearance-groups.xsd
 %attr(755,root,root) %{_sysconfdir}/init.d/sipxsaa
 %attr(755,root,root) %{_bindir}/sipxsaa

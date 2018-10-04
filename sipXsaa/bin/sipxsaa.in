@@ -15,7 +15,7 @@
 prog=sipxsaa
 exec="@SIPX_BINDIR@/${prog}"
 config="@SIPX_CONFDIR@/sipxsaa-config"
-pidfile="@SIPX_RUNDIR@/sipxsaa.pid"
+pidfile="@SIPX_RUNDIR@/sipxsaa/sipxsaa.pid"
 
 [ -e @SIPX_CONFDIR@/sysconfig/$prog ] && . @SIPX_CONFDIR@/sysconfig/$prog
 
