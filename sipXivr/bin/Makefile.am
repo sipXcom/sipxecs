@@ -3,7 +3,8 @@ include $(top_srcdir)/common.am
 
 EXTRA_DIST = \
 	$(initd_SCRIPTS:=.in) \
-	$(bin_SCRIPTS:=.in)
+	$(bin_SCRIPTS:=.in) \
+	$(systemd_SCRIPTS:=.in)
 
 initddir = @SIPX_SERVICEDIR@
 initd_SCRIPTS = \
@@ -14,7 +15,14 @@ bin_SCRIPTS = \
   sipxivr-archive \
   voicemail_clean
 
+systemddir = /usr/lib/systemd/system
+systemd_SCRIPTS = \
+	sipxivr.service
+
 $(bin_SCRIPTS) $(initd_SCRIPTS) : % : %.in Makefile
 	@$(call SearchAndReplace,$<,$@,ivr_PKGS)
 
-DISTCLEANFILES = $(initd_SCRIPTS) $(bin_SCRIPTS)
+$(systemd_SCRIPTS) : % : %.in Makefile
+	@$(call SearchAndReplace,$<,$@)
+
+DISTCLEANFILES = $(initd_SCRIPTS) $(bin_SCRIPTS) $(systemd_SCRIPTS)

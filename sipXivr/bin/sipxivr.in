@@ -13,7 +13,7 @@
 . @SIPX_LIBEXECDIR@/sipx-utils.sh || { echo_failure; echo; exit $ENOENT; }
 
 prog=sipxivr
-pidfile="@SIPX_RUNDIR@/sipxivr.pid"
+pidfile="@SIPX_RUNDIR@/sipxivr/sipxivr.pid"
 regex="Dprocname=sipxivr"
 
 [ -e @SIPX_CONFDIR@/sysconfig/$prog ] && . @SIPX_CONFDIR@/sysconfig/$prog
