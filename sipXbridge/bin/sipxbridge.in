@@ -19,7 +19,7 @@
 . @SIPX_LIBEXECDIR@/sipx-utils.sh || { echo_failure; echo; exit $ENOENT; }
 
 prog=sipxbridge
-pidfile="@SIPX_RUNDIR@/sipxbridge.pid"
+pidfile="@SIPX_RUNDIR@/sipxbridge/sipxbridge.pid"
 regex="Dprocname=sipxbridge"
 
 [ -e @SIPX_CONFDIR@/sysconfig/$prog ] && . @SIPX_CONFDIR@/sysconfig/$prog

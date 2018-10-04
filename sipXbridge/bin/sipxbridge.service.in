@@ -1,0 +1,14 @@
+[Unit]
+Description=sipxbridge
+Documentation=http://sipxcom.org
+After=network.target syslog.target
+
+[Service]
+Type=oneshot
+ExecStart=@SIPX_SERVICEDIR@/sipxbridge start
+RemainAfterExit=true
+ExecStop=@SIPX_SERVICEDIR@/sipxbridge stop
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target

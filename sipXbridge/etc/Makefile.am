@@ -1,7 +1,8 @@
 include $(top_srcdir)/config/utility.am
 
 EXTRA_DIST = \
-	$(conf_DATA:=.in)
+	$(conf_DATA:=.in) \
+	$(tmpfilesd_SCRIPTS:=.in)
 
 confdir = @SIPX_CONFDIR@/sipxbridge
 conf_DATA = \
@@ -12,7 +13,11 @@ cfinputsdir = $(SIPX_CFINPUTS)/plugin.d
 dist_cfinputs_DATA = \
 	sipxbridge.cf
 
-$(conf_DATA) : % : %.in Makefile
+tmpfilesddir = /etc/tmpfiles.d
+tmpfilesd_SCRIPTS = \
+	sipxbridge.conf
+
+$(conf_DATA) $(tmpfilesd_SCRIPTS) : % : %.in Makefile
 	@$(call SearchAndReplace,$<,$@)
 
-DISTCLEANFILES = $(conf_DATA)
+DISTCLEANFILES = $(conf_DATA) $(tmpfilesd_SCRIPTS)
