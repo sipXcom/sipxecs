@@ -1,0 +1,14 @@
+[Unit]
+Description=sipxpublisher
+Documentation=http://sipxcom.org
+After=network.target syslog.target
+
+[Service]
+Type=oneshot
+ExecStart=@SIPX_SERVICEDIR@/sipxpublisher start
+RemainAfterExit=true
+ExecStop=@SIPX_SERVICEDIR@/sipxpublisher stop
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target

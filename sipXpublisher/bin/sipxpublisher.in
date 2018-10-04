@@ -25,7 +25,7 @@ prog=sipstatus
 progName=sipxpublisher
 exec="@SIPX_BINDIR@/${prog}"
 config="@SIPX_CONFDIR@/status-config"
-pidfile="@SIPX_RUNDIR@/sipxpublisher.pid"
+pidfile="@SIPX_RUNDIR@/sipxpublisher/sipxpublisher.pid"
 
 [ -e @SIPX_CONFDIR@/sysconfig/$prog ] && . @SIPX_CONFDIR@/sysconfig/$prog
 

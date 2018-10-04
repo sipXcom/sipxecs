@@ -5,9 +5,14 @@ initd_SCRIPTS = \
     sipxpublisher
 
 EXTRA_DIST = \
-	$(initd_SCRIPTS:=.in)
+	$(initd_SCRIPTS:=.in) \
+	$(systemd_SCRIPTS:=.in)
 
-$(initd_SCRIPTS) : % : %.in Makefile
+systemddir = /usr/lib/systemd/system
+systemd_SCRIPTS = \
+	sipxpublisher.service
+
+$(initd_SCRIPTS) $(systemd_SCRIPTS) : % : %.in Makefile
 	@$(call SearchAndReplace,$<,$@)
 
-CLEANFILES = $(initd_SCRIPTS)
+CLEANFILES = $(initd_SCRIPTS) $(systemd_SCRIPTS)

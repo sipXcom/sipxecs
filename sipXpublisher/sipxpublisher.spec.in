@@ -64,6 +64,8 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc  %name.configlog
+%attr(644,root,root) %{_sysconfdir}/tmpfiles.d/sipxpublisher.conf
+%attr(644,root,root) /usr/lib/systemd/system/*
 %attr(755,root,root) %{_sysconfdir}/init.d/sipxpublisher
 %{_datadir}/sipxecs/cfinputs/plugin.d/sipxpublisher.cf
 %attr(755,root,root) %{_bindir}/sipstatus
