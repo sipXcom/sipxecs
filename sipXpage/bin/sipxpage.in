@@ -13,7 +13,7 @@
 . @SIPX_LIBEXECDIR@/sipx-utils.sh || { echo_failure; echo; exit $ENOENT; }
 
 prog=sipxpage
-pidfile="@SIPX_RUNDIR@/sipxpage.pid"
+pidfile="@SIPX_RUNDIR@/sipxpage/sipxpage.pid"
 regex="Dprocname=sipxpage"
 
 [ -e @SIPX_CONFDIR@/sysconfig/$prog ] && . @SIPX_CONFDIR@/sysconfig/$prog

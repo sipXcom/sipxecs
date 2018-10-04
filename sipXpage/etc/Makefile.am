@@ -15,11 +15,18 @@ dist_cfinputs_DATA = \
 	sipxpage.cf
 
 EXTRA_DIST = \
-	$(conf_DATA:=.in)
+	$(conf_DATA:=.in) \
+	$(tmpfilesd_SCRIPTS:=.in)
 
 confdir = @SIPX_CONFDIR@/sipxpage
 conf_DATA = \
 	log4j.properties
 
-$(conf_DATA) : % : %.in Makefile
+tmpfilesddir = /etc/tmpfiles.d
+tmpfilesd_SCRIPTS = \
+	sipxpage.conf
+
+$(conf_DATA) $(tmpfilesd_SCRIPTS) : % : %.in Makefile
 	@$(call SearchAndReplace,$<,$@)
+
+CLEANFILES = $(conf_DATA) $(tmpfilesd_SCRIPTS)

@@ -49,6 +49,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
+%attr(644,root,root) %{_sysconfdir}/tmpfiles.d/sipxpage.conf
+%attr(644,root,root) /usr/lib/systemd/system/*
 %attr(755,root,root) %{_sysconfdir}/init.d/sipxpage
 %{_datadir}/sipxecs/cfinputs/plugin.d/sipxpage.cf
 %{_datadir}/java/sipXecs/sipXpage/sipXpage.jar
