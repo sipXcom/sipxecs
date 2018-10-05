@@ -16,7 +16,7 @@ prog=sipxsqa
 exec="@SIPX_BINDIR@/${prog}"
 config="@SIPX_CONFDIR@/sipxsqa-config"
 mongoconfig="@SIPX_CONFDIR@/mongo-client.ini"
-pidfile="@SIPX_RUNDIR@/sipxsqa.pid"
+pidfile="@SIPX_RUNDIR@/sipxsqa/sipxsqa.pid"
 logfile="@SIPX_LOGDIR@/sipxsqa.log"
 
 [ -e @SIPX_CONFDIR@/sysconfig/$prog ] && . @SIPX_CONFDIR@/sysconfig/$prog
