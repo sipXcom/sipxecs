@@ -1,0 +1,14 @@
+[Unit]
+Description=sipxcallback
+Documentation=http://sipxcom.org
+After=network.target syslog.target
+
+[Service]
+Type=oneshot
+ExecStart=@SIPX_SERVICEDIR@/sipxcallback start
+RemainAfterExit=true
+ExecStop=@SIPX_SERVICEDIR@/sipxcallback stop
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target

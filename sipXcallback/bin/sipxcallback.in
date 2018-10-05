@@ -15,7 +15,7 @@
 . @SIPX_LIBEXECDIR@/sipx-utils.sh || exit 1
 
 prog=sipxcallback
-pidfile="@SIPX_RUNDIR@/sipxcallback.pid"
+pidfile="@SIPX_RUNDIR@/sipxcallback/sipxcallback.pid"
 
 [ -e @SIPX_CONFDIR@/sysconfig/$prog ] && . @SIPX_CONFDIR@/sysconfig/$prog
 
