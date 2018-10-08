@@ -1,0 +1,10 @@
+<div class="dropdown">
+  <li jwcid="@If" condition="ognl:isAllowed"><a jwcid="@PageLink" page="ognl:pagePath"><span jwcid="@Insert" value="ognl:label"/></a>
+    <div class="dropdown-content">
+      <ul>
+        <span jwcid="@common/AdminNavigationMenu" pagePath="mongo/ManageMongo" label="ognl:messages.getMessage('menu.manageMongo')" />
+        <span jwcid="@common/AdminNavigationMenu" pagePath="admin/EditMongo" label="ognl:messages.getMessage('menu.mongoSettings')" />
+      </ul>
+    </div>
+  </li>
+</div>

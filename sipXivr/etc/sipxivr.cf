@@ -24,6 +24,7 @@ bundle agent sipxivr {
       "any" usebundle => "sipxivr_logwatcher";
       "any" usebundle => "sipxivr_vm_cleanup";
       "any" usebundle => "sipxivr_running";
+      "any" usebundle => allow_ssh_command("java");
 }
 
 bundle agent sipxivr_config {

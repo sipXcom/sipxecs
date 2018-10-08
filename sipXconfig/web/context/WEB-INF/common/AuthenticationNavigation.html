@@ -1,0 +1,10 @@
+<div class="dropdown2">
+  <li jwcid="@If" condition="ognl:isAllowed"><a jwcid="@PageLink" page="ognl:pagePath"><span jwcid="@Insert" value="ognl:label"/></a>
+    <div class="dropdown-content2">
+      <ul>
+        <span jwcid="@common/AdminNavigationMenu" pagePath="admin/ldap/LdapPage" label="ognl:messages.getMessage('menu.ldap')" />
+        <span jwcid="@common/Plugin" blockId="AuthenticationSettingsBottom"/>
+      </ul>
+    </div>
+  </li>
+</div>

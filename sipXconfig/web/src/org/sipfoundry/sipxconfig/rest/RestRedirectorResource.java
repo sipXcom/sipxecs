@@ -105,6 +105,7 @@ public class RestRedirectorResource extends UserResource {
         String callcontrollerRelativeUrl = StringUtils.substringAfter(url, CALLCONTROLLER);
 
         if (!StringUtils.isEmpty(callcontrollerRelativeUrl)) {
+            validateCallController(callcontrollerRelativeUrl);
             m_httpInvoker.invokePost(m_addressManager.getSingleAddress(RestServer.HTTP_API).toString()
                     + CALLCONTROLLER + callcontrollerRelativeUrl);
         }
@@ -129,11 +130,18 @@ public class RestRedirectorResource extends UserResource {
         String mediaRelativeUrl = StringUtils.substringAfter(url, MEDIA);
         byte[] result = null;
         if (!StringUtils.isEmpty(cdrRelativeUrl)) {
+            String userName = StringUtils.substringAfter(cdrRelativeUrl, "/");
+            userName = (userName.indexOf("?") >= 0 ) ? StringUtils.substringBefore(userName, "?") : userName;
+            if (!StringUtils.equals(userName, getUser().getUserName())) {
+                throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED,
+                    "Authenticated user does not match url user");
+            }
             result = m_httpInvoker.invokeGet(m_addressManager.getSingleAddress(RestServer.HTTP_API) + CDR
                     + cdrRelativeUrl);
         } else if (!StringUtils.isEmpty(mailboxRelativeUrl)) {
             result = invokeIvrFallback(GET, MAILBOX + mailboxRelativeUrl);
         } else if (!StringUtils.isEmpty(callcontrollerRelativeUrl)) {
+            validateCallController(callcontrollerRelativeUrl);   
             result = m_httpInvoker.invokeGet(m_addressManager.getSingleAddress(RestServer.HTTP_API) + CALLCONTROLLER
                     + callcontrollerRelativeUrl);
         } else if (!StringUtils.isEmpty(mediaRelativeUrl)) {
@@ -155,6 +163,17 @@ public class RestRedirectorResource extends UserResource {
         getResponse().getServerInfo().setAcceptRanges(true);
         
         return inputRepr;
+    }
+    
+    private void validateCallController(String callcontrollerRelativeUrl) throws ResourceException {
+        //get agentId if available
+        String userName = StringUtils.substringAfter(callcontrollerRelativeUrl, "agent=");
+        userName = !StringUtils.isEmpty(userName) ? ( (userName.indexOf("&") >= 0 ) ? StringUtils.substringBefore(userName, "&") : userName) : userName;
+        userName = StringUtils.isEmpty(userName) ? StringUtils.substringBetween(callcontrollerRelativeUrl, "/") : userName; 
+        if (!StringUtils.equals(userName, getUser().getUserName())) {
+            throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED,
+                "Authenticated user does not match the agent that places the call, or the caller");
+        } 
     }
 
     private byte[] invokeIvrFallback(String methodType, String relativeUri) throws ResourceException {

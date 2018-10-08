@@ -18,6 +18,6 @@ package org.sipfoundry.sipxconfig.web.plugin;
 
 import org.apache.tapestry.html.BasePage;
 
-public abstract class IMFeature extends BasePage {
-
+public abstract class ConferenceEventListener extends BasePage {
+    public static final String PAGE_ID = "ConferenceEventListener";
 }

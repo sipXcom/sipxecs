@@ -18,6 +18,6 @@ package org.sipfoundry.sipxconfig.web.plugin;
 
 import org.apache.tapestry.html.BasePage;
 
-public abstract class RecordingFeature extends BasePage {
-    public static final String PAGE_ID = "RecordingFeature";
+public abstract class InstantMessaging extends BasePage {
+
 }

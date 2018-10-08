@@ -1,0 +1,12 @@
+<div class="dropdown">
+  <li jwcid="@If" condition="ognl:isAllowed"><a jwcid="@PageLink" page="ognl:pagePath"><span jwcid="@Insert" value="ognl:label"/></a>
+    <div class="dropdown-content">
+      <ul>
+		<span jwcid="@If" condition="ognl:isOn('proxy')">
+		  <span jwcid="@common/AdminNavigationMenu" pagePath="dialplan/EditFlexibleDialPlan" label="ognl:messages.getMessage('menu.dialPlans')" />
+		</span>
+        <span jwcid="@common/Plugin" blockId="DialingSystemBottom"/>
+      </ul>  
+    </div>
+  </li>
+</div>

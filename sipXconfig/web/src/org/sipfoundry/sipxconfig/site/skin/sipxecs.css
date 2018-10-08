@@ -95,6 +95,8 @@ a:hover {
   outline: 0;
 }
 
+
+
 /* Text-level semantics
    ========================================================================== */
 
@@ -699,6 +701,58 @@ fieldset#loginForm legend {
   color: white;
   font-size: 10pt;
   height:30px;
+}
+
+.navigationMenuItemTop ul a:hover { 
+    background-color: #EBEBEB;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    left: 100px;
+    top: 0px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 4px 4px 4px 4px;
+    z-index: 1;
+}
+
+.dropdown a:hover { 
+    background-color: #EBEBEB;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown2 {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content2 {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    left: 100px;
+    top: 0px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 4px 4px 4px 4px;
+    z-index: 1;
+}
+
+.dropdown2 a:hover { 
+    background-color: #EBEBEB;
+}
+
+.dropdown2:hover .dropdown-content2 {
+    display: block;
 }
 
 .adminPortal ul#nav li:nth-child(n+1):nth-child(-n+5) {

@@ -1,0 +1,16 @@
+<div class="dropdown">
+  <li jwcid="@If" condition="ognl:isAllowed"><a jwcid="@PageLink" page="ognl:pagePath"><span jwcid="@Insert" value="ognl:label"/></a>
+    <div class="dropdown-content">
+      <ul>
+        <span jwcid="@common/AdminNavigationMenu" pagePath="admin/ManageCertificates" label="ognl:messages.getMessage('menu.certificates')" />
+        <span jwcid="@If" condition="ognl:isOn('firewall')">
+          <span jwcid="@common/AdminNavigationMenu" pagePath="firewall/ManageFirewall" label="ognl:messages.getMessage('menu.firewall.featureMenu')" />
+        </span>
+		<span jwcid="@If" condition="ognl:isOn('fail2ban')">
+			<span jwcid="@common/AdminNavigationMenu" pagePath="fail2ban/ListFail2banFilters" label="ognl:messages.getMessage('menu.fail2ban')" />
+		</span>
+		<span jwcid="@common/AdminNavigationMenu" pagePath="admin/TlsPeers" label="ognl:messages.getMessage('menu.tlspeers')" />
+      </ul>
+    </div>
+  </li>
+</div>

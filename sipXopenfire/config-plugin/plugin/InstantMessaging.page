@@ -5,6 +5,6 @@
   - Update only value in "class" attribute, otherwise this page is always as it's shown here. This file is 
   - required only as a tapestry legacy requirement.
   -->
-<page-specification class="org.sipfoundry.sipxconfig.web.plugin.IMFeature">
+<page-specification class="org.sipfoundry.sipxconfig.web.plugin.InstantMessaging">
 	<description>PluginMenu</description>
 </page-specification>

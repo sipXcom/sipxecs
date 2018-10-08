@@ -1,0 +1,11 @@
+<div class="dropdown">
+  <li jwcid="@If" condition="ognl:isAllowed"><a jwcid="@PageLink" page="ognl:pagePath"><span jwcid="@Insert" value="ognl:label"/></a>
+    <div class="dropdown-content">
+      <ul>
+        <span jwcid="@common/AdminNavigationMenu" pagePath="backup/BackupPage" label="ognl:messages.getMessage('menu.backup')" />
+        <span jwcid="@common/AdminNavigationMenu" pagePath="admin/BulkImport" label="ognl:messages.getMessage('menu.importCsv')" />
+        <span jwcid="@common/AdminNavigationMenu" pagePath="backup/RestorePage" label="ognl:messages.getMessage('menu.restore')" />
+      </ul>  
+    </div>
+  </li>
+</div>

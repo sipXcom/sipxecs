@@ -19,8 +19,9 @@ bin_SCRIPTS = \
 	sipxecs-setup \
 	setup-master-host-domain \
 	master-reconfig.js \
-	sipx-archive
-
+	sipx-archive \
+	voicemail-cli
+	
 cfmoddir = @SIPX_CFMODULES@
 cfmod_SCRIPTS = \
 	sipx \
