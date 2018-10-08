@@ -1,0 +1,14 @@
+[Unit]
+Description=sipxacccode
+Documentation=http://sipxcom.org
+After=network.target syslog.target
+
+[Service]
+Type=oneshot
+ExecStart=@SIPX_SERVICEDIR@/sipxacccode start
+RemainAfterExit=true
+ExecStop=@SIPX_SERVICEDIR@/sipxacccode stop
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target
