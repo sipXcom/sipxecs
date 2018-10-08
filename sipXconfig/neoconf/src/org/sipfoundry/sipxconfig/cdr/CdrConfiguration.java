@@ -36,10 +36,12 @@ import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.proxy.ProxyManager;
 
 public class CdrConfiguration implements ConfigProvider {
+
     private CdrManager m_cdrManager;
 
     @Override
     public void replicate(ConfigManager manager, ConfigRequest request) throws IOException {
+
         if (!request.applies(CdrManager.FEATURE, ProxyManager.FEATURE)) {
             return;
         }
@@ -54,7 +56,8 @@ public class CdrConfiguration implements ConfigProvider {
                 ConfigUtils.enableCfengineClass(dir, datfile, false, CdrManager.FEATURE.getId());
                 continue;
             }
-            ConfigUtils.enableCfengineClass(dir, datfile, true, CdrManager.FEATURE.getId(), "postgres");
+            boolean isCdrEnabled = manager.getFeatureManager().isFeatureEnabled(CdrManager.FEATURE, location);
+            ConfigUtils.enableCfengineClass(dir, datfile, isCdrEnabled, CdrManager.FEATURE.getId());
             FileWriter wtr = new FileWriter(new File(dir, "callresolver-config.part"));
             try {
                 write(wtr, proxyLocations, settings);

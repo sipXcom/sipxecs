@@ -40,9 +40,6 @@ public class AuthCodesConfig implements ConfigProvider, PostConfigListener {
         if (!request.applies(AuthCodes.FEATURE)) {
             return;
         }
-        if (!m_authCodes.isEnabled()) {
-            return;
-        }
 
         Set<Location> locations = request.locations(manager);
         Address fs = manager.getAddressManager().getSingleAddress(FreeswitchFeature.ACC_EVENT_ADDRESS);
