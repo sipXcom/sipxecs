@@ -27,23 +27,19 @@ class Base
   attr_writer :out
   attr_writer :dryrun
 
-  def initialize(config = nil)
+  def initialize(user = nil)
     @bin_dir = '@SIPX_BINDIR@'
     @ivrdir = '@SIPX_JAVADIR@/sipXivr'
     @out = $stdout
     @ssh_params = "-o 'StrictHostKeyChecking=no' -i @SIPX_CONFDIR@/.cfagent/ppkeys/localhost.nopass.priv"
-    load_config_file(config) unless config == nil
+    @data = sql_exec_output("SIPXCONFIG", "select l.ip_address from location l, feature_local fl where l.location_id=fl.location_id and fl.feature_id='ivr'")    
+    @user = user
     redirect_output
   end
-
-  def load_config_file(config_file)
-    @config = config_file
-    @data = YAML::load_file(config_file)
-  end
-
-  def load_config_stream(config_stream)
-    @data = YAML::load(config_stream)
-  end
+  
+  def sql_exec_output(db, sql)
+    return `psql -U postgres #{db} --no-align -t -c \"#{sql}\"`
+  end  
 
   def cmd(cmd)
     puts cmd if @verbose
@@ -66,10 +62,12 @@ class Base
 end
 
 class IvrCli < Base  
+  
   def run(params, args)
-      @data['hosts'].each { |ip, meta|
-      params = meta['params']
-      if cmd("ssh #{@ssh_params} root@#{ip} java -jar #{@ivrdir}/gridfs-voicemail-cli.jar #{params} < #{@config}")
+      @data = @data.split(" ")
+      @data.each { |ip|      
+      params = "--deleteMailbox #{@user}"
+      if cmd("ssh #{@ssh_params} root@#{ip} java -jar #{@ivrdir}/gridfs-voicemail-cli.jar #{params}")
         @logger.info("java -jar #{@ivrdir}/gridfs-voicemail-cli.jar #{params} Completed on host #{ip}")
       else
         @logger.error("java -jar #{@ivrdir}/gridfs-voicemail-cli.jar #{params} error: Cannot complete on host #{ip}")
@@ -100,7 +98,7 @@ args = OptionParser.new { |opts|
 Create or restore backups and archives.
 EOF
 
-  opts.on("--exec config.yaml",
+  opts.on("--deleteMailbox user",
       "Voicemail cli execution"){ |v|    
     operation = IvrCli.new(v)
   }  
