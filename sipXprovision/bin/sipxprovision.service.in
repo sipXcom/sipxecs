@@ -1,0 +1,14 @@
+[Unit]
+Description=sipxprovision
+Documentation=http://sipxcom.org
+After=network.target syslog.target
+
+[Service]
+Type=oneshot
+ExecStart=@SIPX_SERVICEDIR@/sipxprovision start
+RemainAfterExit=true
+ExecStop=@SIPX_SERVICEDIR@/sipxprovision stop
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target
