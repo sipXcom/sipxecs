@@ -57,7 +57,7 @@ bundle edit_line tftp_xinet_config {
 bundle agent xinetd_sysctl_running {
   vars:
     any::
-      "service" string => "xinetd.service";
+      "service" string => "tftp.service";
 
   classes:
     fedora16_or_greater::

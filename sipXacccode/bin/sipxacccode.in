@@ -15,7 +15,7 @@
 . @SIPX_LIBEXECDIR@/sipx-utils.sh || exit 1
 
 prog=sipxacccode
-pidfile="@SIPX_RUNDIR@/sipxacccode.pid"
+pidfile="@SIPX_RUNDIR@/sipxacccode/sipxacccode.pid"
 
 [ -e @SIPX_CONFDIR@/sysconfig/$prog ] && . @SIPX_CONFDIR@/sysconfig/$prog
 
