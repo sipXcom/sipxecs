@@ -68,7 +68,9 @@ $(sipx.SIPX_FSLOGDIR)/freeswitch*.log {
     notifempty
     postrotate
         # Tell freeswitch to reopen the log file
-        kill -HUP `cat $(sipx.SIPX_FSRUNDIR)/freeswitch.pid`
+        if [ -e $(sipx.SIPX_FSRUNDIR)/freeswitch.pid ]; then
+            kill -HUP `cat $(sipx.SIPX_FSRUNDIR)/freeswitch.pid`
+        fi
     endscript
 }
 

@@ -15,7 +15,7 @@
 prog=sipxrls
 exec="@SIPX_BINDIR@/${prog}"
 config="@SIPX_CONFDIR@/sipxrls-config"
-pidfile="@SIPX_RUNDIR@/sipxrls.pid"
+pidfile="@SIPX_RUNDIR@/sipxrls/sipxrls.pid"
 
 [ -e @SIPX_CONFDIR@/sysconfig/$prog ] && . @SIPX_CONFDIR@/sysconfig/$prog
 

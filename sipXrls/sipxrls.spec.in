@@ -58,6 +58,8 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_sysconfdir}/init.d/sipxrls
+%attr(644,root,root) %{_sysconfdir}/tmpfiles.d/sipxrls.conf
+%attr(644,root,root) /usr/lib/systemd/system/*
 %{_datadir}/sipxecs/cfinputs/plugin.d/sipxrls.cf
 %attr(755,root,root) %{_bindir}/sipxrls
 %{_datadir}/sipxecs/schema/resource-lists.xsd

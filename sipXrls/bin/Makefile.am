@@ -9,10 +9,15 @@ initddir = @SIPX_SERVICEDIR@
 initd_SCRIPTS = \
     sipxrls
 
-EXTRA_DIST = \
-	$(initd_SCRIPTS:=.in)
+systemddir = /usr/lib/systemd/system
+systemd_SCRIPTS = \
+	sipxrls.service
 
-$(initd_SCRIPTS) : % : %.in Makefile
+EXTRA_DIST = \
+	$(initd_SCRIPTS:=.in) \
+	$(systemd_SCRIPTS:=.in)
+
+$(initd_SCRIPTS) $(systemd_SCRIPTS) : % : %.in Makefile
 	@$(call SearchAndReplace,$<,$@)
 
-CLEANFILES = $(initd_SCRIPTS)
+CLEANFILES = $(initd_SCRIPTS) $(systemd_SCRIPTS)

@@ -1,0 +1,14 @@
+[Unit]
+Description=sipxrls
+Documentation=http://sipxcom.org
+After=network.target syslog.target
+
+[Service]
+Type=oneshot
+ExecStart=@SIPX_SERVICEDIR@/sipxrls start
+RemainAfterExit=true
+ExecStop=@SIPX_SERVICEDIR@/sipxrls stop
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target
