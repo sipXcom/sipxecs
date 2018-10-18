@@ -20,11 +20,11 @@ Requires: cfengine >= 3.2.3
 Requires: chkconfig
 %endif
 %if %{_vendor} == suse
-Requires: net-snmp = 5.7.1
-#BuildRequires: net-snmp-devel = 5.7.1
+Requires: net-snmp >= 5.3.1
+BuildRequires: net-snmp-devel >= 5.3.1
 %else
-#BuildRequires: net-snmp-devel = 5.7.1
-Requires: net-snmp-libs = 5.7.1
+BuildRequires: net-snmp-devel >= 5.3.1
+Requires: net-snmp-libs >= 5.3.1
 %endif
 %if 0%{?rhel} >= 7
 Requires: NetworkManager-tui
