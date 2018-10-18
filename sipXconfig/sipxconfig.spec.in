@@ -72,10 +72,10 @@ Requires: python-pymongo
 %endif
 Requires: python-argparse
 Requires: js
-Requires: net-snmp = 5.7.1
-Requires: net-snmp-sysvinit = 5.7.1
-Requires: net-snmp-utils = 5.7.1
-Requires: net-snmp-python = 5.7.1
+Requires: net-snmp >= 5.7.1
+Requires: net-snmp-sysvinit >= 5.7.1
+Requires: net-snmp-utils >= 5.7.1
+Requires: net-snmp-python
 
 Requires: sipxcommons >= %version
 Requires: sipxtacklib >= %version
