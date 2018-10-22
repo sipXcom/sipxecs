@@ -20,7 +20,7 @@
 . /etc/rc.d/init.d/functions || exit 1
 CONFIG_FILES="@SIPX_CONFDIR@/sipxtcpdumplog.properties"
 . @SIPX_LIBEXECDIR@/sipx-utils.sh || exit 1
-pidfile=@SIPX_RUNDIR@/sipxtcpdumplog.pid
+pidfile=@SIPX_RUNDIR@/sipxtcpdumplog/sipxtcpdumplog.pid
 . @SIPX_CONFDIR@/sipxtcpdumplog.properties
 shopt -s extglob
 

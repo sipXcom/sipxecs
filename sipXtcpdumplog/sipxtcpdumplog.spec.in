@@ -52,6 +52,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_sysconfdir}/init.d/sipxtcpdumplog
 %{_datadir}/sipxecs/cfinputs/plugin.d/sipxtcpdumplog.cf
+%attr(644,root,root) %{_sysconfdir}/tmpfiles.d/sipxtcpdumplog.conf
+%attr(644,root,root) /usr/lib/systemd/system/*
 
 %pre
 

@@ -1,12 +1,16 @@
 include $(top_srcdir)/config/utility.am
 
-EXTRA_DIST =
+EXTRA_DIST = $(tmpfilesd_SCRIPTS:=.in)
 
 cfinputsdir = $(SIPX_CFINPUTS)/plugin.d
 dist_cfinputs_DATA = \
 	sipxtcpdumplog.cf
 
-$(proc_DATA) : % : %.in Makefile
+tmpfilesddir = /etc/tmpfiles.d
+tmpfilesd_SCRIPTS = \
+	sipxtcpdumplog.conf
+
+$(proc_DATA) $(tmpfilesd_SCRIPTS) : % : %.in Makefile
 	@$(call SearchAndReplace, $<, $@)
 
-CLEANFILES =
+CLEANFILES = $(tmpfilesd_SCRIPTS)
