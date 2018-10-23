@@ -82,7 +82,11 @@ rm -rf $RPM_BUILD_ROOT
 %define rb_ver %(ruby -rrbconfig -e 'puts Config::CONFIG["ruby_version"]')
 %define gem_home %{gem_dir}/%{rb_ver}
 
-gem install --no-rdoc --local --install-dir %{gem_home} %{_var}/lib/sipxpbx/sipxcallresolver-*.gem >/dev/null 2>&1
+gem install --no-rdoc --local --install-dir %{gem_home} %{_var}/lib/sipxpbx/sipxcallresolver-*.gem >/dev/null 2>&1i
+gem install dbi
+gem install soap4r-ng
+gem install dbd-pg
+
 if [ -f %{_sysconfdir}/cron.daily/callresolver_run ]; then
   rm -f %{_sysconfdir}/cron.daily/callresolver_run
 fi
