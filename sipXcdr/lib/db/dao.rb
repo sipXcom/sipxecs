@@ -66,7 +66,7 @@ class Dao
     now = Time.now
     if @last_purge_time.nil? || now - @last_purge_time > Configure::SECONDS_PER_DAY
       first_entry_time = now - (@purge_age * Configure::SECONDS_PER_DAY)
-      purge_now(dbh, first_entry_time)
+      purge_now(dbh, first_entry_time.to_date)
       @last_purge_time = now
     end
   end

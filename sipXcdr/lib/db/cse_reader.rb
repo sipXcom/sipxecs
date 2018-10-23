@@ -61,7 +61,7 @@ class CseReader < Dao
           # If we read less than MAX_CSES then we're done reading for now.
           if ((first_id.to_i + MAX_CSES) > @last_read_id.to_i)
              @log.debug("cse_reader.rb:: Going to sleep. Connection #{@database_url.host}:#{@database_url.port}") if @log
-             break if @stop.wait
+             @stop.wait
              @log.debug("cse_reader.rb:: Waking up. Connection #{@database_url.host}:#{@database_url.port}") if @log
           end
         end
