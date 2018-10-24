@@ -10,7 +10,7 @@ AC_PROG_JAVA_CC([javac])
 AC_PROG_JAVA([java])
 PROG_JAVA_DEP
 AM_CONDITIONAL(IS_RPMBUILD, test x$enable_rpmbuild = xyes)
-CHECK_RUBY([1.8.2])
+CHECK_RUBY([2])
 # not avail on ruby 1.9, default on fedora 17
 #CHECK_RUBY_MODULE([soap/wsdlDriver])
 CHECK_RUBYGEMS([0.8.11])

@@ -41,7 +41,11 @@ class CdrWriter < Dao
   
   def last_cdr_start_time
     connect do | dbh |
-      return dbh.select_one(CdrWriter.last_cdr_sql)[0]
+      last_date = dbh.select_one(CdrWriter.last_cdr_sql)
+      unless last_date.nil? || last_date == 0
+        return dbh.select_one(CdrWriter.last_cdr_sql)[0]
+    end
+      return nil      
     end
     return nil    
   end

@@ -78,9 +78,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_var}/lib/sipxpbx/sipxcallresolver-*.gem
 
 %post
-%define gem_dir %(ruby -rrbconfig -e 'puts File::join(Config::CONFIG["libdir"],"/ruby/gems")')
-%define rb_ver %(ruby -rrbconfig -e 'puts Config::CONFIG["ruby_version"]')
-%define gem_home %{gem_dir}
+%define gem_dir %(ruby -rrbconfig -e 'puts File::join(RbConfig::CONFIG["libdir"],"/ruby/gems")')
+%define rb_ver %(ruby -rrbconfig -e 'puts RbConfig::CONFIG["MAJOR"]')
+%define gem_home %{gem_dir}/%{rb_ver}
 
 gem install --no-rdoc --local --install-dir %{gem_home} %{_var}/lib/sipxpbx/sipxcallresolver-*.gem >/dev/null 2>&1
 gem install dbi

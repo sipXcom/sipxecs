@@ -1057,7 +1057,7 @@ GEMS_HOWTO
   # TODO: Make this more dynamic
   #   See http://fedoraproject.org/wiki/Packaging:Ruby
   # Call eval a few times to resolve nested shell vars
-  eval GEM_LOCAL_LIB_DIR=${libdir}/ruby/gems/1.8
+  eval GEM_LOCAL_LIB_DIR=${libdir}/ruby/gems/2
   eval GEM_LOCAL_LIB_DIR=${GEM_LOCAL_LIB_DIR}
   AC_SUBST(GEM_LOCAL_LIB_DIR)
 ])
