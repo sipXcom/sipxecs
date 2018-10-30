@@ -26,7 +26,7 @@ using namespace std;
 
 const string RegDB::NS("node.registrar");
 
-RegDB* RegDB::CreateInstance(bool ensureIndexes) {
+RegDB* RegDB::CreateInstance(bool ensureIndexes, int gracePeriod) {
    RegDB* lRegDb = NULL;
 
    MongoDB::ConnectionInfo local = MongoDB::ConnectionInfo::localInfo();
@@ -34,6 +34,7 @@ RegDB* RegDB::CreateInstance(bool ensureIndexes) {
      Os::Logger::instance().log(FAC_SIP, PRI_INFO, "Regional database defined");
      Os::Logger::instance().log(FAC_SIP, PRI_INFO, local.getConnectionString().toString().c_str());
      lRegDb = new RegDB(local);
+     lRegDb->setExpireGracePeriod(gracePeriod);
 
      // ensure indexes, if requested
      if (ensureIndexes)
@@ -46,6 +47,7 @@ RegDB* RegDB::CreateInstance(bool ensureIndexes) {
 
    MongoDB::ConnectionInfo global = MongoDB::ConnectionInfo::globalInfo();
    RegDB* regDb = new RegDB(global, lRegDb);
+   regDb->setExpireGracePeriod(gracePeriod);
 
    // ensure indexes, if requested
    if (ensureIndexes)

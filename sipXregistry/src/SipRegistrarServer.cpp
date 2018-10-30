@@ -281,16 +281,7 @@ SipRegistrarServer::initialize(
                                            ,RegisterPlugin::Prefix
                                            );
     mpSipRegisterPlugins->readConfig(*pOsConfigDb);
-    
-    //
-    // Set the grace period for expirations
-    //
-    
-    int gracePeriod = 0;
-    if ( OS_SUCCESS == pOsConfigDb->get("SIP_REGISTRAR_EXPIRE_GRACE_PERIOD", gracePeriod));
-    {
-      SipRegistrar::getInstance(NULL)->getRegDB()->setExpireGracePeriod(gracePeriod * 60);
-    }
+
 }
 
 
