@@ -156,7 +156,7 @@ SipRegistrar::SipRegistrar(OsConfigDb* configDb) :
    mConfigDb->get("SIP_REGISTRAR_EXPIRE_GRACE_PERIOD", gracePeriod);
    Os::Logger::instance().log(FAC_SIP, PRI_INFO, "SipRegistrar::SipRegistrar gracePeriod: %d seconds", gracePeriod * 60);
 
-   mpRegDb = RegDB::CreateInstance(true, gracePeriod);
+   mpRegDb = RegDB::CreateInstance(true, gracePeriod * 60);
    mpSubscribeDb = SubscribeDB::CreateInstance(true /* ensure indexes creation */);
 
    mConfigDb->get("SIP_REGISTRAR_BIND_IP", mBindIp);
