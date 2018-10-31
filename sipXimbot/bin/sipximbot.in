@@ -15,7 +15,7 @@
 . @SIPX_LIBEXECDIR@/sipx-utils.sh || exit 1
 
 prog=sipximbot
-pidfile="@SIPX_RUNDIR@/sipximbot.pid"
+pidfile="@SIPX_RUNDIR@/sipximbot/sipximbot.pid"
 
 [ -e @SIPX_CONFDIR@/sysconfig/$prog ] && . @SIPX_CONFDIR@/sysconfig/$prog
 

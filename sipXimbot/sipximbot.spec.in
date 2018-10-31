@@ -56,6 +56,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,sipx,sipx) %{_datadir}/java/sipXecs/sipXimbot
 %attr(755,root,root) %{_sysconfdir}/init.d/sipximbot
 %{_datadir}/sipxecs/cfinputs/plugin.d/sipximbot.cf
+%attr(644,root,root) %{_sysconfdir}/tmpfiles.d/sipximbot.conf
+%attr(644,root,root) /usr/lib/systemd/system/*
 %config(noreplace) %attr(755,sipx,sipx) %{_localstatedir}/sipxdata/sipximbot
 
 %dir %attr(755,sipx,sipx) %{_sysconfdir}/sipxpbx

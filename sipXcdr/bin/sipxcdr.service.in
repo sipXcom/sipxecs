@@ -1,0 +1,14 @@
+[Unit]
+Description=sipxcdr
+Documentation=http://sipxcom.org
+After=network.target syslog.target
+
+[Service]
+Type=oneshot
+ExecStart=@SIPX_SERVICEDIR@/sipxcdr start
+RemainAfterExit=true
+ExecStop=@SIPX_SERVICEDIR@/sipxcdr stop
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target

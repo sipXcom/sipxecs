@@ -51,6 +51,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,sipx,sipx) %{_datadir}/java/sipXecs/sipXrest
 %{_datadir}/sipxecs/cfinputs/plugin.d/sipxrest.cf
+%attr(644,root,root) %{_sysconfdir}/tmpfiles.d/sipxrest.conf
+%attr(644,root,root) /usr/lib/systemd/system/*
 %attr(755,root,root) %{_sysconfdir}/init.d/sipxrest
 %config(noreplace) %{_sysconfdir}/sipxpbx/sipxrest/log4j.properties
 

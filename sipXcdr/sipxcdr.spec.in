@@ -74,6 +74,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sysconfdir}/init.d/sipxcdr
 %attr(755,root,root) %{_bindir}/sipxcdr-archive
 %{_datadir}/sipxecs/cfinputs/plugin.d/sipxcdr.cf
+%attr(644,root,root) %{_sysconfdir}/tmpfiles.d/sipxcdr.conf
+%attr(644,root,root) /usr/lib/systemd/system/*
 %{_sysconfdir}/sipxpbx/cdr/*.sql
 %{_var}/lib/sipxpbx/sipxcallresolver-*.gem
 
