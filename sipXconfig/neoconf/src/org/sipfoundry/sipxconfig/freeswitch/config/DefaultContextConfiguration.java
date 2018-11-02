@@ -87,6 +87,7 @@ public class DefaultContextConfiguration extends AbstractFreeswitchConfiguration
         addAdditionalLocations(context, location);
         context.put("dollar", "$");
         context.put("conferenceExitScript", m_fsEtcDir + "conferenceExit.lua");
+        context.put("callParkScript", m_fsEtcDir + "callPark.lua");
         context.put("advancedCallHandling",
             m_featureManager.
             isFeatureEnabled(FreeswitchFeature.FEATURE, location) ? m_advancedCallHandling.isEnabled() : false);
