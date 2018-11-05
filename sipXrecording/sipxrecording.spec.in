@@ -53,6 +53,8 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_sysconfdir}/init.d/sipxrecording
+%attr(644,root,root) %{_sysconfdir}/tmpfiles.d/sipxrecording.conf
+%attr(644,root,root) /usr/lib/systemd/system/*
 %{_datadir}/sipxecs/cfinputs/plugin.d/sipxrecording.cf
 %dir %attr(775,sipx,sipx) %{_sysconfdir}/sipxpbx/sipxrecording
 %config(noreplace) %{_sysconfdir}/sipxpbx/sipxrecording/*

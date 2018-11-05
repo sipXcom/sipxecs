@@ -13,7 +13,7 @@
 . @SIPX_LIBEXECDIR@/sipx-utils.sh || exit 1
 
 prog=sipxrecording
-pidfile="@SIPX_RUNDIR@/sipxrecording.pid"
+pidfile="@SIPX_RUNDIR@/sipxrecording/sipxrecording.pid"
 config_props="@SIPX_CONFDIR@/sipxrecording.properties"
 
 [ -e @SIPX_CONFDIR@/sysconfig/$prog ] && . @SIPX_CONFDIR@/sysconfig/$prog
