@@ -16,6 +16,8 @@
  */
 package org.sipfoundry.voicemail.mailbox;
 
+import static java.lang.String.format;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -56,6 +58,13 @@ public class FilesystemMailboxManager extends AbstractMailboxManager {
         File mailstore = new File(m_mailstoreDirectory);
         if (!mailstore.exists()) {
             mailstore.mkdir();
+            try {
+                Process p = Runtime.getRuntime().exec(format("setfacl -Rm d:u:freeswitch:rwX,u:freeswitch:rwX %s", m_mailstoreDirectory));
+                p.waitFor();
+                p.destroy();
+            } catch (Exception ex) {
+                LOG.error("Cannot provide freeswitch rights to mailstore directory", ex);
+            }           
         }
     }
 
