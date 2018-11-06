@@ -389,8 +389,7 @@ DocumentRoot "@wwwdir@/doc"
 #
 # Controls who can get stuff from this server.
 #
-    Order allow,deny
-    Allow from all
+    Require all granted
 
 </Directory>
 
@@ -439,8 +438,7 @@ AccessFileName .htaccess
 # viewed by Web clients.
 #
 <Files ~ "^\.ht">
-    Order allow,deny
-    Deny from all
+    Require all denied
 </Files>
 
 #

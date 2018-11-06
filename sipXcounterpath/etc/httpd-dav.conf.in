@@ -19,8 +19,7 @@ Alias /webdav "@wwwdir@/webdav"
 <Directory "@wwwdir@/webdav">
     Dav On
 
-    Order Allow,Deny
-    Allow from all
+    Require all granted
 
     AuthType Digest
     AuthName "WebDAV"
