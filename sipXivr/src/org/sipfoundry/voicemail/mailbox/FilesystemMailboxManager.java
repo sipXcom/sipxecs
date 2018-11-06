@@ -59,7 +59,7 @@ public class FilesystemMailboxManager extends AbstractMailboxManager {
         if (!mailstore.exists()) {
             mailstore.mkdir();
             try {
-                Process p = Runtime.getRuntime().exec(format("setfacl -Rm d:u:freeswitch:rwX,u:freeswitch:rwX %s", m_mailstoreDirectory));
+                Process p = Runtime.getRuntime().exec(format("setfacl -Rm d:u:freeswitch:rwX,u:freeswitch:rwX %s/..", m_mailstoreDirectory));
                 p.waitFor();
                 p.destroy();
             } catch (Exception ex) {
