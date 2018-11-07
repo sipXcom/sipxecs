@@ -10,6 +10,7 @@ package org.sipfoundry.conference;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -48,7 +49,10 @@ public class ConfRecordThread extends ConfBasicThread {
         // Check that the freeswitch initial recording directory exists
         File sourceDir = new File(sourceName);
         if (!sourceDir.exists()) {
-           sourceDir.mkdirs();
+            sourceDir.mkdirs();
+        } else if (Files.isSymbolicLink(sourceDir.toPath())) {
+            sourceDir.delete();
+            sourceDir.mkdirs();
         }
 
         setConfConfiguration(recordingConfig);

@@ -161,7 +161,7 @@ bundle agent apache_sysctl_running {
     apache.apache_running.restart_apache::
       "$(sipx.systemctl)"
         comment => "restart apache",
-        args => "restart";
+        args => "restart $(service)";
 }
 
 bundle agent verify_httpd_user(user,password) {
