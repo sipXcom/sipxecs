@@ -76,7 +76,7 @@ RUNTIME_EPEL = \
 	erlang-erlando-* \
 	erlang-ibrowse-* \
 	erlang-rpm-macros-* \
-	fail2ban-* \
+	fail2ban-0.9.6* \
 	gperftools-libs-* \
 	gtest-1* \
 	js-* \

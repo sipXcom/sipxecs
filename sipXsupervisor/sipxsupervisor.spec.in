@@ -44,7 +44,7 @@ Requires: policycoreutils
 #semanage
 Requires: policycoreutils-python
 # fail2ban
-Requires: fail2ban
+Requires: fail2ban >= 0.9.6
 
 Prefix:    %_prefix
 BuildRoot: %{_tmppath}/%name-%version-root
