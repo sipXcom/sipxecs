@@ -16,6 +16,8 @@
  */
 package org.sipfoundry.sipxconfig.ivr;
 
+import static java.lang.String.format;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -30,6 +32,8 @@ import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.sipfoundry.sipxconfig.address.Address;
 import org.sipfoundry.sipxconfig.admin.AdminContext;
 import org.sipfoundry.sipxconfig.alarm.AlarmDefinition;
@@ -62,6 +66,7 @@ import org.springframework.beans.factory.annotation.Required;
 public class IvrConfig implements ConfigProvider, AlarmProvider {
 
     private static final String VOICEMAIL_PATH_KEY = "SIPX_IVRDATADIR";
+    private static final Log LOG = LogFactory.getLog(IvrConfig.class);
 
     private Ivr m_ivr;
     private Mwi m_mwi;
@@ -104,8 +109,18 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
                 if (!StringUtils.isEmpty(voicemailPath)) {
                     config.write(VOICEMAIL_PATH_KEY, voicemailPath);
                 } else {
-                    config.write(VOICEMAIL_PATH_KEY, m_mailstoreDirectory);                    
-                }                
+                    config.write(VOICEMAIL_PATH_KEY, m_mailstoreDirectory); 
+                    voicemailPath = m_mailstoreDirectory;
+                }
+                
+                try {
+                    Process p = Runtime.getRuntime().exec(format("setfacl -Rm d:u:freeswitch:rwX,u:freeswitch:rwX %s/..", m_mailstoreDirectory));
+                    p.waitFor();
+                    p.destroy();
+                    LOG.info(format("Provide freeswitch rights for voicemail path directory: %s", voicemailPath));
+                } catch (Exception ex) {
+                    LOG.error("Cannot provide freeswitch rights to voicemail path directory", ex);
+                }
                 
                 if (location.isPrimary()) {
                     config.write("CLEANUP_VOICEMAIL_HOUR", settings.getCleanupVoicemailHour());
