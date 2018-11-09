@@ -329,14 +329,26 @@
 (function(window, document, undefined) {
 'use strict';
 
-var uniteWeb = angular.module('uw', ['ngAnimate', 'ngSanitize', 'ngCookies', 'ngRoute', 'config', 'emoji', 'underscore', 'LocalStorageModule', 'notify', 'xml', 'dragAndDrop', 'ngOrderObjectBy', 'angularFileUpload', 'angularUtils.directives.dirPagination', 'ui.bootstrap']);
+var uniteWeb = angular.module('uw', ['ngAnimate', 'ngSanitize', 'ngCookies', 'ngRoute', 'config', 'emoji', 'underscore', 'LocalStorageModule', 'notify', 'xml', 'dragAndDrop', 'ngOrderObjectBy', 'angularFileUpload', 'angularUtils.directives.dirPagination', 'ui.bootstrap', 'pascalprecht.translate']);
 
 uniteWeb.config([
   '$routeProvider',
   '$httpProvider',
   '$compileProvider',
   '$provide',
-  function ($routeProvider, $httpProvider, $compileProvider, $provide) {
+  '$translateProvider',
+  function ($routeProvider, $httpProvider, $compileProvider, $provide, $translateProvider) {
+
+  $translateProvider.useStaticFilesLoader({
+      prefix: 'language-',
+      suffix: '.json'
+  })
+  var language = ((navigator.languages && navigator.languages[0]) || navigator.language || navigator.userLanguage);
+  var browser_language = language.split('-')[0];
+  console.log(browser_language);
+  $translateProvider.preferredLanguage(browser_language);
+  $translateProvider.fallbackLanguage('en');
+
   $routeProvider.
     when('/voicemail', {
       templateUrl: 'views/main.html',
@@ -344,14 +356,22 @@ uniteWeb.config([
         '$scope',
         '$location',
         '$cookies',
+        '$translate',
         'restService',
         'uiService',
-        function ($scope, $location, $cookies, restService, uiService) {
+        function ($scope, $location, $cookies, $translate, restService, uiService) {
           $scope.received = true;
 
           restService.getLogindetails().
             then(function (data) {
-              restService.updateCredentials(data['login-details']['userName']);
+              restService.updateCredentials(data['login-details']['userName'], data['login-details']['pin']);
+
+              var languageID = data['login-details']['userName'] + "_language";
+              var id = localStorage.getItem(languageID);
+              if (id) $translate.use(id);
+              
+              console.log("language id is:" + id);
+
               uiService.secondary.permission.init();
               restService.connected = true;
 
@@ -390,14 +410,22 @@ uniteWeb.config([
           '$scope',
           '$location',
           '$cookies',
+          '$translate',
           'restService',
           'uiService',
-          function ($scope, $location, $cookies, restService, uiService) {
+          function ($scope, $location, $cookies, $translate, restService, uiService) {
             $scope.received = true;
 
             restService.getLogindetails().
               then(function (data) {
-                restService.updateCredentials(data['login-details']['userName']);
+                restService.updateCredentials(data['login-details']['userName'], data['login-details']['pin']);
+                console.log("credentials:"+data['login-details']['userName'] + ":" + data['login-details']['pin'])
+                var languageID = data['login-details']['userName'] + "_language";
+                var id = localStorage.getItem(languageID);
+                if (id) $translate.use(id);
+                
+                console.log("language id is:" + id);
+
                 uiService.secondary.permission.init();
                 restService.connected = true;
 
@@ -609,7 +637,7 @@ uw.factory('profileFactory', [
       getPhotoSrc : function () {
 
       },
-      translate : function (text) {
+      translated : function (text) {
         return makeHumanReadable(text);
         // var parsed = {};
 
@@ -1114,18 +1142,21 @@ uw.service('sharedFactory', [
       mainMenu: [
         {
           name: 'Activity List',
+          displayName: '.Activity List',
           url: 'views/activitylist.html',
           iconClass:  'icon-activity_stream',
           show: 'false'
         },
         {
           name: 'Contacts',
+          displayName: '.Contacts',
           url: 'views/rosterlist.html',
           iconClass:  'icon-presence_meeting',
           show: 'true'
         },
         {
           name: 'Conference Bridge',
+          displayName: '.Conference Bridge',
           url: 'views/conference-bridge.html',
           iconClass: 'icon-conference_call',
           type: 'right',
@@ -1134,6 +1165,7 @@ uw.service('sharedFactory', [
         },
         {
           name: 'Voicemails',
+          displayName: '.Voicemails',
           url: 'views/voicemails.html',
           iconClass: 'icon-voicemail',
           type: 'right',
@@ -1142,6 +1174,7 @@ uw.service('sharedFactory', [
         },
         {
           name: 'My profile',
+          displayName: '.My profile',
           url: 'views/my-profile.html',
           iconClass: 'icon-my-profile',
           type: 'right',
@@ -1150,6 +1183,7 @@ uw.service('sharedFactory', [
         },
         {
           name: 'Call history',
+          displayName: '.Call history',
           url: 'views/call-history.html',
           iconClass: 'icon-call_history',
           type: 'right',
@@ -1158,6 +1192,7 @@ uw.service('sharedFactory', [
         },
         {
           name: 'Settings',
+          displayName: '.Settings',
           url: 'views/settings.html',
           iconClass: 'icon-settings_cogs',
           type: 'right',
@@ -1165,6 +1200,7 @@ uw.service('sharedFactory', [
         },
         {
           name: 'Logout',
+          displayName: 'TEMPLATES.Logout',
           url: '/',
           iconClass: 'icon-logout',
           show: 'true',
@@ -1173,12 +1209,14 @@ uw.service('sharedFactory', [
         },
         {
           name: 'Search',
+          displayName: '.Search',
           url: 'views/search.html',
           iconClass: 'icon-settings_cogs',
           show: 'false'
         },
         {
           name: 'Chat',
+          displayName: '.Chat',
           url: 'views/chat.html',
           iconClass: 'icon-settings',
           type: 'right',
@@ -1186,6 +1224,7 @@ uw.service('sharedFactory', [
         },
         {
           name: 'default',
+          displayName: '.default',
           url: 'views/default-right.html',
           iconClass: 'icon-settings_cogs',
           type: 'right',
@@ -1195,36 +1234,42 @@ uw.service('sharedFactory', [
       miniTemplates: [
         {
           name: 'Profile',
+          displayName: '.Profile',
           url: 'views/profile.html',
         }
       ],
       defaultPresences: [
         {
           icon: 'icon-status_available',
+          displayName: 'PRESENCES.AVAILABLE',
           show: 'Available',
           status: '',
           color: '#38b427'
         },
         {
           icon: 'icon-clock_fill_away',
+          displayName: 'PRESENCES.AWAY',
           show: 'Away',
           status: 'away',
           color: '#f18703'
         },
         {
           icon: 'icon-presence_dnd',
+          displayName: 'PRESENCES.DO NOT DISTURB',
           show: 'Do not disturb',
           status: 'dnd',
           color: '#e3352d'
         },
         {
           icon: 'icon-clock_fill_xa',
+          displayName: 'PRESENCES.EXTENDED AWAY',
           show: 'Extended away',
           status: 'xa',
           color: '#0d73b5'
         },
         {
           icon: 'icon-presence_invisible',
+          displayName: 'PRESENCES.INVISIBILE',
           show: 'Invisible',
           status: 'invisible',
           color: '#bdbfc0'
@@ -1271,6 +1316,8 @@ uw.service('restService', [
     var baseRestNew = baseRest.replace("rest","api");
     var sipRest         = initSipRest();
     var msgUrls         = {};
+    var greetings   = null;
+    var moh         = null;
     var self            = this;
 
     this.cred = {
@@ -2002,10 +2049,13 @@ uw.service('restService', [
 
     this.listenMohFile = function (name) {
       var deferred = $q.defer();
+      var blob;
 
       sipRest.listenMohFile(name).
         success(function (data) {
-          deferred.resolve(data);
+          blob = new Blob([data]); // the blob
+          moh = $sce.trustAsResourceUrl(window.URL.createObjectURL(blob));
+          deferred.resolve(moh);
         }).
         error(function (e) {
           deferred.reject(e);
@@ -2127,10 +2177,13 @@ uw.service('restService', [
 
     this.listenGreetingFileWav = function (greeting_type) {
       var deferred = $q.defer();
+      var blob;
 
       sipRest.listenGreetingFileWav(greeting_type).
       success(function (data) {
-        deferred.resolve(data);
+        blob = new Blob([data]); // the blob
+        greetings = $sce.trustAsResourceUrl(window.URL.createObjectURL(blob));
+        deferred.resolve(greetings);
       }).
       error(function (e) {
         deferred.reject(e);
@@ -2140,10 +2193,13 @@ uw.service('restService', [
 
     this.listenGreetingFileMp3 = function (greeting_type) {
       var deferred = $q.defer();
+      var blob;
 
       sipRest.listenGreetingFileMp3(greeting_type).
       success(function (data) {
-        deferred.resolve(data);
+        blob = new Blob([data]); // the blob
+        greetings = $sce.trustAsResourceUrl(window.URL.createObjectURL(blob));
+        deferred.resolve(greetings);
       }).
       error(function (e) {
         deferred.reject(e);
@@ -2630,7 +2686,8 @@ uw.service('restService', [
         listenMohFile: function (data) {
           return request(authHeaders({
             method: 'GET',
-            url:   baseRestNew + '/my/moh/prompts/'+data
+            url:   baseRestNew + '/my/moh/prompts/'+data,
+            responseType: 'arraybuffer'
           }))
         },
         isCustomGreetingWav: function (greeting_type) {
@@ -2686,13 +2743,15 @@ uw.service('restService', [
         listenGreetingFileWav: function (greeting_type) {
           return request(authHeaders({
             method: 'GET',
-            url:   baseRestNew + '/my/greetings/'+ greeting_type +'/wav'
+            url:   baseRestNew + '/my/greetings/'+ greeting_type +'/wav',
+            responseType: 'arraybuffer'
           }))
         },
         listenGreetingFileMp3: function (greeting_type) {
           return request(authHeaders({
             method: 'GET',
-            url:   baseRestNew + '/my/greetings/'+ greeting_type +'/mp3'
+            url:   baseRestNew + '/my/greetings/'+ greeting_type +'/mp3',
+            responseType: 'arraybuffer'
           }))
         },
         getIMproperties: function () {
@@ -2869,11 +2928,12 @@ uw.service('restService', [
     '$cookies',
     '$interval',
     '$sce',
+    '$translate',
     'sharedFactory',
     'restService',
     '_',
     'CONFIG',
-    function ($rootScope, $cookies, $interval, $sce, sharedFactory, restService, _, CONFIG) {
+    function ($rootScope, $cookies, $interval, $sce, $translate, sharedFactory, restService, _, CONFIG) {
 
       var activityList = {
         main: null
@@ -3398,23 +3458,33 @@ uw.service('restService', [
            {
              icon: 'chat_to_call',
              name: 'Personal Attendant',
+             displayName: "SETTINGS.PERSONAL_ATTENDANT",
              enable: 'true'
            },
            {
              icon: 'follow_me',
              name: 'Call Forwarding',
+             displayName: 'SETTINGS.CALL_FORWARDING',
              enable: 'true'
            },
            {
              icon: 'dialpad',
              name: 'Speed Dials',
+             displayName: 'SETTINGS.SPEED_DIALS',
              enable: 'true'
            },
            {
              icon: 'settings_cogs',
              name: 'User Settings',
+             displayName: 'SETTINGS.USER_SETTINGS',
              enable: 'true'
-           }
+           },
+           {
+            icon: 'language',
+            name: 'Language',
+            displayName: 'SETTINGS.LANGUAGE',
+            enable: 'true'
+          }
          ],
 
          init: function () {
@@ -3594,7 +3664,7 @@ uw.service('restService', [
             restService.getConfList()
               .then(function (data) {
                 if (_.isEmpty(data.conferences)) {
-                  secondary.conference.status   = 'No conference rooms found. ';
+                  secondary.conference.status   = 'CONFERENCEBRIDGE.STATUS_NOACTIVE';
                   secondary.conference.err      = true;
                   ui.root.templates[2].show = false;
                   return;
@@ -3603,7 +3673,7 @@ uw.service('restService', [
                 }
                 secondary.conference.rooms    = data.conferences;
                 secondary.conference.select   = secondary.conference.rooms[0];
-                secondary.conference.status   = 'Waiting for an active conference room...';
+                secondary.conference.status   = 'CONFERENCEBRIDGE.STATUS_WAITING';
                 secondary.conference.timers.start('confActive');
               })
               .catch(function (er) {
@@ -3859,7 +3929,7 @@ uw.service('restService', [
                           secondary.conference.active       = true;
                           secondary.conference.btnDisabled  = false;
                         } else {
-                          secondary.conference.status       = 'Waiting for an active conference room...';
+                          secondary.conference.status       = 'CONFERENCEBRIDGE.STATUS_WAITING';
                           secondary.conference.active       = false;
                           secondary.conference.btnDisabled  = false;
                           _.each(secondary.conference.participants, function (part) {
@@ -3875,7 +3945,7 @@ uw.service('restService', [
                         // secondary.conference.btnDisabled  = false;
                         // secondary.conference.status       = 'Error ' + status;
 
-                        secondary.conference.status       = 'Waiting for an active conference room...';
+                        secondary.conference.status       = 'CONFERENCEBRIDGE.STATUS_WAITING';
                         secondary.conference.active       = false;
                         secondary.conference.btnDisabled  = false;
                         _.each(secondary.conference.participants, function (part) {
@@ -4428,6 +4498,10 @@ uw.service('restService', [
               pass: null,
               selectedGreeting: 'standard.mp3',
               isSelectedGreetingWav: false,
+              href: null,
+              isMp3: null,
+              loading: true,
+              changed: true,
 
               deleteGreeting: function() {
                 restService.deleteGreetingFileWav(secondary.settings.user.vm.selected.greetigs).then(function () {
@@ -4445,10 +4519,15 @@ uw.service('restService', [
                 });
               },
               listenGreeting: function(){
+                secondary.settings.user.vm.loading = true;
+                secondary.settings.user.vm.changed = false;
                 secondary.settings.errors.greetings = false;
                 if (secondary.settings.user.vm.selectedGreeting.indexOf("mp3") == -1) {
                   restService.listenGreetingFileWav(secondary.settings.user.vm.selected.greetigs).then(function (data) {
-                    window.open('/sipxconfig/api/my/greetings/'+ secondary.settings.user.vm.selected.greetigs +'/wav', '_blank');
+                    secondary.settings.user.vm.loading = false;
+                    secondary.settings.user.vm.href = data;
+                    secondary.settings.user.vm.isMp3 =  false;
+                    //window.open('/sipxconfig/api/my/greetings/'+ secondary.settings.user.vm.selected.greetigs +'/wav', '_blank');
                   }).catch(function (err) {
                     console.log("error listen greeting file");
                     //secondary.settings.errors.greetings = true;
@@ -4456,7 +4535,10 @@ uw.service('restService', [
                 }
                 else if (secondary.settings.user.vm.selectedGreeting.indexOf("wav") == -1){
                   restService.listenGreetingFileMp3(secondary.settings.user.vm.selected.greetigs).then(function (data) {
-                    window.open('/sipxconfig/api/my/greetings/'+ secondary.settings.user.vm.selected.greetigs +'/mp3', '_blank');
+                    secondary.settings.user.vm.loading = false;
+                    secondary.settings.user.vm.href = data;
+                    secondary.settings.user.vm.isMp3 =  true;
+                    //window.open('/sipxconfig/api/my/greetings/'+ secondary.settings.user.vm.selected.greetigs +'/mp3', '_blank');
                   }).catch(function (err) {
                     console.log("error listen greeting file");
                     //secondary.settings.errors.greetings = true;
@@ -4467,6 +4549,7 @@ uw.service('restService', [
                 secondary.settings.user.vm.setGreetingFilename();
               },
               setGreetingFilename: function() {
+                secondary.settings.user.vm.changed = true;
                 secondary.settings.errors.greetings = false;
                 if(secondary.settings.user.vm.selected.greetigs === 'none' ) {
                   return;
@@ -4552,6 +4635,8 @@ uw.service('restService', [
 
           moh: {
             audioData: null,
+            loading: true,
+            changed: true,
             addMoh: function (name) {
               var size = secondary.settings.user.moh.selectMoh.length;
               //name.upload();
@@ -4572,11 +4657,18 @@ uw.service('restService', [
               });
             },
             listenMoh: function(){
+              secondary.settings.user.moh.loading = true;
+              secondary.settings.user.moh.changed = false;
               restService.listenMohFile(secondary.settings.user.moh.selectedMoh.name).then(function (data) {
-                window.open('/sipxconfig/api/my/moh/prompts/'+secondary.settings.user.moh.selectedMoh.name+'/stream', '_blank');
+                secondary.settings.user.moh.loading = false;
+                secondary.settings.user.moh.href = data;
+                //window.open('/sipxconfig/api/my/moh/prompts/'+secondary.settings.user.moh.selectedMoh.name+'/stream', '_blank');
               }).catch(function (err) {
                 console.log("error listen MoH file error");
               });
+            },
+            changeMoh: function(){
+              secondary.settings.user.moh.changed =true;
             },
             selected: null,
             select: [
@@ -4714,6 +4806,7 @@ uw.service('restService', [
             }
 
             function setMohSettingsSelected (data) {
+              secondary.settings.user.moh.changed = true;
               var i = 0;
               for (i = 0; i < secondary.settings.user.moh.select.length; i++) {
                 if (data.value === secondary.settings.user.moh.select[i].val) {
@@ -4855,6 +4948,59 @@ uw.service('restService', [
 
             errors: {
               pass: null
+            }
+          },
+
+          language: {
+            show: true,
+            enabled: false,
+            error: '',
+            languageId: 'en',
+            availableOptions: [
+              {id: 'ar', name: 'Arabian'},
+              {id: 'de', name: 'German'},
+              {id: 'el', name: 'Greek'},
+              {id: 'en', name: 'English'},
+              {id: 'es', name: 'Spanish'},
+              {id: 'fi', name: 'Finnish'},
+              {id: 'fr', name: 'French'},
+              {id: 'hi', name: 'Hindi'},
+              {id: 'it', name: 'Italian'},
+              {id: 'ja', name: 'Japanesse'},
+              {id: 'kk', name: 'Kazakh'},
+              {id: 'ko', name: 'Korean'},
+              {id: 'ne', name: 'Nepali'},
+              {id: 'nl', name: 'Dutch'},
+              {id: 'pt', name: 'Portuguese'},
+              {id: 'pt_BR', name: 'Portuguese (Brazil)'},
+              {id: 'ro', name: 'Romanian'},
+              {id: 'ru', name: 'Russian'},
+              {id: 'sk', name: 'Slovak'},
+              {id: 'tr', name: 'Turkish'},
+              {id: 'ur', name: 'Urdu'},
+              {id: 'zh_Hans', name: 'Simplified Chinese'},
+              {id: 'zh_Hant', name: 'Traditional Chinese'}
+            ],
+            selectedOption: {id: 'en', name: 'English'},
+            
+            init: function () {
+              secondary.settings.language.languageId = restService.cred.user + "_language";
+              console.log(restService.cred.user);
+              var id = localStorage.getItem(secondary.settings.language.languageId);
+              if (id) secondary.settings.language.selectedOption.id = id;
+              secondary.settings.success = false;
+              secondary.settings.warning = false;
+              secondary.settings.language.error = '';
+            },
+            save: function (formLanguage) {
+              localStorage.setItem(secondary.settings.language.languageId, secondary.settings.language.selectedOption.id);
+              $translate.use(secondary.settings.language.selectedOption.id);
+              secondary.settings.success = null;
+              secondary.settings.warning = null;
+              secondary.settings.loading = true;
+              secondary.settings.language.error = '';
+              secondary.settings.success = true;
+              formLanguage.$setPristine();
             }
           },
 
@@ -5834,6 +5980,9 @@ uw.controller('settingsController', [
         case 'Personal Attendant':
           $scope.userSettings.personalAttendant.init();
           break;
+        case 'Language':
+          $scope.userSettings.language.init();
+          break;
       }
     };
     $scope.reloadApp      = uiService.secondary.logout.init;
@@ -6347,7 +6496,7 @@ uw.directive('maxHeight', [
 
   'use strict';
 
-  uw.filter('translate', function () {
+  uw.filter('mytranslate', function () {
     return function (input) {
       var translated = input;
       var dict = [

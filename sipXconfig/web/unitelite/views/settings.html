@@ -2,7 +2,7 @@
   <div id="settings-wideview">
     <div class="settings profile-bar-chat row">
       <div class="col-xs-10">
-        <span class="settings-title">Settings</span>
+        <span class="settings-title">{{ 'SETTINGS.SETTINGS_NAME' | translate }}</span>
       </div>
       <div class="col-xs-2">
         <button class="btn btn-link pull-right"
@@ -20,9 +20,14 @@
             data-ng-click="selectOption()"
             data-ng-class="{'active': option.isSelected}"
             data-ng-if="(option.enable === 'false') ? false : true">
-            <span class="col-xs-2"><i class="icon-{{option.icon}}"></i></span>
-            <span class="col-xs-8 settings-item-name">{{option.name}}</span>
-            <span class="col-xs-2 arrow"><i class="icon-arrow_collapse_right"></i></span>
+            <div class="row">
+              <span class="col-xs-2">
+                <i data-ng-if="option.name !== 'Language'" class="icon-{{option.icon}}"></i>
+                <img data-ng-if="option.name === 'Language'" style="margin-top:8px" data-ng-src="styles/images/59cd0231d6c6b83c25357969.baseline_language_black_18dp.png">
+              </span>
+              <span class="col-xs-8 settings-item-name">{{ option.displayName | translate }}</span>
+              <span class="col-xs-2 arrow"><i class="icon-arrow_collapse_right"></i></span>
+            </div>
           </div>
         </div>
       </div>
@@ -31,7 +36,7 @@
         <div class="row">
           <div class="settings-details">
             <div class="settings-title">
-              <span>Personal Attendant</span>
+              <span>{{ 'SETTINGS.PERSONAL_ATTENDANT' | translate}}</span>
               <div class="spinner-wrapper animated fade pull-right"
                 data-ng-if="!userSettings.personalAttendant.main && !userSettings.errors.notAvailable">
                 <div class="spinner small"></div>
@@ -41,30 +46,30 @@
 
             <div class="settings-details-wrapper animated fade" data-ng-if="userSettings.errors.notAvailable">
               <div class="alert alert-warning">
-                <p><strong>Feature not available</strong></p>
-                Please contact your administrator.
+                <p><strong>{{ 'SETTINGS.FEATURE_HELP' | translate }}</strong></p>
+                {{ 'SETTINGS.ADMIN_HELP' | translate }}
               </div>
             </div>
             <div class="settings-details-wrapper animated fade" data-ng-if="userSettings.personalAttendant.main.personalAttendantPermission === false">
               <div class="alert alert-warning">
-                <p><strong>Personal attendant is turned off</strong></p>
-                Please contact your administrator.
+                <p><strong>{{ 'SETTINGS.PA_ATTENDANT_HELP' | translate }}</strong></p>
+                {{ 'SETTINGS.ADMIN_HELP' | translate }}
               </div>
             </div>
             <div class="settings-details-wrapper" data-ng-if="(userSettings.errors.notAvailable === false) || (userSettings.personalAttendant.main.personalAttendantPermission === true)">
               <form name="formPa" novalidate>
                 <div class="form-group clearfix">
-                  <label class="col-sm-4 control-label">Override default AutoAttendant language</label>
+                  <label class="col-sm-4 control-label">{{ 'SETTINGS.PA_OVERRIDE' | translate }}</label>
                   <div class="col-sm-8">
                     <input type="checkbox" class="form-control" data-ng-model="userSettings.personalAttendant.main.overrideLanguage">
                     <span class="help-block">
-                      Check this box to override the default AutoAttendant language chosen by the administrator.
+                      {{ 'SETTINGS.PA_OVERRIDE_HELP' | translate }}
                     </span>
                   </div>
                 </div>
 
                 <div class="form-group clearfix" data-ng-if="userSettings.personalAttendant.main.overrideLanguage !== false">
-                  <label class="col-sm-4 control-label">Language</label>
+                  <label class="col-sm-4 control-label">{{ 'SETTINGS.LANGUAGE' | translate }}</label>
                   <div class="col-sm-8">
                     <select
                       class="form-control"
@@ -72,46 +77,46 @@
                       data-ng-options="lang for lang in userSettings.personalAttendant.lang">
                     </select>
                     <span class="help-block">
-                      The language used by the AutoAttendant if the override checkbox is selected.
+                      {{ 'SETTINGS.PA_LANGUAGE_HELP' | translate }}
                     </span>
                   </div>
                 </div>
 
                 <div class="form-group clearfix">
-                  <label class="col-sm-4 control-label">Operator</label>
+                  <label class="col-sm-4 control-label">{{ 'SETTINGS.PA_OPERATOR' | translate }}</label>
                   <div class="col-sm-8">
                     <input type="text" class="form-control" data-ng-model="userSettings.personalAttendant.main.operator">
                     <span class="help-block">
-                      Extension or SIP URI the caller is transferred to after pressing 0.
+                      {{ 'SETTINGS.PA_OPERATOR_HELP' | translate }}
                     </span>
                   </div>
                 </div>
 
                 <div class="form-group clearfix">
-                  <label class="col-sm-4 control-label">Play default voicemail option</label>
+                  <label class="col-sm-4 control-label">{{ 'SETTINGS.PA_PLAY' | translate }}</label>
                   <div class="col-sm-8">
                     <input type="checkbox" class="form-control" data-ng-model="userSettings.personalAttendant.main.playVMDefaultOptions">
                     <span class="help-block">
-                      If enabled default prompt "When you are finished press 1 for more options. To reach the operator, dial 0 at any time." is played.
+                      {{ 'SETTINGS.PA_PLAY_HELP' | translate }}
                     </span>
                   </div>
                 </div>
 
                 <div class="form-group clearfix">
-                  <label class="col-sm-4 control-label">Voicemail deposit</label>
+                  <label class="col-sm-4 control-label">{{ 'SETTINGS.PA_DEPOSIT' | translate }}</label>
                   <div class="col-sm-8">
                     <input type="checkbox" class="form-control" data-ng-model="userSettings.personalAttendant.main.depositVM">
                     <span class="help-block">
-                      If unchecked, callers will not be able to leave you voicemails, but they will be able to transfer to defined numbers. It is good practice to record a greeting explaining this.
+                      {{ 'SETTINGS.PA_DEPOSIT_HELP' | translate }}
                     </span>
                   </div>
                 </div>
                 <div class="form-group clearfix">
-                  <label class="col-sm-4 control-label">Forward and Delete voicemail</label>
+                  <label class="col-sm-4 control-label">{{ 'SETTINGS.PA_FORWARD' | translate }}</label>
                   <div class="col-sm-8">
                     <input type="checkbox" class="form-control" data-ng-model="userSettings.personalAttendant.main.forwardDeleteVM">
                     <span class="help-block">
-                      If checked, the voicemails that are succesfully emailed will be deleted.
+                      {{ 'SETTINGS.PA_FORWARD_HELP' | translate }}
                     </span>
                   </div>
                 </div>
@@ -119,8 +124,8 @@
                   <table class="table">
                     <thead>
                       <tr>
-                        <th width="10%">Dialpad</th>
-                        <th>Call routes to extension</th>
+                        <th width="10%">{{ 'SETTINGS.PA_DIALPAD' | translate }}</th>
+                        <th>{{ 'SETTINGS.PA_ROUTES' | translate }}</th>
                         <th></th>
                       </tr>
                     </thead>
@@ -170,7 +175,7 @@
                           <p class="add-btn">
                             <button type="button" class="btn btn-link"
                               data-ng-click="userSettings.personalAttendant.add(); formPa.$setDirty();"
-                              title="Add dialpad entry">
+                              translate-attr="{ title: 'SETTINGS.PA_ADD_DIALPAD' }">
                               <b>+</b>
                             </button>
 
@@ -186,19 +191,19 @@
                 <button class="btn btn-default"
                   data-ng-disabled="!formPa.$dirty"
                   data-ng-click="userSettings.personalAttendant.cancel(); formPa.$setPristine();">
-                  Cancel
+                  {{ 'GLOBAL.CANCEL' | translate }}
                 </button>
                 <button type="button" class="btn btn-success"
                   data-ng-click="userSettings.personalAttendant.save(formPa)"
                   data-ng-disabled="!formPa.$dirty || formPa.$invalid">
-                  Save
+                  {{ 'GLOBAL.SAVE' | translate }}
                 </button>
                 <div class="spinner-wrapper inline animated fade"
                   data-ng-show="userSettings.loading">
                   <div class="spinner small"></div>
                 </div>
-                <span data-ng-if="userSettings.success" class="label label-success animated fadeOut">Success</span>
-                <span data-ng-if="userSettings.warning" class="label label-warning animated fadeOut">Warning</span>
+                <span data-ng-if="userSettings.success" class="label label-success animated fadeOut">{{ 'GLOBAL.SUCCESS' | translate }}</span>
+                <span data-ng-if="userSettings.warning" class="label label-warning animated fadeOut">{{ 'GLOBAL.WARNING' | translate }}</span>
               </div>
             </div>
           </div>
@@ -209,7 +214,7 @@
         <div class="row">
           <div class="settings-details">
             <div class="settings-title">
-              <span>Call Forwarding</span>
+              <span>{{ 'SETTINGS.CALL_FORWARDING' | translate }}</span>
               <div class="spinner-wrapper animated fade pull-right"
                 data-ng-if="!userSettings.fwd.setup.resp && !userSettings.errors.notAvailable">
                 <div class="spinner small"></div>
@@ -219,13 +224,13 @@
               <li data-ng-class="{'active': userSettings.fwd.visible === 'setup'}">
                 <button type="button" class="btn btn-default btn-block"
                   data-ng-click="userSettings.fwd.show('setup')">
-                  Set-up
+                  {{ 'SETTINGS.CF_SETUP' | translate }}
                 </button>
               </li>
               <li data-ng-class="{'active': userSettings.fwd.visible === 'schedule'}">
                 <button type="button" class="btn btn-default btn-block"
                   data-ng-click="userSettings.fwd.show('schedule')">
-                  Schedules
+                  {{ 'SETTINGS.CF_SCHEDULES' | translate }}
                 </button>
               </li>
             </ul>
@@ -236,28 +241,27 @@
 
                 <div class="settings-details-wrapper animated fade" data-ng-if="userSettings.errors.notAvailable">
                   <div class="alert alert-warning">
-                    <p><strong>Feature not available</strong></p>
-                    Please contact your administrator.
+                    <p><strong>{{ 'SETTINGS.FEATURE_HELP' | translate }}</strong></p>
+                    {{ 'SETTINGS.ADMIN_HELP' | translate }}
                   </div>
                 </div>
 
                 <div data-ng-if="!userSettings.errors.notAvailable">
                   <form name="formSetup">
                     <p>
-                      Extension will ring first for
-                      <input class="fwd-no form-control" type="number" data-ng-model="userSettings.fwd.setup.resp.expiration" data-ng-pattern="/^\d+$/" data-ng-required="true"> seconds.
+                      {{ 'SETTINGS.CF_EXTENSION' | translate }}
+                      <input class="fwd-no form-control" type="number" data-ng-model="userSettings.fwd.setup.resp.expiration" data-ng-pattern="/^\d+$/"  data-ng-required="true"> {{ 'SETTINGS.CALLFORWARDING.SECONDS' | translate }}
                     </p>
 
                     <div class="table-responsive">
                       <table class="table">
                         <thead>
                           <tr>
-                            <th>Active</th>
-                            <th>Condition</th>
-                            <th>Schedule</th>
-                            <th>Forward to</th>
-                            <th>Timeout (s)</th>
-                            <th>Move</th>
+                            <th>{{ 'SETTINGS.CF_ACTIVE' | translate }}</th>
+                            <th>{{ 'SETTINGS.CF_CONDITION' | translate }}</th>
+                            <th>{{ 'SETTINGS.CF_SCHEDULE' | translate }}</th>
+                            <th>{{ 'SETTINGS.CF_FORWARD' | translate }}</th>
+                            <th>{{ 'SETTINGS.CF_TIMEOUT' | translate }} (s)</th>
                             <th></th>
                           </tr>
                         </thead>
@@ -312,7 +316,8 @@
                           <tr>
                             <td colspan="6">
                               <p class="add-btn">
-                                <button type="button" class="btn btn-link" title="Add ring"
+                                <button type="button" class="btn btn-link" 
+                                  translate-attr="{ title: 'SETTINGS.CF_ADD_RING' }"
                                   data-ng-click="userSettings.fwd.setup.add(); formSetup.$setDirty();">
                                   <b>+</b>
                                 </button>
@@ -332,19 +337,19 @@
                     <button class="btn btn-default"
                       data-ng-disabled="!formSetup.$dirty"
                       data-ng-click="userSettings.fwd.setup.cancel(); formSetup.$setPristine();">
-                      Cancel
+                      {{ 'GLOBAL.CANCEL' | translate }}
                     </button>
                     <button type="button" class="btn btn-success"
                       data-ng-click="userSettings.fwd.setup.save(formSetup)"
                       data-ng-disabled="!formSetup.$dirty || formSetup.$invalid">
-                      Save
+                      {{ 'GLOBAL.SAVE' | translate }}
                     </button>
                     <div class="spinner-wrapper inline animated fade"
                       data-ng-show="userSettings.loading">
                       <div class="spinner small"></div>
                     </div>
-                    <span data-ng-if="userSettings.success" class="label label-success animated fadeOut">Success</span>
-                    <span data-ng-if="userSettings.warning" class="label label-warning animated fadeOut">Warning</span>
+                    <span data-ng-if="userSettings.success" class="label label-success animated fadeOut">{{ 'GLOBAL.SUCCESS' | translate}}</span>
+                    <span data-ng-if="userSettings.warning" class="label label-warning animated fadeOut">{{ 'GLOBAL.WARNING' | translate}}</span>
                   </div>
 
                 </div>
@@ -355,17 +360,17 @@
 
                 <div class="settings-details-wrapper animated fade" data-ng-if="userSettings.errors.notAvailable">
                   <div class="alert alert-warning">
-                    <p><strong>Feature not available</strong></p>
-                    Please contact your administrator.
+                    <p><strong>{{ 'SETTINGS.FEATURE_HELP' | translate }}</strong></p>
+                    {{ 'SETTINGS.ADMIN_HELP' | translate }}
                   </div>
                 </div>
                 <div data-ng-if="!userSettings.errors.notAvailable">
                   <p data-ng-if="!userSettings.fwd.sched.selected.periods">
-                    No schedules found. Add one.
+                    {{ 'SETTINGS.CF_NO_SCHEDULES' | translate }}
                   </p>
                   <div class="clearfix">
                     <div data-ng-if="userSettings.fwd.sched.selected">
-                    <p>Select schedule:
+                    <p>{{ 'SETTINGS.CF_SELECT_SCHEDULE' | translate }}
                       <select
                         data-ng-model="userSettings.fwd.sched.selected"
                         data-ng-options="c.name for c in userSettings.fwd.sched.main"
@@ -384,9 +389,9 @@
                         <table class="table" data-ng-if="userSettings.fwd.sched.selected">
                           <thead>
                             <tr>
-                              <th>Day</th>
-                              <th>From</th>
-                              <th>To</th>
+                              <th>{{ 'SETTINGS.CF_DAY' | translate }}</th>
+                              <th>{{ 'SETTINGS.CF_FROM' | translate }}</th>
+                              <th>{{ 'SETTINGS.CF_TO' | translate }}</th>
                               <th></th>
                             </tr>
                           </thead>
@@ -426,7 +431,8 @@
                             <tr>
                               <td colspan="4">
                                 <p class="add-btn">
-                                  <button type="button" class="btn btn-link" title="Add time period"
+                                  <button type="button" class="btn btn-link"
+                                    translate-attr="{ title: 'SETTINGS.CF_ADD_PERIOD' }"
                                     data-ng-click="userSettings.fwd.sched.add(userSettings.fwd.sched.selected); formSched.$setDirty();">
                                     <b>+</b>
                                   </button>
@@ -441,19 +447,19 @@
                         <button class="btn btn-default"
                           data-ng-click="userSettings.fwd.sched.cancel(); formSched.$setPristine();"
                           data-ng-disabled="!formSched.$dirty">
-                          Cancel
+                          {{ 'GLOBAL.CANCEL' | translate }}
                         </button>
                         <button type="button" class="btn btn-success"
                           data-ng-click="userSettings.fwd.sched.save(formSched)"
                           data-ng-disabled="!formSched.$dirty || formSched.$invalid || userSettings.fwd.sched.selected.periods.length === 0">
-                          Save
+                          {{ 'GLOBAL.SAVE' | translate }}
                         </button>
                         <div class="spinner-wrapper inline animated fade"
                           data-ng-show="userSettings.loading">
                           <div class="spinner small"></div>
                         </div>
-                        <span data-ng-if="userSettings.success" class="label label-success animated fadeOut">Success</span>
-                        <span data-ng-if="userSettings.warning" class="label label-warning animated fadeOut">Warning</span>
+                        <span data-ng-if="userSettings.success" class="label label-success animated fadeOut">{{ 'GLOBAL.SUCCESS' | translate }}</span>
+                        <span data-ng-if="userSettings.warning" class="label label-warning animated fadeOut">{{ 'GLOBAL.WARNING' | translate }}</span>
                       </div>
                     </form>
                   </div>
@@ -463,7 +469,7 @@
                     data-ng-if="userSettings.fwd.sched.showNew">
 
                     <div class="clearfix">
-                      <input class="form-control col-xs-4" placeholder="Schedule name" required
+                      <input class="form-control col-xs-4" translate-attr="{ placeholder: 'SETTINGS.CF_SCHEDULE_NAME' }" required
                       data-ng-model="userSettings.fwd.sched.showNewEmpty.name"
                       data-ng-minlength="1">
                       <span class="close-inline" title="Remove">
@@ -476,9 +482,9 @@
                       <table class="table">
                         <thead>
                           <tr>
-                            <th>Day</th>
-                            <th>From</th>
-                            <th>To</th>
+                            <th>{{ 'SETTINGS.CF_DAY' | translate }}</th>
+                            <th>{{ 'SETTINGS.CF_FROM' | translate }}</th>
+                            <th>{{ 'SETTINGS.CF_TO' | translate }}</th>
                             <th></th>
                           </tr>
                         </thead>
@@ -518,7 +524,8 @@
                           <tr>
                             <td colspan="4">
                               <p class="add-btn">
-                                <button type="button" class="btn btn-link" title="Add time period"
+                                <button type="button" class="btn btn-link"
+                                  translate-attr="{ title: 'SETTINGS.CF_ADD_PERIOD' }"
                                   data-ng-click="userSettings.fwd.sched.add(userSettings.fwd.sched.showNewEmpty);">
                                   <b>+</b>
                                 </button>
@@ -532,7 +539,7 @@
                         data-ng-disabled="!formSchedNew.$dirty || formSchedNew.$invalid|| userSettings.fwd.sched.selected.periods.length === 0"
                         data-ng-click="userSettings.fwd.sched.addNew();"
                         >
-                        Add and save
+                        {{ 'SETTINGS.CF_ADD_SAVE' | translate }}
                       </button>
                     </form>
                   </div>
@@ -542,7 +549,7 @@
                       data-ng-disabled="userSettings.fwd.sched.showNew || userSettings.fwd.sched.selected.periods.length === 0"
                       data-ng-click="userSettings.fwd.sched.addNew();"
                       >
-                      Add new schedule
+                      {{ 'SETTINGS.CF_ADD_NEW_SCHEDULE' | translate }}
                     </button>
                   </p>
                 </div>
@@ -559,7 +566,7 @@
         <div class="row">
           <div class="settings-details speed">
             <div class="settings-title">
-              <span>Speed Dials</span>
+              <span>{{ 'SETTINGS.SPEED_DIALS' | translate }}</span>
               <div class="spinner-wrapper animated fade pull-right"
                 data-ng-if="!userSettings.speed.data && !userSettings.errors.notAvailable">
                 <div class="spinner small"></div>
@@ -568,18 +575,18 @@
 
             <div class="settings-details-wrapper animated fade" data-ng-if="userSettings.errors.notAvailable">
               <div class="alert alert-warning">
-                <p><strong>Feature not available</strong></p>
-                Please contact your administrator.
+                <p><strong>{{ 'SETTINGS.FEATURE_HELP' | translate }}</strong></p>
+                {{ 'SETTINGS.ADMIN_HELP' | translate }}
               </div>
             </div>
 
             <div class="settings-details-wrapper" data-ng-if="!userSettings.errors.notAvailable">
               <div class="form-group clearfix">
-                <label class="col-sm-5 control-label">Only use Group Speed Dials</label>
+                <label class="col-sm-5 control-label">{{ 'SETTINGS.SD_ONLY_GROUP' | translate }}</label>
                 <div class="col-sm-7">
                   <input type="checkbox" class="form-control" data-ng-model="userSettings.speed.data.groupSpeedDial" data-ng-change="formSpeed.$setDirty();">
                   <span class="help-block">
-                    Enabling this option will delete all your existing Speed Dials and replace them with the Group Speed Dials
+                    {{ 'SETTINGS.SD_ONLY_GROUP_HELP' | translate }}
                   </span>
                 </div>
               </div>
@@ -589,9 +596,9 @@
                     <table class="table">
                       <thead>
                         <tr>
-                          <th>Number</th>
-                          <th>Name</th>
-                          <th>Presence</th>
+                          <th>{{ 'SETTINGS.SD_NUMBER' | translate }}</th>
+                          <th>{{ 'SETTINGS.SD_NAME' | translate }}</th>
+                          <th>{{ 'PRESENCES.PRESENCE' | translate }}</th>
                           <th></th>
                           <th></th>
                         </tr>
@@ -599,14 +606,16 @@
                       <tbody>
                         <tr class="form-group" data-ng-repeat="obj in userSettings.speed.data.buttons track by $index">
                           <td>
-                            <input type="text" class="form-control" placeholder="Number"
+                            <input type="text" class="form-control"
+                              translate-attr="{ placeholder: 'SETTINGS.SD_NUMBER' }"
                               data-ng-model="userSettings.speed.data.buttons[$index].number"
                               data-ng-pattern="userSettings.speed.data.buttons[$index].pattern"
                               data-ng-required="true"
                               data-ng-disabled="userSettings.speed.data.groupSpeedDial">
                           </td>
                           <td>
-                            <input type="text" class="form-control" placeholder="Name"
+                            <input type="text" class="form-control"
+                              translate-attr="{ placeholder: 'SETTINGS.SD_NAME' }"
                               data-ng-model="userSettings.speed.data.buttons[$index].label"
                               data-ng-required="true"
                               data-ng-disabled="userSettings.speed.data.groupSpeedDial">
@@ -626,7 +635,7 @@
                           </td>
                           <td>
                             <div class="tooltip-wrapper" data-ng-if="!userSettings.speed.data.groupSpeedDial">
-                              <span class="close-inline" title="Remove">
+                              <span class="close-inline" translate-attr="{ title: 'SETTINGS.SD_REMOVE' }">
                                 <i class="icon-close"
                                   data-ng-click="userSettings.speed.removeEntry($index); formSpeed.$setDirty();"></i>
                               </span>
@@ -636,7 +645,7 @@
                         <tr>
                           <td colspan="4">
                             <p class="add-btn">
-                              <button type="button" class="btn btn-link" title="Add speed dial"
+                              <button type="button" class="btn btn-link" translate-attr="{ title: 'SETTINGS.SD_ADD_DIAL' }"
                                 data-ng-disabled="userSettings.speed.data.groupSpeedDial"
                                 data-ng-click="userSettings.speed.addEntry(); formSpeed.$setDirty();">
                                 <b>+</b>
@@ -648,8 +657,8 @@
                     </table>
                     <div class="settings-details-wrapper animated fade" data-ng-if="userSettings.errors.speedDials">
                       <div class="alert alert-warning">
-                      <p><strong>Invalid Speed Dial value entered.</strong></p>
-                        You can not subscribe to presence with this speed dial value.
+                        <p><strong>{{ 'SETTINGS.SD_INVALID_START' | translate }}</strong></p>
+                        {{ 'SETTINGS.SD_INVALID_END' | translate }}  
                       </div>
                     </div>
                   </div>
@@ -659,22 +668,22 @@
                 <button class="btn btn-default"
                   data-ng-disabled="!formSpeed.$dirty"
                   data-ng-click="userSettings.speed.cancel(); formSpeed.$setPristine();">
-                  Cancel
+                  {{ 'GLOBAL.CANCEL' | translate }}
                 </button>
                 <button class="btn btn-success" data-ng-click="userSettings.speed.save(formSpeed)"
                   data-ng-disabled="!formSpeed.$dirty || formSpeed.$invalid">
-                  Save
+                  {{ 'GLOBAL.SAVE' | translate }}
                 </button>
                 <button class="btn btn-success" data-ng-click="userSettings.speed.save(formSpeed, true)"
                   data-ng-disabled="!formSpeed.$dirty || formSpeed.$invalid">
-                  Save and update phone(s)
+                  {{ 'SETTINGS.SD_SAVE_UPDATE' | translate }}
                 </button>
                 <div class="spinner-wrapper inline animated fade"
                   data-ng-show="userSettings.loading">
                   <div class="spinner small"></div>
                 </div>
-                <span data-ng-if="userSettings.success" class="label label-success animated fadeOut">Success</span>
-                <span data-ng-if="userSettings.warning" class="label label-warning animated fadeOut">Warning</span>
+                <span data-ng-if="userSettings.success" class="label label-success animated fadeOut">{{ 'GLOBAL.SUCCESS' | translate }}</span>
+                <span data-ng-if="userSettings.warning" class="label label-warning animated fadeOut">{{ 'GLOBAL.WARNING' | translate }}</span>
               </div>
             </div>
           </div>
@@ -686,7 +695,7 @@
           <div class="settings-details">
 
             <div class="settings-title">
-              <span>User Settings</span>
+              <span>{{ 'SETTINGS.USER_SETTINGS' | translate }}</span>
               <div class="spinner-wrapper animated fade pull-right"
                 data-ng-if="!userSettings.user.buddy && !userSettings.errors.notAvailable">
                 <div class="spinner small"></div>
@@ -698,58 +707,58 @@
 
               <div class="settings-details-wrapper">
                 <div class="form-group clearfix">
-                  <label for="inputPass" class="col-sm-3 control-label">User Password</label>
+                  <label for="inputPass" class="col-sm-3 control-label">{{ 'SETTINGS.US_PASSWORD' | translate }}</label>
                   <div class="col-sm-9">
                     <input type="password" class="form-control" placeholder="********"
                       data-ng-pattern="/^[a-zA-Z0-9-!$%^&*()_+|~=`{}\[\]:;'<>?,.\/@#]{8,}$/"
                       data-ng-disabled="!permission.enableSettingUserPaswd"
                       data-ng-model="userSettings.user.pass">
                     <span class="help-block">
-                      Used to log into the User Portal and XMPP. Minimum length is 8.
+                      {{ 'SETTINGS.US_PASSWORD_HELP' | translate }}
                     </span>
                   </div>
                 </div>
                 <div class="form-group clearfix">
-                  <label class="col-sm-3 control-label">Browser Exit Warning</label>
+                  <label class="col-sm-3 control-label">{{ 'SETTINGS.US_BROWSER_EXIT' | translate }}</label>
                   <div class="col-sm-9">
                     <input type="checkbox" class="form-control" data-ng-model="userSettings.user.closeWarn">
                     <span class="help-block">
-                      Web browser will issue a warning if you try to close the window or logout when logged in.
+                      {{ 'SETTINGS.US_BROWSER_EXIT_HELP' | translate }}
                     </span>
                   </div>
                 </div>
                 <div class="alert alert-warning alert-dismissable animated fade"
                   data-ng-if="userSettings.user.errors.pass">
                   <button type="button" class="close" data-ng-click="userSettings.user.errors.pass = null">&times;</button>
-                  Minimum password length: 8
+                  {{ 'SETTINGS.US_PASSWORD_WARN' | translate }}
                 </div>
               </div>
 
-              <p class="settings-subtitle">Voicemail</p>
+              <p class="settings-subtitle">{{ 'SETTINGS.US_VOICEMAIL' | translate }}</p>
               <div class="settings-details-wrapper animated fade" data-ng-if="userSettings.errors.voicemail">
                 <div class="alert alert-warning">
-                  <p><strong>Feature not available</strong></p>
-                  Please contact your administrator.
+                  <p><strong>{{ 'SETTINGS.FEATURE_HELP' | translate }}</strong></p>
+                  {{ 'SETTINGS.ADMIN_HELP' | translate }}
                 </div>
               </div>
               <div class="settings-details-wrapper animated fade" data-ng-if="userSettings.user.vm.main.voicemailPermission === false">
                 <div class="alert alert-warning">
-                  <p><strong>Voicemail is turned off</strong></p>
-                  Please contact your administrator.
+                  <p><strong>{{ 'SETTINGS.US_VOICEMAIL_OFF' | translate }}</strong></p>
+                  {{ 'SETTINGS.ADMIN_HELP' | translate }}
                 </div>
               </div>
               <div class="settings-details-wrapper" data-ng-if="(userSettings.errors.voicemail === false) || (userSettings.user.vm.main.voicemailPermission === true)">
                 <div class="form-group clearfix">
-                  <label class="col-sm-3 control-label">Voicemail PIN</label>
+                  <label class="col-sm-3 control-label">{{ 'SETTINGS.US_VOICEMAIL_PIN' | translate }}</label>
                   <div class="col-sm-9">
                     <input type="password" class="form-control" placeholder="****" data-ng-pattern="/^[a-zA-Z0-9]{4,}$/" data-ng-disabled="!permission.enableSettingUserVmPin" data-ng-model="userSettings.user.vm.pass">
                     <span class="help-block">
-                      Used to log into voicemail. Numeric PINs are recommended, since only numbers can be dialed. Minimum length is 4.
+                      {{ 'SETTINGS.US_VOICEMAIL_PIN_HELP' | translate }}
                     </span>
                   </div>
                 </div>
                 <div class="form-group clearfix">
-                  <label class="col-sm-3 control-label">Announcement</label>
+                  <label class="col-sm-3 control-label">{{ 'SETTINGS.US_ANNOUNCEMENT' | translate }}</label>
                   <div class="col-sm-9">
                     <select class="form-control"
                       data-ng-model="userSettings.user.vm.selected"
@@ -758,39 +767,49 @@
                       data-ng-change="userSettings.user.vm.changeAnnouncement()">
                     </select>
                     <span class="help-block">
-                      Voicemail prompt callers will hear before leaving a message.
+                      {{ 'SETTINGS.US_ANNOUNCEMENT_HELP' | translate }}
                     </span>
                   </div>
                 </div>
                 <div class="form-group clearfix" data-ng-if="userSettings.user.vm.selected.greetigs.indexOf('none') == -1">
-                  <label class="col-sm-3 control-label">Greeting</label>
+                  <label class="col-sm-3 control-label">{{ 'SETTINGS.US_GREETING' | translate }}</label>
                   <div class="col-sm-9">
                     <input type="text" class="form-control" data-ng-disabled="true" data-ng-model="userSettings.user.vm.selectedGreeting">
                     <span class="help-block"  data-ng-if="userSettings.user.vm.selectedGreeting == ''">
-                      No custom greeting, system greeting is used.
+                      {{ 'SETTINGS.US_GREETING_HELP' | translate }}
                     </span>
                     <div class="settings-details-wrapper buttons">
                       <button class="btn btn-default"
                               data-ng-if="userSettings.user.vm.selectedGreeting != ''"
                               data-ng-click="userSettings.user.vm.listenGreeting()">
-                        Listen
+                              {{ 'SETTINGS.US_LISTEN' | translate }}
                       </button>
+                      <div class="spinner-wrapper inline animated fade"
+                        data-ng-show="userSettings.user.vm.loading == true && userSettings.user.vm.changed == false">
+                        <div class="spinner small"></div>
+                      </div>
                       <button class="btn btn-default"
                               data-ng-if="userSettings.user.vm.selectedGreeting != ''"
                               data-ng-click="userSettings.user.vm.deleteGreeting()">
-                        Delete
+                              {{ 'SETTINGS.US_DELETE' | translate }}
                       </button>
+                    </div>
+                    <div data-ng-if="userSettings.user.vm.loading == false && userSettings.user.vm.changed == false" class="settings-details-wrapper buttons">
+                      <audio controls autoplay
+                        data-ng-src="{{ userSettings.user.vm.href }}"
+                        type="{{userSettings.user.vm.isMp3 ? 'audio/mp3' : 'audio/wav'}}">
+                      </audio>
                     </div>
                     <div class="settings-details-wrapper buttons animated fade" data-ng-if="userSettings.errors.greetings">
                       <div class="alert alert-warning">
-                        <p><strong>Deleting Greeting file failed</strong></p>
-                        No initial greeting to replace with. Please upload greeting file.
+                        <p><strong>{{ 'SETTINGS.US_GREETING_DELETING' | translate }}</strong></p>
+                        {{ 'SETTINGS.US_GREETING_REPLACE' | translate }}
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="form-group clearfix" data-ng-if="userSettings.user.vm.selected.greetigs.indexOf('none') == -1">
-                  <label class="col-sm-3 control-label">Audio file</label>
+                  <label class="col-sm-3 control-label">{{ 'SETTINGS.US_AUDIO_FILE' | translate }}</label>
                   <div class="col-sm-9">
                     <div ng-controller="UploadGreetingFile" ng-click="formUserSettings.$setDirty()" class="entry-choose-file">
                       <input type="file" nv-file-select uploader="uploader">
@@ -801,33 +820,33 @@
                       </button>-->
                     </div>
                     <span class="help-block">
-                      Choose the file from your computer to upload and make it the new Greeting.
+                      {{ 'SETTINGS.US_AUDIO_FILE_GREETING_HELP' | translate }}
                     </span>
                   </div>
                 </div>
                 <div class="form-group clearfix">
-                  <label class="col-sm-3 control-label">Email</label>
+                  <label class="col-sm-3 control-label">{{ 'SETTINGS.US_EMAIL' | translate }}</label>
                   <div class="col-sm-9">
-                    <input type="email" class="form-control" placeholder="Email" data-ng-disabled="!permission.enableSettingUserEmail" data-ng-model="userSettings.user.vm.main.email">
+                    <input type="email" class="form-control" translate-attr="{ placeholder: 'SETTINGS.US_EMAIL' }" data-ng-disabled="!permission.enableSettingUserEmail" data-ng-model="userSettings.user.vm.main.email">
                   </div>
                 </div>
                 <div class="form-group clearfix">
-                  <label class="col-sm-3 control-label">Attach audio</label>
+                  <label class="col-sm-3 control-label">{{ 'SETTINGS.US_ATTACH_AUDIO' | translate }}</label>
                   <div class="col-sm-9">
                     <input type="checkbox" class="form-control" data-ng-disabled="!permission.enableSettingUserAttachAudio" data-ng-model="userSettings.user.vm.main.emailIncludeAudioAttachment">
                     <span class="help-block">
-                      If checked, the voicemail message will be attached to the notification email. Otherwise, the email will contain a link to retrieve voicemail message.
+                      {{ 'SETTINGS.US_ATTACH_AUDIO_HELP' | translate }}
                     </span>
                   </div>
                 </div>
                 <div class="form-group clearfix">
-                  <label class="col-sm-3 control-label">Alternate email</label>
+                  <label class="col-sm-3 control-label">{{ 'SETTINGS.US_ALT_EMAIL' | translate }}</label>
                   <div class="col-sm-9">
-                    <input type="email" class="form-control" placeholder="Email" data-ng-disabled="!permission.enableSettingUserAltEmail" data-ng-model="userSettings.user.vm.main.altEmail">
+                    <input type="email" class="form-control" translate-attr="{ placeholder: 'SETTINGS.US_EMAIL' }" data-ng-disabled="!permission.enableSettingUserAltEmail" data-ng-model="userSettings.user.vm.main.altEmail">
                   </div>
                 </div>
                 <div class="form-group clearfix">
-                  <label class="col-sm-3 control-label">Attach audio</label>
+                  <label class="col-sm-3 control-label">{{ 'SETTINGS.US_ATTACH_AUDIO' | translate }}</label>
                   <div class="col-sm-9">
                     <input type="checkbox" class="form-control" data-ng-disabled="!permission.enableSettingUserAltAttachAudio" data-ng-model="userSettings.user.vm.main.altEmailIncludeAudioAttachment">
                   </div>
@@ -843,9 +862,9 @@
               </div>-->
 
               <div class="settings-details-wrapper" data-ng-if="!userSettings.errors.confBridge">
-                <p class="settings-subtitle">Conference Bridge</p>
+                <p class="settings-subtitle">{{ 'SETTINGS.US_CONFERENCEBRIDGE' | translate }}</p>
                 <div class="form-group clearfix">
-                  <label class="col-sm-3 control-label">Room</label>
+                  <label class="col-sm-3 control-label">{{ 'SETTINGS.US_ROOM' | translate }}</label>
                   <div class="col-sm-9">
                     <select class="form-control"
                       data-ng-model="userSettings.user.conf.selected"
@@ -856,104 +875,104 @@
                   </div>
                 </div>
                 <div class="form-group clearfix">
-                  <label class="col-sm-3 control-label">Enabled</label>
+                  <label class="col-sm-3 control-label">{{ 'SETTINGS.US_ENABLED' | translate }}</label>
                   <div class="col-sm-9">
                     <input type="checkbox" class="form-control" data-ng-disabled="!permission.enableSettingUserConfBridgeEnabled" data-ng-model="userSettings.user.conf.main.enabled">
                   </div>
                 </div>
                 <div class="form-group clearfix">
-                  <label class="col-sm-3 control-label">Name</label>
+                  <label class="col-sm-3 control-label">{{ 'SETTINGS.US_NAME' | translate }}</label>
                   <div class="col-sm-9">
-                    <input type="text" placeholder="Name" class="form-control" data-ng-disabled="!permission.enableSettingUserConfBridgeName" data-ng-model="userSettings.user.conf.main.name" required>
+                    <input type="text" translate-attr="{ placeholder: 'SETTINGS.US_NAME' }" class="form-control" data-ng-disabled="!permission.enableSettingUserConfBridgeName" data-ng-model="userSettings.user.conf.main.name" required>
                   </div>
                 </div>
                 <div class="form-group clearfix">
-                  <label class="col-sm-3 control-label">Moderator PIN</label>
+                  <label class="col-sm-3 control-label">{{ 'SETTINGS.US_MODERATOR_PIN' | translate }}</label>
                   <div class="col-sm-9">
-                    <input type="text" placeholder="PIN" class="form-control" data-ng-disabled="!permission.enableSettingUserConfBridgeModeratorPin" data-ng-model="userSettings.user.conf.main.moderatorCode" data-ng-pattern="/^\d+$/">
+                    <input type="text" translate-attr="{ placeholder: 'SETTINGS.US_PIN' }" class="form-control" data-ng-disabled="!permission.enableSettingUserConfBridgeModeratorPin" data-ng-model="userSettings.user.conf.main.moderatorCode" data-ng-pattern="/^\d+$/">
                     <span class="help-block">
-                      Moderator access code for audio conference. Can be empty. If set, a participant PIN must also be set. Users logged in using this pin are automatically recognised as moderators.
+                      {{ 'SETTINGS.US_PIN_HELP' | translate }}
                     </span>
                   </div>
                 </div>
                 <div class="form-group clearfix">
-                  <label class="col-sm-3 control-label">Participant PIN</label>
+                  <label class="col-sm-3 control-label">{{ 'SETTINGS.US_PARTICIPANT_PIN' | translate }}</label>
                   <div class="col-sm-9">
-                    <input type="text" placeholder="PIN" class="form-control" data-ng-disabled="!permission.enableSettingUserConfBridgePartPin" data-ng-model="userSettings.user.conf.main.accessCode" data-ng-pattern="/^\d+$/">
+                    <input type="text" translate-attr="{ placeholder: 'SETTINGS.US_PIN' }" class="form-control" data-ng-disabled="!permission.enableSettingUserConfBridgePartPin" data-ng-model="userSettings.user.conf.main.accessCode" data-ng-pattern="/^\d+$/">
                     <span class="help-block">
-                      Participant access code for audio conference. Can be empty.
+                      {{ 'SETTINGS.US_PARTICIPANT_PIN_HELP' | translate }}
                     </span>
                   </div>
                 </div>
                 <div class="form-group clearfix">
-                  <label class="col-sm-3 control-label">Max. members</label>
+                  <label class="col-sm-3 control-label">{{ 'SETTINGS.US_MAXMEMBERS' | translate }}</label>
                   <div class="col-sm-9">
                     <input type="number" class="form-control" data-ng-disabled="!permission.enableSettingUserConfBridgeMaxMembers" data-ng-model="userSettings.user.conf.main.maxMembers" data-ng-pattern="/^\d+$/">
                     <span class="help-block">
-                      The maximum number of call legs to be allowed by this bridge. 0 means unlimited.
+                      {{ 'SETTINGS.US_MAXMEMBERS_HELP' | translate }}
                     </span>
                   </div>
                 </div>
                 <div class="form-group clearfix">
-                  <label class="col-sm-3 control-label">Quickstart</label>
+                  <label class="col-sm-3 control-label">{{ 'SETTINGS.US_QUICKSTART' | translate }}</label>
                   <div class="col-sm-9">
                     <input type="checkbox" class="form-control" data-ng-disabled="!permission.enableSettingUserConfBridgeQuickStart" data-ng-model="userSettings.user.conf.main.quickstart">
                     <span class="help-block">
-                      A non-quickstart conference begins when the chair person arrives. Enable this if you want not to wait for a moderator. Only a quickstart conference can be setup with no PIN.
+                      {{ 'SETTINGS.US_QUICKSTART_HELP' | translate }}
                     </span>
                   </div>
                 </div>
                 <div class="form-group clearfix">
-                  <label class="col-sm-3 control-label">Auto-record</label>
+                  <label class="col-sm-3 control-label">{{ 'SETTINGS.US_AUTO_RECORD' | translate }}</label>
                   <div class="col-sm-9">
                     <input type="checkbox" class="form-control" data-ng-disabled="!permission.enableSettingUserConfBridgeAutoRecord" data-ng-model="userSettings.user.conf.main.autorecorded">
                     <span class="help-block">
-                      If checked then conference calls will be recorded to the conference owner's mailbox
+                      {{ 'SETTINGS.US_AUTO_RECORD_HELP' | translate }}
                     </span>
                   </div>
                 </div>
                 <div class="form-group clearfix">
-                  <label class="col-sm-3 control-label">Play Entry Tone</label>
+                  <label class="col-sm-3 control-label">{{ 'SETTINGS.US_PLAY_ENTRY' | translate }}</label>
                   <div class="col-sm-9">
                     <input type="checkbox" class="form-control" data-ng-disabled="!permission.enableSettingUserConfBridgeEntryTone" data-ng-model="userSettings.user.conf.main.playEntryToneEnabled">
                     <span class="help-block">
-                      When enabled, entry tone will be played each time a participant joins this conference.
+                      {{ 'SETTINGS.US_PLAY_ENTRY_HELP' | translate }}
                     </span>
                   </div>
                 </div>
                 <div class="form-group clearfix">
-                  <label class="col-sm-3 control-label">Play Exit Tone</label>
+                  <label class="col-sm-3 control-label">{{ 'SETTINGS.US_PLAY_EXIT' | translate }}</label>
                   <div class="col-sm-9">
                     <input type="checkbox" class="form-control" data-ng-disabled="!permission.enableSettingUserConfBridgeExitTone" data-ng-model="userSettings.user.conf.main.playExitToneEnabled">
                     <span class="help-block">
-                      When enabled, exit tone will be played each time a participant leaves this conference.
+                      {{ 'SETTINGS.US_PLAY_EXIT_HELP' | translate }}
                     </span>
                   </div>
                 </div>
                 <div class="form-group clearfix">
-                  <label class="col-sm-3 control-label">Play User Name on Entry</label>
+                  <label class="col-sm-3 control-label">{{ 'SETTINGS.US_PLAY_NAME_ENTRY' | translate }}</label>
                   <div class="col-sm-9">
                     <input type="checkbox" class="form-control" data-ng-disabled="!permission.enableSettingUserConfBridgeEntryVoice" data-ng-model="userSettings.user.conf.main.recordAndPlayNameOnEntryEnabled">
                     <span class="help-block">
-                      When enabled, user joining this conference will be prompted to speak their name. The name is played and heard by all the participants upon user joining the meeting.
+                      {{ 'SETTINGS.US_PLAY_NAME_ENTRY_HELP' | translate }}
                     </span>
                   </div>
                 </div>
                 <div class="form-group clearfix">
-                  <label class="col-sm-3 control-label">Play User Name on Exit</label>
+                  <label class="col-sm-3 control-label">{{ 'SETTINGS.US_PLAY_NAME_EXIT' | translate }}</label>
                   <div class="col-sm-9">
                     <input type="checkbox" class="form-control" data-ng-disabled="!permission.enableSettingUserConfBridgeExitVoice" data-ng-model="userSettings.user.conf.main.recordAndPlayNameOnExitEnabled">
                     <span class="help-block">
-                      	When enabled, recorded name of user leaving this meeting is played and heard by all participants.
+                      {{ 'SETTINGS.US_PLAY_NAME_EXIT_HELP' | translate }}
                     </span>
                   </div>
                 </div>
               </div>
 
-              <p class="settings-subtitle">Music on hold</p>
+              <p class="settings-subtitle">{{ 'SETTINGS.US_MOH' | translate }}</p>
               <div class="settings-details-wrapper" >
                 <div class="form-group clearfix">
-                  <label class="col-sm-3 control-label">Audio source</label>
+                  <label class="col-sm-3 control-label">{{ 'SETTINGS.US_AUDIO_SOURCE' | translate }}</label>
                   <div class="col-sm-9">
                     <select class="form-control"
                       data-ng-disabled="!permission.enableSettingUserMoHAudioSource"
@@ -961,69 +980,79 @@
                       data-ng-options="c.name for c in userSettings.user.moh.select">
                     </select>
                     <span class="help-block">
-                      Select the Music on Hold source<br>
-                      &nbsp;&nbsp;Personal Music Directory - Personal MoH files listed bellow<br>
-                      &nbsp;&nbsp;Group Music Directory - Music from the User Group<br>
-                      &nbsp;&nbsp;System Music Directory - MoH defined for the System<br>
-                      &nbsp;&nbsp;Use System Configuration - Choose whatever the default is for the system<br>
-                      &nbsp;&nbsp;None - No MoH
+                      {{ 'SETTINGS.US_SELECT_MOH' | translate }}<br>
+                      &nbsp;&nbsp;Personal Music Directory - {{ 'SETTINGS.US_MOH_PERSONAL' | translate }}<br>
+                      &nbsp;&nbsp;Group Music Directory - {{ 'SETTINGS.US_MOH_GROUP' | translate }}<br>
+                      &nbsp;&nbsp;System Music Directory - {{ 'SETTINGS.US_MOH_SYSTEM' | translate }}<br>
+                      &nbsp;&nbsp;Use System Configuration - {{ 'SETTINGS.US_MOH_CONFIG' | translate }}<br>
+                      &nbsp;&nbsp;None - {{ 'SETTINGS.US_MOH_NO' | translate }}
                     </span>
 
                   </div>
                 </div>
                 <div class="form-group clearfix">
-                  <label class="col-sm-3 control-label">Personal MoH Files</label>
+                  <label class="col-sm-3 control-label">{{ 'SETTINGS.US_PERSONAL_MOH_FILES' | translate }}</label>
                   <div class="col-sm-9">
                     <select class="form-control"
                       data-ng-disabled="!permission.enableSettingUserMoHPersonal"
                       data-ng-model="userSettings.user.moh.selectedMoh"
-                      data-ng-options="c.name for c in userSettings.user.moh.selectMoh">
+                      data-ng-options="c.name for c in userSettings.user.moh.selectMoh"
+                      data-ng-change="userSettings.user.moh.changeMoh()">
                     </select>
                     <span class="help-block">
-                      Select the Music on Hold file
+                      {{ 'SETTINGS.US_SELECT_MOH_FILES' | translate }}
                     </span>
                     <div data-ng-if="!(userSettings.user.moh.selectedMoh.val == 'NONE')">
                       <button class="btn btn-default"
                         data-ng-click="userSettings.user.moh.listenMoh()">
-                        Listen
+                        {{ 'SETTINGS.US_LISTEN' | translate }}
                       </button>
+                      <div class="spinner-wrapper inline animated fade"
+                        data-ng-show="userSettings.user.moh.loading == true && userSettings.user.moh.changed == false">
+                        <div class="spinner small"></div>
+                      </div>
                       <button class="btn btn-default"
                         data-ng-click="userSettings.user.moh.deleteMoh()">
-                        Delete
+                        {{ 'SETTINGS.US_DELETE' | translate }}
                       </button>
+                    </div>
+                    <div data-ng-if="userSettings.user.moh.loading == false && userSettings.user.moh.changed == false">
+                        <audio controls autoplay
+                        data-ng-src="{{ userSettings.user.moh.href }}">
+                      </audio>
                     </div>
                   </div>
                 </div>
                 <div class="form-group clearfix">
-                  <label class="col-sm-3 control-label">Audio file</label>
+                  <label class="col-sm-3 control-label">{{ 'SETTINGS.US_AUDIO_FILE' | translate }}</label>
                   <div class="col-sm-9">
                     <div ng-controller="UploadMoHFile">
                       <input type="file" data-ng-disabled="!permission.enableSettingUserMoHFiles" nv-file-select uploader="uploader">
 
                     </div>
                     <span class="help-block">
-                      Choose the file from your computer to upload and add it to the Personal MoH files
+                      {{ 'SETTINGS.US_AUDIO_FILE_MOH_HELP' | translate }}
                     </span>
                   </div>
                 </div>
               </div>
 
-              <p class="settings-subtitle">MyBuddy</p>
+              <p class="settings-subtitle">{{ 'SETTINGS.US_MYBUDDY' | translate }}</p>
               <div class="settings-details-wrapper animated fade" data-ng-if="userSettings.errors.myBuddy">
                 <div class="alert alert-warning">
-                  <p><strong>Feature not available</strong></p>
-                  Please contact your administrator.
+                  <p><strong>{{ 'SETTINGS.FEATURE_HELP' | translate }}</strong></p>
+                  {{ 'SETTINGS.ADMIN_HELP' | translate }}
                 </div>
               </div>
               <div class="settings-details-wrapper" data-ng-if="!userSettings.errors.myBuddy">
                 <div class="form-group clearfix animated fade">
                   <label class="col-sm-4 control-label">
-                    <p class="muted">Triggered on:</p>
+                    <p class="muted">{{ 'SETTINGS.US_TRIGGERED' | translate }}</p>
                   </label>
                 </div>
                 <div class="form-group clearfix animated fade"
                   data-ng-repeat="(key, val) in userSettings.user.buddy track by $index">
-                  <label class="col-sm-3 control-label">{{ key | translate }}</label>
+                  <label class="col-sm-3 control-label">{{ ('SETTINGS.US_' + key) | translate }}</label>
                   <div class="col-sm-9">
                     <input type="checkbox" class="form-control" data-ng-disabled="!permission.buddy[$index]" data-ng-model="userSettings.user.buddy[key]">
                   </div>
@@ -1036,14 +1065,14 @@
 
               <div class="settings-details-wrapper">
                 <button class="btn btn-default"
-                 data-ng-disabled="!formUserSettings.$dirty"
-                 data-ng-click="userSettings.user.cancel(); formUserSettings.$setPristine();">
-                  Cancel
+                  data-ng-disabled="!formUserSettings.$dirty"
+                  data-ng-click="userSettings.user.cancel(); formUserSettings.$setPristine();">
+                  {{ 'GLOBAL.CANCEL' | translate }}
                 </button>
                 <button class="btn btn-success"
                   data-ng-disabled="!formUserSettings.$dirty || formUserSettings.$invalid"
                   data-ng-click="userSettings.user.save(formUserSettings)">
-                  Save
+                  {{ 'GLOBAL.SAVE' | translate }}
                 </button>
                 <div class="spinner-wrapper inline animated fade"
                   data-ng-show="userSettings.user.loading">
@@ -1053,6 +1082,42 @@
             </div>
           </div>
         </div>
+        <div class="col-sm-8 col-md-9 setting-right-side pa unselectable" data-ng-if="selected === 'Language'">
+            <div class="row">
+              <div class="settings-details">
+                <div class="settings-title">
+                  <span>{{ 'SETTINGS.LANGUAGE' | translate }}</span>
+                </div>
+                <form name="formLanguage">
+                  <div class="settings-details-wrapper">
+                    <div class="form-group clearfix">
+                      <label class="col-sm-2 control-label">{{ 'SETTINGS.ACTIVE' | translate }}</label>
+                      <div class="col-sm-10">
+                      <select name="mySelect"
+                              ng-options="option.name for option in userSettings.language.availableOptions  track by option.id"
+                              ng-model="userSettings.language.selectedOption"
+                        >
+                      </select>
+                        <span class="help-block">
+                            {{ 'SETTINGS.US_SELECT_LANGUAGE' | translate }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+    
+                <div class="settings-details-wrapper">
+                  <button class="btn btn-success"
+                    data-ng-click="userSettings.language.save(formLanguage)"
+                    data-ng-disabled="!formLanguage.$dirty || formLanguage.$invalid">
+                    {{ 'GLOBAL.SAVE' | translate }}
+                  </button>
+                  <span data-ng-if="userSettings.success" class="label label-success animated fadeOut">{{ 'GLOBAL.SUCCESS' | translate }}</span>
+                  <span data-ng-if="userSettings.warning" class="label label-warning animated fadeOut">{{ 'GLOBAL.WARNING' | translate }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
 
     </div><!--/#settings-list-->
 

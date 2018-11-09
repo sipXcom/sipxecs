@@ -1,6 +1,6 @@
 <div class="main-left-title-wrapper">
   <i class="icon-presence_meeting"></i>
-  <h5 class="main-left-title">CONTACTS</h5>
+  <h5 class="main-left-title">{{ 'CONTACTS.CONTACTS_NAME' | translate }}</h5>
 </div>
 <div>
   <div data-ng-repeat="entry in (filtered = (phonebook.main | orderBy:'name' )) track by $index">
@@ -21,13 +21,13 @@
   </div>
 </div>
 
-<div
+<div translate-namespace="CONTACTS"
   class="rooms-modal roster-modal animated fade"
   data-ng-show="muc.conf.modal">
   <div class="clearfix">
     <div class="main-left-title-wrapper">
       <i class="icon-presence_meeting"></i>
-      <h5 class="main-left-title">CONTACTS / PROFILE</h5>
+      <h5 translate class="main-left-title">.CONTACTS/PROFILE</h5>
     </div>
     <div
       data-ng-click="hideEntry()"
@@ -57,7 +57,7 @@
 
       <div class="form-group clearfix"
         data-ng-show="entry.profile['first-name'].length > 0">
-        <label class="col-sm-4 control-label">First Name</label>
+        <label translate class="col-sm-4 control-label">.FIRSTNAME</label>
         <div class="col-sm-8">
           <span>{{entry.profile['first-name'] | linky}}</span>
         </div>
@@ -65,7 +65,7 @@
 
       <div class="form-group clearfix"
         data-ng-show="entry.profile['last-name'].length > 0">
-        <label class="col-sm-4 control-label">Last Name</label>
+        <label translate class="col-sm-4 control-label">.LASTNAME</label>
         <div class="col-sm-8">
           <span>{{entry.profile['last-name'] | linky}}</span>
         </div>
@@ -73,7 +73,7 @@
 
       <div class="form-group clearfix"
         data-ng-show="entry.profile['contact-information']['emailAddress'].length > 0">
-        <label class="col-sm-4 control-label">Email Address</label>
+        <label translate class="col-sm-4 control-label">.EMAIL_ADDRESS</label>
         <div class="col-sm-8">
           <span data-ng-bind-html="entry.profile['contact-information']['emailAddress'] | linky"></span>
         </div>
@@ -81,7 +81,7 @@
 
       <div class="form-group clearfix"
         data-ng-show="entry.profile['contact-information']['alternateEmailAddress'].length > 0">
-        <label class="col-sm-4 control-label">Alt Email Address</label>
+        <label translate class="col-sm-4 control-label">.AltEMAIL_ADDRESS</label>
         <div class="col-sm-8">
           <span data-ng-bind-html="entry.profile['contact-information']['alternateEmailAddress'] | linky"></span>
         </div>
@@ -89,7 +89,7 @@
 
       <div class="form-group clearfix"
         data-ng-show="entry.profile['contact-information']['imId'].length > 0">
-        <label class="col-sm-4 control-label">IM ID</label>
+        <label translate class="col-sm-4 control-label">.IM_ID</label>
         <div class="col-sm-8">
           <span>{{entry.profile['contact-information']['imId']}}</span>
         </div>
@@ -97,7 +97,7 @@
 
       <div class="form-group clearfix"
         data-ng-show="entry.profile['contact-information']['alternateImId'].length > 0">
-        <label class="col-sm-4 control-label">Alt IM ID</label>
+        <label translate class="col-sm-4 control-label">.AltIM_ID</label>
         <div class="col-sm-8">
           <span>{{entry.profile['contact-information']['alternateImId']}}</span>
         </div>
@@ -105,7 +105,7 @@
 
       <div class="form-group clearfix"
         data-ng-show="entry.profile['contact-information']['assistantName'].length > 0">
-        <label class="col-sm-4 control-label">Assistant Name</label>
+        <label translate class="col-sm-4 control-label">.ASSIST_NAME</label>
         <div class="col-sm-8">
           <span>{{entry.profile['contact-information']['assistantName']}}</span>
         </div>
@@ -113,7 +113,7 @@
 
       <div class="form-group clearfix"
         data-ng-show="entry.profile['contact-information']['assistantPhoneNumber'].length > 0">
-        <label class="col-sm-4 control-label">Assistant Phone No.</label>
+        <label translate class="col-sm-4 control-label">.ASSIST_PHONE_NUMBER</label>
         <div class="col-sm-8">
           <span>{{entry.profile['contact-information']['assistantPhoneNumber'] | linky}}</span>
         </div>
@@ -121,7 +121,7 @@
 
       <div class="form-group clearfix"
         data-ng-show="entry.profile['contact-information']['cellPhoneNumber'].length > 0">
-        <label class="col-sm-4 control-label">Cell Phone</label>
+        <label translate class="col-sm-4 control-label">.CELL_PHONE</label>
         <div class="col-sm-8">
           <span>{{entry.profile['contact-information']['cellPhoneNumber']}}</span>
         </div>
@@ -129,7 +129,7 @@
 
       <div class="form-group clearfix"
         data-ng-show="entry.profile['contact-information']['homePhoneNumber'].length > 0">
-        <label class="col-sm-4 control-label">Home Phone</label>
+        <label translate class="col-sm-4 control-label">.HOME_PHONE</label>
         <div class="col-sm-8">
           <span>{{entry.profile['contact-information']['homePhoneNumber']}}</span>
         </div>
@@ -137,7 +137,7 @@
 
       <div class="form-group clearfix"
         data-ng-show="entry.profile['contact-information']['faxNumber'].length > 0">
-        <label class="col-sm-4 control-label">Fax Number</label>
+        <label translate class="col-sm-4 control-label">.FAX_NUMBER</label>
         <div class="col-sm-8">
           <span>{{entry.profile['contact-information']['faxNumber']}}</span>
         </div>
@@ -145,7 +145,7 @@
 
       <div class="form-group clearfix"
         data-ng-show="entry.profile['contact-information']['didNumber'].length > 0">
-        <label class="col-sm-4 control-label">DID</label>
+        <label translate class="col-sm-4 control-label">.DID</label>
         <div class="col-sm-8">
           <span>{{entry.profile['contact-information']['didNumber']}}</span>
         </div>
@@ -153,7 +153,7 @@
 
       <div class="form-group clearfix"
         data-ng-show="entry.profile['contact-information']['location'].length > 0">
-        <label class="col-sm-4 control-label">Location</label>
+        <label translate class="col-sm-4 control-label">.LOCATION</label>
         <div class="col-sm-8">
           <span>{{entry.profile['contact-information']['location']}}</span>
         </div>
@@ -161,7 +161,7 @@
 
       <div class="form-group clearfix"
         data-ng-show="entry.profile['contact-information']['companyName'].length > 0">
-        <label class="col-sm-4 control-label">Company</label>
+        <label translate class="col-sm-4 control-label">.COMPANY</label>
         <div class="col-sm-8">
           <span>{{entry.profile['contact-information']['companyName']}}</span>
         </div>
@@ -169,7 +169,7 @@
 
       <div class="form-group clearfix"
         data-ng-show="entry.profile['contact-information']['jobDept'].length > 0">
-        <label class="col-sm-4 control-label">Department</label>
+        <label translate class="col-sm-4 control-label">.DEPARTMENT</label>
         <div class="col-sm-8">
           <span>{{entry.profile['contact-information']['jobDept']}}</span>
         </div>
@@ -177,7 +177,7 @@
 
       <div class="form-group clearfix"
         data-ng-show="entry.profile['contact-information']['jobTitle'].length > 0">
-        <label class="col-sm-4 control-label">Title</label>
+        <label translate class="col-sm-4 control-label">.TITLE</label>
         <div class="col-sm-8">
           <span>{{entry.profile['contact-information']['jobTitle']}}</span>
         </div>
@@ -189,11 +189,11 @@
         entry.profile['contact-information']['officeAddress']['state'] ||
         entry.profile['contact-information']['officeAddress']['country'] ||
         entry.profile['contact-information']['officeAddress']['zip']">
-        <label class="col-sm-4 control-label">Business Address</label>
+        <label translate class="col-sm-4 control-label">.BUSINESS_ADDR</label>
         <div class="form-group-child col-sm-12 clearfix"
           data-ng-show="entry.profile['contact-information']['officeAddress']['street'].length > 0">
           <div>
-            <label class="col-sm-4 control-label">Street</label>
+            <label translate class="col-sm-4 control-label">.BUSINESS_STREET</label>
             <div class="col-sm-8">
               <span>{{entry.profile['contact-information']['officeAddress']['street']}}</span>
             </div>
@@ -202,7 +202,7 @@
         <div class="form-group-child col-sm-12 clearfix"
           data-ng-show="entry.profile['contact-information']['officeAddress']['city'].length > 0">
           <div>
-            <label class="col-sm-4 control-label">City</label>
+            <label translate class="col-sm-4 control-label">.BUSINESS_CITY</label>
             <div class="col-sm-8">
               <span>{{entry.profile['contact-information']['officeAddress']['city']}}</span>
             </div>
@@ -211,7 +211,7 @@
         <div class="form-group-child col-sm-12 clearfix"
           data-ng-show="entry.profile['contact-information']['officeAddress']['state'].length > 0">
           <div>
-            <label class="col-sm-4 control-label">State</label>
+            <label translate class="col-sm-4 control-label">.BUSINESS_STATE</label>
             <div class="col-sm-8">
               <span>{{entry.profile['contact-information']['officeAddress']['state']}}</span>
             </div>
@@ -220,7 +220,7 @@
         <div class="form-group-child col-sm-12 clearfix"
           data-ng-show="entry.profile['contact-information']['officeAddress']['country'].length > 0">
           <div>
-            <label class="col-sm-4 control-label">Country</label>
+            <label translate class="col-sm-4 control-label">.BUSINESS_COUNTRY</label>
             <div class="col-sm-8">
               <span>{{entry.profile['contact-information']['officeAddress']['country']}}</span>
             </div>
@@ -229,7 +229,7 @@
         <div class="form-group-child col-sm-12 clearfix"
           data-ng-show="entry.profile['contact-information']['officeAddress']['zip'].length > 0">
           <div>
-            <label class="col-sm-4 control-label">ZIP</label>
+            <label translate class="col-sm-4 control-label">.BUSINESS_ZIP</label>
             <div class="col-sm-8">
               <span>{{entry.profile['contact-information']['officeAddress']['zip']}}</span>
             </div>
@@ -242,11 +242,11 @@
         entry.profile['contact-information']['homeAddress']['state'] ||
         entry.profile['contact-information']['homeAddress']['country'] ||
         entry.profile['contact-information']['homeAddress']['zip']">
-        <label class="col-sm-4 control-label">Home Address</label>
+        <label translate class="col-sm-4 control-label">.HOME_ADDR</label>
         <div class="form-group-child col-sm-12 clearfix"
           data-ng-show="entry.profile['contact-information']['homeAddress']['street'].length > 0">
           <div>
-            <label class="col-sm-4 control-label">Street</label>
+            <label translate class="col-sm-4 control-label">.HOME_STREET</label>
             <div class="col-sm-8">
               <span>{{entry.profile['contact-information']['homeAddress']['street']}}</span>
             </div>
@@ -255,7 +255,7 @@
         <div class="form-group-child col-sm-12 clearfix"
           data-ng-show="entry.profile['contact-information']['homeAddress']['city'].length > 0">
           <div>
-            <label class="col-sm-4 control-label">City</label>
+            <label translate class="col-sm-4 control-label">.HOME_CITY</label>
             <div class="col-sm-8">
               <span>{{entry.profile['contact-information']['homeAddress']['city']}}</span>
             </div>
@@ -264,7 +264,7 @@
         <div class="form-group-child col-sm-12 clearfix"
           data-ng-show="entry.profile['contact-information']['homeAddress']['state'].length > 0">
           <div>
-            <label class="col-sm-4 control-label">State</label>
+            <label translate class="col-sm-4 control-label">.HOME_STATE</label>
             <div class="col-sm-8">
               <span>{{entry.profile['contact-information']['homeAddress']['state']}}</span>
             </div>
@@ -273,7 +273,7 @@
         <div class="form-group-child col-sm-12 clearfix"
           data-ng-show="entry.profile['contact-information']['homeAddress']['country'].length > 0">
           <div>
-            <label class="col-sm-4 control-label">Country</label>
+            <label translate class="col-sm-4 control-label">.HOME_COUNTRY</label>
             <div class="col-sm-8">
               <span>{{entry.profile['contact-information']['homeAddress']['country']}}</span>
             </div>
@@ -282,7 +282,7 @@
         <div class="form-group-child col-sm-12 clearfix"
           data-ng-show="entry.profile['contact-information']['homeAddress']['zip'].length > 0">
           <div>
-            <label class="col-sm-4 control-label">ZIP</label>
+            <label translate class="col-sm-4 control-label">.HOME_ZIP</label>
             <div class="col-sm-8">
               <span>{{entry.profile['contact-information']['homeAddress']['zip']}}</span>
             </div>
@@ -292,7 +292,7 @@
 
       <div class="form-group clearfix"
         data-ng-show="entry.profile['contact-information']['facebookName'].length > 0">
-        <label class="col-sm-4 control-label">FB Name</label>
+        <label translate class="col-sm-4 control-label">.FB_NAME</label>
         <div class="col-sm-8">
           <span>{{entry.profile['contact-information']['facebookName']}}</span>
         </div>
@@ -300,7 +300,7 @@
 
       <div class="form-group clearfix"
         data-ng-show="entry.profile['contact-information']['twiterName'].length > 0">
-        <label class="col-sm-4 control-label">Twitter Name</label>
+        <label translate class="col-sm-4 control-label">.TWITTER_NAME</label>
         <div class="col-sm-8">
           <span>{{entry.profile['contact-information']['twiterName']}}</span>
         </div>
@@ -308,7 +308,7 @@
 
       <div class="form-group clearfix"
         data-ng-show="entry.profile['contact-information']['linkedinName'].length > 0">
-        <label class="col-sm-4 control-label">LinkedIn Name</label>
+        <label translate class="col-sm-4 control-label">.LINKEDIN_NAME</label>
         <div class="col-sm-8">
           <span>{{entry.profile['contact-information']['linkedinName']}}</span>
         </div>
@@ -316,7 +316,7 @@
 
       <div class="form-group clearfix"
         data-ng-show="entry.profile['contact-information']['xingName'].length > 0">
-        <label class="col-sm-4 control-label">XING Name</label>
+        <label translate class="col-sm-4 control-label">.XING_NAME</label>
         <div class="col-sm-8">
           <span>{{entry.profile['contact-information']['xingName']}}</span>
         </div>

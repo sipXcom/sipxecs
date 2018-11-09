@@ -2,7 +2,7 @@
 
   <div class="row profile-bar-chat">
     <div class="col-xs-10">
-      <span>VOICEMAILS</span>
+      <span>{{'VOICEMAILS.VOICEMAILS_NAME' | translate }}</span>
     </div>
     <div class="col-xs-2">
       <button class="btn btn-link pull-right"
@@ -16,7 +16,7 @@
   <div class="row">
     <div class="col-md-12 conf-options-bar">
       <p>
-        Current folder:
+        {{'VOICEMAILS.FOLDER' | translate }}
       </p>
       <select
         class="animated fade default"
@@ -46,11 +46,11 @@
               <span data-ng-if="vmForm.$dirty" class="pull-right">
                 <button type="button" class="btn btn-default btn-xs"
                   data-ng-click="voicemail.cancelChangeSubject(audio.id);vmForm.$setPristine()">
-                  Cancel
+                  {{'GLOBAL.CANCEL' | translate}}
                 </button>
                 <button type="button" class="btn btn-primary btn-xs"
                   data-ng-click="voicemail.changeSubject(audio.id);vmForm.$setPristine()">
-                  Save
+                  {{'GLOBAL.SAVE' | translate}}
                 </button>
               </span>
             </span>
@@ -59,7 +59,7 @@
               <span class="id" ng-click="voicemail.clickToCall(audio.callerIdNumber, audio.authorExtension)">
                 {{  audio.callerIdNumber === "null" ? (" - " + audio.authorExtension) : (" - " + audio.callerIdNumber) }}</span>
               <span class="label label-primary"
-                data-ng-if="audio.heard === false">New</span>
+                data-ng-if="audio.heard === false">{{'VOICEMAILS.NEW' | translate }}</span>
             </span>-
             <span data-duration="{{ audio.duration }}" class="time">{{ audio.duration }}</span>
           </div>
@@ -73,7 +73,7 @@
               data-ng-if="audio.href === undefined || audio.href === ''">
               <button type="button" class="btn btn-default btn-sm"
                 data-ng-click="voicemail.getMessage(audio.id, $index)">
-                Load message.
+                {{'VOICEMAILS.LOAD' | translate }}
               </button>
             </div>
             <div class="v-msg-audio"
@@ -85,7 +85,7 @@
                 type="{{audio.format=='mp3' ? 'audio/mp3' : 'audio/wav'}}">
               </audio>
               <small data-ng-if="!(voicemail.mp3Ie(audio.format))">
-                WAV voicemails cannot be played. In order to listen to this voicemail please download it.
+                {{'VOICEMAILS.WAV_ERROR' | translate }}
               </small>
             </div>
 
@@ -97,12 +97,12 @@
                   data-ng-href="{{ audio.format=='mp3' ? audio.href + '.mp3' : audio.href + '.wav' }}"
                   download="{{ audio.format=='mp3' ? audio.subject + '.mp3' : audio.subject + '.wav' }}"
                   class="btn btn-default inline-default"
-                  title="Download">
+                  translate-attr="{ title: 'VOICEMAILS.DOWNLOAD' }">
                   <i class="icon-downloads"></i>
                 </a>
                 <button type="button" class="btn btn-default inline-default"
                   data-ng-click="voicemail.delMessage(audio.id);"
-                  title="Trash">
+                  translate-attr="{ title: 'VOICEMAILS.TRASH' }">
                   <i class="icon-trash"></i>
                 </button>
               </div>
@@ -110,7 +110,7 @@
                 data-ng-model="voicemail.moveVoicemail[audio.id]"
                 data-ng-options="c.name for c in voicemail.folders | filter:{name: '!'+voicemail.folder.name}"
                 data-ng-change="voicemail.moveMessage(audio.id)">
-                <option value="">Move to...</option>
+                <option value="">{{'VOICEMAILS.MOVE' | translate}}</option>
               </select>
             </div>
             <div class="pull-right">
@@ -118,7 +118,7 @@
             </div>
             <div class="pull-left fade left-click-warning"
               data-ng-if="voicemail.leftClickWarning[audio.id]">
-              <small>In order to save please right-click the Download button and then "Save as..." from the context menu.</small>
+              <small>{{'VOICEMAILS.RIGHT_CLICK' | translate}}</small>
             </div>
           </div>
 
@@ -126,7 +126,7 @@
     </div>
 
     <div class="alert alert-muted animated fade" data-ng-if="voicemail.isEmpty()">
-      <b>No Voicemails</b>
+      <b>{{'VOICEMAILS.NO_VOICEMAILS' | translate}}</b>
     </div>
     <div class="spinner-wrapper animated fade"
       data-ng-if="!voicemail.messages">
