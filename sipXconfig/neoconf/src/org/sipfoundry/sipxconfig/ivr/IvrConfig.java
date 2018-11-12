@@ -111,16 +111,7 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
                 } else {
                     config.write(VOICEMAIL_PATH_KEY, m_mailstoreDirectory); 
                     voicemailPath = m_mailstoreDirectory;
-                }
-                
-                try {
-                    Process p = Runtime.getRuntime().exec(format("setfacl -Rm d:u:freeswitch:rwX,u:freeswitch:rwX %s/..", voicemailPath));
-                    p.waitFor();
-                    p.destroy();
-                    LOG.info(format("Provide freeswitch rights for voicemail path directory: %s", voicemailPath));
-                } catch (Exception ex) {
-                    LOG.error("Cannot provide freeswitch rights to voicemail path directory", ex);
-                }
+                }               
                 
                 if (location.isPrimary()) {
                     config.write("CLEANUP_VOICEMAIL_HOUR", settings.getCleanupVoicemailHour());
