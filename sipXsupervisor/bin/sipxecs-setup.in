@@ -53,6 +53,19 @@ def set_nonroot_keys
   exit 1 unless run_command "su - #{$user} sh -c '/usr/sbin/cf-key'"
 end
 
+def disable_selinux
+  puts "Checking SELinux..."
+  enforced = run_command("cat /etc/selinux/config | grep SELINUX=enforcing")
+  if enforced
+    puts "Detected SELinux enforcing, setting SELinux to disabled"
+    run_command("sed -i 's/enforcing/disabled/g' /etc/selinux/config /etc/selinux/config")
+    puts "Rebooting machine to apply SELinux changes"
+    run_command("reboot -h now")
+  else
+    puts "SELinux not set to enforcing"
+  end
+end
+
 def disable_firewalld
   #harmless if re-run
   puts "Disabling firewalld..."
@@ -617,6 +630,7 @@ args.parse!
 raise 'Must run as root' unless Process.uid == 0
 if __FILE__ == $0
 set_root_keys()
+disable_selinux
 network_settings
 disable_firewalld
 custom_hook
