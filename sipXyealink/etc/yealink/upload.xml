@@ -248,6 +248,17 @@
     		</type>
 		<description>Firmware binary in 51.x.x.x.rom</description>
         </setting>
+        <setting name="yealink_SIP-TXXS.rom">
+    		<label>SIP-TxxS</label>
+    		<type>
+    			<file>
+    				<contentType>application/binary</contentType>
+    				<rename>TXXS.rom</rename>
+    				<moveTo>../</moveTo>
+    			</file>
+    		</type>
+		<description>Firmware binary in 66.x.x.x.rom for all S-series Phones</description>
+        </setting>
         <setting name="Logo132x64.dob">
             <label>SIP-T2X LCD Logo (screensaver)</label>
             <type>
