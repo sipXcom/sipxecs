@@ -171,6 +171,10 @@ bundle agent sipxivr_running {
       "$(sipx.SIPX_SERVICEDIR)/sipxivr"
         comment => "restart sipxivr",
         args => "asyncrestart";
+    
+      "/usr/bin/setfacl"
+        comment => "Executed command: setfacl -Rm d:u:freeswitch:rwX,u:freeswitch:rwX $(sipx.SIPX_IVRDATADIR)",
+        args => "-Rm d:u:freeswitch:rwX,u:freeswitch:rwX $(sipx.SIPX_IVRDATADIR)";
 }
 
 # Install cron schedules for vm cleanup
