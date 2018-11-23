@@ -279,6 +279,8 @@ public class MongoConfig implements ConfigProvider {
         config.write("mongoArbiterPort", MongoSettings.ARBITER_PORT);
         config.writeClass("mongo_local", local);
         config.writeClass("mongo_local_arbiter", localArbiter);
+        if (m_mongoManager.getSettings().getCacheSize() != null)
+            config.write("mongoCacheSize", format("%.3f", m_mongoManager.getSettings().getCacheSize() / 1024.0));
     }
 
     /**

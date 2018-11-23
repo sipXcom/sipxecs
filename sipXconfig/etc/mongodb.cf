@@ -231,6 +231,9 @@ body file_select all {
 
 
 bundle edit_line mongo_local_config_contents {
+  classes:
+    "has_cache_value" expression => regcmp(".+","$(sipx.mongoCacheSize)");
+
   insert_lines:
     any::
       "systemLog:";
@@ -238,12 +241,6 @@ bundle edit_line mongo_local_config_contents {
       "  logAppend: true";
       "  logRotate: reopen";
       "  path: /var/log/$(mongodb.id)/local/mongodb.log";
-      "storage:";
-      "  dbPath: /var/lib/mongo-local";
-      "  journal:";
-      "    enabled: true";
-      "  mmapv1:";
-      "    smallFiles: true";
       "processManagement:";
       "  fork: true";
       "  pidFilePath: /var/run/mongodb/local.pid";
@@ -252,6 +249,17 @@ bundle edit_line mongo_local_config_contents {
       "  bindIp: 0.0.0.0";
       "replication:";
       "  replSetName: sipxlocal";                 
+      "storage:";
+      "  dbPath: /var/lib/mongo-local";
+      "  journal:";
+      "    enabled: true";
+      "  mmapv1:";
+      "    smallFiles: true";
+
+    has_cache_value::
+      "  wiredTiger:";
+      "    engineConfig:";
+      "      cacheSizeGB: $(sipx.mongoCacheSize)";
   delete_lines:
     any::
       ".*";
@@ -387,6 +395,9 @@ bundle agent mongodb_config {
 }
 
 bundle edit_line mongodb_config_contents {
+  classes:
+    "has_cache_value" expression => regcmp(".+","$(sipx.mongoCacheSize)");
+
   insert_lines:
     any::
       "systemLog:";
@@ -394,12 +405,6 @@ bundle edit_line mongodb_config_contents {
       "  logAppend: true";
       "  logRotate: reopen";
       "  path: /var/log/mongodb/mongod.log";
-      "storage:";
-      "  dbPath: /var/lib/mongo";
-      "  journal:";
-      "    enabled: true";
-      "  mmapv1:";
-      "    smallFiles: true";
       "processManagement:";
       "  fork: true";
       "  pidFilePath: /var/run/mongodb/mongod.pid";
@@ -408,6 +413,17 @@ bundle edit_line mongodb_config_contents {
       "  bindIp: 0.0.0.0";
       "replication:";
       "  replSetName: sipxecs";                 
+      "storage:";
+      "  dbPath: /var/lib/mongo";
+      "  journal:";
+      "    enabled: true";
+      "  mmapv1:";
+      "    smallFiles: true";
+
+    has_cache_value::
+      "  wiredTiger:";
+      "    engineConfig:";
+      "      cacheSizeGB: $(sipx.mongoCacheSize)";
   delete_lines:
     any::
       ".*";
