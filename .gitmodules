@@ -1,72 +1,69 @@
-[submodule "freeswitch"]
-	path = freeswitch
-	url = git://github.com/sipXcom/freeswitch.git
 [submodule "sipXcustomCallerId"]
 	path = sipXcustomCallerId
-	url = git://github.com/ezuce/sipXcustomCallerId.git
+	url = git@github.com:ezuce/sipXcustomCallerId.git
 [submodule "sipXlang-abitibi-fr_CA"]
 	path = sipXlang-abitibi-fr_CA
-	url = git://github.com/sipXcom/sipXlang-abitibi-fr_CA.git
+	url = git@github.com:sipXcom/sipXlang-abitibi-fr_CA.git
 [submodule "sipXlang-ch"]
 	path = sipXlang-ch
-	url = git://github.com/sipXcom/sipXlang-ch.git
+	url = git@github.com:sipXcom/sipXlang-ch.git
 [submodule "sipXlang-cs"]
 	path = sipXlang-cs
-	url = git://github.com/sipXcom/sipXlang-cs.git
+	url = git@github.com:sipXcom/sipXlang-cs.git
 [submodule "sipXlang-de"]
 	path = sipXlang-de
-	url = git://github.com/sipXcom/sipXlang-de.git
+	url = git@github.com:sipXcom/sipXlang-de.git
 [submodule "sipXlang-en_GB"]
 	path = sipXlang-en_GB
-	url = git://github.com/sipXcom/sipXlang-en_GB.git
+	url = git@github.com:sipXcom/sipXlang-en_GB.git
 [submodule "sipXlang-es"]
 	path = sipXlang-es
-	url = git://github.com/sipXcom/sipXlang-es.git
+	url = git@github.com:sipXcom/sipXlang-es.git
 [submodule "sipXlang-fr_CA"]
 	path = sipXlang-fr_CA
-	url = git://github.com/sipXcom/sipXlang-fr_CA.git
+	url = git@github.com:sipXcom/sipXlang-fr_CA.git
 [submodule "sipXlang-fr"]
 	path = sipXlang-fr
-	url = git://github.com/sipXcom/sipXlang-fr.git
+	url = git@github.com:sipXcom/sipXlang-fr.git
 [submodule "sipXlang-it"]
 	path = sipXlang-it
-	url = git://github.com/sipXcom/sipXlang-it.git
+	url = git@github.com:sipXcom/sipXlang-it.git
 [submodule "sipXlang-ja"]
 	path = sipXlang-ja
-	url = git://github.com/sipXcom/sipXlang-ja.git
+	url = git@github.com:sipXcom/sipXlang-ja.git
 [submodule "sipXlang-es_MX"]
 	path = sipXlang-es_MX
-	url = git://github.com/sipXcom/sipXlang-es_MX.git
+	url = git@github.com:sipXcom/sipXlang-es_MX.git
 [submodule "sipXlang-nl"]
 	path = sipXlang-nl
-	url = git://github.com/sipXcom/sipXlang-nl.git
+	url = git@github.com:sipXcom/sipXlang-nl.git
 [submodule "sipXlang-pl"]
 	path = sipXlang-pl
-	url = git://github.com/sipXcom/sipXlang-pl.git
+	url = git@github.com:sipXcom/sipXlang-pl.git
 [submodule "sipXlang-pt_BR"]
 	path = sipXlang-pt_BR
-	url = git://github.com/sipXcom/sipXlang-pt_BR.git
+	url = git@github.com:sipXcom/sipXlang-pt_BR.git
 [submodule "sipXlang-zh"]
 	path = sipXlang-zh
-	url = git://github.com/sipXcom/sipXlang-zh.git
+	url = git@github.com:sipXcom/sipXlang-zh.git
 [submodule "oss_core"]
 	path = oss_core
-	url = git://github.com/joegen/oss_core.git
+	url = git@github.com:joegen/oss_core.git
 [submodule "openfire"]
 	path = openfire
-	url = git://github.com/sipXcom/openfire.git
+	url = git@github.com:sipXcom/openfire.git
 [submodule "sipXcallQueue"]
 	path = sipXcallQueue
 	url = git@github.com:sipXcom/sipXcallQueue.git
 [submodule "sipXresiprocate"]
 	path = sipXresiprocate
-	url = git://github.com/sipXcom/resiprocate.git
+	url = git@github.com:sipXcom/resiprocate.git
 [submodule "sipXAocBilling"]
 	path = sipXAocBilling
-	url = git://github.com/sipXcom/sipXAocBilling.git
+	url = git@github.com:sipXcom/sipXAocBilling.git
 [submodule "sipXdashboard"]
 	path = sipXdashboard
-	url = git://github.com/sipXcom/sipXdashboard.git
+	url = git@github.com:sipXcom/sipXdashboard.git
 [submodule "sipXlang-pt"]
 	path = sipXlang-pt
-	url = git://github.com/sipXcom/sipXlang-pt.git
+	url = git@github.com:sipXcom/sipXlang-pt.git
