@@ -51,14 +51,8 @@ bundle agent mongodb {
       "any" usebundle => disallow_ssh_command("mongodb-admin");
       "any" usebundle => rh_chkconfig_status("disable-transparent-hugepages off");
 
-    fedora16_or_greater::
-      "any" usebundle => mongodb_systemctl_running;
-
-    # assumes 10gen on fedora would never drop sysv scripts
-    !fedora16_or_greater::
-      "any" usebundle => mongodb_sysv_running;
-
     any::
+      "any" usebundle => mongodb_running;
       "any" usebundle => mongodb_arbiter_running;
       "any" usebundle => mongo_local_running;
       "any" usebundle => mongo_local_arbiter_running;
@@ -243,34 +237,35 @@ bundle edit_line mongo_local_config_contents {
 bundle agent mongo_local_sync {
   vars:
     any::
-      "service" string => "$(sipx.SIPX_SERVICEDIR)/mongodb-sync";
-      "service_command" string => "bash $(sipx.SIPX_SERVICEDIR)/mongodb-sync nofork";
+      "service" string => "mongodb-sync.service";
 
-  methods:
+  classes:
     any::
-      "any" usebundle => find_service_by_command("$(service_command)", "mongo_sync_running", "root");
-
-    mongo_local.!src::
-      "any" usebundle => rh_chkconfig_status("mongodb-sync on");
-
-    !mongo_local.!src::
-      "any" usebundle => rh_chkconfig_status("mongodb-sync off");
+      "mongo_sync_running" expression => returnszero("$(sipx.systemctl) is-active $(service)","noshell");
 
   commands:
     (!mongo_local|stop_sipxecs).mongo_sync_running::
-      "$(service)"
+      "$(sipx.systemctl)"
         comment => "stop mongo sync",
-        args => "stop";
+        args => "stop $(service)";
+
+      "$(sipx.systemctl)"
+        comment => "disable mongo sync",
+        args => "disable $(service)";
 
     mongo_local.!mongo_sync_running.!stop_sipxecs::
-      "$(service)"
+      "$(sipx.systemctl)"
         comment => "start mongo sync",
-        args => "start";
+        args => "start $(service)";
+
+      "$(sipx.systemctl)"
+        comment => "enable mongo sync",
+        args => "enable $(service)";
 
     mongo_local.mongo_sync_running.(mongo_local_reconnect|mongo_client_reconnect|restart_mongo_sync|restart_sipxecs)::
-      "$(service)"
+      "$(sipx.systemctl)"
         comment => "restart mongo sync",
-        args => "restart";
+        args => "restart $(service)";
 }
 
 bundle edit_line mongo_local_logrotate_contents {
@@ -429,142 +424,112 @@ bundle edit_line mongo_client_config {
 bundle agent mongodb_arbiter_running {
   vars:
     any::
-      "service" string => "$(sipx.SIPX_SERVICEDIR)/mongod-arbiter";
-      "service_command" string => "/usr/bin/mongod.*-f\s+$(mongodb.config_arbiter)";
+      "service" string => "mongod-arbiter.service";
 
-  methods:
+  classes:
     any::
-      "any" usebundle => find_service_by_command("$(service_command)", "mongo_arbiter_running", "$(mongodb.user)");
-
-    mongod_arbiter.!src::
-      "any" usebundle => rh_chkconfig_status("mongod-arbiter on");
-
-    !mongod_arbiter.!src::
-      "any" usebundle => rh_chkconfig_status("mongod-arbiter off");
+      "mongo_arbiter_running" expression => returnszero("$(sipx.systemctl) is-active $(service)","noshell");
 
   commands:
     !mongod_arbiter.mongo_arbiter_running::
-      "$(service)"
+      "$(sipx.systemctl)"
         comment => "stop mongo arbiter",
-        args => "stop";
+        args => "stop $(service)";
+
+      "$(sipx.systemctl)"
+        comment => "disable mongo arbiter",
+        args => "disable $(service)";
 
     mongod_arbiter.!mongo_arbiter_running::
-      "$(service)"
+      "$(sipx.systemctl)"
         comment => "start mongo arbiter",
-        args => "start";
+        args => "start $(service)";
+
+      "$(sipx.systemctl)"
+        comment => "enable mongo arbiter",
+        args => "enable $(service)";
 
     mongod_arbiter.mongo_arbiter_running.restart_mongo_arbiter::
-      "$(service)"
+      "$(sipx.systemctl)"
         comment => "restart mongo arbiter",
-        args => "restart";
+        args => "restart $(service)";
 }
 
 bundle agent mongo_local_running {
   vars:
     any::
-      "service" string => "$(sipx.SIPX_SERVICEDIR)/mongo-local";
-      "service_command" string => "/usr/bin/mongod.*-f\s+$(mongodb.config_local)";
+      "service" string => "mongo-local.service";
 
-  methods:
+  classes:
     any::
-      "any" usebundle => find_service_by_command("$(service_command)", "mongo_local_running", "$(mongodb.user)");
-
-    mongo_local.!src::
-      "any" usebundle => rh_chkconfig_status("mongo-local on");
-
-    !mongo_local.!src::
-      "any" usebundle => rh_chkconfig_status("mongo-local off");
+      "mongo_local_running" expression => returnszero("$(sipx.systemctl) is-active $(service)","noshell");
 
   commands:
     !mongo_local.mongo_local_running::
-      "$(service)"
+      "$(sipx.systemctl)"
         comment => "stop mongo local",
-        args => "stop";
+        args => "stop $(service)";
+
+      "$(sipx.systemctl)"
+        comment => "disable mongo local",
+        args => "disable $(service)";
 
     mongo_local.!mongo_local_running::
-      "$(service)"
+      "$(sipx.systemctl)"
         comment => "start mongo local",
-        args => "start";
+        args => "start $(service)";
+
+      "$(sipx.systemctl)"
+        comment => "enable mongo local",
+        args => "enable $(service)";
 
     mongo_local.mongo_local_running.mongo_local_restart::
-      "$(service)"
+      "$(sipx.systemctl)"
         comment => "restart mongo local",
-        args => "restart";
+        args => "restart $(service)";
 }
 
 bundle agent mongo_local_arbiter_running {
   vars:
     any::
-      "service" string => "$(sipx.SIPX_SERVICEDIR)/mongo-local-arbiter";
-      "service_command" string => "/usr/bin/mongod.*-f\s+$(mongodb.config_local_arbiter)";
+      "service" string => "mongo-local-arbiter.service";
 
-  methods:
+  classes:
     any::
-      "any" usebundle => find_service_by_command("$(service_command)", "mongo_local_arbiter_running", "$(mongodb.user)");
-
-    mongo_local_arbiter.!src::
-      "any" usebundle => rh_chkconfig_status("mongo-local-arbiter on");
-
-    !mongo_local_arbiter.!src::
-      "any" usebundle => rh_chkconfig_status("mongo-local-arbiter off");
+      "mongo_local_arbiter_running" expression => returnszero("$(sipx.systemctl) is-active $(service)","noshell");
 
   commands:
     !mongo_local_arbiter.mongo_local_arbiter_running::
-      "$(service)"
+      "$(sipx.systemctl)"
         comment => "stop mongo local arbiter",
-        args => "stop";
+        args => "stop $(service)";
+
+      "$(sipx.systemctl)"
+        comment => "disable mongo local arbiter",
+        args => "disable $(service)";
 
     mongo_local_arbiter.!mongo_local_arbiter_running::
-      "$(service)"
+      "$(sipx.systemctl)"
         comment => "start mongo local arbiter",
-        args => "start";
+        args => "start $(service)";
+
+      "$(sipx.systemctl)"
+        comment => "enable mongo local arbiter",
+        args => "enable $(service)";
 
     mongo_local_arbiter.mongo_local_arbiter_running.mongo_local_arbiter_restart::
-      "$(service)"
+      "$(sipx.systemctl)"
         comment => "restart mongo local arbiter",
-        args => "restart";
+        args => "restart $(service)";
 }
 
-bundle agent mongodb_sysv_running {
-  vars:
-    any::
-      "service" string => "/etc/init.d/mongod";
-      "service_command" string => "/usr/bin/mongod.*-f\s+$(mongodb.config)";
-
-  methods:
-    any::
-      "any" usebundle => find_service_by_command("$(service_command)", "mongodb_running","$(mongodb.user)");
-
-    mongod::
-      "any" usebundle => rh_chkconfig_status("mongod on");
-
-    !mongod::
-      "any" usebundle => rh_chkconfig_status("mongod off");
-
-  commands:
-    !mongod.mongodb_running::
-      "$(service)"
-        comment => "stop mongo",
-        args => "stop";
-
-    mongod.!mongodb_running::
-      "$(service)"
-        comment => "start mongo",
-        args => "start";
-
-    mongod.mongodb_running.(restart_mongod|RESTART_DATABASE)::
-      "$(service)"
-        comment => "restart mongo",
-        args => "restart";
-}
-
-bundle agent mongodb_systemctl_running {
+bundle agent mongodb_running {
   vars:
     any::
       "service" string => "mongod.service";
 
   classes:
-    mongodb_sysctl::
+    any::
       "mongodb_running" expression => returnszero("$(sipx.systemctl) is-active $(service)","noshell");
 
   commands:
@@ -583,7 +548,7 @@ bundle agent mongodb_systemctl_running {
         args => "start $(service)";
 
       "$(sipx.systemctl)"
-        comment => "enable iptables",
+        comment => "enable mongo",
         args => "enable $(service)";
 
     mongod.mongodb_running.(restart_mongod|RESTART_DATABASE)::

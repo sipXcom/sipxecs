@@ -87,9 +87,10 @@ mibsdir = $(datadir)/snmp/mibs
 dist_mibs_DATA = \
 	SIPXECS-ALARM-NOTIFICATION-MIB.txt
 
-tmpfilesddir = /etc/tmpfiles.d
+tmpfilesddir = ${sysconfdir}/tmpfiles.d
 tmpfilesd_SCRIPTS = \
-	sipxconfig.conf
+	sipxconfig.conf \
+	mongodb-sync.conf
 
 systemddir = ${sysconfdir}/systemd/system
 systemd_SCRIPTS = \

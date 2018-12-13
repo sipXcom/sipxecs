@@ -1,0 +1,14 @@
+[Unit]
+Description=Mongodb sync
+Documentation=http://sipxcom.org
+After=network.target syslog.target
+
+[Service]
+Type=oneshot
+ExecStart=@SIPX_SERVICEDIR@/mongodb-sync start
+RemainAfterExit=true
+ExecStop=@SIPX_SERVICEDIR@/mongodb-sync stop
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target

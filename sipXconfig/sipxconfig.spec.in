@@ -244,7 +244,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc  README  NOTICE  ChangeLog %name.configlog
 %attr(755,root,root) %{_sysconfdir}/init.d/*
 %attr(644,root,root) %{_sysconfdir}/systemd/system/*
-%attr(644,root,root) %{_sysconfdir}/tmpfiles.d/sipxconfig.conf
+%attr(644,root,root) %{_sysconfdir}/tmpfiles.d/*
 %attr(644,root,root) /usr/lib/systemd/system/*
 %{_datadir}/sipxecs/cfinputs/plugin.d/*.cf
 %{_datadir}/sipxecs/cfinputs/plugin.d/lib/*.cf

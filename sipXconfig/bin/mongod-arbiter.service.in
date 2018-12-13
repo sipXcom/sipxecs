@@ -1,0 +1,14 @@
+[Unit]
+Description=Mongod arbiter
+Documentation=http://sipxcom.org
+After=network.target syslog.target
+
+[Service]
+Type=oneshot
+ExecStart=@SIPX_SERVICEDIR@/mongod-arbiter start
+RemainAfterExit=true
+ExecStop=@SIPX_SERVICEDIR@/mongod-arbiter stop
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target

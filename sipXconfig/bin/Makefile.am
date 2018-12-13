@@ -21,7 +21,11 @@ initd_SCRIPTS = \
 
 systemddir = /usr/lib/systemd/system
 systemd_SCRIPTS = \
-	sipxconfig.service
+	sipxconfig.service \
+	mongod-arbiter.service \
+	mongo-local.service \
+	mongo-local-arbiter.service \
+	mongodb-sync.service
 
 bin_SCRIPTS = \
 	sipxconfig-archive \
