@@ -62,7 +62,7 @@ class Restore < ArchiveBase
     cmd "tar -tzf #{params[:file]} version" or
       raise "Verification failed. Could not determine format of #{params[:file]}"    
 
-    cmd "#{@initd}/sipxivr stop" if params[:restart]
+    cmd "systemctl stop sipxivr" if params[:restart]
 
     cmd "tar -xz --exclude=version -C #{@sipxdata}/../.. -f #{params[:file]}" or
       raise "Failed to extract database from archive."
@@ -70,7 +70,7 @@ class Restore < ArchiveBase
     cmd "chown @SIPXPBXUSER@:@SIPXPBXGROUP@ -R #{params[:path]}" or
       raise "Failed to set permissions on mailstore dir."
 
-    cmd "#{@initd}/sipxivr start" if params[:restart]
+    cmd "systemctl start sipxivr" if params[:restart]
   end
 end
 

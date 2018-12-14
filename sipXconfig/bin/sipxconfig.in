@@ -24,8 +24,6 @@ Options include:
   none                 Runs web admin ui
 
   stop                 Stop web admin ui
-  
-  stop2                Stop web admin ui 2
 
   status               Checks if process is running
 
@@ -305,14 +303,6 @@ stop() {
   [ $Status -eq 0 ] || { echo_success; echo; }
 }
 
-stop2() {
-  echo -n $"Stopping $prog: "
-  killproc -p "${PidFile}" "$prog"
-  Status=$?
-  echo
-  [ $Status -eq 0 ] && rm -f "${PidFile}"
-}
-
 restart() {
   stop
   start $withCheck
@@ -341,9 +331,6 @@ case "$1" in
     ;;
   stop)
     stop
-    ;;
-  stop2)
-    stop2
     ;;  
   restart|reload|force-reload)
     restart
@@ -381,7 +368,7 @@ case "$1" in
     runTask ${@}
     ;;
   *)
-    echo "Usage: $0 {start|stop|stop2|status|restart|reload|asyncrestart|force-reload|condrestart|db|setup|reset-admin}"
+    echo "Usage: $0 {start|stop|status|restart|reload|asyncrestart|force-reload|condrestart|db|setup|reset-admin}"
     Status=$EINCORRECTUSAGE
 esac
 
