@@ -220,6 +220,13 @@ bundle agent security_systemctl_running {
         args => "disable $(service)";
 
     !security_running.security::
+      "/usr/bin/sh"
+        comment => "touch log for fail2ban",
+        args => "-c \"[ ! -f $(sipx.SIPX_LOGDIR)/firewall/firewall-sipdos.log ] && { \
+          /usr/bin/mkdir -m 700 $(sipx.SIPX_LOGDIR)/firewall/; \
+          /usr/bin/touch $(sipx.SIPX_LOGDIR)/firewall/firewall-sipdos.log; \
+          /usr/bin/chmod 600 $(sipx.SIPX_LOGDIR)/firewall/firewall-sipdos.log; }\"";
+
       "$(sipx.systemctl)"
         comment => "start fail2ban",
         args => "start $(service)";
