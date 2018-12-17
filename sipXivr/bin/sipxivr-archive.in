@@ -62,7 +62,7 @@ class Restore < ArchiveBase
     cmd "tar -tzf #{params[:file]} version" or
       raise "Verification failed. Could not determine format of #{params[:file]}"    
 
-    cmd "systemctl stop sipxivr" if params[:restart]
+    cmd "nohup systemctl stop sipxivr &" if params[:restart]
 
     cmd "tar -xz --exclude=version -C #{@sipxdata}/../.. -f #{params[:file]}" or
       raise "Failed to extract database from archive."

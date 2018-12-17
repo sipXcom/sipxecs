@@ -84,9 +84,9 @@ class Restore < ArchiveBase
     end
     
     unless params[:dryrun]
-      cmd "systemctl stop sipxconfig" if params[:restart]
-      cmd "systemctl stop sipxcdr" if params[:restart]
-      cmd "systemctl stop sipxproxy" if params[:restart]
+      cmd "nohup systemctl stop sipxconfig &" if params[:restart]
+      cmd "nohup systemctl stop sipxcdr &" if params[:restart]
+      cmd "nohup systemctl stop sipxproxy &" if params[:restart]
       cmd "dropdb -U #{@pguser} #{@db}"
       # alter database command need double quotes if db name is capitalized. Also, first set of double
       # quotes is lost passing thru ruby
