@@ -227,7 +227,7 @@ class Restore < ArchiveBase
     sql_exec(@restoredb, "update park_orbit set location_id=(select location_id from location where primary_location=true) WHERE location_id IS NULL;") or
       raise "Failed to update park orbit locations."
 
-    cmd "nohup systemctl stop sipxconfig &" if params[:restart]
+    sql_exec("postgres", "select pg_terminate_backend(pid) from pg_stat_activity where datname='sipxconfig';") if params[:restart]
     
     cmd "dropdb -U #{@pguser} #{@db}"
     # alter database command need double quotes if db name is capitalized. Also, first set of double
@@ -268,6 +268,7 @@ class Restore < ArchiveBase
       cmd "mongo --eval \"var oldHost=\\\"#{current_fqdn}\\\", newHost=\\\"#{new_fqdn}\\\"\" #{@bindir}/master-reconfig.js" if params[:restart]
     end
     FileUtils.rm_rf(["#{@tmpdir}/db.tar", "#{@tmpdir}/version", "#{@tmpdir}/dump", "#{@tmpdir}/elasticsearch_backup"])
+    cmd "systemctl restart sipxconfig" if params[:restart]
   end
 end
 

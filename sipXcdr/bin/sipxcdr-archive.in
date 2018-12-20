@@ -84,7 +84,7 @@ class Restore < ArchiveBase
     end
     
     unless params[:dryrun]
-      cmd "nohup systemctl stop sipxconfig &" if params[:restart]
+      sql_exec("postgres", "select pg_terminate_backend(pid) from pg_stat_activity where datname='sipxcdr';") if params[:restart]
       cmd "nohup systemctl stop sipxcdr &" if params[:restart]
       cmd "nohup systemctl stop sipxproxy &" if params[:restart]
       cmd "dropdb -U #{@pguser} #{@db}"
@@ -92,7 +92,7 @@ class Restore < ArchiveBase
       # quotes is lost passing thru ruby
       sql_exec('postgres', "alter database \\\"#{@restoredb}\\\" rename to \\\"#{@db}\\\";") or
         raise "Could not rename database. Please run '#{@initd}/sipxcdr db create' to reset your system."
-      cmd "systemctl start sipxconfig" if params[:restart]
+      cmd "systemctl restart sipxconfig" if params[:restart]
     end    
   end
 end
