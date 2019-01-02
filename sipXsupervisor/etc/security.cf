@@ -234,6 +234,11 @@ bundle agent security_systemctl_running {
       "$(sipx.systemctl)"
         comment => "enable fail2ban",
         args => "enable $(service)";
+
+    security.security_running.(restart_security|restart_iptables|apply_iptables)::
+      "$(sipx.systemctl)"
+        comment => "restart fail2ban",
+        args => "restart $(service)";
 }
 
 
