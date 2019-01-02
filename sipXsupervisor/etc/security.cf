@@ -123,9 +123,13 @@ bundle agent security_config {
 bundle edit_line conf_contents {
   insert_lines:
     "[Definition]
-loglevel = 2
+loglevel = INFO
 logtarget = $(sipx.SIPX_LOGDIR)/sipxsecurity.log
-socket = /var/run/fail2ban/fail2ban.sock";
+socket = /var/run/fail2ban/fail2ban.sock
+pidfile = /var/run/fail2ban/fail2ban.pid
+syslogsocket = auto
+dbfile = /var/lib/fail2ban/fail2ban.sqlite3
+dbpurgeage = 86400";
 }
 
 bundle edit_line action_contents {
