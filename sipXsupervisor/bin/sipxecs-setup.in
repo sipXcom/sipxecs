@@ -72,6 +72,11 @@ def disable_firewalld
   exit 1 unless run_command "systemctl stop firewalld && systemctl disable firewalld"
 end
 
+def create_pid_folders
+  #harmless if re-run
+  exit 1 unless run_command "systemd-tmpfiles --create"
+end
+
 def set_secondary_role
   return true if File.exists?($secondary_dat)
   puts "Configuring as an additional server..."
@@ -631,6 +636,7 @@ raise 'Must run as root' unless Process.uid == 0
 if __FILE__ == $0
 set_root_keys()
 disable_selinux
+create_pid_folders
 network_settings
 disable_firewalld
 custom_hook
