@@ -33,9 +33,9 @@ BuildRequires: ruby-devel
 BuildRequires: dart-sdk
 BuildRequires: rubygems
 BuildRequires: httpd
-BuildRequires: net-snmp-libs = 5.7.1
-BuildRequires: net-snmp-devel = 5.7.1
-BuildRequires: net-snmp-agent-libs = 5.7.1
+BuildRequires: net-snmp-libs <= 5.7.1
+BuildRequires: net-snmp-devel <= 5.7.1
+BuildRequires: net-snmp-agent-libs <= 5.7.1
 BuildRequires: pcre-devel
 
 BuildRequires: sipxcommons >= %version
@@ -72,9 +72,9 @@ Requires: python-pymongo
 %endif
 Requires: python-argparse
 Requires: js
-Requires: net-snmp = 5.7.1
-Requires: net-snmp-sysvinit = 5.7.1
-Requires: net-snmp-utils = 5.7.1
+Requires: net-snmp <= 5.7.1
+Requires: net-snmp-sysvinit <= 5.7.1
+Requires: net-snmp-utils <= 5.7.1
 Requires: net-snmp-python
 
 Requires: sipxcommons >= %version
