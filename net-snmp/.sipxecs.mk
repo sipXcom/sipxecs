@@ -1,4 +1,4 @@
-net-snmp_VER = 5.7.1
+net-snmp_VER = 5.7.3
 net-snmp_REV = 100
 net-snmp_SPEC = $(SRC)/$(PROJ)/net-snmp.spec
 net-snmp_SRPM = net-snmp-$(net-snmp_VER)-$(net-snmp_REV)$(RPM_DIST).src.rpm

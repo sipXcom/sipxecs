@@ -7,18 +7,17 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 # Arches on which we need to prevent arch conflicts on net-snmp-config.h
 %define multilib_arches %{ix86} ia64 ppc ppc64 s390 s390x x86_64 sparc sparcv9 sparc64
-%define source_version 5.7.1
 
 Summary: A collection of SNMP protocol tools and libraries
 Name: net-snmp
-Version: 5.7.3
+Version: 5.7.1
 Release: 100%{?dist}
 Epoch: 1
 
 License: BSD
 Group: System Environment/Daemons
 URL: http://net-snmp.sourceforge.net/
-Source0: http://dl.sourceforge.net/net-snmp/net-snmp-%{source_version}.tar.gz
+Source0: http://dl.sourceforge.net/net-snmp/net-snmp-%{version}.tar.gz
 Source1: net-snmp.redhat.conf
 Source2: net-snmpd.init
 Source3: net-snmptrapd.init
