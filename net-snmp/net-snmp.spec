@@ -50,7 +50,7 @@ Requires(preun): chkconfig
 Requires(preun): initscripts
 # for /bin/rm
 Requires(preun): coreutils
-Requires: %{name}-libs = %{epoch}:%{source_version}-%{release}
+Requires: %{name}-libs = %{epoch}:%{version}-%{release}
 Requires: mysql-libs
 
 %if  0%{?fedora} >= 15
@@ -60,7 +60,7 @@ Requires: mysql-libs
 Requires(post): systemd-sysv
 %endif
 
-BuildRoot: %{_tmppath}/%{name}-%{source_version}-%{release}-root-%(%{__id_u} -n)
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: openssl-devel, bzip2-devel, elfutils-devel
 BuildRequires: libselinux-devel, elfutils-libelf-devel, rpm-devel
 BuildRequires: perl-devel, perl(ExtUtils::Embed), gawk, procps
@@ -98,7 +98,7 @@ which contains NET-SNMP utilities.
 %package utils
 Group: Applications/System
 Summary: Network management utilities using SNMP, from the NET-SNMP project
-Requires: %{name}-libs = %{epoch}:%{source_version}-%{release}
+Requires: %{name}-libs = %{epoch}:%{version}-%{release}
 
 %description utils
 The net-snmp-utils package contains various utilities for use with the
@@ -111,7 +111,7 @@ package.
 %package devel
 Group: Development/Libraries
 Summary: The development environment for the NET-SNMP project
-Requires: %{name}-libs = %{epoch}:%{source_version}-%{release}
+Requires: %{name}-libs = %{epoch}:%{version}-%{release}
 Requires: elfutils-devel, rpm-devel, elfutils-libelf-devel, openssl-devel
 %if %{netsnmp_tcp_wrappers}
 Requires: tcp_wrappers-devel
@@ -133,7 +133,7 @@ packages installed.
 %package perl
 Group: Development/Libraries
 Summary: The perl NET-SNMP module and the mib2c tool
-Requires: %{name}-libs = %{epoch}:%{source_version}-%{release}, perl
+Requires: %{name}-libs = %{epoch}:%{version}-%{release}, perl
 BuildRequires: perl
 
 %description perl
@@ -146,7 +146,7 @@ with perl.
 %package gui
 Group: Applications/System
 Summary: An interactive graphical MIB browser for SNMP
-Requires: perl-Tk, net-snmp-perl = %{epoch}:%{source_version}-%{release}
+Requires: perl-Tk, net-snmp-perl = %{epoch}:%{version}-%{release}
 
 %description gui
 The net-snmp-gui package contains tkmib utility, which is a graphical user 
@@ -177,7 +177,7 @@ binaries and applications.
 %package python
 Group: Development/Libraries
 Summary: The Python 'netsnmp' module for the Net-SNMP
-Requires: %{name}-libs = %{epoch}:%{source_version}-%{release}
+Requires: %{name}-libs = %{epoch}:%{version}-%{release}
 
 %description python
 The 'netsnmp' module provides a full featured, tri-lingual SNMP (SNMPv3, 
@@ -187,7 +187,7 @@ Net-SNMP toolkit library.
 %package sysvinit
 Group: System Environment/Daemons
 Summary: Legacy SysV init scripts for Net-SNMP daemons
-Requires: %{name} = %{epoch}:%{source_version}-%{release}
+Requires: %{name} = %{epoch}:%{version}-%{release}
 
 %description sysvinit
 The net-snmp-sysvinit package provides SysV init scripts for Net-SNMP daemons.
