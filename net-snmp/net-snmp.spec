@@ -17,7 +17,7 @@ Epoch: 1
 License: BSD
 Group: System Environment/Daemons
 URL: http://net-snmp.sourceforge.net/
-Source0: http://dl.sourceforge.net/net-snmp/net-snmp-%{version}.tar.gz
+Source0: http://dl.sourceforge.net/net-snmp/net-snmp-5.7.1.tar.gz
 Source1: net-snmp.redhat.conf
 Source2: net-snmpd.init
 Source3: net-snmptrapd.init
