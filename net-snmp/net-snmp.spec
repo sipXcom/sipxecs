@@ -60,7 +60,7 @@ Requires: mysql-libs
 Requires(post): systemd-sysv
 %endif
 
-BuildRoot: %{_tmppath}/%{name}-%{source_version}-%{release}-root-%(%{__id_u} -n)
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: openssl-devel, bzip2-devel, elfutils-devel
 BuildRequires: libselinux-devel, elfutils-libelf-devel, rpm-devel
 BuildRequires: perl-devel, perl(ExtUtils::Embed), gawk, procps

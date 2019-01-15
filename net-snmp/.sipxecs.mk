@@ -1,7 +1,7 @@
 net-snmp_VER = 5.7.3
 net-snmp_REV = 100
 net-snmp_SPEC = $(SRC)/$(PROJ)/net-snmp.spec
-net-snmp_SRPM = net-snmp-5.7.1-$(net-snmp_REV)$(RPM_DIST).src.rpm
+net-snmp_SRPM = net-snmp-$(net-snmp_VER)-$(net-snmp_REV)$(RPM_DIST).src.rpm
 net-snmp_RPM_DEFS = --define='netsnmp_check 0' --define='_unitdir /lib/systemd/system'
 net-snmp_FILES = \
 	net-snmp-5.5-apsl-copying.patch \
@@ -30,7 +30,7 @@ net-snmp_FILES = \
 	snmptrapd.service
 
 net-snmp_SOURCES = \
-	net-snmp-5.7.1.tar.gz \
+	net-snmp-$(net-snmp_VER).tar.gz \
 	$(addprefix $(SRC)/$(PROJ)/,$(net-snmp_FILES))
 
 net-snmp.dist :;
