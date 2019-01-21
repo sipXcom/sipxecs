@@ -11,7 +11,7 @@
 
 Summary: A collection of SNMP protocol tools and libraries
 Name: net-snmp
-Version: 5.7.3
+Version: 5.7.1
 Release: 100%{?dist}
 Epoch: 1
 
