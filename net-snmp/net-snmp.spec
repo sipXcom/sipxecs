@@ -7,18 +7,18 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 # Arches on which we need to prevent arch conflicts on net-snmp-config.h
 %define multilib_arches %{ix86} ia64 ppc ppc64 s390 s390x x86_64 sparc sparcv9 sparc64
-%define source_version 5.7.1
+%define source_version 5.7.3
 
 Summary: A collection of SNMP protocol tools and libraries
 Name: net-snmp
-Version: 5.7.1
+Version: 5.7.3
 Release: 100%{?dist}
 Epoch: 1
 
 License: BSD
 Group: System Environment/Daemons
 URL: http://net-snmp.sourceforge.net/
-Source0: http://dl.sourceforge.net/net-snmp/net-snmp-%{version}.tar.gz
+Source0: http://dl.sourceforge.net/net-snmp/net-snmp-%{source_version}.tar.gz
 Source1: net-snmp.redhat.conf
 Source2: net-snmpd.init
 Source3: net-snmptrapd.init
@@ -38,11 +38,10 @@ Patch5: net-snmp-5.5-apsl-copying.patch
 Patch6: net-snmp-5.5-perl-linking.patch
 Patch7: net-snmp-5.6-test-debug.patch
 Patch8: net-snmp-5.6.1-mysql.patch
-Patch9: net-snmp-5.7.1-systemd.patch
-Patch10: net-snmp-5.7-libtool.patch
-Patch11: net-snmp-5.7-mibs-perl-linking.patch
-Patch12: 0001-Support-for-listing-processes-specified-in-ucd-snmp-.patch
-Patch13: 0002-autotools-generated-output-for-pcre-fix.patch
+Patch9: net-snmp-5.7-libtool.patch
+Patch10: net-snmp-5.7-mibs-perl-linking.patch
+Patch11: 0001-Support-for-listing-processes-specified-in-ucd-snmp-.patch
+Patch12: 0002-autotools-generated-output-for-pcre-fix.patch
 
 Requires(post): chkconfig
 Requires(preun): chkconfig
@@ -216,7 +215,7 @@ The net-snmp-sysvinit package provides SysV init scripts for Net-SNMP daemons.
 #%patch7 -p1
 
 %patch8 -p1 -b .mysql
-%patch9 -p1 -b .systemd
+#%patch9 -p1 -b .systemd
 
 
 # Does not apply and looks to be not nec.
@@ -224,8 +223,8 @@ The net-snmp-sysvinit package provides SysV init scripts for Net-SNMP daemons.
 # %patch11 -p1 -b .mibs-perl
 
 # process by regexp support
-%patch12 -p1 -b .regexp
-%patch13 -p1 -b .regexp-ac
+%patch11 -p1 -b .regexp
+%patch12 -p1 -b .regexp-ac
 
 %ifarch sparc64 s390 s390x
 # disable failing test - see https://bugzilla.redhat.com/show_bug.cgi?id=680697

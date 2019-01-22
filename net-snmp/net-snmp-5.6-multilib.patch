@@ -19,7 +19,7 @@ diff -up net-snmp-5.6/man/netsnmp_config_api.3.def.multilib net-snmp-5.6/man/net
 -Default: SYSCONFDIR/snmp:DATADIR/snmp:LIBDIR/snmp:$HOME/.snmp
 +Default: SYSCONFDIR/snmp:DATADIR/snmp:/usr/lib(64)/snmp:$HOME/.snmp
  .SH "SEE ALSO"
- .BR mib_api "(3), " snmp_api (3)
+ netsnmp_mib_api(3), snmp_api(3)
  .\" Local Variables:
 diff -up net-snmp-5.6/man/snmp_config.5.def.multilib net-snmp-5.6/man/snmp_config.5.def
 --- net-snmp-5.6/man/snmp_config.5.def.multilib	2010-09-17 11:51:52.000000000 +0200
@@ -30,9 +30,10 @@ diff -up net-snmp-5.6/man/snmp_config.5.def.multilib net-snmp-5.6/man/snmp_confi
  SYSCONFDIR/snmp,
 -DATADIR/snmp, LIBDIR/snmp, and $HOME/.snmp.  In each of these
 +DATADIR/snmp, /usr/lib(64)/snmp, and $HOME/.snmp.  In each of these
- directories, it looks for files with the extension of both
- .IR conf " and " local.conf
- (reading the second ones last).  In this manner, there are
+ directories, it looks for files snmp.conf, snmpd.conf and/or
+ snmptrapd.conf, as well as snmp.local.conf, snmpd.local.conf
+ and/or snmptrapd.local.conf. *.local.conf are always
+ read last. In this manner, there are
 diff -up net-snmp-5.6/man/snmpd.conf.5.def.multilib net-snmp-5.6/man/snmpd.conf.5.def
 --- net-snmp-5.6/man/snmpd.conf.5.def.multilib	2010-09-17 11:51:52.000000000 +0200
 +++ net-snmp-5.6/man/snmpd.conf.5.def	2010-10-25 17:40:12.682976925 +0200

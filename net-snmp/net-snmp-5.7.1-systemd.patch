@@ -1389,9 +1389,9 @@ index c67427b..428e6d6 100644
 +#include <net-snmp/library/sd-daemon.h>
 +#endif
 +
- #if (defined(linux) && defined(IP_PKTINFO)) \
-     || defined(IP_RECVDSTADDR) && HAVE_STRUCT_MSGHDR_MSG_CONTROL \
-                                && HAVE_STRUCT_MSGHDR_MSG_FLAGS
+ #if defined(HAVE_IP_PKTINFO) || defined(HAVE_IP_RECVDSTADDR)
+ int netsnmp_udpipv4_recvfrom(int s, void *buf, int len, struct sockaddr *from,
+                              socklen_t *fromlen, struct sockaddr *dstip,
 @@ -67,6 +71,7 @@ netsnmp_udpipv4base_transport(struct sockaddr_in *addr, int local)
      char           *client_socket = NULL;
      netsnmp_indexed_addr_pair addr_pair;

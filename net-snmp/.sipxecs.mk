@@ -30,7 +30,7 @@ net-snmp_FILES = \
 	snmptrapd.service
 
 net-snmp_SOURCES = \
-	net-snmp-5.7.1.tar.gz \
+	net-snmp-$(net-snmp_VER).tar.gz \
 	$(addprefix $(SRC)/$(PROJ)/,$(net-snmp_FILES))
 
 net-snmp.dist :;
