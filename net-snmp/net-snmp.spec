@@ -442,7 +442,7 @@ rm -rf ${RPM_BUILD_ROOT}
 %doc COPYING ChangeLog.trimmed EXAMPLE.conf FAQ NEWS TODO
 %doc README README.agent-mibs README.agentx README.krb5 README.snmpv3
 %doc local/passtest local/ipf-mod.pl
-%doc README.thread AGENT.txt PORTING local/README.mib2c README.systemd
+%doc README.thread AGENT.txt PORTING local/README.mib2c
 %dir %{_sysconfdir}/snmp
 %config(noreplace,missingok) %{_sysconfdir}/snmp/snmpd.conf
 %config(noreplace,missingok) %{_sysconfdir}/snmp/snmptrapd.conf
