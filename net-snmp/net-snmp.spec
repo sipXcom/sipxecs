@@ -38,10 +38,11 @@ Patch5: net-snmp-5.5-apsl-copying.patch
 Patch6: net-snmp-5.5-perl-linking.patch
 Patch7: net-snmp-5.6-test-debug.patch
 Patch8: net-snmp-5.6.1-mysql.patch
-Patch9: net-snmp-5.7-libtool.patch
-Patch10: net-snmp-5.7-mibs-perl-linking.patch
-Patch11: 0001-Support-for-listing-processes-specified-in-ucd-snmp-.patch
-Patch12: 0002-autotools-generated-output-for-pcre-fix.patch
+Patch9: net-snmp-5.7.1-systemd.patch
+Patch10: net-snmp-5.7-libtool.patch
+Patch11: net-snmp-5.7-mibs-perl-linking.patch
+Patch12: 0001-Support-for-listing-processes-specified-in-ucd-snmp-.patch
+Patch13: 0002-autotools-generated-output-for-pcre-fix.patch
 
 Requires(post): chkconfig
 Requires(preun): chkconfig
@@ -215,7 +216,7 @@ The net-snmp-sysvinit package provides SysV init scripts for Net-SNMP daemons.
 #%patch7 -p1
 
 %patch8 -p1 -b .mysql
-#%patch9 -p1 -b .systemd
+%patch9 -p1 -b .systemd
 
 
 # Does not apply and looks to be not nec.
@@ -223,8 +224,8 @@ The net-snmp-sysvinit package provides SysV init scripts for Net-SNMP daemons.
 # %patch11 -p1 -b .mibs-perl
 
 # process by regexp support
-%patch11 -p1 -b .regexp
-%patch12 -p1 -b .regexp-ac
+%patch12 -p1 -b .regexp
+%patch13 -p1 -b .regexp-ac
 
 %ifarch sparc64 s390 s390x
 # disable failing test - see https://bugzilla.redhat.com/show_bug.cgi?id=680697
@@ -442,7 +443,7 @@ rm -rf ${RPM_BUILD_ROOT}
 %doc COPYING ChangeLog.trimmed EXAMPLE.conf FAQ NEWS TODO
 %doc README README.agent-mibs README.agentx README.krb5 README.snmpv3
 %doc local/passtest local/ipf-mod.pl
-%doc README.thread AGENT.txt PORTING local/README.mib2c
+%doc README.thread AGENT.txt PORTING local/README.mib2c README.systemd
 %dir %{_sysconfdir}/snmp
 %config(noreplace,missingok) %{_sysconfdir}/snmp/snmpd.conf
 %config(noreplace,missingok) %{_sysconfdir}/snmp/snmptrapd.conf
