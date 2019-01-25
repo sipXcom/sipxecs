@@ -87,7 +87,7 @@ public class ElasticsearchServiceImpl implements SearchableService, FeatureProvi
     private static final String FILTERING_ERROR_MESSAGE = "Filtering is supported only by QueryBuilder objects.";
     private static final String NO_NODE_AVAILABLE_ERROR_MESSAGE = "No available nodes in ElasticSearch.";
     private static final String CONFIG = "config";
-    private static final String ELASTICSEARCH_REGEXP = ".*/java -Xms256m -Xmx1g -Djava.awt.headless=true";
+    private static final String ELASTICSEARCH_REGEXP = ".*\\java -Xms256m -Xmx1g -Djava.awt.headless=true\\s.*";
 
     private Client m_client;
     private String m_hostName;
