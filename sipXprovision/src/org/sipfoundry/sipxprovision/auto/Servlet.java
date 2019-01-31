@@ -371,12 +371,15 @@ public class Servlet extends HttpServlet {
             p.setProperty("class.resource.loader.class",
                     "org.apache.velocity.runtime.resource.loader.FileResourceLoader");
             p.setProperty("file.resource.loader.path", yealink_src_dir.getAbsolutePath());
+            p.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.SimpleLog4JLogSystem");
+            p.setProperty("runtime.log.logsystem.log4j.category", "org.apache.Velocity");
             
             // We need our own settings but velocity is already
             // configured for polycom so we have to use a
             // new instance of velocity
             // (currently the only possible solution
             VelocityEngine engine = new VelocityEngine();
+            
             engine.init(p);
 
             VelocityContext context = new VelocityContext();
@@ -425,6 +428,8 @@ public class Servlet extends HttpServlet {
             p.setProperty("class.resource.loader.class",
                     "org.apache.velocity.runtime.resource.loader.FileResourceLoader");
             p.setProperty("file.resource.loader.path", polycom_src_dir.getAbsolutePath());
+            p.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.SimpleLog4JLogSystem");
+            p.setProperty("runtime.log.logsystem.log4j.category", "org.apache.Velocity");            
             Velocity.init(p);
 
             Template template = Velocity.getTemplate("000000000000.cfg.vm");
