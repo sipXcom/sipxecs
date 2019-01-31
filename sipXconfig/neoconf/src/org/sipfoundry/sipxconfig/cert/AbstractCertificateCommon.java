@@ -109,7 +109,7 @@ public class AbstractCertificateCommon {
             escapeComma(m_country),
             escapeComma(m_state),
             escapeComma(m_locality),
-            escapeComma(m_dnsDomain),
+            escapeComma(m_organization),
             escapeComma(m_organizationUnit),
             escapeComma(m_commonName),
             escapeComma(m_email));
