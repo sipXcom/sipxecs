@@ -6,7 +6,8 @@ EXTRA_DIST = \
 	security.erb \
 	security.sec.erb.in \
 	cfengine_stdlib.cf \
-	$(tmpfilesd_SCRIPTS:=.in)
+	$(tmpfilesd_SCRIPTS:=.in) \
+	sipxpol.te
 
 cfdefaultsdir = $(SIPX_CFDATA)/defaults
 cfdefaults_DATA = \
@@ -97,4 +98,11 @@ install-data-hook : $(emptydirs)
 $(cflib_DATA) $(cfinputs_PROMISES) $(tmpfilesd_SCRIPTS) security.sec.erb : % : %.in Makefile
 	@$(call SearchAndReplace, $<, $@)
 
-CLEANFILES = $(cfinputs_PROMISES) $(cfdefaults_DATA) $(cflib_DATA) $(tmpfilesd_SCRIPTS) security.sec.erb
+policydir = /usr/share/selinux/packages/sipxcom
+policy_DATA = sipxpol.pp
+	
+sipxpol.pp:
+	/usr/bin/checkmodule -M -m -o sipxpol.mod sipxpol.te && \
+	/usr/bin/semodule_package -o sipxpol.pp -m sipxpol.mod
+
+CLEANFILES = $(cfinputs_PROMISES) $(cfdefaults_DATA) $(cflib_DATA) $(tmpfilesd_SCRIPTS) security.sec.erb sipxpol.pp

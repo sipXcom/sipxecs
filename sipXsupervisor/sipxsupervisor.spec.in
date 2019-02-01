@@ -66,6 +66,14 @@ infrastruture might already have like puppet, chef or even cfengine.
 %debug_package
 %endif
 
+%package selinux
+#Group: Telcommunications
+#Vendor: SIPfoundry
+Summary: SipXcom policy
+
+%description selinux
+Selinux policy for sipxcom
+
 %prep
 %setup -q
 
@@ -113,10 +121,30 @@ fi
 # defaults are static, only root should write
 %{_localstatedir}/sipxdata/cfdata/defaults/*
 
+%files selinux
+%attr(644,root,root) %{_datadir}/selinux/packages/sipxcom/sipxpol.pp
+
 %post
 if grep -q :on <<<`/sbin/chkconfig sipxsupervisor --list 2>&1`; then
     /sbin/chkconfig sipxsupervisor reset
 fi
 if grep -q :on <<<`/sbin/chkconfig sipxlogwatcher --list 2>&1`; then
     /sbin/chkconfig sipxlogwatcher reset
+fi
+
+%post selinux
+if [ "$1" -le "1" ] ; then # First install
+	echo "  Installing policy file..."
+	semodule -i %{_datadir}/selinux/packages/sipxcom/sipxpol.pp 2> /dev/null || :
+fi
+
+%preun selinux
+if [ "$1" -lt "1" ] ; then # Final removal
+	semodule -r sipxpol 2> /dev/null || :
+fi
+
+%postun selinux
+if [ "$1" -ge "1" ] ; then # Upgrade
+	echo "  Upgrading policy file..."
+	semodule -i %{_datadir}/selinux/packages/sipxcom/sipxpol.pp 2> /dev/null || :
 fi

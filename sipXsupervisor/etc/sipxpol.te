@@ -1,0 +1,472 @@
+
+module sipxpol 1.0;
+
+require {
+	type logrotate_t;
+	type etc_runtime_t;
+	type initrc_t;
+	type postfix_qmgr_t;
+	type iptables_exec_t;
+	type postfix_master_t;
+	type chronyd_t;
+	type gssproxy_t;
+	type redis_t;
+	type var_log_t;
+	type system_cron_spool_t;
+	type usr_t;
+	type net_conf_t;
+	type redis_unit_file_t;
+	type lib_t;
+	type user_tmp_t;
+	type cgrules_etc_t;
+	type httpd_unit_file_t;
+	type postgresql_t;
+	type unconfined_service_t;
+	type etc_mail_t;
+	type tuned_t;
+	type cgroup_t;
+	type snmpd_t;
+	type tmp_t;
+	type cfengine_initrc_exec_t;
+	type initrc_exec_t;
+	type dhcpc_t;
+	type ndc_t;
+	type init_exec_t;
+	type var_run_t;
+	type auditd_t;
+	type fail2ban_t;
+	type postfix_pickup_t;
+	type modules_conf_t;
+	type sendmail_t;
+	type postgresql_db_t;
+	type iptables_t;
+	type policykit_t;
+	type rpm_var_lib_t;
+	type iptables_unit_file_t;
+	type crond_t;
+	type getty_t;
+	type ftpd_t;
+	type etc_t;
+	type lvm_t;
+	type tftpd_t;
+	type NetworkManager_t;
+	type named_unit_file_t;
+	type ntpd_t;
+	type unconfined_t;
+	type mongod_unit_file_t;
+	type init_t;
+	type system_cronjob_t;
+	type tftpd_etc_t;
+	type syslogd_t;
+	type rpm_exec_t;
+	type hostname_exec_t;
+	type irqbalance_t;
+	type plymouth_exec_t;
+	type named_conf_t;
+	type user_cron_spool_t;
+	type ntpd_unit_file_t;
+	type systemd_systemctl_exec_t;
+	type proc_net_t;
+	type postfix_master_exec_t;
+	type snmpd_initrc_exec_t;
+	type syslog_conf_t;
+	type var_lock_t;
+	type kernel_t;
+	type sshd_t;
+	type fs_t;
+	type mongod_t;
+	type httpd_config_t;
+	type system_dbusd_t;
+	type fail2ban_client_t;
+	type systemd_logind_t;
+	type udev_t;
+	type systemd_unit_file_t;
+	type cfengine_serverd_t;
+	type named_zone_t;
+	type ssh_home_t;
+	type initrc_var_run_t;
+	type var_t;
+	type iptables_lock_t;
+	type httpd_t;
+	type nfsd_unit_file_t;
+	type named_t;
+	type unreserved_port_t;
+	type selinux_config_t;
+	type semanage_exec_t;
+	type setfiles_exec_t;
+	type setsebool_exec_t;
+	type unlabeled_t;
+	type device_t;
+	type devpts_t;
+	type hugetlbfs_t;
+	type load_policy_exec_t;
+	type public_content_rw_t;
+	type semanage_store_t;
+	type sysfs_t;
+	type tmpfs_t;
+	class service { disable enable reload start status stop };
+	class process { execmem getattr sigkill signal };
+	class unix_stream_socket connectto;
+	class filesystem getattr;
+	class system reload;
+	class capability { dac_override sys_admin };
+	class file { create execute execute_no_trans getattr ioctl link open read rename unlink write setattr relabelfrom relabelto };
+	class netlink_audit_socket create;
+	class lnk_file { create read unlink };
+	class dir { add_name getattr read remove_name search setattr write create rename unlink open };
+	class tcp_socket { name_bind listen };
+}
+
+#============= cfengine_serverd_t ==============
+
+allow cfengine_serverd_t NetworkManager_t:dir { getattr search read };
+allow cfengine_serverd_t NetworkManager_t:file { open read getattr };
+allow cfengine_serverd_t NetworkManager_t:lnk_file read;
+
+allow cfengine_serverd_t auditd_t:dir { getattr search read };
+allow cfengine_serverd_t auditd_t:file { open read getattr };
+allow cfengine_serverd_t auditd_t:lnk_file read;
+
+allow cfengine_serverd_t cfengine_initrc_exec_t:file open;
+allow cfengine_serverd_t cfengine_initrc_exec_t:file { getattr read };
+
+allow cfengine_serverd_t cgrules_etc_t:file { getattr write read open };
+
+allow cfengine_serverd_t cgroup_t:dir { getattr search };
+allow cfengine_serverd_t cgroup_t:filesystem getattr;
+
+allow cfengine_serverd_t chronyd_t:dir getattr;
+
+allow cfengine_serverd_t crond_t:dir { getattr search read };
+allow cfengine_serverd_t crond_t:file { open read getattr };
+allow cfengine_serverd_t crond_t:lnk_file read;
+allow cfengine_serverd_t crond_t:process signal;
+
+allow cfengine_serverd_t device_t:filesystem getattr;
+allow cfengine_serverd_t devpts_t:filesystem getattr;
+
+allow cfengine_serverd_t dhcpc_t:dir { getattr search read };
+allow cfengine_serverd_t dhcpc_t:file { open read getattr };
+allow cfengine_serverd_t dhcpc_t:lnk_file read;
+
+allow cfengine_serverd_t etc_mail_t:dir search;
+allow cfengine_serverd_t etc_mail_t:file open;
+allow cfengine_serverd_t etc_mail_t:file { getattr read relabelto };
+
+#!!!! WARNING: 'etc_t' is a base type.
+allow cfengine_serverd_t etc_t:dir { add_name remove_name write create rename setattr unlink };
+allow cfengine_serverd_t etc_t:file { create write rename setattr unlink relabelfrom relabelto };
+allow cfengine_serverd_t etc_t:lnk_file { create unlink };
+
+allow cfengine_serverd_t fail2ban_client_t:dir { getattr search };
+
+allow cfengine_serverd_t fail2ban_t:dir { getattr search read };
+allow cfengine_serverd_t fail2ban_t:file { open read getattr };
+allow cfengine_serverd_t fail2ban_t:lnk_file read;
+
+allow cfengine_serverd_t fs_t:filesystem getattr;
+
+allow cfengine_serverd_t ftpd_t:dir { getattr search read };
+allow cfengine_serverd_t ftpd_t:file { open read getattr };
+allow cfengine_serverd_t ftpd_t:lnk_file read;
+
+allow cfengine_serverd_t getty_t:dir { getattr search read };
+allow cfengine_serverd_t getty_t:file { open read getattr };
+allow cfengine_serverd_t getty_t:lnk_file read;
+
+allow cfengine_serverd_t gssproxy_t:dir { getattr search };
+allow cfengine_serverd_t gssproxy_t:file { open read };
+
+allow cfengine_serverd_t hostname_exec_t:file { execute execute_no_trans getattr open read };
+
+allow cfengine_serverd_t httpd_config_t:dir { add_name getattr search write remove_name };
+allow cfengine_serverd_t httpd_config_t:file { create getattr open read write rename unlink setattr relabelfrom relabelto };
+
+allow cfengine_serverd_t httpd_t:dir { getattr search read };
+allow cfengine_serverd_t httpd_t:file { open read getattr };
+allow cfengine_serverd_t httpd_t:lnk_file read;
+
+allow cfengine_serverd_t httpd_unit_file_t:service { enable start status };
+
+allow cfengine_serverd_t hugetlbfs_t:dir getattr;
+allow cfengine_serverd_t hugetlbfs_t:filesystem getattr;
+
+allow cfengine_serverd_t init_exec_t:file getattr;
+
+allow cfengine_serverd_t init_t:file { getattr open read };
+allow cfengine_serverd_t init_t:lnk_file read;
+allow cfengine_serverd_t init_t:system reload;
+allow cfengine_serverd_t init_t:unix_stream_socket connectto;
+
+allow cfengine_serverd_t initrc_exec_t:file { execute execute_no_trans getattr ioctl open read };
+allow cfengine_serverd_t initrc_exec_t:service { start status reload };
+
+allow cfengine_serverd_t initrc_t:dir { getattr search read };
+allow cfengine_serverd_t initrc_t:file { open read getattr };
+allow cfengine_serverd_t initrc_t:lnk_file read;
+allow cfengine_serverd_t initrc_t:process { sigkill signal };
+
+allow cfengine_serverd_t initrc_var_run_t:file { getattr unlink };
+
+allow cfengine_serverd_t iptables_lock_t:file getattr;
+
+allow cfengine_serverd_t iptables_t:dir { getattr search };
+
+allow cfengine_serverd_t iptables_exec_t:file getattr;
+
+allow cfengine_serverd_t iptables_unit_file_t:service { enable start status };
+
+allow cfengine_serverd_t irqbalance_t:dir { getattr search read };
+allow cfengine_serverd_t irqbalance_t:file { open read getattr };
+allow cfengine_serverd_t irqbalance_t:lnk_file read;
+
+allow cfengine_serverd_t kernel_t:dir { getattr search read };
+allow cfengine_serverd_t kernel_t:file { open read getattr };
+allow cfengine_serverd_t kernel_t:lnk_file read;
+
+#!!!! WARNING: 'lib_t' is a base type.
+allow cfengine_serverd_t lib_t:dir write;
+
+allow cfengine_serverd_t load_policy_exec_t:file execute;
+
+allow cfengine_serverd_t lvm_t:dir { getattr search read };
+allow cfengine_serverd_t lvm_t:file { open read getattr };
+allow cfengine_serverd_t lvm_t:lnk_file read;
+
+allow cfengine_serverd_t modules_conf_t:dir search;
+
+allow cfengine_serverd_t mongod_t:dir { getattr search read };
+allow cfengine_serverd_t mongod_t:file { open read getattr };
+allow cfengine_serverd_t mongod_t:lnk_file read;
+
+allow cfengine_serverd_t mongod_unit_file_t:service { enable start status };
+
+allow cfengine_serverd_t named_conf_t:file { getattr ioctl open write setattr };
+
+allow cfengine_serverd_t named_t:dir { getattr search read };
+allow cfengine_serverd_t named_t:file { open read getattr };
+allow cfengine_serverd_t named_t:lnk_file read;
+
+allow cfengine_serverd_t named_unit_file_t:service { enable reload start status };
+
+allow cfengine_serverd_t named_zone_t:dir { getattr search write };
+allow cfengine_serverd_t named_zone_t:file ioctl;
+allow cfengine_serverd_t named_zone_t:file { getattr open write };
+
+allow cfengine_serverd_t ndc_t:dir { getattr search };
+allow cfengine_serverd_t ndc_t:file read;
+
+allow cfengine_serverd_t net_conf_t:file rename;
+
+allow cfengine_serverd_t nfsd_unit_file_t:service status;
+
+allow cfengine_serverd_t ntpd_t:dir { getattr search read };
+allow cfengine_serverd_t ntpd_t:file { open read getattr };
+allow cfengine_serverd_t ntpd_t:lnk_file read;
+
+allow cfengine_serverd_t ntpd_unit_file_t:service { enable start status };
+
+allow cfengine_serverd_t plymouth_exec_t:file { execute getattr open read };
+
+allow cfengine_serverd_t policykit_t:dir { getattr search read };
+allow cfengine_serverd_t policykit_t:file { open read getattr };
+allow cfengine_serverd_t policykit_t:lnk_file read;
+
+allow cfengine_serverd_t postfix_master_t:dir getattr;
+
+allow cfengine_serverd_t postfix_master_exec_t:file getattr;
+
+allow cfengine_serverd_t postfix_pickup_t:dir getattr;
+
+allow cfengine_serverd_t postfix_qmgr_t:dir getattr;
+
+allow cfengine_serverd_t postgresql_db_t:dir { getattr read search setattr };
+allow cfengine_serverd_t postgresql_db_t:file open;
+allow cfengine_serverd_t postgresql_db_t:file { getattr read write };
+
+allow cfengine_serverd_t postgresql_t:dir { getattr search read };
+allow cfengine_serverd_t postgresql_t:file { open read getattr };
+allow cfengine_serverd_t postgresql_t:lnk_file read;
+allow cfengine_serverd_t postgresql_t:unix_stream_socket connectto;
+
+allow cfengine_serverd_t proc_net_t:file { getattr open read };
+
+allow cfengine_serverd_t public_content_rw_t:dir { getattr read open search };
+
+#!!!! The file '/run/postgresql/.s.PGSQL.5432' is mislabeled on your system.  
+#!!!! Fix with $ restorecon -R -v /run/postgresql/.s.PGSQL.5432
+#!!!! This avc can be allowed using the boolean 'daemons_enable_cluster_mode'
+allow cfengine_serverd_t redis_t:dir { getattr search };
+allow cfengine_serverd_t redis_t:file { open read getattr };
+
+allow cfengine_serverd_t redis_unit_file_t:service { enable start status };
+
+allow cfengine_serverd_t rpm_exec_t:file { execute execute_no_trans getattr open read };
+
+allow cfengine_serverd_t rpm_var_lib_t:dir search;
+allow cfengine_serverd_t rpm_var_lib_t:file open;
+
+allow cfengine_serverd_t self:capability dac_override;
+allow cfengine_serverd_t self:capability sys_admin;
+allow cfengine_serverd_t self:netlink_audit_socket create;
+allow cfengine_serverd_t self:process { execmem getattr };
+allow cfengine_serverd_t self:tcp_socket listen;
+
+allow cfengine_serverd_t selinux_config_t:dir { getattr open read write add_name remove_name };
+allow cfengine_serverd_t selinux_config_t:file { getattr open write read create rename unlink relabelfrom setattr relabelto };
+
+allow cfengine_serverd_t semanage_exec_t:file { getattr execute open read execute_no_trans ioctl };
+
+allow cfengine_serverd_t semanage_store_t:dir { read search open write };
+allow cfengine_serverd_t semanage_store_t:file { read open getattr };
+
+allow cfengine_serverd_t setfiles_exec_t:file { getattr execute open read execute_no_trans };
+
+allow cfengine_serverd_t setsebool_exec_t:file { getattr execute open read execute_no_trans };
+
+allow cfengine_serverd_t sendmail_t:dir { getattr search read };
+allow cfengine_serverd_t sendmail_t:file { open read getattr };
+allow cfengine_serverd_t sendmail_t:lnk_file read;
+
+allow cfengine_serverd_t snmpd_initrc_exec_t:file { getattr open read };
+
+allow cfengine_serverd_t snmpd_t:dir { getattr search read };
+allow cfengine_serverd_t snmpd_t:file { open read getattr };
+allow cfengine_serverd_t snmpd_t:lnk_file read;
+
+allow cfengine_serverd_t ssh_home_t:dir { getattr search };
+allow cfengine_serverd_t ssh_home_t:file open;
+allow cfengine_serverd_t ssh_home_t:file { getattr read write };
+
+allow cfengine_serverd_t sshd_t:dir { getattr search read };
+allow cfengine_serverd_t sshd_t:file { open read getattr };
+allow cfengine_serverd_t sshd_t:lnk_file read;
+
+allow cfengine_serverd_t sysfs_t:filesystem getattr;
+
+allow cfengine_serverd_t syslog_conf_t:dir { getattr search };
+allow cfengine_serverd_t syslog_conf_t:file open;
+allow cfengine_serverd_t syslog_conf_t:file { getattr read write };
+
+allow cfengine_serverd_t syslogd_t:dir { getattr search read };
+allow cfengine_serverd_t syslogd_t:file { open read getattr };
+allow cfengine_serverd_t syslogd_t:lnk_file read;
+
+allow cfengine_serverd_t system_cron_spool_t:file getattr;
+
+allow cfengine_serverd_t system_cronjob_t:dir { getattr search };
+allow cfengine_serverd_t system_cronjob_t:file read;
+
+allow cfengine_serverd_t system_dbusd_t:dir { getattr search read };
+allow cfengine_serverd_t system_dbusd_t:file { open read getattr };
+allow cfengine_serverd_t system_dbusd_t:lnk_file read;
+allow cfengine_serverd_t system_dbusd_t:unix_stream_socket connectto;
+
+allow cfengine_serverd_t systemd_logind_t:dir { getattr search read };
+allow cfengine_serverd_t systemd_logind_t:file { open read getattr };
+allow cfengine_serverd_t systemd_logind_t:lnk_file read;
+
+allow cfengine_serverd_t systemd_systemctl_exec_t:file { execute execute_no_trans getattr open read };
+
+allow cfengine_serverd_t systemd_unit_file_t:dir search;
+allow cfengine_serverd_t systemd_unit_file_t:service { disable enable start status reload stop };
+
+allow cfengine_serverd_t tftpd_etc_t:file rename;
+allow cfengine_serverd_t tftpd_etc_t:file { getattr open read unlink };
+
+allow cfengine_serverd_t tftpd_t:dir { getattr search read };
+allow cfengine_serverd_t tftpd_t:file { open read getattr };
+allow cfengine_serverd_t tftpd_t:lnk_file read;
+
+#!!!! WARNING: 'tmp_t' is a base type.
+allow cfengine_serverd_t tmp_t:dir { read write add_name remove_name };
+allow cfengine_serverd_t tmp_t:file { create unlink write };
+
+allow cfengine_serverd_t tmpfs_t:filesystem getattr;
+
+allow cfengine_serverd_t tuned_t:dir { getattr search read };
+allow cfengine_serverd_t tuned_t:file { open read getattr };
+allow cfengine_serverd_t tuned_t:lnk_file read;
+
+allow cfengine_serverd_t udev_t:dir { getattr search read };
+allow cfengine_serverd_t udev_t:file { open read getattr };
+allow cfengine_serverd_t udev_t:lnk_file read;
+
+allow cfengine_serverd_t unconfined_service_t:dir { getattr search read };
+allow cfengine_serverd_t unconfined_service_t:file { open read getattr };
+allow cfengine_serverd_t unconfined_service_t:lnk_file read;
+
+allow cfengine_serverd_t unconfined_t:dir { getattr search read };
+allow cfengine_serverd_t unconfined_t:file { open read getattr };
+allow cfengine_serverd_t unconfined_t:lnk_file read;
+
+#!!!! WARNING: 'unlabeled_t' is a base type.
+allow cfengine_serverd_t unlabeled_t:file { getattr write read open rename relabelto unlink };
+
+allow cfengine_serverd_t unreserved_port_t:tcp_socket name_bind;
+
+allow cfengine_serverd_t user_cron_spool_t:dir { add_name getattr search write remove_name };
+allow cfengine_serverd_t user_cron_spool_t:file { open create rename relabelfrom setattr unlink relabelto };
+
+#!!!! WARNING: 'usr_t' is a base type.
+allow cfengine_serverd_t usr_t:dir write;
+allow cfengine_serverd_t usr_t:file setattr;
+
+allow cfengine_serverd_t user_tmp_t:dir read;
+
+allow cfengine_serverd_t var_lock_t:lnk_file read;
+
+allow cfengine_serverd_t var_log_t:file setattr;
+
+allow cfengine_serverd_t var_run_t:dir { add_name remove_name write };
+allow cfengine_serverd_t var_run_t:file { create getattr link open unlink write };
+
+#!!!! WARNING: 'var_t' is a base type.
+allow cfengine_serverd_t var_t:dir { read setattr write };
+allow cfengine_serverd_t var_t:file { getattr ioctl open read write setattr };
+
+#============= iptables_t ==============
+
+#!!!! WARNING: 'etc_runtime_t' is a base type.
+allow iptables_t etc_runtime_t:file setattr;
+
+#!!!! WARNING: 'var_t' is a base type.
+allow iptables_t var_t:file { getattr read };
+
+#============= logrotate_t ==============
+
+#!!!! WARNING: 'usr_t' is a base type.
+allow logrotate_t usr_t:dir { write add_name };
+allow logrotate_t usr_t:file { write create };
+
+#============= snmpd_t ==============
+
+#!!!! The file '/run/systemd/private' is mislabeled on your system.  
+#!!!! Fix with $ restorecon -R -v /run/systemd/private
+allow snmpd_t init_t:unix_stream_socket connectto;
+
+#!!!! WARNING 'snmpd_t' is not allowed to write or create to lib_t.  Change the label to snmpd_var_lib_t.
+allow snmpd_t lib_t:dir write;
+
+allow snmpd_t postgresql_t:unix_stream_socket connectto;
+
+allow snmpd_t self:process execmem;
+
+allow snmpd_t systemd_systemctl_exec_t:file { execute getattr execute_no_trans open read };
+
+allow snmpd_t systemd_unit_file_t:service { start status };
+
+#!!!! WARNING: 'tmp_t' is a base type.
+allow snmpd_t tmp_t:dir write;
+
+#!!!! WARNING: 'usr_t' is a base type.
+allow snmpd_t usr_t:lnk_file unlink;
+
+allow snmpd_t user_tmp_t:dir write;
+
+allow snmpd_t var_log_t:file { open read };
+
+allow snmpd_t var_run_t:file getattr;
+
+#!!!! WARNING: 'var_t' is a base type.
+allow snmpd_t var_t:file { getattr open read ioctl };

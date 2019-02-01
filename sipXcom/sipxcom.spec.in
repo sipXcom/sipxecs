@@ -131,6 +131,7 @@ Requires: sipxrls >= %version
 Requires: sipxsaa >= %version
 Requires: sipxsnom >= %version
 Requires: sipxsupervisor >= %version
+Requires: sipxsupervisor-selinux >= %version
 Requires: sipxsqa-server >= %version
 Requires: sipxunidata >= %version
 Requires: sipxcallqueue

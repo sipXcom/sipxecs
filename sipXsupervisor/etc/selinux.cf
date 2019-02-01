@@ -29,7 +29,7 @@ bundle agent selinux {
       # vsftp is just one of the known incompatibilies with selinux. There may be others
       "/etc/selinux/config"
         comment => "Disable SELinux on next boot",
-        create => "true",
+        create => "false",
         perms => m(644),
         edit_line => configure_selinux;
 
@@ -82,12 +82,16 @@ bundle agent selinux {
         args => "-P unconfined_chrome_sandbox_transition 0";
         
       "/usr/sbin/setsebool"
+        comment => "Enable master zones",
+        args => "-P named_write_master_zones 1";
+
+      "/usr/sbin/setsebool"
         comment => "Enable nis",
         args => "-P nis_enabled 1";
 
-      "/usr/sbin/semodule"
-        comment => "Allow setcap access on processes labeled chrome_sandbox_t",
-        args => "-i mypol.pp";
+#      "/usr/sbin/semodule"
+#		 comment => "Allow setcap access on processes labeled chrome_sandbox_t",
+#        args => "-i mypol.pp";
 }
 
 bundle edit_line configure_selinux {
