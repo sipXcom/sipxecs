@@ -8,7 +8,7 @@
     <property name="target" ref="adminContextImpl" />
   </bean>
 
-  <bean id="adminContextImpl" class="org.sipfoundry.sipxconfig.admin.AdminContextImpl" autowire="byType">
+  <bean id="adminContextImpl" class="org.sipfoundry.sipxconfig.admin.AdminContextImpl">
     <property name="settingsDao">
       <bean parent="beanWithSettingsDao">
         <property name="target">
