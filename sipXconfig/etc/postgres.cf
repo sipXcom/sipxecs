@@ -154,9 +154,9 @@ bundle agent postgres_sysv_running {
     any::
       "any" usebundle => find_service_by_command("$(service_command)", "postgres_running","$(sipx.POSTGRESQL_USER)");
     postgres::
-      "any" usebundle => rh_chkconfig_status("postgresql on");
+      "any" usebundle => rh_systemctl_status("enable postgresql");
     !postgres::
-      "any" usebundle => rh_chkconfig_status("postgresql off");
+      "any" usebundle => rh_systemctl_status("disable postgresql");
 
   commands:
     !postgres.postgres_running::

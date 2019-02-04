@@ -82,9 +82,9 @@ bundle agent snmptrap_sysv_running {
     any::
       "any" usebundle => find_service_by_command("$(service_command)", "snmptrapd_running","root");
     !snmptrap::
-      "any" usebundle => rh_chkconfig_status("snmptrapd off");
+      "any" usebundle => rh_systemctl_status("disable snmptrapd");
     snmptrap::
-      "any" usebundle => rh_chkconfig_status("snmptrapd on");
+      "any" usebundle => rh_systemctl_status("enable snmptrapd");
 
   commands:
     !snmptrap.snmptrapd_running::

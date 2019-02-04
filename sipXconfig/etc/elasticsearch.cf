@@ -76,9 +76,9 @@ bundle agent elasticsearch_sysv_running {
 
   methods:
     !elasticsearch::
-      "any" usebundle => rh_chkconfig_status("elasticsearch off");
+      "any" usebundle => rh_systemctl_status("disable elasticsearch");
     elasticsearch::
-      "any" usebundle => rh_chkconfig_status("elasticsearch on");
+      "any" usebundle => rh_systemctl_status("enable elasticsearch");
 
   commands:
     (!elasticsearch|stop_sipxecs)::

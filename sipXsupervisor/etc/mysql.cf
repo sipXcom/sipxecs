@@ -95,9 +95,9 @@ bundle agent mysql_sysv_running {
     mysql_installed::
       "any" usebundle => find_service_by_command("$(service_command)", "mysql_running", "$(service_user)");
     mysql_installed.mysql::
-      "any" usebundle => rh_chkconfig_status("mysqld on");
+      "any" usebundle => rh_systemctl_status("enable mysqld");
     mysql_installed.!mysql::
-      "any" usebundle => rh_chkconfig_status("mysqld off");
+      "any" usebundle => rh_systemctl_status("disable mysqld");
 
   commands:
     !mysql.mysql_running::

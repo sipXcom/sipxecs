@@ -73,9 +73,9 @@ bundle agent sipxbridge_running {
     any::
       "any" usebundle => find_sipxservice_by_command_regex("$(service_command)","sipxbridge_running");
     !src.sipxbridge::
-      "any" usebundle => rh_chkconfig_status("sipxbridge on");
+      "any" usebundle => rh_systemctl_status("enable sipxbridge");
     !src.!sipxbridge::
-      "any" usebundle => rh_chkconfig_status("sipxbridge off");
+      "any" usebundle => rh_systemctl_status("disable sipxbridge");
 
   commands:
     (!sipxbridge|stop_sipxecs).sipxbridge_running::

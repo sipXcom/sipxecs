@@ -44,9 +44,9 @@ bundle edit_line sipxevent_properties_contents {
 bundle agent sipxevent_setup {
   methods:
     !src.sipxevent::
-      "any" usebundle => rh_chkconfig_status("sipxevent on");
+      "any" usebundle => rh_systemctl_status("enable sipxevent");
     !src.!sipxevent::
-      "any" usebundle => rh_chkconfig_status("sipxevent off");
+      "any" usebundle => rh_systemctl_status("disable sipxevent");
 }
 
 bundle agent sipxevent_running {

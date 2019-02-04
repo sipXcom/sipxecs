@@ -54,9 +54,9 @@ bundle agent sipxrecording_apache {
 bundle agent sipxrecording_setup {
   methods:
     !src.sipxrecording::
-      "any" usebundle => rh_chkconfig_status("sipxrecording on");
+      "any" usebundle => rh_systemctl_status("enable sipxrecording");
     !src.!sipxrecording::
-      "any" usebundle => rh_chkconfig_status("sipxrecording off");
+      "any" usebundle => rh_systemctl_status("disable sipxrecording");
 }
 
 bundle agent sipxrecording_running {

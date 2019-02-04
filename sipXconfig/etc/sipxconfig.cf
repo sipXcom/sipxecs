@@ -54,9 +54,9 @@ bundle agent sipxconfig_running {
     any::
       "any" usebundle => find_sipxservice_by_command_regex("$(service_command)","sipxconfig_running");
     !src.primary::
-      "any" usebundle => rh_chkconfig_status("sipxconfig off");
+      "any" usebundle => rh_systemctl_status("disable sipxconfig");
     !src.!primary::
-      "any" usebundle => rh_chkconfig_status("sipxconfig off");
+      "any" usebundle => rh_systemctl_status("disable sipxconfig");
 
   commands:
     primary.!sipxconfig_running.!stop_sipxecs::

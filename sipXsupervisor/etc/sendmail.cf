@@ -160,11 +160,11 @@ bundle agent sendmail_sysv_running {
       "any" usebundle => find_service_by_command("sendmail", "sendmail_running", "smmsp");      
 
     !src.sendmail::
-      "any" usebundle => rh_chkconfig_status("sendmail on");
+      "any" usebundle => rh_systemctl_status("enable sendmail");
     !src.postfix_installed::
-      "any" usebundle => rh_chkconfig_status("postfix off");
+      "any" usebundle => rh_systemctl_status("disable postfix");
     !src.!sendmail::
-      "any" usebundle => rh_chkconfig_status("sendmail off");
+      "any" usebundle => rh_systemctl_status("disable sendmail");
 
   commands:
     !sendmail.sendmail_running::

@@ -40,9 +40,9 @@ bundle agent sipxrest_config {
 bundle agent sipxrest_setup {
   methods:
     !src.sipxrest::
-      "any" usebundle => rh_chkconfig_status("sipxrest on");
+      "any" usebundle => rh_systemctl_status("enable sipxrest");
     !src.!sipxrest::
-      "any" usebundle => rh_chkconfig_status("sipxrest off");
+      "any" usebundle => rh_systemctl_status("disable sipxrest");
 }
 
 bundle agent sipxrest_running {

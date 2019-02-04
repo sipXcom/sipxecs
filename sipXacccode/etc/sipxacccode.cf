@@ -74,9 +74,9 @@ bundle edit_line sipxacccode_log4j_properties_contents {
 bundle agent sipxacccode_setup {
   methods:
     !src.sipxacccode::
-      "any" usebundle => rh_chkconfig_status("sipxacccode on");
+      "any" usebundle => rh_systemctl_status("enable sipxacccode");
     !src.!sipxacccode::
-      "any" usebundle => rh_chkconfig_status("sipxacccode off");
+      "any" usebundle => rh_systemctl_status("disable sipxacccode");
 }
 
 bundle agent sipxacccode_running {

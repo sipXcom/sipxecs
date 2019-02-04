@@ -59,9 +59,9 @@ bundle agent sipxsqa_running {
     any::
       "any" usebundle => find_sipxservice_by_command("$(service_command)","sipxsqa_running");
     !src.sipxsqa::
-      "any" usebundle => rh_chkconfig_status("sipxsqa on");
+      "any" usebundle => rh_systemctl_status("enable sipxsqa");
     !src.!sipxsqa::
-      "any" usebundle => rh_chkconfig_status("sipxsqa off");
+      "any" usebundle => rh_systemctl_status("disable sipxsqa");
     sipxsqa.sipxsqa_properties_changed.!restart_sipxsqa::
       "sipxsqa_properties_changed" usebundle => refresh_sip_service("log-level=\d",
       										 "$(sipx.SIPX_CONFDIR)/sipxsqa-config",

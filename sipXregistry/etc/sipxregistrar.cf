@@ -60,9 +60,9 @@ bundle edit_line registrar_config_contents() {
 bundle agent sipxregistrar_setup {
   methods:
     !src.sipxregistrar::
-      "any" usebundle => rh_chkconfig_status("sipxregistrar on");
+      "any" usebundle => rh_systemctl_status("enable sipxregistrar");
     !src.!sipxregistrar::
-      "any" usebundle => rh_chkconfig_status("sipxregistrar off");
+      "any" usebundle => rh_systemctl_status("disable sipxregistrar");
 }
 
 bundle agent sipxregistrar_running {

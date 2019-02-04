@@ -301,6 +301,22 @@ bundle agent rh_chkconfig_status(s){
 }
 
 #
+# Registers or deregisters a service into start with system on startup
+#
+bundle agent rh_systemctl_status(s){
+  classes:
+    "${s}_enabled" expression => returnszero("/usr/bin/systemctl ${s}", "noshell");
+
+  reports:
+    all::
+      "${g.pf} Service ${s} is enabled",
+        ifvarclass => "${s}_enabled";
+
+      "${g.pk} Service ${s} is not enabled",
+        ifvarclass => "!${s}_enabled";
+}
+
+#
 # Replace the entire contents of a file with a given set of contents
 #
 # Example:

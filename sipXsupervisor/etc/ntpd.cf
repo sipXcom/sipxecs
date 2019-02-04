@@ -89,9 +89,9 @@ bundle agent ntpd_sysv_running {
   methods:
     "any" usebundle => find_service_by_command("$(service_command)", "ntpd_running", "ntp");
     !src.!ntpd::
-      "any" usebundle => rh_chkconfig_status("ntpd off");
+      "any" usebundle => rh_systemctl_status("disable ntpd");
     ntpd::
-      "any" usebundle => rh_chkconfig_status("ntpd on");
+      "any" usebundle => rh_systemctl_status("enable ntpd");
 
   commands:
     !ntpd.!src.!unmanaged_ntpd.ntpd_running::

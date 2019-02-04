@@ -55,9 +55,9 @@ bundle edit_line sipxcdr_callresolver_config {
 bundle agent sipxcdr_setup {
   methods:
     !src.sipxcdr::
-      "any" usebundle => rh_chkconfig_status("sipxcdr on");
+      "any" usebundle => rh_systemctl_status("enable sipxcdr");
     !src.!sipxcdr::
-      "any" usebundle => rh_chkconfig_status("sipxcdr off");
+      "any" usebundle => rh_systemctl_status("disable sipxcdr");
 }
 
 bundle agent sipxcdr_running {

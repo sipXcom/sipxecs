@@ -103,9 +103,9 @@ bundle edit_line sipxsupervisor_allowed_users {
 bundle agent sipxsupervisor_setup {
   methods:
     !src.sipxsupervisor::
-      "any" usebundle => rh_chkconfig_status("sipxsupervisor on");
+      "any" usebundle => rh_systemctl_status("enable sipxsupervisor");
     !src.!sipxsupervisor::
-      "any" usebundle => rh_chkconfig_status("sipxsupervisor off");
+      "any" usebundle => rh_systemctl_status("disble sipxsupervisor");
 }
 
 bundle agent sipxsupervisor_running {

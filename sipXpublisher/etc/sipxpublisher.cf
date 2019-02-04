@@ -66,9 +66,9 @@ bundle edit_line sipstatus_config_contents() {
 bundle agent sipxpublisher_setup {
   methods:
     !src.sipxpublisher::
-      "any" usebundle => rh_chkconfig_status("sipxpublisher on");
+      "any" usebundle => rh_systemctl_status("enable sipxpublisher");
     !src.!sipxpublisher::
-      "any" usebundle => rh_chkconfig_status("sipxpublisher off");
+      "any" usebundle => rh_systemctl_status("disable sipxpublisher");
 }
 
 bundle agent sipxpublisher_running {

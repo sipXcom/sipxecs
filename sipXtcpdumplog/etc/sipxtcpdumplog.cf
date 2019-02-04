@@ -75,7 +75,7 @@ bundle edit_line sipxtcpdumplog_nfsexport_contents {
 bundle agent sipxtcpdumplog_setup {
   methods:
     !src.sipxtcpdumplog::
-      "any" usebundle => rh_chkconfig_status("sipxtcpdumplog");
+      "any" usebundle => rh_systemctl_status("enable sipxtcpdumplog");
 }
 
 bundle agent sipxtcpdumplog_running {

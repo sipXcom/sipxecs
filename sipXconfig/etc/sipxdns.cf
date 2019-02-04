@@ -151,9 +151,9 @@ bundle edit_line resolv_conf {
 bundle agent sipxdns_setup {
   methods:
     sipxdns::
-      "any" usebundle => rh_chkconfig_status("named on");
+      "any" usebundle => rh_systemctl_status("enable named");
     !sipxdns::
-      "any" usebundle => rh_chkconfig_status("named off");
+      "any" usebundle => rh_systemctl_status("disable named");
 }
 
 bundle agent named_sysv_running {

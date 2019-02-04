@@ -240,9 +240,9 @@ bundle agent firewall_sysv_running {
 
   methods:
     !firewall::
-      "any" usebundle => rh_chkconfig_status("iptables off");
+      "any" usebundle => rh_systemctl_status("disable iptables");
     firewall::
-      "any" usebundle => rh_chkconfig_status("iptables on");
+      "any" usebundle => rh_systemctl_status("enable iptables");
 
   commands:
     !firewall.iptables_running::

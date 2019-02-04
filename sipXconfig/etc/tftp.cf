@@ -90,7 +90,7 @@ bundle agent xinetd_sysv_running {
   methods:
     any::
       "any" usebundle => find_service_by_command("$(service_command)", "xinetd_running", "root");
-      "any" usebundle => rh_chkconfig_status("xinetd on");
+      "any" usebundle => rh_systemctl_status("enable xinetd");
 
   commands:
     !xinetd_running::

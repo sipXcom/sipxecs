@@ -255,9 +255,9 @@ bundle agent security_sysv_running {
 
   methods:
     !src.!security::
-      "any" usebundle => rh_chkconfig_status("fail2ban off");
+      "any" usebundle => rh_systemctl_status("disable fail2ban");
     !src.security::
-      "any" usebundle => rh_chkconfig_status("fail2ban on");
+      "any" usebundle => rh_systemctl_status("enable fail2ban");
 
   commands:
     !security.!src.security_running::

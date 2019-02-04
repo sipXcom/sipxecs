@@ -41,9 +41,9 @@ bundle edit_line sipxprovision_properties_contents {
 bundle agent sipxprovision_setup {
   methods:
     !src.sipxprovision::
-      "any" usebundle => rh_chkconfig_status("sipxprovision on");
+      "any" usebundle => rh_systemctl_status("enable sipxprovision");
     !src.!sipxprovision::
-      "any" usebundle => rh_chkconfig_status("sipxprovision off");
+      "any" usebundle => rh_systemctl_status("disable sipxprovision");
 }
 
 bundle agent sipxprovision_running {

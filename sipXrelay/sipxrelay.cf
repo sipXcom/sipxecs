@@ -46,9 +46,9 @@ bundle agent sipxrelay_running {
     any::
       "any" usebundle => find_sipxservice_by_command_regex("$(service_command)","sipxrelay_running");
     !src.sipxrelay::
-      "any" usebundle => rh_chkconfig_status("sipxrelay on");
+      "any" usebundle => rh_systemctl_status("enable sipxrelay");
     !src.!sipxrelay::
-      "any" usebundle => rh_chkconfig_status("sipxrelay off");
+      "any" usebundle => rh_systemctl_status("disable sipxrelay");
 
   commands:
     sipxrelay.!sipxrelay_running.!stop_sipxecs::

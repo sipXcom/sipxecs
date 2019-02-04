@@ -71,9 +71,9 @@ bundle edit_line sipxcallback_log4j_properties_contents {
 bundle agent sipxcallback_setup {
   methods:
     !src.sipxcallback::
-      "any" usebundle => rh_chkconfig_status("sipxcallback on");
+      "any" usebundle => rh_systemctl_status("enable sipxcallback");
     !src.!sipxcallback::
-      "any" usebundle => rh_chkconfig_status("sipxcallback off");
+      "any" usebundle => rh_systemctl_status("disable sipxcallback");
 }
 
 bundle agent sipxcallback_running {

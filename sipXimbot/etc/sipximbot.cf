@@ -72,9 +72,9 @@ bundle edit_line sipximbot_log4j_properties_contents {
 bundle agent sipximbot_setup {
   methods:
     !src.sipximbot::
-      "any" usebundle => rh_chkconfig_status("sipximbot on");
+      "any" usebundle => rh_systemctl_status("enable sipximbot");
     !src.!sipximbot::
-      "any" usebundle => rh_chkconfig_status("sipximbot off");
+      "any" usebundle => rh_systemctl_status("disable sipximbot");
 }
 
 bundle agent sipximbot_running {

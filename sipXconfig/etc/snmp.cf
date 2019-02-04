@@ -106,9 +106,9 @@ bundle agent snmp_sysv_running {
     any::
       "any" usebundle => find_service_by_command("$(service_command)", "snmpd_running","root");
     !snmp::
-      "any" usebundle => rh_chkconfig_status("snmpd off");
+      "any" usebundle => rh_systemctl_status("disable snmpd");
     snmp::
-      "any" usebundle => rh_chkconfig_status("snmpd on");
+      "any" usebundle => rh_systemctl_status("enable snmpd");
 
   commands:
     (!snmp|stop_sipxecs).snmpd_running::

@@ -115,9 +115,9 @@ bundle edit_line sipXproxy_config_contents() {
 bundle agent sipxproxy_setup {
   methods:
     !src.sipxproxy::
-      "any" usebundle => rh_chkconfig_status("sipxproxy on");
+      "any" usebundle => rh_systemctl_status("enable sipxproxy");
     !src.!sipxproxy::
-      "any" usebundle => rh_chkconfig_status("sipxproxy off");
+      "any" usebundle => rh_systemctl_status("disable sipxproxy");
 }
 
 bundle agent sipxproxy_running {

@@ -86,9 +86,9 @@ bundle edit_line sipxpage_log4j_properties_contents {
 bundle agent sipxpage_setup {
   methods:
     !src.sipxpage::
-      "any" usebundle => rh_chkconfig_status("sipxpage on");
+      "any" usebundle => rh_systemctl_status("enable sipxpage");
     !src.!sipxpage::
-      "any" usebundle => rh_chkconfig_status("sipxpage off");
+      "any" usebundle => rh_systemctl_status("disable sipxpage");
 }
 
 bundle agent sipxpage_running {

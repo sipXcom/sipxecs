@@ -110,9 +110,9 @@ bundle agent ftp_sysv_running {
     any::
       "any" usebundle => find_service_by_command("$(service_command)", "vsftpd_running", "root");
     ftp::
-      "any" usebundle => rh_chkconfig_status("vsftpd on");
+      "any" usebundle => rh_systemctl_status("enable vsftpd");
     !ftp.!unmanaged_ftp::
-      "any" usebundle => rh_chkconfig_status("vsftpd off");
+      "any" usebundle => rh_systemctl_status("disable vsftpd");
 
   commands:
     !ftp.!unmanaged_ftp.vsftpd_running::
