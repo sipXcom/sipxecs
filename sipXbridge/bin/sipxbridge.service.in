@@ -1,7 +1,7 @@
 [Unit]
 Description=sipxbridge
 Documentation=http://sipxcom.org
-After=network.target syslog.target
+After=network.target syslog.target named.service sipxproxy.service 
 
 [Service]
 Type=oneshot
