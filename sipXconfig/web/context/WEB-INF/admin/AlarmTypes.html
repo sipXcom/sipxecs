@@ -1,6 +1,8 @@
   <table jwcid="@common/Table" id="alarm:list"
       columns="code:alarmDefinition.id,!description,!groupName,!threshold"
       source="ognl:alarms"
+      initialSortColumn="code"
+      initialSortOrder="false"
       row="ognl:currentRow"
       selections="ognl:selections"
       converter="ognl:alarmConverter">
