@@ -32,6 +32,7 @@ public class AbstractCertificateCommon {
         setDnsDomain(domain);
         setEmail("root@" + domain);
         setCommonName(fqdn);
+        setOrganization(domain);
     }
     public String getCountry() {
         return m_country;
