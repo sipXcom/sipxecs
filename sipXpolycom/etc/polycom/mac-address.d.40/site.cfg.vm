@@ -252,14 +252,6 @@
 #end
   />
   <log>
-    <log.level>
-      <log.level.change
-#set ($group = $cfg.EndpointSettings.getSetting('log').getSetting('level.change'))
-#foreach($levelSetting in $group.Values)
-        log.level.change.${levelSetting.Name}="${levelSetting.Value}"
-#end
-      />
-    </log.level>
     <log.render
 #set ($group = $cfg.EndpointSettings.getSetting('log').getSetting('render'))
 #foreach ($setting in $cfg.getSettings($group))
@@ -332,11 +324,6 @@
 
 <device device.set="1"
 
-#set ($group = $cfg.EndpointSettings.getSetting('device'))
-#foreach ($setting in $cfg.getSettings($group))
-    device.${setting.ProfileName}="$!{setting.Value}"
-#end
-
 #set ($group = $cfg.EndpointSettings.getSetting('log').getSetting('device.syslog'))
 #foreach ($setting in $cfg.getSettings($group))
     device.syslog.${setting.ProfileName}="$!{setting.Value}"
@@ -357,18 +344,6 @@
 #end
 device.sec.TLS.customCaCert1.set="1"
 device.sec.TLS.customCaCert1="$cert"
-/>
-
-<powerManagement
-#set ($group = $cfg.EndpointSettings.getSetting('powerManagement').getSetting('usb.charging'))
-#foreach ($setting in $cfg.getSettings($group))
-    usb.charging.${setting.ProfileName}="$!{setting.Value}"
-#end
-
-#set ($group = $cfg.EndpointSettings.getSetting('powerManagement').getSetting('poe.pse'))
-#foreach ($setting in $cfg.getSettings($group))
-    poe.pse.${setting.ProfileName}="$!{setting.Value}"
-#end
 />
 
 <sec
