@@ -305,8 +305,9 @@ public class MongoConfig implements ConfigProvider {
         if (settings != null) {
             // cache-size-mb may be empty and it causes troubles when key has no value - 
             // at least in this case
-            if (settings.getSettingTypedValue("mongod/cache-size-mb") == null)
+            if (settings.getSettingTypedValue("mongod/cache-size-mb") == null) {
                 settings.setSettingValue("mongod/cache-size-mb", "0");
+            }
             config.writeSettings(settings.getSettings());
         }
     }
