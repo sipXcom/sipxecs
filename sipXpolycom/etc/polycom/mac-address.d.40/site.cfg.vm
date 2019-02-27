@@ -332,11 +332,6 @@
 
 <device device.set="1"
 
-#set ($group = $cfg.EndpointSettings.getSetting('device'))
-#foreach ($setting in $cfg.getSettings($group))
-    device.${setting.ProfileName}="$!{setting.Value}"
-#end
-
 #set ($group = $cfg.EndpointSettings.getSetting('log').getSetting('device.syslog'))
 #foreach ($setting in $cfg.getSettings($group))
     device.syslog.${setting.ProfileName}="$!{setting.Value}"
