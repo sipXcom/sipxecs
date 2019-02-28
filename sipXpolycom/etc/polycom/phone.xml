@@ -1680,13 +1680,9 @@
       <setting name="log" copy-of="so" />
       <setting name="curl" copy-of="so" />
       <setting name="rtos" copy-of="so" />
-      <setting name="mb" copy-of="so" />
-      <setting name="ib" copy-of="so" />
       <setting name="sotet" copy-of="so" />
-      <setting name="ttrs" copy-of="so" />
       <setting name="usb" copy-of="so" />
       <setting name="srtp" copy-of="so" />
-      <setting name="clink" copy-of="so" unless="pre_3.2.0_model"/>
       <setting name="pnetm" copy-of="so" unless="pre_3.2.0_model"/>
       <setting name="peer" copy-of="so" unless="pre_3.2.0_model"/>
       <setting name="efk" copy-of="so" unless="pre_3.2.0_model"/>
