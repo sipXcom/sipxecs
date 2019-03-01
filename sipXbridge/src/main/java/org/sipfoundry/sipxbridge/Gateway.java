@@ -929,8 +929,11 @@ public class Gateway {
         initializeSipListeningPoints();
 
         /* Test to see that we can do an address lookup */
-
-        initializeSipxProxyAddresses();
+        try {
+            initializeSipxProxyAddresses();
+        } catch (Exception e) {
+            logger.error("Test to see that we can do an address lookup", e);
+        }
 
         /*
          * Start up the STUN address discovery.
