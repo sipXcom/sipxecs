@@ -58,9 +58,9 @@ BuildRequires: sipxcdr-client >= %version
 Source: %name-%version.tar.gz
 
 Requires: postgresql-server
-Requires: mongodb-org-server = 3.4.10
-Requires: mongodb-org-shell = 3.4.10
-Requires: mongodb-org-tools = 3.4.10
+Requires: mongodb-org-server = 3.6.11
+Requires: mongodb-org-shell = 3.6.11
+Requires: mongodb-org-tools = 3.6.11
 Requires: httpd
 # not installed by default on centos 6
 Requires: mod_ssl
