@@ -29,6 +29,13 @@ import org.sipfoundry.sipxconfig.common.UserException;
 import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.commserver.LocationsManager;
 import org.sipfoundry.sipxconfig.domain.DomainManager;
+import org.sipfoundry.sipxconfig.feature.Bundle;
+import org.sipfoundry.sipxconfig.feature.FeatureChangeRequest;
+import org.sipfoundry.sipxconfig.feature.FeatureChangeValidator;
+import org.sipfoundry.sipxconfig.feature.FeatureManager;
+import org.sipfoundry.sipxconfig.feature.FeatureProvider;
+import org.sipfoundry.sipxconfig.feature.GlobalFeature;
+import org.sipfoundry.sipxconfig.feature.LocationFeature;
 import org.sipfoundry.sipxconfig.firewall.DefaultFirewallRule;
 import org.sipfoundry.sipxconfig.firewall.FirewallManager;
 import org.sipfoundry.sipxconfig.firewall.FirewallProvider;
@@ -43,7 +50,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * Backup provides Java interface to backup scripts
  */
 public class AdminContextImpl extends HibernateDaoSupport implements AdminContext, AddressProvider, ProcessProvider,
-        AlarmProvider, FirewallProvider, ArchiveProvider {
+        AlarmProvider, FirewallProvider, ArchiveProvider, FeatureProvider {
     private static final Collection<AddressType> ADDRESSES = Arrays.asList(new AddressType[] {
         HTTP_ADDRESS, HTTP_ADDRESS_AUTH, HTTPS_ADDRESS_AUTH, SIPXCDR_DB_ADDRESS
     });
@@ -240,5 +247,30 @@ public class AdminContextImpl extends HibernateDaoSupport implements AdminContex
     @Override
     public boolean isAllowSubscriptionsToSelf() {
         return (Boolean) getSettings().isAllowSubscriptionsToSelf();
+    }
+
+    @Override
+    public void featureChangePrecommit(FeatureManager manager, FeatureChangeValidator validator) {
+
+    }
+
+    @Override
+    public void featureChangePostcommit(FeatureManager manager, FeatureChangeRequest request) {
+
+    }
+
+    @Override
+    public Collection<GlobalFeature> getAvailableGlobalFeatures(FeatureManager featureManager) {
+        return null;
+    }
+
+    @Override
+    public Collection<LocationFeature> getAvailableLocationFeatures(FeatureManager featureManager, Location l) {
+        return Collections.singleton(FEATURE);
+    }
+
+    @Override
+    public void getBundleFeatures(FeatureManager featureManager, Bundle b) {
+
     }
 }
