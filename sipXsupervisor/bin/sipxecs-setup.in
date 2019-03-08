@@ -410,6 +410,7 @@ class Network
     x = `hostname -d 2>/dev/null`.chomp
     if $? == 0 && ! x.empty?
       domain_from_hostname_d = x
+    else domain_from_hostname_d = "localdomain"
     end    
 
     File.open('/etc/hosts', 'r') {|f|
