@@ -26,7 +26,7 @@ def cmd(verbose, cmd)
 end
 
 def run(verbose, is_remote, is_raw, hosts, defines, undefines, bundles)
-  File.write('#{$logfile}', 'MIRCEA')
+
   if (Process.uid == 0 && is_remote) # uid == 0 for root?
     #
     # You should not run cf-runagent as root because root user does not have all
