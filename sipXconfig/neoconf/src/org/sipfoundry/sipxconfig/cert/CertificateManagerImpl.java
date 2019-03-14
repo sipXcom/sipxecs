@@ -141,6 +141,7 @@ public class CertificateManagerImpl implements CertificateManager, SetupListener
 
     @Override    
     public void checkAllCertificatesVlaidity() {
+        LOG.debug("SCHEDULED JOB: Check certificates validity");
         List<Map<String, Object>> certs = getCertificates();
         for (Map<String, Object> cert : certs) {
             X509Certificate certificate = CertificateUtils.readCertificate(cert.get("data").toString());
