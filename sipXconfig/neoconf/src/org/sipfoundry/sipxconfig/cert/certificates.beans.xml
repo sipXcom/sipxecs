@@ -36,7 +36,7 @@
   </bean>
   
   <task:scheduled-tasks>
-	<task:scheduled ref="certificateManagerImpl" method="checkAllCertificatesVlaidity" cron="0 0 0 * * *" />
+	<task:scheduled ref="certificateManagerImpl" method="checkAllCertificatesVlaidity" cron="0 0 0/23 * * ?" />
   </task:scheduled-tasks>
 
   <bean id="certificateSettings" class="org.sipfoundry.sipxconfig.cert.CertificateSettings" parent="settingsBean">
