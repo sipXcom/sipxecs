@@ -354,6 +354,7 @@ device.sec.TLS.customCaCert1.set="1"
 device.sec.TLS.customCaCert1="$cert"
 />
 
+#if ($cfg.EndpointSettings.getSetting('powerManagement').getSetting('usb.charging'))
 <powerManagement
 #set ($group = $cfg.EndpointSettings.getSetting('powerManagement').getSetting('usb.charging'))
 #foreach ($setting in $cfg.getSettings($group))
@@ -365,7 +366,8 @@ device.sec.TLS.customCaCert1="$cert"
     poe.pse.${setting.ProfileName}="$!{setting.Value}"
 #end
 />
-
+#end
+	
 <sec
 sec.TLS.customCaCert.1="$cert"
 sec.TLS.profile.1.deviceCert="Application1"
