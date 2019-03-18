@@ -50,7 +50,7 @@ public class CertificateManagerImpl implements CertificateManager, SetupListener
     private static final Log LOG = LogFactory.getLog(CertificateManager.class);
     
     private static final String ALARM_CERTIFICATE_WILL_EXPIRE_STR = "ALARM_CERTIFICATE_WILL_EXPIRE Certificate: %s will expire on %s";
-    private static final String ALARM_DATE_RANGE_FUTURE_STR = "ALARM_DATE_RANGE_FUTURE Certificate: %s valid date range starts on %s, it is not yet valid.";
+    private static final String ALARM_CERTIFICATE_DATE_RANGE_FUTURE_STR = "ALARM_CERTIFICATE_DATE_RANGE_FUTURE Certificate: %s valid date range starts on %s, it is not yet valid.";
 
     private static final String AUTHORITY_TABLE = "authority";
     private static final String CERT_TABLE = "cert";
@@ -156,14 +156,14 @@ public class CertificateManagerImpl implements CertificateManager, SetupListener
             } catch (CertificateExpiredException e) {
                 LOG.error(String.format(ALARM_CERTIFICATE_WILL_EXPIRE_STR, cert.get("name"), certificate.getNotAfter()));
             } catch (CertificateNotYetValidException e) {
-                LOG.error(String.format(ALARM_DATE_RANGE_FUTURE_STR, cert.get("name"), certificate.getNotBefore()));                
+                LOG.error(String.format(ALARM_CERTIFICATE_DATE_RANGE_FUTURE_STR, cert.get("name"), certificate.getNotBefore()));                
             }
         }
     }
     
     @Override
     public Collection<AlarmDefinition> getAvailableAlarms(AlarmServerManager manager) {
-        return Arrays.asList(new AlarmDefinition[]{CERTIFICATE_WILL_EXPIRE, CERTIFICATE_DATE_RANGE_FUTURE});
+        return Arrays.asList(new AlarmDefinition[]{ALARM_CERTIFICATE_WILL_EXPIRE, ALARM_CERTIFICATE_DATE_RANGE_FUTURE});
     }
 
     private void addThirdPartyAuthority(String name, String data) {
