@@ -2897,20 +2897,6 @@
             <value></value>
             <description>TFTP/HTTP Server address.</description>
         </setting>
-        <setting name="P1360">
-            <label>HTTP/HTTPS User Name</label>
-            <type>
-                <string/>
-            </type>
-            <value>PlcmSpIp</value>
-        </setting>
-        <setting name="P1361">
-            <label>HTTP/HTTPS Password</label>
-            <type>
-                <string password="yes"/>
-            </type>
-            <value>PlcmSpIp</value>
-        </setting>
         <setting name="P6767">
             <label>Firmware Upgrade Type</label>
             <type>
@@ -3108,7 +3094,7 @@
             <value></value>
             <description></description>
         </setting>
-        <setting name="P1360" if="gsPhoneGxp21(30|35|40|60|70)">
+        <setting name="P1360" if="gsPhoneGxp21(30|35|40|60|70)|gsPhoneGxp1450|gsPhoneGxp16(10|25)|gsPhoneGxv3175|gsPhoneGxv3370">
             <label>HTTP/HTTPS User Name</label>
             <type>
                 <string/>
@@ -3116,7 +3102,7 @@
             <value></value>
             <description></description>
         </setting>
-        <setting name="P1361" if="gsPhoneGxp21(30|35|40|60|70)">
+        <setting name="P1361" if="gsPhoneGxp21(30|35|40|60|70)|gsPhoneGxp1450|gsPhoneGxp16(10|25)|gsPhoneGxv3175|gsPhoneGxv3370">
             <label>HTTP/HTTPS Password</label>
             <type>
                 <string/>
