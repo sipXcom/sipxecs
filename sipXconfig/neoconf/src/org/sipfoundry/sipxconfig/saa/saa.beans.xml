@@ -28,6 +28,7 @@
     <property name="velocityEngine" ref="velocityEngine" />
     <property name="configManager" ref="configManager" />
     <property name="saaLimitsConfig" ref="saaResLimits" />
+    <property name="phoneContext" ref="phoneContext" />
   </bean>
 
 </beans>
