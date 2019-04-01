@@ -46,6 +46,7 @@ import org.sipfoundry.sipxconfig.common.event.DaoEventListener;
 import org.sipfoundry.sipxconfig.device.DeviceDefaults;
 import org.sipfoundry.sipxconfig.device.DeviceVersion;
 import org.sipfoundry.sipxconfig.device.ProfileLocation;
+import org.sipfoundry.sipxconfig.device.ProfileManager;
 import org.sipfoundry.sipxconfig.intercom.Intercom;
 import org.sipfoundry.sipxconfig.intercom.IntercomManager;
 import org.sipfoundry.sipxconfig.phonebook.GooglePhonebookEntry;
@@ -117,6 +118,8 @@ public class PhoneContextImpl extends SipxHibernateDaoSupport implements BeanFac
 
     private JdbcTemplate m_jdbcTemplate;
 
+    private ProfileManager m_profileManager;
+
     @Required
     public void setPhonebookManager(PhonebookManager phonebookManager) {
         m_phonebookManager = phonebookManager;
@@ -144,6 +147,11 @@ public class PhoneContextImpl extends SipxHibernateDaoSupport implements BeanFac
 
     public void setConfigJdbcTemplate(JdbcTemplate template) {
         m_jdbcTemplate = template;
+    }
+
+    @Required
+    public void setProfileManager(ProfileManager profileManager) {
+        m_profileManager = profileManager;
     }
 
     /**
@@ -370,7 +378,9 @@ public class PhoneContextImpl extends SipxHibernateDaoSupport implements BeanFac
         if (User.class.equals(c)) {
             User user = (User) entity;
             Collection<Phone> phones = getPhonesByUserId(user.getId());
+            List<Integer> phoneIds = new ArrayList<Integer>();
             for (Phone phone : phones) {
+                phoneIds.add(phone.getId());
                 List<Integer> ids = new ArrayList<Integer>();
                 Collection<Line> lines = phone.getLines();
                 for (Line line : lines) {
@@ -382,6 +392,7 @@ public class PhoneContextImpl extends SipxHibernateDaoSupport implements BeanFac
                 DataCollectionUtil.removeByPrimaryKey(lines, ids.toArray());
                 storePhone(phone);
             }
+            m_profileManager.generateProfiles(phoneIds, true, null);
         }
     }
 
