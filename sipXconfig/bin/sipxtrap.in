@@ -12,12 +12,13 @@
 #  sipxtrap PROCESS_RESTARTED "The foo process has failed and is in the process of restarting"
 #  sipxtrap LOGIN_FAILED "User foo has failed to login 3 times in a row in a 1 minute time window"
 here=`hostname`
+community_string=`grep "=snmp_community_string=" $"@SIPX_CFDATA@/snmpd.cfdat" | awk -F= '{print $3}'`
 
 # must be root to call snmptrap command
 
 # TODO: use proper time and code octets for args 3 and 4
 
-snmptrap -v 2c -c public localhost '' SIPXECS-ALARM-NOTIFICATION-MIB::alarmNotifications \
+snmptrap -v 2c -c "$community_string" localhost '' SIPXECS-ALARM-NOTIFICATION-MIB::alarmNotifications \
          SIPXECS-ALARM-NOTIFICATION-MIB::alarmAttributes.1 s "$1" \
          SIPXECS-ALARM-NOTIFICATION-MIB::alarmAttributes.2 s "$here" \
          SIPXECS-ALARM-NOTIFICATION-MIB::alarmAttributes.3 x 0x00000000 \
