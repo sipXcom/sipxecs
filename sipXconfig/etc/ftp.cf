@@ -59,6 +59,13 @@ bundle agent ftp_config {
 	    perms => m("600"),
 	    edit_line => ftp_sshd_config,
 	    classes => if_repaired("reload_sshd");
+	    
+	  "/etc/shells"
+        comment => "Update shell",
+        create => "true",
+        perms => m("644"),
+        edit_line => shell_config,
+        classes => if_repaired("restart_vsftpd");	    
 
     ftp.src::
        "$(config)"
@@ -77,6 +84,11 @@ bundle agent ftp_config {
 bundle edit_line ftp_sshd_config {
   insert_lines:
     "DenyUsers PlcmSpIp lvp2890";
+}
+
+bundle edit_line shell_config {
+  insert_lines:
+    "/sbin/nologin";
 }
 
 
@@ -110,9 +122,9 @@ bundle agent ftp_sysv_running {
     any::
       "any" usebundle => find_service_by_command("$(service_command)", "vsftpd_running", "root");
     ftp::
-      "any" usebundle => rh_systemctl_status("enable vsftpd");
+      "any" usebundle => rh_chkconfig_status("vsftpd on");
     !ftp.!unmanaged_ftp::
-      "any" usebundle => rh_systemctl_status("disable vsftpd");
+      "any" usebundle => rh_chkconfig_status("vsftpd off");
 
   commands:
     !ftp.!unmanaged_ftp.vsftpd_running::
@@ -164,4 +176,3 @@ bundle agent ftp_sysctl_running {
         comment => "restart $(service)",
         args => "restart $(service)";
 }
-
