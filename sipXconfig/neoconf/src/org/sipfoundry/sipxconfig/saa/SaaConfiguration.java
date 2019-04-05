@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -37,7 +38,11 @@ import org.sipfoundry.sipxconfig.common.CoreContext;
 import org.sipfoundry.sipxconfig.common.User;
 import org.sipfoundry.sipxconfig.common.event.DaoEventListener;
 import org.sipfoundry.sipxconfig.commserver.Location;
+import org.sipfoundry.sipxconfig.domain.Domain;
 import org.sipfoundry.sipxconfig.feature.LocationFeature;
+import org.sipfoundry.sipxconfig.phone.Line;
+import org.sipfoundry.sipxconfig.phone.Phone;
+import org.sipfoundry.sipxconfig.phone.PhoneContext;
 import org.sipfoundry.sipxconfig.setting.PersistableSettings;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -45,6 +50,7 @@ public class SaaConfiguration implements ConfigProvider, DaoEventListener, ResLi
     private VelocityEngine m_velocityEngine;
     private SaaManager m_saaManager;
     private CoreContext m_coreContext;
+    private PhoneContext m_phoneContext;
     private ConfigManager m_configManager;
     private AbstractResLimitsConfig m_saaLimitsConfig;
 
@@ -135,6 +141,20 @@ public class SaaConfiguration implements ConfigProvider, DaoEventListener, ResLi
     @Override
     public void onSave(Object entity) {
         onChange(entity);
+        if (m_configManager.getFeatureManager().isFeatureEnabled(SaaManager.FEATURE) && entity instanceof User) {
+            User user = (User) entity;
+            if (user.getIsShared()) {
+                Collection<Phone> phones = m_phoneContext.getPhonesByUserId(user.getId());
+                for (Phone phone : phones) {
+                    List<Line> lines = phone.getLines();
+                    for (Line line : lines) {
+                        line.setSettingTypedValue("reg/outboundProxy.address", Domain.getDomain().getName());
+                    }
+                    m_phoneContext.storePhone(phone);
+                }
+            }
+            m_configManager.configureEverywhere(SaaManager.FEATURE);
+        }
     }
 
     public void onChange(Object entity) {
@@ -167,4 +187,10 @@ public class SaaConfiguration implements ConfigProvider, DaoEventListener, ResLi
     public void saveSettings(PersistableSettings settings) {
         m_saaManager.saveSettings(settings);
     }
+
+    @Required
+    public void setPhoneContext(PhoneContext phoneContext) {
+        m_phoneContext = phoneContext;
+    }
+        
 }

@@ -11,6 +11,7 @@ package org.sipfoundry.sipxconfig.cert;
 
 import java.util.List;
 
+import org.sipfoundry.sipxconfig.alarm.AlarmDefinition;
 import org.sipfoundry.sipxconfig.feature.GlobalFeature;
 
 /*
@@ -23,6 +24,9 @@ public interface CertificateManager {
     public static final String CHAIN_CERT = "server-chain";
     public static final String CA_CERT = "ca-bundle";
     public static final String CRT = ".crt";
+    
+    public static final AlarmDefinition ALARM_CERTIFICATE_WILL_EXPIRE = new AlarmDefinition("CERTIFICATE_WILL_EXPIRE");
+    public static final AlarmDefinition ALARM_CERTIFICATE_DATE_RANGE_FUTURE = new AlarmDefinition("CERTIFICATE_DATE_RANGE_FUTURE");
 
     public CertificateSettings getSettings();
 
@@ -89,4 +93,6 @@ public interface CertificateManager {
     public String getCACertificate();
 
     public void setCACertificate(String cert);
+    
+    public void checkAllCertificatesVlaidity();
 }

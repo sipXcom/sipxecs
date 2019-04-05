@@ -14,7 +14,7 @@ thresh=<%= LOGIN_FAILED[:minThreshold] %>
 
 <% 
   data.each {|a, v|
-    next unless a =~ /^PHONE_|^BACKUP_|^LDAP_/
+    next unless a =~ /^PHONE_|^BACKUP_|^LDAP_|^CERTIFICATE_/
     next unless v[:groupName] != 'disabled'
 %>
 type=Single

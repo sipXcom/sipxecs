@@ -32,6 +32,7 @@ public class AbstractCertificateCommon {
         setDnsDomain(domain);
         setEmail("root@" + domain);
         setCommonName(fqdn);
+        setOrganization(domain);
     }
     public String getCountry() {
         return m_country;
@@ -109,7 +110,7 @@ public class AbstractCertificateCommon {
             escapeComma(m_country),
             escapeComma(m_state),
             escapeComma(m_locality),
-            escapeComma(m_dnsDomain),
+            escapeComma(m_organization),
             escapeComma(m_organizationUnit),
             escapeComma(m_commonName),
             escapeComma(m_email));

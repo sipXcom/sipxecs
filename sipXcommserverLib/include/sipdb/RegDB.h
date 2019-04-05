@@ -65,7 +65,7 @@ public:
 	}
 	;
 
-    static RegDB* CreateInstance(bool ensureIndexes = false);
+    static RegDB* CreateInstance(bool ensureIndexes = false, int gracePeriod = 0);
 
     void updateBinding(const RegBinding::Ptr& pBinding);
 

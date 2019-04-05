@@ -27,11 +27,21 @@
       <type><integer/></type>
       <value>43200</value>
     </setting>
-    <setting name="plcm_https_provisioning">
-      <type>
-        <boolean />
-       </type>
-       <value>0</value>
+    <setting name="plcm_provisioning">
+       <type>
+        <enum>
+          <option>
+            <value>HTTP</value>
+          </option>
+          <option>
+            <value>HTTPS</value>
+          </option>
+          <option>
+            <value>NONE</value>
+          </option>
+        </enum>
+      </type>
+      <value>NONE</value>
     </setting>
     <setting name="bria_https_provisioning">
       <type>

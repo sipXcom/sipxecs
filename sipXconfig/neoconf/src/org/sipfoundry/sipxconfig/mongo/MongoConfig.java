@@ -279,6 +279,8 @@ public class MongoConfig implements ConfigProvider {
         config.write("mongoArbiterPort", MongoSettings.ARBITER_PORT);
         config.writeClass("mongo_local", local);
         config.writeClass("mongo_local_arbiter", localArbiter);
+        if (m_mongoManager.getSettings().getCacheSize() != null)
+            config.write("mongoCacheSize", format("%.3f", m_mongoManager.getSettings().getCacheSize() / 1024.0));
     }
 
     /**
@@ -301,6 +303,11 @@ public class MongoConfig implements ConfigProvider {
         config.write(SHARD_ID, shardId);
         config.write("useReadTags", true);
         if (settings != null) {
+            // cache-size-mb may be empty and it causes troubles when key has no value - 
+            // at least in this case
+            if (settings.getSettingTypedValue("mongod/cache-size-mb") == null) {
+                settings.setSettingValue("mongod/cache-size-mb", "0");
+            }
             config.writeSettings(settings.getSettings());
         }
     }

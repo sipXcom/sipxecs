@@ -151,8 +151,12 @@ SipRegistrar::SipRegistrar(OsConfigDb* configDb) :
 
    MongoDB::ConnectionInfo gInfo = MongoDB::ConnectionInfo::globalInfo();
    mpEntityDb = (_entityCacheExpire == 0 ? new EntityDB(gInfo) : new EntityDB(gInfo, _entityCacheExpire * 1000));
+   
+   int gracePeriod = 0;
+   mConfigDb->get("SIP_REGISTRAR_EXPIRE_GRACE_PERIOD", gracePeriod);
+   Os::Logger::instance().log(FAC_SIP, PRI_INFO, "SipRegistrar::SipRegistrar gracePeriod: %d seconds", gracePeriod * 60);
 
-   mpRegDb = RegDB::CreateInstance(true /* ensure indexes */);
+   mpRegDb = RegDB::CreateInstance(true, gracePeriod * 60);
    mpSubscribeDb = SubscribeDB::CreateInstance(true /* ensure indexes creation */);
 
    mConfigDb->get("SIP_REGISTRAR_BIND_IP", mBindIp);

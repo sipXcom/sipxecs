@@ -17,12 +17,21 @@ import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.sipfoundry.sipxconfig.alarm.AlarmDefinition;
+import org.sipfoundry.sipxconfig.alarm.AlarmProvider;
+import org.sipfoundry.sipxconfig.alarm.AlarmServerManager;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
 import org.sipfoundry.sipxconfig.common.DaoUtils;
 import org.sipfoundry.sipxconfig.common.UserException;
@@ -37,8 +46,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 /**
  * Certificate Management Implementation.
  */
-public class CertificateManagerImpl implements CertificateManager, SetupListener {
+public class CertificateManagerImpl implements CertificateManager, SetupListener, AlarmProvider {
     private static final Log LOG = LogFactory.getLog(CertificateManager.class);
+    
+    private static final String ALARM_CERTIFICATE_WILL_EXPIRE_STR = "ALARM_CERTIFICATE_WILL_EXPIRE Certificate: %s will expire on %s";
+    private static final String ALARM_CERTIFICATE_DATE_RANGE_FUTURE_STR = "ALARM_CERTIFICATE_DATE_RANGE_FUTURE Certificate: %s valid date range starts on %s, it is not yet valid.";
+
     private static final String AUTHORITY_TABLE = "authority";
     private static final String CERT_TABLE = "cert";
     private static final String CERT_COLUMN = "data";
@@ -126,6 +139,33 @@ public class CertificateManagerImpl implements CertificateManager, SetupListener
                 authority);
     }
 
+    @Override    
+    public void checkAllCertificatesVlaidity() {
+        LOG.debug("SCHEDULED JOB: Check certificates validity");
+        List<Map<String, Object>> certs = getCertificates();
+        for (Map<String, Object> cert : certs) {
+            X509Certificate certificate = CertificateUtils.readCertificate(cert.get("data").toString());
+            try {
+                //construct the date two weeks after current date
+                int noOfDays = 14;
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(new Date());            
+                calendar.add(Calendar.DAY_OF_YEAR, noOfDays);
+                Date date = calendar.getTime();
+                certificate.checkValidity(date);
+            } catch (CertificateExpiredException e) {
+                LOG.error(String.format(ALARM_CERTIFICATE_WILL_EXPIRE_STR, cert.get("name"), certificate.getNotAfter()));
+            } catch (CertificateNotYetValidException e) {
+                LOG.error(String.format(ALARM_CERTIFICATE_DATE_RANGE_FUTURE_STR, cert.get("name"), certificate.getNotBefore()));                
+            }
+        }
+    }
+    
+    @Override
+    public Collection<AlarmDefinition> getAvailableAlarms(AlarmServerManager manager) {
+        return Arrays.asList(new AlarmDefinition[]{ALARM_CERTIFICATE_WILL_EXPIRE, ALARM_CERTIFICATE_DATE_RANGE_FUTURE});
+    }
+
     private void addThirdPartyAuthority(String name, String data) {
         addAuthority(name, data, null);
     }
@@ -140,7 +180,7 @@ public class CertificateManagerImpl implements CertificateManager, SetupListener
     private String getSecurityData(String table, String column, String name) {
         String sql = format("select %s from %s where name = ?", column, table);
         return DaoUtils.requireOneOrZero(m_jdbc.queryForList(sql, String.class, name), sql);
-    }
+    }   
 
     @Override
     public String getWebCertificate() {
@@ -160,6 +200,12 @@ public class CertificateManagerImpl implements CertificateManager, SetupListener
     @Override
     public String getCommunicationsPrivateKey() {
         return getSecurityData(CERT_TABLE, KEY_COLUMN, COMM_CERT);
+    }
+
+    public List<Map<String, Object>> getCertificates() {
+        String sql = format("select name,data from %s", CERT_TABLE);
+        List<Map<String, Object>> certificates = m_jdbc.queryForList(sql);
+        return certificates;
     }
 
     @Override

@@ -48,6 +48,10 @@ public class MongoSettings extends PersistableSettings implements DeployConfigOn
         return (Integer) getSettingTypedValue("mongod/port");
     }
 
+    public Integer getCacheSize() {
+        return (Integer) getSettingTypedValue("mongod/cache-size-mb");
+    }
+
     @Override
     public String getBeanId() {
         return "mongoSettings";

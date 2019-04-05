@@ -2,7 +2,7 @@
 
   <div class="row profile-bar-chat">
     <div class="col-xs-10">
-      <span>CALL HISTORY</span>
+      <span>{{ 'CALLHISTORY.CALL_HISTORY' | translate }}</span>
     </div>
     <div class="col-xs-2">
       <button class="btn btn-link pull-right"
@@ -16,7 +16,7 @@
   <div data-resize class="row callhistory-content">
 
     <div class="col-md-12 timezone">
-      <p>Timezone:</p>
+      <p>{{ 'CALLHISTORY.TIMEZONE' | translate }}</p>
     </div>
 
     <div class="col-md-12 timezoneselect">
@@ -27,7 +27,7 @@
     </div>
 
     <div class="col-md-12 start">
-      <p>Start:</p>
+      <p>{{ 'CALLHISTORY.START' | translate }}:</p>
     </div>
 
     <div class="col-md-9 input-group">
@@ -42,7 +42,7 @@
 
 
     <div class="col-md-12 end">
-      <p>End:</p>
+      <p>{{ 'CALLHISTORY.END' | translate }}:</p>
     </div>
 
     <div class="col-md-9 input-group">
@@ -67,7 +67,7 @@
     <div class="col-md-12 callhistory-btn">
       <button type="button" class="btn btn-success"
               data-ng-click="callhistory.apply();">
-        Apply
+      {{ 'CALLHISTORY.APPLY' | translate }}
       </button>
     </div>
 
@@ -75,20 +75,20 @@
       <table class="table table-hover table-bordered">
         <thead style="background-color: silver;">
         <tr>
-          <th ng-click="callhistory.sort('from')">From
+          <th ng-click="callhistory.sort('from')">{{ 'CALLHISTORY.FROM' | translate }}
             <span class="glyphicon sort-icon" ng-show="callhistory.sortKey=='from'" ng-class="{'glyphicon-chevron-up':callhistory.reverse,'glyphicon-chevron-down':!callhistory.reverse}"></span>
           </th>
-          <th ng-click="callhistory.sort('to')">To
+          <th ng-click="callhistory.sort('to')">{{ 'CALLHISTORY.TO' | translate }}
             <span class="glyphicon sort-icon" ng-show="callhistory.sortKey=='to'" ng-class="{'glyphicon-chevron-up':callhistory.reverse,'glyphicon-chevron-down':!callhistory.reverse}"></span>
           </th>
           <!-- <th>Recipient</th>-->
-          <th ng-click="callhistory.sort('start')">Start
+          <th ng-click="callhistory.sort('start')">{{ 'CALLHISTORY.START' | translate }}
             <span class="glyphicon sort-icon" ng-show="callhistory.sortKey=='start'" ng-class="{'glyphicon-chevron-up':callhistory.reverse,'glyphicon-chevron-down':!callhistory.reverse}"></span>
           </th>
-          <th ng-click="callhistory.sort('stop')">Stop
+          <th ng-click="callhistory.sort('stop')">{{ 'CALLHISTORY.STOP' | translate }}
             <span class="glyphicon sort-icon" ng-show="callhistory.sortKey=='stop'" ng-class="{'glyphicon-chevron-up':callhistory.reverse,'glyphicon-chevron-down':!callhistory.reverse}"></span>
           </th>
-          <th ng-click="callhistory.sort('duration')">Duration
+          <th ng-click="callhistory.sort('duration')">{{ 'CALLHISTORY.DURATION' | translate }}
             <span class="glyphicon sort-icon" ng-show="callhistory.sortKey=='duration'" ng-class="{'glyphicon-chevron-up':callhistory.reverse,'glyphicon-chevron-down':!callhistory.reverse}"></span>
           </th><!--
             <th>Status</th>-->

@@ -606,7 +606,7 @@ if __name__ == '__main__':
 	if test_flag:
 		client = pymongo.Connection('192.168.0.39', 27017)	# remote testing
 	else:
-		client = pymongo.Connection('localhost', 27017)
+		client = pymongo.Connection('localhost', 27017, readPreference="secondaryPreferred")
 			
 	
 		

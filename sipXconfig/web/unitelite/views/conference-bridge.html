@@ -1,7 +1,7 @@
   <div class="sticky-wrapper">
     <div class="row profile-bar-chat">
       <div class="col-xs-10">
-        <span>CONFERENCE BRIDGE</span>
+        <span>{{'CONFERENCEBRIDGE.CONFERENCE_BRIDGE' | translate}}</span>
       </div>
       <div class="col-xs-2">
         <button class="btn btn-link pull-right"
@@ -18,7 +18,7 @@
         <div class="row">
           <div class="col-md-12 conf-options-bar">
             <p>
-              Use this conference room:
+              {{'CONFERENCEBRIDGE.USECONFERENCE' | translate}}
               <span data-ng-if="conf.err">-</span>
             </p>
             <div class="spinner-wrapper animated fade"
@@ -46,7 +46,7 @@
               title="Refresh">
               <i class="icon-refresh"></i>
             </button>
-            <p class="pull-right status">{{ conf.status }}</p>
+            <p class="pull-right status">{{ conf.status | translate }}</p>
           </div>
         </div>
         <!-- <div class="spinner-wrapper"
@@ -54,12 +54,12 @@
           <div class="spinner small"></div>
         </div> -->
         <div class="alert alert-muted animated fade" data-ng-if="conf.err">
-          <b>No Conference Rooms</b>
+          <b>{{'CONFERENCEBRIDGE.NO_ROOMS' | translate}}</b>
         </div>
         <div data-ng-if="!conf.err">
           <div class="row animated fade">
             <div class="alert alert-muted animated fade" data-ng-if="conf.participants.length === 0">
-              <b>No Participants</b>
+              <b>{{'CONFERENCEBRIDGE.NO_PARTICIPANT' | translate}}</b>
             </div>
             <div data-drop="conf.moveHere" class="conf-move clearfix">
               <div

@@ -15,7 +15,7 @@
                 data-ng-click="showMainMenuFn()"
                 data-ng-class="{'active': showMainMenu}"
                 class="btn btn-default animated pull-left"
-                title="Menu">
+                translate-attr="{ title: 'MAIN.MENU' }">
                 <i class="icon-hamburger"></i>
               </button>
             </div>
@@ -28,7 +28,7 @@
                 data-ng-click="showSearchFn()"
                 data-ng-class="{'active': showSearch}"
                 class="btn btn-default pull-right"
-                title="Search">
+                translate-attr="{ title: 'MAIN.SEARCH' }">
               <i class="icon-ic_search_black_24px"></i>
               </button>
               <button
@@ -36,7 +36,7 @@
                 data-ng-click="showDialFn()"
                 data-ng-class="{'active': showDial}"
                 class="btn btn-default pull-right"
-                title="Dialpad">
+                translate-attr="{ title: 'MAIN.DIALPAD' }">
                 <i class="icon-ic_dialpad_black_24px"></i>
               </button>
             </div>
@@ -45,7 +45,7 @@
 
         <div data-ng-show="showMainMenu || showDial" class="main-menu-overlay animated fade"></div>
         <div data-ng-show="showMainMenu" class="main-menu animated fadeDown">
-          <div data-ng-repeat="item in (filtered = (ui.templates | filter: { show: true } )) track by $index">
+          <div translate-namespace="TEMPLATES" data-ng-repeat="item in (filtered = (ui.templates | filter: { show: true } )) track by $index">
             <button
               data-ng-click="broadcastViewChange(item);"
               data-ng-class="{'active': item.name === ui.template.name, 'last': $last}"
@@ -54,9 +54,9 @@
               class="btn btn-link btn-lg btn-block">
               <i
               data-ng-class="item.iconClass"></i>
-              <span>{{item.name}}</span>
+              <span translate>{{item.displayName}}</span>
             </button>
-            <a data-ng-if="item.name === 'Logout'" class="btn btn-link btn-lg btn-block" data-ng-click="logout();" ><i class="icon-logout"></i> Logout</a>
+            <a data-ng-if="item.name === 'Logout'" class="btn btn-link btn-lg btn-block" data-ng-click="logout();" ><i class="icon-logout"></i>{{ item.displayName | translate}}</a>
           </div>
         </div>
 
@@ -71,7 +71,7 @@
                 type="text"
                 data-ng-model="displayNo"
                 class="form-control"
-                placeholder="Enter a number">
+                translate-attr="{ placeholder: 'DIALPAD.PLACEHOLDER_LITE' }">
               <span class="input-group-btn" data-ng-show="startNo">
                 <button class="btn btn-default clear" type="button" data-ng-click="clearNo()">
                   <i class="icon-close2"></i>
@@ -108,7 +108,7 @@
             type="text"
             data-ng-model="search.t"
             class="form-control search"
-            placeholder="Search">
+            translate-attr="{ placeholder: 'MAIN.SEARCH' }">
         </div>
       </div> <!-- /Profile -->
 

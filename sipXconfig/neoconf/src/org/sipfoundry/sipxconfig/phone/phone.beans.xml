@@ -24,6 +24,7 @@
     <property name="intercomManager" ref="intercomManager" />
     <property name="phonebookManager" ref="phonebookManager" />
     <property name="speedDialManager" ref="speedDialManager" />
+    <property name="profileManager" ref="phoneProfileManager" /> 
     <property name="configJdbcTemplate" ref="configJdbcTemplate" />
   </bean>
 
