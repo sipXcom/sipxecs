@@ -13,6 +13,7 @@ Url:      http://www.pingtel.com
 BuildRequires: automake
 BuildRequires: checkpolicy
 BuildRequires: policycoreutils
+BuildRequires: policycoreutils-python
 
 Source:   %name-%version.tar.gz
 Obsoletes: %name-devel
@@ -75,8 +76,6 @@ Summary: SipXcom policy
 
 %description selinux
 Selinux policy for sipxcom
-
-Requires: policycoreutils
 
 %prep
 %setup -q
