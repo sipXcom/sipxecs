@@ -11,6 +11,7 @@ Packager: Pingtel <support@pingtel.com>
 Url:      http://www.pingtel.com
 
 BuildRequires: automake
+BuildRequires: checkpolicy
 
 Source:   %name-%version.tar.gz
 Obsoletes: %name-devel
