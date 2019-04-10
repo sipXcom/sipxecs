@@ -76,6 +76,8 @@ Summary: SipXcom policy
 %description selinux
 Selinux policy for sipxcom
 
+Requires: policycoreutils
+
 %prep
 %setup -q
 
