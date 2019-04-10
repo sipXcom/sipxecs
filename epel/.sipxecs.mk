@@ -63,7 +63,11 @@ RUNTIME_EPEL = \
                 b/broadvoice-0.* \
 		e/elasticsearch-* \
 		f/freeswitch-* \
-		m/mongodb-org-* \
+		m/mongodb-org-3.6.* \
+		m/mongodb-org-mongos-3.6.* \
+		m/mongodb-org-server-3.6.* \
+		m/mongodb-org-shell-3.6.* \
+		m/mongodb-org-tools-3.6.* \
 		e/erlang-erlando-* \
 		e/erlang-ibrowse-* \
 		e/erlang-rpm-macros-* \
