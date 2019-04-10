@@ -12,6 +12,7 @@ Url:      http://www.pingtel.com
 
 BuildRequires: automake
 BuildRequires: checkpolicy
+BuildRequires: policycoreutils
 
 Source:   %name-%version.tar.gz
 Obsoletes: %name-devel
