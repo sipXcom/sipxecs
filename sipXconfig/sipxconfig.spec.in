@@ -58,9 +58,7 @@ BuildRequires: sipxcdr-client >= %version
 Source: %name-%version.tar.gz
 
 Requires: postgresql-server
-Obsoletes: mongodb-org-server = 3.4.10
-Obsoletes: mongodb-org-shell = 3.4.10
-Obsoletes: mongodb-org-tools = 3.4.10
+Obsoletes: mongodb-org
 Requires: mongodb-org-server = 3.6.11
 Requires: mongodb-org-shell = 3.6.11
 Requires: mongodb-org-tools = 3.6.11
