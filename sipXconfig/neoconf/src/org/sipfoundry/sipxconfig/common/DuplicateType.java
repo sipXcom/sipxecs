@@ -23,5 +23,6 @@ public enum DuplicateType {
     USER_FAX_EXTENSION,
     USER_FAX_DID,
     //duplicates inside user name/alias/im/fax/did
-    USER_INTERNAL
+    USER_INTERNAL,
+    USER_DID
 }

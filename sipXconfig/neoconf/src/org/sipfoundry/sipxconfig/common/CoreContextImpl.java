@@ -12,10 +12,12 @@ import static org.sipfoundry.commons.userdb.profile.UserProfileService.DISABLED;
 import static org.sipfoundry.commons.userdb.profile.UserProfileService.ENABLED;
 import static org.sipfoundry.commons.userdb.profile.UserProfileService.LDAP;
 import static org.sipfoundry.commons.userdb.profile.UserProfileService.PHANTOM;
+import static org.sipfoundry.commons.diddb.DidService.TYPE_USER;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -31,6 +33,8 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import org.sipfoundry.commons.diddb.Did;
+import org.sipfoundry.commons.diddb.DidService;
 import org.sipfoundry.commons.userdb.profile.Address;
 import org.sipfoundry.commons.userdb.profile.UserProfile;
 import org.sipfoundry.commons.userdb.profile.UserProfileService;
@@ -44,6 +48,7 @@ import org.sipfoundry.sipxconfig.setting.Group;
 import org.sipfoundry.sipxconfig.setting.SettingDao;
 import org.sipfoundry.sipxconfig.setup.SetupListener;
 import org.sipfoundry.sipxconfig.setup.SetupManager;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.dao.support.DataAccessUtils;
@@ -106,6 +111,7 @@ public abstract class CoreContextImpl extends SipxHibernateDaoSupport<User> impl
     private JdbcTemplate m_jdbcTemplate;
     private boolean m_debug;
     private boolean m_setup;
+    private DidService m_didService;
 
     /** limit number of users */
     private int m_maxUserCount = -1;
@@ -436,6 +442,11 @@ public abstract class CoreContextImpl extends SipxHibernateDaoSupport<User> impl
         }
         result = checkForDuplicateString(names);
         duplicateEntity = result != null ? new DuplicateEntity(DuplicateType.USER_INTERNAL, result) : null;
+        if (result == null) {
+            List<Did> dids = m_didService.getDidsInUse(names);
+            result = dids.isEmpty() ? null : Arrays.toString(dids.toArray());
+            duplicateEntity = result != null ? new DuplicateEntity(DuplicateType.USER_DID, result) : null;
+        }
         if (result == null) {
             // Check whether the userName is a duplicate.
             if (!m_aliasManager.canObjectUseAlias(user, userName)) {
@@ -1077,6 +1088,11 @@ public abstract class CoreContextImpl extends SipxHibernateDaoSupport<User> impl
 
     public void setConfigJdbcTemplate(JdbcTemplate jdbcTemplate) {
         m_jdbcTemplate = jdbcTemplate;
+    }
+
+    @Required    
+    public void setDidService(DidService didService) {
+        m_didService = didService;
     }
 
     @Override
