@@ -94,8 +94,7 @@ tmpfilesd_SCRIPTS = \
 
 systemddir = ${sysconfdir}/systemd/system
 systemd_SCRIPTS = \
-	freeswitch.service \
-	tftp.service
+	freeswitch.service
 	
 # automatically selects configuration files, but as importantly, also has to distinguish what is NOT
 # a configuration file in the 'find' statement
