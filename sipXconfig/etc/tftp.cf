@@ -32,6 +32,10 @@ bundle agent tftp_config {
       perms => m("644"),
       edit_line => tftp_xinet_config,
       classes => if_repaired("reload_xinetd");
+    "/usr/lib/systemd/system/tftp.service"
+        comment => "create tftpd service file",
+        perms => mog("644","root","root"),
+        copy_from => local_cp("$(sipx.SIPX_CONFDIR)/../systemd/system/tftp.service");   
 }
 
 bundle edit_line tftp_xinet_config {
