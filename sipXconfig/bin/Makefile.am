@@ -25,8 +25,7 @@ systemd_SCRIPTS = \
 	mongod-arbiter.service \
 	mongo-local.service \
 	mongo-local-arbiter.service \
-	mongodb-sync.service \
-	tftp.service
+	mongodb-sync.service
 
 bin_SCRIPTS = \
 	sipxconfig-archive \
