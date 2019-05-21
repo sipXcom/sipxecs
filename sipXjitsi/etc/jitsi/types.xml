@@ -153,6 +153,12 @@
       <value>de</value>
     </option>
     <option>
+      <value>pt_BR</value>
+    </option>        
+    <option>
+      <value>es</value>
+    </option>        
+    <option>
       <value>fr</value>
     </option>        
   </enum>
