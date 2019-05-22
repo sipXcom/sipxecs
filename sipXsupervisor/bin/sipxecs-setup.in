@@ -4,6 +4,7 @@ require 'optparse'
 require 'fileutils'
 require 'socket'
 require 'tempfile'
+require 'io/console'
 
 # using only @VAR@ style vars in this section only helps make this maintainable when integrating
 # patches.
@@ -59,7 +60,9 @@ def disable_selinux
   if enforced
     puts "Detected SELinux enforcing, setting SELinux to disabled"
     run_command("sed -i 's/enforcing/disabled/g' /etc/selinux/config /etc/selinux/config")
-    puts "Rebooting machine to apply SELinux changes"
+    puts "A reboot is required to apply SELinux changes. Please login as root and run sipxecs-setup after the reboot to continue setup."
+    puts "Press any key to reboot the system now."
+    STDIN.getch
     run_command("reboot -h now")
   else
     puts "SELinux not set to enforcing"
