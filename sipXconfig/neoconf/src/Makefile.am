@@ -19,6 +19,8 @@ neoconf_RESOURCES = \
 	  -name '*.json' \
 	  -o -name '*.properties' \
 	  -o -name 'verisignclass3ca' \
+	  -o -name 'isrgrootx1' \
+	  -o -name 'letsencryptauthorityx3' \
 	  -o -name '*.xml' \
 	  -o -name '*.jpg' \
 	  -o -name '*.xsd' \

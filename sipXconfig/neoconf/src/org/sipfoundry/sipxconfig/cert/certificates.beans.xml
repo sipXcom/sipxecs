@@ -31,6 +31,8 @@
     <property name="thirdPartyAuthorites">
       <list>
         <value>verisignclass3ca</value>
+        <value>isrgrootx1</value>
+        <value>letsencryptauthorityx3</value>
       </list>
     </property>
   </bean>

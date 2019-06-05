@@ -20,6 +20,8 @@ public interface RegistrationContext {
 
     public abstract List<RegistrationItem> getRegistrations();
 
+    public abstract long getRegistrationsCount();
+
     public abstract List<RegistrationItem> getRegistrations(Integer start, Integer limit);
 
     public abstract List<RegistrationItem> getRegistrationsByUser(User user);

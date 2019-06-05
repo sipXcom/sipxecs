@@ -54,6 +54,11 @@ public class RegistrationContextImpl implements RegistrationContext {
     }
 
     @Override
+    public long getRegistrationsCount() {
+        return getRegistrarCollection().find(getRegistrationsQuery()).size();
+    } 
+    
+    @Override
     public List<RegistrationItem> getRegistrations(Integer start, Integer count) {
         return getItems(getRegistrarCollection().find(getRegistrationsQuery())
                 .sort(new BasicDBObject(EXPIRATION_TIME, -1)).skip(start).limit(count));
