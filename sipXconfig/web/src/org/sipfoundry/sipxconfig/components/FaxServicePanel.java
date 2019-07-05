@@ -16,6 +16,8 @@
  */
 package org.sipfoundry.sipxconfig.components;
 
+import java.util.Collection;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.tapestry.BaseComponent;
 import org.apache.tapestry.annotations.ComponentClass;
@@ -24,6 +26,7 @@ import org.apache.tapestry.annotations.InjectState;
 import org.apache.tapestry.annotations.Parameter;
 import org.apache.tapestry.event.PageBeginRenderListener;
 import org.apache.tapestry.event.PageEvent;
+import org.sipfoundry.commons.diddb.DidPoolService;
 import org.sipfoundry.sipxconfig.common.CoreContext;
 import org.sipfoundry.sipxconfig.common.User;
 import org.sipfoundry.sipxconfig.common.UserException;
@@ -55,6 +58,13 @@ public abstract class FaxServicePanel extends BaseComponent implements PageBegin
 
     @InjectState(value = "userSession")
     public abstract UserSession getUserSession();
+    
+    @InjectObject(value = "spring:didPoolService")
+    public abstract DidPoolService getDidPoolService();
+    
+    public abstract Collection getNextDids();
+
+    public abstract void setNextDids(Collection nextDids);    
 
     @Override
     public void pageBeginRender(PageEvent event) {
@@ -80,6 +90,7 @@ public abstract class FaxServicePanel extends BaseComponent implements PageBegin
             }
             user.setFaxExtension(getFaxExtension());
             user.setFaxDid(getFaxDid());
+            user.setSaveFaxDid(true);
         }
     }
 
@@ -88,4 +99,8 @@ public abstract class FaxServicePanel extends BaseComponent implements PageBegin
                 && StringUtils.isEmpty(getMailboxPreferences().getAlternateEmailAddress())
                 || !getUserSession().isAdmin();
     }
+        
+    public void buildNextDids() {        
+        setNextDids(getDidPoolService().buildNextDids());
+    }    
 }

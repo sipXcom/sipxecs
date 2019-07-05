@@ -21,10 +21,17 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.elasticsearch.common.lang3.StringUtils;
+import org.sipfoundry.commons.diddb.Did;
+import org.sipfoundry.commons.diddb.DidPool;
+import org.sipfoundry.commons.diddb.DidPoolService;
+import org.sipfoundry.commons.diddb.DidService;
+import org.sipfoundry.commons.diddb.DidType;
 import org.sipfoundry.sipxconfig.address.Address;
 import org.sipfoundry.sipxconfig.address.AddressManager;
 import org.sipfoundry.sipxconfig.address.AddressProvider;
@@ -32,10 +39,18 @@ import org.sipfoundry.sipxconfig.address.AddressType;
 import org.sipfoundry.sipxconfig.alarm.AlarmDefinition;
 import org.sipfoundry.sipxconfig.alarm.AlarmProvider;
 import org.sipfoundry.sipxconfig.alarm.AlarmServerManager;
+import org.sipfoundry.sipxconfig.callgroup.CallGroup;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
+import org.sipfoundry.sipxconfig.common.CoreContext;
+import org.sipfoundry.sipxconfig.common.DidInUseException;
+import org.sipfoundry.sipxconfig.common.User;
 import org.sipfoundry.sipxconfig.common.UserException;
 import org.sipfoundry.sipxconfig.common.event.DaoEventListenerAdvanced;
 import org.sipfoundry.sipxconfig.commserver.Location;
+import org.sipfoundry.sipxconfig.conference.Conference;
+import org.sipfoundry.sipxconfig.dialplan.AttendantRule;
+import org.sipfoundry.sipxconfig.dialplan.InternalRule;
+import org.sipfoundry.sipxconfig.dialplan.attendant.AutoAttendantSettings;
 import org.sipfoundry.sipxconfig.feature.Bundle;
 import org.sipfoundry.sipxconfig.feature.FeatureChangeRequest;
 import org.sipfoundry.sipxconfig.feature.FeatureChangeValidator;
@@ -60,6 +75,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class MongoManagerImpl implements AddressProvider, FeatureProvider, MongoManager, ProcessProvider,
@@ -72,6 +88,9 @@ public class MongoManagerImpl implements AddressProvider, FeatureProvider, Mongo
     private MongoReplSetManager m_globalManager;
     private ListableBeanFactory m_beans;
     private JdbcTemplate m_configJdbcTemplate;
+    private DidService m_didService;
+    private DidPoolService m_didPoolService;
+    private CoreContext m_coreContext;
 
     public void setConfigManager(ConfigManager configManager) {
         m_configManager = configManager;
@@ -394,6 +413,56 @@ public class MongoManagerImpl implements AddressProvider, FeatureProvider, Mongo
 
     @Override
     public void onSave(Object entity) {
+
+    }
+    
+    private void saveDid(String value, String typeId, DidType type) throws Exception {
+        if (!StringUtils.isEmpty(value)) {
+            if (m_didService.isDidInUse(typeId, value) || m_coreContext.isAliasInUse(value)) {
+                throw new DidInUseException(type.getName(), value);
+            }            
+            DidPool pool = checkDid(value, typeId);     
+            Did did = m_didService.getDid(typeId);
+            if (did == null) {
+                did = new Did(type.getName(), typeId, value, pool.getDescription());
+            } else {
+                did.setValue(value);
+            }
+            
+            did.setPoolId(pool.getId());
+            m_didService.saveDid(did);
+            //save proposed next value
+            pool.setNext(m_didPoolService.findNext(pool).toString());
+            
+            m_didPoolService.saveDidPool(pool);
+        } else {
+            m_didService.removeDid(typeId); 
+        }
+    }
+    
+    /**
+     * returns the first DID Pool where the value is available
+     * @param value
+     * @param typeId
+     * @return
+     */
+    private DidPool checkDid(String value, String typeId) {
+        List<DidPool> didPools = m_didPoolService.getAllDidPools();        
+        for (DidPool pool : didPools) {
+            long valueLong = Long.parseLong(value.replaceAll("[^\\d.]", ""));
+            if (outsideRangeDidValue(pool, valueLong)) {
+                continue;
+            } else {
+                return pool;
+            }
+        }
+        LOG.error("Out of the pool range");
+        throw new UserException("&err.notInRange");
+    }
+    
+    private boolean outsideRangeDidValue(DidPool pool, long value) {
+        return Long.parseLong(pool.getStart().replaceAll("[^\\d.]", "")) > value ||
+            Long.parseLong(pool.getEnd().replaceAll("[^\\d.]", "")) < value;
     }
 
     public void setConfigJdbcTemplate(JdbcTemplate configJdbc) {
@@ -415,10 +484,48 @@ public class MongoManagerImpl implements AddressProvider, FeatureProvider, Mongo
                 }
             }
         }
+        
+        try {
+            if (entity instanceof User) {
+                User user = (User) entity;                
+                //save did if exists
+                if (user.isSaveFaxDid() == false) {
+                    saveDid(user.getDid(), user.getExtension(true), DidType.TYPE_USER);
+                } else {
+                    saveDid(user.getFaxDid(), user.getFaxExtension(), DidType.TYPE_FAX_USER);
+                }
+            } else if (entity instanceof CallGroup) {
+                CallGroup callGroup = (CallGroup) entity;
+                //save did if exists
+                saveDid(callGroup.getDid(), callGroup.getExtension(), DidType.TYPE_HUNT_GROUP);
+            } else if (entity instanceof InternalRule) {
+                InternalRule rule = (InternalRule) entity;
+                //save did if exists
+                saveDid(rule.getDid(), rule.getVoiceMail(), DidType.TYPE_VOICEMAIL_DIALING_RULE);
+            } else if (entity instanceof AttendantRule) {
+                AttendantRule rule = (AttendantRule) entity;
+                //save did if exists
+                saveDid(rule.getDid(), rule.getExtension(), DidType.TYPE_AUTO_ATTENDANT_DIALING_RULE);
+            } else if (entity instanceof AutoAttendantSettings) {
+                AutoAttendantSettings aaSettings = (AutoAttendantSettings) entity;
+                //save did if exists
+                saveDid(aaSettings.getLiveDid(), aaSettings.getBeanId(), DidType.TYPE_LIVE_AUTO_ATTENDANT);
+            }  else if (entity instanceof Conference) {
+                Conference conference = (Conference) entity;
+                //save did if exists
+                saveDid(conference.getDid(), conference.getExtension(), DidType.TYPE_CONFERENCE);
+            }
+        }
+        catch (Exception ex) {
+            LOG.error("failed to save did in mongo: " + ex.getMessage());
+            UserException exception = (ex instanceof UserException) ? (UserException)ex : new UserException("&error.cannotSaveDid", ex.getMessage());
+            throw exception;
+        }        
     }
 
     @Override
     public void onAfterDelete(Object entity) {
+        
     }
 
     @Override
@@ -426,4 +533,18 @@ public class MongoManagerImpl implements AddressProvider, FeatureProvider, Mongo
         return m_globalManager;
     }
 
+    @Required
+    public void setDidService(DidService didService) {
+        m_didService = didService;
+    }    
+    
+    @Required
+    public void setDidPoolService(DidPoolService didPoolService) {
+        m_didPoolService = didPoolService;
+    }
+
+    @Required
+    public void setCoreContext(CoreContext coreContext) {
+        m_coreContext = coreContext;
+    }
 }

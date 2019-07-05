@@ -60,6 +60,7 @@ public class User extends AbstractUser implements Replicable, IndexedBean {
     private static final String DAYS_TO_KEEP_VM = "voicemail/security/days-to-keep-vm";
     private String m_identity;
     private boolean m_validUser = true;
+    private boolean m_saveFaxDid = false;
 
     /**
      * get all the data sets that are replicable for this entity
@@ -332,5 +333,13 @@ public class User extends AbstractUser implements Replicable, IndexedBean {
         values.add(getName());
         values.addAll(getAliases());
         return values;
+    }
+
+    public boolean isSaveFaxDid() {
+        return m_saveFaxDid;
+    }
+
+    public void setSaveFaxDid(boolean saveFaxDid) {
+        m_saveFaxDid = saveFaxDid;
     }
 }

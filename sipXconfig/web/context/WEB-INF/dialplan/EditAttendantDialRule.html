@@ -12,10 +12,12 @@
             field="component:did"
             label="message:label.did"
             description="message:description.did" >
-          <input jwcid="did@TextField"
+          <input jwcid="did@Suggest"
                  value="ognl:rule.did"
                  displayName="message:label.did"
-                 validators="spring-validators:validSipUserId"/>
+                 validators="spring-validators:validSipUserId"
+                 listSource="ognl:nextDids"
+                 listener="listener:buildNextDids"/>
         </tr>
         <tr  jwcid="@common/FieldPanel" for="rule:locations" field="component:locations"
              label="message:label.locations"

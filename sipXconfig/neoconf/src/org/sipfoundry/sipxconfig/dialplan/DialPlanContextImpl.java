@@ -96,7 +96,7 @@ public class DialPlanContextImpl extends SipxHibernateDaoSupport implements Bean
 
     public void storeRule(DialingRule rule) {
         validateRule(rule);
-
+        getDaoEventPublisher().publishBeforeSave(rule);
         // Save the rule. If it's a new rule then attach it to the dial plan first
         // and save it via the dial plan.
         if (rule.isNew()) {

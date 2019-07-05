@@ -60,9 +60,12 @@
     <tr jwcid="@common/FieldPanel" for="didNumber"
       field="component:didNumber"
       label="message:label.didNumber">
-    <span jwcid="didNumber@TextField" id="didNumber" maxlength="255"
-      value="ognl:userProfile.didNumber"
-      type="text" autocomplete="off"/>
+      <input jwcid="didNumber@Suggest" id="didNumber" maxlength="255"
+        value="ognl:userProfile.didNumber"
+        listSource="ognl:nextDids"
+        size="50"
+        translator="translator:string,empty="
+        listener="listener:buildNextDids"/>
     </tr>
     <tr jwcid="@common/FieldPanel" for="emailAddress"
       field="component:emailAddress"

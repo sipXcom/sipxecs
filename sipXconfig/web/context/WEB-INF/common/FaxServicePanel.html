@@ -18,11 +18,13 @@
   field="component:faxDid"
   label="message:faxDid.title"
   description="message:faxDid.description" >
-  <input jwcid="faxDid@TextField"
+  <input jwcid="faxDid@Suggest"
     value="ognl:faxDid"
     displayName="message:faxDid.title"
     disabled="ognl:faxDisabled"
-    validators="spring-validators:validSipUserId"/>
+    validators="spring-validators:validSipUserId"
+    listSource="ognl:nextDids"
+	listener="listener:buildNextDids"/>
 </tr>
 </table>
 </fieldset>

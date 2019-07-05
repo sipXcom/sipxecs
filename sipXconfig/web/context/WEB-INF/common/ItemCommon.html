@@ -52,10 +52,12 @@
 
     <span jwcid="ifUseDid@If" condition="ognl:useDid" renderTag="false">
       <tr jwcid="@common/FieldPanel" for="item:did" field="component:did" label="message:did" description="message:did.description">
-        <input jwcid="did@TextField" id="item:did"
+        <input jwcid="did@Suggest" id="item:did"
           value="ognl:#this.item.did"
           validators="spring-validators:validSipUserId"
           displayName="message:did"
+          listSource="ognl:nextDids"
+		  listener="listener:buildNextDids"
           maxlength="15"/>
       </tr>
     </span>

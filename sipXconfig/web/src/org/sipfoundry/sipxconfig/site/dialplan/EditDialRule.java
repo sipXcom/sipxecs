@@ -9,6 +9,7 @@
  */
 package org.sipfoundry.sipxconfig.site.dialplan;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import org.apache.tapestry.callback.PageCallback;
 import org.apache.tapestry.event.PageBeginRenderListener;
 import org.apache.tapestry.event.PageEvent;
 import org.apache.tapestry.form.IPropertySelectionModel;
+import org.sipfoundry.commons.diddb.DidPoolService;
 import org.sipfoundry.sipxconfig.branch.BranchManager;
 import org.sipfoundry.sipxconfig.components.NamedValuesSelectionModel;
 import org.sipfoundry.sipxconfig.components.ObjectSelectionModel;
@@ -47,6 +49,7 @@ public abstract class EditDialRule extends SipxBasePage implements PageBeginRend
     public static final String EMERGENCY = "dialplan/EditEmergencyDialRule";
     public static final String INTERNATIONAL = "dialplan/EditInternationalDialRule";
     public static final String SITE_TO_SITE = "dialplan/EditSiteToSiteDialRule";
+    
 
     @InjectObject("spring:dialPlanContext")
     public abstract DialPlanContext getDialPlanContext();
@@ -68,6 +71,9 @@ public abstract class EditDialRule extends SipxBasePage implements PageBeginRend
 
     @InjectObject("spring:branchManager")
     public abstract BranchManager getBranchManager();
+    
+    @InjectObject(value = "spring:didPoolService")
+    public abstract DidPoolService getDidPoolService();
 
     @Persist
     public abstract Integer getRuleId();
@@ -90,6 +96,10 @@ public abstract class EditDialRule extends SipxBasePage implements PageBeginRend
     public abstract List getAvailableSchedules();
 
     public abstract void setAvailableSchedules(List schedules);
+        
+    public abstract Collection getNextDids();
+
+    public abstract void setNextDids(Collection nextDids);
 
     public String getEmergencyConfigurableDeviceList() {
         StringBuilder sb = new StringBuilder();
@@ -144,4 +154,8 @@ public abstract class EditDialRule extends SipxBasePage implements PageBeginRend
         // to unexpected places. Always go to the EditFlexibleDialPlan plan.
         setCallback(new PageCallback(EditFlexibleDialPlan.PAGE));
     }
+    
+    public void buildNextDids() {        
+        setNextDids(getDidPoolService().buildNextDids());
+    }    
 }

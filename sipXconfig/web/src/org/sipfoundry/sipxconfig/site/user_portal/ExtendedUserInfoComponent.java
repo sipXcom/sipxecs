@@ -9,11 +9,18 @@
  */
 package org.sipfoundry.sipxconfig.site.user_portal;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.tapestry.BaseComponent;
 import org.apache.tapestry.IRequestCycle;
 import org.apache.tapestry.annotations.ComponentClass;
 import org.apache.tapestry.annotations.InjectObject;
 import org.apache.tapestry.annotations.Parameter;
+import org.sipfoundry.commons.diddb.DidPool;
+import org.sipfoundry.commons.diddb.DidPoolService;
 import org.sipfoundry.commons.userdb.profile.Address;
 import org.sipfoundry.commons.userdb.profile.UserProfile;
 import org.sipfoundry.sipxconfig.common.CoreContext;
@@ -31,6 +38,9 @@ public abstract class ExtendedUserInfoComponent extends BaseComponent {
 
     @InjectObject(value = "spring:coreContext")
     public abstract CoreContext getCoreContext();
+    
+    @InjectObject(value = "spring:didPoolService")
+    public abstract DidPoolService getDidPoolService();
 
     @Parameter(required = true)
     public abstract User getUser();
@@ -45,6 +55,10 @@ public abstract class ExtendedUserInfoComponent extends BaseComponent {
     public abstract ImAccount getImAccount();
 
     public abstract void setImAccount(ImAccount imAccount);
+    
+    public abstract Collection getNextDids();
+
+    public abstract void setNextDids(Collection nextDids);    
 
     public void prepareForRender(IRequestCycle cycle) {
         if (null == getUserProfile()) {
@@ -75,5 +89,9 @@ public abstract class ExtendedUserInfoComponent extends BaseComponent {
         user.setUserProfile(getUserProfile());
 
         getCoreContext().saveUser(user);
+    }
+    
+    public void buildNextDids() {        
+        setNextDids(getDidPoolService().buildNextDids());
     }
 }

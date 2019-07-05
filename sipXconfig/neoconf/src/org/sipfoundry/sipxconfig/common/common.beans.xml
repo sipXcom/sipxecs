@@ -13,6 +13,7 @@
     <property name="debug" value="false" />
     <property name="domainManager" ref="domainManager"/>
     <property name="configJdbcTemplate" ref="configJdbcTemplate" />
+    <property name="didService" ref="didService" />
   </bean>
   <!--
   - C O R E  C O N T E X T
@@ -53,6 +54,27 @@
     <property name="target">
       <ref local="extensionPoolContextImpl"/>
     </property>
+  </bean>
+  
+  <!--
+  - DID  P O O L  S E R V I C E S
+  --> 
+  <bean id="didService" class="org.springframework.aop.framework.ProxyFactoryBean">
+    <property name="proxyInterfaces" value="org.sipfoundry.commons.diddb.DidService"/>
+    <property name="target" ref="didServiceImpl"/>
+  </bean>
+
+  <bean id="didServiceImpl" class="org.sipfoundry.commons.diddb.DidServiceImpl">
+    <property name="imdb" ref="imdb"/>
+  </bean>
+  <bean id="didPoolService" class="org.springframework.aop.framework.ProxyFactoryBean">
+    <property name="proxyInterfaces" value="org.sipfoundry.commons.diddb.DidPoolService"/>
+    <property name="target" ref="didPoolServiceImpl"/>
+  </bean>
+
+  <bean id="didPoolServiceImpl" class="org.sipfoundry.commons.diddb.DidPoolServiceImpl">
+    <property name="imdb" ref="imdb"/>
+    <property name="didService" ref="didService"/>
   </bean>
 
   <bean id="org.sipfoundry.sipxconfig.common.User" class="org.sipfoundry.sipxconfig.common.User"

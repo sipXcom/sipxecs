@@ -42,7 +42,7 @@ import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 
-public class ConferenceBridgeContextImpl extends SipxHibernateDaoSupport implements BeanFactoryAware,
+public class ConferenceBridgeContextImpl extends SipxHibernateDaoSupport<Conference> implements BeanFactoryAware,
         ConferenceBridgeContext, DaoEventListener {
     private static final String BUNDLE_CONFERENCE = "conference";
     private static final String CONFERENCE = "&label.conference";

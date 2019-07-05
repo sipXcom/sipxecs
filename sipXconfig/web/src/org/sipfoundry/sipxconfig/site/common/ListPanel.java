@@ -74,7 +74,7 @@ public abstract class ListPanel extends BaseComponent {
         afterRewind(cycle);
     }
 
-    private void afterRewind(IRequestCycle cycle) {
+    protected void afterRewind(IRequestCycle cycle) {
         List source = getSource();
         int removeIndex = getRemoveIndex();
         if (removeIndex >= 0) {

@@ -1,0 +1,58 @@
+<fieldset>
+  <legend><span jwcid="@Insert" value="ognl:label"/></legend>
+  <ul class="component-links">
+    <li>
+      <a jwcid="addLink@LinkSubmit" selected="ognl:add" tag="ognl:true">
+        <span jwcid="@Insert" value="ognl:addLinkLabel">Add</span>
+      </a>
+    </li>
+  </ul>
+  <span jwcid="@Hidden" value="ognl:size"/>
+  <table>
+    <tbody>
+      <tr jwcid="@For"
+        source="ognl:source"
+        value="ognl:value"
+        index="ognl:index"
+        volatile="true">
+        <td>
+          <input jwcid="@TextField"
+            value="ognl:value.description"
+            validators="ognl:validators"
+            displayName="ognl:itemDisplayName" />
+        </td>        
+        <td>
+          <input jwcid="@TextField"
+            value="ognl:value.start"
+            validators="ognl:validators"
+            displayName="ognl:itemDisplayName" />
+        </td>
+        <td>
+          <input jwcid="@TextField"
+            value="ognl:value.end"
+            validators="ognl:validators"
+            displayName="ognl:itemDisplayName" />
+        </td>
+        <td>
+          <input jwcid="findNext@Submit" id="find:next" 
+          	listener="listener:saveNext" 
+          	value="message:button.findNext"
+          	parameters="ognl:{value.id, value.next}" />
+        </td>
+        <td>
+          <a jwcid="deleteLink@LinkSubmit" selected="ognl:removeIndex" tag="ognl:index">
+            <span key="button.delete">Delete</span>
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <table>
+    <tr>
+      <td>
+        <input jwcid="nextValue@TextField"
+         value="ognl:nextValue"/>
+      </td>   
+    </tr>     
+  </table>
+</fieldset>
