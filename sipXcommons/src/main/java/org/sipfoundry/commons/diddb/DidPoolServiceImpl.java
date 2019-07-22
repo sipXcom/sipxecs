@@ -1,7 +1,6 @@
 package org.sipfoundry.commons.diddb;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -19,6 +18,13 @@ public class DidPoolServiceImpl implements DidPoolService {
     public DidPool getDidPool(String type) {
         DidPool did = m_imdb.findOne(
             new Query(Criteria.where("type").is(type)), DidPool.class);
+        return did;
+    }
+
+    @Override
+    public DidPool getDidPoolById(String poolId) {
+        DidPool did = m_imdb.findOne(
+            new Query(Criteria.where("_id").is(poolId)), DidPool.class);
         return did;
     }
 

@@ -20,6 +20,10 @@ public interface DidService {
     
     public List<Did> getAllDids();
     
+    public List<Did> searchDidsByValue(String value);
+
+    public List<Did> searchDidsByExtension(String extension);
+
     /**
      * get all saved dids except the did with the typeId parameter
      * @param typeId - the typeId did that needs to be filtered

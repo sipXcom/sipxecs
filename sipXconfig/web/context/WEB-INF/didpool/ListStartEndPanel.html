@@ -20,7 +20,7 @@
             value="ognl:value.description"
             validators="ognl:validators"
             displayName="ognl:itemDisplayName" />
-        </td>        
+        </td>
         <td>
           <input jwcid="@TextField"
             value="ognl:value.start"
@@ -34,10 +34,10 @@
             displayName="ognl:itemDisplayName" />
         </td>
         <td>
-          <input jwcid="findNext@Submit" id="find:next" 
-          	listener="listener:saveNext" 
-          	value="message:button.findNext"
-          	parameters="ognl:{value.id, value.next}" />
+          <input jwcid="findNext@Submit" id="find:next"
+		listener="listener:saveNext"
+		value="message:button.findNext"
+		parameters="ognl:{value.id, value.next}" />
         </td>
         <td>
           <a jwcid="deleteLink@LinkSubmit" selected="ognl:removeIndex" tag="ognl:index">
@@ -52,7 +52,7 @@
       <td>
         <input jwcid="nextValue@TextField"
          value="ognl:nextValue"/>
-      </td>   
-    </tr>     
+      </td>
+    </tr>
   </table>
 </fieldset>

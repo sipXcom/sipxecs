@@ -6,6 +6,8 @@ public interface DidPoolService {
     
     public DidPool getDidPool(String typeId);
 
+    public DidPool getDidPoolById(String poolId);
+
     public void saveDidPool(DidPool didPool);
     
     public void removeAllDidPools();

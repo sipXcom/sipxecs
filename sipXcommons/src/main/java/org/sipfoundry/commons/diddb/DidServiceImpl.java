@@ -54,6 +54,20 @@ public class DidServiceImpl implements DidService {
     }
 
     @Override
+    public List<Did> searchDidsByValue(String value) {
+        return m_imdb.find(
+            new Query(Criteria.where("_class").is("org.sipfoundry.commons.diddb.Did").and("value").regex(value)), Did.class);
+    }
+
+    @Override
+    public List<Did> searchDidsByExtension(String extension) {
+        return m_imdb.find(
+            new Query(Criteria.where("_class").is("org.sipfoundry.commons.diddb.Did").and("typeId").regex(extension)), Did.class);
+    }
+
+
+
+    @Override
     public List<Did> getDidsExceptOne(String typeId) {
         return m_imdb.find(
             new Query(Criteria.where("typeId").ne(typeId)), Did.class);        

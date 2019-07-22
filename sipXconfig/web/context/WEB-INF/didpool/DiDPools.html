@@ -1,9 +1,9 @@
 <div jwcid="@common/Border" restricted="false" borderTitle="ognl:borderTitle">
   <span jwcid="@common/ErrorMsg"/>
   <span jwcid="@common/QuickHelp" value="message:quick.help"/>
-  <form jwcid="@Form" delegate="bean:validator" id="didPool:form">
 
-    <fieldset jwcid="listPools@common/ListStartEndPanel"
+  <form jwcid="@Form" delegate="bean:validator" id="didPool:form">
+    <fieldset jwcid="listPools@didpool/ListStartEndPanel"
       label="message:label.pools"
       addLinkLabel="message:link.addPool"
       itemDisplayName="message:label.pool"
@@ -21,21 +21,17 @@
 		</ul>
       </tr>
     </table>
-    
+  </form>
+  <form jwcid="@common/AutoRefreshForm" delegate="bean:validator" id="didPool:form">
     <ul class="component-submit">
-      <li>
-        <span jwcid="settingGroupFilter@setting/GroupFilter" 
-          selectedGroupId="ognl:groupId"
-          queryText="ognl:queryText"
-          searchMode="ognl:searchMode" />
-      </li>
+        <li><span jwcid="@didpool/DidPoolFilter" didPoolSearch="ognl:didPoolSearch"/></li>
     </ul>
-        
+
     <table jwcid="@common/Table" id="did:list"
-    	columns="did.description:description,did.type:typeLabel,did.type.id:typeId,did.value:value"
-  		source="ognl:labeledDids"
-  		row="ognl:currentRow"
-  		usePager="ognl:true">
+	columns="did.description:description,did.type:typeLabel,did.type.id:typeId,did.value:value"
+		source="ognl:labeledDids"
+		row="ognl:currentRow"
+		usePager="ognl:true">
 	</table>
   </form>
 </div>

@@ -1,0 +1,9 @@
+<span jwcid="actionSelection@common/FlexiblePropertySelection"
+    model="ognl:selectionModel"
+    onchange="javascript:dojo.byId('refresh').click();"
+    value="ognl:didPoolSearch.mode"
+    renderer="bean:propertyRenderer" />
+  <span jwcid="@If" condition="ognl:didPoolSearch.search" renderTag="false">
+	<input jwcid="renderQuery@TextField" type="text" value="ognl:didPoolSearch.term[0]" />
+	<input jwcid="search@Submit" value="message:button.search"/>
+  </span>

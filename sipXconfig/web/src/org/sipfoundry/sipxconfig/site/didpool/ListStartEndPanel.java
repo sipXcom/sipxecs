@@ -1,38 +1,37 @@
-package org.sipfoundry.sipxconfig.site.common;
+package org.sipfoundry.sipxconfig.site.didpool;
 
 import java.util.List;
 
-import org.apache.tapestry.IMarkupWriter;
 import org.apache.tapestry.IRequestCycle;
 import org.apache.tapestry.annotations.InjectObject;
 import org.apache.tapestry.annotations.Parameter;
-import org.apache.tapestry.annotations.Persist;
 import org.sipfoundry.commons.diddb.ActiveNextDid;
 import org.sipfoundry.commons.diddb.Did;
 import org.sipfoundry.commons.diddb.DidPool;
 import org.sipfoundry.commons.diddb.DidPoolService;
 import org.sipfoundry.commons.diddb.DidService;
 import org.sipfoundry.sipxconfig.components.TapestryUtils;
+import org.sipfoundry.sipxconfig.site.common.ListPanel;
 
 public abstract class ListStartEndPanel extends ListPanel {
 
     @InjectObject(value = "spring:didPoolService")
     public abstract DidPoolService getDidPoolService();
-    
+
     @InjectObject(value = "spring:didService")
     public abstract DidService getDidService();
 
     @Parameter(required=true)
     public abstract String getNextValue();
-    
+
     public abstract void setNextValue(String nextValue);
-    
+
     @Parameter(required = true)
     public abstract String getUserNextValue();
-    
+
     public abstract void setUserNextValue(String userNextValue);
-    
-            
+
+
     @Override
     public void setSize(int size) {
         List source = getSource();
@@ -43,14 +42,14 @@ public abstract class ListStartEndPanel extends ListPanel {
             source.add(new DidPool("", "", ""));
         }
     }
-    
+
     @Override
     protected void afterRewind(IRequestCycle cycle) {
         List source = getSource();
         int removeIndex = getRemoveIndex();
         if (removeIndex >= 0) {
             getDidPoolService().removeDidPool(((DidPool)source.get(removeIndex)));
-            source.remove(removeIndex);            
+            source.remove(removeIndex);
             TapestryUtils.getValidator(this).clearErrors();
         } else if (TapestryUtils.isValid(cycle, this) && getAdd()) {
             source.add(new DidPool("","",""));
@@ -59,9 +58,9 @@ public abstract class ListStartEndPanel extends ListPanel {
             setUserNextValue(getNextValue());
         }
         Did activeDid = getDidService().getActiveNextDid();
-        setNextValue(activeDid == null ? null : activeDid.getValue());                
+        setNextValue(activeDid == null ? null : activeDid.getValue());
     }
-    
+
     public void saveNext(String poolId, String value) {
         ActiveNextDid activeNextDid = (ActiveNextDid)getDidService().getActiveNextDid();
         if (activeNextDid == null) {
@@ -69,6 +68,6 @@ public abstract class ListStartEndPanel extends ListPanel {
         }
         activeNextDid.setPoolId(poolId);
         activeNextDid.setValue(value);
-        getDidService().saveDid(activeNextDid);        
+        getDidService().saveDid(activeNextDid);
     }
 }
