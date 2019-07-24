@@ -19,9 +19,10 @@ public class CdrLogPlugin extends Plugin {
     @Override
     public void attachContext(Filter filter, Context context, Router router) {
        filter.setNext(new CdrLogRestlet());
-       Route cdrRoute = router.attach(this.getMetaInf().getUriPrefix() + "/{user}",filter);
+       Route cdrRoute = router.attach(this.getMetaInf().getUriPrefix() + "/{user}",filter);       
        cdrRoute.extractQuery(CdrLogParams.LIMIT, CdrLogParams.LIMIT, true);
        cdrRoute.extractQuery(CdrLogParams.FROMDATE, CdrLogParams.FROMDATE, true);
+       cdrRoute.extractQuery(CdrLogParams.OFFSET, CdrLogParams.OFFSET, true);
     }
 
     @Override

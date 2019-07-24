@@ -131,7 +131,7 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
 
     @Override
     public List<Cdr> getCdrs(Date from, Date to, CdrSearch search, User user, int limit, int offset) {
-        return getCdrs(from, to, search, user, null, 0, 0);
+        return getCdrs(from, to, search, user, null, limit, offset);
     }
 
     @Override

@@ -5,7 +5,7 @@
 <uri-prefix>/cdr</uri-prefix>
 <service-description>
 <![CDATA[ This is a rest plugin for querying call logs for a particular user. You can 
-invoke it using the URI cdr/{user}?limit=maxrecs&fromdate=yyyymmdd where
+invoke it using the URI cdr/{user}?limit=maxrecs&fromdate=yyyymmdd&offset=startrec where
 user is a valid user in your user database, maxrecs is the maximum number
 of records that can be returned and yyyymmdd is the year/month/day to use
 as a starting point for the call logs to obtain. ]]>

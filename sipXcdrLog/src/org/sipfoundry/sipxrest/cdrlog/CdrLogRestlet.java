@@ -19,6 +19,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
 import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
@@ -36,7 +37,8 @@ public class CdrLogRestlet extends Restlet {
     private String sqlStmt = "SELECT caller_aor, callee_aor, callee_contact, start_time, (end_time - connect_time) AS duration, termination, callee_route from cdrs";
     private String sqlUserWhereStmt = "WHERE (caller_aor LIKE ? OR callee_aor LIKE ? ) ";
     private String sqlFromDateStmt = "AND start_time > ? ";
-    private String sqlLimitStmt = "LIMIT ?";
+    private String sqlLimitStmt = "LIMIT ? ";
+    private String sqlOffsetStmt = "OFFSET ? ";
     private String sqlOrderStmt = "ORDER BY start_time DESC ";
 
 
@@ -65,7 +67,13 @@ public class CdrLogRestlet extends Restlet {
              * Only GET is supported for CDR records.
              */
             String userId = (String) request.getAttributes().get(CdrLogParams.USER);
-
+            String Ioffset = (String) request.getAttributes().get(CdrLogParams.OFFSET);          
+            int offset;
+            if (Ioffset != null) {
+                offset = Integer.parseInt(Ioffset);
+            } else
+                offset = 1;
+            
             String Ilimit = (String) request.getAttributes().get(CdrLogParams.LIMIT);
             int limit;
             if (Ilimit != null) {
@@ -112,24 +120,25 @@ public class CdrLogRestlet extends Restlet {
             String userLike = "%:" + userId + "@%";
 
             if (fromTimeMs != null) {
-                sqlPrepareString = sqlStmt + " " + sqlUserWhereStmt + sqlFromDateStmt + sqlOrderStmt + sqlLimitStmt;
+                sqlPrepareString = sqlStmt + " " + sqlUserWhereStmt + sqlFromDateStmt + sqlOrderStmt + sqlLimitStmt + sqlOffsetStmt;
                 qStatement = cdrConnection.prepareStatement(sqlPrepareString);
                 qStatement.setString(1, userLike);
                 qStatement.setString(2, userLike);
                 qStatement.setTimestamp(3, fromTimeMs);
                 qStatement.setInt(4, limit);
+                qStatement.setInt(5, offset);
             }
             else {
-                sqlPrepareString = sqlStmt + " " + sqlUserWhereStmt + sqlOrderStmt + sqlLimitStmt;
+                sqlPrepareString = sqlStmt + " " + sqlUserWhereStmt + sqlOrderStmt + sqlLimitStmt + sqlOffsetStmt;
                 qStatement = cdrConnection.prepareStatement(sqlPrepareString);
                 qStatement.setString(1, userLike);
                 qStatement.setString(2, userLike);
                 qStatement.setInt(3, limit);
+                qStatement.setInt(4, offset);
             }
-
             // Execute the SQL query to obtain the results.
             qResults = qStatement.executeQuery();
-
+        logger.error("MIRCEA " + qStatement.toString());
             // Build an XML document to return the DB Query results.
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder =factory.newDocumentBuilder();
