@@ -16,28 +16,31 @@
         index="ognl:index"
         volatile="true">
         <td>
+          <span jwcid="@Insert" value="message:description">Description</span>
           <input jwcid="@TextField"
             value="ognl:value.description"
             validators="ognl:validators"
             displayName="ognl:itemDisplayName" />
         </td>
         <td>
+          <span jwcid="@Insert" value="message:start">Start</span>
           <input jwcid="@TextField"
             value="ognl:value.start"
             validators="ognl:validators"
             displayName="ognl:itemDisplayName" />
         </td>
         <td>
+          <span jwcid="@Insert" value="message:end">End</span>
           <input jwcid="@TextField"
             value="ognl:value.end"
             validators="ognl:validators"
             displayName="ognl:itemDisplayName" />
         </td>
-        <td>
+        <td>          
           <input jwcid="findNext@Submit" id="find:next"
-		listener="listener:saveNext"
-		value="message:button.findNext"
-		parameters="ognl:{value.id, value.next}" />
+		         listener="listener:saveNext"
+		         value="message:button.findNext"
+		         parameters="ognl:{value.id, value.next}" />
         </td>
         <td>
           <a jwcid="deleteLink@LinkSubmit" selected="ognl:removeIndex" tag="ognl:index">
@@ -50,6 +53,7 @@
   <table>
     <tr>
       <td>
+        <span jwcid="@Insert" value="message:nextDid">Next Did</span>
         <input jwcid="nextValue@TextField"
          value="ognl:nextValue"/>
       </td>

@@ -423,18 +423,20 @@ public class MongoManagerImpl implements AddressProvider, FeatureProvider, Mongo
             }            
             DidPool pool = checkDid(value, typeId);     
             Did did = m_didService.getDid(typeId);
-            if (did == null) {
-                did = new Did(type.getName(), typeId, value, pool.getDescription());
-            } else {
-                did.setValue(value);
+
+            if (pool != null) {
+                if (did == null) {
+                    did = new Did(type.getName(), typeId, value, pool.getDescription());
+                } else {
+                    did.setValue(value);
+                }                
+                did.setPoolId(pool.getId());
+                m_didService.saveDid(did);
+                //save proposed next value
+                pool.setNext(m_didPoolService.findNext(pool).toString());
+            
+                m_didPoolService.saveDidPool(pool);
             }
-            
-            did.setPoolId(pool.getId());
-            m_didService.saveDid(did);
-            //save proposed next value
-            pool.setNext(m_didPoolService.findNext(pool).toString());
-            
-            m_didPoolService.saveDidPool(pool);
         } else {
             m_didService.removeDid(typeId); 
         }
@@ -456,8 +458,9 @@ public class MongoManagerImpl implements AddressProvider, FeatureProvider, Mongo
                 return pool;
             }
         }
-        LOG.error("Out of the pool range");
-        throw new UserException("&err.notInRange");
+        return null;
+        //LOG.error("Out of the pool range");
+        //throw new UserException("&err.notInRange");
     }
     
     private boolean outsideRangeDidValue(DidPool pool, long value) {

@@ -184,7 +184,6 @@ public abstract class DiDPoolsPage extends SipxBasePage implements PageBeginRend
             DidPool myPool = getDidPoolService().getDidPoolById(next.getPoolId());
             LabeledDid labelDid = new LabeledDid(
                 next.getType(), next.getTypeId(), next.getValue(), null);
-            labelDid.setTypeLabel(getMessages().getMessage(next.getType()));
             labelDid.setDescription(myPool != null ? myPool.getDescription() : null);
             return labelDid;
         }
