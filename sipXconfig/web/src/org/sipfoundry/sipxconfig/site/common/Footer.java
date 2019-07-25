@@ -29,4 +29,10 @@ public abstract class Footer extends BaseComponent {
     public boolean isModified() {
         return StringUtils.isNotBlank(getReleaseInfo().getPackageInfo());
     }
+    
+    public String getProductCopyright() {
+        String buildYear = StringUtils.substringBefore(getVersion().getVersionDetails()[2], "-");
+        return getMessages().format("product.copyright", buildYear);
+    }
 }
+
