@@ -79,6 +79,7 @@ RUNTIME_EPEL = \
 		i/ilbc2-* \
 		j/js-* \
 		j/jemalloc-* \
+		l/lame-libs-3.100* \
 		l/libcodec2-* \
 		l/libev-4.* \
 		l/libdb4-* \
