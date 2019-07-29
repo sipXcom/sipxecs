@@ -21,5 +21,7 @@ public interface DidPoolService {
     public Long findNext(DidPool pool);
     
     public List<String> buildNextDids();
+    
+    public boolean outsideRangeDidValue(DidPool pool, long value);
 
 }

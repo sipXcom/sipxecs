@@ -182,8 +182,12 @@ public abstract class DiDPoolsPage extends SipxBasePage implements PageBeginRend
         public Did next() {
             Did next = getSource().next();
             DidPool myPool = getDidPoolService().getDidPoolById(next.getPoolId());
+            String type = next.getType();
             LabeledDid labelDid = new LabeledDid(
-                next.getType(), next.getTypeId(), next.getValue(), null);
+                type, next.getTypeId(), next.getValue(), null);
+            if (type != null) {
+                labelDid.setTypeLabel(getMessages().getMessage(type));
+            }
             labelDid.setDescription(myPool != null ? myPool.getDescription() : null);
             return labelDid;
         }
@@ -216,6 +220,18 @@ public abstract class DiDPoolsPage extends SipxBasePage implements PageBeginRend
         }
         if (getDidPoolService().getAllDidPools().isEmpty()) {
         	throw new UserException("&no.did.pool");
+        }
+        boolean outsideRange = true;
+        for (DidPool pool : getDidPoolService().getAllDidPools()) {
+            if (getDidPoolService().outsideRangeDidValue(pool, Long.parseLong(getUserNext()))) {
+                continue;
+            } else {
+                outsideRange = false;
+                break;
+            }
+        }
+        if (outsideRange) {
+            throw new UserException("&err.notInRange");
         }
         SelectUsers selectUsersPage = (SelectUsers) cycle.getPage(SelectUsers.PAGE);
         SelectUsersCallback callback = new SelectUsersCallback(getPage());

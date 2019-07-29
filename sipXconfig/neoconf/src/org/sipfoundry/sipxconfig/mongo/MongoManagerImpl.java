@@ -452,7 +452,7 @@ public class MongoManagerImpl implements AddressProvider, FeatureProvider, Mongo
         List<DidPool> didPools = m_didPoolService.getAllDidPools();        
         for (DidPool pool : didPools) {
             long valueLong = Long.parseLong(value.replaceAll("[^\\d.]", ""));
-            if (outsideRangeDidValue(pool, valueLong)) {
+            if (m_didPoolService.outsideRangeDidValue(pool, valueLong)) {
                 continue;
             } else {
                 return pool;
@@ -463,10 +463,7 @@ public class MongoManagerImpl implements AddressProvider, FeatureProvider, Mongo
         //throw new UserException("&err.notInRange");
     }
     
-    private boolean outsideRangeDidValue(DidPool pool, long value) {
-        return Long.parseLong(pool.getStart().replaceAll("[^\\d.]", "")) > value ||
-            Long.parseLong(pool.getEnd().replaceAll("[^\\d.]", "")) < value;
-    }
+
 
     public void setConfigJdbcTemplate(JdbcTemplate configJdbc) {
         m_configJdbcTemplate = configJdbc;
@@ -493,7 +490,7 @@ public class MongoManagerImpl implements AddressProvider, FeatureProvider, Mongo
                 User user = (User) entity;                
                 //save did if exists
                 if (user.isSaveFaxDid() == false) {
-                    saveDid(user.getDid(), user.getExtension(true), DidType.TYPE_USER);
+                    saveDid(user.getDid(), user.getUserName(), DidType.TYPE_USER);
                 } else {
                     saveDid(user.getFaxDid(), user.getFaxExtension(), DidType.TYPE_FAX_USER);
                 }

@@ -98,5 +98,10 @@ public class DidPoolServiceImpl implements DidPoolService {
         }
         return candidates;
     }
-
+    
+    @Override
+    public boolean outsideRangeDidValue(DidPool pool, long value) {
+        return Long.parseLong(pool.getStart().replaceAll("[^\\d.]", "")) > value ||
+            Long.parseLong(pool.getEnd().replaceAll("[^\\d.]", "")) < value;
+    }
 }
