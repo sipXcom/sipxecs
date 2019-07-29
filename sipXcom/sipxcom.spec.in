@@ -81,6 +81,7 @@ Requires: freeswitch-event-json-cdr
 Requires: freeswitch-event-multicast
 Requires: freeswitch-event-rayo
 Requires: freeswitch-format-local-stream
+Requires: freeswitch-format-mod-shout
 Requires: freeswitch-format-native-file
 Requires: freeswitch-format-portaudio-stream
 Requires: freeswitch-format-shell-stream
