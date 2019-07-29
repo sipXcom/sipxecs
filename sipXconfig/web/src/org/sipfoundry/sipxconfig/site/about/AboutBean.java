@@ -19,6 +19,7 @@ package org.sipfoundry.sipxconfig.site.about;
 import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.tapestry.IPage;
 import org.sipfoundry.sipxconfig.common.VersionInfo;
 import org.springframework.beans.factory.annotation.Required;
@@ -70,7 +71,8 @@ public class AboutBean {
     }
 
     public String getCopyright() {
-        m_copyright = (m_copyright == null) ? m_aboutPage.getMessages().getMessage("product.copyright") : m_copyright;
+        m_copyright = (m_copyright == null) ? m_aboutPage.getMessages().format("product.copyright",
+                StringUtils.substringBefore(m_versionInfo.getVersionDetails()[2], "-")) : m_copyright;
         return m_copyright;
     }
 

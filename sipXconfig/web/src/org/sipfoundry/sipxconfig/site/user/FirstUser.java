@@ -12,6 +12,7 @@ package org.sipfoundry.sipxconfig.site.user;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.tapestry.IAsset;
 import org.apache.tapestry.PageRedirectException;
 import org.apache.tapestry.annotations.Asset;
@@ -108,5 +109,10 @@ public abstract class FirstUser extends SipxBasePage implements PageBeginRenderL
 
     public IAsset[] getStylesheets() {
         return getTapestry().getStylesheets(this);
+    }
+
+    public String getProductCopyright() {
+        String buildYear = StringUtils.substringBefore(getVersionInfo().getVersionDetails()[2], "-");
+        return getMessages().format("product.copyright", buildYear);
     }
 }
