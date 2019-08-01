@@ -27,7 +27,7 @@ import org.sipfoundry.sipxconfig.setting.PersistableSettings;
 import org.sipfoundry.sipxconfig.setting.Setting;
 
 public class AutoAttendantSettings extends PersistableSettings implements DeployConfigOnEdit {
-    private static final String LIVE_DID = "liveAttendant/did";
+    public static final String LIVE_DID = "liveAttendant/did";
     private static final String ENABLE_PREFIX = "liveAttendant/enablePrefix";
     private static final String DISABLE_PREFIX = "liveAttendant/disablePrefix";
     private static final String EXPIRE_TIME = "liveAttendant/expireTime";

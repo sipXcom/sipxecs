@@ -49,6 +49,7 @@ public class ConferenceBridgeContextImpl extends SipxHibernateDaoSupport<Confere
     private static final String VALUE = "value";
     private static final String CONFERENCE_IDS_WITH_ALIAS = "conferenceIdsWithAlias";
     private static final String CONFERENCE_BY_NAME = "conferenceByName";
+    private static final String CONFERENCE_BY_EXTENSION = "conferenceByExtension";
     private static final String OWNER = "owner";
     private static final String PERCENT = "%";
 
@@ -186,6 +187,12 @@ public class ConferenceBridgeContextImpl extends SipxHibernateDaoSupport<Confere
         return DataAccessUtils.singleResult(conferences);
     }
 
+    public Conference findConferenceByExtension(String extension) {
+        List<Conference> conferences = getHibernateTemplate().findByNamedQueryAndNamedParam(CONFERENCE_BY_EXTENSION,
+                VALUE, extension);
+        return DataAccessUtils.singleResult(conferences);
+    }    
+    
     public void clear() {
         List bridges = getBridges();
         getHibernateTemplate().deleteAll(bridges);

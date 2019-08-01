@@ -65,4 +65,6 @@ public interface ConferenceBridgeContext extends AliasOwner {
 
     List<Conference> filterConferencesByPage(final Integer bridgeId, final Integer ownerGroupId, int firstRow,
             int pageSize, String[] orderBy, boolean orderAscending);
+    
+    public Conference findConferenceByExtension(String extension);
 }

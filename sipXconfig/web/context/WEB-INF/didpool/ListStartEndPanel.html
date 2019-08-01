@@ -51,9 +51,16 @@
     </tbody>
   </table>
   <table>
+	<tr class="component-submit">
+		<td>
+		  <input jwcid="savePool@Submit"
+		    value="message:button.save"
+		    listener="listener:commit"/>
+		</td>
+    </tr>  
     <tr>
       <td>
-        <span jwcid="@Insert" value="message:nextDid">Next Did</span>
+        <span jwcid="@Insert" value="message:nextDid">DID to Assign</span>
         <input jwcid="nextValue@TextField"
          value="ognl:nextValue"/>
       </td>

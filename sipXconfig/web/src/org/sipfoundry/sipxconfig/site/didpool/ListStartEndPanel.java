@@ -70,4 +70,12 @@ public abstract class ListStartEndPanel extends ListPanel {
         activeNextDid.setValue(value);
         getDidService().saveDid(activeNextDid);
     }
+    
+    public void commit() {
+        for (Object obj : getSource()) {
+            DidPool pool = (DidPool)obj;
+            pool.setNext(getDidPoolService().findNext(pool).toString());
+            getDidPoolService().saveDidPool(pool);
+        }        
+    }    
 }

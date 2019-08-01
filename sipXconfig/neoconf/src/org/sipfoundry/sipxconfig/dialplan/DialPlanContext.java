@@ -74,4 +74,8 @@ public interface DialPlanContext extends DataObjectSource, AliasOwner, Replicabl
     EmergencyInfo getLikelyEmergencyInfo();
 
     void setOperator(AutoAttendant attendant);
+    
+    public Collection getInternalRulesWithVoiceMailExtension(String extension);
+    
+    public Collection getAttendantRulesWithExtensionOrDid(String extension);
 }

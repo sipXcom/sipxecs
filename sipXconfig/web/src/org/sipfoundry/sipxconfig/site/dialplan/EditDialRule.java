@@ -84,6 +84,7 @@ public abstract class EditDialRule extends SipxBasePage implements PageBeginRend
 
     public abstract void setRule(DialingRule rule);
 
+    @Persist
     public abstract ICallback getCallback();
 
     public abstract void setCallback(ICallback callback);
@@ -152,7 +153,10 @@ public abstract class EditDialRule extends SipxBasePage implements PageBeginRend
 
         // Ignore the callback passed to us for now because we're navigating
         // to unexpected places. Always go to the EditFlexibleDialPlan plan.
-        setCallback(new PageCallback(EditFlexibleDialPlan.PAGE));
+        //2019 - multiple callback is needed - UC-2437
+        if (getCallback() == null) {
+            setCallback(new PageCallback(EditFlexibleDialPlan.PAGE));
+        }
     }
     
     public void buildNextDids() {        

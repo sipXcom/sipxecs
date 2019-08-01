@@ -54,6 +54,10 @@
     <![CDATA[from Conference conf where conf.name = :value]]>
   </query>
 
+  <query name="conferenceByExtension">
+    <![CDATA[from Conference conf where conf.extension = :value]]>
+  </query>
+  
   <query name="conferencesByOwner">
     <![CDATA[from Conference conf where conf.owner = :owner]]>
   </query>

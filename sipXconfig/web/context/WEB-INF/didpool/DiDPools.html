@@ -12,28 +12,39 @@
       nextValue="ognl:next"
       userNextValue="ognl:userNext"/>
     <table>
-	  <tr class="component-submit">
-		<ul>
-		  <input jwcid="savePool@Submit"
-		    value="message:button.save"
-		    listener="listener:commit"/>
-		</ul>
-      </tr>
       <tr>
         <input id="assignDid" jwcid="@Submit" listener="listener:assignDid" value="message:label.selectUser" />
       </tr>      
     </table>    
   </form>
-  <form jwcid="@common/AutoRefreshForm" delegate="bean:validator" id="didPool:form">
+  <form jwcid="@common/AutoRefreshForm" delegate="bean:validator" id="didPool:form" actionBlock="component:didActions">
     <ul class="component-submit">
         <li><span jwcid="@didpool/DidPoolFilter" didPoolSearch="ognl:didPoolSearch"/></li>
     </ul>
 
     <table jwcid="@common/Table" id="did:list"
-	columns="did.description:description,did.type:typeLabel,did.type.id:typeId,did.value:value"
+	    columns="did.description:description,did.type:typeLabel,typeId,did.value:value"
 		source="ognl:labeledDids"
 		row="ognl:currentRow"
-		usePager="ognl:true">
+		usePager="ognl:true"
+		selections="ognl:selections">
+      <div jwcid="typeIdColumnValue@Block">      
+        <a href="#" jwcid="userNameLink@DirectLink"
+          listener="listener:entityListener"
+          parameters="ognl:{currentRow.typeId, currentRow.type}"
+          id="ognl:'user_' + currentRow.typeId + '_link'">
+          <span jwcid="@Insert" value="ognl:currentRow.typeId" />
+        </a>      
+      </div>		
 	</table>
+	<div jwcid="didActions@Block">
+	  <li>
+	    <input jwcid="delete@Submit" id="did:delete"
+	      selected="ognl:rowsToDelete"
+		  tag="ognl:selections.allSelected"
+		  action="listener:deleteDids"
+		  value="message:button.delete" />
+	  </li>
+	</div>	
   </form>
 </div>

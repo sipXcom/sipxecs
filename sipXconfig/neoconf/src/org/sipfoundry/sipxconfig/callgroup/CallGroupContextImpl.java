@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.Query;
 import org.sipfoundry.sipxconfig.alias.AliasManager;
 import org.sipfoundry.sipxconfig.common.BeanId;
 import org.sipfoundry.sipxconfig.common.CoreContext;
@@ -38,6 +39,7 @@ public class CallGroupContextImpl extends SipxHibernateDaoSupport implements Cal
 
     private static final String QUERY_CALL_GROUP_IDS_WITH_NAME = "callGroupIdsWithName";
     private static final String QUERY_CALL_GROUP_IDS_WITH_ALIAS = "callGroupIdsWithAlias";
+    private static final String SQL_CALL_GROUP_EXTENSION = "SELECT call_group_id from call_group where extension = :extension";
 
     private CoreContext m_coreContext;
     private SipxReplicationContext m_replicationContext;
@@ -59,6 +61,14 @@ public class CallGroupContextImpl extends SipxHibernateDaoSupport implements Cal
     @Override
     public CallGroup loadCallGroup(Integer id) {
         return getHibernateTemplate().load(CallGroup.class, id);
+    }
+    
+    @Override
+    public int getCallGroupId(String extension) {
+        Query q = getHibernateTemplate().getSessionFactory().getCurrentSession()
+            .createSQLQuery(SQL_CALL_GROUP_EXTENSION);
+        q.setString("extension", extension);
+        return ((Number) q.uniqueResult()).intValue();
     }
 
     @Override

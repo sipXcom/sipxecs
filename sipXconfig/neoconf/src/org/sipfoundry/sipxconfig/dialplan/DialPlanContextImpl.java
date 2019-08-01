@@ -452,12 +452,14 @@ public class DialPlanContextImpl extends SipxHibernateDaoSupport implements Bean
         return bids;
     }
 
-    private Collection getInternalRulesWithVoiceMailExtension(String extension) {
+    @Override
+    public Collection getInternalRulesWithVoiceMailExtension(String extension) {
         return getHibernateTemplate().findByNamedQueryAndNamedParam("internalRuleIdsWithVoiceMailExtension", VALUE,
                 extension);
     }
 
-    private Collection getAttendantRulesWithExtensionOrDid(String extension) {
+    @Override
+    public Collection getAttendantRulesWithExtensionOrDid(String extension) {
         return getHibernateTemplate().findByNamedQueryAndNamedParam("attendantRuleIdsWithExtensionOrDid", VALUE,
                 extension);
     }
