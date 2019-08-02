@@ -327,7 +327,8 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
 
     abstract static class CdrsStatementCreator implements PreparedStatementCreator {
         private static final String FROM = " FROM cdrs WHERE (? <= start_time) AND (start_time <= ?)";
-        private static final String LIMIT = " LIMIT ? OFFSET ?";
+        private static final String LIMIT = " LIMIT ? ";
+        private static final String OFFSET = " OFFSET ?";
 
         private final Timestamp m_from;
         private final Timestamp m_to;
@@ -372,12 +373,21 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
             if (m_limit > 0) {
                 sql.append(LIMIT);
             }
+            if (m_offset > 0) {
+                sql.append(OFFSET);
+            }
             PreparedStatement ps = con.prepareStatement(sql.toString());
             ps.setTimestamp(1, m_from, m_calendar);
             ps.setTimestamp(2, m_to, m_calendar);
-            if (m_limit > 0) {
+            if (m_offset > 0 && m_limit > 0) {
                 ps.setInt(3, m_limit);
                 ps.setInt(4, m_offset);
+            } 
+            else if (m_limit > 0) {
+                ps.setInt(3, m_limit);
+            }
+            else if (m_offset > 0) {
+                ps.setInt(3, m_offset);
             }
             return ps;
         }
