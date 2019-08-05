@@ -38,6 +38,7 @@ import org.sipfoundry.sipxconfig.site.admin.EditCallGroup;
 import org.sipfoundry.sipxconfig.site.conference.EditConference;
 import org.sipfoundry.sipxconfig.site.dialplan.EditAutoAttendant;
 import org.sipfoundry.sipxconfig.site.dialplan.EditDialRule;
+import org.sipfoundry.sipxconfig.site.dialplan.EditFlexibleDialPlan;
 import org.sipfoundry.sipxconfig.site.gateway.EditGateway;
 import org.sipfoundry.sipxconfig.site.paging.EditPagingGroupPage;
 import org.sipfoundry.sipxconfig.site.park.EditParkOrbit;
@@ -202,6 +203,7 @@ public abstract class AssociatedPanel extends BaseComponent implements PageBegin
     public IPage editAutoAttendantDialingRule(IRequestCycle cycle, Integer ruleId) {
         EditDialRule page = (EditDialRule) cycle.getPage(EditDialRule.ATTENDANT);
         page.setRuleId(ruleId);
+        page.setReturnPage(EditFlexibleDialPlan.PAGE);
         return page;
     }
 

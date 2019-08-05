@@ -149,6 +149,8 @@ public abstract class DiDPoolsPage extends SipxBasePage implements PageBeginRend
 
     @Override
     public void pageBeginRender(PageEvent event) {
+        ManageAttendants page = (ManageAttendants) event.getRequestCycle().getPage(ManageAttendants.PAGE);
+        page.setReturnPage(ManageAttendants.PAGE);
         if (getDidPoolSearch() == null) {
             setDidPoolSearch(new DidPoolSearch());
         }
@@ -302,7 +304,7 @@ public abstract class DiDPoolsPage extends SipxBasePage implements PageBeginRend
                 page.setRule(rule);
                 page.setRuleId(id);
             }
-            page.setCallback(new PageCallback(PAGE));
+            page.setReturnPage(PAGE);
             return page;
         } 
         else if (StringUtils.equals(DidType.TYPE_VOICEMAIL_DIALING_RULE.getName(), type)) {
@@ -316,13 +318,13 @@ public abstract class DiDPoolsPage extends SipxBasePage implements PageBeginRend
                 page.setRule(rule);
                 page.setRuleId(id);
             }
-            page.setCallback(new PageCallback(PAGE));
+            page.setReturnPage(PAGE);
             return page;
         } 
         else if (StringUtils.equals(DidType.TYPE_HUNT_GROUP.getName(), type)) {
             EditCallGroup page = (EditCallGroup) cycle.getPage(EditCallGroup.PAGE);            
             page.setCallGroupId(getCallGroupContext().getCallGroupId(typeId));
-            page.setCallback(new PageCallback(PAGE));
+            page.setReturnPage(PAGE);
             return page;
         } 
         else if (StringUtils.equals(DidType.TYPE_CONFERENCE.getName(), type)) {
@@ -337,6 +339,7 @@ public abstract class DiDPoolsPage extends SipxBasePage implements PageBeginRend
         } 
         else if (StringUtils.equals(DidType.TYPE_LIVE_AUTO_ATTENDANT.getName(), type)) {
             ManageAttendants page = (ManageAttendants) cycle.getPage(ManageAttendants.PAGE);
+            page.setReturnPage(PAGE);
             return page;
         }
         return null;               

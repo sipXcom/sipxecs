@@ -418,7 +418,7 @@ public class MongoManagerImpl implements AddressProvider, FeatureProvider, Mongo
     
     private void saveDid(String value, String typeId, DidType type) throws Exception {
         if (!StringUtils.isEmpty(value)) {
-            if (m_didService.isDidInUse(typeId, value) || m_coreContext.isAliasInUse(value)) {
+            if (m_didService.isDidInUse(typeId, value) || m_coreContext.isAliasInUseExceptDid(value)) {
                 throw new DidInUseException(type.getName(), value);
             }            
             DidPool pool = checkDid(value, typeId);     

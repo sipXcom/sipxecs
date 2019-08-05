@@ -15,7 +15,6 @@ import java.util.Map;
 
 import org.apache.tapestry.annotations.InjectObject;
 import org.apache.tapestry.annotations.Persist;
-import org.apache.tapestry.callback.ICallback;
 import org.apache.tapestry.callback.PageCallback;
 import org.apache.tapestry.event.PageBeginRenderListener;
 import org.apache.tapestry.event.PageEvent;
@@ -24,7 +23,7 @@ import org.sipfoundry.commons.diddb.DidPoolService;
 import org.sipfoundry.sipxconfig.branch.BranchManager;
 import org.sipfoundry.sipxconfig.components.NamedValuesSelectionModel;
 import org.sipfoundry.sipxconfig.components.ObjectSelectionModel;
-import org.sipfoundry.sipxconfig.components.SipxBasePage;
+import org.sipfoundry.sipxconfig.components.PageWithCallback;
 import org.sipfoundry.sipxconfig.device.ModelSource;
 import org.sipfoundry.sipxconfig.dialplan.AttendantRule;
 import org.sipfoundry.sipxconfig.dialplan.AutoAttendantManager;
@@ -39,7 +38,7 @@ import org.sipfoundry.sipxconfig.phone.PhoneModel;
 /**
  * EditDialRule
  */
-public abstract class EditDialRule extends SipxBasePage implements PageBeginRenderListener {
+public abstract class EditDialRule extends PageWithCallback implements PageBeginRenderListener {
 
     public static final String CUSTOM = "dialplan/EditCustomDialRule";
     public static final String INTERNAL = "dialplan/EditInternalDialRule";
@@ -83,11 +82,6 @@ public abstract class EditDialRule extends SipxBasePage implements PageBeginRend
     public abstract DialingRule getRule();
 
     public abstract void setRule(DialingRule rule);
-
-    @Persist
-    public abstract ICallback getCallback();
-
-    public abstract void setCallback(ICallback callback);
 
     @Persist(value = "client")
     public abstract DialingRuleType getRuleType();

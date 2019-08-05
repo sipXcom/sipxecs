@@ -73,6 +73,12 @@ public abstract class CoreContextImpl extends SipxHibernateDaoSupport<User> impl
             + "where u.user_name= :alias or alias.alias= :alias  "
             + "or (sv.path='voicemail/fax/did' and sv.value= :alias)  "
             + "or (sv.path='voicemail/fax/extension' and sv.value= :alias) ";
+    private static final String SQL_QUERY_USER_IDS_BY_NAME_OR_ALIAS_EXCEPT_DID = "select distinct u.user_id from users u "
+        + "left outer join user_alias alias  " + "on u.user_id=alias.user_id  "
+        + "left outer join value_storage vs on vs.value_storage_id=u.value_storage_id  "
+        + "left outer join setting_value sv on sv.value_storage_id=vs.value_storage_id  "
+        + "where u.user_name= :alias or alias.alias= :alias  "       
+        + "or (sv.path='voicemail/fax/extension' and sv.value= :alias) ";
     private static final String SQL_QUERY_USER_IDS_BY_NAME_OR_ALIAS_EXCEPT_THIS =
         "select distinct u.user_id from users "
         + "u left outer join user_alias alias  "
@@ -855,6 +861,19 @@ public abstract class CoreContextImpl extends SipxHibernateDaoSupport<User> impl
     public boolean isAliasInUse(String alias) {
         Query q = getHibernateTemplate().getSessionFactory().getCurrentSession()
         .createSQLQuery(SQL_QUERY_USER_IDS_BY_NAME_OR_ALIAS).addScalar(USER_ID, Hibernate.INTEGER);
+        q.setString(ALIAS, alias);
+        List<Integer> userIds = q.list();
+        if (SipxCollectionUtils.safeSize(userIds) > 0) {
+            return true;
+        }
+        // check im id in user profile db
+        return getUserProfileService().isImIdInUse(alias);
+    }
+    
+    @Override
+    public boolean isAliasInUseExceptDid(String alias) {
+        Query q = getHibernateTemplate().getSessionFactory().getCurrentSession()
+        .createSQLQuery(SQL_QUERY_USER_IDS_BY_NAME_OR_ALIAS_EXCEPT_DID).addScalar(USER_ID, Hibernate.INTEGER);
         q.setString(ALIAS, alias);
         List<Integer> userIds = q.list();
         if (SipxCollectionUtils.safeSize(userIds) > 0) {

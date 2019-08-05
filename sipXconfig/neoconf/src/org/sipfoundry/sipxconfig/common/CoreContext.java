@@ -231,4 +231,6 @@ public interface CoreContext extends DataObjectSource<User>, AliasOwner, Replica
     int getPhantomUsersCount();
 
     int getPhantomUsersWithoutSuperadminCount();
+    
+    boolean isAliasInUseExceptDid(String alias);
 }

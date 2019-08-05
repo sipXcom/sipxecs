@@ -47,6 +47,7 @@ public abstract class ListCallGroups extends SipxBasePage {
         Integer callGroupId = TapestryUtils.getBeanId(cycle);
         editCallGroup.setCallGroupId(callGroupId);
         editCallGroup.setCallGroup(null);
+        editCallGroup.setReturnPage(PAGE);
         return editCallGroup;
     }
 

@@ -65,7 +65,9 @@ public abstract class EditFlexibleDialPlan extends SipxBasePage {
     public IPage edit(IRequestCycle cycle, Integer ruleId) {
         DialingRule rule = getDialPlanContext().getRule(ruleId);
         DialingRuleType ruleType = rule.getType();
-        return SelectRuleType.getEditDialRulePage(cycle, ruleType, ruleId);
+        EditDialRule rulePage = SelectRuleType.getEditDialRulePage(cycle, ruleType, ruleId);
+        rulePage.setReturnPage(PAGE);
+        return rulePage; 
     }
 
     public void formSubmit() {
