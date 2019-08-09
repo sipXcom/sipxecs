@@ -444,6 +444,7 @@ function marshal_configuration_information () {
    /var/log/mongodb
    /var/log/mongo
    /var/log/elasticsearch
+   /var/log/freeswitch
    /var/log/mysqld.log
    /var/log/tomcat6
    /var/log/yum.log
