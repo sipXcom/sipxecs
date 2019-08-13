@@ -1,0 +1,74 @@
+#!/bin/bash
+# runs common sip checks against given proxy log
+# proxy log must be at info or debug verbosity to see signaling in order to count
+
+echo -e "Proxy log covers from: \n"
+head -n2 $1 | awk -F '"' '{ print $2 }' | tail -n1
+echo -e "to:"
+tail -n2 $1 | awk -F '"' '{ print $2 }' | tail -n1
+echo -e "\n"
+
+echo -e "Overall count, specific to INCOMING messages: \n"
+echo -e "INVITEs .."
+grep "INVITE sip" $1 | grep "INCOMING:INFO" | grep -c "INVITE sip"
+echo -e "REGISTERs .."
+grep "REGISTER sip" $1 | grep "INCOMING:INFO" | grep -c "REGISTER sip"
+echo -e "SUBSCRIBES .."
+grep "SUBSCRIBE sip" $1 | grep "INCOMING:INFO" | grep -c "SUBSCRIBE sip"
+echo -e "OPTIONS .."
+grep "OPTIONS sip" $1 | grep "INCOMING:INFO" | grep -c "OPTIONS sip"
+echo -e "ACKs .."
+grep "ACK sip" $1 | grep "INCOMING:INFO" | grep -c "ACK sip"
+echo -e "\n"
+
+# subscribe info
+echo -e "SUBSCRIBE additional info:\n"
+echo -e "Events .."  
+grep "SUBSCRIBE sip" $1 | grep "INCOMING:INFO" | @SIPX_BINDIR@/syslogviewer --no-pager | grep "Event:" | grep -v "implied" | sort | uniq -c
+echo -e "\n"
+
+subevents=$(grep "SUBSCRIBE sip" $1 | grep "INCOMING:INFO" | @SIPX_BINDIR@/syslogviewer --no-pager | grep "Event:" | grep -v 'implied' | sort | uniq | awk -F ": " '{ print $NF }')
+for e in $subevents; 
+ do echo -e "SUBSCRIBE Event: $e -- Top From users \n" ;
+ grep "SUBSCRIBE sip" $1 | grep "$e" | @SIPX_BINDIR@/syslogviewer --no-pager | grep "From:" | awk -F ";" '{ print $1 }' | sort | uniq -c | sort -rn | head -n50;
+ echo -e "\n";
+done
+
+echo -e "REGISTER additional info:\n"
+grep "REGISTER sip" $1 | grep "INCOMING:INFO" | @SIPX_BINDIR@/syslogviewer --no-pager | grep ^"From:" | awk -F ";" '{ print $1 }' | sort | uniq -c | sort -rn | head -n50
+echo -e "\n"
+
+echo -e "INVITEs addional info, From: \n"
+grep "INVITE sip" $1 | grep "INCOMING:INFO" | @SIPX_BINDIR@/syslogviewer --no-pager | grep ^"From:" | awk -F ";" '{ print $1 }' | sort | uniq -c | sort -rn | head -n50
+echo -e "\n"
+
+echo -e "INVITEs additional info, To: \n"
+grep "INVITE sip" $1 | grep "INCOMING:INFO" | @SIPX_BINDIR@/syslogviewer --no-pager | grep ^"To:" | awk -F ";" '{ print $1 }' | sort | uniq -c | sort -rn | head -n50
+echo -e "\n"
+
+echo -e "Checking number of 400 Bad Request." 
+grep -c "400 Bad Request" $1
+
+echo -e "\nChecking number of 408 Request Timeout."
+grep -c "408 Request Timeout" $1
+
+echo -e "\nChecking number of 482 Loop Detected."
+grep -c "482 Loop Detected" $1
+
+echo -e "\nChecking number of 483 Too Many Hops."
+grep -c "483 Too Many Hops" $1
+
+echo -e "\nChecking number of 500 Server Internal Error."
+grep -c "500 Server Internal Error" $1
+
+echo -e "\nChecking number of 502 Bad Gateway."
+grep -c "502 Bad Gateway" $1
+
+echo -e "\nChecking number of 503 Service Unavailable."
+grep -c "503 Service Unavailable" $1
+
+echo -e "\nChecking number of sipxrelay 503 timeouts."
+grep -c "SIP/2.0 503 Error in processing request SipXrelaySemaphore timed out" $1
+
+echo -e "\nChecking number of sipxrelay 503 Ports Exhausted."
+grep -c "503 Error in processing request Ports not available" $1

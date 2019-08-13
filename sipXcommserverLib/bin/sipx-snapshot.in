@@ -412,6 +412,7 @@ function marshal_configuration_information () {
 
    # Assemble the list of files to record.
    # These files and directories are always recorded.
+   @SIPX_BINDIR@/sipcodes.sh @SIPX_LOGDIR@/sipXproxy.log > @SIPX_LOGDIR@/sipCodes.log
    cat > $Work.copy-files <<EOF
    @SIPX_CONFDIR@
    @SIPX_DBDIR@
