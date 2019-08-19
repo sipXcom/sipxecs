@@ -58,6 +58,11 @@ bundle edit_line elasticsearch_config_file {
   delete_lines:
     any::
       "path.repo.*";
+      "script.engine.groovy.inline.aggs.*";
+      "cluster.name.*";
+      "node.name.*";
+      "index.number_of_replicas.*";
+      "discovery.zen.ping.multicast.enabled.*";
 
   insert_lines:
     any::
