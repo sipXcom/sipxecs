@@ -140,6 +140,12 @@ public abstract class AssetSelector extends BaseComponent {
 
         FileOutputStream promptWriter = null;
         String fileName = getSystemIndependentFileName(upload.getFilePath());
+        String name = fileName.substring(0, fileName.lastIndexOf("."));
+        String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+        name = name.replaceAll("[^\\w\\s]","");
+        name = name.replaceAll(" ", "_");
+        name = name.toLowerCase();
+        fileName = name.concat(".").concat(extension);
         try {
             File promptsDir = new File(getAssetDir());
             promptsDir.mkdirs();
