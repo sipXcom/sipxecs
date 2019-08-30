@@ -31,7 +31,7 @@ function ${initRefresh}(buttonName, interval) {
             dojo.byId("${checkbox}").checked = false;
         } else {
             dojo.debug("Clicking: " + buttonName);
-            dojo.byId(buttonName).click();
+            dojo.byId(buttonName).submit();
         }
     }
   }
