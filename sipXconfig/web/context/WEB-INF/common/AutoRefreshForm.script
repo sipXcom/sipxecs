@@ -19,10 +19,10 @@ var stopOnError = ${stopOnError};
     
 function updateRefresh(value) {
     dojo.debug("Updating auto refresh interval: " + value.message);
-    ${initRefresh}("refresh", value.message);
+    ${initRefresh}("refreshForm", value.message);
 }    
     
-function ${initRefresh}(buttonName, interval) {
+function ${initRefresh}(formId, interval) {
   dojo.debug("Registering auto refresh: " + interval);
   var click = function() {
     if (dojo.byId("${checkbox}").checked && refreshEnabled) {  
@@ -30,8 +30,8 @@ function ${initRefresh}(buttonName, interval) {
             dojo.debug("Error on page - no refresh");
             dojo.byId("${checkbox}").checked = false;
         } else {
-            dojo.debug("Clicking: " + buttonName);
-            dojo.byId(buttonName).submit();
+            dojo.debug("Clicking: " + formId);
+            dojo.byId(formId).submit();
         }
     }
   }
@@ -51,7 +51,7 @@ function ${initRefresh}(buttonName, interval) {
     </unique>
   </body>
   <initialization>
-${initRefresh}("refresh", ${interval});
+${initRefresh}("refreshForm", ${interval});
 
 // This is notified when the value of the current interval changes.
 dojo.event.topic.subscribe("refreshInterval", updateRefresh);

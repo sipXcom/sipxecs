@@ -40,7 +40,7 @@ public abstract class CdrPage extends UserBasePage {
     @Bean
     public abstract SipxValidationDelegate getValidator();
 
-    @Persist
+    @Persist(value = "client")
     @InitialValue(value = "literal:active")
     public abstract String getTab();
 
