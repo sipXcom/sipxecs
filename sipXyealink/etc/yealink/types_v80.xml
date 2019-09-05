@@ -74,6 +74,7 @@
 <type id="TimeZoneName_type">
 	<enum>
 		<option><value>UnitedKingdom(London)</value></option>
+		<option><value>Moncton(Atlantic)</value></option>
 		<option><value>Morocco</value></option>
 		<option><value>Albania(Tirane)</value></option>
 		<option><value>Austria(Vienna)</value></option>
