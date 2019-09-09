@@ -102,7 +102,7 @@
           </option>
         </enum>
       </type>
-      <value>1</value>
+      <value>0</value>
     </setting>
     <setting name="ChannelSelectMode" unless="digital" advanced="yes">
       <type>
@@ -186,7 +186,7 @@
           </option>
         </enum>
       </type>
-      <value>3</value>
+      <value>0</value>
     </setting>
     <setting name="DetFaxOnAnswerTone" advanced="yes">
       <type>
@@ -1776,7 +1776,7 @@
             </option>
           </enum>
         </type>
-        <value>1</value>
+        <value>0</value>
       </setting>
       <setting name="FaxModemBypassCoderType">
         <type>
