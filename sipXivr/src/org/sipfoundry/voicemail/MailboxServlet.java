@@ -362,7 +362,7 @@ public class MailboxServlet extends HttpServlet {
                     descriptor.getDurationSecsLong(), StringUtils.defaultIfEmpty(descriptor.getContentLength(), StringUtils.EMPTY),
                     descriptor.getTimeStampDate().getTime(), HtmlUtils.htmlEscapeHex(authorDisplayName),
                     HtmlUtils.htmlEscapeHex(authorExtension), message.getUserName(), descriptor.getAudioFormat(), 
-                    descriptor.getCallerIdName(), descriptor.getCallerIdNumber());
+                    HtmlUtils.htmlEscapeHex(descriptor.getCallerIdName()), descriptor.getCallerIdNumber());
         }
     }
 
@@ -385,7 +385,7 @@ public class MailboxServlet extends HttpServlet {
                 descriptor.getDurationSecsLong(), StringUtils.defaultIfEmpty(descriptor.getContentLength(),
                 StringUtils.EMPTY), descriptor.getTimeStampDate().getTime(), fromUri,
                 HtmlUtils.htmlEscapeHex(authorDisplayName), HtmlUtils.htmlEscapeHex(authorExtension) ,HtmlUtils.htmlEscapeHex(descriptor.getSubject()),
-                message.getUserName(), descriptor.getAudioFormat(), descriptor.getCallerIdName(), descriptor.getCallerIdNumber());
+                message.getUserName(), descriptor.getAudioFormat(), HtmlUtils.htmlEscapeHex(descriptor.getCallerIdName()), descriptor.getCallerIdNumber());
     }
 
 }
