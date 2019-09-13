@@ -18,38 +18,31 @@ public class TimezoneTest extends TestCase {
     private class TimezoneMock extends Timezone {
 
         @Override
-        protected Reader getReaderForClockFile() {
+        protected Reader getReaderForTimezoneIni() {
             return sr;
         }
     }
 
     public void testInitalizeTimezoneFromClockFilewithQuotes() {
         // double quotes around ZONE="test"
-        sr = new StringReader("Here is my test data\nZONE=\"test1\"\n");
+        sr = new StringReader("test1");
         TimezoneMock tzm = new TimezoneMock();
-        assertEquals("test1", tzm.getInitialTimezoneFromClockFile());
+        assertEquals("test1", tzm.getInitialTimezone());
     }
 
     public void testInitalizeTimezoneFromClockFilewithNoQuotes() {
         // no quotes around ZONE=test
-        sr = new StringReader("Here is my test data\nZONE=test2\n");
+        sr = new StringReader("test2");
         TimezoneMock tzm = new TimezoneMock();
-        assertEquals("test2", tzm.getInitialTimezoneFromClockFile());
+        assertEquals("test2", tzm.getInitialTimezone());
 
-    }
-
-    public void testInitalizeTimezoneFromClockFilewithNoZone() {
-        // no ZONE= in the file
-        sr = new StringReader("Here is my test data\n\n");
-        TimezoneMock tzm = new TimezoneMock();
-        assertEquals("", tzm.getInitialTimezoneFromClockFile());
     }
 
     public void testListAllTimezonesWithCurrentTZInList() {
-        sr = new StringReader("Here is my test data\nZONE=Europe/Dublin\n");
+        sr = new StringReader("Europe/Dublin");
         TimezoneMock tzm = new TimezoneMock();
 
-        String currentTz = tzm.getInitialTimezoneFromClockFile();
+        String currentTz = tzm.getInitialTimezone();
         NtpManagerImpl mgr = new NtpManagerImpl();
         mgr.setTimezone(tzm);
         List<String> timezonesList = mgr.getAvailableTimezones(currentTz);
@@ -64,9 +57,9 @@ public class TimezoneTest extends TestCase {
 
     public void testListAllTimezonesWithCurrentTZNotInList() {
         // no ZONE= in the file
-        sr = new StringReader("Here is my test data\nZONE=Continent/City\n");
+        sr = new StringReader("Continent/City");
         TimezoneMock tzm = new TimezoneMock();
-        String currentTz = tzm.getInitialTimezoneFromClockFile();
+        String currentTz = tzm.getInitialTimezone();
         NtpManagerImpl mgr = new NtpManagerImpl();
         mgr.setTimezone(tzm);
 

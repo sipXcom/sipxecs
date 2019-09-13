@@ -28,6 +28,8 @@
     <property name="ntpManager" ref="ntpManager"/>
   </bean>
 
-  <bean id="timezone" class="org.sipfoundry.sipxconfig.time.Timezone" />
+  <bean id="timezone" class="org.sipfoundry.sipxconfig.time.Timezone" >
+    <property name="cfDataDir" value="${sysdir.var}/cfdata"/>
+  </bean>
 
 </beans>

@@ -82,7 +82,7 @@ public class NtpManagerImpl implements NtpManager, ProcessProvider, FeatureProvi
 
         Writer wtr = null;
         try {
-            File f = new File(m_configManager.getGlobalDataDirectory(), "timezone.ini");
+            File f = new File(m_configManager.getGlobalDataDirectory(), TIMEZONE_INI);
             wtr = new FileWriter(f);
             wtr.write(timezone);
             wtr.flush();
@@ -149,7 +149,7 @@ public class NtpManagerImpl implements NtpManager, ProcessProvider, FeatureProvi
             manager.setTrue(FEATURE.getId());
         }
         if (!manager.isTrue(CLOCK)) {
-            saveTimezoneSetting(m_timezone.getInitialTimezoneFromClockFile());
+            saveTimezoneSetting(m_timezone.getInitialTimezone());
             manager.setTrue(CLOCK);
         }
         return true;

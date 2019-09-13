@@ -22,14 +22,12 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class Timezone {
-    private static final String CLOCK_FILE = "/etc/sysconfig/clock";
+public class Timezone {    
     private static final String TIMEZONE_LIST_DIR = "/usr/share/zoneinfo";
-    private static final String ERROR_MSG = "Error when reading current time zone info from: " + CLOCK_FILE;
+    private static final String ERROR_MSG = "Error when reading current time zone info from timezone.ini application timezone file";
 
     private static final Log LOG = LogFactory.getLog(Timezone.class);
-    private static final String EMPTY_STRING = "";
-    private static final String ZONE_EQUALS_TOKEN = "ZONE=";
+    private static final String EMPTY_STRING = "";    
     private static final String FORWARD_SLASH = "/";
 
     private static final String[] TIMEZONE_DIRECTORIES = {
@@ -42,8 +40,11 @@ public class Timezone {
         "Australia",
         "Europe",
         "Indian",
-        "Pacific"
+        "Pacific",
+        "Etc"
     };
+    
+    private String m_cfDataDir;
 
     public List<String> getAllTimezones(String currentTimezone) {
         List<String> timezoneList = new ArrayList<String>();
@@ -62,39 +63,19 @@ public class Timezone {
         return timezoneList;
     }
 
-    public String getInitialTimezoneFromClockFile() {
+    public String getInitialTimezone() {
         String returnStr = EMPTY_STRING;
-        Reader readerForClockFile = getReaderForClockFile();
+        Reader readerForTimezoneIni = getReaderForTimezoneIni();
         boolean found = false;
         try {
-            if (readerForClockFile != null) {
-                BufferedReader in = new BufferedReader(readerForClockFile);
-                String str;
-                while ((str = in.readLine()) != null) {
-                    //
-                    // Only interested in line that starts with ZONE=
-                    //
-                    if (str.startsWith(ZONE_EQUALS_TOKEN)) {
-                        // timezone might have double quotes around it. If so remove them.
-                        String str1;
-                        str1 = str.substring(ZONE_EQUALS_TOKEN.length(), str.length());
-                        if (str1.charAt(0) == '"') {
-                            if ((str1.charAt(str1.length() - 1) != '"')) {
-                                break;
-                            }
-                            returnStr = str1.substring(1, str1.length() - 1);
-                        } else {
-                            returnStr = str1;
-                        }
-                        found = true;
-                        break;
-                    }
-                }
+            if (readerForTimezoneIni != null) {
+                BufferedReader in = new BufferedReader(readerForTimezoneIni);
+                returnStr = in.readLine();
             }
         } catch (IOException e) {
             LOG.error(ERROR_MSG, e);
         } finally {
-            IOUtils.closeQuietly(readerForClockFile);
+            IOUtils.closeQuietly(readerForTimezoneIni);
         }
         if (!found) {
             LOG.error(ERROR_MSG);
@@ -138,13 +119,17 @@ public class Timezone {
         }
     }
 
-    protected Reader getReaderForClockFile() {
+    protected Reader getReaderForTimezoneIni() {
         FileReader fileReader = null;
         try {
-            fileReader = new FileReader(CLOCK_FILE);
+            fileReader = new FileReader(new File(m_cfDataDir, NtpManager.TIMEZONE_INI));
         } catch (FileNotFoundException e) {
             LOG.error(ERROR_MSG);
         }
         return fileReader;
     }
+
+    public void setCfDataDir(String cfDataDir) {
+        m_cfDataDir = cfDataDir;
+    }   
 }

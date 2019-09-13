@@ -25,12 +25,12 @@ bundle agent prepare_change {
 
   files:
     any::
-      "$(timezone_ini_file)"
+      "$(timezone_ini_file)"            
         comment => "prepare change timezone",
         create => "true",
         perms => m("644"),
-        copy_from => master_files("$(sipx.master_address)","$(timezone_ini_file)");
-
+        copy_from => master_files("$(sipx.master_address)","$(timezone_ini_file)");    
+        
   methods:
     any::
       "perform_change" usebundle => perform_change("$(timezone_ini_file)");
@@ -40,31 +40,9 @@ bundle agent perform_change(ini) {
   vars:
     "timezone" string => readfile("$(ini)", "1500");
 
-  files:
+  commands:
     any::
-      "/etc/localtime"
-            comment => "Replace localtime",
-            copy_from => local_tz("/usr/share/zoneinfo/$(timezone)"),
-            perms => m("644");
-
-      "/etc/sysconfig/clock"
-            comment => "Change sysconfig clock",
-            create => "true",
-            perms => m("644"),
-            edit_line => timezone_contents('"$(timezone)"');
-}
-
-bundle edit_line timezone_contents(timezone) {
-  insert_lines:
-    any::
-      "ZONE=$(timezone)";
-  delete_lines:
-    any::
-      ".*";
-}
-
-body copy_from local_tz(from)
-{
-  source => "$(from)";
-  compare => "digest";
+      "/usr/bin/timedatectl"
+        comment => "Change local timezone",
+        args => "set-timezone $(timezone)";
 }

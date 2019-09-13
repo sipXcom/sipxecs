@@ -26,6 +26,7 @@ public interface NtpManager {
     public static final AddressType NTP_SERVER = new AddressType("ntpServer");
     static final GlobalFeature FEATURE = new GlobalFeature("ntpd");
     static final String CONTEXT_BEAN_NAME = "timeManager";
+    static final String TIMEZONE_INI = "timezone.ini";
 
     void setSystemTimezone(String timezone);
 
