@@ -19,7 +19,7 @@ bundle agent 00_sipxconfig {
   vars:
     any::
       "timezone_ini_file" string => "$(sipx.SIPX_CFDATA)/timezone.ini";
-      "default_timezone"  string => execresult("/usr/bin/timedatectl | awk '/Time zone:/ {print $3}'","noshell");
+      "default_timezone"  string => execresult("/usr/bin/timedatectl | awk '/Time zone:/ {print $3}'",useshell);
       
   classes:
   "postgres_pwd_conf" expression => fileexists("$(sipx.SIPX_CONFDIR)/postgres-pwd.properties");
