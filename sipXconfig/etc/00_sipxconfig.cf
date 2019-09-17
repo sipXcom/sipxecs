@@ -39,7 +39,7 @@ bundle agent 00_sipxconfig {
         comment => "Save current timezone",
         create => "true",
         perms => mog("644", "$(sipx.SIPXPBXUSER)", "$(sipx.SIPXPBXGROUP)"),
-        edit_line => timezone_contents('"$(default_timezone)"'),
+        edit_line => timezone_contents('$(default_timezone)'),
         copy_from => master_files("$(sipx.master_address)","$(timezone_ini_file)");
     any::
       "$(sipx.SIPX_CONFDIR)/resource-limits.ini"
