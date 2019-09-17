@@ -240,10 +240,42 @@
         <property name="speedDial" value="false" />
         <property name="restartSupported" value="false" />
         <property name="externalLinesSupported" value="false" />
-    </bean>
+    </bean>    
     <bean id="gsFxsGxw4024" parent="gsModel">
         <property name="label" value="Grandstream GXW4024" />
         <property name="maxLineCount" value="24" />
+        <property name="isFxsGxw" value="true" />
+        <property name="speedDial" value="false" />
+        <property name="restartSupported" value="false" />
+        <property name="externalLinesSupported" value="false" />
+    </bean>
+    <bean id="gsFxsGxw4216" parent="gsModel">
+        <property name="label" value="Grandstream GXW4216" />
+        <property name="maxLineCount" value="16" />
+        <property name="isFxsGxw" value="true" />
+        <property name="speedDial" value="false" />
+        <property name="restartSupported" value="false" />
+        <property name="externalLinesSupported" value="false" />
+    </bean>
+    <bean id="gsFxsGxw4224" parent="gsModel">
+        <property name="label" value="Grandstream GXW4224" />
+        <property name="maxLineCount" value="24" />
+        <property name="isFxsGxw" value="true" />
+        <property name="speedDial" value="false" />
+        <property name="restartSupported" value="false" />
+        <property name="externalLinesSupported" value="false" />
+    </bean>
+    <bean id="gsFxsGxw4232" parent="gsModel">
+        <property name="label" value="Grandstream GXW4232" />
+        <property name="maxLineCount" value="32" />
+        <property name="isFxsGxw" value="true" />
+        <property name="speedDial" value="false" />
+        <property name="restartSupported" value="false" />
+        <property name="externalLinesSupported" value="false" />
+    </bean>
+    <bean id="gsFxsGxw4248" parent="gsModel">
+        <property name="label" value="Grandstream GXW4248" />
+        <property name="maxLineCount" value="48" />
         <property name="isFxsGxw" value="true" />
         <property name="speedDial" value="false" />
         <property name="restartSupported" value="false" />
@@ -307,6 +339,36 @@
         <property name="maxLineCount" value="4" />
         <property name="isHandyTone" value="true" />
         <property name="isHandyTone704" value="true" />
+        <property name="speedDial" value="false" />
+    </bean>
+    <bean id="gsHt801" parent="gsModel">
+        <property name="label" value="Grandstream HandyTone 801" />
+        <property name="maxLineCount" value="1" />
+        <property name="isHandyTone" value="true" />
+        <property name="speedDial" value="false" />
+    </bean>
+    <bean id="gsHt802" parent="gsModel">
+        <property name="label" value="Grandstream HandyTone 802" />
+        <property name="maxLineCount" value="2" />
+        <property name="isHandyTone" value="true" />
+        <property name="speedDial" value="false" />
+    </bean>
+    <bean id="gsHt812" parent="gsModel">
+        <property name="label" value="Grandstream HandyTone 812" />
+        <property name="maxLineCount" value="2" />
+        <property name="isHandyTone" value="true" />
+        <property name="speedDial" value="false" />
+    </bean>
+    <bean id="gsHt814" parent="gsModel">
+        <property name="label" value="Grandstream HandyTone 814" />
+        <property name="maxLineCount" value="4" />
+        <property name="isHandyTone" value="true" />
+        <property name="speedDial" value="false" />
+    </bean>
+    <bean id="gsHt818" parent="gsModel">
+        <property name="label" value="Grandstream HandyTone 818" />
+        <property name="maxLineCount" value="8" />
+        <property name="isHandyTone" value="true" />
         <property name="speedDial" value="false" />
     </bean>
     <bean id="grandstream" class="org.sipfoundry.sipxconfig.phone.grandstream.GrandstreamPhone" scope="prototype"

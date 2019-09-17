@@ -1235,10 +1235,19 @@ public class Servlet extends HttpServlet {
         PHONE_MODEL_MAP.put("HT701", new PhoneModel("gsHt701", "Grandstream HandyTone 701"));
         PHONE_MODEL_MAP.put("HT702", new PhoneModel("gsHt702", "Grandstream HandyTone 702"));
         PHONE_MODEL_MAP.put("HT704", new PhoneModel("gsHt704", "Grandstream HandyTone 704"));
+        PHONE_MODEL_MAP.put("HT801", new PhoneModel("gsHt801", "Grandstream HandyTone 801"));
+        PHONE_MODEL_MAP.put("HT802", new PhoneModel("gsHt802", "Grandstream HandyTone 802"));
+        PHONE_MODEL_MAP.put("HT812", new PhoneModel("gsHt812", "Grandstream HandyTone 812"));
+        PHONE_MODEL_MAP.put("HT814", new PhoneModel("gsHt814", "Grandstream HandyTone 814"));
+        PHONE_MODEL_MAP.put("HT818", new PhoneModel("gsHt818", "Grandstream HandyTone 818"));
 
         PHONE_MODEL_MAP.put("GXW4004", new PhoneModel("gsFxsGxw4004", "Grandstream GXW4004"));
         PHONE_MODEL_MAP.put("GXW4008", new PhoneModel("gsFxsGxw4008", "Grandstream GXW4008"));
         PHONE_MODEL_MAP.put("GXW4024", new PhoneModel("gsFxsGxw4024", "Grandstream GXW4024"));
+        PHONE_MODEL_MAP.put("GXW4216", new PhoneModel("gsFxsGxw4216", "Grandstream GXW4216"));
+        PHONE_MODEL_MAP.put("GXW4224", new PhoneModel("gsFxsGxw4008", "Grandstream GXW4224"));
+        PHONE_MODEL_MAP.put("GXW4232", new PhoneModel("gsFxsGxw4008", "Grandstream GXW4232"));
+        PHONE_MODEL_MAP.put("GXW4248", new PhoneModel("gsFxsGxw4008", "Grandstream GXW4248"));
 
         // Yealink model map
         PHONE_MODEL_MAP.put("SIP-T42G", new PhoneModel("yealinkPhoneSIPT42G", "Yealink T42G"));
