@@ -169,7 +169,7 @@ bundle agent mongo_local_config {
       "dirs" slist => {
         "/var/lib/mongo-local",
         "/var/run/$(mongodb.id)",
-        "/var/log/mongo/local"
+        "/var/log/mongodb/local"
       };
 
   files:
@@ -299,7 +299,7 @@ bundle agent mongo_local_arbiter_config {
       "dirs" slist => {
         "/var/lib/mongo-local-arbiter",
         "/var/run/$(mongodb.id)",
-        "/var/log/mongo/local"
+        "/var/log/mongodb/local"
       };
 
   files:
