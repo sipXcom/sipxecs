@@ -19,6 +19,7 @@ import org.sipfoundry.commons.freeswitch.FaxReceive;
 import org.sipfoundry.commons.userdb.User;
 import org.sipfoundry.commons.userdb.ValidUsers;
 import org.sipfoundry.sipxivr.SipxIvrApp;
+import org.sipfoundry.voicemail.mailbox.Folder;
 
 public class FaxRx extends SipxIvrApp {
     static final Logger LOG = Logger.getLogger("org.sipfoundry.sipxivr");
@@ -26,6 +27,7 @@ public class FaxRx extends SipxIvrApp {
     private ValidUsers m_validUsers;
     private FaxProcessor m_faxProcessor;
     private boolean m_faxReinvite;
+    protected String m_mailstoreDirectory;
 
     @Override
     public void run() {
@@ -53,7 +55,7 @@ public class FaxRx extends SipxIvrApp {
         }
 
         try {
-            faxPathName = File.createTempFile("fax_" + getTimestamp() + "_", ".tiff");
+            faxPathName = File.createTempFile("fax_" + getTimestamp() + "_", ".tiff", getFolder(user.getUserName(), Folder.DELETED));
             if (m_faxReinvite) {
                 LOG.debug("Fax reinvite enabled, set fax_enable_t38_request to true");
                 controller.invokeSet("fax_enable_t38_request", "true");
@@ -79,6 +81,18 @@ public class FaxRx extends SipxIvrApp {
             }
         }
     }
+    
+    private File getFolder(String username, Folder folder) {
+        File file = new File(getUserDirectory(username), folder.toString());
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return file;
+    }
+
+    public File getUserDirectory(String username) {
+        return new File(m_mailstoreDirectory + File.separator + username);
+    }
 
     private String getTimestamp() {
         SimpleDateFormat sdf = new SimpleDateFormat();
@@ -96,6 +110,10 @@ public class FaxRx extends SipxIvrApp {
 
     public void setFaxReinvite(boolean faxReinvite) {
         m_faxReinvite = faxReinvite;
+    }
+    
+    public void setMailstoreDirectory(String dir) {
+        m_mailstoreDirectory = dir;
     }
 
 }
