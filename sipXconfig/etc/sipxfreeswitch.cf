@@ -81,6 +81,22 @@ bundle agent sipxfreeswitch_config {
         perms => mog("644","freeswitch","daemon"),
         edit_line => sipxfreeswitch_modules,
         classes => if_repaired("restart_sipxfreeswitch");
+        
+    any::
+      "$(sipx.SIPX_FSCONFDIR)/sipxpbx/conf/en/dir/sounds.xml"
+        comment => "change sounds.xml",
+        create => "true",
+        perms => mog("644","freeswitch","daemon"),
+        edit_line => sipxfreeswitch_sounds,
+        classes => if_repaired("restart_sipxfreeswitch");
+        
+    any::
+      "$(sipx.SIPX_FSCONFDIR)/sipxpbx/conf/en/en.xml"
+        comment => "change en.xml",
+        create => "true",
+        perms => mog("644","freeswitch","daemon"),
+        edit_line => sipxfreeswitch_en,
+        classes => if_repaired("restart_sipxfreeswitch");
 
     any::
       "$(sipx.SIPX_FSCONFDIR)/sipxpbx/conf/"
@@ -122,6 +138,30 @@ bundle edit_line delete_sysctl_conf_core() {
     "# sipxecs generated - core dumps";
     "fs.suid_dumpable=2";
     "kernel.core_pattern=/tmp/core";
+}
+
+bundle edit_line sipxfreeswitch_sounds {
+  insert_lines:
+    "        <action function=\"speak-text\" data=\"$1\"/>" location => speak_test_loc;
+  delete_lines:
+    "        <action function=\"say\" data=\"$1\" method=\"pronounced\" type=\"name_spelled\"/>";
+}
+
+body location speak_test_loc {
+  select_line_matching => "      </match>";
+  before_after => "before";
+}
+
+bundle edit_line sipxfreeswitch_en {
+  insert_lines:
+    "  <language name=\"en\" say-module=\"en\" sound-prefix=\"$${sounds_dir}/en/us/callie\" tts-engine=\"flite\" tts-voice=\"slt\">" location => en_loc;
+  delete_lines:
+    "  <language name=\"en\" say-module=\"en\" sound-prefix=\"$${sounds_dir}/en/us/callie\" tts-engine=\"cepstral\" tts-voice=\"callie\">";
+}
+
+body location en_loc {
+  select_line_matching => "    <phrases>";
+  before_after => "before";
 }
 
 bundle edit_line sipxfreeswitch_modules {
