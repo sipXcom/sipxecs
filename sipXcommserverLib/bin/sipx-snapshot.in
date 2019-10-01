@@ -423,7 +423,6 @@ function marshal_configuration_information () {
    /etc/ntp
    /etc/hosts
    /etc/crontab
-   /etc/sendmail.cf
    /etc/yum.conf
    /etc/yum
    /etc/yum.repos.d
@@ -443,11 +442,8 @@ function marshal_configuration_information () {
    /var/log/maillog
    /var/log/messages
    /var/log/mongodb
-   /var/log/mongo
    /var/log/elasticsearch
    /var/log/freeswitch
-   /var/log/mysqld.log
-   /var/log/tomcat6
    /var/log/yum.log
 EOF
 
@@ -597,12 +593,9 @@ EOF
    fi
    echo -n "SysVersion: "
    uname -a
-   if [ -f /etc/issue ]
-   then
-     echo ""
-     echo "Release (/etc/issue):"
-     cat /etc/issue
-   fi
+   echo ""
+   echo "Release (/etc/*release):"
+   cat /etc/*release
    if [ -f /etc/redhat-release ]
    then
      echo ""
