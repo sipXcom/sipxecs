@@ -99,7 +99,6 @@ $(sipx.SIPX_LOGDIR)/firewall/*.log {
     create 644 mongod mongod
     daily
     rotate 30
-    size 50M
     compress
     dateext
     missingok
