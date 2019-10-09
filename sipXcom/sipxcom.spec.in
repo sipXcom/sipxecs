@@ -74,7 +74,6 @@ Requires: freeswitch-endpoint-dingaling
 Requires: freeswitch-endpoint-portaudio
 Requires: freeswitch-endpoint-rtmp
 Requires: freeswitch-endpoint-skinny
-Requires: freeswitch-endpoint-skypopen
 Requires: freeswitch-event-cdr-sqlite
 Requires: freeswitch-event-erlang-event
 Requires: freeswitch-event-json-cdr
