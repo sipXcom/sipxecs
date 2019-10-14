@@ -142,6 +142,7 @@ Requires: iptables-services
 Obsoletes: %{name}-doc
 Obsoletes: epel-release
 Obsoletes: sipxhomer
+Obsoletes: freeswitch-endpoint-skypopen
 
 Source: %name-%version.tar.gz
 Prefix: %_prefix
