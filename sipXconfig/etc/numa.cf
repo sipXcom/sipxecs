@@ -1,0 +1,42 @@
+# Copyright (c) 2019 eZuce, Inc. All rights reserved.
+# Contributed to SIPfoundry under a Contributor Agreement
+
+# This software is free software; you can redistribute it and/or modify it under
+# the terms of the Affero General Public License (AGPL) as published by the
+# Free Software Foundation; either version 3 of the License, or (at your option)
+# any later version.
+
+# This software is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+# details.
+
+#
+# NUMA configuration
+#
+bundle agent numa {
+  files:
+    any::
+      "/etc/default/grub"
+        comment => "disable numa",
+        create => "true",
+        perms => mog("644","root","root"),
+        edit_line => numa_off;
+  commands:
+    any::
+      "/usr/sbin/grub2-mkconfig"
+        comment => "run command to apply numa off",
+        args => "-o /etc/grub2.cfg";                    
+}
+
+bundle edit_line numa_off {
+  insert_lines:
+    "GRUB_CMDLINE_LINUX=\"crashkernel=auto rd.lvm.lv=centos/root rd.lvm.lv=centos/swap rhgb quiet numa=off\"" location => grub_cmdline;
+  delete_lines:
+    "GRUB_CMDLINE_LINUX=\"crashkernel=auto rd.lvm.lv=centos/root rd.lvm.lv=centos/swap rhgb quiet\"";
+}
+
+body location grub_cmdline {
+  select_line_matching => "GRUB_DISABLE_RECOVERY=\"true\"";
+  before_after => "before";
+}
