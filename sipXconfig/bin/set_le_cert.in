@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -e
+
+httpd_cert=/etc/httpd/conf.d/ssl
+
+umask 077
+
+cp "$RENEWED_LINEAGE/fullchain.pem" "$httpd_cert/ssl-web.crt"
+cp "$RENEWED_LINEAGE/privkey.pem" "$httpd_cert/ssl-web.key"
+
+chmod 600 "$httpd_cert/ssl-web.crt" "$httpd_cert/ssl-web.key"

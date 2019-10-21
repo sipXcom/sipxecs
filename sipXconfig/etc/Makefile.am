@@ -34,6 +34,7 @@ cfinputsdir = @SIPX_CFINPUTS@/plugin.d
 dist_cfinputs_DATA = \
 	00_sipxconfig.cf \
 	ftp.cf \
+	letsencrypt.cf \
 	mongodb.cf \
 	postgres.cf \
 	sipxfreeswitch.cf \

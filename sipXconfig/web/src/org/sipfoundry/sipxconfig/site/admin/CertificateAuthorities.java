@@ -131,7 +131,10 @@ public abstract class CertificateAuthorities extends BaseComponent implements Pa
         String sipSize;
 
         try {
-            webSize = String.valueOf(CertificateUtils.getEncryptionStrength(webKey));
+            boolean useLetsEncrypt = getCertificateManager().getLetsEncryptStatus();
+            int keySize = useLetsEncrypt ? getCertificateManager().getSettings().getLetsEncryptKeySize()
+                : CertificateUtils.getEncryptionStrength(webKey);
+            webSize = String.valueOf(keySize);
         } catch (Exception e) {
             LOG.error("Could not retrieve encryption strength for web key: " + e.getMessage());
             webSize = undeterminedSize;

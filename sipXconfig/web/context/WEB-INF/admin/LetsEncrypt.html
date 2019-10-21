@@ -1,0 +1,41 @@
+<div jwcid="@common/QuickHelp" value="message:quick.help.letsEncrypt"></div>
+<span jwcid="@common/ErrorMsg" validator="bean:validator" />
+<form jwcid="letsEncryptForm@common/AutoRefreshForm" delegate="bean:validator"
+    interval="10" showRefresh="ognl:autoRefresh">
+  <fieldset>
+    <h3><label jwcid="@Insert" value="message:label.title" /></h3>
+    <table>
+      <label jwcid="leKeySizeLabel@common/FieldPanel" label="message:label.keySize"
+          description="message:description.keySize">
+        <span jwcid="type@PropertySelection" model="ognl:keySizeModel" value="ognl:keySize" />
+      </label>
+
+      <label jwcid="emailLabel@common/FieldPanel" label="message:label.emailAddress"
+          description="message:description.email">
+        <span jwcid="letsEncryptEmail@TextField" value="ognl:letsEncryptEmailValue" />
+      </label>
+
+      <tr><td>&nbsp;</td></tr>
+      <tr>
+        <td>
+          <input jwcid="applyButton@Submit" value="ognl:buttonText" listener="listener:applySettings" />
+        </td>
+        <span jwcid="@If" condition="ognl:certificateManager.letsEncryptStatus">
+          <td>
+            <input jwcid="disableButton@Submit" value="message:button.disableLetsEncrypt"
+                listener="listener:disableLetsEncryptService" />
+            <span jwcid="@common/Confirm" component="component:disableButton" prompt="message:confirm.disableLetsEncrypt" />
+          </td>
+        </span>
+      </tr>
+
+      <span jwcid="@If" condition="ognl:certificateManager.letsEncryptStatus">
+        <tr><td>&nbsp;</td></tr>
+        <tr>
+          <td><label jwcid="@Insert" value="message:label.letsEncryptStatus" /></td>
+          <td><b><label jwcid="leStatusLabel@Insert" value="ognl:letsEncryptStatus" /></b></td>
+        </tr>
+      </span>
+    </table>
+  </fieldset>
+</form>

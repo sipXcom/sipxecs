@@ -36,7 +36,10 @@ bin_SCRIPTS = \
 	sipxtrap \
 	sipx-dns-validator-regions \
 	postgres_change_pwd \
-	audit_clean
+	audit_clean \
+	certbot-wrapper \
+	renew_le_cert \
+	set_le_cert
 
 libexecdir = $(SIPX_LIBEXECDIR)
 libexec_SCRIPTS = \

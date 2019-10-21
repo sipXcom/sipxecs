@@ -11,6 +11,9 @@ package org.sipfoundry.sipxconfig.cert;
 
 import static java.lang.String.format;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.cert.CertificateExpiredException;
@@ -48,10 +51,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
  */
 public class CertificateManagerImpl implements CertificateManager, SetupListener, AlarmProvider {
     private static final Log LOG = LogFactory.getLog(CertificateManager.class);
-    
+
     private static final String ALARM_CERTIFICATE_WILL_EXPIRE_STR = "ALARM_CERTIFICATE_WILL_EXPIRE Certificate: %s will expire on %s";
     private static final String ALARM_CERTIFICATE_DATE_RANGE_FUTURE_STR = "ALARM_CERTIFICATE_DATE_RANGE_FUTURE Certificate: %s valid date range starts on %s, it is not yet valid.";
 
+    private static final String LOCK_FILE = "/var/sipxdata/cfdata/letsencrypt.lock";
     private static final String AUTHORITY_TABLE = "authority";
     private static final String CERT_TABLE = "cert";
     private static final String CERT_COLUMN = "data";
@@ -62,6 +66,8 @@ public class CertificateManagerImpl implements CertificateManager, SetupListener
     private JdbcTemplate m_jdbc;
     private ConfigManager m_configManager;
     private List<String> m_thirdPartyAuthorites;
+    private String m_letsencryptConfigParams;
+    private String m_letsencryptEmailChangeParams;
 
     @Override
     public CertificateSettings getSettings() {
@@ -144,6 +150,11 @@ public class CertificateManagerImpl implements CertificateManager, SetupListener
         LOG.debug("SCHEDULED JOB: Check certificates validity");
         List<Map<String, Object>> certs = getCertificates();
         for (Map<String, Object> cert : certs) {
+            // don't check web certificate when using Let's Encrypt service
+            if (getLetsEncryptStatus() && cert.get("name").toString().equals("ssl-web")) {
+                continue;
+            }
+
             X509Certificate certificate = CertificateUtils.readCertificate(cert.get("data").toString());
             try {
                 //construct the date two weeks after current date
@@ -160,7 +171,7 @@ public class CertificateManagerImpl implements CertificateManager, SetupListener
             }
         }
     }
-    
+
     @Override
     public Collection<AlarmDefinition> getAvailableAlarms(AlarmServerManager manager) {
         return Arrays.asList(new AlarmDefinition[]{ALARM_CERTIFICATE_WILL_EXPIRE, ALARM_CERTIFICATE_DATE_RANGE_FUTURE});
@@ -391,6 +402,89 @@ public class CertificateManagerImpl implements CertificateManager, SetupListener
         return true;
     }
 
+    @Override
+    public boolean getLetsEncryptStatus() {
+        return getSettings().getUseLetsEncrypt();
+    }
+
+    @Override
+    public boolean configureLetsEncryptService(String email, int keySize) {
+        CertificateSettings settings = getSettings();
+        CommandExecutionStatus status = getCertbotCommandStatus();
+
+        if (settings.getLetsEncryptEmail() != null && settings.getLetsEncryptEmail().equals(email) 
+                && settings.getLetsEncryptKeySize() == keySize
+                && (status.equals(CommandExecutionStatus.IN_PROGRESS) || status.equals(CommandExecutionStatus.SUCCESS))) {
+            // nothing was changed or execution in progress
+            return false;
+        }
+
+        String fqdn = m_locationsManager.getPrimaryLocation().getFqdn();
+        String params;
+
+        if (getLetsEncryptStatus() && settings.getLetsEncryptKeySize() == keySize
+                && status.equals(CommandExecutionStatus.SUCCESS)) {
+            // just update the email address (if previous run was successfull)
+            params = String.format(m_letsencryptEmailChangeParams, email);
+        } else {
+            // (re)configure certbot
+            params = String.format(m_letsencryptConfigParams, fqdn, keySize, email);
+        }
+
+        settings.setSettingTypedValue("letsencrypt/useLetsEncrypt", true);
+        settings.setSettingTypedValue("letsencrypt/certbotParams", params);
+        settings.setSettingTypedValue("letsencrypt/letsEncryptEmail", email);
+        settings.setSettingTypedValue("letsencrypt/letsEncryptKeySize", new Integer(keySize));
+        saveSettings(settings);
+
+        File lockFile = new File(LOCK_FILE);
+        if (lockFile.exists()) {
+            // delete lockfile so sipxagent can execute certbot
+            lockFile.delete();
+        }
+
+        m_configManager.configureEverywhere(FEATURE);
+
+        return true;
+    }
+
+    @Override
+    public void disableLetsEncryptService() {
+        CertificateSettings settings = getSettings();
+        settings.setSettingTypedValue("letsencrypt/useLetsEncrypt", false);
+        settings.setSettingTypedValue("letsencrypt/letsEncryptEmail", "");
+        saveSettings(settings);
+        rebuildWebCert(settings.getLetsEncryptKeySize());
+    }
+
+    @Override
+    public CommandExecutionStatus getCertbotCommandStatus() {
+        File lockFile = new File(LOCK_FILE);
+
+        if (!lockFile.exists()) {
+            return CommandExecutionStatus.IN_PROGRESS;
+        }
+
+        String line = "";
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(lockFile));
+            line = br.readLine();
+
+            int val = Integer.valueOf(line);
+            if (val == 0) {
+                return CommandExecutionStatus.SUCCESS;
+            } else {
+                return CommandExecutionStatus.FAIL;
+            }
+        } catch (Exception e) {
+            LOG.error(e);
+            return CommandExecutionStatus.ERROR;
+        } finally {
+            IOUtils.closeQuietly(br);
+        }
+    }
+
     public void setJdbc(JdbcTemplate jdbc) {
         m_jdbc = jdbc;
     }
@@ -409,5 +503,13 @@ public class CertificateManagerImpl implements CertificateManager, SetupListener
 
     public void setThirdPartyAuthorites(List<String> thirdPartyAuthorites) {
         m_thirdPartyAuthorites = thirdPartyAuthorites;
+    }
+
+    public void setLetsencryptConfigParams(String letsencryptConfigParams) {
+        m_letsencryptConfigParams = letsencryptConfigParams;
+    }
+
+    public void setLetsencryptEmailChangeParams(String letsencryptEmailChangeParams) {
+        m_letsencryptEmailChangeParams = letsencryptEmailChangeParams;
     }
 }

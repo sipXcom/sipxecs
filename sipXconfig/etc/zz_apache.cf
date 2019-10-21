@@ -81,23 +81,24 @@ bundle agent apache_config {
         create => "true",
         edit_defaults => empty,
         edit_line => expand_template("$(sipx.SIPX_CONFDIR)/siplogviewer/siplogviewer.conf"),
-        classes => if_repaired("restart_apache");        
+        classes => if_repaired("restart_apache");
 
       "$(sipx.APACHE2_CONFDIR)/ssl/."
         create => "true",
         perms => mog("700","root","root");
 
+      "$(sipx.APACHE2_CONFDIR)/provusers"
+        comment => "create provusers file",
+        perms => mog("644","root","root"),
+        copy_from => local_cp("$(sipx.APACHE2_CONFDIR)/provusers.tmp");
+
+    !letsencrypt::
       "$(sipx.APACHE2_CONFDIR)/ssl/$(ssl_web)"
         comment => "install ssl info $(this.promiser)",
         create => "true",
         copy_from => copy_from_cfdata("$(sipx.location_id)/$(ssl_web)"),
         perms => mog("600","root","root"),
         classes => if_repaired("restart_apache");
-
-      "$(sipx.APACHE2_CONFDIR)/provusers"
-        comment => "create provusers file",
-        perms => mog("644","root","root"),
-        copy_from => local_cp("$(sipx.APACHE2_CONFDIR)/provusers.tmp");
 }
 
 bundle agent apache_sysv_running {

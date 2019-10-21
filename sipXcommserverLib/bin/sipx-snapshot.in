@@ -439,6 +439,7 @@ function marshal_configuration_information () {
    /var/named
    /var/lib/pgsql/data/pg_log
    /var/log/httpd
+   /var/log/letsencrypt
    /var/log/maillog
    /var/log/messages
    /var/log/mongodb

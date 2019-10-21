@@ -27,4 +27,23 @@
       <type><string required="yes"/></type>
     </setting>
   </group>
+
+  <group name="letsencrypt">
+    <setting name="useLetsEncrypt">
+      <type><boolean /></type>
+      <value>0</value>
+    </setting>
+    <setting name="certbotParams">
+      <type><string /></type>
+      <value></value>
+    </setting>
+    <setting name="letsEncryptEmail">
+      <type><string /></type>
+      <value></value>
+    </setting>
+    <setting name="letsEncryptKeySize">
+      <type><integer /></type>
+      <value>2048</value>
+    </setting>
+  </group>
 </model>
