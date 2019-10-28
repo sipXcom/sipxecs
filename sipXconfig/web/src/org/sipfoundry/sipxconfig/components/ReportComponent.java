@@ -178,9 +178,12 @@ public abstract class ReportComponent extends BaseComponent {
             timezone = TimeZone.getTimeZone(getSelectedTimezone());
         }
         int limit = getCdrManager().getSettings().getReportLimit();
-        int count = (limit == 0 ? getCdrManager().getCdrCount(getStartTime(), getEndTime(), getCdrSearch(), getUser()) : limit);
+        int count = getCdrManager().getCdrCount(getStartTime(), getEndTime(), getCdrSearch(), getUser());
+        if (limit != 0 && count > limit) {
+            count = limit;
+        }
         count = (count > CdrManager.MAX_COUNT2) ? CdrManager.MAX_COUNT2 : count;
-        
+
         int offset = 0;
         int pages = count / CdrManager.DUMP_PAGE2;
         int remaining = count - pages * CdrManager.DUMP_PAGE2;
@@ -193,10 +196,10 @@ public abstract class ReportComponent extends BaseComponent {
         }
         if (remaining > 0) {
             List<Cdr> cdrsTemp = getCdrManager().getCdrs(getStartTime(), getEndTime(), getCdrSearch(),
-                getUser(), timezone, remaining, 0);
+                getUser(), timezone, remaining, offset);
             cdrs.addAll(cdrsTemp);
-        }        
-        
+        }
+
         Locale locale = getPage().getLocale();
         Date startdate = getStartTime();
         Date enddate = getEndTime();
