@@ -229,6 +229,6 @@ RUNTIME_EPEL = \
 		p/python-pymongo-gridfs-2.5* \
 		s/sipp-* \
 		p/portaudio-19* \
-		j/jack-audio-connection-kit-*
+		j/jack-audio-connection-kit-* \
 		z/zlib-1.2.7*
 
