@@ -230,4 +230,5 @@ RUNTIME_EPEL = \
 		s/sipp-* \
 		p/portaudio-19* \
 		j/jack-audio-connection-kit-*
+		z/zlib-1.2.7*
 
