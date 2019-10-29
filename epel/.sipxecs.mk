@@ -61,6 +61,7 @@ BUILD_EPEL = \
 # Technincally these could be build and runtime requirements
 RUNTIME_EPEL = \
                 b/broadvoice-0.* \
+		c/codec2-* \
 		e/elasticsearch-* \
 		f/freeswitch-1.10.1* \
 		f/freeswitch-application-abstraction-1.10.1* \
@@ -184,6 +185,7 @@ RUNTIME_EPEL = \
 		i/ilbc2-* \
 		j/js-* \
 		j/jemalloc-* \
+		l/lame-3* \
 		l/lame-libs-3.100* \
 		l/libcodec2-* \
 		l/libev-4.* \
