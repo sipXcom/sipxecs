@@ -61,7 +61,7 @@ BUILD_EPEL = \
 # Technincally these could be build and runtime requirements
 RUNTIME_EPEL = \
                 b/broadvoice-0.* \
-		c/codec2-* \
+		c/codec2-0.8.1* \
 		e/elasticsearch-* \
 		f/freeswitch-1.10.1* \
 		f/freeswitch-application-abstraction-1.10.1* \
@@ -100,6 +100,7 @@ RUNTIME_EPEL = \
 		f/freeswitch-application-stress-1.10.1* \
 		f/freeswitch-application-translate-1.10.1* \
 		f/freeswitch-application-valet_parking-1.10.1* \
+		f/freeswitch-application-video_filter-1.10.1* \
 		f/freeswitch-application-voicemail-1.10.1* \
 		f/freeswitch-application-voicemail-ivr-1.10.1* \
 		f/freeswitch-asrtts-flite-1.10.1* \
@@ -121,6 +122,7 @@ RUNTIME_EPEL = \
 		f/freeswitch-codec-siren-1.10.1* \
 		f/freeswitch-codec-theora-1.10.1* \
 		f/freeswitch-config-vanilla-1.10.1* \
+		f/freeswitch-database-pgsql-1.10.1* \
 		f/freeswitch-debuginfo-1.10.1* \
 		f/freeswitch-devel-1.10.1* \
 		f/freeswitch-endpoint-dingaling-1.10.1* \
@@ -160,6 +162,7 @@ RUNTIME_EPEL = \
 		f/freeswitch-lua-1.10.1* \
 		f/freeswitch-perl-1.10.1* \
 		f/freeswitch-python-1.10.1* \
+		f/freeswitch-application-signalwire-1.10.1* \
 		f/freeswitch-sounds-en-us-callie-1.0.51* \
 		f/freeswitch-sounds-en-us-callie-16000-1.0.51* \
 		f/freeswitch-sounds-en-us-callie-32000-1.0.51* \
