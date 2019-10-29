@@ -62,6 +62,7 @@ BUILD_EPEL = \
 RUNTIME_EPEL = \
                 b/broadvoice-0.* \
 		e/elasticsearch-* \
+		f/freeswitch-1.10.1 \
 		f/freeswitch-application-abstraction-1.10.1* \
 		f/freeswitch-application-avmd-1.10.1* \
 		f/freeswitch-application-blacklist-1.10.1* \
