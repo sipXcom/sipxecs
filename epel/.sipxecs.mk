@@ -218,6 +218,7 @@ RUNTIME_EPEL = \
 		r/rubygem-daemons-* \
 		r/rubygem-pg-* \
 		s/sec-* \
+		s/signalwire-client-* \
 		s/shorewall-5* \
 		s/shorewall-core-* \
 		v/v8-3* \
