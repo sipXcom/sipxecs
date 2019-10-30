@@ -10,12 +10,16 @@
 package org.sipfoundry.sipxivr.common;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.sipfoundry.commons.freeswitch.Collect;
 import org.sipfoundry.commons.freeswitch.Localization;
 import org.sipfoundry.commons.freeswitch.PromptList;
+import org.sipfoundry.commons.freeswitch.Set;
+import org.sipfoundry.commons.freeswitch.Speak;
 import org.sipfoundry.commons.userdb.User;
 import org.sipfoundry.commons.userdb.ValidUsers;
 import org.sipfoundry.sipxivr.ApplicationConfiguraton;
@@ -169,7 +173,7 @@ public class DialByName {
 
         // Build a menu of the matched user's names.
         // Limit the choices to the first 9 (or it gets too long)
-        PromptList pl = new PromptList(m_loc);
+        List<PlayStructure> playStructureList = new ArrayList<PlayStructure>();
         StringBuilder digitMask = new StringBuilder();
         int choices = matches.size();
         if (choices > 9) {
@@ -177,26 +181,37 @@ public class DialByName {
         }
         for (int i = 0; i < choices; i++) {
             String digit = Integer.toString(i+1);
-
+            PromptList pl = new PromptList(m_loc);
+            String name = null;
             User u = matches.get(i);
             // Try to speak the user's recorded name
             File nameFile = m_mailboxManager.getRecordedName(u.getUserName());
-            String namePrompts;
+            String namePrompts = null;
             if (nameFile.exists()) {
                 namePrompts = nameFile.getPath();
             } else {
-                PromptList ext = new PromptList(m_loc);
-                // "Extension {extension}"
-                ext.addFragment("extension", u.getUserName());
-                namePrompts = ext.toString();
+                if (StringUtils.isEmpty(u.getFirstName()) && StringUtils.isEmpty(u.getLastName())) {
+                    PromptList ext = new PromptList(m_loc);
+                    // "Extension {extension}"
+                    ext.addFragment("extension", u.getUserName());
+                    namePrompts = ext.toString();
+                } else {
+                    name = new StringBuilder(u.getFirstName()).append(",").append(u.getLastName()).toString();
+                }
             }
             LOG.debug(String.format("DialByName::selectChoice menu %s for %s", digit, u.getUserName()));
             // "Press {number} for {name}"
-            pl.addFragment("press_n_for", digit, namePrompts);
+            if (namePrompts != null) {
+                pl.addFragment("press_n_for", digit, namePrompts);
+            } else {
+                pl.addFragment("press_n_for", digit);
+            }
             digitMask.append(digit);
+            PlayStructure playStructure = new PlayStructure();
+            playStructure.setPromptList(pl);
+            playStructure.setName(name);
+            playStructureList.add(playStructure);
         }
-        // "To cancel and enter a different name, press *."
-        pl.addFragment("dial_by_name_enter_different_name");
 
         // Dialog for the caller to enter one of the choices
         int timeoutCount = 0;
@@ -204,10 +219,23 @@ public class DialByName {
             if (timeoutCount > m_config.getNoInputCount()) {
                 return new DialByNameChoice(new IvrChoice("", IvrChoiceReason.FAILURE));
             }
-
+            
             // Play the menu
+            for (PlayStructure playStructure : playStructureList) {
+                m_loc.play(playStructure.getPromptList(), digitMask+"*");
+                if (!StringUtils.isEmpty(playStructure.getName())) {
+                    new Set(m_loc.getFreeSwitchEventSocketInterface(), "tts_engine", "flite").go();
+                    new Set(m_loc.getFreeSwitchEventSocketInterface(), "tts_voice", "slt").go();
+                    new Speak(m_loc.getFreeSwitchEventSocketInterface(), playStructure.getName()).go();
+                    new Set(m_loc.getFreeSwitchEventSocketInterface(), "playback_terminators", "#").go();
+                }
+            }
+            
+            // "To cancel and enter a different name, press *."
+            PromptList pl = new PromptList(m_loc);
+            pl.addFragment("dial_by_name_enter_different_name");
             m_loc.play(pl, digitMask+"*");
-
+            
             // Wait for the caller to enter a digit
             Collect c = new Collect(m_loc.getFreeSwitchEventSocketInterface(), 1, 
                     m_config.getInitialTimeout(), 0, 0);
@@ -280,5 +308,23 @@ public class DialByName {
 
     public void setMailboxManager(MailboxManager mgr) {
         m_mailboxManager = mgr;
+    }
+    
+    private class PlayStructure {
+        private PromptList m_promptList;
+        private String m_name;
+        
+        public PromptList getPromptList() {
+            return m_promptList;
+        }
+        public void setPromptList(PromptList promptList) {
+            m_promptList = promptList;
+        }
+        public String getName() {
+            return m_name;
+        }
+        public void setName(String name) {
+            m_name = name;
+        }
     }
 }
