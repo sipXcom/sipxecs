@@ -226,9 +226,9 @@ RUNTIME_EPEL = \
 		w/wxGTK-2.* \
 		w/wxGTK-gl-* \
 		l/leveldb-* \
+		l/libks-1.2.0* \
 		p/python-pymongo-gridfs-2.5* \
 		s/sipp-* \
 		p/portaudio-19* \
-		j/jack-audio-connection-kit-* \
-		z/zlib-1.2.7*
+		j/jack-audio-connection-kit-*
 
