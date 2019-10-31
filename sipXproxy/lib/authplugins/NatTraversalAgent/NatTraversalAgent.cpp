@@ -469,7 +469,7 @@ void NatTraversalAgent::handleOutputMessage( SipMessage& message,
       }
       else
       {
-         Os::Logger::instance().log(FAC_NAT, PRI_DEBUG, "NatTraversalAgent[%s]::handleOutputMessage failed to retrieve CallTracker to handle request"
+         Os::Logger::instance().log(FAC_NAT, PRI_NOTICE, "NatTraversalAgent[%s]::handleOutputMessage failed to retrieve CallTracker to handle request"
                                             , mInstanceName.data() );
       }
    }

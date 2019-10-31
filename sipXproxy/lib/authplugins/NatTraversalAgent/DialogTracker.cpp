@@ -179,7 +179,7 @@ bool DialogTracker::handleRequest( SipMessage& message, const char* address, int
    }
    else
    {
-      Os::Logger::instance().log(FAC_NAT, PRI_DEBUG, "DialogTracker[%s]::DialogTracker: received unhandled request: %s",
+      Os::Logger::instance().log(FAC_NAT, PRI_NOTICE, "DialogTracker[%s]::DialogTracker: received unhandled request: %s",
                                         mHandle.data(), method.data() );
    }
    return bTrackRequestResponse;

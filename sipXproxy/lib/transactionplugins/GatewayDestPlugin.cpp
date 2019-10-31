@@ -143,7 +143,7 @@ void GatewayDestPlugin::addLocationInfo(SipMessage& message, const GatewayDestRe
   }
   else
   {
-    OS_LOG_DEBUG(FAC_SIP, "GatewayDestPlugin::" << __FUNCTION__ << "failed to encode location info");
+    OS_LOG_NOTICE(FAC_SIP, "GatewayDestPlugin::" << __FUNCTION__ << "failed to encode location info");
   }
 }
 
@@ -194,7 +194,7 @@ void GatewayDestPlugin::handleIncoming(SipMessage& message, const char* address,
         }
         else
         {
-          OS_LOG_DEBUG(FAC_SIP, "GatewayDestPlugin::" << __FUNCTION__ << " No gateway destination record in mongo for callid:"
+          OS_LOG_NOTICE(FAC_SIP, "GatewayDestPlugin::" << __FUNCTION__ << " No gateway destination record in mongo for callid:"
               << targetCallId.data() << ", to-tag:" << targetToTag.data() << ", from-tag:" << targetFromTag.data());
         }
       }

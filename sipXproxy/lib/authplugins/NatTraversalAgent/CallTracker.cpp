@@ -282,7 +282,7 @@ bool CallTracker::handleRequest( SipMessage& message, const char* address, int p
    {
       // we can see that log entry in 'normal' cases when a dialog-forming INVITE we processed
       // is coming back to us and is spiraling, i.e. carries a X-Sipx-Spiral: header.
-      Os::Logger::instance().log(FAC_NAT, PRI_DEBUG, "CallTracker[%zd]::handleRequest did not find SIP_SIPX_SESSION_CONTEXT_ID_HEADER in message"
+      Os::Logger::instance().log(FAC_NAT, PRI_NOTICE, "CallTracker[%zd]::handleRequest did not find SIP_SIPX_SESSION_CONTEXT_ID_HEADER in message"
                                       , mHandle );
    }
    deleteSessionContextsReadyForDeletion();
@@ -306,7 +306,7 @@ void CallTracker::handleResponse( SipMessage& message, const char* address, int 
    }
    else
    {
-      Os::Logger::instance().log(FAC_NAT, PRI_DEBUG, "CallTracker[%zd]::handleResponse: no session context present in response", mHandle );
+      Os::Logger::instance().log(FAC_NAT, PRI_NOTICE, "CallTracker[%zd]::handleResponse: no session context present in response", mHandle );
    }
    deleteSessionContextsReadyForDeletion();
 }

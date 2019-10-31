@@ -273,7 +273,7 @@ EnforceAuthRules::authorizeAndModify(const UtlString& id,    /**< The authentica
              * supply any information about what is needed, so do not set the reason.
              */
             result = DENY;
-            Os::Logger::instance().log(FAC_AUTH, PRI_DEBUG, "EnforceAuthRules[%s]::authorizeAndModify "
+            Os::Logger::instance().log(FAC_AUTH, PRI_NOTICE, "EnforceAuthRules[%s]::authorizeAndModify "
                           "DENY - request not authenticated because of originator id not defined, but requires permission for call %s and target %s requiredPermissions: %s",
                           mInstanceName.data(), callId.data(), strUri.data(), requiredPermissionsStr.data());
          }

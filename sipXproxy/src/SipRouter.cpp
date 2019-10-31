@@ -656,7 +656,7 @@ SipRouter::applyCongestionPolicy(SipMessage *sipRequest, UtlString &policy)
     else if (policy == CONGESTION_POLICY_IGNORE)
     {
         // do nothing but log
-        OS_LOG_DEBUG(FAC_SIP, "SipRouter::applyCongestionPolicy - ignore request");
+        OS_LOG_NOTICE(FAC_SIP, "SipRouter::applyCongestionPolicy - ignore request");
     }
 }
 
@@ -2130,7 +2130,7 @@ bool SipRouter::isAuthenticated(const SipMessage& sipRequest,
 
       if (mRealm.compareTo(requestRealm) ) // case sensitive check that realm is correct
       {
-         Os::Logger::instance().log(FAC_AUTH, PRI_DEBUG,
+         Os::Logger::instance().log(FAC_AUTH, PRI_NOTICE,
                        "SipRouter:isAuthenticated::isAuthenticated "
                        "Realm does not match");
       }
@@ -2205,7 +2205,7 @@ bool SipRouter::isAuthenticated(const SipMessage& sipRequest,
              }
              else
              {
-                Os::Logger::instance().log(FAC_AUTH, PRI_DEBUG,
+                Os::Logger::instance().log(FAC_AUTH, PRI_NOTICE,
                               "SipRouter::isAuthenticated() "
                               "authentication failed as '%s'",
                               requestUser.data());

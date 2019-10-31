@@ -196,7 +196,7 @@ void NatTraversalRules::initializeNatTraversalInfo( void )
             Url url( hostIpAddress, TRUE );
             mPublicTransport.setAddress( hostIpAddress );
             mSecurePublicTransport.setAddress( hostIpAddress );
-            Os::Logger::instance().log(FAC_NAT, PRI_DEBUG, "NatTraversalRules::initializeNatTraversalInfo - No child Node named '%s', using host IP: '%s'", XML_TAG_PUBLIC_ADDRESS, mPublicTransport.getAddress().data() );
+            Os::Logger::instance().log(FAC_NAT, PRI_NOTICE, "NatTraversalRules::initializeNatTraversalInfo - No child Node named '%s', using host IP: '%s'", XML_TAG_PUBLIC_ADDRESS, mPublicTransport.getAddress().data() );
          }
 
          // get the 'publicport' node
