@@ -7,6 +7,7 @@
     <property name="eslRequestController" ref="aaEslRequestController" />
     <property name="validUsers" ref="validUsers" />
     <property name="mailboxManager" ref="mailboxManager" />
+    <property name="tts" value="${tts}"/>
   </bean>
 
   <bean id="aaEslRequestController" class="org.sipfoundry.attendant.AaEslRequestController" scope="eslRequest">

@@ -68,6 +68,10 @@
       <type><boolean /></type>
       <value>1</value>    
     </setting>
+    <setting name="tts">
+      <type><boolean /></type>
+      <value>1</value>    
+    </setting>    
     <setting name="path">
       <string />
     </setting>

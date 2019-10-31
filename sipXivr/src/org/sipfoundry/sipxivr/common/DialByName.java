@@ -25,6 +25,7 @@ import org.sipfoundry.commons.userdb.ValidUsers;
 import org.sipfoundry.sipxivr.ApplicationConfiguraton;
 import org.sipfoundry.sipxivr.common.IvrChoice.IvrChoiceReason;
 import org.sipfoundry.voicemail.mailbox.MailboxManager;
+import org.springframework.beans.factory.annotation.Required;
 
 public class DialByName {
     static final Logger LOG = Logger.getLogger("org.sipfoundry.sipxivr");
@@ -37,6 +38,7 @@ public class DialByName {
     private ApplicationConfiguraton m_config;
     private boolean m_OnlyVoicemailUsers;   // Limit users to those who have voicemail permssions
     private MailboxManager m_mailboxManager;
+    private boolean m_tts;
 
     /**
      * The Dial by Name dialog.
@@ -190,7 +192,7 @@ public class DialByName {
             if (nameFile.exists()) {
                 namePrompts = nameFile.getPath();
             } else {
-                if (StringUtils.isEmpty(u.getFirstName()) && StringUtils.isEmpty(u.getLastName())) {
+                if ((StringUtils.isEmpty(u.getFirstName()) && StringUtils.isEmpty(u.getLastName())) || !m_tts) {
                     PromptList ext = new PromptList(m_loc);
                     // "Extension {extension}"
                     ext.addFragment("extension", u.getUserName());
@@ -199,7 +201,7 @@ public class DialByName {
                     name = new StringBuilder(u.getFirstName()).append(",").append(u.getLastName()).toString();
                 }
             }
-            LOG.debug(String.format("DialByName::selectChoice menu %s for %s", digit, u.getUserName()));
+            LOG.debug(String.format("DialByName::selectChoice menu %s for %s", digit, u.getUserName()));           
             // "Press {number} for {name}"
             if (namePrompts != null) {
                 pl.addFragment("press_n_for", digit, namePrompts);
@@ -309,7 +311,12 @@ public class DialByName {
     public void setMailboxManager(MailboxManager mgr) {
         m_mailboxManager = mgr;
     }
-    
+
+    @Required
+    public void setTts(boolean tts) {
+        m_tts = tts;
+    }
+
     private class PlayStructure {
         private PromptList m_promptList;
         private String m_name;

@@ -25,6 +25,7 @@ import org.sipfoundry.sipxivr.common.DialByName;
 import org.sipfoundry.sipxivr.common.DialByNameChoice;
 import org.sipfoundry.sipxivr.common.IvrChoice.IvrChoiceReason;
 import org.sipfoundry.voicemail.mailbox.MailboxManager;
+import org.springframework.beans.factory.annotation.Required;
 
 public class Attendant extends SipxIvrApp {
     static final Logger LOG = Logger.getLogger("org.sipfoundry.sipxivr");
@@ -32,6 +33,7 @@ public class Attendant extends SipxIvrApp {
     private ValidUsers m_validUsers;
     private String m_operatorAddr;
     private MailboxManager m_mailboxManager;
+    private boolean m_tts;
 
     enum NextAction {
         repeat, exit, nextAttendant;
@@ -288,6 +290,7 @@ public class Attendant extends SipxIvrApp {
             }
             dbn.setValidUsers(m_validUsers);
             dbn.setMailboxManager(m_mailboxManager);
+            dbn.setTts(m_tts);
             DialByNameChoice choice = dbn.dialByName(item.getParameter());
             if (choice.getIvrChoiceReason() == IvrChoiceReason.CANCELED) {
                 return NextAction.repeat;
@@ -401,4 +404,8 @@ public class Attendant extends SipxIvrApp {
         m_mailboxManager = mgr;
     }
 
+    @Required
+    public void setTts(boolean tts) {
+        m_tts = tts;
+    }        
 }
