@@ -39,6 +39,7 @@ public class DialByName {
     private boolean m_OnlyVoicemailUsers;   // Limit users to those who have voicemail permssions
     private MailboxManager m_mailboxManager;
     private boolean m_tts;
+    private String m_ttsVoice;
 
     /**
      * The Dial by Name dialog.
@@ -227,7 +228,7 @@ public class DialByName {
                 m_loc.play(playStructure.getPromptList(), digitMask+"*");
                 if (!StringUtils.isEmpty(playStructure.getName())) {
                     new Set(m_loc.getFreeSwitchEventSocketInterface(), "tts_engine", "flite").go();
-                    new Set(m_loc.getFreeSwitchEventSocketInterface(), "tts_voice", "slt").go();
+                    new Set(m_loc.getFreeSwitchEventSocketInterface(), "tts_voice", m_ttsVoice).go();
                     new Speak(m_loc.getFreeSwitchEventSocketInterface(), playStructure.getName()).go();
                     new Set(m_loc.getFreeSwitchEventSocketInterface(), "playback_terminators", "#").go();
                 }
@@ -315,6 +316,11 @@ public class DialByName {
     @Required
     public void setTts(boolean tts) {
         m_tts = tts;
+    }
+
+    @Required
+    public void setTtsVoice(String ttsVoice) {
+        m_ttsVoice = ttsVoice;
     }
 
     private class PlayStructure {

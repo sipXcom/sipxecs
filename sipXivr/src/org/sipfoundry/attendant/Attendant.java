@@ -34,6 +34,7 @@ public class Attendant extends SipxIvrApp {
     private String m_operatorAddr;
     private MailboxManager m_mailboxManager;
     private boolean m_tts;
+    private String m_ttsVoice;
 
     enum NextAction {
         repeat, exit, nextAttendant;
@@ -291,6 +292,7 @@ public class Attendant extends SipxIvrApp {
             dbn.setValidUsers(m_validUsers);
             dbn.setMailboxManager(m_mailboxManager);
             dbn.setTts(m_tts);
+            dbn.setTtsVoice(m_ttsVoice);
             DialByNameChoice choice = dbn.dialByName(item.getParameter());
             if (choice.getIvrChoiceReason() == IvrChoiceReason.CANCELED) {
                 return NextAction.repeat;
@@ -407,5 +409,10 @@ public class Attendant extends SipxIvrApp {
     @Required
     public void setTts(boolean tts) {
         m_tts = tts;
-    }        
+    }
+
+    @Required
+    public void setTtsVoice(String ttsVoice) {
+        m_ttsVoice = ttsVoice;
+    }
 }

@@ -51,6 +51,22 @@
       </option>
     </enum>
   </type>
+  <type id="tts_voice_type">
+    <enum>
+      <option>
+        <value>slt</value>
+      </option>
+      <option>
+        <value>rms</value>
+      </option>
+      <option>
+        <value>awb</value>
+      </option>
+      <option>
+        <value>kal</value>
+      </option>            
+    </enum>
+  </type>  
   <group name="ivr">
     <setting name="log.level">
       <type refid="loglevel" />
@@ -70,8 +86,12 @@
     </setting>
     <setting name="tts">
       <type><boolean /></type>
-      <value>1</value>    
-    </setting>    
+      <value>1</value>
+    </setting>
+    <setting name="tts_voice">
+      <type refid="tts_voice_type" />
+      <value>slt</value>
+    </setting>
     <setting name="path">
       <string />
     </setting>
