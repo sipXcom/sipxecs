@@ -1,0 +1,11 @@
+[Unit] 
+Description=Tftp Server 
+Requires=tftp.socket 
+Documentation=man:in.tftpd 
+
+[Service] 
+ExecStart=/usr/sbin/in.tftpd -s @SIPX_VARDIR@/configserver/phone/profile/tftproot --blocksize 1300 
+StandardInput=socket 
+
+[Install] 
+Also=tftp.socket

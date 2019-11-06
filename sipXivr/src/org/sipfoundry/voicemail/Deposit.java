@@ -110,7 +110,7 @@ public class Deposit extends AbstractVmAction implements ApplicationContextAware
 
                             String digit = getDtmfDigit();
                             if (digit != null && digit.equals("0")) {
-                                if (tempMessage.getDuration() > 2) {
+                                if (tempMessage.getDuration() > 1) {
                                     m_mailboxManager.storeInInbox(user, tempMessage);
                                     play("msg_sent", "");
                                 } else {
@@ -171,7 +171,7 @@ public class Deposit extends AbstractVmAction implements ApplicationContextAware
 
                         // "2" means send the message.
                         if (digit.equals("2")) {
-                            if (tempMessage.getDuration() > 2) {
+                            if (tempMessage.getDuration() > 1) {
                                 tempMessage.setCallerIdName(getChannelCallerIdName());
                                 tempMessage.setCallerIdNumber(getChannelCallerIdNumber());
                                 m_mailboxManager.storeInInbox(user, tempMessage);
