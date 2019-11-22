@@ -1,9 +1,22 @@
+<span jwcid="@If" condition="ognl:certificateType == 'web' && useLetsEncryptService">
+    <span jwcid="@admin/LetsEncrypt" />
+</span>
+<span jwcid="@Else">
+
 <div jwcid="@common/QuickHelp" value="message:quick.help.import"></div>
 <span jwcid="@common/ErrorMsg" validator="bean:validator" />
 <form jwcid="importForm@Form" delegate="bean:validator">
   <fieldset>
     <table>
       <tbody>
+        <span jwcid="@If" condition="ognl:certificateType == 'web' && !useLetsEncryptService">
+          <tr>
+            <label jwcid="useLetsEncryptLabel@common/FieldPanel" label="message:label.useLetsEncrypt">
+              <input jwcid="useLetsEncrypt@Checkbox" id="useLetsEncrypt:checkbox" value="ognl:useLetsEncryptValue"
+                onchange="javascript:this.form.submit();" />
+            </label>
+          </tr>
+        </span>
         <tr>
           <label jwcid="certificateLabel@common/FieldPanel" label="message:label.crtFile"
             description="message:description.certificate">
@@ -138,3 +151,4 @@
     <span jwcid="@Insert" value="ognl:csr"/>
   </textarea>
 </form>
+</span>

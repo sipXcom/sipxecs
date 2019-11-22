@@ -28,6 +28,8 @@
     <property name="configManager" ref="configManager"/>
     <property name="jdbc" ref="configJdbcTemplate"/>
     <property name="locationsManager" ref="locationsManager"/>
+    <property name="letsencryptConfigParams" value="certonly --standalone -n -d %s --rsa-key-size %d --email %s --deploy-hook /usr/bin/set_le_cert --force-renewal --agree-tos --no-eff-email"/>
+    <property name="letsencryptEmailChangeParams" value="register --update-registration -m %s"/>
     <property name="thirdPartyAuthorites">
       <list>
         <value>verisignclass3ca</value>
@@ -38,7 +40,7 @@
   </bean>
   
   <task:scheduled-tasks>
-	<task:scheduled ref="certificateManagerImpl" method="checkAllCertificatesVlaidity" cron="0 0 0/23 * * ?" />
+    <task:scheduled ref="certificateManagerImpl" method="checkAllCertificatesVlaidity" cron="0 0 0/23 * * ?" />
   </task:scheduled-tasks>
 
   <bean id="certificateSettings" class="org.sipfoundry.sipxconfig.cert.CertificateSettings" parent="settingsBean">

@@ -1,0 +1,59 @@
+# Copyright (c) 2019 eZuce, Inc. All rights reserved.
+
+# This software is free software; you can redistribute it and/or modify it under
+# the terms of the Affero General Public License (AGPL) as published by the
+# Free Software Foundation; either version 3 of the License, or (at your option)
+# any later version.
+
+# This software is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+# details.
+
+#
+# Let's Encrypt configuration
+#
+
+bundle agent letsencrypt {
+  methods:
+    any::
+      "any" usebundle => letsencrypt_config;
+}
+
+bundle agent letsencrypt_config {
+  vars:
+    # execute it every day at 1am
+    "cron" string => "0 1 * * * /usr/bin/renew_le_cert";
+    "cron_id" string => ".*renew_le_cert.*"; #regex
+    "fqdn" string => "$(sipx.host).$(sipx.net_domain)";
+    "lock_file" string => "$(sipx.SIPX_CFDATA)/letsencrypt.lock";
+
+  classes:
+    "lock_exists" expression => fileexists("$(lock_file)");
+
+  methods:
+    letsencrypt::
+      "any" usebundle => add_crontab("$(cron_id)", "root", "$(cron)");
+
+    !letsencrypt::
+      "any" usebundle => remove_crontab("$(cron_id)", "root");
+
+  commands:
+    letsencrypt.!lock_exists::
+      "/usr/bin/systemctl"
+        comment => "stop apache server",
+        args => "stop httpd.service";
+
+      "/usr/bin/certbot-wrapper"
+        comment => "execute certbot for $(fqdn): letsencrypt_certbot_params",
+        args => "$(sipx.letsencrypt_certbot_params)";
+
+      "/usr/bin/systemctl"
+        comment => "start apache server",
+        args => "start httpd.service";
+
+  files:
+    !letsencrypt.lock_exists::
+      "$(lock_file)"
+        delete => unlink;
+}

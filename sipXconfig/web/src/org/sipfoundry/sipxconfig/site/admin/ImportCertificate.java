@@ -106,6 +106,11 @@ public abstract class ImportCertificate extends BaseComponent implements PageBeg
 
     public abstract void setKeySizeDescr(String descr);
 
+    public abstract boolean getUseLetsEncryptValue();
+
+    @Persist("client")
+    public abstract void setUseLetsEncryptValue(boolean useLetsEncryptValue);
+
     public void rebuild() {
         if (getCertificateType().equals(WEB)) {
             getCertificateManager().rebuildWebCert(getKeySize());
@@ -292,5 +297,9 @@ public abstract class ImportCertificate extends BaseComponent implements PageBeg
             settings = getCertificateManager().getSettings();
             setSettings(settings);
         }
+    }
+
+    public boolean getUseLetsEncryptService() {
+        return getUseLetsEncryptValue() || getCertificateManager().getLetsEncryptStatus();
     }
 }

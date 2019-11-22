@@ -27,6 +27,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.sipfoundry.sipxconfig.cfgmgt.CfengineModuleConfiguration;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigProvider;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigRequest;
@@ -120,6 +121,23 @@ public class CertificateConfig implements ConfigProvider {
             } finally {
                 IOUtils.closeQuietly(authoritiesStore);
             }
+
+            if (location.isPrimary()) {
+                writer = new FileWriter(new File(dir, "letsencrypt.cfdat"));
+
+                try {
+                    CfengineModuleConfiguration config = new CfengineModuleConfiguration(writer);
+                    CertificateSettings settings = m_certificateManager.getSettings();
+
+                    config.writeClass("letsencrypt", settings.getUseLetsEncrypt());
+                    config.write("letsencrypt_certbot_params", settings.getCertbotParams());
+                    config.write("letsencrypt_email", settings.getLetsEncryptEmail());
+                    config.write("letsencrypt_key_size", settings.getLetsEncryptKeySize());
+                } finally {
+                    IOUtils.closeQuietly(writer);
+                }
+            }
+
         }
     }
 

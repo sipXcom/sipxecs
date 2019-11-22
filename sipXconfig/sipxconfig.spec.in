@@ -91,6 +91,8 @@ Requires: freeswitch >= 1.0.7
 Requires: freeswitch-sounds-en-us-callie-all
 Requires: elasticsearch >= 1.7.1
 
+Requires: certbot
+
 # XX-10822 Required EPEL rpms are now found in build. Pointing to this repo has
 # proven to be dangerous
 Obsoletes: epel-release
