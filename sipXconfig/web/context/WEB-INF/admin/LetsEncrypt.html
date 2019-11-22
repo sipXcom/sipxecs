@@ -4,18 +4,11 @@
     interval="10" showRefresh="ognl:autoRefresh">
   <fieldset>
     <h3><label jwcid="@Insert" value="message:label.title" /></h3>
+    <br>
+    <span jwcid="@setting/SettingsFieldset" settings="ognl:settings.settings.getSetting('letsencrypt')"
+        renderGroupTitle="false" settingsToHide="useLetsEncrypt,certbotParams" />
+    <br>
     <table>
-      <label jwcid="leKeySizeLabel@common/FieldPanel" label="message:label.keySize"
-          description="message:description.keySize">
-        <span jwcid="type@PropertySelection" model="ognl:keySizeModel" value="ognl:keySize" />
-      </label>
-
-      <label jwcid="emailLabel@common/FieldPanel" label="message:label.emailAddress"
-          description="message:description.email">
-        <span jwcid="letsEncryptEmail@TextField" value="ognl:letsEncryptEmailValue" />
-      </label>
-
-      <tr><td>&nbsp;</td></tr>
       <tr>
         <td>
           <input jwcid="applyButton@Submit" value="ognl:buttonText" listener="listener:applySettings" />

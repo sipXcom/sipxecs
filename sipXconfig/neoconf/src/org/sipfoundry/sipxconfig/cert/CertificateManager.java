@@ -98,7 +98,7 @@ public interface CertificateManager {
 
     public boolean getLetsEncryptStatus();
 
-    public boolean configureLetsEncryptService(String email, int keySize);
+    public boolean configureLetsEncryptService(CertificateSettings settings);
 
     public void disableLetsEncryptService();
 

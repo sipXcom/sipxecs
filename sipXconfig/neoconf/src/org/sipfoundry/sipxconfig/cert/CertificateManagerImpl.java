@@ -408,12 +408,12 @@ public class CertificateManagerImpl implements CertificateManager, SetupListener
     }
 
     @Override
-    public boolean configureLetsEncryptService(String email, int keySize) {
-        CertificateSettings settings = getSettings();
+    public boolean configureLetsEncryptService(CertificateSettings newSettings) {
+        CertificateSettings oldSettings = getSettings();
         CommandExecutionStatus status = getCertbotCommandStatus();
 
-        if (settings.getLetsEncryptEmail() != null && settings.getLetsEncryptEmail().equals(email) 
-                && settings.getLetsEncryptKeySize() == keySize
+        if (oldSettings.getLetsEncryptEmail() != null && oldSettings.getLetsEncryptEmail().equals(newSettings.getLetsEncryptEmail()) 
+                && oldSettings.getLetsEncryptKeySize().equals(newSettings.getLetsEncryptKeySize())
                 && (status.equals(CommandExecutionStatus.IN_PROGRESS) || status.equals(CommandExecutionStatus.SUCCESS))) {
             // nothing was changed or execution in progress
             return false;
@@ -422,20 +422,19 @@ public class CertificateManagerImpl implements CertificateManager, SetupListener
         String fqdn = m_locationsManager.getPrimaryLocation().getFqdn();
         String params;
 
-        if (getLetsEncryptStatus() && settings.getLetsEncryptKeySize() == keySize
+        if (getLetsEncryptStatus() && oldSettings.getLetsEncryptKeySize().equals(newSettings.getLetsEncryptKeySize())
                 && status.equals(CommandExecutionStatus.SUCCESS)) {
             // just update the email address (if previous run was successfull)
-            params = String.format(m_letsencryptEmailChangeParams, email);
+            params = String.format(m_letsencryptEmailChangeParams, newSettings.getLetsEncryptEmail());
         } else {
             // (re)configure certbot
-            params = String.format(m_letsencryptConfigParams, fqdn, keySize, email);
+            params = String.format(m_letsencryptConfigParams, fqdn, newSettings.getLetsEncryptKeySize(),
+                    newSettings.getLetsEncryptEmail());
         }
 
-        settings.setSettingTypedValue("letsencrypt/useLetsEncrypt", true);
-        settings.setSettingTypedValue("letsencrypt/certbotParams", params);
-        settings.setSettingTypedValue("letsencrypt/letsEncryptEmail", email);
-        settings.setSettingTypedValue("letsencrypt/letsEncryptKeySize", new Integer(keySize));
-        saveSettings(settings);
+        newSettings.setSettingTypedValue("letsencrypt/useLetsEncrypt", true);
+        newSettings.setSettingTypedValue("letsencrypt/certbotParams", params);
+        saveSettings(newSettings);
 
         File lockFile = new File(LOCK_FILE);
         if (lockFile.exists()) {

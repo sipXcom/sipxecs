@@ -23,14 +23,12 @@ import org.apache.tapestry.annotations.Bean;
 import org.apache.tapestry.annotations.InjectObject;
 import org.apache.tapestry.event.PageBeginRenderListener;
 import org.apache.tapestry.event.PageEvent;
-import org.apache.tapestry.form.IPropertySelectionModel;
 import org.sipfoundry.sipxconfig.cert.CertificateManager;
 import org.sipfoundry.sipxconfig.cert.CertificateSettings;
 import org.sipfoundry.sipxconfig.cert.CommandExecutionStatus;
 import org.sipfoundry.sipxconfig.common.UserException;
 import org.sipfoundry.sipxconfig.components.SipxValidationDelegate;
 import org.sipfoundry.sipxconfig.components.TapestryUtils;
-import org.sipfoundry.sipxconfig.site.common.IntegerPropertySelectionModel;
 
 public abstract class LetsEncrypt extends BaseComponent implements PageBeginRenderListener {
     private static final Log LOG = LogFactory.getLog(LetsEncrypt.class);
@@ -41,13 +39,9 @@ public abstract class LetsEncrypt extends BaseComponent implements PageBeginRend
     @InjectObject(value = "spring:certificateManager")
     public abstract CertificateManager getCertificateManager();
 
-    public abstract String getLetsEncryptEmailValue();
+    public abstract CertificateSettings getSettings();
 
-    public abstract void setLetsEncryptEmailValue(String letsEncryptEmailValue);
-
-    public abstract void setKeySize(int keySize);
-
-    public abstract int getKeySize();
+    public abstract void setSettings(CertificateSettings settings);
 
     @Override
     public void pageBeginRender(PageEvent evt) {
@@ -55,25 +49,24 @@ public abstract class LetsEncrypt extends BaseComponent implements PageBeginRend
             return;
         }
 
-        setKeySize(getCertificateManager().getSettings().getLetsEncryptKeySize());
-        setLetsEncryptEmailValue(getCertificateManager().getSettings().getLetsEncryptEmail());
-    }
-
-    public IPropertySelectionModel getKeySizeModel() {
-        return new IntegerPropertySelectionModel(this, new int[] {
-            2048, 4096
-        });
+        if (getSettings() == null) {
+            setSettings(getCertificateManager().getSettings());
+        }
     }
 
     public void applySettings() {
-        String email = getLetsEncryptEmailValue();
+        CertificateSettings settings = getSettings();
+
+        String email = settings.getLetsEncryptEmail();
 
         if (StringUtils.isBlank(email) || !email.matches(".+@.+\\..+")) {
             getValidator().record(new UserException("&msg.invalidEmail"), getMessages());
             return;
         }
 
-        getCertificateManager().configureLetsEncryptService(email, getKeySize());
+        if (getCertificateManager().configureLetsEncryptService(settings)) {
+            setSettings(getCertificateManager().getSettings());
+        }
     }
 
     public void disableLetsEncryptService() {

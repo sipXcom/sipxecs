@@ -28,6 +28,17 @@
     </setting>
   </group>
 
+  <type id="keySize">
+    <enum>
+      <option>
+        <value>2048</value>
+      </option>
+      <option>
+        <value>4096</value>
+      </option>
+    </enum>
+  </type>  
+
   <group name="letsencrypt">
     <setting name="useLetsEncrypt">
       <type><boolean /></type>
@@ -37,13 +48,13 @@
       <type><string /></type>
       <value></value>
     </setting>
-    <setting name="letsEncryptEmail">
-      <type><string /></type>
-      <value></value>
-    </setting>
     <setting name="letsEncryptKeySize">
-      <type><integer /></type>
+      <type refid="keySize" />
       <value>2048</value>
+    </setting>
+    <setting name="letsEncryptEmail">
+      <type><string required="yes"/></type>
+      <value></value>
     </setting>
   </group>
 </model>
