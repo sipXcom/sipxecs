@@ -61,6 +61,7 @@ BUILD_EPEL = \
 # Technincally these could be build and runtime requirements
 RUNTIME_EPEL = \
                 b/broadvoice-0.* \
+		c/certbot-* \
 		c/codec2-0.8.1* \
 		e/elasticsearch-* \
 		f/freeswitch-1.10.1* \
@@ -213,7 +214,19 @@ RUNTIME_EPEL = \
 		p/poco-xml-* \
 		p/poco-zip-* \
 		p/python-bson-2.5* \
+		p/python-ndg_httpsclient-* \
 		p/python-pymongo-2.5* \
+		p/python-zope-component-* \
+		p/python-zope-event-* \
+		p/python2-acme-* \
+		p/python2-certbot-* \
+		p/python2-configargparse-* \
+		p/python2-future-* \
+		p/python2-josepy-* \
+		p/python2-mock-* \
+		p/python2-parsedatetime-* \
+		p/python2-pyrfc3339-* \
+		p/python2-six-* \
 		r/redis-* \
 		r/rubygem-daemons-* \
 		r/rubygem-pg-* \
