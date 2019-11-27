@@ -11,55 +11,55 @@ import org.springframework.data.mongodb.core.query.Query;
 
 public class DidPoolServiceImpl implements DidPoolService {
     
-    private MongoTemplate m_imdb;
+    private MongoTemplate m_profiles;
     private DidService m_didService;
 
     @Override
     public DidPool getDidPool(String type) {
-        DidPool did = m_imdb.findOne(
+        DidPool did = m_profiles.findOne(
             new Query(Criteria.where("type").is(type)), DidPool.class);
         return did;
     }
 
     @Override
     public DidPool getDidPoolById(String poolId) {
-        DidPool did = m_imdb.findOne(
+        DidPool did = m_profiles.findOne(
             new Query(Criteria.where("_id").is(poolId)), DidPool.class);
         return did;
     }
 
     @Override
     public void saveDidPool(DidPool didPool) {
-        m_imdb.save(didPool);
+        m_profiles.save(didPool);
     }
 
     @Override
     public void removeAllDidPools() {
-        m_imdb.remove(
+        m_profiles.remove(
             new Query(Criteria.where("_class").is("org.sipfoundry.commons.diddb.DidPool")), DidPool.class);
     }
 
     @Override
     public void insertDidPools(List<DidPool> didPools) {
-        m_imdb.insertAll(didPools);        
+        m_profiles.insertAll(didPools);        
     }
 
     @Override
     public void removeDidPool(DidPool didPool) {
         if (didPool != null) {
-            m_imdb.remove(didPool);            
+            m_profiles.remove(didPool);            
         }                
     }
 
     @Override
     public List<DidPool> getAllDidPools() {
-        return m_imdb.find(
+        return m_profiles.find(
             new Query(Criteria.where("_class").is("org.sipfoundry.commons.diddb.DidPool")), DidPool.class);
     }
     
     @Required
-    public void setImdb(MongoTemplate imdb) {
-        m_imdb = imdb;
+    public void setProfiles(MongoTemplate profiles) {
+        m_profiles = profiles;
     }
 
     @Override

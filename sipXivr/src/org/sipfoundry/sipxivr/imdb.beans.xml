@@ -11,6 +11,11 @@
     <constructor-arg ref="mongoDbFactory"/>
     <property name="dbname" value="imdb"/> 
   </bean>
+  
+  <bean id="profilesDb" class="org.sipfoundry.commons.mongo.MongoSpringTemplate">
+    <constructor-arg ref="mongoDbFactory"/>
+    <property name="dbname" value="profiles"/> 
+  </bean>  
 
   <bean id="validUsers" class="org.sipfoundry.commons.userdb.ValidUsersSpring">
 	<property name="imdbTemplate" ref="imdb"/>

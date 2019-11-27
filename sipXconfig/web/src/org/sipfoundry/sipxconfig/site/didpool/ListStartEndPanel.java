@@ -10,7 +10,9 @@ import org.sipfoundry.commons.diddb.Did;
 import org.sipfoundry.commons.diddb.DidPool;
 import org.sipfoundry.commons.diddb.DidPoolService;
 import org.sipfoundry.commons.diddb.DidService;
+import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
 import org.sipfoundry.sipxconfig.components.TapestryUtils;
+import org.sipfoundry.sipxconfig.dialplan.DialPlanContext;
 import org.sipfoundry.sipxconfig.site.common.ListPanel;
 
 public abstract class ListStartEndPanel extends ListPanel {
@@ -31,6 +33,8 @@ public abstract class ListStartEndPanel extends ListPanel {
 
     public abstract void setUserNextValue(String userNextValue);
 
+    @InjectObject(value = "spring:configManager")
+    public abstract ConfigManager getConfigManager();
 
     @Override
     public void setSize(int size) {
@@ -51,6 +55,7 @@ public abstract class ListStartEndPanel extends ListPanel {
             getDidPoolService().removeDidPool(((DidPool)source.get(removeIndex)));
             source.remove(removeIndex);
             TapestryUtils.getValidator(this).clearErrors();
+            getConfigManager().configureEverywhere(DialPlanContext.FEATURE);
         } else if (TapestryUtils.isValid(cycle, this) && getAdd()) {
             source.add(new DidPool("","",""));
         }
@@ -76,6 +81,7 @@ public abstract class ListStartEndPanel extends ListPanel {
             DidPool pool = (DidPool)obj;
             pool.setNext(getDidPoolService().findNext(pool).toString());
             getDidPoolService().saveDidPool(pool);
-        }        
+        }
+        getConfigManager().configureEverywhere(DialPlanContext.FEATURE);
     }    
 }

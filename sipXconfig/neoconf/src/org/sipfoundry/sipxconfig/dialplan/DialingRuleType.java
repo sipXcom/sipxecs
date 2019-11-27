@@ -33,6 +33,7 @@ public final class DialingRuleType extends Enum {
     public static final DialingRuleType AUTHCODE = new DialingRuleType("Authorization Code",
             AuthorizationCodeRule.class, CallTag.AUTH);
     public static final DialingRuleType CALLBACK = new DialingRuleType("Callback", CallbackRule.class);
+    public static final DialingRuleType UNASSIGNED_DID = new DialingRuleType("UnassignedDid", UnassignedDidRule.class);
 
     private final Class< ? extends DialingRule> m_klass;
     private final CallTag m_callTag;

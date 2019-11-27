@@ -71,6 +71,7 @@ public abstract class SipXivrServer {
                 "classpath:/org/sipfoundry/sipxivr/email/email.beans.xml",
                 "classpath:/org/sipfoundry/attendant/attendant.beans.xml",
                 "classpath:/org/sipfoundry/bridge/bridge.beans.xml",
+                "classpath:/org/sipfoundry/unassigned/unassigned.beans.xml",                
                 "classpath:/org/sipfoundry/faxrx/fax.beans.xml",
                 "classpath:/org/sipfoundry/moh/moh.beans.xml",
                 "classpath:/org/sipfoundry/voicemail/voicemail.beans.xml",

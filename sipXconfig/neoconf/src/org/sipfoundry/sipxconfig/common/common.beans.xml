@@ -65,7 +65,7 @@
   </bean>
 
   <bean id="didServiceImpl" class="org.sipfoundry.commons.diddb.DidServiceImpl">
-    <property name="imdb" ref="imdb"/>
+    <property name="profiles" ref="profilesDb"/>
   </bean>
   <bean id="didPoolService" class="org.springframework.aop.framework.ProxyFactoryBean">
     <property name="proxyInterfaces" value="org.sipfoundry.commons.diddb.DidPoolService"/>
@@ -73,9 +73,19 @@
   </bean>
 
   <bean id="didPoolServiceImpl" class="org.sipfoundry.commons.diddb.DidPoolServiceImpl">
-    <property name="imdb" ref="imdb"/>
+    <property name="profiles" ref="profilesDb"/>
     <property name="didService" ref="didService"/>
   </bean>
+  
+  <bean id="didPoolContext" class="org.springframework.aop.framework.ProxyFactoryBean" parent="abstractDao">
+    <property name="proxyInterfaces" value="org.sipfoundry.sipxconfig.common.DidPoolContext" />
+    <property name="target" ref="didPoolContextImpl" />
+  </bean>
+  
+  <bean id="didPoolContextImpl" class="org.sipfoundry.sipxconfig.common.DidPoolContextImpl">
+    <property name="featureManager" ref="featureManager" />
+    <property name="didPoolService" ref="didPoolService" />
+  </bean>  
 
   <bean id="org.sipfoundry.sipxconfig.common.User" class="org.sipfoundry.sipxconfig.common.User"
     scope="prototype" parent="beanWithSettings">

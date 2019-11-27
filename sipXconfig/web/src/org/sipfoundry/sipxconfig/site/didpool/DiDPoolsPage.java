@@ -37,6 +37,7 @@ import org.sipfoundry.commons.diddb.DidType;
 import org.sipfoundry.commons.diddb.LabeledDid;
 import org.sipfoundry.sipxconfig.callgroup.CallGroup;
 import org.sipfoundry.sipxconfig.callgroup.CallGroupContext;
+import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
 import org.sipfoundry.sipxconfig.common.BeanId;
 import org.sipfoundry.sipxconfig.common.CoreContext;
 import org.sipfoundry.sipxconfig.common.User;
@@ -87,7 +88,7 @@ public abstract class DiDPoolsPage extends SipxBasePage implements PageBeginRend
     
     @InjectObject("spring:autoAttendantManager")
     public abstract AutoAttendantManager getAutoAttendantManager();
-    
+
     public abstract List<Did> getDids();
 
     public abstract List<Did> getLabeledDids();
