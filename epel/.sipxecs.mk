@@ -216,11 +216,13 @@ RUNTIME_EPEL = \
 		p/python-bson-2.5* \
 		p/python-ndg_httpsclient-* \
 		p/python-pymongo-2.5* \
+		p/python-requests-toolbelt-* \
 		p/python-zope-component-* \
 		p/python-zope-event-* \
 		p/python2-acme-* \
 		p/python2-certbot-* \
 		p/python2-configargparse-* \
+		p/python2-distro-* \
 		p/python2-future-* \
 		p/python2-josepy-* \
 		p/python2-mock-* \

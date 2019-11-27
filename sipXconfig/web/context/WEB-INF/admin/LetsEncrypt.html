@@ -1,7 +1,7 @@
 <div jwcid="@common/QuickHelp" value="message:quick.help.letsEncrypt"></div>
 <span jwcid="@common/ErrorMsg" validator="bean:validator" />
 <form jwcid="letsEncryptForm@common/AutoRefreshForm" delegate="bean:validator"
-    interval="10" showRefresh="ognl:autoRefresh">
+    interval="30" showRefresh="ognl:autoRefresh">
   <fieldset>
     <h3><label jwcid="@Insert" value="message:label.title" /></h3>
     <br>
