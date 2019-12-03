@@ -227,6 +227,9 @@ RUNTIME_EPEL = \
 		p/python2-parsedatetime-* \
 		p/python2-pyrfc3339-* \
 		p/python2-six-* \
+		p/python2-rpm-macros-* \
+		p/python-srpm-macros-* \
+		p/python-rpm-macros-* \
 		r/redis-* \
 		r/rubygem-daemons-* \
 		r/rubygem-pg-* \
