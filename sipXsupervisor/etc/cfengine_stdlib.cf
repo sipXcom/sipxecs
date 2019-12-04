@@ -221,7 +221,7 @@ field_edits:
 
 insert_lines:
 
-  "$(index)=$($(v)[$(index)])",
+  "$(index)=$($(v)[$(index)])"
 
          comment => "Insert a variable definition",
       ifvarclass => "!$(cindex[$(index)])_in_file";
@@ -245,7 +245,7 @@ classes:
 
 insert_lines:
 
-  "$($(v)[$(index)])",
+  "$($(v)[$(index)])"
 
          comment => "Append users into a password file format",
       ifvarclass => "add_$(index)";
@@ -269,7 +269,7 @@ classes:
 
 insert_lines:
 
-  "$($(v)[$(index)])",
+  "$($(v)[$(index)])"
 
          comment => "Append users into a group file format",
       ifvarclass => "add_$(index)";
