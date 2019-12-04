@@ -293,10 +293,10 @@ bundle agent rh_chkconfig_status(s){
 
   reports:
     all::
-      "${g.pf} Service ${s} is enabled",
+      "${g.pf} Service ${s} is enabled"
         ifvarclass => "${s}_enabled";
 
-      "${g.pk} Service ${s} is not enabled",
+      "${g.pk} Service ${s} is not enabled"
         ifvarclass => "!${s}_enabled";
 }
 
@@ -309,10 +309,10 @@ bundle agent rh_systemctl_status(s){
 
   reports:
     all::
-      "${g.pf} Service ${s} is enabled",
+      "${g.pf} Service ${s} is enabled"
         ifvarclass => "${s}_enabled";
 
-      "${g.pk} Service ${s} is not enabled",
+      "${g.pk} Service ${s} is not enabled"
         ifvarclass => "!${s}_enabled";
 }
 
@@ -359,7 +359,7 @@ field_edits:
         comment => "Match a line starting like key = something";
 
 insert_lines:
-  "$(index) : $($(v)[$(index)])",
+  "$(index) : $($(v)[$(index)])"
          comment => "Insert a variable definition",
       ifvarclass => "!$(cindex[$(index)])_in_file";
 }
@@ -497,7 +497,7 @@ bundle agent verify_system_user(user,password,home) {
 
   commands:
     !has_user::
-      "$(sipx.adduser)",
+      "$(sipx.adduser)"
         comment => "Creating user $(user)",
         contain => in_shell,
         args => "-d $(home) -s /sbin/nologin -M $(user) && \
