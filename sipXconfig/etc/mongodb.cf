@@ -580,7 +580,7 @@ bundle agent mongodb_client {
       # absolutely nec..  So sipXconfig should take care the client config
       # file it generates has the same checksum as the original or not generate
       # ini file in cfdata unless it's different.
-      "$(sipx.SIPX_CONFDIR)/mongo-client.ini",
+      "$(sipx.SIPX_CONFDIR)/mongo-client.ini"
         comment => "install mongo client config $(this.promiser)",
         create => "true",
         perms => m("644"),
@@ -588,7 +588,7 @@ bundle agent mongodb_client {
         classes => if_repaired("mongo_client_reconnect");
 
     mongo_local::
-      "$(sipx.SIPX_CONFDIR)/mongo-local.ini",
+      "$(sipx.SIPX_CONFDIR)/mongo-local.ini"
         comment => "local mongo db $(this.promiser)",
         create => "true",
         perms => m("644"),
@@ -597,7 +597,7 @@ bundle agent mongodb_client {
         classes => if_repaired("mongo_local_reconnect");
 
     !mongo_local::
-      "$(sipx.SIPX_CONFDIR)/mongo-local.ini",
+      "$(sipx.SIPX_CONFDIR)/mongo-local.ini"
         comment => "do not use local mongo db $(this.promiser)",
         delete => unlink,
         classes => if_repaired("mongo_local_reconnect");
@@ -613,7 +613,7 @@ bundle agent mongodb_initialize {
 
   files:
     !has_config::
-      "$(config)",
+      "$(config)"
         comment => "Create initial mongo cluster db model $(this.promiser)",
         create => "true",
         perms => mog("644", "$(sipx.SIPXPBXUSER)", "$(sipx.SIPXPBXGROUP)"),
