@@ -174,7 +174,7 @@ bundle agent verify_httpd_user(user,password) {
       create => "true";
 
   commands:
-    "/usr/bin/htpasswd",
+    "/usr/bin/htpasswd"
       comment => "Creating apache user $(user)",
       args => "-b $(sipx.APACHE2_CONFDIR)/provusers.tmp $(user) $(password)";
 }
