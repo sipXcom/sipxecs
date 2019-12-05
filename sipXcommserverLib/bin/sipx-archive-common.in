@@ -36,12 +36,12 @@ bad_usage() {
 }
 
 postgresql_running() {
-  # simply see if there's a postmaster running
-  PIDS="$(ps -C postmaster -o pid --noheaders 2>/dev/null)"
+  /usr/bin/systemctl --quiet is-active postgresql.service
+  STATUS=$?
 
-  if [ -z "$PIDS" ] ; then
+  if [ $STATUS -ne 0 ] ; then
     echo "PostgreSQL does not appear to be running."
-	echo "  You must start it in order to $OPERATION."
+    echo "  You must start it in order to $OPERATION."
     exit 2
   fi
 }
