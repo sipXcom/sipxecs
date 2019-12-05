@@ -92,8 +92,12 @@ public abstract class RestoreFinalize extends PageWithCallback implements PageBe
     public Setting getRestoreSettings() {
         return getBackupSettings().getSettings().getSetting("restore");
     }
-
+    
     public IPage restore() {
+        return restore(getValidator());
+    }
+
+    public IPage restore(SipxValidationDelegate validator) {
         if (!TapestryUtils.isValid(this)) {
             return null;
         }
@@ -123,17 +127,17 @@ public abstract class RestoreFinalize extends PageWithCallback implements PageBe
             return waitingPage;
         } else {
             try {
-                getValidator().recordSuccess(getMessages().getMessage("restore.initiated"));
+                validator.recordSuccess(getMessages().getMessage("restore.initiated"));
                 restore.restore(plan, getBackupSettings(), getSelections());
                 // if we are here, restore is successful
-                getValidator().recordSuccess(getMessages().getMessage("restore.success"));
+                validator.recordSuccess(getMessages().getMessage("restore.success"));
 
             } catch (ResourceException e) {
                 if (e.getCause() instanceof BackupRunnerImpl.TimeoutException) {
                     //BackupRunnerImpl has a background timeout > foreground timeout for restore: it went background
-                    getValidator().recordSuccess(getMessages().getMessage("restore.background"));
-                } else if (e.getCause() instanceof BackupRunnerImpl.StdErrException) {
-                    getValidator().record(new ValidatorException(e.getMessage()));
+                    validator.recordSuccess(getMessages().getMessage("restore.background"));
+                } else {
+                    validator.record(new ValidatorException(e.getMessage()));
                 }
             }
         }

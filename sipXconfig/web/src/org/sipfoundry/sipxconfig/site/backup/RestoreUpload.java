@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,6 +40,7 @@ import org.apache.tapestry.event.PageEvent;
 import org.apache.tapestry.request.IUploadFile;
 import org.apache.tapestry.valid.IValidationDelegate;
 import org.apache.tapestry.valid.ValidatorException;
+import org.sipfoundry.sipxconfig.admin.AdminContext;
 import org.sipfoundry.sipxconfig.backup.BackupManager;
 import org.sipfoundry.sipxconfig.backup.BackupType;
 import org.sipfoundry.sipxconfig.common.UserException;
@@ -109,7 +111,13 @@ public abstract class RestoreUpload extends BaseComponent implements PageBeginRe
             List<String> none = Collections.emptyList();
             page.setSelections(none);
             page.setCallback(new PageCallback(getPage()));
-            return page;
+            Iterator<String> it = defs.iterator();
+            while (it.hasNext()) {
+                if (it.next().contains(AdminContext.ARCHIVE)) {
+                    return page;
+                }
+            }
+            return page.restore(getValidator());
         } catch (ValidatorException e) {
             validator.record(e);
             return null;

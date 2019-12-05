@@ -16,8 +16,11 @@ package org.sipfoundry.sipxconfig.site.backup;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.tapestry.BaseComponent;
 import org.apache.tapestry.IPage;
 import org.apache.tapestry.annotations.Bean;
@@ -26,6 +29,7 @@ import org.apache.tapestry.annotations.Parameter;
 import org.apache.tapestry.callback.PageCallback;
 import org.apache.tapestry.event.PageBeginRenderListener;
 import org.apache.tapestry.event.PageEvent;
+import org.sipfoundry.sipxconfig.admin.AdminContext;
 import org.sipfoundry.sipxconfig.backup.BackupPlan;
 import org.sipfoundry.sipxconfig.common.UserException;
 import org.sipfoundry.sipxconfig.components.SelectMap;
@@ -51,6 +55,8 @@ public abstract class RestoreForm extends BaseComponent implements PageBeginRend
 
     @Parameter(required = true)
     public abstract boolean isCanRestore();
+    
+    private static final Log LOG = LogFactory.getLog(RestoreForm.class);
 
     @Override
     public void pageBeginRender(PageEvent event) {
@@ -82,6 +88,12 @@ public abstract class RestoreForm extends BaseComponent implements PageBeginRend
         Set<String> none = Collections.emptySet();
         page.setUploadedIds(none);
         page.setCallback(new PageCallback(getPage()));
-        return page;
+        Iterator<String> it = restoreFrom.iterator();
+        while (it.hasNext()) {
+            if (it.next().contains(AdminContext.ARCHIVE)) {
+                return page;
+            }
+        }
+        return page.restore(getValidator());
     }
 }
