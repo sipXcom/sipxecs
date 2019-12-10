@@ -1,0 +1,48 @@
+# Copyright (c) 2019 eZuce, Inc. All rights reserved.
+# Contributed to SIPfoundry under a Contributor Agreement
+
+# This software is free software; you can redistribute it and/or modify it under
+# the terms of the Affero General Public License (AGPL) as published by the
+# Free Software Foundation; either version 3 of the License, or (at your option)
+# any later version.
+
+# This software is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+# details.
+
+#
+# RPCBIND remove IPV6 configuration
+#
+
+bundle agent rpcbind {
+  files:
+    !rpcbindipv6off::
+      "/usr/lib/systemd/system/rpcbind.socket"
+        comment => "remove ipv6",
+        create => "true",
+        perms => mog("644","root","root"),
+        edit_line => delete_lines_matching('.*::.*');
+  methods:
+    any::
+      "any" usebundle => "after_rpcbindipv6";
+}
+
+bundle agent after_rpcbindipv6 {
+  files:
+    any::
+      "$(sipx.SIPX_CFDATA)/$(sipx.location_id)/rpcbind.cfdat"
+        comment => "mark rpcbind ipv6 removed",
+        create => "true",
+        perms => m("644"),
+        edit_line => after_rpcbindipv6_off;
+}
+
+bundle edit_line after_rpcbindipv6_off {
+  insert_lines:
+    any::
+      "+rpcbindipv6off";
+  delete_lines:
+    any::
+      ".*";    
+}

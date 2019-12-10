@@ -46,7 +46,8 @@ dist_cfinputs_DATA = \
 	zz_apache.cf \
 	elasticsearch.cf \
 	systemaudit.cf \
-	numa.cf
+	numa.cf \
+	rpcbind.cf
 
 cfdefaultsdir = $(SIPX_CFDATA)/defaults
 cfdefaults_DATA = \
