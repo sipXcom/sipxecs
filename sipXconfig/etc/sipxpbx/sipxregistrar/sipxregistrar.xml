@@ -86,7 +86,7 @@
     <setting name="SIP_REGISTRAR_AUTHENTICATE_ALGORITHM" advanced="yes">
       <type><string/></type>
     </setting>
-    <setting name="SIP_REGISTRAR_LOG_CONSOLE" advanced="yes">
+    <setting name="SIP_REGISTRAR_LOG_CONSOLE" advanced="yes" hidden="yes">
       <type><string/></type>
     </setting>
     <setting name="SIP_REGISTRAR_MAX_EXPIRES_NORMAL" advanced="yes">
