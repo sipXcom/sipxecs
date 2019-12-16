@@ -29,6 +29,9 @@ public class DidPool implements Serializable {
     @Field("description")
     private String description;
     
+    @Field("redirect_extension")
+    private String redirectExtension;
+    
     public DidPool() {
     	
     }
@@ -86,5 +89,13 @@ public class DidPool implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getRedirectExtension() {
+        return redirectExtension;
+    }
+
+    public void setRedirectExtension(String redirectExtension) {
+        this.redirectExtension = redirectExtension;
     }        
 }

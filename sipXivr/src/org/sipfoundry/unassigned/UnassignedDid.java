@@ -1,6 +1,5 @@
 package org.sipfoundry.unassigned;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.sipfoundry.commons.diddb.DidPool;
 import org.sipfoundry.commons.diddb.DidPoolService;
@@ -17,19 +16,18 @@ public class UnassignedDid extends SipxIvrApp {
         LOG.info("SipXivr::run Check DID");
         UnassignedDidEslRequestController controller = (UnassignedDidEslRequestController) getEslRequestController();
         String didExt = controller.getDialed();
-        String poolDesc = StringUtils.EMPTY;
+        
         boolean outsideDid = true;
         for (DidPool pool : m_didPoolService.getAllDidPools()) {
             outsideDid = m_didPoolService.outsideRangeDidValue(pool, Long.valueOf(didExt));
-            if (!outsideDid) {
-                poolDesc = pool.getDescription();
+            if (!outsideDid) {                
                 break;
             }
         }
         if (outsideDid) {
-            controller.speak("Dialed extension " + didExt + "is not part of any DID pool. Extension is unassigned");
+            controller.speak("Dialed extension " + didExt + " is not part of any DID pool. Extension is unassigned");
         } else {
-            controller.speak("Dialed extension " + didExt + " is part of DID pool " + poolDesc + ", but not active yet");
+            controller.speak("Dialed extension " + didExt + " is not active yet");
         }
     }
 

@@ -51,12 +51,12 @@ public class DidPoolContextImpl implements DidPoolContext {
             for (int i = 0; i < end.length() - start.length(); i++) {
                 noDigits++;
             }
-            UnassignedDidRule rule = new UnassignedDidRule(prefix.toString(), noDigits, locations.get(0).getFqdn());
+            UnassignedDidRule rule = new UnassignedDidRule(prefix.toString(), noDigits, locations.get(0).getFqdn(), pool.getRedirectExtension());
             rule.appendToGenerationRules(dialingRules);
             prefix = new StringBuffer();
             prefixDigit = Character.MIN_VALUE;
             noDigits = 0;
-        }        
+        }
         return dialingRules;        
     }    
 

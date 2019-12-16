@@ -36,6 +36,12 @@
             validators="ognl:validators"
             displayName="ognl:itemDisplayName" />
         </td>
+        <td>
+          <span jwcid="@Insert" value="message:redirectExtension">Redirect Extension</span>
+          <input jwcid="@TextField"
+            value="ognl:value.redirectExtension"
+            displayName="ognl:itemDisplayName" />
+        </td>        
         <td>          
           <input jwcid="findNext@Submit" id="find:next"
 		         listener="listener:saveNext"
