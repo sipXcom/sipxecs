@@ -33,6 +33,10 @@ public interface DomainManager extends DialingRuleProvider {
 
     String getDomainName();
 
+    DomainSettings getSettings();
+
+    void saveSettings(DomainSettings settings);
+
     static class DomainNotInitializedException extends RuntimeException {
         DomainNotInitializedException() {
             super("System was not initialized properly");
