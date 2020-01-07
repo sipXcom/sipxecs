@@ -480,7 +480,9 @@ bool RegDB::getUnexpiredContactsUser(const string& identity, unsigned long timeN
         << " Identity: " << identity
         << " Contact: " << binding.getContact()
         << " Expires: " << binding.getExpirationTime() - OsDateTime::getSecsSinceEpoch() << " sec"
-        << " Call-Id: " << binding.getCallId());
+        << " Call-Id: " << binding.getCallId()
+        << " Time NOW: " << timeNow
+        << " Expiration TIME: " << binding.getExpirationTime());
 
         push_or_replace_binding(bindings, binding);
       }

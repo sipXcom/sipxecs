@@ -135,6 +135,8 @@ void RegBinding::fromBSONObj(const mongo::BSONObj& bson)
     if (mongo::Date == expirationTimeElement.type())
     {
       _expirationTime = static_cast<unsigned long>(expirationTimeElement.date().toTimeT());
+      OS_LOG_WARNING(FAC_SIP, "RegBinding::fromBSONObj MIRCEA expirationTime "
+          << " Expiration time: " << _expirationTime);
     }
     else if (expirationTimeElement.isNumber())
     {
