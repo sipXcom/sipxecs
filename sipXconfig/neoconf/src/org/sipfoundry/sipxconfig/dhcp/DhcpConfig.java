@@ -60,7 +60,7 @@ public class DhcpConfig implements ConfigProvider {
         Set<Location> locations = request.locations(manager);
         for (Location location : locations) {
             File dir = manager.getLocationDataDirectory(location);
-            boolean enabled = manager.getFeatureManager().isFeatureEnabled(DhcpManager.FEATURE, location) && !unmanaged;
+            boolean enabled = manager.getFeatureManager().isFeatureEnabled(DhcpManager.FEATURE, location);
             ConfigUtils.enableCfengineClass(dir, "dhcpd.cfdat", enabled, "dhcpd");
             if (!enabled) {
                 continue;

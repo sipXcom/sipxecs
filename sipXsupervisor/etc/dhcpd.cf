@@ -18,7 +18,7 @@
 
 bundle agent dhcpd {
   methods:
-    dhcpd::
+    dhcpd.!unmanaged_dhcpd::
       "any" usebundle => "dhcpd_config";
     fedora16_or_greater::
       "any" usebundle => "dhcpd_systemctl_running";
