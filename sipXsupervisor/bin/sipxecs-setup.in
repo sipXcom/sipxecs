@@ -19,6 +19,7 @@ $group = "@SIPXPBXGROUP@"
 $domain_dat = "#{$cfdatadir}/domain.cfdat"
 $domain_part = "#{$cfdatadir}/domain-config.part"
 $root_cfenginedir = "/var/cfengine"
+$tmp_dir = "/var/sipxdata/tmp"
 $home_dir = `awk -F : '/^#{$user}:/ { print $6 }' /etc/passwd`.chomp
 $user_keydir = "#{$home_dir}/.cfagent/ppkeys"
 $primary_dat = "#{$cfdatadir}/defaults/primary.cfdat"
@@ -269,6 +270,7 @@ def reset_all
     rm_file(f)
   }
   rm_files("#{$home_dir}/.cfagent")
+  rm_files("#{$tmp_dir}")
 
   # Flush out any existing connections, otherwise we cannot drop databases
   # test if postgres is supposed to be running on the machine
