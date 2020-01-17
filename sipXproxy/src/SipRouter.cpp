@@ -58,7 +58,7 @@ const char* AuthPlugin::Prefix  = "SIPX_PROXY";
 const char* SipBidirectionalProcessorPlugin::Factory = "getTransactionPlugin";
 const char* SipBidirectionalProcessorPlugin::Prefix  = "SIPX_TRAN";
 // The period of time in seconds that nonces are valid, in seconds.
-#define NONCE_EXPIRATION_PERIOD             (60 * 5)     // five minutes
+#define NONCE_EXPIRATION_PERIOD             (60 * 500)     // five minutes
 static const char* P_PID_HEADER = "P-Preferred-Identity";
 static const int MAX_CONCURRENT_THREADS = 10;
 static const bool ENFORCE_MAX_CONCURRENT_THREADS = true;

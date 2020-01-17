@@ -95,7 +95,7 @@ SipRegistrarServer::SipRegistrarServer(SipRegistrar& registrar) :
     mSipUserAgent(NULL),
     mSendExpiresInResponse(TRUE),
     mSendAllContactsInResponse(FALSE),
-    mNonceExpiration(5*60)
+    mNonceExpiration(500*60)
 {
 }
 
