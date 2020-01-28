@@ -59,7 +59,7 @@ public class FreeswitchFeature implements FeatureProvider, AddressProvider, Proc
     public static final AddressType ACC_EVENT_ADDRESS = new AddressType("acc-freeswitch-event");
     public static final AddressType CALLBACK_EVENT_ADDRESS = new AddressType("callback-freeswitch-event");
 
-    private static final String PROCESS = "sipxfreeswitch";
+    private static final String PROCESS = "freeswitch";
 
     private SettingsWithLocationDao<FreeswitchSettings> m_settingsDao;
     private SipxReplicationContext m_sipxReplicationContext;
