@@ -14,6 +14,9 @@
  */
 package org.sipfoundry.sipxconfig.fail2ban;
 
+import java.util.Collection;
+import java.util.List;
+
 import org.sipfoundry.sipxconfig.alarm.AlarmDefinition;
 import org.sipfoundry.sipxconfig.feature.GlobalFeature;
 
@@ -25,5 +28,9 @@ public interface Fail2banManager {
     Fail2banSettings getSettings();
 
     void saveSettings(Fail2banSettings settings);
+
+    List<BannedHost> getBannedHosts();
+
+    void unbanSelectedHosts(Collection<BannedHost> bannedHosts);
 
 }

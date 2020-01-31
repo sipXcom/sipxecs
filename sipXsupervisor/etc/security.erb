@@ -29,6 +29,7 @@ filter = sip-<%= siprule[:name] %>
 logpath = <%= siprule[:log] %>
 maxretry = <%= siprule[:maxretry] %>
 action = block-allports
+         store-to-mongo[reason=<%= siprule[:name] %>]
 findtime = <%= siprule[:findtime] %>
 ignoreip = <%= srciprange(siprule[:ignoreip]) %>
 bantime = <%= siprule[:bantime] %>

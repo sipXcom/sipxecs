@@ -22,6 +22,8 @@
         </property>
       </bean>
     </property>
+    <property name="fail2banDb" ref="fail2banDb"/>
+    <property name="configManager" ref="configManager"/>
   </bean>
   
   <bean id="fail2banSettings" class="org.sipfoundry.sipxconfig.fail2ban.Fail2banSettings" parent="settingsBean">
@@ -37,5 +39,10 @@
     <property name="basename">
       <value>org.sipfoundry.sipxconfig.fail2ban.fail2ban</value>
     </property>
+  </bean>
+
+  <bean id="fail2banDb" class="org.sipfoundry.commons.mongo.MongoSpringTemplate">
+    <constructor-arg ref="mongoDbFactory"/>
+    <property name="dbname" value="fail2ban${sysdir.mongo_ns}"/> 
   </bean>
 </beans>

@@ -17,10 +17,12 @@ package org.sipfoundry.sipxconfig.fail2ban;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import org.sipfoundry.sipxconfig.alarm.AlarmDefinition;
 import org.sipfoundry.sipxconfig.alarm.AlarmProvider;
 import org.sipfoundry.sipxconfig.alarm.AlarmServerManager;
+import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
 import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.feature.Bundle;
 import org.sipfoundry.sipxconfig.feature.FeatureChangeRequest;
@@ -34,8 +36,17 @@ import org.sipfoundry.sipxconfig.setting.BeanWithSettingsDao;
 import org.sipfoundry.sipxconfig.setup.SetupListener;
 import org.sipfoundry.sipxconfig.setup.SetupManager;
 
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+
 public class Fail2banManagerImpl implements Fail2banManager, FeatureProvider, SetupListener, AlarmProvider {
     private BeanWithSettingsDao<Fail2banSettings> m_settingsDao;
+    private MongoTemplate m_fail2banDb;
+    private ConfigManager m_configManager;
 
     @Override
     public void featureChangePrecommit(FeatureManager manager, FeatureChangeValidator validator) {
@@ -95,5 +106,33 @@ public class Fail2banManagerImpl implements Fail2banManager, FeatureProvider, Se
             });
         }
         return null;
+    }
+
+    @Override
+    public List<BannedHost> getBannedHosts() {
+        DBCollection col = m_fail2banDb.getCollection("bannedHosts");
+        return m_fail2banDb.find(new Query(), BannedHost.class, "bannedHosts");
+    }
+
+    @Override
+    public void unbanSelectedHosts(Collection<BannedHost> bannedHosts) {
+        DBCollection collection = m_fail2banDb.getCollection("unbanHosts");
+
+        for (BannedHost host : bannedHosts) {
+            BasicDBObject obj = new BasicDBObject("ipAddress", host.getIpAddress());
+            obj.append("jail", "sip-" + host.getReason().toString().toLowerCase());
+            collection.insert(obj);
+        }
+
+        // start sipxagent to execute python script which unbans hosts
+        m_configManager.configureEverywhere(FEATURE);
+    }
+
+    public void setFail2banDb(MongoTemplate fail2banDb) {
+        m_fail2banDb = fail2banDb;
+    }
+
+    public void setConfigManager(ConfigManager configManager) {
+        m_configManager = configManager;
     }
 }

@@ -228,6 +228,11 @@ bundle agent firewall_systemctl_running {
       "$(sipx.systemctl)"
         comment => "enable iptables",
         args => "enable $(service)";
+
+    iptables_running.firewall.restart_iptables::
+      "$(sipx.systemctl)"
+        comment => "restart iptables",
+        args => "restart $(service)";
 }
 
 

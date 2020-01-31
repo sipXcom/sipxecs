@@ -39,7 +39,8 @@ bin_SCRIPTS = \
 	audit_clean \
 	certbot-wrapper \
 	renew_le_cert \
-	set_le_cert
+	set_le_cert \
+	sip-unban
 
 libexecdir = $(SIPX_LIBEXECDIR)
 libexec_SCRIPTS = \
