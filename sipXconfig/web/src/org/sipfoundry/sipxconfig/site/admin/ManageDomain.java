@@ -18,11 +18,14 @@ import org.apache.tapestry.annotations.InjectObject;
 import org.apache.tapestry.annotations.Persist;
 import org.apache.tapestry.event.PageBeginRenderListener;
 import org.apache.tapestry.event.PageEvent;
+import org.sipfoundry.sipxconfig.common.UserException;
 import org.sipfoundry.sipxconfig.components.PageWithCallback;
+import org.sipfoundry.sipxconfig.components.SipxValidationDelegate;
 import org.sipfoundry.sipxconfig.components.TapestryContext;
 import org.sipfoundry.sipxconfig.components.TapestryUtils;
 import org.sipfoundry.sipxconfig.domain.Domain;
 import org.sipfoundry.sipxconfig.domain.DomainManager;
+import org.sipfoundry.sipxconfig.domain.DomainSettings;
 
 /**
  * Edit single domain and it's aliases
@@ -48,7 +51,14 @@ public abstract class ManageDomain extends PageWithCallback implements PageBegin
 
     public abstract void setAliases(List<String> aliases);
 
+    public abstract DomainSettings getSettings();
+
+    public abstract void setSettings(DomainSettings settings);
+
     public void pageBeginRender(PageEvent event) {
+        if (getSettings() == null) {
+            setSettings(getDomainManager().getSettings());
+        }
         List<String> aliases = getAliases();
         if (aliases == null) {
             aliases = new ArrayList<String>();
@@ -77,6 +87,17 @@ public abstract class ManageDomain extends PageWithCallback implements PageBegin
         if (!TapestryUtils.isValid(getPage())) {
             return;
         }
+
+        DomainSettings settings = getSettings();
+        getDomainManager().saveSettings(settings);
+
+        String s = StringUtils.join(getAliases(), ", ");
+        if (s.length() > settings.getAliasLength()) {
+            SipxValidationDelegate validator = (SipxValidationDelegate) TapestryUtils.getValidator(this);
+            validator.record(new UserException("&msg.aliasListTooLong", s.length()), getMessages());
+            return;
+        }
+
         Domain d = getDomain();
         d.getAliases().clear();
         d.getAliases().addAll(getAliases());

@@ -3,6 +3,15 @@
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
   <bean id="domainManagerImpl" class="org.sipfoundry.sipxconfig.domain.DomainManagerImpl" parent="abstractDaoImpl">
+    <property name="settingsDao">
+      <bean parent="beanWithSettingsDao">
+        <property name="target">
+          <bean parent="beanWithSettingsDaoImpl">
+            <constructor-arg value="org.sipfoundry.sipxconfig.domain.DomainSettings"/>
+          </bean>
+        </property>
+      </bean>
+    </property>
     <property name="jdbc" ref="configJdbcTemplate"/>
   </bean>
 
@@ -16,5 +25,8 @@
   <bean id="domainConfiguration" class="org.sipfoundry.sipxconfig.domain.DomainConfiguration">
     <property name="locationsManager" ref="locationsManager" />
   </bean>
-  
+
+  <bean id="domainSettings" class="org.sipfoundry.sipxconfig.domain.DomainSettings" parent="settingsBean">
+  </bean>
+
 </beans>

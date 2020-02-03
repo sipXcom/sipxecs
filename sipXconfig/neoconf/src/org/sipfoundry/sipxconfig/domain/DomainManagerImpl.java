@@ -23,6 +23,7 @@ import org.sipfoundry.sipxconfig.common.SipxHibernateDaoSupport;
 import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.dialplan.DialingRule;
 import org.sipfoundry.sipxconfig.localization.Localization;
+import org.sipfoundry.sipxconfig.setting.BeanWithSettingsDao;
 import org.sipfoundry.sipxconfig.setup.SetupListener;
 import org.sipfoundry.sipxconfig.setup.SetupManager;
 import org.springframework.dao.support.DataAccessUtils;
@@ -38,6 +39,7 @@ public class DomainManagerImpl extends SipxHibernateDaoSupport<Domain> implement
     private String m_configuredSecret;
     private String m_configuredFqdn;
     private String m_configuredIp;
+    private BeanWithSettingsDao<DomainSettings> m_settingsDao;
 
     public DomainManagerImpl() {
         s_instance = this;
@@ -88,6 +90,16 @@ public class DomainManagerImpl extends SipxHibernateDaoSupport<Domain> implement
         }
 
         return m_domain;
+    }
+
+    @Override
+    public DomainSettings getSettings() {
+        return m_settingsDao.findOrCreateOne();
+    }
+
+    @Override
+    public void saveSettings(DomainSettings settings) {
+        m_settingsDao.upsert(settings);
     }
 
     void changeDomainName(String domain) {
@@ -213,6 +225,10 @@ public class DomainManagerImpl extends SipxHibernateDaoSupport<Domain> implement
 
     public void setJdbc(JdbcTemplate jdbc) {
         m_jdbc = jdbc;
+    }
+
+    public void setSettingsDao(BeanWithSettingsDao<DomainSettings> settingsDao) {
+        m_settingsDao = settingsDao;
     }
 
     private String getEffectiveSipDomain() {
