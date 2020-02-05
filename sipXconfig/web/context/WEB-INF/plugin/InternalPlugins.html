@@ -1,38 +1,41 @@
 <!--
  -  When pages internal to sipXconfig leverage the plugins API.  Easiest to assemble all 
  -  components into one place but these could be separate files for each section 
- --> 
+ -->
 <span jwcid="InternalPluginsFeaturesBottom@Block">
   <span jwcid="@If" condition="ognl:isOn('moh')">
-    <span jwcid="@common/AdminNavigationMenu" pagePath="admin/MusicOnHold" label="ognl:messages.getMessage('menu.musicOnHold')" />     
+    <span jwcid="@common/AdminNavigationMenu" pagePath="admin/MusicOnHold" label="ognl:messages.getMessage('menu.musicOnHold')" />
   </span>
   <span jwcid="@If" condition="ognl:isOn('page')">
-     <span jwcid="@common/AdminNavigationMenu" pagePath="paging/PagingGroupsPage" label="ognl:messages.getMessage('menu.paging.featureMenu')" />
+    <span jwcid="@common/AdminNavigationMenu" pagePath="paging/PagingGroupsPage" label="ognl:messages.getMessage('menu.paging.featureMenu')" />
   </span>  
   <span jwcid="@common/AdminNavigationMenu" pagePath="phonebook/ManagePhonebooks" label="ognl:messages.getMessage('menu.phonebook')" />
 </span>
-<span jwcid="InternalPluginsSystemBottom@Block">   
+<span jwcid="InternalPluginsSystemBottom@Block">
 </span>
 <span jwcid="InternalPluginsDiagnosticsTop@Block">
     <li><span jwcid="@admin/AboutDialog" id="menu.about" linkTitle="message:menu.about"/></li>
     <span jwcid="@common/AdminNavigationMenu" pagePath="admin/AlarmsPage" label="ognl:messages.getMessage('menu.alarms')" />
+    <span jwcid="@If" condition="ognl:isOn('fail2ban')">
+      <span jwcid="@common/AdminNavigationMenu" pagePath="admin/BannedHosts" label="ognl:messages.getMessage('menu.bannedHosts')" />
+    </span>
     <span jwcid="@If" condition="ognl:isOn('sipxcdr')">
       <span jwcid="@common/AdminNavigationMenu" pagePath="cdr/CdrPage" label="ognl:messages.getMessage('menu.cdr')" />
-	</span>    
+    </span>
 </span>
 <span jwcid="InternalPluginsDiagnosticsBottom@Block">
     <span jwcid="@common/AdminNavigationMenu" pagePath="admin/JobStatusPage" label="ognl:messages.getMessage('menu.jobs')" />
     <span jwcid="@If" condition="ognl:isOn('tcpdump')">
       <span jwcid="@common/AdminNavigationMenu" pagePath="tcpdumplog/EditTcpdumpLogService" label="ognl:messages.getMessage('menu.tcpdumplog.featureMenu')" />
-    </span>    	
-	<span jwcid="@If" condition="ognl:isOn('registrar')">
-	  <span jwcid="@common/AdminNavigationMenu" pagePath="admin/commserver/Registrations" label="ognl:messages.getMessage('menu.registrations')" />
-	</span>
+    </span>
+    <span jwcid="@If" condition="ognl:isOn('registrar')">
+      <span jwcid="@common/AdminNavigationMenu" pagePath="admin/commserver/Registrations" label="ognl:messages.getMessage('menu.registrations')" />
+    </span>
     <span jwcid="@If" condition="ognl:isOn('sbcBridge')">
       <span jwcid="@common/AdminNavigationMenu" pagePath="sbc/BridgeSbcStatisticsPage" label="ognl:messages.getMessage('menu.sbcStats')" />
     </span>
    <span jwcid="@common/AdminNavigationMenu" pagePath="admin/SnapshotPage" label="ognl:messages.getMessage('menu.snapshot')" />
    <span jwcid="@If" condition="ognl:isOn('systemaudit')">
-	 <span jwcid="@common/AdminNavigationMenu" pagePath="admin/systemaudit/ManageSystemAudit" label="ognl:messages.getMessage('menu.managesystemaudit')" />
+    <span jwcid="@common/AdminNavigationMenu" pagePath="admin/systemaudit/ManageSystemAudit" label="ognl:messages.getMessage('menu.managesystemaudit')" />
    </span>
 </span>

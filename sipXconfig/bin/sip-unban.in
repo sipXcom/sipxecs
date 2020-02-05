@@ -1,0 +1,16 @@
+#!/usr/bin/env python
+
+import os
+from pymongo import MongoClient
+
+mongo_client = MongoClient()
+
+db = mongo_client.fail2ban
+col = db.unbanHosts
+
+for doc in col.find():
+    ip = doc["ipAddress"]
+    jail = doc["jail"]
+    cmd = '/usr/bin/fail2ban-client set ' + jail + ' unbanip ' + ip
+    os.system(cmd)
+    col.remove(doc)

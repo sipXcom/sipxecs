@@ -78,6 +78,14 @@ bundle agent security_config {
         edit_line => action_contents,
         classes => if_repaired("restart_security");
 
+      "/etc/fail2ban/action.d/store-to-mongo.conf"
+        comment => "Security daemon action config $(this.promoiser)",
+        perms => mog("0644","root","root"),
+        create => "true",
+        edit_defaults => empty,
+        edit_line => action_mongo_contents,
+        classes => if_repaired("restart_security");
+
       "/etc/fail2ban/filter.d/sip-dos.conf"
         comment => "install SIP DOS security filter",
         perms => mog("0600","root","root"),
@@ -158,6 +166,25 @@ name = block
 protocol = all
 
 chain = INPUT";
+}
+
+bundle edit_line action_mongo_contents {
+  insert_lines:
+    "
+[Definition]
+
+actionstart = 
+
+actionstop = 
+
+actioncheck = 
+
+actionban = /usr/bin/mongo fail2ban --eval 'var document = { ipAddress : \"<ip>\", reason : \"<reason>\" , timeStamp : \"<time>\"}; db.bannedHosts.insert(document);'
+
+actionunban = /usr/bin/mongo fail2ban --eval 'var document = { ipAddress : \"<ip>\", reason : \"<reason>\" }; db.bannedHosts.remove(document);'
+
+[Init]
+";
 }
 
 bundle edit_line sip_dos_contents {
@@ -243,6 +270,10 @@ bundle agent security_systemctl_running {
       "$(sipx.systemctl)"
         comment => "restart fail2ban",
         args => "restart $(service)";
+
+    security.security_running::
+      "/usr/bin/sip-unban"
+        comment => "unban selected hosts";
 }
 
 

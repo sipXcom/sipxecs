@@ -1,0 +1,22 @@
+<div jwcid="@common/Border" borderTitle="ognl:borderTitle">
+  <span jwcid="@common/ErrorMsg"></span>
+  <div jwcid="@common/QuickHelp" value="message:quick.help" />
+
+  <form jwcid="@Form" >
+    <ul class="component-links">
+      <li>
+        <b><label jwcid="@Insert" value="ognl:bannedHostsCount" /></b>
+      </li>
+    </ul>
+
+    <table jwcid="@common/Table" id="bannedHosts:list"
+      columns="* ipAddress,reason,banTime"
+      source="ognl:bannedHosts"
+      selections="bean:selections">
+    </table>
+
+    <input jwcid="unban@Submit" listener="listener:unbanSelectedHosts" value="message:label.unban"/>
+    <input jwcid="refresh@Submit" listener="listener:refresh" value="message:label.refresh"/>
+  </form>
+
+</div>
