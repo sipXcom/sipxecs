@@ -60,6 +60,7 @@
         <ref bean="gatewayRestApi"/>
         <ref bean="scheduleRestApi"/>
         <ref bean="dialPlanRestApi"/>
+        <ref bean="apibanRestApi"/>
     </util:list>
 
     <bean class="org.sipfoundry.sipxconfig.api.impl.PhoneApiImpl" id="phoneRestApi">
@@ -186,4 +187,8 @@
         <property name="coreContext" ref="coreContext"/>
         <property name="settingDao" ref="settingDao" />
     </bean>
+    
+    <bean class="org.sipfoundry.sipxconfig.api.impl.ApibanApiImpl" id="apibanRestApi">
+		<property name="bannedApi" ref="restClient"/>
+    </bean>    
 </beans>

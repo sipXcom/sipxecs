@@ -90,6 +90,7 @@ sipxconfig_neoconf_PKGS = \
 	smack \
 	FastInfoset \
 	cxf-core \
+    cxf-rt-rs-client \
 	cxf-rt-rs-service-description \
 	cxf-rt-transports-http \
 	cxf-rt-frontend-jaxrs \
