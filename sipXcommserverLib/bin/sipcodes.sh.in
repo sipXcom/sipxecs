@@ -38,7 +38,7 @@ echo -e "REGISTER additional info:\n"
 grep "REGISTER sip" $1 | grep "INCOMING:INFO" | @SIPX_BINDIR@/syslogviewer --no-pager | grep ^"From:" | awk -F ";" '{ print $1 }' | sort | uniq -c | sort -rn | head -n50
 echo -e "\n"
 
-echo -e "INVITEs addional info, From: \n"
+echo -e "INVITEs additional info, From: \n"
 grep "INVITE sip" $1 | grep "INCOMING:INFO" | @SIPX_BINDIR@/syslogviewer --no-pager | grep ^"From:" | awk -F ";" '{ print $1 }' | sort | uniq -c | sort -rn | head -n50
 echo -e "\n"
 
