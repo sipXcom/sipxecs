@@ -74,6 +74,7 @@
       <type>
         <string multiLine="no" maxLen="1000"/>
       </type>
+      <value>dd9dcea5fc54068af6b277c4b5f66541</value>
     </setting>
     <setting name="ips">
       <type>
