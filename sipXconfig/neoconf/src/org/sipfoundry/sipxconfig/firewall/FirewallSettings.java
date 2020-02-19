@@ -65,9 +65,25 @@ public class FirewallSettings extends PersistableSettings implements DeployConfi
     public String getBlackList() {
         return (String) getSettingTypedValue("dos/black_list");
     }
+    
+    public String getApibanKey() {
+        return (String) getSettingTypedValue("apiban/key");
+    }
+    
+    public void setBlackList(String value) {
+        setSettingTypedValue("dos/black_list", value);
+    }
+    
+    public void setApibanIps(String value) {
+        setSettingTypedValue("apiban/ips", value);
+    }        
 
     public String getWhiteList() {
         return (String) getSettingTypedValue("dos/white_list");
+    }
+    
+    public Integer getBannedPoolingPeriod() {
+        return (Integer)getSettingTypedValue("apiban/banned");
     }
 
     public boolean isLogDroppedPacketsEnabled() {

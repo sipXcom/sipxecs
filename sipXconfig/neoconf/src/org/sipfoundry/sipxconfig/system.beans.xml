@@ -11,6 +11,12 @@
     </constructor-arg>
   </bean>
   
+  <bean id="apiban.properties" class="org.springframework.core.io.ClassPathResource">
+    <constructor-arg index="0">
+      <value>apiban.properties</value>
+    </constructor-arg>
+  </bean>  
+  
   <bean id="postgres-pwd.properties" class="org.springframework.core.io.ClassPathResource">
     <constructor-arg index="0">
       <value>postgres-pwd.properties</value>
@@ -21,6 +27,13 @@
     <property name="ignoreUnresolvablePlaceholders" value="true"/>
     <property name="location">
       <ref local="sipxconfig.properties" />
+    </property>
+  </bean>
+  
+  <bean id="apiban" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    <property name="location">
+      <ref local="apiban.properties" />
     </property>
   </bean>
   

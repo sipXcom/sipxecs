@@ -67,12 +67,17 @@ bundle agent 00_sipxconfig {
         perms => mog("644", "$(sipx.SIPXPBXUSER)", "$(sipx.SIPXPBXGROUP)"),
         edit_defaults => empty,
         edit_line => empty_postgres_pwd;        
-    postgres::    
+    postgres::
       "$(sipx.SIPX_CONFDIR)/postgres-pwd.properties"
         comment => "change postgresql password",
         copy_from => copy_from_cfdata("$(sipx.location_id)/postgres-pwd.properties"),
         perms => mog("644", "$(sipx.SIPXPBXUSER)", "$(sipx.SIPXPBXGROUP)"),
-        classes => if_repaired("change_password");          
+        classes => if_repaired("change_password");
+    any::
+      "$(sipx.SIPX_CONFDIR)/apiban.properties"
+        comment => "copy apiban.properties",
+        perms => mog("644", "$(sipx.SIPXPBXUSER)", "$(sipx.SIPXPBXGROUP)"),
+        copy_from => copy_from_cfdata("$(sipx.location_id)/apiban.properties");        
 
   commands:
     primary.setup::

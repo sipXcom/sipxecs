@@ -19,10 +19,10 @@
     <import resource="classpath:META-INF/cxf/cxf.xml"/>
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
 
-    <jaxrs-client:client id="restClient" address="https://apiban.org/api/dd9dcea5fc54068af6b277c4b5f66541/" serviceClass="org.sipfoundry.sipxconfig.apiban.BannedApi" inheritHeaders="true">
+    <jaxrs-client:client id="restClient" address="https://apiban.org/api/${apiban.key}/" serviceClass="org.sipfoundry.sipxconfig.apiban.BannedApi" inheritHeaders="true">
         <jaxrs-client:headers>
             <entry key="json" value="application/json" />
-        </jaxrs-client:headers>       
+        </jaxrs-client:headers>
     </jaxrs-client:client>
     
 	<conduit name="{http://apiban.sipxconfig.sipfoundry.org/}BannedApi.http-conduit"
@@ -31,11 +31,11 @@
     	<tlsClientParameters>
       		<sec:keyManagers keyPassword="changeit">
         		<sec:keyStore type="JKS" password="changeit"
-                      file="${sysdir.etc}/ssl/authorities.jks"/>
+                      file="/etc/pki/java/cacerts"/>
       		</sec:keyManagers>
       	    <sec:trustManagers>
         	    <sec:keyStore type="JKS" password="changeit"
-                      file="${sysdir.etc}/ssl/authorities.jks"/>
+                      file="/etc/pki/java/cacerts"/>
       	    </sec:trustManagers>
       	    <sec:cipherSuitesFilter>
         	    <!-- these filters ensure that a ciphersuite with

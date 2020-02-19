@@ -63,6 +63,24 @@
       <value>1</value>
     </setting>
   </group>
+  <group name="apiban">
+    <setting name="banned">
+      <type>
+        <integer min="0"/>
+      </type>
+      <value>0</value>
+    </setting> 
+    <setting name="key">
+      <type>
+        <string multiLine="no" maxLen="1000"/>
+      </type>
+    </setting>
+    <setting name="ips">
+      <type>
+        <string multiLine="yes" maxLen="1000"/>
+      </type>
+    </setting>      
+  </group>
   <group name="logging">
     <setting name="enable-drop">
       <type refid="true-false"/>

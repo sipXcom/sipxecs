@@ -29,7 +29,7 @@ public class BannedBean {
     public String getID() {
         return m_ID;
     }
-    
+
     public void setID(String iD) {
         m_ID = iD;
     }

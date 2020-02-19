@@ -61,6 +61,19 @@ public class FirewallConfig implements ConfigProvider, FeatureListener {
                 FtpManager.FTP_FEATURE)) {
             return;
         }
+        
+        if (request.applies(FirewallManager.FEATURE)) {
+            if (request.applies(FirewallManager.FEATURE)) {
+                File dir = manager.getLocationDataDirectory(manager.getLocationManager().getPrimaryLocation());
+                Writer apiban = new FileWriter(new File(dir, "apiban.properties"));
+                try {
+                    KeyValueConfiguration cfg = KeyValueConfiguration.equalsSeparated(apiban);
+                    cfg.write("apiban.key", m_firewallManager.getSettings().getApibanKey());
+                } finally {
+                    IOUtils.closeQuietly(apiban);
+                }
+            }
+        }
 
         FirewallSettings settings = m_firewallManager.getSettings();
         Set<String> blackList = settings.getBlackListSet();

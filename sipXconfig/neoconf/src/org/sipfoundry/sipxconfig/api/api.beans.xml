@@ -190,5 +190,5 @@
     
     <bean class="org.sipfoundry.sipxconfig.api.impl.ApibanApiImpl" id="apibanRestApi">
 		<property name="bannedApi" ref="restClient"/>
-    </bean>    
+    </bean>
 </beans>
