@@ -25,21 +25,22 @@ public class BannedTimer {
             return;
         }
         FirewallSettings settings = m_firewallManager.getSettings();
-        Integer poolingPeriod = settings.getBannedPoolingPeriod();        
+        Integer poolingPeriod = settings.getBannedPoolingPeriod();
         if (poolingPeriod != 0) {
             if (m_counter < poolingPeriod) {
                 m_counter ++;
                 LOG.debug("Banned Timer counter " + m_counter);
-            } else {
-                LOG.debug("Banned Timer counter " + m_counter + " ready to save apiban banned list");
-                try {
-                    String bannedIps = StringUtils.join(m_bannedApi.getBanned().getIpaddress(), ',');
-                    settings.setApibanIps(bannedIps);
-                    m_firewallManager.saveSettings(settings);
-                } catch (Exception ex) {
-                    LOG.error("APIBAN Call failed with: ", ex);
+                if (m_counter == poolingPeriod) {
+                    LOG.debug("Banned Timer counter " + m_counter + " ready to save apiban banned list");
+                    try {
+                        String bannedIps = StringUtils.join(m_bannedApi.getBanned().getIpaddress(), ',');
+                        settings.setApibanIps(bannedIps);
+                        m_firewallManager.saveSettings(settings);
+                    } catch (Exception ex) {
+                        LOG.error("APIBAN Call failed with: ", ex);
+                    }
+                    m_counter = 0;
                 }
-                m_counter = 0;
             }
         }
     }
