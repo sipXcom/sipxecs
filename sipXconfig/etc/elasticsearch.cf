@@ -28,7 +28,7 @@ bundle agent elasticsearch {
 bundle agent elasticsearch_config {
   files:
     any::
-      "/etc/elasticsearch/elasticsearch.yml",
+      "/etc/elasticsearch/elasticsearch.yml"
         comment => "configure elasticsearch",
         create => "true",
         perms => mog("644", "root", "root"),
