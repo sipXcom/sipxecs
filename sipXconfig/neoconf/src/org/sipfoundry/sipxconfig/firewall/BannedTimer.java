@@ -29,7 +29,7 @@ public class BannedTimer {
         if (poolingPeriod != 0) {
             if (m_counter < poolingPeriod) {
                 m_counter ++;
-                LOG.debug("Banned Timer counter " + m_counter);
+                LOG.debug("Banned Timer counter " + m_counter + " pooling period " + poolingPeriod);
                 if (m_counter == poolingPeriod) {
                     LOG.debug("Banned Timer counter " + m_counter + " ready to save apiban banned list");
                     try {

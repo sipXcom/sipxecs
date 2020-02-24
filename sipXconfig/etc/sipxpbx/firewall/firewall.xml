@@ -78,7 +78,7 @@
     </setting>
     <setting name="ips">
       <type>
-        <string multiLine="yes" maxLen="1000"/>
+        <string multiLine="yes" maxLen="10000"/>
       </type>
     </setting>      
   </group>
