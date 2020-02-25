@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Required;
 public class BannedTimer {
     private BannedApi m_bannedApi;
     private FirewallManager m_firewallManager;
-    private Integer m_counter = 0;
+    private int m_counter = 0;
     private String m_key;
 
     private static final Log LOG = LogFactory.getLog(BannedTimer.class);
@@ -25,7 +25,7 @@ public class BannedTimer {
             return;
         }
         FirewallSettings settings = m_firewallManager.getSettings();
-        Integer poolingPeriod = settings.getBannedPoolingPeriod();
+        int poolingPeriod = settings.getBannedPoolingPeriod();
         if (poolingPeriod != 0) {
             if (m_counter < poolingPeriod) {
                 m_counter ++;
