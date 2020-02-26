@@ -47,12 +47,12 @@ end
 
 def set_root_keys
   #harmless if re-run  
-  exit 1 unless run_command "/usr/sbin/cf-key"
+  exit 1 unless run_command "/usr/local/sbin/cf-key"
 end
 
 def set_nonroot_keys
   #harmless if re-run
-  exit 1 unless run_command "su - #{$user} sh -c '/usr/sbin/cf-key'"
+  exit 1 unless run_command "su - #{$user} sh -c '/usr/local/sbin/cf-key'"
 end
 
 def disable_selinux
