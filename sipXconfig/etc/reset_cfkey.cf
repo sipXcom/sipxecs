@@ -33,11 +33,11 @@ bundle agent reset_cfkey_do {
 
   commands:
     have_keys_to_reset::
-      "/usr/sbin/cf-key"
+      "/usr/local/sbin/cf-key"
         comment => "Deleting cfkey for root user",
         args => "-r $(sipx.reset_cfkeys)";
 
-      "/usr/sbin/cf-key"
+      "/usr/local/sbin/cf-key"
         comment => "Deleting cfkey for $(sipx.user) user",
         args => "-r $(sipx.reset_cfkeys)",
         contain => su("$(sipx.SIPXPBXUSER)");
