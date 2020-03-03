@@ -77,7 +77,7 @@ public class Location extends BeanWithId implements KeepsOriginalCopy<Location>,
     private Timestamp m_lastAttempt;
     private Set<String> m_failedReplications;
     private Branch m_branch;
-    private boolean m_useStun = true;
+    private boolean m_useStun = false;
     private String m_stunAddress = "stun.ezuce.com";
     private int m_stunInterval = 60; // seconds
     private String m_publicAddress;
@@ -143,7 +143,7 @@ public class Location extends BeanWithId implements KeepsOriginalCopy<Location>,
     }
 
     public String getPublicAddress() {
-        return m_publicAddress;
+        return m_publicAddress == null ? m_address : m_publicAddress;
     }
 
     public void setPublicAddress(String publicAddress) {
