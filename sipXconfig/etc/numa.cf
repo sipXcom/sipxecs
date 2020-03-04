@@ -14,33 +14,19 @@
 #
 # NUMA configuration
 #
-
 bundle agent numa {
   files:
-    !numaoff::
+    any::
       "/etc/default/grub"
         comment => "disable numa",
         create => "true",
         perms => mog("644","root","root"),
         edit_line => numa_off;
   commands:
-    !numaoff::
+    any::
       "/usr/sbin/grub2-mkconfig"
         comment => "run command to apply numa off",
-        args => "-o /etc/grub2.cfg";
-  methods:
-    any::
-      "any" usebundle => "after_numa";
-}
-
-bundle agent after_numa {
-  files:
-    any::
-      "$(sipx.SIPX_CFDATA)/$(sipx.location_id)/numa.cfdat"
-        comment => "mark numa disabled",
-        create => "true",
-        perms => m("644"),
-        edit_line => after_numa_off;
+        args => "-o /etc/grub2.cfg";                    
 }
 
 bundle edit_line numa_off {
@@ -53,13 +39,4 @@ bundle edit_line numa_off {
 body location grub_cmdline {
   select_line_matching => "GRUB_DISABLE_RECOVERY=\"true\"";
   before_after => "before";
-}
-
-bundle edit_line after_numa_off {
-  insert_lines:
-    any::
-      "+numaoff";
-  delete_lines:
-    any::
-      ".*";    
 }
