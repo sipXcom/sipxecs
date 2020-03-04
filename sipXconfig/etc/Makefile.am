@@ -45,8 +45,7 @@ dist_cfinputs_DATA = \
 	tftp.cf \
 	zz_apache.cf \
 	elasticsearch.cf \
-	systemaudit.cf \
-	numa.cf
+	systemaudit.cf
 
 cfdefaultsdir = $(SIPX_CFDATA)/defaults
 cfdefaults_DATA = \
