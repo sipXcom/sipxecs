@@ -93,7 +93,7 @@ public abstract class AbstractMailboxManager implements MailboxManager {
     }
 
     @Override
-    public final void store(User destUser, Folder folder, TempMessage message, String subject) {
+    public final void store(User destUser, Folder folder, TempMessage message, String subject, boolean sendEmail) {
         // Not this one, just delete any temp file
         if (!message.isToBeStored()) {
             FileUtils.deleteQuietly(new File(message.getTempPath()));
@@ -112,11 +112,18 @@ public abstract class AbstractMailboxManager implements MailboxManager {
             if (savedMessage != null) {
                 // Make sure to set folder after the message was correctly saved
                 savedMessage.setParentFolder(folder);
-                m_emailer.queueVm2Email(destUser, savedMessage);
+                if (sendEmail) {
+                    m_emailer.queueVm2Email(destUser, savedMessage);
+                }
             }
         }
     }
-
+    
+    @Override
+    public final void store(User destUser, Folder folder, TempMessage message, String subject) {
+        store(destUser, folder, message, subject, true);
+    }
+    
     @Override
     public final void copyMessage(User destUser, TempMessage message) {
         String newMessageId = nextMessageId(m_mailstoreDirectory + "/..");
