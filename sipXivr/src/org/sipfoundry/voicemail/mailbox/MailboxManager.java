@@ -35,9 +35,12 @@ public interface MailboxManager {
 
     TempMessage createTempMessage(String username, String fromUri, String extension, boolean addAudio);
 
-    void deleteTempMessage(TempMessage message);
+    void deleteTempMessage(TempMessage message);    
 
-    void store(User destUser, Folder folder, TempMessage message, String subject);
+    //sendEmail flag must be false is used when migration is performed
+    void store(User destUser, Folder folder, TempMessage message, String subject, boolean sendEmail);
+    
+    void store(User destUser, Folder folder, TempMessage message, String subject);    
 
     void storeInInbox(User destUser, TempMessage message);
 
