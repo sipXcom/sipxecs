@@ -81,9 +81,17 @@ if __name__ == '__main__':
             if collection == 'system.indexes':
                 continue
             if '_id' not in change['o']:
-                logging.debug("Ignore operation, no _id")
+                logging.debug("Ignore operation insert or delete, no _id")
+                if change['op'] == OP_UPDATE:
+                    if '_id' not in change['o2']:
+                        logging.debug("Ignore operation update, no _id")
+                        continue
+                    else:
+                        logging.debug("Perform operation: %s/%s/%s" % (collection, change['op'], change['o2']['_id']))
+                        newValues = {"$set": change['o']['$set']}
+                        dest[collection].update(change['o2'], newValues)                
                 continue
-            logging.debug("%s/%s/%s" % (collection, change['op'], change['o']['_id']))
+            logging.debug("Perform operation: %s/%s/%s" % (collection, change['op'], change['o']['_id']))
             if change['op'] == OP_DELETE:
                 dest[collection].remove(change['o'])
             elif change['op'] == OP_INSERT:
@@ -91,8 +99,6 @@ if __name__ == '__main__':
                     dest[collection].insert(change['o'])
                 except DuplicateKeyError:
                     logging.debug('already applied')
-            elif change['op'] == OP_UPDATE:
-                dest[collection].update(change['o2'], change['o'])
 
     except ConnectionFailure as e:
         logging.error(e)
