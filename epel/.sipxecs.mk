@@ -46,6 +46,7 @@ BUILD_EPEL = \
 	p/poco-* \
 	p/poco-debug-* \
 	p/python-empy-* \
+        p/python-bson-2.5* \
 	r/rubygem-mocha-* \
 	r/rubygem-net-ssh-* \
 	r/rubygem-net-sftp-* \
