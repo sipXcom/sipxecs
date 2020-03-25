@@ -61,6 +61,7 @@
         <ref bean="scheduleRestApi"/>
         <ref bean="dialPlanRestApi"/>
         <ref bean="apibanRestApi"/>
+        <ref bean="callGroupRestApi"/>
     </util:list>
 
     <bean class="org.sipfoundry.sipxconfig.api.impl.PhoneApiImpl" id="phoneRestApi">
@@ -191,4 +192,8 @@
     <bean class="org.sipfoundry.sipxconfig.api.impl.ApibanApiImpl" id="apibanRestApi">
 		<property name="bannedApi" ref="restClient"/>
     </bean>
+    
+    <bean class="org.sipfoundry.sipxconfig.api.impl.CallGroupApiImpl" id="callGroupRestApi">
+		<property name="context" ref="callGroupContext" />
+    </bean>    
 </beans>
