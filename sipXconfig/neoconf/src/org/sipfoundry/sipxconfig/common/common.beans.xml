@@ -86,6 +86,19 @@
     <property name="featureManager" ref="featureManager" />
     <property name="didPoolService" ref="didPoolService" />
   </bean>  
+  
+  <!--
+  - EXTENDED CDR SERVICE
+  -->  
+
+  <bean id="extendedCdrService" class="org.springframework.aop.framework.ProxyFactoryBean">
+    <property name="proxyInterfaces" value="org.sipfoundry.commons.extendedcdr.ExtendedCdrService"/>
+    <property name="target" ref="extendedCdrServiceImpl"/>
+  </bean>
+
+  <bean id="extendedCdrServiceImpl" class="org.sipfoundry.commons.extendedcdr.ExtendedCdrServiceImpl">
+    <property name="profiles" ref="profilesDb"/>
+  </bean>
 
   <bean id="org.sipfoundry.sipxconfig.common.User" class="org.sipfoundry.sipxconfig.common.User"
     scope="prototype" parent="beanWithSettings">

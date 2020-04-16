@@ -21,6 +21,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.joda.time.Period;
+import org.sipfoundry.commons.extendedcdr.ExtendedCdrBean;
 import org.sipfoundry.sipxconfig.cdr.Cdr;
 
 @XmlRootElement(name = "Cdr")
@@ -37,6 +38,7 @@ public class CdrBean {
     private Date m_startTime;
     private String m_startAt;
     private String m_connectAt;
+    private ExtendedCdrBean m_extendedCdr;
 
     public String getCaller() {
         return m_caller;
@@ -153,4 +155,12 @@ public class CdrBean {
         return bean;
     }
 
+	public ExtendedCdrBean getExtendedCdr() {
+		return m_extendedCdr;
+	}
+
+	public void setExtendedCdr(ExtendedCdrBean extendedCdr) {
+		m_extendedCdr = extendedCdr;
+	}
+   
 }

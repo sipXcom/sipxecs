@@ -36,6 +36,8 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.sipfoundry.commons.util.TimeZoneUtils;
@@ -43,6 +45,7 @@ import org.sipfoundry.sipxconfig.address.Address;
 import org.sipfoundry.sipxconfig.address.AddressManager;
 import org.sipfoundry.sipxconfig.address.AddressProvider;
 import org.sipfoundry.sipxconfig.address.AddressType;
+import org.sipfoundry.sipxconfig.api.impl.BaseCdrApiImpl;
 import org.sipfoundry.sipxconfig.backup.ArchiveDefinition;
 import org.sipfoundry.sipxconfig.backup.ArchiveProvider;
 import org.sipfoundry.sipxconfig.backup.BackupManager;
@@ -109,6 +112,7 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
     private FeatureManager m_featureManager;
     private BeanWithSettingsDao<CdrSettings> m_settingsDao;
     private NtpManager m_ntpManager;
+    private static final Log LOG = LogFactory.getLog(CdrManagerImpl.class);
 
     @Override
     public CdrSettings getSettings() {
@@ -152,7 +156,7 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
         CdrsResultReader resultReader = new CdrsResultReader(resultsTimeZone,
                 getSettings().getPrivacyStatus(), getSettings().getPrivacyMinLength(),
                 getSettings().getPrivacyExcludeList());
-
+        LOG.error("MIRCEA DOBITOCUL " + psc.getSelectSql() + " XXX " +psc.FROM);
         getJdbcTemplate().query(psc, resultReader);
         return resultReader.getResults();
     }
@@ -389,6 +393,7 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
             else if (m_offset > 0) {
                 ps.setInt(3, m_offset);
             }
+            LOG.error("MIRCEA DOBITOCUL 2 " + sql.toString() + " CCC " + m_limit + " VVV " + m_offset);
             return ps;
         }
 

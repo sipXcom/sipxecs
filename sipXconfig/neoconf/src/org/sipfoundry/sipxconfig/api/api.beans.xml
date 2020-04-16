@@ -62,6 +62,7 @@
         <ref bean="dialPlanRestApi"/>
         <ref bean="apibanRestApi"/>
         <ref bean="callGroupRestApi"/>
+        <ref bean="cdrExtendedRestApi"/>
     </util:list>
 
     <bean class="org.sipfoundry.sipxconfig.api.impl.PhoneApiImpl" id="phoneRestApi">
@@ -179,6 +180,7 @@
         <property name="settingDao" ref="settingDao" />
         <property name="branchManager" ref="branchManager" />
     </bean>
+
     <bean class="org.sipfoundry.sipxconfig.api.impl.MyUserApiImpl" id="myUserRestApi">
         <property name="coreContext" ref="coreContext"/>
         <property name="userApiImpl" ref="userRestApi"/>
@@ -192,8 +194,16 @@
     <bean class="org.sipfoundry.sipxconfig.api.impl.ApibanApiImpl" id="apibanRestApi">
 		<property name="bannedApi" ref="restClient"/>
     </bean>
-    
+
     <bean class="org.sipfoundry.sipxconfig.api.impl.CallGroupApiImpl" id="callGroupRestApi">
 		<property name="context" ref="callGroupContext" />
+    </bean>
+    
+    <bean class="org.sipfoundry.sipxconfig.api.impl.CdrExtendedApiImpl" id="cdrExtendedRestApi">
+        <property name="cdrManager" ref="cdrManager" />
+        <property name="coreContext" ref="coreContext"/>
+        <property name="path" value="${sysdir.var}/reports"/>
+        <property name="extensions" ref="reportExtensions"/>
+        <property name="extendedCdrService" ref="extendedCdrService"/>
     </bean>    
 </beans>
