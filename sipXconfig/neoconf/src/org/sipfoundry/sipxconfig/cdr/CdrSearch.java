@@ -175,7 +175,15 @@ public class CdrSearch {
     public boolean isSearch() {
         return m_mode != Mode.NONE;
     }
-
+    
+    public boolean isAscending() {
+    	return m_ascending;
+    }
+    
+    public void setAscending(boolean m_ascending) {
+    	this.m_ascending = m_ascending;
+    }
+    
     private String orderToColumn() {
         if (m_order == null) {
             return CdrManagerImpl.START_TIME;

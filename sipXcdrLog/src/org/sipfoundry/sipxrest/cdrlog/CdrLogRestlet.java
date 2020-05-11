@@ -138,7 +138,6 @@ public class CdrLogRestlet extends Restlet {
             }
             // Execute the SQL query to obtain the results.
             qResults = qStatement.executeQuery();
-        logger.error("MIRCEA " + qStatement.toString());
             // Build an XML document to return the DB Query results.
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder =factory.newDocumentBuilder();

@@ -31,7 +31,7 @@ public class CdrExtendedApiImpl extends BaseCdrApiImpl implements CdrExtendedApi
 	@Override
     public Response getCdrHistory(String fromDate, String toDate, String from, String to, Integer limit,
             Integer offset, String orderBy, HttpServletRequest request) {
-		CdrList list = CdrList.convertCdrList(getCdrs(fromDate, toDate, from, to, limit, offset, orderBy, null),
+		CdrList list = CdrList.convertCdrList(getCdrs(fromDate, toDate, from, to, limit, offset, orderBy, "asc", null),
                 request.getLocale());
 		List<CdrBean> listCdrs = list.getCdrs();
 		List<String> callIds = new ArrayList<String>();

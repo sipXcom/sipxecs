@@ -156,7 +156,6 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
         CdrsResultReader resultReader = new CdrsResultReader(resultsTimeZone,
                 getSettings().getPrivacyStatus(), getSettings().getPrivacyMinLength(),
                 getSettings().getPrivacyExcludeList());
-        LOG.error("MIRCEA DOBITOCUL " + psc.getSelectSql() + " XXX " +psc.FROM);
         getJdbcTemplate().query(psc, resultReader);
         return resultReader.getResults();
     }
@@ -393,7 +392,6 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
             else if (m_offset > 0) {
                 ps.setInt(3, m_offset);
             }
-            LOG.error("MIRCEA DOBITOCUL 2 " + sql.toString() + " CCC " + m_limit + " VVV " + m_offset);
             return ps;
         }
 

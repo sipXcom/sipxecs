@@ -80,10 +80,9 @@ public class BaseCdrApiImpl extends BaseServiceApiImpl implements BaseCdrApi {
     @Override
     public Response getCdrHistory(String fromDate, String toDate, String from, String to, Integer limit,
             Integer offset, String orderBy, HttpServletRequest request) {
-    	LOG.error("MIRCEA FRAIERUL " + fromDate + " VVV " + toDate + " AAA " +from + " BBBB " + to);
         return Response
                 .ok()
-                .entity(CdrList.convertCdrList(getCdrs(fromDate, toDate, from, to, limit, offset, orderBy, null),
+                .entity(CdrList.convertCdrList(getCdrs(fromDate, toDate, from, to, limit, offset, orderBy, "asc", null),
                         request.getLocale())).build();
     }
 
@@ -103,13 +102,13 @@ public class BaseCdrApiImpl extends BaseServiceApiImpl implements BaseCdrApi {
 
     @Override
     public Response getUserCdrHistory(String userId, String fromDate, String toDate, String from, String to,
-            Integer limit, Integer offset, String orderBy, HttpServletRequest request) {
+            Integer limit, Integer offset, String orderBy, String orderDirection, HttpServletRequest request) {
         User user = getUserByIdOrUserName(userId);
         if (user != null) {
             return Response
                     .ok()
                     .entity(CdrList.convertCdrList(
-                            getCdrs(fromDate, toDate, from, to, limit, offset, orderBy, user), request.getLocale()))
+                            getCdrs(fromDate, toDate, from, to, limit, offset, orderBy, orderDirection, user), request.getLocale()))
                     .build();
         }
         return Response.status(Status.NOT_FOUND).build();
@@ -125,7 +124,7 @@ public class BaseCdrApiImpl extends BaseServiceApiImpl implements BaseCdrApi {
             Integer offset, String orderBy, HttpServletRequest request) {
         Date start = getDate(fromDate, RequestUtils.getDefaultStartTime());
         Date end = getDate(toDate, RequestUtils.getDefaultEndTime());
-        List<Cdr> cdrs = getCdrs(start, end, from, to, limit, offset, orderBy, null);
+        List<Cdr> cdrs = getCdrs(start, end, from, to, limit, offset, orderBy, "asc", null);
         return generateReport(CdrList.convertCdrList(cdrs, request.getLocale()), start, end, request.getLocale());
     }
 
@@ -136,7 +135,7 @@ public class BaseCdrApiImpl extends BaseServiceApiImpl implements BaseCdrApi {
         if (user != null) {
             Date start = getDate(fromDate, RequestUtils.getDefaultStartTime());
             Date end = getDate(toDate, RequestUtils.getDefaultEndTime());
-            List<Cdr> cdrs = getCdrs(start, end, from, to, limit, offset, orderBy, user);
+            List<Cdr> cdrs = getCdrs(start, end, from, to, limit, offset, orderBy, "asc", user);
             return generateReport(CdrList.convertCdrList(cdrs, request.getLocale()), start, end, request.getLocale());
         }
         return Response.status(Status.NOT_FOUND).build();
@@ -194,9 +193,10 @@ public class BaseCdrApiImpl extends BaseServiceApiImpl implements BaseCdrApi {
     }
 
     private List<Cdr> getCdrs(Date start, Date end, String from, String to, Integer limit, Integer offset,
-            String orderBy, User user) {
+            String orderBy, String orderDirection, User user) {
 
         CdrSearch search = getSearch(from, to, orderBy);
+        search.setAscending(StringUtils.equals(orderDirection, "asc"));
         return m_cdrManager.getCdrs(start, end, search, user, getWithDefaultValue(limit),
                 getWithDefaultValue(offset));
     }
@@ -209,10 +209,10 @@ public class BaseCdrApiImpl extends BaseServiceApiImpl implements BaseCdrApi {
     }
 
     protected  List<Cdr> getCdrs(String fromDate, String toDate, String from, String to, Integer limit, Integer offset,
-            String orderBy, User user) {
+            String orderBy, String orderDirection, User user) {
         Date start = getDate(fromDate, RequestUtils.getDefaultStartTime());
         Date end = getDate(toDate, RequestUtils.getDefaultEndTime());
-        return getCdrs(start, end, from, to, limit, offset, orderBy, user);
+        return getCdrs(start, end, from, to, limit, offset, orderBy, orderDirection, user);
     }
 
     private CdrSearch getSearch(String from, String to, String orderBy) {
