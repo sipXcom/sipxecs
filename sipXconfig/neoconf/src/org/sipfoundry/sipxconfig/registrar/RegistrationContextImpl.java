@@ -15,6 +15,7 @@ import static org.sipfoundry.commons.mongo.MongoConstants.INSTRUMENT;
 import static org.sipfoundry.commons.mongo.MongoConstants.REG_CONTACT;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -68,10 +69,21 @@ public class RegistrationContextImpl implements RegistrationContext {
     public List<RegistrationItem> getRegistrationsByUser(User user) {
         return getItems(getRegistrarCollection().find(getUserQuery(user)));
     }
+    
+    @Override
+    public List<RegistrationItem> getRegistrationsByUsers(Collection<User> users) {
+        return getItems(getRegistrarCollection().find(getUsersQuery(users)));
+    }
 
     @Override
     public List<RegistrationItem> getRegistrationsByUser(User user, Integer start, Integer count) {
         return getItems(getRegistrarCollection().find(getUserQuery(user))
+                .sort(new BasicDBObject(EXPIRATION_TIME, -1)).skip(start).limit(count));
+    }
+    
+    @Override
+    public List<RegistrationItem> getRegistrationsByUsers(Collection<User> users, Integer start, Integer count) {
+        return getItems(getRegistrarCollection().find(getUsersQuery(users))
                 .sort(new BasicDBObject(EXPIRATION_TIME, -1)).skip(start).limit(count));
     }
 
@@ -176,6 +188,15 @@ public class RegistrationContextImpl implements RegistrationContext {
 
     private DBObject getUserQuery(User user) {
         return QueryBuilder.start(IDENTITY).is(user.getIdentity(m_domainManager.getDomainName())).and(EXPIRED)
+                .is(Boolean.FALSE).get();
+    }
+    
+    private DBObject getUsersQuery(Collection<User> users) {
+    	List<String> identities = new ArrayList<String>();
+    	for (User user : users) {
+    		identities.add(user.getIdentity(m_domainManager.getDomainName()));
+    	}
+        return QueryBuilder.start(IDENTITY).in(identities).and(EXPIRED)
                 .is(Boolean.FALSE).get();
     }
 

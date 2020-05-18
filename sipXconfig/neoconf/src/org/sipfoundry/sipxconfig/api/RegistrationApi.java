@@ -42,6 +42,14 @@ public interface RegistrationApi {
             @Description("User internal id or user name / alias") @PathParam("userid") String user,
             @Description("First registration row") @QueryParam("start") Integer start,
             @Description("Number of registrations to be returned") @QueryParam("limit") Integer limit);
+    
+    @Path("group/{groupName}")
+    @GET
+    public Response getRegistrationsByUserGroup(
+            @Description("User internal id or user name / alias") @PathParam("groupName") String groupName,
+            @Description("First registration row") @QueryParam("start") Integer start,
+            @Description("Number of registrations to be returned") @QueryParam("limit") Integer limit);
+    
 
     @Path("user/{userid}")
     @DELETE

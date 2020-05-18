@@ -32,6 +32,7 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.converters.DateConverter;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.ListUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -154,6 +155,35 @@ public class UserApiImpl implements UserApi {
         }
         return buildUserList(users);
     }
+    
+	@Override
+	public Response getUsersInGroup(String groupName, Integer startId, Integer pageSize, final String email) {
+        List<User> users = new ArrayList();
+        if (groupName != null) {
+        	Group group = m_coreContext.getGroupByName(groupName, false);
+        	if (group != null) {
+        		if (startId != null && pageSize != null) {        	
+        			Collection<Integer> userIds = m_coreContext.getGroupMembersByPage(group.getId(), startId, pageSize);
+        			for (Integer userId : userIds) {
+        				users.add(m_coreContext.loadUser(userId));
+        			}
+        		} else {
+        			users = new ArrayList(m_coreContext.getGroupMembers(group));
+        		}
+        		if (email != null) {
+        			users = (List<User>) CollectionUtils.select(users, new org.apache.commons.collections.Predicate() {
+        				public boolean evaluate(Object userObject) {
+        					User validUser = (User) userObject;
+        					return (StringUtils.contains(validUser.getEmailAddress(), email)
+        						|| StringUtils.contains(validUser.getEmailAddressAliases(), email)
+        						|| StringUtils.contains(validUser.getAlternateEmailAddress(), email));
+        				}
+        			});
+        		}
+        	}
+        }
+        return buildUserList(users);
+	}    
 
     @Override
     public Response getUsersEmail(String emailFilter) {

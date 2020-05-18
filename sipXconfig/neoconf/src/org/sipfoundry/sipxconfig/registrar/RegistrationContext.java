@@ -9,6 +9,7 @@
  */
 package org.sipfoundry.sipxconfig.registrar;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.sipfoundry.sipxconfig.common.User;
@@ -25,8 +26,12 @@ public interface RegistrationContext {
     public abstract List<RegistrationItem> getRegistrations(Integer start, Integer limit);
 
     public abstract List<RegistrationItem> getRegistrationsByUser(User user);
+    
+    public abstract List<RegistrationItem> getRegistrationsByUsers(Collection<User> users);
 
     public abstract List<RegistrationItem> getRegistrationsByUser(User user, Integer start, Integer limit);
+    
+    public abstract List<RegistrationItem> getRegistrationsByUsers(Collection<User> users, Integer start, Integer count);
 
     public abstract List<RegistrationItem> getRegistrationsByLineId(String uid);
 

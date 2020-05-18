@@ -51,6 +51,7 @@ public interface BaseCdrApi extends ServiceSettingsApi {
             @Description("Offset Cdr row") @QueryParam("offset") Integer offset,
             @Description("Order by criteria. Could have values of caller, callee, startTime, duration, termination")
             @QueryParam("orderBy") String orderBy,
+            @QueryParam("orderDirection") String orderDirection,
             @Context HttpServletRequest request);
 
     @Path("user/{userId}/active")

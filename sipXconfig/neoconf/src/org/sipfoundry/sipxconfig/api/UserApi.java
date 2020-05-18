@@ -46,6 +46,12 @@ public interface UserApi {
     public Response getUsers(@Description("First User row") @QueryParam("start") Integer startId,
             @Description("Number of users to be returned") @QueryParam("limit") Integer limit,
             @Description("Email filtering") @QueryParam("email") String email);
+    
+    @Path("group/{groupName}")
+    @GET
+    public Response getUsersInGroup(@Description("Group Name") @PathParam("groupName") String groupName, @Description("First User row") @QueryParam("start") Integer startId,
+            @Description("Number of users to be returned") @QueryParam("limit") Integer limit,
+            @Description("Email filtering") @QueryParam("email") String email);
 
     @Path("email")
     @GET

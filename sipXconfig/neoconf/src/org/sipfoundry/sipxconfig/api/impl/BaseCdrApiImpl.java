@@ -79,10 +79,10 @@ public class BaseCdrApiImpl extends BaseServiceApiImpl implements BaseCdrApi {
 
     @Override
     public Response getCdrHistory(String fromDate, String toDate, String from, String to, Integer limit,
-            Integer offset, String orderBy, HttpServletRequest request) {
+            Integer offset, String orderBy, String orderDirection, HttpServletRequest request) {
         return Response
                 .ok()
-                .entity(CdrList.convertCdrList(getCdrs(fromDate, toDate, from, to, limit, offset, orderBy, "asc", null),
+                .entity(CdrList.convertCdrList(getCdrs(fromDate, toDate, from, to, limit, offset, orderBy, orderDirection, null),
                         request.getLocale())).build();
     }
 
@@ -167,7 +167,7 @@ public class BaseCdrApiImpl extends BaseServiceApiImpl implements BaseCdrApi {
         return responseBuilder.build();
     }
 
-    private User getUserByIdOrUserName(String id) {
+    protected User getUserByIdOrUserName(String id) {
         User user = null;
         try {
             int userId = Integer.parseInt(id);

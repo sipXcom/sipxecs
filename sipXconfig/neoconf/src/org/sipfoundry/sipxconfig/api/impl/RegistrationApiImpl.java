@@ -14,6 +14,7 @@
  */
 package org.sipfoundry.sipxconfig.api.impl;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -31,6 +32,7 @@ import org.sipfoundry.sipxconfig.phone.Phone;
 import org.sipfoundry.sipxconfig.phone.PhoneContext;
 import org.sipfoundry.sipxconfig.registrar.RegistrationContext;
 import org.sipfoundry.sipxconfig.registrar.RegistrationMetrics;
+import org.sipfoundry.sipxconfig.setting.Group;
 
 public class RegistrationApiImpl implements RegistrationApi {
     private static final String SERVER_NOT_FOUND = "Server not found";
@@ -59,6 +61,19 @@ public class RegistrationApiImpl implements RegistrationApi {
             return buildRegistrationResponse(m_context.getRegistrationsByUser(user));
         }
         return Response.status(Status.NOT_FOUND).entity(USER_NOT_FOUND).build();
+    }
+    
+    @Override
+    public Response getRegistrationsByUserGroup(String groupName, Integer startId, Integer limit) {
+    	Group group = m_coreContext.getGroupByName(groupName, false);
+    	if (group != null) {
+    		Collection<User> users = m_coreContext.getGroupMembers(group);
+    		if (startId != null && limit != null) {
+    			return buildRegistrationResponse(m_context.getRegistrationsByUsers(users, startId, limit));
+    		}
+    		return buildRegistrationResponse(m_context.getRegistrationsByUsers(users));
+    	}
+    	return Response.status(Status.NOT_FOUND).entity(USER_NOT_FOUND).build();
     }
 
     @Override
