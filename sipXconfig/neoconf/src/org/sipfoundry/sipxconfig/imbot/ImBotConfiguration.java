@@ -102,7 +102,7 @@ public class ImBotConfiguration implements ConfigProvider {
             config.write("imbot.callHistoryUrl", rest.toString() + "/cdr/");
         }
         if (imApi != null) {
-            config.write("imbot.openfireHost", domain.getNetworkName());
+            config.write("imbot.openfireHost", domain.getName());
             config.write("imbot.openfireXmlRpcPort", imApi.getPort());
         }
         config.write("imbot.hzEnabled", hzEnabled);
