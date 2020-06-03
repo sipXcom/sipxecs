@@ -148,6 +148,7 @@ public class FirewallConfig implements ConfigProvider, FeatureListener {
         c.write("logsubscribe", settings.isLogSipSubscribeEnabled());
         c.write("loglimit", settings.getLogLimitNumber());
         c.write("loginterval", settings.getLogLimitInterval());
+        c.write("blocksipmessage", (Boolean)settings.getSettingTypedValue("sys/block-sip-message"));
 
         c.writeInlineArray("cluster", ips);
 

@@ -147,5 +147,9 @@
     <setting name="unmanaged">
       <type refid="true-false"/>
     </setting>
+    <setting name="block-sip-message">
+      <type refid="true-false"/>
+      <value>1</value>
+    </setting>
   </group>
 </model>
