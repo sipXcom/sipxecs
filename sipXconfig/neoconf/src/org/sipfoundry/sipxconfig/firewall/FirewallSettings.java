@@ -30,6 +30,7 @@ import org.sipfoundry.sipxconfig.setting.SettingEntry;
 
 public class FirewallSettings extends PersistableSettings implements DeployConfigOnEdit {
     private boolean m_unmanagedDefault;
+    private boolean m_blockSipMessageDefault = true;
 
     public FirewallSettings() {
         addDefaultBeanSettingHandler(new Defaults());
@@ -39,6 +40,10 @@ public class FirewallSettings extends PersistableSettings implements DeployConfi
         @SettingEntry(path = "sys/unmanaged")
         public boolean unmanaged() {
             return m_unmanagedDefault;
+        }
+        @SettingEntry(path = "sys/block-sip-message")
+        public boolean blockSipMessage() {
+            return m_blockSipMessageDefault;
         }
     }
 
@@ -176,5 +181,9 @@ public class FirewallSettings extends PersistableSettings implements DeployConfi
 
     public void setUnmanagedDefault(boolean unmanagedDefault) {
         m_unmanagedDefault = unmanagedDefault;
+    }
+
+    public void setBlockSipMessageDefault(boolean blockSipMessageDefault) {
+        m_blockSipMessageDefault = blockSipMessageDefault;
     }
 }

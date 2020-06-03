@@ -171,6 +171,13 @@
     end
   }
 
+  if blocksipmessage
+%>-A INPUT -i $(sipx.iface) -p tcp -m tcp --dport 5060 -m string --string "MESSAGE sip:" --algo bm --to 65 -j DROP
+-A INPUT -i $(sipx.iface) -p udp -m udp --dport 5060 -m string --string "MESSAGE sip:" --algo bm --to 65 -j DROP
+-A INPUT -i $(sipx.iface) -p tcp -m tcp --dport 5061 -m string --string "MESSAGE sip:" --algo bm --to 65 -j DROP
+<%
+  end
+
   if !restrictive && defined?(filter) && !filter.nil?
     filter.each { |rule|
 %><%= rule %>
