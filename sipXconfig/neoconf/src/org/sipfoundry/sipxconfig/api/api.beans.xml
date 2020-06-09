@@ -197,6 +197,7 @@
 
     <bean class="org.sipfoundry.sipxconfig.api.impl.CallGroupApiImpl" id="callGroupRestApi">
 		<property name="context" ref="callGroupContext" />
+		<property name="coreContext" ref="coreContext" />
     </bean>
     
     <bean class="org.sipfoundry.sipxconfig.api.impl.CdrExtendedApiImpl" id="cdrExtendedRestApi">
