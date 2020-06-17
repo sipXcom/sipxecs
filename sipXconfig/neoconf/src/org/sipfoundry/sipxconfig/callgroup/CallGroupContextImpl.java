@@ -198,6 +198,21 @@ public class CallGroupContextImpl extends SipxHibernateDaoSupport implements Cal
             getDaoEventPublisher().publishSave(groupDup);
         }
     }
+    
+    @Override
+    public void duplicateCallGroup(Integer id, String extension) {
+        CallGroup group = loadCallGroup(id);
+
+        // Create a copy of the call group with a unique name
+        CallGroup groupDup = (CallGroup) duplicateBean(group, QUERY_CALL_GROUP_IDS_WITH_NAME);
+        
+        groupDup.setExtension(extension);
+        groupDup.setDid(null);
+
+        groupDup.setEnabled(false);
+        saveCallGroup(groupDup);
+        getDaoEventPublisher().publishSave(groupDup);        
+    }
 
     /**
      * Remove all call groups - mostly used for testing

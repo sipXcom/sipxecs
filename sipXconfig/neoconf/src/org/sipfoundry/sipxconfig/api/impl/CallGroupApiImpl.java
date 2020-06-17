@@ -1,5 +1,6 @@
 package org.sipfoundry.sipxconfig.api.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -105,5 +106,31 @@ public class CallGroupApiImpl implements CallGroupApi {
             return Response.ok().entity(CallGroupBean.convertCallGroup(callGroup)).build();
         }
         return Response.status(Status.NOT_FOUND).build();
-    }	
+    }
+
+	@Override
+	public Response duplicateCallGroup(String callGroupExtension, String assignedExtension) {
+        int callGroupId = m_context.getCallGroupId(callGroupExtension);
+        if (assignedExtension == null) {
+        	ArrayList<Integer> list = new ArrayList<Integer>();
+        	list.add(callGroupId);
+        	m_context.duplicateCallGroups(list);
+        } else {
+        	m_context.duplicateCallGroup(callGroupId, assignedExtension);
+        }
+        return Response.ok().entity(callGroupId).build();
+	}
+
+	@Override
+	public Response getPrefixedCallGroups(String prefix) {
+        List<CallGroup> callGroups = m_context.getCallGroups();
+        if (callGroups != null) {
+        	try {
+        		return Response.ok().entity(CallGroupList.convertCallGroupList(callGroups, prefix)).build();
+        	} catch (Exception ex) {
+        		LOG.error("Exception building callgroup response ", ex);
+        	}
+        }
+        return Response.status(Status.NOT_FOUND).build();
+	}	
 }

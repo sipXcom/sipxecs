@@ -35,4 +35,16 @@ public class CallGroupList {
         list.setCallGroups(callGroupBeans);
         return list;
     }
+    
+    public static CallGroupList convertCallGroupList(List<CallGroup> callGroups, String prefix) {
+        List<CallGroupBean> callGroupBeans = new ArrayList<CallGroupBean>();
+        for (CallGroup callGroup : callGroups) {
+        	if (callGroup.getExtension().startsWith(prefix)) {
+        		callGroupBeans.add(CallGroupBean.convertCallGroup(callGroup));
+        	}
+        }
+        CallGroupList list = new CallGroupList();
+        list.setCallGroups(callGroupBeans);
+        return list;
+    }
 }

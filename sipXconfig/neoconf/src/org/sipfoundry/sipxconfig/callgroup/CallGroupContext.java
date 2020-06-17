@@ -29,6 +29,8 @@ public interface CallGroupContext extends AliasOwner, ReplicableProvider {
     void removeCallGroupByAlias(String alias);
 
     void duplicateCallGroups(Collection ids);
+    
+    void duplicateCallGroup(Integer id, String extension);
 
     void removeUser(Integer userId);
 

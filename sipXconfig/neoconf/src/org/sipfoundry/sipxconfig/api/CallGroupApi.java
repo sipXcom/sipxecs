@@ -23,6 +23,13 @@ public interface CallGroupApi {
     @GET
     public Response getCallGroups();
     
+    @Path("prefix/{prefix}")
+    @GET
+    @Consumes({
+        MediaType.APPLICATION_JSON, MediaType.TEXT_XML, MediaType.APPLICATION_XML
+    })
+    public Response getPrefixedCallGroups(@Description("Call Group Extension prefix") @PathParam("prefix") String prefix);
+    
     @Path("{callGroupExtension}")
     @GET
     @Consumes({
@@ -36,7 +43,12 @@ public interface CallGroupApi {
         MediaType.APPLICATION_JSON, MediaType.TEXT_XML, MediaType.APPLICATION_XML
     })
     public Response newCallGroup(@Description("CallGroup bean to save") CallGroupBean callGroupBean);
-    
+
+    @Path("{callGroupExtension}/duplicate/{assignedExtension}")
+    @POST
+    public Response duplicateCallGroup(@Description("Call Group Extension") @PathParam("callGroupExtension") String callGroupExtension, 
+    		@Description("Extension to assign to new group") @PathParam("assignedExtension") String assignedExtension);
+        
     @Path("{callGroupExtension}")
     @PUT
     @Consumes({
@@ -45,7 +57,7 @@ public interface CallGroupApi {
     public Response updateCallGroup(
             @Description("Call Group Extension") @PathParam("callGroupExtension") String callGroupExtension,
             @Description("Call group bean to save") CallGroupBean callGroup);
-
+        
     @Path("{callGroupExtension}")
     @DELETE
     public Response deleteCallGroup(@Description("Call Group Extension") @PathParam("callGroupExtension") String callGroupExtension);
