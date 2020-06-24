@@ -29,6 +29,7 @@ import org.sipfoundry.sipxconfig.cdr.Cdr;
 public class CdrList {
 
     private List<CdrBean> m_cdrs;
+    private Integer m_total;
 
     public void setCdrs(List<CdrBean> cdrs) {
         m_cdrs = cdrs;
@@ -52,4 +53,14 @@ public class CdrList {
         list.setCdrs(cdrList);
         return list;
     }
+
+	public Integer getTotal() {
+		return m_total;
+	}
+
+	public void setTotal(Integer total) {
+		this.m_total = total;
+	}
+    
+    
 }

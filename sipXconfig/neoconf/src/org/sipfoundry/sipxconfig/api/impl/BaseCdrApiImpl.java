@@ -41,7 +41,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sipfoundry.sipxconfig.api.BaseCdrApi;
-import org.sipfoundry.sipxconfig.api.CdrApi;
 import org.sipfoundry.sipxconfig.api.model.CdrList;
 import org.sipfoundry.sipxconfig.cdr.Cdr;
 import org.sipfoundry.sipxconfig.cdr.CdrManager;
@@ -54,7 +53,7 @@ import org.springframework.ui.jasperreports.JasperReportsUtils;
 
 public class BaseCdrApiImpl extends BaseServiceApiImpl implements BaseCdrApi {
     private static final Log LOG = LogFactory.getLog(BaseCdrApiImpl.class);
-    private CdrManager m_cdrManager;
+    protected CdrManager m_cdrManager;
     private CoreContext m_coreContext;
 
     public void setCdrManager(CdrManager manager) {
@@ -79,7 +78,7 @@ public class BaseCdrApiImpl extends BaseServiceApiImpl implements BaseCdrApi {
 
     @Override
     public Response getCdrHistory(String fromDate, String toDate, String from, String to, Integer limit,
-            Integer offset, String orderBy, String orderDirection, HttpServletRequest request) {
+            Integer offset, String orderBy, String orderDirection, HttpServletRequest request) {    	
         return Response
                 .ok()
                 .entity(CdrList.convertCdrList(getCdrs(fromDate, toDate, from, to, limit, offset, orderBy, orderDirection, null),
@@ -103,6 +102,7 @@ public class BaseCdrApiImpl extends BaseServiceApiImpl implements BaseCdrApi {
     @Override
     public Response getUserCdrHistory(String userId, String fromDate, String toDate, String from, String to,
             Integer limit, Integer offset, String orderBy, String orderDirection, HttpServletRequest request) {
+    	LOG.error("CACAMCAMCA " + offset);
         User user = getUserByIdOrUserName(userId);
         if (user != null) {
             return Response
@@ -181,7 +181,7 @@ public class BaseCdrApiImpl extends BaseServiceApiImpl implements BaseCdrApi {
         return user;
     }
 
-    private Date getDate(String date, Date defaultDate) {
+    protected Date getDate(String date, Date defaultDate) {
         try {
             if (date != null) {
                 return RequestUtils.DATE_FORMAT.parse(date);
@@ -215,7 +215,7 @@ public class BaseCdrApiImpl extends BaseServiceApiImpl implements BaseCdrApi {
         return getCdrs(start, end, from, to, limit, offset, orderBy, orderDirection, user);
     }
 
-    private CdrSearch getSearch(String from, String to, String orderBy) {
+    protected CdrSearch getSearch(String from, String to, String orderBy) {
         CdrSearch search = new CdrSearch();
         if (StringUtils.isNotBlank(from) && StringUtils.isNotBlank(to) && StringUtils.equals(from, to)) {
             search.setMode(CdrSearch.Mode.ANY);

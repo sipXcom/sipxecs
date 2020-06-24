@@ -378,7 +378,7 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
             }
             if (m_offset > 0) {
                 sql.append(OFFSET);
-            }
+            }            
             PreparedStatement ps = con.prepareStatement(sql.toString());
             ps.setTimestamp(1, m_from, m_calendar);
             ps.setTimestamp(2, m_to, m_calendar);
