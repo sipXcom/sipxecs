@@ -47,8 +47,9 @@ public class CdrSearch {
     private String[] m_term = new String[] {
         ""
     };
-    private String m_order;
+    private String m_order;    
     private boolean m_ascending = true;
+    private boolean m_prefix = false;
 
     public void setMode(Mode mode) {
         if (mode == null) {
@@ -82,7 +83,7 @@ public class CdrSearch {
     private void appendSearchTermSql(StringBuilder sql, String call) {
         List<String> sqlList = new ArrayList<String>();
         for (String name : m_term) {
-            sqlList.add(call + " LIKE '%<sip:" + name + "@%>'");
+            sqlList.add(call + " LIKE '%<sip:" + name + (m_prefix ? "%@%>'" : "@%>'"));
         }
         sql.append(join(sqlList.toArray(), OR));
     }
@@ -190,4 +191,13 @@ public class CdrSearch {
         }
         return ORDER_TO_COLUMN.get(m_order);
     }
+
+	public boolean isPrefix() {
+		return m_prefix;
+	}
+
+	public void setPrefix(boolean m_prefix) {
+		this.m_prefix = m_prefix;
+	}
+       
 }

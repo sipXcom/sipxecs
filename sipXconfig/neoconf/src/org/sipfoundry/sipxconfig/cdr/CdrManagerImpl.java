@@ -368,6 +368,7 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
         public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
             StringBuilder sql = new StringBuilder(getSelectSql());
             sql.append(FROM);
+            
             m_search.appendGetSql(sql);
             if (m_forUser != null) {
                 m_forUser.appendGetSql(sql);
@@ -378,7 +379,8 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
             }
             if (m_offset > 0) {
                 sql.append(OFFSET);
-            }            
+            }
+            LOG.debug("CDR sql " + sql.toString());
             PreparedStatement ps = con.prepareStatement(sql.toString());
             ps.setTimestamp(1, m_from, m_calendar);
             ps.setTimestamp(2, m_to, m_calendar);

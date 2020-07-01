@@ -62,6 +62,26 @@ public interface BaseCdrApi extends ServiceSettingsApi {
     public Response getUserActiveCdrs(
             @Description("User internal id or user name / alias") @PathParam("userId") String user,
             @Context HttpServletRequest request);
+    
+    @Path("prefix/{prefix}/history")
+    @GET
+    @Produces({
+        MediaType.APPLICATION_JSON, MediaType.TEXT_XML, MediaType.APPLICATION_XML
+    })
+    public Response getPrefixCdrHistory(
+            @Description("From Date, format yyyyMMddHHmm. If nto specified defaults to yesterday")
+            @QueryParam("fromDate") String fromDate,
+            @Description("To Date, format yyyyMMddHHmm. If not specified defaults to now")
+            @QueryParam("toDate") String toDate,
+            @Description("Calls From") @QueryParam("from") String from,
+            @Description("Calls to") @QueryParam("to") String to,
+            @Description("Limit row") @QueryParam("limit") Integer limit,
+            @Description("Offset Cdr row") @QueryParam("offset") Integer offset,
+            @Description("Order by criteria. Could have values of caller, callee, startTime, duration, termination")
+            @QueryParam("orderBy") String orderBy,
+            @QueryParam("orderDirection") String orderDirection,
+            @PathParam("prefix") String prefix,
+            @Context HttpServletRequest request);    
 
     @Path("user/{userId}/history")
     @GET

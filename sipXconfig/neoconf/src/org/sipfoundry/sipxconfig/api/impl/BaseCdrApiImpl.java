@@ -45,6 +45,7 @@ import org.sipfoundry.sipxconfig.api.model.CdrList;
 import org.sipfoundry.sipxconfig.cdr.Cdr;
 import org.sipfoundry.sipxconfig.cdr.CdrManager;
 import org.sipfoundry.sipxconfig.cdr.CdrSearch;
+import org.sipfoundry.sipxconfig.cdr.CdrSearch.Mode;
 import org.sipfoundry.sipxconfig.cdr.CdrSettings;
 import org.sipfoundry.sipxconfig.common.CoreContext;
 import org.sipfoundry.sipxconfig.common.User;
@@ -81,7 +82,7 @@ public class BaseCdrApiImpl extends BaseServiceApiImpl implements BaseCdrApi {
             Integer offset, String orderBy, String orderDirection, HttpServletRequest request) {    	
         return Response
                 .ok()
-                .entity(CdrList.convertCdrList(getCdrs(fromDate, toDate, from, to, limit, offset, orderBy, orderDirection, null),
+                .entity(CdrList.convertCdrList(getCdrs(fromDate, toDate, from, to, limit, offset, orderBy, orderDirection, null, null, false),
                         request.getLocale())).build();
     }
 
@@ -98,17 +99,27 @@ public class BaseCdrApiImpl extends BaseServiceApiImpl implements BaseCdrApi {
         }
         return Response.status(Status.NOT_FOUND).build();
     }
+    
+    @Override
+    public Response getPrefixCdrHistory(String fromDate, String toDate, String from, String to,
+            Integer limit, Integer offset, String orderBy, String orderDirection, String prefix, HttpServletRequest request) {       
+        
+            return Response
+                    .ok()
+                    .entity(CdrList.convertCdrList(
+                            getCdrs(fromDate, toDate, from, to, limit, offset, orderBy, orderDirection, null, prefix, true), request.getLocale()))
+                    .build();
+    }
 
     @Override
     public Response getUserCdrHistory(String userId, String fromDate, String toDate, String from, String to,
             Integer limit, Integer offset, String orderBy, String orderDirection, HttpServletRequest request) {
-    	LOG.error("CACAMCAMCA " + offset);
         User user = getUserByIdOrUserName(userId);
         if (user != null) {
             return Response
                     .ok()
                     .entity(CdrList.convertCdrList(
-                            getCdrs(fromDate, toDate, from, to, limit, offset, orderBy, orderDirection, user), request.getLocale()))
+                            getCdrs(fromDate, toDate, from, to, limit, offset, orderBy, orderDirection, user, null, false), request.getLocale()))
                     .build();
         }
         return Response.status(Status.NOT_FOUND).build();
@@ -124,7 +135,7 @@ public class BaseCdrApiImpl extends BaseServiceApiImpl implements BaseCdrApi {
             Integer offset, String orderBy, HttpServletRequest request) {
         Date start = getDate(fromDate, RequestUtils.getDefaultStartTime());
         Date end = getDate(toDate, RequestUtils.getDefaultEndTime());
-        List<Cdr> cdrs = getCdrs(start, end, from, to, limit, offset, orderBy, "asc", null);
+        List<Cdr> cdrs = getCdrs(start, end, from, to, limit, offset, orderBy, "asc", null, null, false);
         return generateReport(CdrList.convertCdrList(cdrs, request.getLocale()), start, end, request.getLocale());
     }
 
@@ -135,7 +146,7 @@ public class BaseCdrApiImpl extends BaseServiceApiImpl implements BaseCdrApi {
         if (user != null) {
             Date start = getDate(fromDate, RequestUtils.getDefaultStartTime());
             Date end = getDate(toDate, RequestUtils.getDefaultEndTime());
-            List<Cdr> cdrs = getCdrs(start, end, from, to, limit, offset, orderBy, "asc", user);
+            List<Cdr> cdrs = getCdrs(start, end, from, to, limit, offset, orderBy, "asc", user, null, false);
             return generateReport(CdrList.convertCdrList(cdrs, request.getLocale()), start, end, request.getLocale());
         }
         return Response.status(Status.NOT_FOUND).build();
@@ -193,9 +204,9 @@ public class BaseCdrApiImpl extends BaseServiceApiImpl implements BaseCdrApi {
     }
 
     private List<Cdr> getCdrs(Date start, Date end, String from, String to, Integer limit, Integer offset,
-            String orderBy, String orderDirection, User user) {
+            String orderBy, String orderDirection, User user, String prefixValue, boolean prefix) {
 
-        CdrSearch search = getSearch(from, to, orderBy);
+        CdrSearch search = getSearch(from, to, orderBy, prefixValue, prefix);
         search.setAscending(StringUtils.equals(orderDirection, "asc"));
         return m_cdrManager.getCdrs(start, end, search, user, getWithDefaultValue(limit),
                 getWithDefaultValue(offset));
@@ -209,13 +220,13 @@ public class BaseCdrApiImpl extends BaseServiceApiImpl implements BaseCdrApi {
     }
 
     protected  List<Cdr> getCdrs(String fromDate, String toDate, String from, String to, Integer limit, Integer offset,
-            String orderBy, String orderDirection, User user) {
+            String orderBy, String orderDirection, User user, String prefixValue, boolean prefix) {
         Date start = getDate(fromDate, RequestUtils.getDefaultStartTime());
         Date end = getDate(toDate, RequestUtils.getDefaultEndTime());
-        return getCdrs(start, end, from, to, limit, offset, orderBy, orderDirection, user);
+        return getCdrs(start, end, from, to, limit, offset, orderBy, orderDirection, user, prefixValue, prefix);
     }
 
-    protected CdrSearch getSearch(String from, String to, String orderBy) {
+    protected CdrSearch getSearch(String from, String to, String orderBy, String prefixValue, boolean prefix) {
         CdrSearch search = new CdrSearch();
         if (StringUtils.isNotBlank(from) && StringUtils.isNotBlank(to) && StringUtils.equals(from, to)) {
             search.setMode(CdrSearch.Mode.ANY);
@@ -240,6 +251,11 @@ public class BaseCdrApiImpl extends BaseServiceApiImpl implements BaseCdrApi {
                         .entity("Unknown order by criteria").build());
             }
             search.setOrder(orderBy, true);
+        }
+        search.setPrefix(prefix);
+        if (prefix) {
+        	search.setTerm(new String [] {prefixValue});
+        	search.setMode(Mode.ANY);
         }
         return search;
     }
