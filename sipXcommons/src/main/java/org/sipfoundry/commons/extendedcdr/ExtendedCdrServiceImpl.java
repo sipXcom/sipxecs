@@ -6,7 +6,11 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-
+/**
+ * Extended cdr service
+ * @author mirceac
+ *
+ */
 public class ExtendedCdrServiceImpl implements ExtendedCdrService {
     private MongoTemplate m_profiles;
 
