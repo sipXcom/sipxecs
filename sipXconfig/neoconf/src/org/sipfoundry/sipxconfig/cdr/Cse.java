@@ -1,5 +1,9 @@
 package org.sipfoundry.sipxconfig.cdr;
-
+/**
+ * the purpose is to map call_state_events table
+ * @author mirceac
+ *
+ */
 public class Cse {
 	private String m_fromUrl;
 	private String m_toUrl;
