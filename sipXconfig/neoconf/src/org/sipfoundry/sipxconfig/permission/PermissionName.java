@@ -16,6 +16,8 @@ import org.sipfoundry.sipxconfig.setting.Group;
 public enum PermissionName {
     /** application */
     SUPERADMIN(Type.APPLICATION, "superadmin"),
+    
+    REST(Type.APPLICATION, "rest"),
 
     DBAUTH_ONLY(Type.APPLICATION, "dbauth-only"),
 

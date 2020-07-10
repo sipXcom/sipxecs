@@ -72,6 +72,7 @@ sipxconfig_neoconf_PKGS = \
 	spring-data-mongodb \
 	spring-ldap \
 	spring-ws \
+	spring-security-jwt \
 	thumbnailator \
 	velocity \
 	velocity-tools-generic \

@@ -493,6 +493,10 @@ public abstract class AbstractUser extends BeanWithGroups implements SystemAudit
     public boolean isAdmin() {
         return hasPermission(PermissionName.SUPERADMIN);
     }
+    
+    public boolean isRest() {
+        return hasPermission(PermissionName.REST);
+    }
 
     public boolean hasVoicemailPermission() {
         return hasPermission(PermissionName.VOICEMAIL);

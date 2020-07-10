@@ -48,6 +48,7 @@ commons_PKGS = \
 	spring-security-core \
 	spring-security-ldap \
 	spring-security-web \
+	spring-security-jwt \
 	spring-web \
 	spring-webmvc \	
 	joda-time \

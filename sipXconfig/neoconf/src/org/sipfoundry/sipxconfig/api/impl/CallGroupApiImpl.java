@@ -9,6 +9,7 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.elasticsearch.common.lang3.StringUtils;
 import org.sipfoundry.sipxconfig.api.CallGroupApi;
 import org.sipfoundry.sipxconfig.api.model.CallGroupBean;
 import org.sipfoundry.sipxconfig.api.model.CallGroupList;
@@ -132,5 +133,39 @@ public class CallGroupApiImpl implements CallGroupApi {
         	}
         }
         return Response.status(Status.NOT_FOUND).build();
-	}	
+	}
+
+	@Override
+	public Response rotateRings(String callGroupExtension, String ringExtension) {
+        int callGroupId = m_context.getCallGroupId(callGroupExtension);
+        CallGroup callGroup = m_context.loadCallGroup(callGroupId);
+        List<AbstractRing> rings = callGroup.getRings();
+        int ringsSize = rings.size();
+        UserRing lastRing = (ringsSize > 0) ? (UserRing)rings.get(ringsSize -1) : null;
+        if (lastRing != null && StringUtils.equals(lastRing.getUser().getExtension(true), ringExtension)) {
+        	LOG.debug("Hunt Group ring rotation is not needed, extension to rotate is the last");
+        	return Response.ok().entity(callGroupId).build();
+        }
+        
+        List<AbstractRing> newRings = new ArrayList<AbstractRing>();
+        boolean addFirst = false;
+        int i = 0;
+        for (AbstractRing ring : rings) {
+        	UserRing userRing = (UserRing)ring; 
+        	if (StringUtils.equals(ringExtension, userRing.getUser().getExtension(true))) {
+        		addFirst = true;
+        		newRings.add(userRing);
+        	} else {
+        		if (addFirst) {
+        			newRings.add(i++, userRing);
+        		} else {
+        			newRings.add(userRing);
+        		}
+        	}
+        }
+        callGroup.clear();
+        callGroup.insertRings(newRings);
+        m_context.saveCallGroup(callGroup);
+        return Response.ok().entity(callGroupId).build();
+	}
 }

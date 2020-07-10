@@ -7,7 +7,7 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/sipXconfig-etc"/>
 	<classpathentry kind="var" path="SIPX_JAVADIR/sipXecs/sipXconfig/cdr-bindings.jar"/>
 	<classpathentry kind="var" path="SIPX_BUILDDIR/sipXconfig/neoconf/test"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/sipxcommons"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/sipxcommons"/>
 	<classpathentry kind="lib" path="test/lib/jetty-continuation-8.1.15.v20140411.jar"/>
 	<classpathentry kind="lib" path="test/lib/jetty-http-8.1.15.v20140411.jar"/>
 	<classpathentry kind="lib" path="test/lib/jetty-io-8.1.15.v20140411.jar"/>
@@ -20,5 +20,6 @@
 	<classpathentry kind="lib" path="test/lib/lucene-sandbox-4.10.4.jar"/>
 	<classpathentry kind="lib" path="test/lib/lucene-highlighter-4.10.4.jar"/>
 	<classpathentry kind="lib" path="test/lib/lucene-memory-4.10.4.jar"/>
+	<classpathentry kind="lib" path="/sipxcommons/lib/spring-security-jwt-1.1.1.RELEASE.jar"/>
 	<classpathentry kind="output" path="bin.eclipse"/>
 </classpath>

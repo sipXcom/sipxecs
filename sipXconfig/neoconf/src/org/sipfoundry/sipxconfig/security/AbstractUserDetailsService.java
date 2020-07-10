@@ -12,6 +12,7 @@ package org.sipfoundry.sipxconfig.security;
 
 import static org.sipfoundry.sipxconfig.permission.PermissionName.RECORD_SYSTEM_PROMPTS;
 import static org.sipfoundry.sipxconfig.security.UserRole.Admin;
+import static org.sipfoundry.sipxconfig.security.UserRole.Rest;
 import static org.sipfoundry.sipxconfig.security.UserRole.AttendantAdmin;
 import static org.sipfoundry.sipxconfig.security.UserRole.User;
 
@@ -76,11 +77,15 @@ public abstract class AbstractUserDetailsService implements UserDetailsService {
     }
 
     public UserDetails createUserDetails(String userNameOrAliasOrImIdOrAuthAccnameOrEmail, User user) {
-        List<GrantedAuthority> gas = new ArrayList<GrantedAuthority>(4);
+        List<GrantedAuthority> gas = new ArrayList<GrantedAuthority>(5);
         gas.add(User.toAuth());
 
         if (user.isAdmin()) {
             gas.add(Admin.toAuth());
+        }
+        
+        if (user.isRest()) {
+        	gas.add(Rest.toAuth());
         }
 
         if (user.hasPermission(RECORD_SYSTEM_PROMPTS)) {

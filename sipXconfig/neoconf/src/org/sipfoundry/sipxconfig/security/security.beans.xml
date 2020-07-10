@@ -23,7 +23,7 @@
       <security:filter-chain pattern="/rest/avatar/.*"
             filters="lazySecurityContextPersistenceFilter,basicAuthenticationFilter,digestAuthenticationFilter,digestExceptionTranslationFilter,anonymousProcessingFilter,filterInvocationInterceptor"/>
       <security:filter-chain pattern="/(services|rest|api)/.*"
-            filters="lazySecurityContextPersistenceFilter,optionsAuthFilter,basicAuthenticationFilter,digestAuthenticationFilter,digestExceptionTranslationFilter,filterInvocationInterceptor"/>
+            filters="lazySecurityContextPersistenceFilter,optionsAuthFilter,basicAuthenticationFilter,jwtAuthenticationFilter,digestAuthenticationFilter,digestExceptionTranslationFilter,filterInvocationInterceptor"/>
       <security:filter-chain pattern="/(TestPage|FirstUser).html"
             filters="securityContextPersistenceFilter"/>
       <security:filter-chain pattern="/.*"
@@ -40,6 +40,7 @@
         <ref bean="testAuthenticationProvider" />
         <ref bean="ldapAuthProvider" />
         <ref bean="userAuthenticationProvider" />
+        <ref bean="jwtAuthenticationProvider" />
         <ref bean="sharedSecretUserAuthenticationProvider" />
         <ref bean="locationAuthenticationProvider" />
         <ref bean="anonymousAuthenticationProvider"/>
@@ -69,11 +70,14 @@
     </property>
   </bean>
 
+  <bean id="jwtAuthenticationProvider" class="org.sipfoundry.sipxconfig.security.JwtAuthenticationProvider">
+  </bean>
+  
   <bean id="locationAuthenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
     <property name="userDetailsService" ref="locationDetailsService" />
     <property name="userCache" ref="userCache" />
   </bean>
-
+  
   <bean id="testAuthenticationProvider" class="org.sipfoundry.sipxconfig.security.TestAuthenticationProvider">
     <property name="coreContext" ref="coreContext" />
   </bean>
@@ -157,6 +161,10 @@
     <property name="userDetailsService" ref="standardUserDetailsService" />
     <property name="authenticationDetailsSource" ref="authenticationDetailsSource" />
   </bean>
+  
+  <bean id="jwtAuthenticationFilter" class="org.sipfoundry.sipxconfig.security.JwtAuthenticationFilter">
+    <property name="authenticationManager" ref="authenticationManager" />
+  </bean>  
 
   <bean id="digestAuthenticationEntryPoint" class="org.sipfoundry.sipxconfig.security.SipxDigestAuthenticationEntryPoint">
     <property name="domainManager" ref="domainManager" />
@@ -222,7 +230,7 @@
     <security:intercept-url pattern="/(rest|api)/my/.*" access="ROLE_USER"/>
     <security:intercept-url pattern="/rest/avatar/.*" access="ROLE_ANONYMOUS,ROLE_ADMIN,ROLE_USER"/>
     <security:intercept-url pattern="/rest/private/.*" access="ROLE_USER"/>
-    <security:intercept-url pattern="/(services|rest|api)/.*" access="ROLE_ADMIN"/>
+    <security:intercept-url pattern="/(services|rest|api)/.*" access="ROLE_ADMIN,ROLE_REST"/>
     <security:intercept-url pattern="/initial-config/.*" access="ROLE_LOCATION"/>
   </security:filter-security-metadata-source>
 

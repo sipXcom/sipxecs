@@ -159,6 +159,15 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
         getJdbcTemplate().query(psc, resultReader);
         return resultReader.getResults();
     }
+    
+    @Override
+    public Cse getCse(String extension) {
+    	CseStatementCreator csc = new CseStatementCreator(extension);
+    	CseResultReader resultReader = new CseResultReader();
+    	getJdbcTemplate().query(csc, resultReader);
+    	List<Cse> cses = resultReader.getResults();
+    	return cses.isEmpty() ? null : cses.get(0);
+    }
 
     private TimeZone getTimeZone() {
         String systemTimezone = m_ntpManager.getSystemTimezone();
@@ -327,6 +336,24 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
             throw new UserException(e);
         }
     }
+    
+    static class CseStatementCreator implements PreparedStatementCreator {
+    	String m_extension;
+    	
+    	public CseStatementCreator(String extension) {
+    		m_extension = extension;
+    	}
+    	
+        @Override
+        public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+            StringBuilder sql = new StringBuilder("SELECT from_url, to_url FROM call_state_events WHERE to_url LIKE '%<sip:");
+            sql.append(m_extension);
+            sql.append("@%' and event_type='S' order by event_time desc limit 1");
+            LOG.debug("CSE sql " + sql.toString());
+            PreparedStatement ps = con.prepareStatement(sql.toString());
+            return ps;
+        }    	
+    }
 
     abstract static class CdrsStatementCreator implements PreparedStatementCreator {
         private static final String FROM = " FROM cdrs WHERE (? <= start_time) AND (start_time <= ?)";
@@ -433,6 +460,20 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
         @Override
         protected void appendOrderBySql(StringBuilder sql) {
             // no ordering when selecting COUNT
+        }
+    }
+    
+    static class CseResultReader implements RowCallbackHandler {
+        List<Cse> m_cses = new ArrayList<Cse>();
+    	
+		@Override
+		public void processRow(ResultSet rs) throws SQLException {
+			Cse cse = new Cse(rs.getString("from_url"), rs.getString("to_url"));
+			m_cses.add(cse);
+		}
+
+        public List<Cse> getResults() {
+            return m_cses;
         }
     }
 

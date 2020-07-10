@@ -45,6 +45,14 @@ public interface CdrManager {
     List<Cdr> getCdrs(Date from, Date to, CdrSearch search, User user);
     List<Cdr> getCdrs(Date from, Date to, CdrSearch search, User user, int limit, int offset);
     List<Cdr> getCdrs(Date from, Date to, CdrSearch search, User user, TimeZone timezone, int limit, int offset);
+    
+    /**
+     * Returns the last CSE found in the call_state_events table of established call (event_type = S)
+     * @param extension - the callee extension - this is the extension that was called, which might not be the extension
+     * that answered the call. For example when a hunt grup was called
+     * @return - the last CSE of established call
+     */
+    Cse getCse(String extension);
 
 
     /**

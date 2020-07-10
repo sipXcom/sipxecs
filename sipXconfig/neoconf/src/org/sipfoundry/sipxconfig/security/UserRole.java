@@ -15,7 +15,7 @@ import org.springframework.security.core.authority.GrantedAuthorityImpl;
 
 public enum UserRole {
     User("ROLE_USER"), Admin("ROLE_ADMIN"),
-        AttendantAdmin("ROLE_ATTENDANT_ADMIN");
+        AttendantAdmin("ROLE_ATTENDANT_ADMIN"), Rest("ROLE_REST");
 
     private String m_role;
 

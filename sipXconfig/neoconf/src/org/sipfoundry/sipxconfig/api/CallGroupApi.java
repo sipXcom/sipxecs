@@ -48,6 +48,12 @@ public interface CallGroupApi {
     @POST
     public Response duplicateCallGroup(@Description("Call Group Extension") @PathParam("callGroupExtension") String callGroupExtension, 
     		@Description("Extension to assign to new group") @PathParam("assignedExtension") String assignedExtension);
+    
+    /** rings 1,2,3,4,5 where ringExtension = 3 will be 4,5,1,2,3*/
+    @Path("{callGroupExtension}/rotate/{ringExtension}")
+    @POST
+    public Response rotateRings(@Description("Call Group Extension") @PathParam("callGroupExtension") String callGroupExtension, 
+    		@Description("Ring extension to rotate rings") @PathParam("ringExtension") String ringExtension);
         
     @Path("{callGroupExtension}")
     @PUT
