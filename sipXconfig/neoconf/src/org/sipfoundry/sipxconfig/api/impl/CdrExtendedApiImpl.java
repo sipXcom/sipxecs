@@ -11,9 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.elasticsearch.common.lang3.StringUtils;
 import org.sipfoundry.commons.extendedcdr.ExtendedCdrBean;
 import org.sipfoundry.commons.extendedcdr.ExtendedCdrService;
 import org.sipfoundry.sipxconfig.api.CdrExtendedApi;
@@ -21,7 +21,6 @@ import org.sipfoundry.sipxconfig.api.model.CdrBean;
 import org.sipfoundry.sipxconfig.api.model.CdrList;
 import org.sipfoundry.sipxconfig.cdr.CdrSearch;
 import org.sipfoundry.sipxconfig.common.User;
-import org.sipfoundry.sipxconfig.setting.Group;
 
 public class CdrExtendedApiImpl extends BaseCdrApiImpl implements CdrExtendedApi {
 	
@@ -29,10 +28,9 @@ public class CdrExtendedApiImpl extends BaseCdrApiImpl implements CdrExtendedApi
 	private static final Log LOG = LogFactory.getLog(CdrExtendedApiImpl.class);
 	
 	@Override
-	public Response newCdr(ExtendedCdrBean extendedCdrBean) {
-        Group group = new Group();
+	public Response newCdr(ExtendedCdrBean extendedCdrBean) {        
         m_extendedCdrService.saveExtendedCdr(extendedCdrBean);
-        return Response.ok().entity(group.getId()).build();
+        return Response.ok().entity(extendedCdrBean.getId()).build();
 	}
 
 	@Override
@@ -89,23 +87,10 @@ public class CdrExtendedApiImpl extends BaseCdrApiImpl implements CdrExtendedApi
 	
 	private void addExtendedData(CdrList list) {
 		List<CdrBean> listCdrs = list.getCdrs();
-		List<String> callIds = new ArrayList<String>();
 		for (CdrBean bean : listCdrs) {
-			callIds.add(bean.getCallId());
+			bean.setExtendedCdrY(m_extendedCdrService.getExtendedCdrByCaller(bean.getCallId(), "Y"));
+			bean.setExtendedCdrN(m_extendedCdrService.getExtendedCdrByCaller(bean.getCallId(), "N"));
 		}
-		List<ExtendedCdrBean> extendedCdrs = callIds.isEmpty() ? 
-				new ArrayList<ExtendedCdrBean>() : m_extendedCdrService.getExtendedCdrs(callIds);
-		Collections.sort(listCdrs, CDR_CALL_ID);
-		Collections.sort(extendedCdrs, EXTENDED_CDR_CALL_ID);
-		for (CdrBean bean : listCdrs) {
-			for (ExtendedCdrBean extBean : extendedCdrs) {
-				if (StringUtils.equals(bean.getCallId(), extBean.getCallId())) {
-					bean.setExtendedCdr(extBean);
-					extendedCdrs.remove(extBean);
-					break;
-				}
-			}
-		}		
 	}
         
 	public void setExtendedCdrService(ExtendedCdrService extendedCdrService) {

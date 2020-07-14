@@ -38,7 +38,8 @@ public class CdrBean {
     private Date m_startTime;
     private String m_startAt;
     private String m_connectAt;
-    private ExtendedCdrBean m_extendedCdr;
+    private ExtendedCdrBean m_extendedCdrY;
+    private ExtendedCdrBean m_extendedCdrN;
 
     public String getCaller() {
         return m_caller;
@@ -155,12 +156,19 @@ public class CdrBean {
         return bean;
     }
 
-	public ExtendedCdrBean getExtendedCdr() {
-		return m_extendedCdr;
+	public ExtendedCdrBean getExtendedCdrY() {
+		return m_extendedCdrY;
 	}
 
-	public void setExtendedCdr(ExtendedCdrBean extendedCdr) {
-		m_extendedCdr = extendedCdr;
+	public void setExtendedCdrY(ExtendedCdrBean extendedCdrY) {
+		m_extendedCdrY = extendedCdrY;
 	}
-   
+
+	public ExtendedCdrBean getExtendedCdrN() {
+		return m_extendedCdrN;
+	}
+
+	public void setExtendedCdrN(ExtendedCdrBean extendedCdrN) {
+		m_extendedCdrN = extendedCdrN;
+	}   
 }
