@@ -23,7 +23,7 @@
       <security:filter-chain pattern="/rest/avatar/.*"
             filters="lazySecurityContextPersistenceFilter,basicAuthenticationFilter,digestAuthenticationFilter,digestExceptionTranslationFilter,anonymousProcessingFilter,filterInvocationInterceptor"/>
       <security:filter-chain pattern="/(services|rest|api)/.*"
-            filters="lazySecurityContextPersistenceFilter,optionsAuthFilter,basicAuthenticationFilter,jwtAuthenticationFilter,digestAuthenticationFilter,digestExceptionTranslationFilter,filterInvocationInterceptor"/>
+            filters="lazySecurityContextPersistenceFilter,optionsAuthFilter,basicAuthenticationFilter,digestAuthenticationFilter,digestExceptionTranslationFilter,filterInvocationInterceptor"/>
       <security:filter-chain pattern="/(TestPage|FirstUser).html"
             filters="securityContextPersistenceFilter"/>
       <security:filter-chain pattern="/.*"
@@ -40,7 +40,6 @@
         <ref bean="testAuthenticationProvider" />
         <ref bean="ldapAuthProvider" />
         <ref bean="userAuthenticationProvider" />
-        <ref bean="jwtAuthenticationProvider" />
         <ref bean="sharedSecretUserAuthenticationProvider" />
         <ref bean="locationAuthenticationProvider" />
         <ref bean="anonymousAuthenticationProvider"/>
