@@ -26,23 +26,18 @@ public class ExtendedCdrBean {
     
     @Field("CallID")    
     @Indexed
-    @JsonProperty("CallID")
 	private String m_callId;
         
     @Field("ApplicationReferenceID")
-    @JsonProperty("ApplicationReferenceID")
     private String m_applicationReferenceID;
     
     @Field("CallerYN")
-    @JsonProperty("CallerYN")
     private String m_caller;
 
     @Field("AudioStatistics")
-    @JsonProperty("AudioStatistics")
     private Set<AudioStatistics> m_audioStatistics;
     
-    @Field("VideoStatistics")
-    @JsonProperty("VideoStatistics")
+    @Field("VideoStatistics")    
     private Set<VideoStatistics> m_videoStatistics;
 
 	public String getId() {
@@ -52,7 +47,8 @@ public class ExtendedCdrBean {
 	public void setId(String id) {
 		this.id = id;
 	}
-
+    
+	@JsonProperty("CallID")
 	public String getCallId() {
 		return m_callId;
 	}
@@ -60,7 +56,8 @@ public class ExtendedCdrBean {
 	public void setCallId(String callId) {
 		m_callId = callId;
 	}
-		
+	
+	@JsonProperty("ApplicationReferenceID")		
 	public String getApplicationReferenceID() {
 		return m_applicationReferenceID;
 	}
@@ -68,7 +65,8 @@ public class ExtendedCdrBean {
 	public void setApplicationReferenceID(String applicationReferenceID) {
 		m_applicationReferenceID = applicationReferenceID;
 	}
-
+	
+	@JsonProperty("CallerYN")
 	public String getCaller() {
 		return m_caller;
 	}
@@ -76,7 +74,8 @@ public class ExtendedCdrBean {
 	public void setCaller(String caller) {
 		m_caller = caller;
 	}
-
+	
+	@JsonProperty("AudioStatistics")
 	public Set<AudioStatistics> getAudioStatistics() {
 		return m_audioStatistics;
 	}
@@ -85,6 +84,7 @@ public class ExtendedCdrBean {
 		m_audioStatistics = audioStatistics;
 	}
 
+	@JsonProperty("VideoStatistics")
 	public Set<VideoStatistics> getVideoStatistics() {
 		return m_videoStatistics;
 	}

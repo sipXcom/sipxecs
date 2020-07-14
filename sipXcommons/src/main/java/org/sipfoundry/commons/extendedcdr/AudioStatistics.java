@@ -7,69 +7,76 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class AudioStatistics {
 	
 	@Field("TimeStampUtc")
-	@JsonProperty("TimeStampUtc")
 	private String m_timeStampUtc;
 	
-	@Field("AverageJitterMs")
-	@JsonProperty("AverageJitterMs")
+	@Field("AverageJitterMs")	
 	private int m_averageJitterMs;
 	
-	@Field("MOSCQ")
-	@JsonProperty("MOSCQ")
+	@Field("MOSCQ")	
 	private int m_mos;
 	
-	@Field("PacketsSent")
-	@JsonProperty("PacketsSent")
+	@Field("PacketsSent")	
 	private int m_packetsSent;
 	
 	@Field("PacketsReceived")
-	@JsonProperty("PacketsReceived")
 	private int m_packetsReceived;
 	
-	@Field("CumulativeLostPackets")
-	@JsonProperty("CumulativeLostPackets")
+	@Field("CumulativeLostPackets")	
 	private int m_cumulativeLostPackets;
 	
-	@Field("RttMs")
-	@JsonProperty("RttMs")
+	@Field("RttMs")	
 	private int m_rttMs;
 	
+	@JsonProperty("TimeStampUtc")
 	public String getTimeStampUtc() {
 		return m_timeStampUtc;
 	}
 	public void setTimeStampUtc(String timeStampUtc) {
 		m_timeStampUtc = timeStampUtc;
 	}
+	
+	@JsonProperty("AverageJitterMs")
 	public int getAverageJitterMs() {
 		return m_averageJitterMs;
 	}
 	public void setAverageJitterMs(int averageJitterMs) {
 		m_averageJitterMs = averageJitterMs;
 	}
+	
+	@JsonProperty("MOSCQ")
 	public int getMos() {
 		return m_mos;
 	}
+	
 	public void setMos(int mos) {
 		m_mos = mos;
 	}
+	
+	@JsonProperty("PacketsSent")
 	public int getPacketsSent() {
 		return m_packetsSent;
 	}
 	public void setPacketsSent(int packetsSent) {
 		m_packetsSent = packetsSent;
 	}
+	
+	@JsonProperty("PacketsReceived")
 	public int getPacketsReceived() {
 		return m_packetsReceived;
 	}
 	public void setPacketsReceived(int packetsReceived) {
 		m_packetsReceived = packetsReceived;
 	}
+	
+	@JsonProperty("CumulativeLostPackets")
 	public int getCumulativeLostPackets() {
 		return m_cumulativeLostPackets;
 	}
 	public void setCumulativeLostPackets(int cumulativeLostPackets) {
 		m_cumulativeLostPackets = cumulativeLostPackets;
 	}
+	
+	@JsonProperty("RttMs")
 	public int getRttMs() {
 		return m_rttMs;
 	}
