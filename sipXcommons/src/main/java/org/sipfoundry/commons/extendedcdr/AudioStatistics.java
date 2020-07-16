@@ -4,7 +4,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 
-public class AudioStatistics {
+public class AudioStatistics implements Comparable {
 	
 	@Field("TimeStampUtc")
 	private String m_timeStampUtc;
@@ -82,5 +82,9 @@ public class AudioStatistics {
 	}
 	public void setRttMs(int rttMs) {
 		m_rttMs = rttMs;
+	}
+	@Override
+	public int compareTo(Object arg0) {		
+		return m_timeStampUtc.compareTo((String)arg0);
 	}
 }
