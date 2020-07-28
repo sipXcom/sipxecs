@@ -53,7 +53,8 @@ public class UserBean {
     private UserProfileBean m_userProfile;
     private Boolean m_notified;
     private List<GroupBean> m_groups;
-
+    private Set<String> m_permissions = new LinkedHashSet<String>();
+    
     public int getId() {
         return m_id;
     }
@@ -96,7 +97,17 @@ public class UserBean {
         return m_aliases;
     }
 
-    public String getSipPassword() {
+    @XmlElementWrapper(name = "Permissions")
+    @XmlElement(name = "Permission")    
+    public Set<String> getPermissions() {
+		return m_permissions;
+	}
+
+	public void setPermissions(Set<String> permissions) {
+		m_permissions = permissions;
+	}
+
+	public String getSipPassword() {
         return m_sipPassword;
     }
 
@@ -161,6 +172,7 @@ public class UserBean {
         bean.setUserName(user.getUserName());
         bean.setUserProfile(UserProfileBean.convertUserProfile(user.getUserProfile()));
         bean.setGroups(GroupBean.buildGroupList(user.getGroupsAsList(), null));
+        bean.setPermissions(new LinkedHashSet(user.getUserPermissionNames()));
         return bean;
     }
 

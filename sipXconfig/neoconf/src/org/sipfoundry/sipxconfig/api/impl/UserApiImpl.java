@@ -52,6 +52,7 @@ import org.sipfoundry.sipxconfig.branch.Branch;
 import org.sipfoundry.sipxconfig.branch.BranchManager;
 import org.sipfoundry.sipxconfig.common.CoreContext;
 import org.sipfoundry.sipxconfig.common.User;
+import org.sipfoundry.sipxconfig.permission.PermissionManager;
 import org.sipfoundry.sipxconfig.phone.Phone;
 import org.sipfoundry.sipxconfig.phone.PhoneContext;
 import org.sipfoundry.sipxconfig.setting.Group;
@@ -66,6 +67,7 @@ public class UserApiImpl implements UserApi {
     private PhoneContext m_phoneContext;
     private SettingDao m_settingDao;
     private BranchManager m_branchManager;
+    private PermissionManager m_permissionManager;
 
     public UserApiImpl() {
         //Required by: https://issues.apache.org/jira/browse/BEANUTILS-387
@@ -226,6 +228,13 @@ public class UserApiImpl implements UserApi {
         if (aliases != null) {
             user.setAliases(userBean.getAliases());
         }
+        
+        Set<String> permissions = userBean.getPermissions();
+        if (permissions != null) {
+        	for (String permission : permissions) {
+        		user.setPermission(m_permissionManager.getPermissionByLabel(permission), true);
+        	}
+        }
 
         Boolean beanNotified = userBean.isNotified();
         if (beanNotified != null) {
@@ -369,8 +378,13 @@ public class UserApiImpl implements UserApi {
     public void setCoreContext(CoreContext coreContext) {
         m_coreContext = coreContext;
     }
-
+    
     @Required
+    public void setPermissionManager(PermissionManager permissionManager) {
+		m_permissionManager = permissionManager;
+	}
+
+	@Required
     public void setSettingDao(SettingDao settingDao) {
         m_settingDao = settingDao;
     }

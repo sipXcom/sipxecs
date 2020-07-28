@@ -179,6 +179,7 @@
         <property name="phoneContext" ref="phoneContext"/>
         <property name="settingDao" ref="settingDao" />
         <property name="branchManager" ref="branchManager" />
+        <property name="permissionManager" ref="permissionManager" />
     </bean>
 
     <bean class="org.sipfoundry.sipxconfig.api.impl.MyUserApiImpl" id="myUserRestApi">
