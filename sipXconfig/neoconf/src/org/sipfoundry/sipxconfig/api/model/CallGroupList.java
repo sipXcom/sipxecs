@@ -26,7 +26,7 @@ public class CallGroupList {
         return m_callGroups;
     }
 
-    public static CallGroupList convertCallGroupList(List<CallGroup> callGroups) {
+    public static CallGroupList convertCallGroupList(List<CallGroup> callGroups) throws Exception {
         List<CallGroupBean> callGroupBeans = new ArrayList<CallGroupBean>();
         for (CallGroup callGroup : callGroups) {
         	callGroupBeans.add(CallGroupBean.convertCallGroup(callGroup));
@@ -36,7 +36,7 @@ public class CallGroupList {
         return list;
     }
     
-    public static CallGroupList convertCallGroupList(List<CallGroup> callGroups, String prefix) {
+    public static CallGroupList convertCallGroupList(List<CallGroup> callGroups, String prefix) throws Exception {
         List<CallGroupBean> callGroupBeans = new ArrayList<CallGroupBean>();
         for (CallGroup callGroup : callGroups) {
         	if (callGroup.getExtension().startsWith(prefix)) {

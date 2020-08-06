@@ -104,7 +104,12 @@ public class CallGroupApiImpl implements CallGroupApi {
 	
     public Response getCallGroup(CallGroup callGroup) {
         if (callGroup != null) {
-            return Response.ok().entity(CallGroupBean.convertCallGroup(callGroup)).build();
+            try {
+				return Response.ok().entity(CallGroupBean.convertCallGroup(callGroup)).build();
+			} catch (Exception e) {
+				LOG.error("Cannot convert call group ", e);
+				return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+			}
         }
         return Response.status(Status.NOT_FOUND).build();
     }
@@ -132,7 +137,7 @@ public class CallGroupApiImpl implements CallGroupApi {
         		LOG.error("Exception building callgroup response ", ex);
         	}
         }
-        return Response.status(Status.NOT_FOUND).build();
+        return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 	}
 
 	@Override
