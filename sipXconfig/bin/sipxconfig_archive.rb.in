@@ -50,12 +50,8 @@ class Backup < ArchiveBase
     cmd "echo Backup uses #{@tmpdir} as temporary dir."
     cmd "pg_dump -U #{@pguser} -F t #{@db} --file=#{@tmpdir}/db.tar" or
       raise "Could not backup postgres database"
-    cmd "mongodump --out #{@tmpdir}/dump --db profiles --collection userProfile" or
+    cmd "mongodump --out #{@tmpdir}/dump --db profiles" or
       raise "Could not backup user profiles database"
-    cmd "mongodump --out #{@tmpdir}/dump --db profiles --collection fs.files" or
-      raise "Could not backup avatar database"
-    cmd "mongodump --out #{@tmpdir}/dump --db profiles --collection fs.chunks" or
-      raise "Could not backup avatar database"
 	add_additional_databases(params)
 
     elasticsearch_started = cmd "service elasticsearch status"
@@ -160,17 +156,9 @@ class Restore < ArchiveBase
     if !pre_mongo      
       cmd "tar -zxvf #{params[:file]} -C #{@tmpdir} dump" or
         raise "Failed to extract user profiles database from archive"
-      cmd "mongo profiles --eval \"db.userProfile.remove({})\""
-      cmd "mongorestore --db profiles --collection userProfile #{@tmpdir}/dump/profiles/userProfile.bson" or
+      cmd "mongo profiles --eval \"db.getCollectionNames().forEach(function(n){db[n].remove()});\""
+      cmd "mongorestore --db profiles  #{@tmpdir}/dump/profiles/" or
         raise "Failed to restore user profiles database"
-
-      cmd "mongo profiles --eval \"db.fs.files.remove({})\""
-      cmd "mongorestore --db profiles --collection fs.files #{@tmpdir}/dump/profiles/fs.files.bson" or
-        cmd "echo Failed to restore avatar database"
-
-      cmd "mongo profiles --eval \"db.fs.chunks.remove({})\""
-      cmd "mongorestore --db profiles --collection fs.chunks #{@tmpdir}/dump/profiles/fs.chunks.bson" or
-        cmd "echo Failed to restore avatar database"
 
       cmd "tar -zxvf #{params[:file]} -C #{@tmpdir} elasticsearch_backup" or
         cmd "echo Failed to extract elasticsearch backup from archive"
