@@ -148,7 +148,8 @@ public class CallGroupApiImpl implements CallGroupApi {
         int ringsSize = rings.size();
         UserRing lastRing = (ringsSize > 0) ? (UserRing)rings.get(ringsSize -1) : null;
         if (lastRing != null && StringUtils.equals(lastRing.getUser().getExtension(true), ringExtension)) {
-        	LOG.debug("Hunt Group ring rotation is not needed, extension to rotate is the last");
+        	LOG.debug("Hunt Group " + callGroupExtension + 
+        			" ring rotation is not needed, extension to rotate is the last: " + ringExtension);
         	return Response.ok().entity(callGroupId).build();
         }
         
@@ -171,6 +172,11 @@ public class CallGroupApiImpl implements CallGroupApi {
         callGroup.clear();
         callGroup.insertRings(newRings);
         m_context.saveCallGroup(callGroup);
+        if (newRings.size() > 0) {
+        	LOG.debug("Hunt Group " + callGroup.getExtension() + " now has first ring " + ((UserRing)newRings.get(0)).getUser().getExtension(true));
+        } else {
+        	LOG.debug("Hunt Group " + callGroup.getExtension() + " has no rings");
+        }
         return Response.ok().entity(callGroupId).build();
 	}
 }
