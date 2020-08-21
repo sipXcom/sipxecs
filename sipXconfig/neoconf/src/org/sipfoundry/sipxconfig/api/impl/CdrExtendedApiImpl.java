@@ -37,13 +37,13 @@ public class CdrExtendedApiImpl extends BaseCdrApiImpl implements CdrExtendedApi
     public Response getCdrHistory(String fromDate, String toDate, String from, String to, Integer limit,
             Integer offset, String orderBy, String orderDirection, HttpServletRequest request) {
 		
-		CdrList list = CdrList.convertCdrList(getCdrs(fromDate, toDate, from, to, limit, offset, orderBy, orderDirection, null, null, false),
+		CdrList list = CdrList.convertCdrList(getCdrs(fromDate, toDate, from, to, limit, offset, orderBy, orderDirection, null, null, false, false),
                 request.getLocale());
 		addExtendedData(list);
 		CdrSearch search = getSearch(from, to, orderBy, null, false);
         Date start = getDate(fromDate, RequestUtils.getDefaultStartTime());
         Date end = getDate(toDate, RequestUtils.getDefaultEndTime());
-		list.setTotal(m_cdrManager.getCdrCount(start, end, search, null));
+		list.setTotal(m_cdrManager.getCdrCount(start, end, search, null, false));
         return Response
                 .ok()
                 .entity(list).build();
@@ -52,16 +52,16 @@ public class CdrExtendedApiImpl extends BaseCdrApiImpl implements CdrExtendedApi
 	
     @Override
     public Response getUserCdrHistory(String userId, String fromDate, String toDate, String from, String to,
-            Integer limit, Integer offset, String orderBy, String orderDirection, HttpServletRequest request) {
+            Integer limit, Integer offset, String orderBy, String orderDirection, boolean recipient, HttpServletRequest request) {
         User user = getUserByIdOrUserName(userId);
         if (user != null) {        	
-    		CdrList list = CdrList.convertCdrList(getCdrs(fromDate, toDate, from, to, limit, offset, orderBy, orderDirection, user, null, false),
+    		CdrList list = CdrList.convertCdrList(getCdrs(fromDate, toDate, from, to, limit, offset, orderBy, orderDirection, user, null, false, recipient),
                     request.getLocale());
     		addExtendedData(list);
     		CdrSearch search = getSearch(from, to, orderBy, null, false);
             Date start = getDate(fromDate, RequestUtils.getDefaultStartTime());
             Date end = getDate(toDate, RequestUtils.getDefaultEndTime());
-    		list.setTotal(m_cdrManager.getCdrCount(start, end, search, user));
+    		list.setTotal(m_cdrManager.getCdrCount(start, end, search, user, recipient));
             return Response
                     .ok()
                     .entity(list).build();        	
@@ -73,13 +73,13 @@ public class CdrExtendedApiImpl extends BaseCdrApiImpl implements CdrExtendedApi
     public Response getPrefixCdrHistory(String fromDate, String toDate, String from, String to,
             Integer limit, Integer offset, String orderBy, String orderDirection, String prefix, HttpServletRequest request) {
 
-    	CdrList list = CdrList.convertCdrList(getCdrs(fromDate, toDate, from, to, limit, offset, orderBy, orderDirection, null, prefix, true), 
+    	CdrList list = CdrList.convertCdrList(getCdrs(fromDate, toDate, from, to, limit, offset, orderBy, orderDirection, null, prefix, true, false), 
                 request.getLocale());
     	addExtendedData(list);
 		CdrSearch search = getSearch(from, to, orderBy, prefix, true);
         Date start = getDate(fromDate, RequestUtils.getDefaultStartTime());
         Date end = getDate(toDate, RequestUtils.getDefaultEndTime());
-		list.setTotal(m_cdrManager.getCdrCount(start, end, search, null));
+		list.setTotal(m_cdrManager.getCdrCount(start, end, search, null, false));
         return Response
                 .ok()
                 .entity(list).build();

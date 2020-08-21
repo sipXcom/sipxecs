@@ -46,7 +46,7 @@ public class CdrManagerImplTestIntegration extends IntegrationTestCase {
     }
 
     public void testGetCdrsCount() {
-        int size = m_cdrManagerImpl.getCdrCount(null, null, new CdrSearch(), null);
+        int size = m_cdrManagerImpl.getCdrCount(null, null, new CdrSearch(), null, false);
         assertTrue(size > 0);
     }
 

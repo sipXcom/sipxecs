@@ -178,7 +178,7 @@ public abstract class ReportComponent extends BaseComponent {
             timezone = TimeZone.getTimeZone(getSelectedTimezone());
         }
         int limit = getCdrManager().getSettings().getReportLimit();
-        int count = getCdrManager().getCdrCount(getStartTime(), getEndTime(), getCdrSearch(), getUser());
+        int count = getCdrManager().getCdrCount(getStartTime(), getEndTime(), getCdrSearch(), getUser(), false);
         if (limit != 0 && count > limit) {
             count = limit;
         }
@@ -190,13 +190,13 @@ public abstract class ReportComponent extends BaseComponent {
         List<Cdr> cdrs = new ArrayList<Cdr> ();
         for (int i = 0; i < pages; i++) {
             List<Cdr> cdrsTemp = getCdrManager().getCdrs(getStartTime(), getEndTime(), getCdrSearch(),
-                getUser(), timezone, CdrManager.DUMP_PAGE2, offset);
+                getUser(), timezone, CdrManager.DUMP_PAGE2, offset, false);
             offset += CdrManager.DUMP_PAGE2;
             cdrs.addAll(cdrsTemp);
         }
         if (remaining > 0) {
             List<Cdr> cdrsTemp = getCdrManager().getCdrs(getStartTime(), getEndTime(), getCdrSearch(),
-                getUser(), timezone, remaining, offset);
+                getUser(), timezone, remaining, offset, false);
             cdrs.addAll(cdrsTemp);
         }
 

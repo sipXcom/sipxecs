@@ -40,7 +40,7 @@ public class CdrSearch {
     }
 
     public enum Mode {
-        NONE, CALLER, CALLEE, ANY
+        NONE, CALLER, CALLEE, ANY, ANY_RECIPIENT
     }
 
     private Mode m_mode = Mode.NONE;
@@ -99,6 +99,12 @@ public class CdrSearch {
         appendSearchTermSql(sql, CdrManagerImpl.CALLEE_AOR);
         sql.append(CLOSED_PARANTHESIS);
     }
+    
+    private void appendCaleeContactSql(StringBuilder sql) {
+        sql.append(OPEN_PARANTHESIS);
+        appendSearchTermSql(sql, CdrManagerImpl.CALLEE_CONTACT);
+        sql.append(CLOSED_PARANTHESIS);    	
+    }
 
     private void appendCalleeInternalRouteSql(StringBuilder sql) {
         sql.append(OPEN_PARANTHESIS);
@@ -155,6 +161,15 @@ public class CdrSearch {
             appendCalleeSql(sql);
             sql.append(CLOSED_PARANTHESIS);
             break;
+        case ANY_RECIPIENT:
+            sql.append(AND);
+            sql.append(OPEN_PARANTHESIS);
+            appendCallerSql(sql);
+            sql.append(OR);
+            appendCalleeSql(sql);
+            sql.append(OR);
+            appendCaleeContactSql(sql);
+            sql.append(CLOSED_PARANTHESIS);        	
         default:
             return false;
         }

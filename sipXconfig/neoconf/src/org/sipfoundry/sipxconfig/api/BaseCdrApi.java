@@ -101,6 +101,7 @@ public interface BaseCdrApi extends ServiceSettingsApi {
             @Description("Order by criteria. Could have values of caller, callee, startTime, duration, termination")
             @QueryParam("orderBy") String orderBy,
             @QueryParam("orderDirection") String orderDirection,
+            @QueryParam("recipient") boolean recipient,
             @Context HttpServletRequest request);
 
     @Path("reports")

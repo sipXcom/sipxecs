@@ -130,17 +130,18 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
 
     @Override
     public List<Cdr> getCdrs(Date from, Date to, CdrSearch search, User user) {
-        return getCdrs(from, to, search, user, 0, 0);
+        return getCdrs(from, to, search, user, 0, 0, false);
     }
 
     @Override
-    public List<Cdr> getCdrs(Date from, Date to, CdrSearch search, User user, int limit, int offset) {
-        return getCdrs(from, to, search, user, null, limit, offset);
+    public List<Cdr> getCdrs(Date from, Date to, CdrSearch search, User user, int limit, int offset, boolean recipient) {
+        return getCdrs(from, to, search, user, null, limit, offset, recipient);
     }
 
     @Override
     public List<Cdr> getCdrs(Date fromDate, Date toDate, CdrSearch search, User user,
-        TimeZone timeZone, int limit, int offset) {
+        TimeZone timeZone, int limit, int offset, boolean recipient) {
+    	LOG.debug("RECIPIENT: " + recipient);
         Date from = fromDate;
         Date to = toDate;
         if (timeZone != null) {
@@ -148,7 +149,7 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
             to = TimeZoneUtils.getSameDateWithNewTimezone(toDate, timeZone);
         }
         CdrsStatementCreator psc = new SelectAll(from, to, search, user, (user != null)
-            ? (user.getTimezone()) : m_tz, limit, offset);
+            ? (user.getTimezone()) : m_tz, limit, offset, recipient);
         TimeZone resultsTimeZone = timeZone;
         if (resultsTimeZone == null) {
             resultsTimeZone = (user != null) ? (user.getTimezone()) : (getTimeZone());
@@ -213,7 +214,7 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
             to = TimeZoneUtils.getSameDateWithNewTimezone(toDate, timezone);
         }
 
-        int count = (limit == 0 ? getCdrCount(from, to, search, user) : limit);
+        int count = (limit == 0 ? getCdrCount(from, to, search, user, false) : limit);
         count = (count > MAX_COUNT) ? MAX_COUNT : count;
 
         try {
@@ -225,13 +226,13 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
 
             for (int i = 0; i < pages; i++) {
                 PreparedStatementCreator psc = new SelectAll(from, to, search, user, (user != null)
-                    ? (user.getTimezone()) : m_tz, DUMP_PAGE, offset);
+                    ? (user.getTimezone()) : m_tz, DUMP_PAGE, offset, false);
                 getJdbcTemplate().query(psc, resultReader);
                 offset += DUMP_PAGE;
             }
             if (remaining > 0) {
                 PreparedStatementCreator psc = new SelectAll(from, to, search, user, (user != null)
-                    ? (user.getTimezone()) : m_tz, remaining, offset);
+                    ? (user.getTimezone()) : m_tz, remaining, offset, false);
                 getJdbcTemplate().query(psc, resultReader);
             }
 
@@ -246,8 +247,8 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
     }
 
     @Override
-    public int getCdrCount(Date from, Date to, CdrSearch search, User user) {
-        CdrsStatementCreator psc = new SelectCount(from, to, search, user, m_tz);
+    public int getCdrCount(Date from, Date to, CdrSearch search, User user, boolean recipient) {
+        CdrsStatementCreator psc = new SelectCount(from, to, search, user, m_tz, recipient);
         RowMapper rowMapper = new SingleColumnRowMapper(Integer.class);
         List results = getJdbcTemplate().query(psc, rowMapper);
         return (Integer) DataAccessUtils.requiredUniqueResult(results);
@@ -368,12 +369,12 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
         private final int m_offset;
         private final Calendar m_calendar;
 
-        public CdrsStatementCreator(Date from, Date to, CdrSearch search, User user, TimeZone tz) {
-            this(from, to, search, user, tz, 0, 0);
+        public CdrsStatementCreator(Date from, Date to, CdrSearch search, User user, TimeZone tz, boolean recipient) {
+            this(from, to, search, user, tz, 0, 0, recipient);
         }
 
         public CdrsStatementCreator(Date from, Date to, CdrSearch search, User user, TimeZone tz, int limit,
-                int offset) {
+                int offset, boolean recipient) {
             m_calendar = Calendar.getInstance(tz);
             long fromMillis = from != null ? from.getTime() : 0;
             m_from = new Timestamp(fromMillis);
@@ -384,7 +385,11 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
             m_offset = offset;
             if (user != null) {
                 m_forUser = new CdrSearch();
-                m_forUser.setMode(CdrSearch.Mode.ANY);
+                if (!recipient) {
+                	m_forUser.setMode(CdrSearch.Mode.ANY);
+                } else {
+                	m_forUser.setMode(CdrSearch.Mode.ANY_RECIPIENT);
+                }
                 Set<String> names = user.getAliases();
                 names.add(user.getName());
                 m_forUser.setTerm(names.toArray(new String[0]));
@@ -432,12 +437,12 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
     }
 
     static class SelectAll extends CdrsStatementCreator {
-        public SelectAll(Date from, Date to, CdrSearch search, User user, TimeZone tz, int limit, int offset) {
-            super(from, to, search, user, tz, limit, offset);
+        public SelectAll(Date from, Date to, CdrSearch search, User user, TimeZone tz, int limit, int offset, boolean recipient) {
+            super(from, to, search, user, tz, limit, offset, recipient);
         }
 
         public SelectAll(Date from, Date to, CdrSearch search, User user, TimeZone tz) {
-            super(from, to, search, user, tz);
+            super(from, to, search, user, tz, false);
         }
 
         @Override
@@ -448,8 +453,8 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
 
     static class SelectCount extends CdrsStatementCreator {
 
-        public SelectCount(Date from, Date to, CdrSearch search, User user, TimeZone tz) {
-            super(from, to, search, user, tz);
+        public SelectCount(Date from, Date to, CdrSearch search, User user, TimeZone tz, boolean recipient) {
+            super(from, to, search, user, tz, recipient);
         }
 
         @Override

@@ -67,11 +67,11 @@ public class CdrTableModel implements IBasicTableModel {
             m_cdrSearch.setOrder(objSortColumn.getColumnName(), ascending);
         }
         List<Cdr> cdrs = m_cdrManager.getCdrs(m_from, m_to, m_cdrSearch,
-                m_activeUser, m_timeZone, nPageSize, nFirst);
+                m_activeUser, m_timeZone, nPageSize, nFirst, false);
         return cdrs.iterator();
     }
 
     public int getRowCount() {
-        return m_cdrManager.getCdrCount(m_from, m_to, m_cdrSearch, m_activeUser);
+        return m_cdrManager.getCdrCount(m_from, m_to, m_cdrSearch, m_activeUser, false);
     }
 }

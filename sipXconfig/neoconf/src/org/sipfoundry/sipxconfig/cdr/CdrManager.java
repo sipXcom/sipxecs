@@ -43,8 +43,8 @@ public interface CdrManager {
      * @return list of CDR objects
      */
     List<Cdr> getCdrs(Date from, Date to, CdrSearch search, User user);
-    List<Cdr> getCdrs(Date from, Date to, CdrSearch search, User user, int limit, int offset);
-    List<Cdr> getCdrs(Date from, Date to, CdrSearch search, User user, TimeZone timezone, int limit, int offset);
+    List<Cdr> getCdrs(Date from, Date to, CdrSearch search, User user, int limit, int offset, boolean recipient);
+    List<Cdr> getCdrs(Date from, Date to, CdrSearch search, User user, TimeZone timezone, int limit, int offset, boolean recipient);
     
     /**
      * Returns the last CSE found in the call_state_events table of established call (event_type = S)
@@ -61,7 +61,7 @@ public interface CdrManager {
      * @param search specification - enumeration representing columns and string to search for
      * @return number of CDRs that fullfil passed criteria
      */
-    int getCdrCount(Date from, Date to, CdrSearch search, User user);
+    int getCdrCount(Date from, Date to, CdrSearch search, User user, boolean recipient);
 
     /**
      * Dumps CDRs in comma separated values format.
