@@ -286,7 +286,7 @@
   <group name="database">
     <setting name="SIPX_PROXY_ENTITY_CACHE_EXPIRE">
       <type>
-    	<integer min="5"/>
+    	<integer min="0"/>
       </type>
       <value>30</value>
     </setting>

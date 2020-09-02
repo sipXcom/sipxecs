@@ -209,7 +209,7 @@
   <group name="database">
     <setting name="SIP_REGISTRAR_ENTITY_CACHE_EXPIRE">
       <type>
-    	<integer min="30"/>
+    	<integer min="0"/>
       </type>
       <value>30</value>
     </setting>
