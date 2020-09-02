@@ -34,7 +34,6 @@ class CallResolver
       CseReader.new(url, purge_age_cse, config.cse_polling_interval, log)
     end
     install_signal_handler(@readers)
-    log.debug("MIRCEA  #{config.cdr_database_url}");
     @writer = CdrWriter.new(@config.cdr_database_url, @config.purge_age_cdr, log)
     @long_calls_cleaner = Cleaner.new(@config.min_cleanup_interval, [:retire_long_calls,  @config.max_call_len])
     @long_ringing_calls_cleaner = Cleaner.new(@config.min_cleanup_interval, [:retire_long_ringing_calls,  @config.max_ringing_call_len])
@@ -45,8 +44,8 @@ class CallResolver
   # make sure we can connect to the CDR DB. The CSE DB connections will be checked/(re-)established on running the reader.
   def check_connections
     @writer.test_connection
-  rescue => e
-    log.error("call_resolver.rb:: Problems with CDR DB connection. #{e.message}")
+  rescue
+    log.error("call_resolver.rb:: Problems with CDR DB connection.")
     raise
   end
 
