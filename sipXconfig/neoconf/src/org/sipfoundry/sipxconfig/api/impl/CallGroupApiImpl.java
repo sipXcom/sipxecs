@@ -153,27 +153,27 @@ public class CallGroupApiImpl implements CallGroupApi {
         	return Response.ok().entity(callGroupId).build();
         }
         
-        List<AbstractRing> newRings = new ArrayList<AbstractRing>();
-        boolean addFirst = false;
-        int i = 0;
-        for (AbstractRing ring : rings) {
-        	UserRing userRing = (UserRing)ring; 
+        boolean found = false;
+        int size = rings.size();
+        for (int i = 0; i < size; i++) {
+        	UserRing userRing = (UserRing)rings.get(i);
         	if (StringUtils.equals(ringExtension, userRing.getUser().getExtension(true))) {
-        		addFirst = true;
-        		newRings.add(userRing);
+        		found = true;
         	} else {
-        		if (addFirst) {
-        			newRings.add(i++, userRing);
-        		} else {
-        			newRings.add(userRing);
+        		if (found) {
+        			for (int k = i; k < size; k++) {
+        				for (int j = 0; j < i; j++) {
+        					callGroup.moveRingUp(rings.get(k-j));
+        				}
+        			}
         		}
         	}
         }
-        callGroup.clear();
-        callGroup.insertRings(newRings);
+        
         m_context.saveCallGroup(callGroup);
-        if (newRings.size() > 0) {
-        	LOG.debug("Hunt Group " + callGroup.getExtension() + " now has first ring " + ((UserRing)newRings.get(0)).getUser().getExtension(true));
+        if (callGroup.getRings().size() > 0) {
+        	LOG.debug("Hunt Group " + callGroup.getExtension() + 
+        			" now has first ring " + ((UserRing)callGroup.getRings().get(0)).getUser().getExtension(true));
         } else {
         	LOG.debug("Hunt Group " + callGroup.getExtension() + " has no rings");
         }
