@@ -41,13 +41,11 @@ class Dao
   end
   
   def connect(&block)
-    log.debug("MIRCEA BBNV + #{@connection} #{@username} #{@password}");
     DBI.connect(@connection, @username, @password, &block)
   end
   
   # this is run to test if DB connection is working
   def test_connection
-    log.debug("MIRCEA VVVVVV #{@purge_age} ");
     connect do | dbh |
       check_purge(dbh)
     end
@@ -65,7 +63,6 @@ class Dao
   # purge at least once a day
   def check_purge(dbh)
     return unless @purge_age
-    log.debug("MIRCEA CACA ")
     now = Time.now
     if @last_purge_time.nil? || now - @last_purge_time > Configure::SECONDS_PER_DAY
       first_entry_time = now - (@purge_age * Configure::SECONDS_PER_DAY)
