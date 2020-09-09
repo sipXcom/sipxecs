@@ -59,7 +59,9 @@ public class CallGroupApiImpl implements CallGroupApi {
 	public void convertToCallGroup(CallGroupBean callGroupBean, CallGroup callGroup) {        
         try {
             BeanUtils.copyProperties(callGroup, callGroupBean);
-            callGroup.clear();            
+            if (callGroup.getRings().size() > 0) {
+            	callGroup.clear();
+            }
             List<RingBean> rings = callGroupBean.getRingBeans();
             for (RingBean ring : rings) {
             	UserRing userRing = callGroup.insertRingForUser(m_coreContext.loadUserByUserName(ring.getUserName()));
@@ -97,9 +99,9 @@ public class CallGroupApiImpl implements CallGroupApi {
 
 	@Override
 	public Response getCallGroup(String callGroupExtension) {
-        int callGroupId = m_context.getCallGroupId(callGroupExtension);
-        CallGroup callGroup = m_context.loadCallGroup(callGroupId);
-        return getCallGroup(callGroup);
+        Integer callGroupId = m_context.getCallGroupIdByAlias(callGroupExtension);
+        CallGroup callGroup = callGroupId != null ? m_context.loadCallGroup(callGroupId) : null;
+        return callGroup!=null ? getCallGroup(callGroup) : Response.status(Status.NO_CONTENT).build();
 	}
 	
     public Response getCallGroup(CallGroup callGroup) {

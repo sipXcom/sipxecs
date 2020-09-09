@@ -41,4 +41,6 @@ public interface CallGroupContext extends AliasOwner, ReplicableProvider {
     void generateSipPasswords();
     
     int getCallGroupId(String extension);
+    
+    Integer getCallGroupIdByAlias(String alias);
 }
