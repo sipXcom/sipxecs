@@ -388,7 +388,36 @@ public class MongoManagerImpl implements AddressProvider, FeatureProvider, Mongo
     public void onDelete(Object entity) {
         if (entity instanceof Region) {
             Region r = (Region) entity;
-            checkRegionForRegionalDatabase(r);
+            checkRegionForRegionalDatabase(r);            
+        } else if (entity instanceof User) {
+            User user = (User) entity;
+            user.getUserProfile().setDidNumber(null);
+            user.setFaxDid(null);
+            if (user.isSaveFaxDid() == false) {
+            	removeDid(user.getExtension(true));
+            } else {
+            	removeDid(user.getFaxExtension());
+            }
+        } else if (entity instanceof CallGroup) {
+        	CallGroup cg = (CallGroup) entity;
+        	cg.setDid(null);
+        	removeDid(cg.getExtension());
+        } else if (entity instanceof Conference) {
+        	Conference conf = (Conference) entity;
+        	conf.setDid(null);
+        	removeDid(conf.getExtension());
+        } else if (entity instanceof InternalRule) {
+            InternalRule rule = (InternalRule) entity;
+            rule.setDid(null);
+            removeDid(rule.getVoiceMail());
+        } else if (entity instanceof AttendantRule) {
+            AttendantRule rule = (AttendantRule) entity;
+            rule.setDid(null);
+            removeDid(rule.getExtension());
+        } else if (entity instanceof AutoAttendantSettings) {
+            AutoAttendantSettings aaSettings = (AutoAttendantSettings) entity;
+            aaSettings.setSettingValue(AutoAttendantSettings.LIVE_DID, null);
+            removeDid(aaSettings.getBeanId());
         }
     }
 
@@ -413,78 +442,6 @@ public class MongoManagerImpl implements AddressProvider, FeatureProvider, Mongo
 
     @Override
     public void onSave(Object entity) {
-
-    }
-    
-    private void saveDid(String value, String typeId, DidType type) throws Exception {
-        if (!StringUtils.isEmpty(value)) {
-            if (m_didService.isDidInUse(typeId, value) || m_coreContext.isAliasInUseExceptDid(value)) {
-                throw new DidInUseException(type.getName(), value);
-            }            
-            DidPool pool = checkDid(value, typeId);     
-            Did did = m_didService.getDid(typeId);
-
-            if (pool != null) {
-                if (did == null) {
-                    did = new Did(type.getName(), typeId, value, pool.getDescription());
-                } else {
-                    did.setValue(value);
-                }                
-                did.setPoolId(pool.getId());
-                m_didService.saveDid(did);
-                //save proposed next value
-                pool.setNext(m_didPoolService.findNext(pool).toString());
-            
-                m_didPoolService.saveDidPool(pool);
-            }
-        } else {
-            m_didService.removeDid(typeId); 
-        }
-    }
-    
-    /**
-     * returns the first DID Pool where the value is available
-     * @param value
-     * @param typeId
-     * @return
-     */
-    private DidPool checkDid(String value, String typeId) {
-        List<DidPool> didPools = m_didPoolService.getAllDidPools();        
-        for (DidPool pool : didPools) {
-            long valueLong = Long.parseLong(value.replaceAll("[^\\d.]", ""));
-            if (m_didPoolService.outsideRangeDidValue(pool, valueLong)) {
-                continue;
-            } else {
-                return pool;
-            }
-        }
-        return null;
-        //LOG.error("Out of the pool range");
-        //throw new UserException("&err.notInRange");
-    }
-    
-
-
-    public void setConfigJdbcTemplate(JdbcTemplate configJdbc) {
-        m_configJdbcTemplate = configJdbc;
-    }
-
-    @Override
-    public void onBeforeSave(Object entity) {
-        if (entity instanceof Location) {
-            // Don't allow changing server region if there are regional databases there.
-            // they should be removed first
-            Location l = (Location) entity;
-            Location o = l.getOriginalCopy();
-            if (o != null) {
-                if (o.getRegionId() != null) {
-                    if (!o.getRegionId().equals(l.getRegionId())) {
-                        checkLocationForRegionalDatabase(o);
-                    }
-                }
-            }
-        }
-        
         try {
             if (entity instanceof User) {
                 User user = (User) entity;                
@@ -520,7 +477,89 @@ public class MongoManagerImpl implements AddressProvider, FeatureProvider, Mongo
             LOG.error("failed to save did in mongo: " + ex.getMessage());
             UserException exception = (ex instanceof UserException) ? (UserException)ex : new UserException("&error.cannotSaveDid", ex.getMessage());
             throw exception;
-        }        
+        }
+    }
+    
+    private void saveDid(String value, String typeId, DidType type) throws Exception {
+        if (!StringUtils.isEmpty(value)) {
+            if (m_didService.isDidInUse(typeId, value)) {
+                throw new DidInUseException(type.getName(), value);
+            }            
+            DidPool pool = checkDid(value, typeId);     
+            Did did = m_didService.getDid(typeId);
+
+            if (pool != null) {
+                if (did == null) {
+                    did = new Did(type.getName(), typeId, value, pool.getDescription());
+                } else {
+                    did.setValue(value);
+                }                
+                did.setPoolId(pool.getId());
+                m_didService.saveDid(did);
+                //save proposed next value
+                Long next = m_didPoolService.findNext(pool);
+                pool.setNext(next != null ? next.toString() : "");
+            
+                m_didPoolService.saveDidPool(pool);
+            }
+        } else {
+        	removeDid(typeId);
+        }
+    }
+    
+    private void removeDid(String typeId) {
+    	Did savedDid = m_didService.getDid(typeId);
+    	String savedValue = savedDid.getValue();
+        m_didService.removeDid(typeId);
+    	if (savedDid != null) {
+    		DidPool pool = checkDid(savedValue, typeId);
+    		if (pool != null) {
+    			pool.setNext(m_didPoolService.findNext(pool).toString());
+    			m_didPoolService.saveDidPool(pool);
+    		}
+    	}
+    }
+    
+    /**
+     * returns the first DID Pool where the value is available
+     * @param value
+     * @param typeId
+     * @return
+     */
+    private DidPool checkDid(String value, String typeId) {
+        List<DidPool> didPools = m_didPoolService.getAllDidPools();        
+        for (DidPool pool : didPools) {
+            long valueLong = Long.parseLong(value.replaceAll("[^\\d.]", ""));
+            if (m_didPoolService.outsideRangeDidValue(pool, valueLong)) {
+                continue;
+            } else {
+                return pool;
+            }
+        }
+        return null;       
+    }
+    
+
+
+    public void setConfigJdbcTemplate(JdbcTemplate configJdbc) {
+        m_configJdbcTemplate = configJdbc;
+    }
+
+    @Override
+    public void onBeforeSave(Object entity) {
+        if (entity instanceof Location) {
+            // Don't allow changing server region if there are regional databases there.
+            // they should be removed first
+            Location l = (Location) entity;
+            Location o = l.getOriginalCopy();
+            if (o != null) {
+                if (o.getRegionId() != null) {
+                    if (!o.getRegionId().equals(l.getRegionId())) {
+                        checkLocationForRegionalDatabase(o);
+                    }
+                }
+            }
+        }       
     }
 
     @Override
