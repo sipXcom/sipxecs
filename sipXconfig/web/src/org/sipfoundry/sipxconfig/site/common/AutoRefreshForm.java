@@ -47,6 +47,19 @@ public abstract class AutoRefreshForm extends BaseComponent implements PageBegin
     @Persist
     @InitialValue(value = "true")
     public abstract boolean isAuto();
+    
+    @Persist
+    @InitialValue(value = "false")
+    public abstract boolean isInitialized();
+    
+    public abstract void setInitialized(boolean initialized);
+    
+    public abstract void setAuto(boolean auto);
+    
+    @Parameter(defaultValue = "ognl:true")
+    public abstract boolean getInitAuto();
+    
+    public abstract void setInitAuto(boolean initAuto);
 
     @Parameter(defaultValue = "30")
     public abstract int getInterval();
@@ -76,6 +89,10 @@ public abstract class AutoRefreshForm extends BaseComponent implements PageBegin
     }
 
     public void pageBeginRender(PageEvent event) {
+    	if (!isInitialized()) {
+    		setAuto(getInitAuto());
+    		setInitialized(true);
+    	}
         if (0 == getCurrentInterval()) {
             setCurrentInterval(getInterval());
         }

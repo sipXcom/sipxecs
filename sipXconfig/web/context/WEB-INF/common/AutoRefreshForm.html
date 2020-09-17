@@ -12,7 +12,7 @@
 	  <ul class="component-links">
 	    <li>
 	      <form jwcid="intervalForm@Form" delegate="bean:validator">
-	        <span jwcid="auto@Checkbox" value="ognl:auto"/>
+	        <span jwcid="auto@Checkbox" value="ognl:auto" onchange="literal:javascript:this.form.submit();"/>
 	      </form>
 	    </li>
 	    <li>

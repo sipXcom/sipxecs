@@ -17,7 +17,7 @@
       </tr>      
     </table>    
   </form>
-  <form jwcid="@common/AutoRefreshForm" delegate="bean:validator" id="didPool:form" actionBlock="component:didActions">
+  <form jwcid="@common/AutoRefreshForm" delegate="bean:validator" id="didPool:form" actionBlock="component:didActions" initAuto="false">
     <ul class="component-submit">
         <li><span jwcid="@didpool/DidPoolFilter" didPoolSearch="ognl:didPoolSearch"/></li>
     </ul>
