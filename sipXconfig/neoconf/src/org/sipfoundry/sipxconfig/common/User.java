@@ -116,6 +116,12 @@ public class User extends AbstractUser implements Replicable, IndexedBean {
             AliasMapping mapping = new AliasMapping(alias, contact, ALIAS_RELATION);
             mappings.add(mapping);
         }
+        
+        String did = getDid();
+        if (!StringUtils.isEmpty(did)) {
+        	AliasMapping mapping = new AliasMapping(did, contact, ALIAS_RELATION);
+        	mappings.add(mapping);
+        }
 
         ImAccount imAccount = new ImAccount(this);
         if (imAccount.isEnabled() && !StringUtils.isEmpty(imAccount.getImId())

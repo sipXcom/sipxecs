@@ -509,6 +509,9 @@ public class MongoManagerImpl implements AddressProvider, FeatureProvider, Mongo
     
     private void removeDid(String typeId) {
     	Did savedDid = m_didService.getDid(typeId);
+    	if (savedDid == null) {
+    		return;
+    	}
     	String savedValue = savedDid.getValue();
         m_didService.removeDid(typeId);
     	if (savedDid != null) {

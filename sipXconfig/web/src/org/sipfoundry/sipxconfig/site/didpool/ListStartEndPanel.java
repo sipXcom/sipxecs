@@ -79,9 +79,12 @@ public abstract class ListStartEndPanel extends ListPanel {
     public void commit() {
         for (Object obj : getSource()) {
             DidPool pool = (DidPool)obj;
-            pool.setNext(getDidPoolService().findNext(pool).toString());
+            Long next = getDidPoolService().findNext(pool);
+            if (next != null) {
+            	pool.setNext(next.toString());            	
+            }
             getDidPoolService().saveDidPool(pool);
         }
         getConfigManager().configureEverywhere(DialPlanContext.FEATURE);
-    }    
+    }
 }
