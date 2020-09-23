@@ -1,7 +1,13 @@
 package org.sipfoundry.sipxconfig.api.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -14,13 +20,15 @@ import org.sipfoundry.sipxconfig.api.CallGroupApi;
 import org.sipfoundry.sipxconfig.api.model.CallGroupBean;
 import org.sipfoundry.sipxconfig.api.model.CallGroupList;
 import org.sipfoundry.sipxconfig.api.model.RingBean;
+import org.sipfoundry.sipxconfig.api.model.StringList;
 import org.sipfoundry.sipxconfig.callgroup.AbstractRing;
-import org.sipfoundry.sipxconfig.callgroup.AbstractRing.Type;
 import org.sipfoundry.sipxconfig.callgroup.CallGroup;
 import org.sipfoundry.sipxconfig.callgroup.CallGroupContext;
 import org.sipfoundry.sipxconfig.callgroup.UserRing;
+import org.sipfoundry.sipxconfig.cdr.Cdr;
+import org.sipfoundry.sipxconfig.cdr.CdrManager;
+import org.sipfoundry.sipxconfig.cdr.CdrSearch;
 import org.sipfoundry.sipxconfig.common.CoreContext;
-import org.sipfoundry.sipxconfig.common.User;
 import org.springframework.beans.factory.annotation.Required;
 
 public class CallGroupApiImpl implements CallGroupApi {
@@ -29,6 +37,8 @@ public class CallGroupApiImpl implements CallGroupApi {
 	
 	private CallGroupContext m_context;
 	private CoreContext m_coreContext;
+	private CdrManager m_cdrManager;
+	private ExecutorService m_executor = Executors.newSingleThreadExecutor();
 	
 	@Override
 	public Response getCallGroups() {
@@ -78,6 +88,11 @@ public class CallGroupApiImpl implements CallGroupApi {
 	public void setCoreContext(CoreContext coreContext) {
 		m_coreContext = coreContext;
 	}
+	
+	@Required
+    public void setCdrManager(CdrManager manager) {
+        m_cdrManager = manager;
+    }	
 
 	@Override
 	public Response updateCallGroup(String callGroupExtension, CallGroupBean callGroupBean) {
@@ -141,9 +156,8 @@ public class CallGroupApiImpl implements CallGroupApi {
         }
         return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 	}
-
-    @Override
-    public Response rotateRings(String callGroupExtension, String ringExtension) {
+	
+	private CallGroup retrieveCallGroupToRotate(String callGroupExtension, String ringExtension) {
     	int callGroupId = m_context.getCallGroupId(callGroupExtension);
     	CallGroup callGroup = m_context.loadCallGroup(callGroupId);
     	List<AbstractRing> rings = callGroup.getRings();
@@ -152,10 +166,15 @@ public class CallGroupApiImpl implements CallGroupApi {
     	if (lastRing != null && StringUtils.equals(lastRing.getUser().getExtension(true), ringExtension)) {
             LOG.debug("Hunt Group " + callGroupExtension + 
                             " ring rotation is not needed, extension to rotate is the last: " + ringExtension);
-            return Response.ok().entity(callGroupId).build();
+            return null;
+    	} else {
+    		return callGroup;
     	}
-    
+	}
+	
+	private void rotateRings(CallGroup callGroup, String ringExtension) {
     	boolean found = false;
+    	List<AbstractRing> rings = callGroup.getRings();
     	int size = rings.size();
     	for (int i = 0; i < size; i++) {
             UserRing userRing = (UserRing)rings.get(i);
@@ -178,7 +197,61 @@ public class CallGroupApiImpl implements CallGroupApi {
                             " now has first ring " + ((UserRing)callGroup.getRings().get(0)).getUser().getExtension(true));
     	} else {                                                                                                                                                                                                                             
             LOG.debug("Hunt Group " + callGroup.getExtension() + " has no rings");                                                                                                                                                       
-    	}                                                                                                                                                                                                                                    
-    	return Response.ok().entity(callGroupId).build();                                                                                                                                                                                    
-    } 
+    	}
+	}
+
+    @Override
+    public Response rotateRings(String callGroupExtension, String ringExtension) {
+    	CallGroup callGroupToRotate = retrieveCallGroupToRotate(callGroupExtension, ringExtension);
+        if (callGroupToRotate == null) {
+        	return Response.ok().entity(callGroupExtension).build();
+        }
+        rotateRings(callGroupToRotate, ringExtension);
+    	return Response.ok().entity(callGroupToRotate.getId()).build();
+    }
+
+	@Override
+	public Response rotateRings(final StringList callGroupExtensions) {
+		LOG.debug("Hunt group extensions to rotate " + callGroupExtensions.getStrings());
+		Calendar from = Calendar.getInstance();
+		from.add(Calendar.YEAR, -10);
+		final Date dateTo = RequestUtils.getDefaultEndTime();
+		final Date dateFrom = from.getTime();
+		m_executor.execute(new Runnable() {
+			@Override
+			public void run() {
+				ExecutorService m_hgExecutor = Executors.newCachedThreadPool();
+				for (final String extension : callGroupExtensions.getStrings()) {
+					final CdrSearch search = new CdrSearch();
+					search.setAscending(false);
+					search.setMode(CdrSearch.Mode.CALLEE);
+					search.setTerm(new String[] {extension});
+					m_hgExecutor.execute(new Runnable() {
+						@Override
+						public void run() {
+							List<Cdr> cdrs = m_cdrManager.getCdrs(dateFrom, dateTo, search, null, 1, 0, false);
+							if (cdrs.size() > 0) {
+								final String callGroupExtension = cdrs.get(0).getCallee();
+								final String ringExtension = cdrs.get(0).getRecipient();
+								LOG.debug("Hunt Group with extension: " + callGroupExtension + " last answered: " + ringExtension);
+								if (ringExtension != null) {
+									final CallGroup cg = retrieveCallGroupToRotate(callGroupExtension, ringExtension);
+									if (cg != null) {
+										rotateRings(cg, ringExtension);
+									}
+								}
+							}
+						}
+					});
+				}
+				m_hgExecutor.shutdown();
+				try {
+					m_hgExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+				} catch (InterruptedException e) {
+					LOG.debug("Interrupted: " + e.getMessage());
+				}
+			}
+		});		
+		return Response.status(Status.OK).build();
+	} 
 }

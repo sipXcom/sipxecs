@@ -13,6 +13,7 @@ import javax.ws.rs.core.Response;
 
 import org.apache.cxf.jaxrs.model.wadl.Description;
 import org.sipfoundry.sipxconfig.api.model.CallGroupBean;
+import org.sipfoundry.sipxconfig.api.model.StringList;
 
 @Path("/callgroups/")
 @Produces({
@@ -54,6 +55,13 @@ public interface CallGroupApi {
     @POST
     public Response rotateRings(@Description("Call Group Extension") @PathParam("callGroupExtension") String callGroupExtension, 
     		@Description("Ring extension to rotate rings") @PathParam("ringExtension") String ringExtension);
+    
+    @Path("rotate")
+    @POST
+    @Consumes({
+        MediaType.APPLICATION_JSON, MediaType.TEXT_XML, MediaType.APPLICATION_XML
+    })    
+    public Response rotateRings(@Description("Call Group Extensions") StringList callGroupExtensions);    
         
     @Path("{callGroupExtension}")
     @PUT
