@@ -31,6 +31,9 @@ public class ExtendedCdrBean {
     @Field("ApplicationReferenceID")
     private String m_applicationReferenceID;
     
+    @Field("IP")
+    private String m_ip;
+    
     @Field("CallerYN")
     private String m_caller;
 
@@ -92,4 +95,12 @@ public class ExtendedCdrBean {
 	public void setVideoStatistics(Set<VideoStatistics> videoStatistics) {
 		m_videoStatistics = videoStatistics;
 	}
+
+	public String getIp() {
+		return m_ip;
+	}
+
+	public void setIp(String ip) {
+		m_ip = ip;
+	}	
 }

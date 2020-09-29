@@ -22,6 +22,7 @@ public class ExtendedCdrServiceImpl implements ExtendedCdrService {
     	if(extendedCdr != null) {
     		extendedCdr.setCaller(extCdrBean.getCaller());
     		extendedCdr.setCallId(extCdrBean.getCallId());
+    		extendedCdr.setIp(extCdrBean.getIp());
     		extendedCdr.setApplicationReferenceID(extCdrBean.getApplicationReferenceID());
     		extendedCdr.setAudioStatistics(extCdrBean.getAudioStatistics());
     		extendedCdr.setVideoStatistics(extCdrBean.getVideoStatistics());
