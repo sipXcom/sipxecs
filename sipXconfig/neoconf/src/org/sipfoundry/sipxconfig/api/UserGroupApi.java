@@ -55,6 +55,14 @@ public interface UserGroupApi {
     @Path("{groupId}")
     @DELETE
     public Response deleteUserGroup(@Description("Group internal id or name") @PathParam("groupId") String groupId);
+    
+    @Path("{groupId}/empty")
+    @DELETE
+    public Response deleteUserGroupIfEmpty(@Description("Group internal id or name") @PathParam("groupId") String groupId);
+    
+    @Path("{groupId}/all")
+    @DELETE
+    public Response deleteUserGroupWithAllUsers(@Description("Group internal id or name") @PathParam("groupId") String groupId);
 
     @Path("{groupId}")
     @PUT

@@ -14,6 +14,7 @@
  */
 package org.sipfoundry.sipxconfig.api.impl;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -180,4 +181,32 @@ public class UserGroupApiImpl extends GroupApiImpl implements UserGroupApi {
         }
         return Response.status(Status.NOT_FOUND).build();
     }
+
+	@Override
+	public Response deleteUserGroupIfEmpty(String groupId) {
+		Group group = getUserGroupByIdOrName(groupId);
+        if (group != null) {
+        	int count = m_coreContext.getGroupMembersCount(group.getId());
+        	if (count == 0) {
+        		m_coreContext.deleteGroups(Collections.singletonList(group.getId()));
+        		return Response.ok().build();
+        	} else {
+        		return Response.status(Status.CONFLICT).build();
+        	}
+        } else {
+        	return Response.status(Status.NO_CONTENT).build();
+        }		
+	}
+
+	@Override
+	public Response deleteUserGroupWithAllUsers(String groupId) {
+		Group group = getUserGroupByIdOrName(groupId);
+        if (group != null) {
+        	Collection<Integer> ids = m_coreContext.getGroupMembersIds(group);
+        	m_coreContext.removeFromGroup(group.getId(), ids);
+    		m_coreContext.deleteGroups(Collections.singletonList(group.getId()));
+    		return Response.ok().build();        	
+        }		
+		return Response.status(Status.NO_CONTENT).build();
+	}
 }
