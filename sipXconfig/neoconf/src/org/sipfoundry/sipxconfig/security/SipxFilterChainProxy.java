@@ -75,11 +75,12 @@ public class SipxFilterChainProxy extends FilterChainProxy {
             if (origin != null && origin.indexOf(portSeparator) > 0) {
                 origin = origin.substring(0, origin.indexOf(portSeparator));
             }
+            httpResponse.setHeader("Content-Security-Policy", "frame-ancestors 'none'");
             httpResponse.setHeader("Access-Control-Allow-Origin", originUrl);
             httpResponse.setHeader("Access-Control-Allow-Credentials",
                 String.valueOf(getAllowedCorsDomains().contains(origin)));
             httpResponse.setHeader("Access-Control-Allow-Methods", "DELETE, HEAD, GET, PATCH, POST, PUT");
-            httpResponse.setHeader("Access-Control-Max-Age", "3600");
+            httpResponse.setHeader("Access-Control-Max-Age", "3600");            
             String allowedHeaders;
             if ("OPTIONS".equals(((HttpServletRequest) request).getMethod())) {
                 allowedHeaders = "accept, authorization, content-type";
