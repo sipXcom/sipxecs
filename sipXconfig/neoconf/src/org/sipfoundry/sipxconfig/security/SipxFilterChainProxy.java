@@ -17,6 +17,7 @@
 package org.sipfoundry.sipxconfig.security;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +29,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
@@ -36,6 +38,8 @@ import org.sipfoundry.sipxconfig.admin.AdminContext;
 import org.sipfoundry.sipxconfig.common.AbstractUser;
 import org.sipfoundry.sipxconfig.domain.DomainManager;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.FilterChainProxy;
 
 public class SipxFilterChainProxy extends FilterChainProxy {
@@ -75,12 +79,30 @@ public class SipxFilterChainProxy extends FilterChainProxy {
             if (origin != null && origin.indexOf(portSeparator) > 0) {
                 origin = origin.substring(0, origin.indexOf(portSeparator));
             }
-            httpResponse.setHeader("Content-Security-Policy", "frame-ancestors 'none'");
+            boolean cspHeader = false;
+            HttpServletRequest req = (HttpServletRequest) request;
+            HttpSession session = req.getSession(false);
+            if (session != null) {
+            	SecurityContextImpl sci = (SecurityContextImpl) session.getAttribute("SPRING_SECURITY_CONTEXT");
+            	if (sci != null) {
+            		UserDetails cud = (UserDetails) sci.getAuthentication().getPrincipal();
+            		if (cud == null) {
+            			cspHeader = true;
+            		}
+            	} else {
+            		cspHeader = true;
+            	}
+            } else {
+            	cspHeader = true;
+            }
+            if (cspHeader) {
+            	httpResponse.setHeader("Content-Security-Policy", "frame-ancestors 'none'");
+            }
             httpResponse.setHeader("Access-Control-Allow-Origin", originUrl);
             httpResponse.setHeader("Access-Control-Allow-Credentials",
                 String.valueOf(getAllowedCorsDomains().contains(origin)));
             httpResponse.setHeader("Access-Control-Allow-Methods", "DELETE, HEAD, GET, PATCH, POST, PUT");
-            httpResponse.setHeader("Access-Control-Max-Age", "3600");            
+            httpResponse.setHeader("Access-Control-Max-Age", "3600");
             String allowedHeaders;
             if ("OPTIONS".equals(((HttpServletRequest) request).getMethod())) {
                 allowedHeaders = "accept, authorization, content-type";
