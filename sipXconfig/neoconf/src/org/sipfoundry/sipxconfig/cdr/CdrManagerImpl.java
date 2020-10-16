@@ -253,6 +253,12 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
         List results = getJdbcTemplate().query(psc, rowMapper);
         return (Integer) DataAccessUtils.requiredUniqueResult(results);
     }
+    
+    @Override
+    public int deleteAll(Date from, Date to, CdrSearch search, User user, boolean recipient) {
+        CdrsStatementCreator psc = new DeleteAll(from, to, search, user, m_tz, recipient);
+        return getJdbcTemplate().update(psc);
+    }
 
     @Override
     public List<Cdr> getActiveCalls() {
@@ -405,7 +411,9 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
             if (m_forUser != null) {
                 m_forUser.appendGetSql(sql);
             }
-            appendOrderBySql(sql);
+            if (!StringUtils.startsWith(sql.toString(), "DELETE")) {
+            	appendOrderBySql(sql);
+            }
             if (m_limit > 0) {
                 sql.append(LIMIT);
             }
@@ -450,7 +458,22 @@ public class CdrManagerImpl extends JdbcDaoSupport implements CdrManager, Featur
             return "SELECT *";
         }
     }
+    
+    static class DeleteAll extends CdrsStatementCreator {
+        public DeleteAll(Date from, Date to, CdrSearch search, User user, TimeZone tz, boolean recipient) {
+            super(from, to, search, user, tz, recipient);
+        }
 
+        public DeleteAll(Date from, Date to, CdrSearch search, User user, TimeZone tz) {
+            super(from, to, search, user, tz, false);
+        }
+
+        @Override
+        public String getSelectSql() {
+            return "DELETE";
+        }
+    }
+    
     static class SelectCount extends CdrsStatementCreator {
 
         public SelectCount(Date from, Date to, CdrSearch search, User user, TimeZone tz, boolean recipient) {

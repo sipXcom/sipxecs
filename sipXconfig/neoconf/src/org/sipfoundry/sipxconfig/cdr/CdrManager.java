@@ -91,4 +91,6 @@ public interface CdrManager {
      * Returns the list of active calls as CDRs for a particular user using REST call on sipXcallresolver
      */
     List<Cdr> getActiveCallsREST(User user) throws IOException;
+    
+    int deleteAll(Date from, Date to, CdrSearch search, User user, boolean recipient);
 }

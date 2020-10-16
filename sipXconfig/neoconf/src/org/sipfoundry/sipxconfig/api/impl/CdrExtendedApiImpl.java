@@ -2,7 +2,7 @@ package org.sipfoundry.sipxconfig.api.impl;
 
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sipfoundry.commons.extendedcdr.ExtendedCdrBean;
@@ -83,6 +82,15 @@ public class CdrExtendedApiImpl extends BaseCdrApiImpl implements CdrExtendedApi
         return Response
                 .ok()
                 .entity(list).build();
+    }
+    
+    @Override
+    public Response deletePrefixCdrHistory(String prefix) {
+		CdrSearch search = getSearch(null, null, null, prefix, true);
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.YEAR, -20);
+        int count = m_cdrManager.deleteAll(calendar.getTime(), null, search, null, false);
+        return Response.ok().entity(count).build();
     }
 	
 	private void addExtendedData(CdrList list) {
