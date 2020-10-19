@@ -56,6 +56,7 @@ BUILD_EPEL = \
 	x/xemacs-* \
 	l/leveldb-devel-* \
 	p/portaudio-devel-* \
+	p/php73-* \
 	j/jack-audio-connection-kit-devel*
 
 # Technincally these could be build and runtime requirements
@@ -232,6 +233,7 @@ RUNTIME_EPEL = \
 		p/python2-rpm-macros-* \
 		p/python-srpm-macros-* \
 		p/python-rpm-macros-* \
+		p/php73-* \
 		r/redis-* \
 		r/rubygem-daemons-* \
 		r/rubygem-pg-* \
