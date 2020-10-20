@@ -72,7 +72,7 @@ public class CdrLogRestlet extends Restlet {
             if (Ioffset != null) {
                 offset = Integer.parseInt(Ioffset);
             } else
-                offset = 1;
+                offset = 0;
             
             String Ilimit = (String) request.getAttributes().get(CdrLogParams.LIMIT);
             int limit;
