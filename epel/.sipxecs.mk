@@ -55,6 +55,7 @@ BUILD_EPEL = \
 	w/wxGTK-media-* \
 	x/xemacs-* \
 	l/leveldb-devel-* \
+	l/libargon2-* \
 	p/portaudio-devel-* \
 	p/php73-* \
 	j/jack-audio-connection-kit-devel*
@@ -199,6 +200,7 @@ RUNTIME_EPEL = \
 		l/libffado-* \
 		l/libsilk-* \
 		l/libxml++-* \
+		l/libargon2-* \
 		m/monit-* \
 		o/openpgm-5* \
 		p/php-pecl-mongo-* \
