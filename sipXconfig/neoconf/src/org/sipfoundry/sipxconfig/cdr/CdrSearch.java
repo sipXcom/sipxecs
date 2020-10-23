@@ -36,6 +36,7 @@ public class CdrSearch {
         map.put("startTime", CdrManagerImpl.START_TIME);
         map.put("duration", CdrManagerImpl.END_TIME + " - " + CdrManagerImpl.CONNECT_TIME);
         map.put("termination", CdrManagerImpl.TERMINATION);
+        map.put("recipient", CdrManagerImpl.CALLEE_CONTACT);
         ORDER_TO_COLUMN = map;
     }
 
