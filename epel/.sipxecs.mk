@@ -58,6 +58,7 @@ BUILD_EPEL = \
 	l/libargon2-* \
 	p/portaudio-devel-* \
 	p/php73-* \
+	p/php73-php-fpm-* \
 	j/jack-audio-connection-kit-devel*
 
 # Technincally these could be build and runtime requirements
@@ -236,6 +237,7 @@ RUNTIME_EPEL = \
 		p/python-srpm-macros-* \
 		p/python-rpm-macros-* \
 		p/php73-* \
+		p/php73-php-fpm-* \
 		r/redis-* \
 		r/rubygem-daemons-* \
 		r/rubygem-pg-* \

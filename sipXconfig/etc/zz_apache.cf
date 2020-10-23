@@ -129,6 +129,10 @@ bundle agent apache_sysv_running {
       "/sbin/service"
         comment => "restart apache",
         args => "httpd restart";
+        
+      "/sbin/service"
+        comment => "restart php73-php-fpm",
+        args => "php73-php-fpm restart";        
 }
 
 bundle agent apache_sysctl_running {
