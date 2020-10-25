@@ -49,15 +49,16 @@ public class CheckDST implements ApplicationContextAware {
     public void checkDst() {
         LOG.info("Checking DST...");
         TimeZone tzLocal = TimeZone.getDefault();
+        LOG.info("Detected timezone: " + tzLocal.getDisplayName());
         Date dstChangeTime = findDstChangeTime(tzLocal, new Date());
         if (dstChangeTime != null) {
-            //remove minutes from the DST approximate date/time found - this will ensure an error of maximum 59 seconds
-            //in the night when DST is applied. DST is always applied at fixed hour so is safe to remove minutes
-            //above fixed hour
-            Calendar c = Calendar.getInstance(tzLocal);
-            c.setTime(dstChangeTime);
-            c.add(Calendar.MINUTE, (-1) * c.get(Calendar.MINUTE));
-            Date time = c.getTime();
+        	//remove minutes from the DST approximate date/time found - this will ensure an error of maximum 59 seconds
+        	//in the night when DST is applied. DST is always applied at fixed hour so is safe to remove minutes
+        	//above fixed hour
+        	Calendar c = Calendar.getInstance(tzLocal);
+        	c.setTime(dstChangeTime);
+        	c.add(Calendar.MINUTE, (-1) * c.get(Calendar.MINUTE));
+        	Date time = c.getTime();        	
             LOG.info("DST change detected at " + time);
             setupNotifyTask(time);
         }
@@ -76,13 +77,15 @@ public class CheckDST implements ApplicationContextAware {
         calendar.setTime(today);
 
         // check one day ahead
-        calendar.roll(Calendar.DAY_OF_MONTH, true);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
         Date future = calendar.getTime();
         boolean dtsNow = tz.inDaylightTime(today);
-
+        LOG.info("DST now in daylight time: " + dtsNow + " date: " + today.toString());
+        LOG.info("DST tomorrow in daylight time: " + tz.inDaylightTime(future) + " date: " + future.toString());
         Date dstChangeTime = null;
 
         // find when it changes
+        LOG.info("Find when DST changes, START ROLL: " + future);
         while (dtsNow != tz.inDaylightTime(future)) {
             dstChangeTime = future;
             calendar.roll(Calendar.HOUR_OF_DAY, false);
@@ -91,6 +94,7 @@ public class CheckDST implements ApplicationContextAware {
             }
             future = calendar.getTime();
         }
+        LOG.info("Find when DST changes, END ROLL: " + future);
         return dstChangeTime;
     }
 }
