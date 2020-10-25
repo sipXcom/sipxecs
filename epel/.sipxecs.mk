@@ -184,7 +184,7 @@ RUNTIME_EPEL = \
 		e/erlang-erlando-* \
 		e/erlang-ibrowse-* \
 		e/erlang-rpm-macros-* \
-		f/flite-* \
+		f/flite-2.0.0-1* \
 		f/fail2ban-* \
 		g/g722_1-* \
 		g/gtest-1* \
