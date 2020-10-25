@@ -451,7 +451,7 @@ public class ReplicationManagerImpl extends SipxHibernateDaoSupport implements R
             for (ReplicableProvider provider : beanMap.values()) {
                 if (provider instanceof Proxy) {
                     for (Replicable entity : provider.getReplicables()) {
-                        if (entity != null) {
+                        if (entity != null && entity.getDataSets() != null) {
                             if (!entity.getDataSets().contains(ds)) { /*
                                                                        * Callable used for the
                                                                        * replication of members in a
