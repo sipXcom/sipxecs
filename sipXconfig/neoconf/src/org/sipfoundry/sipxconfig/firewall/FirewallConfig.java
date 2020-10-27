@@ -77,6 +77,8 @@ public class FirewallConfig implements ConfigProvider, FeatureListener {
 
         FirewallSettings settings = m_firewallManager.getSettings();
         Set<String> blackList = settings.getBlackListSet();
+        Set<String> apibanList = settings.getApibanIpsSet();
+        blackList.addAll(apibanList);
         Set<String> whiteList = settings.getWhiteListSet();
         boolean restrictive = manager.getFeatureManager().isFeatureEnabled(FirewallManager.FEATURE);
         List<FirewallRule> rules = m_firewallManager.getFirewallRules();

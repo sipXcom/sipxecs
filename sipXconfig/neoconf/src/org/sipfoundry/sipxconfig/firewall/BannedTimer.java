@@ -34,8 +34,12 @@ public class BannedTimer {
                     LOG.debug("Banned Timer counter " + m_counter + " ready to save apiban banned list");
                     try {
                         String bannedIps = StringUtils.join(m_bannedApi.getBanned().getIpaddress(), ',');
-                        settings.setApibanIps(bannedIps);
-                        m_firewallManager.saveSettings(settings);
+                        String oldBannedIps = settings.getApibanIps();
+                        if (!StringUtils.equals(bannedIps, oldBannedIps)) {
+                            LOG.debug("Banned ips list changed  - save new list");                        	
+                        	settings.setApibanIps(bannedIps);
+                        	m_firewallManager.saveSettings(settings);
+                        }
                     } catch (Exception ex) {
                         LOG.error("APIBAN Call failed with: ", ex);
                     }

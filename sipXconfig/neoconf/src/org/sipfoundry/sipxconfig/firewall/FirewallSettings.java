@@ -78,6 +78,10 @@ public class FirewallSettings extends PersistableSettings implements DeployConfi
     public void setBlackList(String value) {
         setSettingTypedValue("dos/black_list", value);
     }
+
+    public String getApibanIps() {
+        return (String) getSettingTypedValue("apiban/ips");
+    }
     
     public void setApibanIps(String value) {
         setSettingTypedValue("apiban/ips", value);
@@ -135,6 +139,10 @@ public class FirewallSettings extends PersistableSettings implements DeployConfi
         return IPAddressUtil.getIpsSet(getBlackList());
     }
 
+    public Set<String> getApibanIpsSet() {
+        return IPAddressUtil.getIpsSet(getApibanIps());
+    }    
+    
     public Set<String> getWhiteListSet() {
         return IPAddressUtil.getIpsSet(getWhiteList());
     }
