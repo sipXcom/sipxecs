@@ -17,6 +17,7 @@ bundle common apache {
 
   classes:
     "apache_2_2" expression => regcmp("2\.2\..*", "$(apache_ver)");
+    "php_fpm_running" expression => returnszero("$(sipx.systemctl) is-active php73-php-fpm.service","noshell");
 }
 
 bundle agent zz_apache {
@@ -54,7 +55,12 @@ bundle agent apache_config {
 
        # default user account Nortel 1535 phones use
       "nortel_httpd_user" usebundle => verify_httpd_user("lvp2890", "28904all");
-
+  commands:
+    !php_fpm_running::
+      "/sbin/service"
+        comment => "restart php73-php-fpm",
+        args => "php73-php-fpm restart";
+      
   files:
     any::
       "$(sipx.APACHE2_CONFDIR)/welcome.conf"
@@ -129,10 +135,6 @@ bundle agent apache_sysv_running {
       "/sbin/service"
         comment => "restart apache",
         args => "httpd restart";
-        
-      "/sbin/service"
-        comment => "restart php73-php-fpm",
-        args => "php73-php-fpm restart";        
 }
 
 bundle agent apache_sysctl_running {
