@@ -360,6 +360,19 @@ class Cdr
   end
   
   def accept_call_end(cse)
+    # set fields unless previous events were caught and fields already set
+    @from_tag = cse.from_tag if !@from_tag
+    @caller_aor = cse.caller_aor if !@caller_aor
+    @callee_aor = cse.callee_aor if !@callee_aor
+    @start_time = cse.event_time if !@start_time
+    @reference = cse.reference if !@reference
+    @caller_internal = cse.caller_internal if !@caller_internal
+    @caller_contact = Utils.contact_without_params(cse.contact) if !@caller_contact
+    @via_count = cse.via_count if !@via_count
+    @branch_id = cse.branch_id if !@branch_id
+    @callee_route = cse.callee_route if !@callee_route
+    @callee_contact = cse.contact if !@callee_contact
+  
     @legs.accept_end(cse)
     finish
   end
