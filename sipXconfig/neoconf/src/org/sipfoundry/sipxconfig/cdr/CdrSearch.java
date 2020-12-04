@@ -84,7 +84,7 @@ public class CdrSearch {
     private void appendSearchTermSql(StringBuilder sql, String call) {
         List<String> sqlList = new ArrayList<String>();
         for (String name : m_term) {
-            sqlList.add(call + " LIKE '%<sip:" + name + (m_prefix ? "%@%>'" : "@%>'"));
+            sqlList.add(call + " LIKE '%sip:" + name + (m_prefix ? "%@%'" : "@%'"));
         }
         sql.append(join(sqlList.toArray(), OR));
     }
