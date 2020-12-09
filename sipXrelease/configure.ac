@@ -1,5 +1,5 @@
 AC_PREREQ(2.57)
-AC_INIT(sipxrelease, 20.08, sipx-dev@list.sipfoundry.org)
+AC_INIT(sipxrelease, 21.04, sipx-dev@list.sipfoundry.org)
 AM_INIT_AUTOMAKE(foreign tar-ustar)
 m4_include([config/sipXlib2.m4])
 AC_CONFIG_FILES(Makefile)
