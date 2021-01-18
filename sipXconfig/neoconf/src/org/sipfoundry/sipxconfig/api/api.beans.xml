@@ -63,6 +63,7 @@
         <ref bean="apibanRestApi"/>
         <ref bean="callGroupRestApi"/>
         <ref bean="cdrExtendedRestApi"/>
+        <ref bean="autoAttendantApi"/>
     </util:list>
 
     <bean class="org.sipfoundry.sipxconfig.api.impl.PhoneApiImpl" id="phoneRestApi">
@@ -208,5 +209,10 @@
         <property name="path" value="${sysdir.var}/reports"/>
         <property name="extensions" ref="reportExtensions"/>
         <property name="extendedCdrService" ref="extendedCdrService"/>
-    </bean>    
+    </bean>
+    
+    <bean class="org.sipfoundry.sipxconfig.api.impl.AutoAttendantApiImpl" id="autoAttendantApi">
+        <property name="autoAttendantManager" ref="autoAttendantManager" />
+        <property name="branchManager" ref="branchManager" />
+    </bean>
 </beans>
