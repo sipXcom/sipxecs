@@ -1,6 +1,7 @@
 package org.sipfoundry.sipxconfig.api;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -12,7 +13,6 @@ import javax.ws.rs.core.Response;
 import org.sipfoundry.sipxconfig.api.model.AutoAttendantBean;
 import org.sipfoundry.sipxconfig.api.model.AutoAttendantGenericSettingsBean;
 import org.sipfoundry.sipxconfig.api.model.AutoAttendantSpecialModeBean;
-import org.sipfoundry.sipxconfig.api.model.UserBean;
 import org.apache.cxf.jaxrs.model.wadl.Description;
 
 @Path("/autoattendant/")
@@ -42,6 +42,10 @@ public interface AutoAttendantApi {
     public Response updateAutoAttendant(
             @Description("AutoAttendant name") @PathParam("name") String name,
             @Description("AutoAttendant to save") AutoAttendantBean aaBean);
+    
+    @Path("{name}")
+    @DELETE
+    public Response deleteAutoAttendant(@Description("AutoAttendant  name") @PathParam("name") String name);
     
     @Path("settings")
     @PUT

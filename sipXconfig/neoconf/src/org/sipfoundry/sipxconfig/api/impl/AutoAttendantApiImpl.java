@@ -71,6 +71,12 @@ public class AutoAttendantApiImpl implements AutoAttendantApi {
             return Response.ok().entity(autoAttendant.getId()).build();
         }
         return Response.status(Status.NOT_FOUND).build();
+    }
+    
+    @Override
+    public Response deleteAutoAttendant(String name) {
+        m_autoAttendantManager.deleteAutoAttendant(m_autoAttendantManager.getAutoAttendantByName(name));
+        return Response.ok().build();
     }    
     
     @Override
