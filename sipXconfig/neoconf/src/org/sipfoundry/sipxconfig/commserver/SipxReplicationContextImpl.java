@@ -16,10 +16,13 @@ import java.util.concurrent.Executors;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sipfoundry.sipxconfig.common.Replicable;
+import org.sipfoundry.sipxconfig.common.VersionInfo;
 import org.sipfoundry.sipxconfig.commserver.imdb.DataSet;
 import org.sipfoundry.sipxconfig.commserver.imdb.ReplicationManager;
 import org.sipfoundry.sipxconfig.job.JobContext;
 import org.sipfoundry.sipxconfig.localization.LanguageUpdatedEvent;
+import org.sipfoundry.sipxconfig.setup.SetupListener;
+import org.sipfoundry.sipxconfig.setup.SetupManager;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
@@ -35,7 +38,7 @@ import org.springframework.context.ApplicationListener;
  * on a large number of users. (generate all data, generate 1 dataset)
  */
 public class SipxReplicationContextImpl implements ApplicationEventPublisherAware, SipxReplicationContext,
-        ApplicationListener<LanguageUpdatedEvent> {
+        ApplicationListener<LanguageUpdatedEvent>, SetupListener {
     private static final Log LOG = LogFactory.getLog(SipxReplicationContextImpl.class);
     private ApplicationEventPublisher m_applicationEventPublisher;
     private ReplicationManager m_replicationManager;
@@ -146,5 +149,15 @@ public class SipxReplicationContextImpl implements ApplicationEventPublisherAwar
     public void onApplicationEvent(LanguageUpdatedEvent arg0) {
         LOG.debug("Language updated, replicating DataSet.MAILSTORE...");
         generateAll(DataSet.MAILSTORE);
+    }
+
+    @Override
+    public boolean setup(SetupManager manager) {
+        String id = "replication-" + new VersionInfo().getVersion();
+        if (manager.isFalse(id)) {
+            generateAll();
+            manager.setTrue(id);
+        }
+        return true;
     }
 }

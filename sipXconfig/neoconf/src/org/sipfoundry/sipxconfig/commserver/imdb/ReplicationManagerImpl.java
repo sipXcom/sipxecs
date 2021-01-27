@@ -79,7 +79,7 @@ import com.mongodb.QueryBuilder;
  * {@link ConfigurationFile}s on different locations.
  */
 public class ReplicationManagerImpl extends SipxHibernateDaoSupport implements ReplicationManager, BeanFactoryAware,
-        SetupListener, ApplicationContextAware {
+         ApplicationContextAware {
     private static final Log LOG = LogFactory.getLog(ReplicationManagerImpl.class);
     private static final String REPLICATION_FAILED = "Replication: insert/update failed - ";
     private static final String REPLICATION_FAILED_REMOVE = "Replication: delete failed - ";
@@ -346,7 +346,7 @@ public class ReplicationManagerImpl extends SipxHibernateDaoSupport implements R
             }
         } catch (Exception e) {
             LOG.error(REPLICATION_FAILED + name, e);
-            throw new UserException(REPLICATION_FAILED + entity.getName(), e);
+            //throw new UserException(REPLICATION_FAILED + entity.getName(), e);
         }
     }
 
@@ -373,7 +373,7 @@ public class ReplicationManagerImpl extends SipxHibernateDaoSupport implements R
             LOG.debug(REPLICATION_INS_UPD + name + IN + (end - start) + MS);
         } catch (Exception e) {
             LOG.error(REPLICATION_FAILED + name, e);
-            throw new UserException(REPLICATION_FAILED + entity.getName(), e);
+            //throw new UserException(REPLICATION_FAILED + entity.getName(), e);
         }
     }
 
@@ -849,16 +849,6 @@ public class ReplicationManagerImpl extends SipxHibernateDaoSupport implements R
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
         m_applicationContext = applicationContext;
-    }
-
-    @Override
-    public boolean setup(SetupManager manager) {
-        String id = "replication-" + new VersionInfo().getVersion();
-        if (manager.isFalse(id)) {
-            replicateAllData();
-            manager.setTrue(id);
-        }
-        return true;
     }
 
     public void setPhoneContext(PhoneContext phoneContext) {
