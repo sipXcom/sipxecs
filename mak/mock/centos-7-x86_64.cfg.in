@@ -36,7 +36,7 @@ failovermethod=priority
 [epel]
 name=epel
 enabled=1
-@CENTOS_BASE_URL_ON@baseurl=http://download.fedoraproject.org/pub/epel/7/$basearch
+@CENTOS_BASE_URL_ON@baseurl=https://mirror.efect.ro/epel/7/$basearch
 @CENTOS_BASE_URL_OFF@mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=epel-7&arch=$basearch
 failovermethod=priority
 
