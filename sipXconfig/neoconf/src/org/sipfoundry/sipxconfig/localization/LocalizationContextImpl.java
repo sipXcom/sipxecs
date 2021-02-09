@@ -160,6 +160,37 @@ public class LocalizationContextImpl extends SipxHibernateDaoSupport<Localizatio
         m_applicationContext.publishEvent(new LanguageUpdatedEvent(this, m_promptsDir, getCurrentLanguageDir()));
         return 1;
     }
+    
+    @Override
+    public Localization updateLocalization(String language, String region) {
+        Localization actualLocalization = getLocalization();
+        boolean updateRegion = !actualLocalization.getRegion().equals(region);
+        boolean updateLanguage = !actualLocalization.getLanguage().equals(language); 
+        if (!updateRegion && !updateLanguage) {
+            return actualLocalization;
+        }
+
+        actualLocalization.setRegion(region);        
+        actualLocalization.setLanguage(language);
+        
+        if (actualLocalization.isNew()) {
+            getHibernateTemplate().save(actualLocalization);
+        } else {
+            getHibernateTemplate().merge(actualLocalization);
+        }        
+        getHibernateTemplate().flush();
+        getDaoEventPublisher().publishSave(actualLocalization);
+        if (updateRegion) {
+            m_applicationContext.publishEvent(new RegionUpdatedEvent(this, region));            
+        }        
+        if (updateLanguage) {
+            // Copy default AutoAttendant prompts in the currently applied language
+            // to AutoAttendant prompts directory.
+            LOG.debug("Language updated, sending LanguageUpdatedEvent...");
+            m_applicationContext.publishEvent(new LanguageUpdatedEvent(this, m_promptsDir, getCurrentLanguageDir()));
+        }        
+        return actualLocalization;
+    }
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) {

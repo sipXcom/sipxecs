@@ -31,4 +31,6 @@ public interface LocalizationContext {
     public void updateRegion(String region);
 
     public int updateLanguage(String languageDirectory);
+    
+    Localization updateLocalization(String language, String region);
 }

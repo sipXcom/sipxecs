@@ -64,6 +64,7 @@
         <ref bean="callGroupRestApi"/>
         <ref bean="cdrExtendedRestApi"/>
         <ref bean="autoAttendantApi"/>
+        <ref bean="localizationApi"/>
     </util:list>
 
     <bean class="org.sipfoundry.sipxconfig.api.impl.PhoneApiImpl" id="phoneRestApi">
@@ -215,4 +216,7 @@
         <property name="autoAttendantManager" ref="autoAttendantManager" />
         <property name="branchManager" ref="branchManager" />
     </bean>
+    <bean class="org.sipfoundry.sipxconfig.api.impl.LocalizationApiImpl" id="localizationApi">
+        <property name="localizationContext" ref="localizationContext" />        
+    </bean>    
 </beans>
