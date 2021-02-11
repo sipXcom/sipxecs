@@ -65,6 +65,7 @@
         <ref bean="cdrExtendedRestApi"/>
         <ref bean="autoAttendantApi"/>
         <ref bean="localizationApi"/>
+        <ref bean="timezoneApi"/>
     </util:list>
 
     <bean class="org.sipfoundry.sipxconfig.api.impl.PhoneApiImpl" id="phoneRestApi">
@@ -217,6 +218,9 @@
         <property name="branchManager" ref="branchManager" />
     </bean>
     <bean class="org.sipfoundry.sipxconfig.api.impl.LocalizationApiImpl" id="localizationApi">
-        <property name="localizationContext" ref="localizationContext" />        
-    </bean>    
+        <property name="localizationContext" ref="localizationContext" />
+    </bean>
+    <bean class="org.sipfoundry.sipxconfig.api.impl.TimeZoneApiImpl" id="timezoneApi">
+        <property name="ntpManager" ref="ntpManager" />
+    </bean>            
 </beans>
