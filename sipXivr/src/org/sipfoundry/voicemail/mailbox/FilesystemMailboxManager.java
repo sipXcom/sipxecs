@@ -16,8 +16,6 @@
  */
 package org.sipfoundry.voicemail.mailbox;
 
-import static java.lang.String.format;
-
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -64,13 +62,13 @@ public class FilesystemMailboxManager extends AbstractMailboxManager {
     @Override
     public MailboxDetails getMailboxDetails(String username) {
         FilenameFilter filter = new RegexFileFilter(MESSAGE_REGEX);
-        List<String> inboxMessages = extractMessages(getFolder(username, Folder.INBOX).listFiles(filter));
-        List<String> savedMessages = extractMessages(getFolder(username, Folder.SAVED).listFiles(filter));
-        List<String> deletedMessages = extractMessages(getFolder(username, Folder.DELETED).listFiles(filter));
-        List<String> conferenceMessages = extractMessages(getFolder(username, Folder.CONFERENCE).listFiles(filter));
+        List<String> inboxMessages = extractMessages(filter, getFolder(username, Folder.INBOX));
+        List<String> savedMessages = extractMessages(filter, getFolder(username, Folder.SAVED));
+        List<String> deletedMessages = extractMessages(filter, getFolder(username, Folder.DELETED));
+        List<String> conferenceMessages = extractMessages(filter, getFolder(username, Folder.CONFERENCE));
 
         FilenameFilter unheardFilter = new RegexFileFilter(STATUS_REGEX);
-        List<String> unheardMessages = extractMessages(getFolder(username, Folder.INBOX).listFiles(unheardFilter));
+        List<String> unheardMessages = extractMessages(unheardFilter, getFolder(username, Folder.INBOX));
         return new MailboxDetails(username, inboxMessages, savedMessages, deletedMessages, conferenceMessages,
                 unheardMessages);
     }
@@ -477,15 +475,14 @@ public class FilesystemMailboxManager extends AbstractMailboxManager {
     public List<VmMessage> getMessages(String username, Folder folder) {
         File mailboxFolder = getFolder(username, folder);
         List<VmMessage> messages = new LinkedList<VmMessage>();
-        File[] files = mailboxFolder.listFiles(new MessageCountFilter());
-        Arrays.sort(files, FILE_DATE_COMPARATOR);
+        File[] files = orderMessages(new MessageCountFilter(), mailboxFolder);
         for (File file : files) {
             MessageDescriptor descriptor = m_descriptorReader.readObject(file);
             String messageId = StringUtils.removeEnd(file.getName(), MESSAGE_IDENTIFIER);
             boolean unheard = new File(mailboxFolder, String.format("%s%s", messageId, STATUS_IDENTIFIER)).exists();
             boolean urgent = new File(mailboxFolder, String.format("%s%s", messageId, URGENT_IDENTIFIER)).exists();
-            messages.add(new VmMessage(messageId, username, null, descriptor, folder, unheard, urgent));
-        }
+            messages.add(new VmMessage(messageId, username, file, descriptor, folder, unheard, urgent));
+        }        
         return messages;
     }
 
@@ -687,13 +684,8 @@ public class FilesystemMailboxManager extends AbstractMailboxManager {
         return new File(m_mailstoreDirectory + File.separator + username);
     }
 
-    private List<String> extractMessages(File[] files) {
-        Arrays.sort(files, new Comparator<File>() {
-            @Override
-            public int compare(File f1, File f2) {
-                return Long.valueOf(f1.lastModified()).compareTo(f2.lastModified());
-            }
-        });
+    private List<String> extractMessages(FilenameFilter filter, final File mailboxFolder) {
+        File[] files = orderMessages(filter, mailboxFolder);
         List<String> messageList = new LinkedList<String>();
         for (File file : files) {
             messageList.add(StringUtils.removeEnd(file.getName(), MESSAGE_IDENTIFIER));
@@ -733,6 +725,24 @@ public class FilesystemMailboxManager extends AbstractMailboxManager {
                 return 0;
             }
         }
+    }
+    
+    private File [] orderMessages(FilenameFilter filter, final File mailboxFolder) {
+        File[] files = mailboxFolder.listFiles(filter);
+        Arrays.sort(files, new Comparator<File>() {
+            @Override
+            public int compare(File f1, File f2) {
+                String f1messageId = StringUtils.removeEnd(f1.getName(), MESSAGE_IDENTIFIER);
+                String f2messageId = StringUtils.removeEnd(f2.getName(), MESSAGE_IDENTIFIER);
+                Boolean heard1 = new File(mailboxFolder, String.format("%s%s", f1messageId, STATUS_IDENTIFIER)).exists();
+                Boolean heard2 = new File(mailboxFolder, String.format("%s%s", f2messageId, STATUS_IDENTIFIER)).exists();
+                if (heard1 == heard2) {                   
+                    return FILE_DATE_COMPARATOR.compare(f2, f1);
+                }
+                return (heard1 ? -1 : 1);
+            }
+        });
+        return files;
     }
 
     public void setMessageDescriptorWriter(MessageDescriptorWriter writer) {
