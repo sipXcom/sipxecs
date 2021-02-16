@@ -211,7 +211,7 @@ public class RegistrationContextImpl implements RegistrationContext {
 
     private DBObject getIpQuery(String ip) {
         Pattern ipPattern = Pattern.compile(PATTERN_ALL + ip + PATTERN_ALL);
-        return QueryBuilder.start(CALL_ID).regex(ipPattern).and(EXPIRED).is(Boolean.FALSE).get();
+        return QueryBuilder.start("binding").regex(ipPattern).and(EXPIRED).is(Boolean.FALSE).get();
     }
 
     private DBCollection getRegistrarCollection() {
