@@ -13,11 +13,14 @@
       </option>
       <option>
         <value>64</value>
-      </option>
+      </option>      
     </enum>
   </type>
   <type id="resampleType">
     <enum>
+      <option>
+        <value>8000</value>
+      </option>    
       <option>
         <value>16000</value>
       </option>
