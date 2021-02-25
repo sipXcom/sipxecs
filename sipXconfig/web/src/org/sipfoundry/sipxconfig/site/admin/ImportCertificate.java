@@ -267,7 +267,7 @@ public abstract class ImportCertificate extends BaseComponent implements PageBeg
 
     @Override
     public void pageBeginRender(PageEvent evt) {
-        if (!TapestryUtils.isValid(this)) {
+        if (!TapestryUtils.isValid(this)) {            
             return;
         }
 
@@ -301,5 +301,8 @@ public abstract class ImportCertificate extends BaseComponent implements PageBeg
 
     public boolean getUseLetsEncryptService() {
         return getUseLetsEncryptValue() || getCertificateManager().getLetsEncryptStatus();
+    }
+    public void cancel() {
+        setUseLetsEncryptValue(false);
     }
 }

@@ -1,5 +1,16 @@
-<span jwcid="@If" condition="ognl:certificateType == 'web' && useLetsEncryptService">
+<span jwcid="@If" condition="ognl:certificateType == 'web' && useLetsEncryptService">    
     <span jwcid="@admin/LetsEncrypt" />
+    <span jwcid="@If" condition="ognl:certificateType == 'web' && !certificateManager.letsEncryptStatus">
+    	<form jwcid="cancelForm@Form">
+     	  <table>
+      	    <tbody>
+      	      <tr>    	
+    		 	<span>&nbsp;<input jwcid="cancelButton@Submit" value="message:button.cancel" listener="listener:cancel" /></span>
+    		  </tr>	
+    	    </tbody>
+    	  </table> 	 
+    	</form>
+    </span>
 </span>
 <span jwcid="@Else">
 
@@ -9,7 +20,7 @@
   <fieldset>
     <table>
       <tbody>
-        <span jwcid="@If" condition="ognl:certificateType == 'web' && !useLetsEncryptService">
+        <span jwcid="@If" condition="ognl:certificateType == 'web'">
           <tr>
             <label jwcid="useLetsEncryptLabel@common/FieldPanel" label="message:label.useLetsEncrypt">
               <input jwcid="useLetsEncrypt@Checkbox" id="useLetsEncrypt:checkbox" value="ognl:useLetsEncryptValue"
