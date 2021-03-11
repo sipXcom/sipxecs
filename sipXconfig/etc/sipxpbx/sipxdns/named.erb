@@ -24,6 +24,7 @@ options {
   statistics-file "/var/named/data/named_stats.txt";<% unless acl.nil?%>
   allow-query { any; };
   allow-recursion { corpnets; };<% end%>
+  filter-aaaa-on-v4 yes;
   forwarders { <% 
     forwarders.each {|forwarder| 
 %>
