@@ -38,7 +38,7 @@ bundle agent last_seen_report {
 
   commands:
     any::
-      "/usr/sbin/cf-report"
+      "/usr/local/sbin/cf-report"
         args => "-IKvf @SIPX_CFINPUTS@/plugin.d/lib/commands.cf";
 }
 
