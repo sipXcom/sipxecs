@@ -319,7 +319,6 @@ checkPrimary() {
     exit $EINCORRECTUSAGE
   fi
 }
-checkPrimary
 
 case "$1" in
   nofork)

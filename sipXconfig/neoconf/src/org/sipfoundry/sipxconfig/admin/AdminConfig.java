@@ -58,22 +58,17 @@ public class AdminConfig implements ConfigProvider {
                 ConfigUtils.enableCfengineClass(dir, SELINUX_FILE, true, settings.getSelinux());
             } else {
                 ConfigUtils.enableCfengineClass(dir, SELINUX_FILE, false, "permissive", "enforcing");
-            }
-            if (l.isPrimary() || manager.getFeatureManager().isFeatureEnabled(ProxyManager.FEATURE, l)) {
-                Writer pwd = new FileWriter(new File(dir, "postgres-pwd.properties"));
-                Writer pwdCfdat = new FileWriter(new File(dir, "postgres-pwd.cfdat"));
-                try {
-                    KeyValueConfiguration cfg = KeyValueConfiguration.equalsSeparated(pwd);
-                    CfengineModuleConfiguration cfgCfdat = new CfengineModuleConfiguration(pwdCfdat);
-                    cfg.write("password", password);
-                    cfgCfdat.write("NEW_POSTGRESQL_PASSWORD", password);
-                } finally {
-                    IOUtils.closeQuietly(pwd);
-                    IOUtils.closeQuietly(pwdCfdat);
-                }
-            }
-            if (!l.isPrimary()) {
-                continue;
+            }            
+            Writer pwd = new FileWriter(new File(dir, "postgres-pwd.properties"));
+            Writer pwdCfdat = new FileWriter(new File(dir, "postgres-pwd.cfdat"));
+            try {
+                KeyValueConfiguration cfg = KeyValueConfiguration.equalsSeparated(pwd);
+                CfengineModuleConfiguration cfgCfdat = new CfengineModuleConfiguration(pwdCfdat);
+                cfg.write("password", password);
+                cfgCfdat.write("NEW_POSTGRESQL_PASSWORD", password);
+            } finally {
+                IOUtils.closeQuietly(pwd);
+                IOUtils.closeQuietly(pwdCfdat);
             }
             String log4jFileName = "log4j.properties.part";
             String[] logLevelKeys = settings.getLogLevelKeys();

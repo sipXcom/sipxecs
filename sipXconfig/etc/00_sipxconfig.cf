@@ -25,7 +25,7 @@ bundle agent 00_sipxconfig {
   "postgres_pwd_conf" expression => fileexists("$(sipx.SIPX_CONFDIR)/postgres-pwd.properties");
   "apiban_conf" expression => fileexists("$(sipx.SIPX_CONFDIR)/apiban.properties");
   methods:
-    primary::
+    any::
       # normally not nec but mongodb need 00_ssh to run first
       "any" usebundle => 00_ssh;
 
@@ -54,7 +54,7 @@ bundle agent 00_sipxconfig {
         create => "false",
         perms => m("644"),
         copy_from => copy_from_cfdata("$(sipx.location_id)/hz-config.xml");        
-    primary::
+    any::
       "$(sipx.SIPX_CONFDIR)/sipxconfig.properties"
         comment => "sipXconfig configuration $(this.promiser)",
         create => "true",
@@ -88,7 +88,7 @@ bundle agent 00_sipxconfig {
         copy_from => copy_from_cfdata("$(sipx.location_id)/apiban.properties");    
 
   commands:
-    primary.setup::
+    setup::
       "$(sipx.SIPX_SERVICEDIR)/sipxconfig"
         comment => "generate ssl info $(this.promiser)",
         args => "setup",
@@ -104,20 +104,20 @@ bundle edit_line sipxconfig_config {
     "has_ui_config" expression => fileexists("$(ui_config)");
 
   insert_lines:
-    primary::
+    any::
       "# Part 1 - from $(install_config)";
       "$(install_config)"
         expand_scalars => "true",
         insert_type => "file";
 
-    primary::
+    any::
       "# Part 2 - from $(ui_config)";
       "$(ui_config)"
         expand_scalars => "true",
         insert_type => "file";
 
     # part 3
-    primary::
+    any::
 "# Part 3 - from $(sipx.SIPX_CFINPUTS)/plugin.d/00_sipxconfig.cf
 sysdir.mongo_ns=
 domainManagerImpl.configuredDomain=$(sipx.net_domain)
@@ -131,7 +131,7 @@ locationsManagerImpl.primaryFqdn=$(sipx.host).$(sipx.net_domain)
 mongoReplicaSetManager.primaryFqdn=$(sipx.host).$(sipx.net_domain)
 ";
 
-    primary.has_config::
+    any::
     "# Part 3 - from $(ui_config)";
     "$(ui_config)"
       expand_scalars => "true",

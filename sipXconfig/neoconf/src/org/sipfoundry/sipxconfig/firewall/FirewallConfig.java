@@ -60,20 +60,7 @@ public class FirewallConfig implements ConfigProvider, FeatureListener {
         if (!request.applies(FirewallManager.FEATURE, LocationsManager.FEATURE, ImManager.FEATURE,
                 FtpManager.FTP_FEATURE)) {
             return;
-        }
-        
-        if (request.applies(FirewallManager.FEATURE)) {
-            if (request.applies(FirewallManager.FEATURE)) {
-                File dir = manager.getLocationDataDirectory(manager.getLocationManager().getPrimaryLocation());
-                Writer apiban = new FileWriter(new File(dir, "apiban.properties"));
-                try {
-                    KeyValueConfiguration cfg = KeyValueConfiguration.equalsSeparated(apiban);
-                    cfg.write("apiban.key", m_firewallManager.getSettings().getApibanKey());
-                } finally {
-                    IOUtils.closeQuietly(apiban);
-                }
-            }
-        }
+        }        
 
         FirewallSettings settings = m_firewallManager.getSettings();
         Set<String> blackList = settings.getBlackListSet();
@@ -88,6 +75,13 @@ public class FirewallConfig implements ConfigProvider, FeatureListener {
         List<CallRateRule> rateRules = m_callRateManager.getCallRateRules();
         for (Location location : request.locations(manager)) {
             File dir = manager.getLocationDataDirectory(location);
+            Writer apiban = new FileWriter(new File(dir, "apiban.properties"));
+            try {
+                KeyValueConfiguration cfg = KeyValueConfiguration.equalsSeparated(apiban);
+                cfg.write("apiban.key", m_firewallManager.getSettings().getApibanKey());
+            } finally {
+                IOUtils.closeQuietly(apiban);
+            }            
             Map<Object, Object> configRequest = request.getRequestData();
 
             Writer sysconf = new FileWriter(new File(dir, "firewall.cfdat"));
