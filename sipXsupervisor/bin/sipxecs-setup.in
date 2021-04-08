@@ -106,9 +106,12 @@ def set_secondary_role
     f.puts "SIPX_CONFDIR=#{master_confdir}"
   }
   File.open($secondary_dat,'w') {|f|
-    f.puts "+sipxsupervisor"
+    f.puts <<EOF
++sipxsupervisor
++postgres
++apache
+EOF
   }
-
   return true
 end
 
@@ -686,7 +689,7 @@ end
 
 # 2nd pass operates on cfdata info
 ok = run_command("#{$bindir}/sipxagent #{'-v ' if $verbose}")
-
+FileUtils.chown_R($user, $group, $cfdatadir)
 if !ok
   puts "failed."
   exit 1

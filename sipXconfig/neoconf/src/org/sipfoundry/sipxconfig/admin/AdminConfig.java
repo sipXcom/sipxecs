@@ -29,8 +29,6 @@ import org.sipfoundry.sipxconfig.cfgmgt.ConfigUtils;
 import org.sipfoundry.sipxconfig.cfgmgt.KeyValueConfiguration;
 import org.sipfoundry.sipxconfig.cfgmgt.LoggerKeyValueConfiguration;
 import org.sipfoundry.sipxconfig.commserver.Location;
-import org.sipfoundry.sipxconfig.firewall.FirewallManager;
-import org.sipfoundry.sipxconfig.proxy.ProxyManager;
 import org.sipfoundry.sipxconfig.setting.Setting;
 import org.sipfoundry.sipxconfig.setting.SettingUtil;
 
