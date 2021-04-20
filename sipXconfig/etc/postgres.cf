@@ -90,8 +90,22 @@ bundle agent postgres_config {
         perms => mog("644","$(sipx.POSTGRESQL_USER)","$(sipx.POSTGRESQL_GROUP)"),
         classes => if_repaired("restart_postgres"),
         edit_line => replace_contents("-i");
+	postgres.!primary::
+	  "$(sipx.PGDATA)/recovery.conf"
+	    comment => "install required postgres replication standby settings in $(this.promiser)",
+        create => "true",
+        perms => mog("644","$(sipx.POSTGRESQL_USER)","$(sipx.POSTGRESQL_GROUP)"),
+        classes => if_repaired("restart_postgres"),
+        edit_line => postgresql_recovery_conf;
+	    
 }
 
+bundle edit_line postgresql_recovery_conf {
+  insert_lines:
+    any::
+      "standby_mode          = 'on'";
+      "primary_conninfo      = 'host=$(sipx.bind_ip) port=5432 user=postgres password='";
+}
 
 bundle edit_line postgresql_conf {
   insert_lines:
@@ -111,6 +125,10 @@ bundle edit_line postgresql_conf {
       "autovacuum_analyze_scale_factor = 0.1";
       "autovacuum_vacuum_cost_delay = 20";
       "autovacuum_vacuum_cost_limit = 0";
+      "wal_level = hot_standby";
+      "max_wal_senders = 5";
+      "wal_keep_segments = 32";
+      "hot_standby = on";
 
     src::
       # allows unit tests to run exponentially faster after using
@@ -121,6 +139,7 @@ bundle edit_line postgresql_conf {
   delete_lines:
     any::
       "(autovacuum_|fsync).*";
+      
 }
 
 bundle edit_line pg_hba_conf {
@@ -129,12 +148,14 @@ bundle edit_line pg_hba_conf {
     "pwdfile_exists" expression  => fileexists("$(sipx.SIPX_CFDATA)/$(sipx.location_id)/postgres-pwd.cfdat");
   insert_lines:
     pwdfile_exists.!trust::
+      "host  replication        postgres     0.0.0.0/0             md5";
       "local all all md5";
       "host all all 127.0.0.1/32 md5";
       "host all all ::1/128 md5";
       # any node in the cluster can connect to postgresql
       "host all all 0.0.0.0/0 md5";
     !pwdfile_exists|trust::
+      "host  replication        postgres     0.0.0.0/0             trust";
       "local all all trust";
       "host all all 127.0.0.1/32 trust";
       "host all all ::1/128 trust";
