@@ -1509,12 +1509,12 @@
   <target name="add_location_call_restrictions" unless="add_location_call_restrictions">
   	<db-patch patch="add_location_call_restrictions"/>
   </target>
-  <target name="migrate-yealinkPhone-to-yealink" unless="migrate-yealinkPhone-to-yealink">
+  <target name="migrate-yealinkPhone-to-yealink" if="primary">
     <sipx-sql>
       UPDATE "public"."phone" SET "bean_id"='yealink' WHERE ("bean_id"='yealinkPhone');
     </sipx-sql>
   </target>
-  <target name="migrate-yealinkphoneVP49G-to-yealinkphoneSIPT49G" unless="migrate-yealinkphoneVP49G-to-yealinkphoneSIPT49G">
+  <target name="migrate-yealinkphoneVP49G-to-yealinkphoneSIPT49G" if="primary">
     <sipx-sql>
       UPDATE "public"."phone" SET "model_id"='yealinkPhoneSIPT49G' WHERE ("model_id"='yealinkPhoneVP49G');
     </sipx-sql>

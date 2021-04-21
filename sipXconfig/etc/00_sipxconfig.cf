@@ -126,9 +126,9 @@ domainManagerImpl.configuredRealm=$(sipx.realm)
 domainManagerImpl.configuredSecret=$(sipx.secret)
 domainManagerImpl.configuredFqdn=$(sipx.host).$(sipx.net_domain)
 domainManagerImpl.configuredIp=$(sipx.bind_ip)
-locationsManagerImpl.primaryIp=$(sipx.bind_ip)
-locationsManagerImpl.primaryFqdn=$(sipx.host).$(sipx.net_domain)
-mongoReplicaSetManager.primaryFqdn=$(sipx.host).$(sipx.net_domain)
+locationsManagerImpl.primaryIp=$(sipx.master_address)
+locationsManagerImpl.primaryFqdn=$(master_fqdn)
+mongoReplicaSetManager.primaryFqdn=$(master_fqdn)
 ";
 
     any::

@@ -67,8 +67,14 @@ bundle agent postgres_init {
 }
 
 bundle agent postgres_config {
+  commands:
+    postgres.!primary::
+      "pg_basebackup"
+        comment => "initialize slave postgres configuration from primary",
+        args => "-h $(sipx.master_address) -D $(sipx.PGDATA) -P -U postgres --xlog-method=stream",
+        contain => su("$(sipx.POSTGRESQL_USER)");
   files:
-    postgres::
+    postgres.primary::
       "$(sipx.PGDATA)/pg_hba.conf"
         comment => "allow local connections to postgres in $(this.promiser)",
         create => "false",
@@ -90,7 +96,7 @@ bundle agent postgres_config {
         perms => mog("644","$(sipx.POSTGRESQL_USER)","$(sipx.POSTGRESQL_GROUP)"),
         classes => if_repaired("restart_postgres"),
         edit_line => replace_contents("-i");
-	postgres.!primary::
+    postgres.!primary::
 	  "$(sipx.PGDATA)/recovery.conf"
 	    comment => "install required postgres replication standby settings in $(this.promiser)",
         create => "true",
@@ -104,7 +110,7 @@ bundle edit_line postgresql_recovery_conf {
   insert_lines:
     any::
       "standby_mode          = 'on'";
-      "primary_conninfo      = 'host=$(sipx.bind_ip) port=5432 user=postgres password='";
+      "primary_conninfo      = 'host=$(sipx.master_address) port=5432 user=postgres password='";
 }
 
 bundle edit_line postgresql_conf {

@@ -84,6 +84,7 @@ export CLASSPATH=`echo @SIPX_CONFDIR@ ${Dependencies} ${PluginDir}/*.jar | sed -
 value=`cat @SIPX_CONFDIR@/postgres-pwd.properties`
 prefix="password="
 password=${value#$prefix}
+test -f @SIPX_CFDATA@/defaults/primary.cfdat && primary=1 || primary=0
 
 # Incase system failed suddenly, clear previous locks
 clearIndexLocks() {
@@ -109,6 +110,7 @@ databaseCommand() {
       -Dtmp.dir=${TmpDir} \
       -Dsipxconfig.db.user=@POSTGRESQL_USER@ \
       -Dsipxconfig.db.password='${password}' \
+      -Dprimary=${primary} \
       ${SIPXCONFIG_ANT_OPTS} \
       -f @SIPX_CONFDIR@/database/database.xml \
       $@"
