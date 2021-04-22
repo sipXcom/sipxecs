@@ -251,6 +251,11 @@ public class LocationsManagerImpl extends SipxHibernateDaoSupport<Location> impl
         m_primaryIp = primaryIp;
     }
 
+    @Override
+    public String getPrimaryIp() {
+        return m_primaryIp;
+    }
+
     public void setJdbc(JdbcTemplate jdbc) {
         m_jdbc = jdbc;
     }

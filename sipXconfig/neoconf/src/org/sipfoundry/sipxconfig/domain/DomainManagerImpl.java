@@ -219,6 +219,11 @@ public class DomainManagerImpl extends SipxHibernateDaoSupport<Domain> implement
         m_configuredIp = configuredIp;
     }
 
+    @Override
+    public String getConfiguredIp() {
+        return m_configuredIp;
+    }
+
     public void setConfiguredFqdn(String configuredFqdn) {
         m_configuredFqdn = configuredFqdn;
     }

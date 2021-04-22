@@ -32,7 +32,9 @@ public interface DomainManager extends DialingRuleProvider {
     String getSharedSecret();
 
     String getDomainName();
-
+    
+    String getConfiguredIp();
+    
     DomainSettings getSettings();
 
     void saveSettings(DomainSettings settings);

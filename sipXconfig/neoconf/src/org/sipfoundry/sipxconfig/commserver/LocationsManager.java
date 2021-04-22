@@ -29,7 +29,8 @@ public interface LocationsManager {
     Location getLocationByAddress(String address);
 
     Location getPrimaryLocation();
-
+    
+    String getPrimaryIp();
     /**
      * Save/update location and publish corresponding save/update events
      *

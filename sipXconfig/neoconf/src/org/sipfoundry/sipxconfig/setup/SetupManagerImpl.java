@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sipfoundry.sipxconfig.cfgmgt.ConfigManager;
@@ -119,6 +120,10 @@ public class SetupManagerImpl implements SetupManager, ApplicationListener<Appli
 
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
+        //execute setup only on primary host
+        if (!StringUtils.equals(m_configManager.getDomainManager().getConfiguredIp(), m_configManager.getLocationManager().getPrimaryIp())) {
+            return;
+        }
         if (event instanceof ApplicationInitializedEvent) {
             setup(Context.APP_MAIN);
         }
