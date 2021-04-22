@@ -37,7 +37,7 @@ bundle agent postgres_init {
     # postgres very easily gets into a state of half-initialized
     # there the pgdata directory is created and initdb refuses to
     # complete, yet postgres is not fully initialized
-    initdb::
+    !primary|initdb::
       "$(sipx.PGDATA)"
         comment => "clear uninitialized postgres",
         file_select => days_old("0"),
@@ -46,7 +46,7 @@ bundle agent postgres_init {
 
       "$(sipx.PGDATA)/."
         comment => "fix postgres permissions",
-        perms => mog("644","$(sipx.POSTGRESQL_USER)","$(sipx.POSTGRESQL_GROUP)");
+        perms => mog("700","$(sipx.POSTGRESQL_USER)","$(sipx.POSTGRESQL_GROUP)");
 
   commands:
     # Most distributions use a separate command "initdb"
@@ -55,24 +55,24 @@ bundle agent postgres_init {
     # initdb directly there is various other housekeeping that
     # the service script handles so leverage it here.
 
-    fedora16_or_greater.initdb::
+    fedora16_or_greater.initdb.primary::
       "/usr/bin/postgresql-setup"
         comment => "initialize postgres",
         args => "initdb";
 
-    !fedora16_or_greater.initdb::
+    !fedora16_or_greater.initdb.primary::
       "$(sipx.PG_DAEMON)"
         comment => "initialize postgres",
         args => "initdb";
+        
+    !primary::
+      "/usr/bin/pg_basebackup"
+        comment => "initialize slave postgres configuration from primary",
+        args => "-h $(sipx.master_address) -D $(sipx.PGDATA) -P -U postgres --xlog-method=stream",
+        contain => su("$(sipx.POSTGRESQL_USER)");        
 }
 
 bundle agent postgres_config {
-  commands:
-    postgres.!primary::
-      "pg_basebackup"
-        comment => "initialize slave postgres configuration from primary",
-        args => "-h $(sipx.master_address) -D $(sipx.PGDATA) -P -U postgres --xlog-method=stream",
-        contain => su("$(sipx.POSTGRESQL_USER)");
   files:
     postgres.primary::
       "$(sipx.PGDATA)/pg_hba.conf"

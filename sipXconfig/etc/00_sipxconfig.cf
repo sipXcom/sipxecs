@@ -127,8 +127,8 @@ domainManagerImpl.configuredSecret=$(sipx.secret)
 domainManagerImpl.configuredFqdn=$(sipx.host).$(sipx.net_domain)
 domainManagerImpl.configuredIp=$(sipx.bind_ip)
 locationsManagerImpl.primaryIp=$(sipx.master_address)
-locationsManagerImpl.primaryFqdn=$(master_fqdn)
-mongoReplicaSetManager.primaryFqdn=$(master_fqdn)
+locationsManagerImpl.primaryFqdn=$(sipx.master_fqdn)
+mongoReplicaSetManager.primaryFqdn=$(sipx.master_fqdn)
 ";
 
     any::
