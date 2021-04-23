@@ -1,0 +1,1 @@
+UPDATE "public"."phone" SET "model_id"='yealinkPhoneSIPT49G' WHERE ("model_id"='yealinkPhoneVP49G');

@@ -487,7 +487,7 @@
     <antcall target="openacd-permission-update4" />
   	<antcall target="add_location_call_restrictions" />
     <antcall target="migrate-yealinkPhone-to-yealink" />
-    <antcall target="migrate-yealinkphoneVP49G-to-yealinkphoneSIPT49G" />
+    <antcall target="migrate-ylVP49G-to-ylSIPT49G" />
   	<antcall target="add_location_location" />
     <antcall target="remove_chat_meeting_setting" />
   	<antcall target="system_audit_remove" />
@@ -1509,15 +1509,11 @@
   <target name="add_location_call_restrictions" unless="add_location_call_restrictions">
   	<db-patch patch="add_location_call_restrictions"/>
   </target>
-  <target name="migrate-yealinkPhone-to-yealink" if="primary">
-    <sipx-sql>
-      UPDATE "public"."phone" SET "bean_id"='yealink' WHERE ("bean_id"='yealinkPhone');
-    </sipx-sql>
+  <target name="migrate-yealinkPhone-to-yealink" unless="migrate-yealinkPhone-to-yealink">
+  	<db-patch patch="migrate-yealinkPhone-to-yealink"/>
   </target>
-  <target name="migrate-yealinkphoneVP49G-to-yealinkphoneSIPT49G" if="primary">
-    <sipx-sql>
-      UPDATE "public"."phone" SET "model_id"='yealinkPhoneSIPT49G' WHERE ("model_id"='yealinkPhoneVP49G');
-    </sipx-sql>
+  <target name="migrate-ylVP49G-to-ylSIPT49G" unless="migrate-ylVP49G-to-ylSIPT49G">
+  	<db-patch patch="migrate-ylVP49G-to-ylSIPT49G"/>
   </target>
   <target name="add_location_location" unless="add_location_location">
   	<db-patch patch="add_location_location"/>

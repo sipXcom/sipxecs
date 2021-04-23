@@ -1,0 +1,1 @@
+UPDATE "public"."phone" SET "bean_id"='yealink' WHERE ("bean_id"='yealinkPhone');

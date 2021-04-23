@@ -37,10 +37,13 @@ import org.sipfoundry.commons.diddb.DidService;
 import org.sipfoundry.commons.userdb.profile.Address;
 import org.sipfoundry.commons.userdb.profile.UserProfile;
 import org.sipfoundry.commons.userdb.profile.UserProfileService;
+import org.sipfoundry.sipxconfig.admin.AdminContext;
 import org.sipfoundry.sipxconfig.alias.AliasManager;
 import org.sipfoundry.sipxconfig.branch.Branch;
 import org.sipfoundry.sipxconfig.common.SpecialUser.SpecialUserType;
+import org.sipfoundry.sipxconfig.commserver.Location;
 import org.sipfoundry.sipxconfig.domain.DomainManager;
+import org.sipfoundry.sipxconfig.elasticsearch.ElasticsearchServiceImpl;
 import org.sipfoundry.sipxconfig.im.ImAccount;
 import org.sipfoundry.sipxconfig.permission.PermissionName;
 import org.sipfoundry.sipxconfig.setting.Group;
@@ -1120,7 +1123,15 @@ public abstract class CoreContextImpl extends SipxHibernateDaoSupport<User> impl
     }
 
     @Override
-    public boolean setup(SetupManager manager) {
+    public boolean setup(SetupManager manager) {        
+        if (manager.isFalse(AdminContext.FEATURE.getId())) {
+            Location primary = manager.getConfigManager().getLocationManager().getPrimaryLocation();
+            if (primary == null) {
+                return false;
+            }
+            manager.getFeatureManager().enableLocationFeature(AdminContext.FEATURE, primary, true);
+            manager.setTrue(AdminContext.FEATURE.getId());
+        }
         if (!m_setup) {
             // this checks special users on every start-up as there seems to be no harm.
             initializeSpecialUsers();

@@ -29,6 +29,8 @@ import org.sipfoundry.sipxconfig.cfgmgt.ConfigUtils;
 import org.sipfoundry.sipxconfig.cfgmgt.KeyValueConfiguration;
 import org.sipfoundry.sipxconfig.cfgmgt.LoggerKeyValueConfiguration;
 import org.sipfoundry.sipxconfig.commserver.Location;
+import org.sipfoundry.sipxconfig.elasticsearch.ElasticsearchServiceImpl;
+import org.sipfoundry.sipxconfig.feature.FeatureManager;
 import org.sipfoundry.sipxconfig.setting.Setting;
 import org.sipfoundry.sipxconfig.setting.SettingUtil;
 
@@ -44,21 +46,26 @@ public class AdminConfig implements ConfigProvider {
         if (!request.applies(AdminContext.FEATURE)) {
             return;
         }
-
+        FeatureManager featureManager = manager.getFeatureManager();
+        
         Set<Location> locations = request.locations(manager);
         AdminSettings settings = m_adminContext.getSettings();
         Setting adminSettings = settings.getSettings().getSetting(m_adminSettingsKey);
         String password = settings.getPostgresPassword();
-
+        
         for (Location l : locations) {
             File dir = manager.getLocationDataDirectory(l);
             if (settings.isSelinux()) {
                 ConfigUtils.enableCfengineClass(dir, SELINUX_FILE, true, settings.getSelinux());
             } else {
                 ConfigUtils.enableCfengineClass(dir, SELINUX_FILE, false, "permissive", "enforcing");
-            }            
+            }
+
+            boolean enabled = featureManager.isFeatureEnabled(AdminContext.FEATURE, l);
+            ConfigUtils.enableCfengineClass(dir, "sipxconfig.cfdat", enabled, "admin");
+            
             Writer pwd = new FileWriter(new File(dir, "postgres-pwd.properties"));
-            Writer pwdCfdat = new FileWriter(new File(dir, "postgres-pwd.cfdat"));
+            Writer pwdCfdat = new FileWriter(new File(dir, "postgres-pwd.cfdat"));            
             try {
                 KeyValueConfiguration cfg = KeyValueConfiguration.equalsSeparated(pwd);
                 CfengineModuleConfiguration cfgCfdat = new CfengineModuleConfiguration(pwdCfdat);

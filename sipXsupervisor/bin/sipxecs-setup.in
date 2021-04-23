@@ -109,7 +109,6 @@ def set_secondary_role
     f.puts <<EOF
 +sipxsupervisor
 +postgres
-+apache
 EOF
   }
   return true

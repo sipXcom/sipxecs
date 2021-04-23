@@ -20,6 +20,7 @@ import org.sipfoundry.sipxconfig.address.AddressType;
 import org.sipfoundry.sipxconfig.alarm.AlarmDefinition;
 import org.sipfoundry.sipxconfig.alarm.AlarmProvider;
 import org.sipfoundry.sipxconfig.alarm.AlarmServerManager;
+import org.sipfoundry.sipxconfig.apache.ApacheManager;
 import org.sipfoundry.sipxconfig.backup.ArchiveDefinition;
 import org.sipfoundry.sipxconfig.backup.ArchiveProvider;
 import org.sipfoundry.sipxconfig.backup.BackupManager;
@@ -251,7 +252,7 @@ public class AdminContextImpl extends HibernateDaoSupport implements AdminContex
 
     @Override
     public void featureChangePrecommit(FeatureManager manager, FeatureChangeValidator validator) {
-
+        validator.requiredOnSameHost(AdminContext.FEATURE, ApacheManager.FEATURE);
     }
 
     @Override
@@ -271,6 +272,8 @@ public class AdminContextImpl extends HibernateDaoSupport implements AdminContex
 
     @Override
     public void getBundleFeatures(FeatureManager featureManager, Bundle b) {
-
+        if (b == Bundle.CORE) {
+            b.addFeature(FEATURE);
+        }
     }
 }
