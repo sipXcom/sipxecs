@@ -119,11 +119,7 @@ public class SetupManagerImpl implements SetupManager, ApplicationListener<Appli
     }
 
     @Override
-    public void onApplicationEvent(ApplicationEvent event) {
-        //execute setup only on primary host
-        if (!StringUtils.equals(m_configManager.getDomainManager().getConfiguredIp(), m_configManager.getLocationManager().getPrimaryIp())) {
-            return;
-        }
+    public void onApplicationEvent(ApplicationEvent event) {        
         if (event instanceof ApplicationInitializedEvent) {
             setup(Context.APP_MAIN);
         }
@@ -131,7 +127,8 @@ public class SetupManagerImpl implements SetupManager, ApplicationListener<Appli
 
     @Override
     public void setup(Context c) {
-        if (m_setup) {
+        if (m_setup || !StringUtils.equals
+            (m_configManager.getDomainManager().getConfiguredIp(), m_configManager.getLocationManager().getPrimaryIp())) {
             return;
         }
 
