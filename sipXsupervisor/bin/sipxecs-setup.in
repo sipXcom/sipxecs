@@ -108,7 +108,6 @@ def set_secondary_role
   File.open($secondary_dat,'w') {|f|
     f.puts <<EOF
 +sipxsupervisor
-+postgres
 EOF
   }
   return true

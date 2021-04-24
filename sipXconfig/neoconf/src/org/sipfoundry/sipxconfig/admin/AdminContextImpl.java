@@ -106,7 +106,7 @@ public class AdminContextImpl extends HibernateDaoSupport implements AdminContex
     @Override
     public Collection<ArchiveDefinition> getArchiveDefinitions(BackupManager manager, Location location,
             BackupPlan plan, BackupSettings settings) {
-        if (!location.isPrimary()) {
+        if (!StringUtils.equals(location.getAddress(), m_domainManager.getConfiguredIp())) {
             return null;
         }
 

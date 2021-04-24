@@ -62,7 +62,11 @@ public class AdminConfig implements ConfigProvider {
             }
 
             boolean enabled = featureManager.isFeatureEnabled(AdminContext.FEATURE, l);
-            ConfigUtils.enableCfengineClass(dir, "sipxconfig.cfdat", enabled, "admin");
+            if(!l.isPrimary()) {
+                ConfigUtils.enableCfengineClass(dir, "sipxconfig.cfdat", enabled, "admin", "postgres");
+            } else {
+                ConfigUtils.enableCfengineClass(dir, "sipxconfig.cfdat", true, "admin");
+            }
             
             Writer pwd = new FileWriter(new File(dir, "postgres-pwd.properties"));
             Writer pwdCfdat = new FileWriter(new File(dir, "postgres-pwd.cfdat"));            
