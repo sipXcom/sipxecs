@@ -84,6 +84,12 @@
       <type><boolean /></type>
       <value>1</value>    
     </setting>
+    <setting name="mongo_external_dbname">
+      <type>
+        <string required="yes"/>
+      </type>
+      <value>vmdb</value>
+    </setting>      
     <setting name="tts">
       <type><boolean /></type>
       <value>1</value>

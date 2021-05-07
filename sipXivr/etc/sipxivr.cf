@@ -115,8 +115,10 @@ bundle edit_line sipxivr_properties_contents {
      "ivr.backupPath=$(sipx.SIPX_VARDIR)/backup";
     external_vm_mongo::
       "ivr.mongoVmConfigFile=$(sipx.SIPX_CONFDIR)/mongo-vm-client.ini";
+      "ivr.mongoVmDbName=$(sipx.MONGO_EXTERNAL_DBNAME)";
     !external_vm_mongo::
       "ivr.mongoVmConfigFile=$(sipx.SIPX_CONFDIR)/mongo-client.ini";
+      "ivr.mongoVmDbName=vmdb";
   delete_lines:
     any::
       ".*";

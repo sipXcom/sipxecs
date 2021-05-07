@@ -104,6 +104,7 @@ public class IvrConfig implements ConfigProvider, AlarmProvider {
             try {
                 CfengineModuleConfiguration config = new CfengineModuleConfiguration(w);
                 config.writeClass("sipxivr", enabled);
+                config.write("MONGO_EXTERNAL_DBNAME", settings.getMongoExternalDbname());
                 if (!StringUtils.isEmpty(voicemailPath)) {
                     config.write(VOICEMAIL_PATH_KEY, voicemailPath);
                 } else {

@@ -104,7 +104,7 @@ public class UserProfileContext implements DaoEventListener, SetupListener {
                 m_userProfileService.saveUserProfile(profile);
             } catch (Exception ex) {
                 LOG.error("failed to save profile in mongo" + ex.getMessage());
-                throw new UserException("&err.msg.saveProfile", ex.getMessage());
+                //throw new UserException("&err.msg.saveProfile", ex.getMessage());
             }
         } else if (entity instanceof Branch) {
             Branch branch = (Branch) entity;
