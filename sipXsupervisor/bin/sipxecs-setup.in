@@ -12,6 +12,7 @@ $cfdatadir = "@SIPX_CFDATA@"
 $confdir = "@SIPX_CONFDIR@"
 $logdir = "@SIPX_LOGDIR@"
 $bindir = "@SIPX_BINDIR@"
+$postgresdir = "/var/lib/pgsql/data"
 $servicedir = "@SIPX_SERVICEDIR@"
 $user = "@SIPXPBXUSER@"
 $group = "@SIPXPBXGROUP@"
@@ -288,6 +289,42 @@ def reset_all
     drop_db_if_exists('openfire')
   end
   cmd_no_die("#{$bindir}/mongodb-admin --obliterate")
+end
+
+def convert_to_primary
+  return false unless $prompt[:noui] || prompt_confirm("This will convert this node to primary. Are you sure?")
+
+  # may not work, but try to shut down whatever is running
+  cmd_no_die("#{$bindir}/sipxagent -d stop_sipxecs")
+  cmd_no_die("/usr/bin/systemctl stop sipxsupervisor.service")
+
+  # cannot rely stop_sipxecs worked all the way
+  cmd_no_die("killall -9 java")
+
+  Dir.foreach($cfdatadir) { |f|
+    next if f == '.' or f == '..'
+    fname = "#{$cfdatadir}/#{f}"
+    if File.directory?(fname)
+      next if f == 'defaults'
+      rm_files fname
+    else
+      rm_file fname
+    end
+  }
+  reset
+  cfe = ["#{$root_cfenginedir}/ppkeys/*", "#{$root_cfenginedir}/state/*", "#{$root_cfenginedir}/*.tcdb" ]
+  Dir.glob(cfe).each {|f|
+    rm_file(f)
+  }
+  rm_files("#{$home_dir}/.cfagent")
+  rm_files("#{$tmp_dir}")
+
+  # test if postgres is supposed to be running on the machine
+  has_postgres_data = File.directory? "/var/lib/pgsql/data/base"
+  if has_postgres_data
+    rm_file "#{$postgresdir}/recovery.conf"
+    cmd_no_die("/usr/bin/systemctl restart postgresql.service")
+  end
 end
 
 def drop_db_if_exists(db)
@@ -577,6 +614,10 @@ args = OptionParser.new { |opts|
 
   opts.on("--reset-all", "Force reset of all possible settings including ssl keys.") {
     reset_all
+  }
+  
+  opts.on("--convert-to-primary", "Try converting secondary node to primary.") {
+    convert_to_primary
   }
 
   opts.on("--advanced", "Ask advanced questions.") {
