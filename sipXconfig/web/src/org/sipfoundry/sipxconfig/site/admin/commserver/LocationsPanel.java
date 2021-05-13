@@ -141,7 +141,14 @@ public abstract class LocationsPanel extends BaseComponent implements PageBeginR
         for (Integer id : selectedLocations) {
             Location locationToDelete = getLocationsManager().getLocation(id);
             try {
-                getLocationsManager().deleteLocation(locationToDelete);
+                // calling deleteSomething will trigger interceptor and publish on delete events
+                // and we don't want this for primary server
+                if (locationToDelete.isPrimary()) {
+                    getValidator().record(new ValidatorException(getMessages().format("error.delete.primary",
+                            locationToDelete.getFqdn())));
+                } else {
+                    getLocationsManager().deleteLocation(locationToDelete);
+                }
             } catch (UserException e) {
                 getValidator().record(e, getMessages());
             }

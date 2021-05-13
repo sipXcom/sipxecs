@@ -139,6 +139,9 @@ public class LocationsManagerImpl extends SipxHibernateDaoSupport<Location> impl
 
     @Override
     public void deleteLocation(Location location) {
+        if (location.isPrimary()) {
+            throw new UserException("&error.delete.primary", location.getFqdn());
+        }
         Location merge = getHibernateTemplate().merge(location);
         getHibernateTemplate().delete(merge);
     }
