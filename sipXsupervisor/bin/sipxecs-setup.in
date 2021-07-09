@@ -343,6 +343,8 @@ EOF
   File.open(host_dat, 'w') { |f|
     f.puts <<EOF
 =host=#{net.host}
+=master_address=#{net.ip}
+=master_fqdn=#{net.host}.#{net.domain}
 EOF
   }  
   FileUtils.chown_R($user, $group, location_dir)
