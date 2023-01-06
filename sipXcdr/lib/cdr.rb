@@ -239,7 +239,7 @@ class Cdr
   end
   
   def terminated?
-    @termination == CALL_COMPLETED_TERM || @termination == CALL_FAILED_TERM || @termination == CALL_UNKNOWN_COMPLETED_TERM || @termination == CALL_TRANSFERRED_TERM || @termination == CALL_ABANDONED_TERM
+    @termination == CALL_COMPLETED_TERM || @termination == CALL_UNKNOWN_COMPLETED_TERM || @termination == CALL_TRANSFERRED_TERM || @termination == CALL_ABANDONED_TERM
   end
   
   # Return a text description of the termination status for this CDR.
