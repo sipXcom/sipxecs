@@ -27,7 +27,7 @@ class State
     end
   end
 
-  attr_writer :log
+  attr_writer :log, :max_call_len, :max_ringing_call_len, :max_failed_wait
 
   def initialize(cse_queue, cdr_queue, cdr_class = Cdr)
     @cse_queue = cse_queue
@@ -58,7 +58,16 @@ class State
         else          
           accept(item)
           #@log.debug("state.rb:: Accepted #{item}") if @log
-        end            
+        end
+
+        # run background tasks (this should run in own tasks but currently this does not work
+        # with the old code (maybe the dependencies have changed because of the update to ruby-2.0.0 ?
+        # this is meant as an workaround but I was not able to solve it differently
+        # and this works
+        # and as ruby is one threaded in base this should not change anything regards runtime...
+        retire_long_calls(@max_call_len)
+        retire_long_ringing_calls(@max_ringing_call_len)
+        flush_failed_calls(@max_failed_wait)
       end
       flush_failed()
       @cdr_queue << nil

@@ -35,9 +35,6 @@ class CallResolver
     end
     install_signal_handler(@readers)
     @writer = CdrWriter.new(@config.cdr_database_url, @config.purge_age_cdr, log)
-    @long_calls_cleaner = Cleaner.new(@config.min_cleanup_interval, [:retire_long_calls,  @config.max_call_len])
-    @long_ringing_calls_cleaner = Cleaner.new(@config.min_cleanup_interval, [:retire_long_ringing_calls,  @config.max_ringing_call_len])
-    @failed_calls_cleaner = Cleaner.new(@config.min_cleanup_interval, [:flush_failed_calls,  @config.max_failed_wait])
     @state = nil
   end
 
@@ -71,19 +68,13 @@ class CallResolver
       end
     end
 
-    long_calls_cleaner_thread = Thread.new(@long_calls_cleaner, cse_queue) do |cleaner, queue|
-      cleaner.run(queue)
-    end
-    failed_calls_cleaner_thread = Thread.new(@failed_calls_cleaner, cse_queue) do |cleaner, queue|
-      cleaner.run(queue)
-    end
-    long_ringing_calls_cleaner_thread = Thread.new(@long_ringing_calls_cleaner, cse_queue) do |cleaner, queue|
-      cleaner.run(queue)
-    end
-
     # state copies from CSE queue to CDR queue
     @state = State.new(cse_queue, cdr_queue)
     @state.log = @log
+
+    @state.max_call_len = @config.max_call_len
+    @state.max_ringing_call_len = @config.max_ringing_call_len
+    @state.max_failed_wait = @config.max_failed_wait
 
     Thread.new( @state ) do | state |
       state.run
