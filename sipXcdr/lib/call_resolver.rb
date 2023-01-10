@@ -103,11 +103,6 @@ class CallResolver
     log.debug("call_resolver.rb:: CSE Readers threads stopped.")
     log.debug("call_resolver.rb:: CSEs in Queue = #{cse_queue.size()}")
 
-    # stop running housekeeping jobs
-    @long_calls_cleaner.stop
-    @failed_calls_cleaner.stop
-    @long_ringing_calls_cleaner.stop
-
     ThreadsWait.all_waits(long_calls_cleaner_thread, failed_calls_cleaner_thread, long_ringing_calls_cleaner_thread)
     log.debug("call_resolver.rb:: Clean-up threads stopped.")
 

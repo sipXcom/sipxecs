@@ -60,6 +60,9 @@ class State
           #@log.debug("state.rb:: Accepted #{item}") if @log
         end
 
+        # TODO: we should check for the min distance between runs...
+        #  so that we reduce runtime
+
         # run background tasks (this should run in own tasks but currently this does not work
         # with the old code (maybe the dependencies have changed because of the update to ruby-2.0.0 ?
         # this is meant as an workaround but I was not able to solve it differently
